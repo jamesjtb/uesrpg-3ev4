@@ -107,7 +107,7 @@ export class SimpleActor extends Actor {
 
     data.carry_rating.max = Math.floor((4 * strBonus) + (2 * endBonus)) + data.carry_rating.bonus;
     this._sortCarriedItems(actorData);
-    data.current_enc = this._calculateENC(actorData) - this._armorWeight(actorData);
+    data.current_enc = (this._calculateENC(actorData) - this._armorWeight(actorData)) .toFixed(1);
 
     //ENC Burden Calculations
     if (data.current_enc > data.carry_rating.max * 3) {
