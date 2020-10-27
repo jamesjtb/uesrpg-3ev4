@@ -1,0 +1,51 @@
+{
+  "name": "uesrpg-d100",
+  "title": "UESRPG d100",
+  "description": "A system based off of Atropos Worldbuilding system used to play the the UESRPG d100 game.",
+  "version": 0.50,
+  "minimumCoreVersion": "0.5.6",
+  "compatibleCoreVersion": "0.5.7",
+  "templateVersion": 2,
+  "author": "DogBoneZone",
+  "esmodules": ["module/simple.js"],
+  "styles": ["styles/simple.css"],
+  "packs": [
+    {
+      "name": "items-uesrpg",
+      "label": "Items",
+      "system": "uesrpg-d100",
+      "path": "./packs/items-uesrpg.db",
+      "entity": "Item"
+    },
+    {
+      "name": "creatures",
+      "label": "Creatures",
+      "system": "uesrpg-d100",
+      "path": "./packs/creatures.db",
+      "entity": "Actor"
+    },
+    {
+      "name": "spells",
+      "label": "Spells",
+      "system": "uesrpg-d100",
+      "path": "./packs/spells.db",
+      "entity": "Item"
+    },
+    {
+      "name": "roll-tables",
+      "label": "Loot Tables",
+      "system": "uesrpg-d100",
+      "path": "./packs/roll-tables.db",
+      "entity": "RollTable"
+    }
+  ],
+  "languages": [],
+  "gridDistance": 1,
+  "gridUnits": "m",
+  "primaryTokenAttribute": "hp",
+  "secondaryTokenAttribute": "action_points",
+  "url": "https://gitlab.com/dogbonezone1/uesrpg-3e/",
+  "manifest": "https://gitlab.com/dogbonezone1/uesrpg-3e/raw/master/system.json",
+  "download": "https://gitlab.com/dogbonezone1/uesrpg-3e/-/archive/v0.50/unofficial-elder-scrolls-rpg-system-v0.50.zip",
+  "license": "LICENSE.txt"
+}
