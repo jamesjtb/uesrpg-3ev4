@@ -502,7 +502,7 @@
       "bonus": 0
     },
     "action_points": {
-      "current": 0,
+      "value": 0,
       "max": 3
     },
     "luck_points": {
