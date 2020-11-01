@@ -144,7 +144,7 @@ export class SimpleActorSheet extends ActorSheet {
   const content = `Rolls for <b>${element.name}</b>!
     <p></p><b>Target Number: [[${this.actor.data.data.skills[element.id].tn}]]</b> <p></p>
     <b>Result: [[${roll.total}]]</b><p></p>
-    <b>${roll.total<=this.actor.data.data.skills[element.id].tn ? "SUCCESS!": "FAILURE!"}</b>`
+    ${roll.total<=this.actor.data.data.skills[element.id].tn ? " <span style='color:green; font-size: 120%;'> <b>SUCCESS!</b></span>" : " <span style='color:red; font-size: 120%;'> <b>FAILURE!</b></span>"}`
     roll.toMessage({type: 4, user: game.user._id, speaker: ChatMessage.getSpeaker(), content: content});
   }
 
@@ -158,7 +158,7 @@ export class SimpleActorSheet extends ActorSheet {
     const content = `Rolls for <b>${element.name}</b>!
       <p></p><b>Target Number: [[${this.actor.data.data.magic_skills[element.id].tn}]]</b> <p></p>
       <b>Result: [[${roll.total}]]</b><p></p>
-      <b>${roll.total<=this.actor.data.data.magic_skills[element.id].tn ? "SUCCESS!": "FAILURE!"}</b>`
+      ${roll.total<=this.actor.data.data.magic_skills[element.id].tn ? " <span style='color:green; font-size: 120%;'> <b>SUCCESS!</b></span>" : " <span style='color: red; font-size: 120%;'> <b>FAILURE!</b></span>"}`
       roll.toMessage({type: 4, user: game.user._id, speaker: ChatMessage.getSpeaker(), content: content});
   }
 
@@ -190,7 +190,7 @@ export class SimpleActorSheet extends ActorSheet {
   const content = `Rolls Combat Style <b>${element.name}</b>!
     <p></p><b>Target Number: [[${this.actor.data.data.combat_styles[element.id].tn}]]</b> <p></p>
     <b>Result: [[${roll.total}]]</b><p></p>
-    <b>${roll.total<=this.actor.data.data.combat_styles[element.id].tn ? "SUCCESS!": "FAILURE!"}</b>`
+    <b>${roll.total<=this.actor.data.data.combat_styles[element.id].tn ? " <span style='color:green; font-size: 120%;'> <b>SUCCESS!</b></span>" : " <span style='color: red; font-size: 120%;'> <b>FAILURE!</b></span>"}`
 
     roll.toMessage({type: 4, user: game.user._id, speaker: ChatMessage.getSpeaker(), content: content});
   }
