@@ -131,7 +131,7 @@ export class npcSheet extends ActorSheet {
     const content = `Rolls for <b>${element.name}</b>!
       <p></p><b>Target Number: [[${this.actor.data.data.characteristics[element.id].value}]]</b> <p></p>
       <b>Result: [[${roll.total}]]</b><p></p>
-      <b>${roll.total<=this.actor.data.data.characteristics[element.id].value ? "SUCCESS!": "FAILURE!"}</b>`
+      <b>${roll.total<=this.actor.data.data.characteristics[element.id].value ? " <span style='color:green; font-size: 120%;'> <b>SUCCESS!</b></span>" : " <span style='color:red; font-size: 120%;'> <b>FAILURE!</b></span>"}`
       roll.toMessage({type: 4, user: game.user._id, speaker: ChatMessage.getSpeaker(), content: content});
  
   }
@@ -146,7 +146,7 @@ export class npcSheet extends ActorSheet {
     const content = `Rolls for <b>${element.name}</b>!
       <p></p><b>Target Number: [[${this.actor.data.data.professions[element.id]}]]</b> <p></p>
       <b>Result: [[${roll.total}]]</b><p></p>
-      <b>${roll.total<=this.actor.data.data.professions[element.id] ? "Success!": "Failure!"}</b>`
+      <b>${roll.total<=this.actor.data.data.professions[element.id] ? " <span style='color:green; font-size: 120%;'> <b>SUCCESS!</b></span>" : " <span style='color:red; font-size: 120%;'> <b>FAILURE!</b></span>"}`
       roll.toMessage({type: 4, user: game.user._id, speaker: ChatMessage.getSpeaker(), content: content});
   }
 
