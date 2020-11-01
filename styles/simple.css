@@ -1,0 +1,402 @@
+.worldbuilding {
+  /* Sheet Tabs */
+  /* Items List */
+  /* Attributes */
+}
+
+@font-face {
+  font-family: "cyrodiil";
+  src: url("../fonts/cyrodiil/cyrodiil.ttf");
+}
+.worldbuilding .editor {
+  min-height: 200px;
+}
+.worldbuilding .editor-content {
+  min-height: 200px;
+  margin-left: 10px;
+  margin-top: 10px;
+}
+.worldbuilding table {
+  font-size: 12px;
+}
+.worldbuilding .window-content {
+  height: 100%;
+  padding: 5px;
+  overflow-y: scroll;
+  overflow-x: hidden;
+  min-width: 200px;
+  background: url("../images/parchment6.jpg");
+  background-repeat: repeat;
+  background-attachment: local;
+}
+.worldbuilding .sheet-header {
+  height: 180px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  justify-content: flex-start;
+  margin-bottom: 10px;
+}
+.worldbuilding .sheet-body {
+  overflow-y: scroll;
+  overflow-x: hidden;
+  margin-left: 2%;
+  margin-right: 2%;
+}
+.worldbuilding .resources {
+ display: inline-block;
+}
+.worldbuilding .sheet-header .profile-img {
+  flex: 0 0 180px;
+  height: 180px;
+  margin-right: 10px;
+  border: none;
+}
+.worldbuilding .sheet-tabs {
+  background-color: rgb(219, 181, 77);
+  font-family: "cyrodiil";
+  src: url("../fonts/cyrodiil/cyrodiil.ttf");
+  font-size: larger;
+}
+.worldbuilding .sheet-tabs2 {
+  background-color: rgb(189, 116, 106);
+  font-family: "cyrodiil";
+  src: url("../fonts/cyrodiil/cyrodiil.ttf");
+  font-size: larger;
+}
+.worldbuilding .sheet-tabs3 {
+  background-color: rgb(84, 163, 124);
+  font-family: "cyrodiil";
+  src: url("../fonts/cyrodiil/cyrodiil.ttf");
+  font-size: larger;
+}
+.worldbuilding .charname {
+  font-family: "cyrodiil";
+  src: url("../fonts/cyrodiil/cyrodiil.ttf");
+}
+.worldbuilding .resource-label {
+  font-family: "cyrodiil";
+  src: url("../fonts/cyrodiil/cyrodiil.ttf");
+  display: block;
+  text-align: center;
+  width: 95px;
+  font-size: larger;
+}
+.worldbuilding .resource-hp {
+  font-family: "cyrodiil";
+  src: url("../fonts/cyrodiil/cyrodiil.ttf");
+  background: firebrick;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  text-align: center;
+  font-size: x-large;
+  color: white;
+  margin-left: 5px;
+}
+.worldbuilding .resource-hp-max {
+  font-family: "cyrodiil";
+  src: url("../fonts/cyrodiil/cyrodiil.ttf");
+  background:firebrick;
+  border-radius: 50%;
+  width: 30px;
+  height: 30px;
+  text-align: center;
+  font-size: larger;
+  color: white;
+  margin-right: 3px;
+}
+.worldbuilding .resource-mp {
+  font-family: "cyrodiil";
+  src: url("../fonts/cyrodiil/cyrodiil.ttf");
+  background: #1E90FF ;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  text-align: center;
+  font-size: x-large;
+  color: white;
+  margin-left: 5px;
+}
+.worldbuilding .resource-mp-max {
+  font-family: "cyrodiil";
+  src: url("../fonts/cyrodiil/cyrodiil.ttf");
+  background: #1E90FF;
+  border-radius: 50%;
+  width: 30px;
+  height: 30px;
+  text-align: center;
+  font-size: larger;
+  color: white;
+}
+.worldbuilding .resource-sp {
+  font-family: "cyrodiil";
+  src: url("../fonts/cyrodiil/cyrodiil.ttf");
+  background: #228B22;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  text-align: center;
+  font-size: x-large;
+  color: white;
+  margin-left: 5px;
+}
+.worldbuilding .resource-sp-max {
+  font-family: "cyrodiil";
+  src: url("../fonts/cyrodiil/cyrodiil.ttf");
+  background: #228B22;
+  border-radius: 50%;
+  width: 30px;
+  height: 30px;
+  text-align: center;
+  font-size: larger;
+  color: white;
+}
+.worldbuilding .resource-lp {
+  font-family: "cyrodiil";
+  src: url("../fonts/cyrodiil/cyrodiil.ttf");
+  background: purple;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  text-align: center;
+  font-size: x-large;
+  color: white;
+  margin-left: 5px;
+}
+.worldbuilding .resource-lp-max {
+  font-family: "cyrodiil";
+  src: url("../fonts/cyrodiil/cyrodiil.ttf");
+  background:purple;
+  border-radius: 50%;
+  width: 30px;
+  height: 30px;
+  text-align: center;
+  font-size: larger;
+  color: white;
+}
+.worldbuilding .characteristic-table {
+  text-align: center;
+  font-size: 15px;
+  margin-top: 5px;
+  font-family: "cyrodiil";
+  src: url("../fonts/cyrodiil/cyrodiil.ttf");
+}
+.worldbuilding .xpPoints {
+  text-align: center;
+  border-radius: 50%;
+  width: 50%;
+}
+.worldbuilding .bioHeader {
+  font-family: "cyrodiil";
+  src: url(../fonts/cyrodiil/cyrodiil.ttf);
+  text-align: center;
+}
+.worldbuilding .derived_attributes_table {
+  text-align: center;
+  width: 10%;
+  float: left;
+  margin-top: 5px;
+  font-family: "cyrodiil";
+  src: url("../fonts/cyrodiil/cyrodiil.ttf");
+}
+.worldbuilding .skills-header {
+  font-family: "cyrodiil";
+  src: url(../fonts/cyrodiil/cyrodiil.ttf);
+  font-size: 15px;
+  background-color: goldenrod;
+}
+.worldbuilding .actionPoints {
+  text-align: center;
+  padding: 10px;
+}
+.worldbuilding .size_table {
+  font-family: "cyrodiil";
+  src: url(../fonts/cyrodiil/cyrodiil.ttf);
+  width: 10%;
+}
+.worldbuilding .combat_table {
+  margin-top: 2px;
+  text-align: center;
+  font-weight: bold;
+}
+.worldbuilding .combat_table_header {
+  font-family: "cyrodiil";
+  src: url(../fonts/cyrodiil/cyrodiil.ttf);
+  font-size: large;
+  margin-top: 2px;
+  text-align: center;
+  background-color: rgb(219, 181, 77);
+}
+.worldbuilding .combat_table_header2 {
+  font-family: "cyrodiil";
+  src: url(../fonts/cyrodiil/cyrodiil.ttf);
+  font-size: large;
+  margin-top: 2px;
+  text-align: center;
+  background-color: rgb(189, 116, 106);
+}
+.worldbuilding .item-list {
+  list-style: none;
+  margin: 7px 0;
+  padding: 0;
+  width: 100%;
+  float: left;
+}
+.worldbuilding .item-list-resource input {
+  width: 20%;
+  height: 18px;
+  text-align: center;
+  margin-left: 15px;
+  margin-right: 5px;
+  margin-bottom: 20px;
+  margin-top: 1px;
+}
+.worldbuilding .item-list .item {
+  height: 30px;
+  line-height: 25px;
+  padding: 3px 0;
+  border-bottom: 1px solid #BBB;
+}
+.worldbuilding .item-list label {
+  width: 10px;
+  text-align: center;
+}
+.worldbuilding .item-list .item img {
+  flex: 0 0 24px;
+  margin-right: 5px;
+}
+.worldbuilding .item-list .item-name {
+  margin: 0;
+}
+.worldbuilding .item-list .item-controls {
+  flex: 0 0 36px;
+  margin-right: 5px;
+  margin-left: 0px;
+}
+.worldbuilding .spell-list {
+  list-style: none;
+  margin: 7px 0;
+  padding: 0;
+  width: 100%;
+  float: center;
+}
+.worldbuilding .spell-list-resource input {
+  width: 20%;
+  height: 18px;
+  text-align: center;
+  margin-left: 15px;
+  margin-right: 5px;
+  margin-bottom: 20px;
+  margin-top: 1px;
+}
+.worldbuilding .spell-list .item {
+  height: 30px;
+  line-height: 25px;
+  padding: 3px 0;
+  border-bottom: 1px solid #BBB;
+}
+.worldbuilding .spell-list label {
+  width: 10px;
+  text-align: center;
+}
+.worldbuilding .spell-list .item img {
+  flex: 0 0 24px;
+  margin-right: 5px;
+  margin-left: 5%;
+}
+.worldbuilding .spell-list .item-name {
+  margin: 0;
+}
+.worldbuilding .spell-list .item-controls {
+  flex: 0 0 36px;
+  margin-right: 5px;
+  margin-left: 0px;
+}
+.worldbuilding .itemHeader {
+  font-family: "cyrodiil";
+  src: url(../fonts/cyrodiil/cyrodiil.ttf);
+  text-align: center;
+  font-size: large;
+}
+.worldbuilding .spellHeader {
+  font-family: "cyrodiil";
+  src: url(../fonts/cyrodiil/cyrodiil.ttf);
+  text-align: center;
+  background-color: rgb(200, 185, 143);
+  font-size: large;
+  border-bottom: thin;
+}
+.worldbuilding .itemHeaderQTY {
+  width: 14%;
+}
+.worldbuilding .item-resource {
+  text-align: center;
+}
+.worldbuilding .field-inputs {
+  text-align: center;
+  font-size: small;
+}
+.worldbuilding .field-inputs-small {
+  text-align: center;
+  font-size: small;
+  font-weight: bold;
+}
+.worldbuilding .tall-input {
+  text-align: center;
+  line-height: 140%;
+}
+.worldbuilding .enc-color-red {
+  background-color: red;
+  color: white;
+}
+.worldbuilding .enc-color-orange {
+  background-color: orange;
+  color: white;
+}
+.worldbuilding .enc-color-none {
+  background-color: none;
+}
+.worldbuilding .characteristic-roll {
+  font-family: "cyrodiil";
+  src: url(../fonts/cyrodiil/cyrodiil.ttf);
+  font-weight: bold;
+  border-radius: 10%;
+  padding: 5px;
+}
+.worldbuilding .skill-roll {
+  font-family: "cyrodiil";
+  src: url(../fonts/cyrodiil/cyrodiil.ttf);
+  font-weight: bold;
+  border-radius: 10%;
+  padding: 5px;
+}
+.worldbuilding .professions-roll {
+  font-family: "cyrodiil";
+  src: url(../fonts/cyrodiil/cyrodiil.ttf);
+  font-weight: bold;
+  border-radius: 10%;
+  padding: 5px;
+}
+.worldbuilding .magic-skill-roll {
+  font-family: "cyrodiil";
+  src: url(../fonts/cyrodiil/cyrodiil.ttf);
+  font-weight: bold;
+  border-radius: 10%;
+  padding: 5px;
+}
+.worldbuilding .weapon-roll {
+  font-family: "cyrodiil";
+  src: url(../fonts/cyrodiil/cyrodiil.ttf);
+  font-weight: bold;
+  border-radius: 10%;
+  padding: 5px;
+}
+.worldbuilding .combat-style-roll {
+  font-family: "cyrodiil";
+  src: url(../fonts/cyrodiil/cyrodiil.ttf);
+  font-weight: bold;
+  border-radius: 10%;
+  padding: 5px;
+}
