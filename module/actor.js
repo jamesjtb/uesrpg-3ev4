@@ -159,7 +159,7 @@ export class SimpleActor extends Actor {
     data.speed.base = strBonus + (2 * agiBonus) + (data.speed.bonus);
     data.initiative.base = agiBonus + intBonus + prcBonus + (data.initiative.bonus);
 
-    data.hp.base = Math.floor(data.characteristics.end.value / 2);
+    data.hp.base = Math.ceil(data.characteristics.end.value / 2);
     data.hp.max = data.hp.base + data.hp.bonus;
 
     data.magicka.max = data.characteristics.int.value + data.magicka.bonus;
@@ -252,7 +252,7 @@ export class SimpleActor extends Actor {
     data.speed.base = strBonus + (2 * agiBonus) + (data.speed.bonus);
     data.initiative.base = agiBonus + intBonus + prcBonus + (data.initiative.bonus);
 
-    data.hp.base = Math.floor(data.characteristics.end.value / 2);
+    data.hp.base = Math.ceil(data.characteristics.end.value / 2);
     data.hp.max = data.hp.base + data.hp.bonus;
 
     data.magicka.max = data.characteristics.int.value + data.magicka.bonus;
