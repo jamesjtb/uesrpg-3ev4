@@ -391,8 +391,26 @@
         "tn": 0
       }
     },
-    "prep_spells": {
+   "prep_spells": {
       "s1": {
+        "name": "",
+        "dmg": "",
+        "cost": "",
+        "school": "",
+        "form": "",
+        "attributes": "",
+        "level": ""
+      },
+      "s2": {
+        "name": "",
+        "dmg": "",
+        "cost": "",
+        "school": "",
+        "form": "",
+        "attributes": "",
+        "level": ""
+      },
+      "s3": {
         "name": "",
         "dmg": "",
         "cost": "",
