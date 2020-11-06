@@ -93,6 +93,7 @@ export class SimpleActorSheet extends ActorSheet {
     html.find(".magic-skill-roll").click(this._onMagicSkillRoll.bind(this));
     html.find(".weapon-roll").click(this._onWeaponRoll.bind(this));
     html.find(".combat-style-roll").click(this._onCombatRoll.bind(this));
+    html.find(".spell-roll").click(this._onSpellRoll.bind(this));
 
     // Everything below here is only needed if the sheet is editable
     if (!this.options.editable) return;
@@ -177,6 +178,28 @@ export class SimpleActorSheet extends ActorSheet {
     <b>Hit Location:</b> <b>[[${hit.total}]]</b><p></p>
     <b>Qualities:</b> ${this.actor.data.data.weapons[element.id].qualities}
     `
+    roll.toMessage({type: 1, user: game.user._id, speaker: ChatMessage.getSpeaker(), content: content});
+  }
+
+  _onSpellRoll(event) {
+    event.preventDefault()
+    const element = event.currentTarget
+
+    let roll = new Roll(this.actor.data.data.prep_spells[element.id].dmg);
+    roll.roll();
+    let hit = new Roll("1d10");
+    hit.roll();
+
+    const content = `Casts the spell <b>${this.actor.data.data.prep_spells[element.id].name}!</b>
+    <p></p>
+    <b>Damage:[[${roll.total}]]
+    <p></p>
+    Hit Location: [[${hit.total}]]
+    <p></p>
+    MP Cost: [[${this.actor.data.data.prep_spells[element.id].cost}]]
+    <p></p>
+    Attributes:</b> ${this.actor.data.data.prep_spells[element.id].attributes}`
+
     roll.toMessage({type: 1, user: game.user._id, speaker: ChatMessage.getSpeaker(), content: content});
   }
 
