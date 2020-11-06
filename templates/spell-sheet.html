@@ -4,15 +4,22 @@
         <div class="header-fields">
             <h1 class="charname"><input name="name" type="text" value="{{item.name}}" placeholder="Name"/></h1>
             <div class="item-resource">
-                <table>
+                 <table>
                     <tr>
                         <th>Spell Level</th>
-                        <th>Magicka Cost</th>
+                        <th>MP Cost</th>
+                        <th>Prepared?</th>
                         <th>School</th>
                     </tr>
                     <tr>
                         <td><input type="text" name="data.level" value="{{data.level}}" data-dtype="Number"/></td>
                         <td><input type="text" name="data.cost" value="{{data.cost}}" data-dtype="Number"></td>
+                        <td><select name="data.category" data-type="String">
+                            {{#select item.data.category}}
+                            {{#each item.data.item_cat as |item_cat key|}}
+                            <option value="{{key}}">{{item_cat}}</option> 
+                            {{/each}} {{/select}}
+                        </select></td>
                         <td><select name="data.school" data-dtype="String">
                             {{#select item.data.school}}
                             {{#each item.data.school_cat as | school_cat key|}}
@@ -23,7 +30,7 @@
                     <tr>
                         <th>Damage</th>
                         <th>Form</th>
-                        <th>Attributes</th>
+                        <th colspan="2">Attributes</th>
                     </tr>
                     <tr>
                         <td><input type="text" name="data.damage" value="{{data.damage}}" data-dtype="String"/></td>
