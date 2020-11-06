@@ -246,6 +246,21 @@ export class SimpleActor extends Actor {
     data.weapons.w3.reach = this._w3Reach(actorData);
     data.weapons.w3.qualities = this._w3Qualities(actorData);
 
+    data.prep_spells.s1.name = this._s1Name(actorData);
+    data.prep_spells.s1.dmg = this._s1Dam(actorData);
+    data.prep_spells.s1.cost = this._s1Cost(actorData);
+    data.prep_spells.s1.attributes = this._s1Attributes(actorData);
+
+    data.prep_spells.s2.name = this._s2Name(actorData);
+    data.prep_spells.s2.dmg = this._s2Dam(actorData);
+    data.prep_spells.s2.cost = this._s2Cost(actorData);
+    data.prep_spells.s2.attributes = this._s2Attributes(actorData);
+
+    data.prep_spells.s3.name = this._s3Name(actorData);
+    data.prep_spells.s3.dmg = this._s3Dam(actorData);
+    data.prep_spells.s3.cost = this._s3Cost(actorData);
+    data.prep_spells.s3.attributes = this._s3Attributes(actorData);
+
   } 
 
   _prepareNPCData(actorData) {
@@ -579,6 +594,114 @@ export class SimpleActor extends Actor {
     let qualities = "";
       for (let item of primary) {
         qualities = item.data.qualities;
+      }
+      return qualities
+  }
+
+  _s1Name(actorData) {
+    let primary = actorData.items.filter(item => item.data.category == "spell1");
+    let name = "";
+      for (let item of primary) {
+        name = item.name;
+      }
+      return name
+  }
+
+  _s1Dam(actorData) {
+    let primary = actorData.items.filter(item => item.data.category == "spell1");
+    let dam = "";
+      for (let item of primary) {
+        dam = item.data.damage;
+      }
+      return dam
+  }
+
+  _s1Cost(actorData) {
+    let primary = actorData.items.filter(item => item.data.category == "spell1");
+    let reach = "";
+      for (let item of primary) {
+        reach = item.data.cost;
+      }
+      return reach
+  }
+
+  _s1Attributes(actorData) {
+    let primary = actorData.items.filter(item => item.data.category == "spell1");
+    let qualities = "";
+      for (let item of primary) {
+        qualities = item.data.attributes;
+      }
+      return qualities
+  }
+
+  _s2Name(actorData) {
+    let primary = actorData.items.filter(item => item.data.category == "spell2");
+    let name = "";
+      for (let item of primary) {
+        name = item.name;
+      }
+      return name
+  }
+
+  _s2Dam(actorData) {
+    let primary = actorData.items.filter(item => item.data.category == "spell2");
+    let dam = "";
+      for (let item of primary) {
+        dam = item.data.damage;
+      }
+      return dam
+  }
+
+  _s2Cost(actorData) {
+    let primary = actorData.items.filter(item => item.data.category == "spell2");
+    let reach = "";
+      for (let item of primary) {
+        reach = item.data.cost;
+      }
+      return reach
+  }
+
+  _s2Attributes(actorData) {
+    let primary = actorData.items.filter(item => item.data.category == "spell2");
+    let qualities = "";
+      for (let item of primary) {
+        qualities = item.data.attributes;
+      }
+      return qualities
+  }
+
+  _s3Name(actorData) {
+    let primary = actorData.items.filter(item => item.data.category == "spell3");
+    let name = "";
+      for (let item of primary) {
+        name = item.name;
+      }
+      return name
+  }
+
+  _s3Dam(actorData) {
+    let primary = actorData.items.filter(item => item.data.category == "spell3");
+    let dam = "";
+      for (let item of primary) {
+        dam = item.data.damage;
+      }
+      return dam
+  }
+
+  _s3Cost(actorData) {
+    let primary = actorData.items.filter(item => item.data.category == "spell3");
+    let reach = "";
+      for (let item of primary) {
+        reach = item.data.cost;
+      }
+      return reach
+  }
+
+  _s3Attributes(actorData) {
+    let primary = actorData.items.filter(item => item.data.category == "spell3");
+    let qualities = "";
+      for (let item of primary) {
+        qualities = item.data.attributes;
       }
       return qualities
   }
