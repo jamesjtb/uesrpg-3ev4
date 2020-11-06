@@ -389,7 +389,18 @@
         "weapons": "",
         "characteristic": "",
         "tn": 0
-    }
+      }
+    },
+    "prep_spells": {
+      "s1": {
+        "name": "",
+        "dmg": "",
+        "cost": "",
+        "school": "",
+        "form": "",
+        "attributes": "",
+        "level": ""
+      }
     },
     "weapons": {
       "w1": {
