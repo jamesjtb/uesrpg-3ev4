@@ -1073,6 +1073,13 @@
       "mysticism": "Mysticism",
       "necromancy": "Necromancy",
       "restoration": "Restoration"
+    },
+     "category": "",
+      "item_cat": {
+        "none": "None",
+        "weapon1": "Spell 1",
+        "weapon2": "Spell 2",
+        "weapon3": "Spell 3"
     }
   }
 }
