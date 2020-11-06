@@ -391,7 +391,7 @@
         "tn": 0
       }
     },
-   "prep_spells": {
+    "prep_spells": {
       "s1": {
         "name": "",
         "dmg": "",
@@ -1103,12 +1103,12 @@
       "necromancy": "Necromancy",
       "restoration": "Restoration"
     },
-     "category": "",
-      "item_cat": {
-        "none": "None",
-        "weapon1": "Spell 1",
-        "weapon2": "Spell 2",
-        "weapon3": "Spell 3"
+    "category": "",
+    "spell_cat": {
+      "none": "None",
+      "spell1": "Spell 1",
+      "spell2": "Spell 2",
+      "spell3": "Spell 3"
     }
   }
 }
