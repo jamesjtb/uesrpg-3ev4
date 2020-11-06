@@ -332,6 +332,8 @@ export class SimpleActor extends Actor {
     for (let item of carried) {
       if (item.data.category == "none") {
         item.data.carried = false;
+      } else if (item.data.category == "") {
+        item.data.carried = false;
       } else if (item.data.category == "shield") {
         item.data.carried = false;
       } else if (item.data.category == "weapon1") {
@@ -339,6 +341,12 @@ export class SimpleActor extends Actor {
       } else if (item.data.category == "weapon2") {
         item.data.carried = false;
       } else if (item.data.category == "weapon3") {
+        item.data.carried = false;
+      } else if (item.data.category == "spell1") {
+        item.data.carried = false;
+      } else if (item.data.category == "spell2") {
+        item.data.carried = false;
+      } else if (item.data.category == "spell3") {
         item.data.carried = false;
       } else {
         item.data.carried = true;
