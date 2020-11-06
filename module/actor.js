@@ -195,6 +195,20 @@ export class SimpleActor extends Actor {
       data.speed.base = data.speed.base;
     }
 
+    //Wounded Penalties
+    if (data.wounded == true) {
+      for (var skill in data.skills) {
+        data.skills[skill].tn = data.skills[skill].tn - 20;
+      }
+      for (var skill in data.magic_skills) {
+        data.magic_skills[skill].tn = data.magic_skills[skill].tn -20;
+      }
+      for (var skill in data.combat_styles) {
+        data.combat_styles[skill].tn = data.combat_styles[skill].tn -20;
+      }
+      data.initiative.base = data.initiative.base -2;
+    }
+
     //Worn Armor/Weapons to Actor Sheet
     data.armor.head.ar = this._helmetArmor(actorData);
     data.armor.head.magic_ar = this._helmetMagicArmor(actorData);
@@ -286,6 +300,14 @@ export class SimpleActor extends Actor {
       data.speed.base = data.speed.base - 1;
     } else {
       data.speed.base = data.speed.base;
+    }
+
+    //Wounded Penalties
+    if (data.wounded == true) {
+      for (var skill in data.professions) {
+        data.professions[skill] = data.professions[skill] - 20;
+      }
+      data.initiative.base = data.initiative.base -2;
     }
 
   }
