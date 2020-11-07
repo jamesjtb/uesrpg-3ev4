@@ -4,7 +4,7 @@
         <div class="header-fields">
             <h1 class="charname"><input name="name" type="text" value="{{item.name}}" placeholder="Name"/></h1>
             <div class="item-resource">
-                 <table>
+                <table>
                     <tr>
                         <th>Spell Level</th>
                         <th>MP Cost</th>
@@ -16,8 +16,8 @@
                         <td><input type="text" name="data.cost" value="{{data.cost}}" data-dtype="Number"></td>
                         <td><select name="data.category" data-type="String">
                             {{#select item.data.category}}
-                            {{#each item.data.item_cat as |item_cat key|}}
-                            <option value="{{key}}">{{item_cat}}</option> 
+                            {{#each item.data.spell_cat as |spell_cat key|}}
+                            <option value="{{key}}">{{spell_cat}}</option> 
                             {{/each}} {{/select}}
                         </select></td>
                         <td><select name="data.school" data-dtype="String">
