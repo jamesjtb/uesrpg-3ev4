@@ -102,14 +102,22 @@
             </div>
             <table>
                 <tr class="characteristic-table">
-                    <th>Lucky Numbers</th>
+                    <th colspan="5">Lucky Numbers</th>
                     <th>XP Points</th>
-                    <th>Unlucky Numbers</th>
+                    <th colspan="5">Unlucky Numbers</th>
                 </tr>
                 <tr class="field-inputs">
-                    <td><input type="text" name="data.lucky_numbers" value="{{data.lucky_numbers}}"></td>
+                    <td><input type="text" name="data.lucky_numbers.ln1" value="{{data.lucky_numbers.ln1}}"></td>
+                    <td><input type="text" name="data.lucky_numbers.ln2" value="{{data.lucky_numbers.ln2}}"></td>
+                    <td><input type="text" name="data.lucky_numbers.ln3" value="{{data.lucky_numbers.ln3}}"></td>
+                    <td><input type="text" name="data.lucky_numbers.ln4" value="{{data.lucky_numbers.ln4}}"></td>
+                    <td><input type="text" name="data.lucky_numbers.ln5" value="{{data.lucky_numbers.ln5}}"></td>
                     <td><input class="xpPoints" type="text" name="data.xp" value="{{data.xp}}" data-dtype="String"></td>
-                    <td><input type="text" name="data.unlucky_numbers" value="{{data.unlucky_numbers}}"></td>
+                    <td><input type="text" name="data.unlucky_numbers.ul1" value="{{data.unlucky_numbers.ul1}}"></td>
+                    <td><input type="text" name="data.unlucky_numbers.ul2" value="{{data.unlucky_numbers.ul2}}"></td>
+                    <td><input type="text" name="data.unlucky_numbers.ul3" value="{{data.unlucky_numbers.ul3}}"></td>
+                    <td><input type="text" name="data.unlucky_numbers.ul4" value="{{data.unlucky_numbers.ul4}}"></td>
+                    <td><input type="text" name="data.unlucky_numbers.ul5" value="{{data.unlucky_numbers.ul5}}"></td>
                 </tr>
             </table>
             <div>
@@ -865,6 +873,39 @@
                             <td><input type="text" name="data.weapons.w3.dmg" value="{{data.weapons.w3.dmg}}" data-dtype="String" disabled></td>
                             <td><input type="text" name="data.weapons.w3.reach" value="{{data.weapons.w3.reach}}" data-dtype="String" disabled></td>
                             <td><input type="text" name="data.weapons.w3.qualities" value="{{data.weapons.w3.qualities}}" data-dtype="String" disabled></td>
+                        </tr>
+                    </table>
+                    <table>
+                        <tr>
+                            <th colspan="5" class="combat_table_header">Prepared Spells</th>
+                        </tr>
+                        <tr>
+                            <th>Roll</th>
+                            <th>Spell</th>
+                            <th>Damage</th>
+                            <th>MP Cost</th>
+                            <th>Attributes</th>
+                        </tr>
+                        <tr class="field-inputs-small">
+                            <td><button class="spell-roll" name="Spell 1" id="s1">Roll</button></td>
+                            <td><input type="text" name="data.prep_spells.s1.name" value="{{data.prep_spells.s1.name}}" data-dtype="String" disabled></td>
+                            <td><input type="text" name="data.prep_spells.s1.dmg" value="{{data.prep_spells.s1.dmg}}" data-dtype="String" disabled></td>
+                            <td><input type="text" name="data.prep_spells.s1.cost" value="{{data.prep_spells.s1.cost}}" data-dtype="String" disabled></td>
+                            <td><input type="text" name="data.prep_spells.s1.attributes" value="{{data.prep_spells.s1.attributes}}" data-dtype="String" disabled></td>
+                        </tr>
+                        <tr class="field-inputs-small">
+                            <td><button class="spell-roll" name="Spell 2" id="s2">Roll</button></td>
+                            <td><input type="text" name="data.prep_spells.s2.name" value="{{data.prep_spells.s2.name}}" data-dtype="String" disabled></td>
+                            <td><input type="text" name="data.prep_spells.s2.dmg" value="{{data.prep_spells.s2.dmg}}" data-dtype="String" disabled></td>
+                            <td><input type="text" name="data.prep_spells.s2.cost" value="{{data.prep_spells.s2.cost}}" data-dtype="String" disabled></td>
+                            <td><input type="text" name="data.prep_spells.s2.attributes" value="{{data.prep_spells.s2.attributes}}" data-dtype="String" disabled></td>
+                        </tr>
+                        <tr class="field-inputs-small">
+                            <td><button class="spell-roll" name="Spell 3" id="s3">Roll</button></td>
+                            <td><input type="text" name="data.prep_spells.s3.name" value="{{data.prep_spells.s3.name}}" data-dtype="String" disabled></td>
+                            <td><input type="text" name="data.prep_spells.s3.dmg" value="{{data.prep_spells.s3.dmg}}" data-dtype="String" disabled></td>
+                            <td><input type="text" name="data.prep_spells.s3.cost" value="{{data.prep_spells.s3.cost}}" data-dtype="String" disabled></td>
+                            <td><input type="text" name="data.prep_spells.s3.attributes" value="{{data.prep_spells.s3.attributes}}" data-dtype="String" disabled></td>
                         </tr>
                     </table>
                 </div>
