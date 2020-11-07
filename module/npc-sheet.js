@@ -95,6 +95,7 @@ export class npcSheet extends ActorSheet {
     html.find(".characteristic-roll").click(this._onClickCharacteristic.bind(this));
     html.find(".professions-roll").click(this._onProfessionsRoll.bind(this));
     html.find(".weapon-roll").click(this._onWeaponRoll.bind(this));
+    html.find(".unconventional-roll").click(this._onUnconventionalRoll.bind(this));
 
     // Everything below here is only needed if the sheet is editable
     if (!this.options.editable) return;
@@ -147,6 +148,20 @@ export class npcSheet extends ActorSheet {
       <p></p><b>Target Number: [[${this.actor.data.data.professions[element.id]}]]</b> <p></p>
       <b>Result: [[${roll.total}]]</b><p></p>
       <b>${roll.total<=this.actor.data.data.professions[element.id] ? " <span style='color:green; font-size: 120%;'> <b>SUCCESS!</b></span>" : " <span style='color:red; font-size: 120%;'> <b>FAILURE!</b></span>"}`
+      roll.toMessage({type: 4, user: game.user._id, speaker: ChatMessage.getSpeaker(), content: content});
+  }
+
+  _onUnconventionalRoll(event) {
+    event.preventDefault()
+    const element = event.currentTarget
+
+    let roll = new Roll("1d100");
+    roll.roll();
+
+    const content = `Rolls for <b>${element.name}</b>!
+      <p></p><b>Target Number: [[${this.actor.data.data.skills[element.id].bonus}]]</b> <p></p>
+      <b>Result: [[${roll.total}]]</b><p></p>
+      <b>${roll.total<=this.actor.data.data.skills[element.id].bonus ? " <span style='color:green; font-size: 120%;'> <b>SUCCESS!</b></span>" : " <span style='color:red; font-size: 120%;'> <b>FAILURE!</b></span>"}`
       roll.toMessage({type: 4, user: game.user._id, speaker: ChatMessage.getSpeaker(), content: content});
   }
 
