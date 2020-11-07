@@ -12,8 +12,20 @@
     "bio": "",
     "journal": "",
     "notes": "",
-    "lucky_numbers": "",
-    "unlucky_numbers": "",
+    "lucky_numbers": {
+      "ln1": 0,
+      "ln2": 0,
+      "ln3": 0,
+      "ln4": 0,
+      "ln5": 0
+    },
+    "unlucky_numbers": {
+      "ul1": 0,
+      "ul2": 0,
+      "ul3": 0,
+      "ul4": 0,
+      "ul5": 0
+    },
     "supply": "",
     "supply_cat": {
       "1d2": "1d2",
