@@ -185,8 +185,8 @@
 }
 .worldbuilding .xpPoints {
   text-align: center;
-  border-radius: 50%;
-  width: 50%;
+  border-radius: 30%;
+  width: 100%;
 }
 .worldbuilding .bioHeader {
   font-family: "cyrodiil";
