@@ -407,3 +407,10 @@
   border-radius: 10%;
   padding: 5px;
 }
+.worldbuilding .unconventional-roll {
+  font-family: "cyrodiil";
+  src: url(../fonts/cyrodiil/cyrodiil.ttf);
+  font-weight: bold;
+  border-radius: 10%;
+  padding: 5px;
+}
