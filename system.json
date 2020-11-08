@@ -2,7 +2,7 @@
   "name": "uesrpg-d100",
   "title": "UESRPG d100",
   "description": "A system based off of Atropos Worldbuilding system used to play the UESRPG d100 system.",
-  "version": 0.69,
+  "version": 0.70,
   "minimumCoreVersion": "0.5.6",
   "compatibleCoreVersion": "0.7.5",
   "templateVersion": 2,
@@ -44,6 +44,13 @@
       "system": "uesrpg-d100",
       "path": "./packs/macros.db",
       "entity": "Macro"
+    },
+    {
+      "name": "uesrpg-3e-reference",
+      "label": "Reference Journals",
+      "system": "uesrpg-d100",
+      "path": "./packs/uesrpg-3e-reference.db",
+      "entity": "JournalEntry"
     }
   ],
   "languages": [],
@@ -53,6 +60,6 @@
   "secondaryTokenAttribute": "action_points",
   "url": "https://gitlab.com/DogBoneZone/uesrpg-3e/",
   "manifest": "https://gitlab.com/DogBoneZone/uesrpg-3e/raw/master/system.json",
-  "download": "https://gitlab.com/DogBoneZone/uesrpg-3e/-/archive/0.69/uesrpg-3e-0.69.zip",
+  "download": "https://gitlab.com/DogBoneZone/uesrpg-3e/-/archive/0.70/uesrpg-3e-0.70.zip",
   "license": "LICENSE.txt"
 }
