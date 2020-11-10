@@ -261,6 +261,26 @@ export class SimpleActor extends Actor {
     data.prep_spells.s3.cost = this._s3Cost(actorData);
     data.prep_spells.s3.attributes = this._s3Attributes(actorData);
 
+    data.prep_spells.s4.name = this._s4Name(actorData);
+    data.prep_spells.s4.dmg = this._s4Dam(actorData);
+    data.prep_spells.s4.cost = this._s4Cost(actorData);
+    data.prep_spells.s4.attributes = this._s4Attributes(actorData);
+
+    data.prep_spells.s5.name = this._s5Name(actorData);
+    data.prep_spells.s5.dmg = this._s5Dam(actorData);
+    data.prep_spells.s5.cost = this._s5Cost(actorData);
+    data.prep_spells.s5.attributes = this._s5Attributes(actorData);
+
+    data.prep_spells.s6.name = this._s6Name(actorData);
+    data.prep_spells.s6.dmg = this._s6Dam(actorData);
+    data.prep_spells.s6.cost = this._s6Cost(actorData);
+    data.prep_spells.s6.attributes = this._s6Attributes(actorData);
+
+    data.prep_spells.s7.name = this._s7Name(actorData);
+    data.prep_spells.s7.dmg = this._s7Dam(actorData);
+    data.prep_spells.s7.cost = this._s7Cost(actorData);
+    data.prep_spells.s7.attributes = this._s7Attributes(actorData);
+
   } 
 
   _prepareNPCData(actorData) {
@@ -707,6 +727,150 @@ export class SimpleActor extends Actor {
 
   _s3Attributes(actorData) {
     let primary = actorData.items.filter(item => item.data.category == "spell3");
+    let qualities = "";
+      for (let item of primary) {
+        qualities = item.data.attributes;
+      }
+      return qualities
+  }
+
+  _s4Name(actorData) {
+    let primary = actorData.items.filter(item => item.data.category == "spell4");
+    let name = "";
+      for (let item of primary) {
+        name = item.name;
+      }
+      return name
+  }
+
+  _s4Dam(actorData) {
+    let primary = actorData.items.filter(item => item.data.category == "spell4");
+    let dam = "";
+      for (let item of primary) {
+        dam = item.data.damage;
+      }
+      return dam
+  }
+
+  _s4Cost(actorData) {
+    let primary = actorData.items.filter(item => item.data.category == "spell4");
+    let reach = "";
+      for (let item of primary) {
+        reach = item.data.cost;
+      }
+      return reach
+  }
+
+  _s4Attributes(actorData) {
+    let primary = actorData.items.filter(item => item.data.category == "spell4");
+    let qualities = "";
+      for (let item of primary) {
+        qualities = item.data.attributes;
+      }
+      return qualities
+  }
+
+  _s5Name(actorData) {
+    let primary = actorData.items.filter(item => item.data.category == "spell5");
+    let name = "";
+      for (let item of primary) {
+        name = item.name;
+      }
+      return name
+  }
+
+  _s5Dam(actorData) {
+    let primary = actorData.items.filter(item => item.data.category == "spell5");
+    let dam = "";
+      for (let item of primary) {
+        dam = item.data.damage;
+      }
+      return dam
+  }
+
+  _s5Cost(actorData) {
+    let primary = actorData.items.filter(item => item.data.category == "spell5");
+    let reach = "";
+      for (let item of primary) {
+        reach = item.data.cost;
+      }
+      return reach
+  }
+
+  _s5Attributes(actorData) {
+    let primary = actorData.items.filter(item => item.data.category == "spell5");
+    let qualities = "";
+      for (let item of primary) {
+        qualities = item.data.attributes;
+      }
+      return qualities
+  }
+
+  _s6Name(actorData) {
+    let primary = actorData.items.filter(item => item.data.category == "spell6");
+    let name = "";
+      for (let item of primary) {
+        name = item.name;
+      }
+      return name
+  }
+
+  _s6Dam(actorData) {
+    let primary = actorData.items.filter(item => item.data.category == "spell6");
+    let dam = "";
+      for (let item of primary) {
+        dam = item.data.damage;
+      }
+      return dam
+  }
+
+  _s6Cost(actorData) {
+    let primary = actorData.items.filter(item => item.data.category == "spell6");
+    let reach = "";
+      for (let item of primary) {
+        reach = item.data.cost;
+      }
+      return reach
+  }
+
+  _s6Attributes(actorData) {
+    let primary = actorData.items.filter(item => item.data.category == "spell6");
+    let qualities = "";
+      for (let item of primary) {
+        qualities = item.data.attributes;
+      }
+      return qualities
+  }
+
+  _s7Name(actorData) {
+    let primary = actorData.items.filter(item => item.data.category == "spell7");
+    let name = "";
+      for (let item of primary) {
+        name = item.name;
+      }
+      return name
+  }
+
+  _s7Dam(actorData) {
+    let primary = actorData.items.filter(item => item.data.category == "spell7");
+    let dam = "";
+      for (let item of primary) {
+        dam = item.data.damage;
+      }
+      return dam
+  }
+
+  _s7Cost(actorData) {
+    let primary = actorData.items.filter(item => item.data.category == "spell7");
+    let reach = "";
+      for (let item of primary) {
+        reach = item.data.cost;
+      }
+      return reach
+  }
+
+  _s7Attributes(actorData) {
+    let primary = actorData.items.filter(item => item.data.category == "spell7");
     let qualities = "";
       for (let item of primary) {
         qualities = item.data.attributes;
