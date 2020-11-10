@@ -51,14 +51,14 @@
             <div>
             <table class="characteristic-table">
                 <tr>
-                    <th><button class="characteristic-roll" name="STR" id="str">Str</button></th>
-                    <th><button class="characteristic-roll" name="END" id="end">End</button></th>
-                    <th><button class="characteristic-roll" name="AGI" id="agi">Agi</button></th>
-                    <th><button class="characteristic-roll" name="INT" id="int">Int</button></th>
-                    <th><button class="characteristic-roll" name="WP" id="wp">Wp</button></th>
-                    <th><button class="characteristic-roll" name="PRC" id="prc">Prc</button></th>
-                    <th><button class="characteristic-roll" name="PRS" id="prs">Prs</button></th>
-                    <th><button class="characteristic-roll" name="LCK" id="lck">Lck</button></th>
+                    <th><input type="button" class="characteristic-roll" name="STR" id="str" value="STR"></th>
+                    <th><input type="button" class="characteristic-roll" name="END" id="end" value="END"></th>
+                    <th><input type="button" class="characteristic-roll" name="AGI" id="agi" value="AGI"></th>
+                    <th><input type="button" class="characteristic-roll" name="INT" id="int" value="INT"></th>
+                    <th><input type="button" class="characteristic-roll" name="WP" id="wp" value="WP"></th>
+                    <th><input type="button" class="characteristic-roll" name="PRC" id="prc" value="PRC"></th>
+                    <th><input type="button" class="characteristic-roll" name="PRS" id="prs" value="PRS"></th>
+                    <th><input type="button" class="characteristic-roll" name="LCK" id="lck" value="LCK"></th>
                 </tr>
                 <tr>
                     <td><input name="data.characteristics.str.value" type="text" value="{{data.characteristics.str.value}}" data-dtype="Number"></td>
@@ -140,7 +140,7 @@
                         <th>TN</th>
                     </tr>
                     <tr class="field-inputs">
-                        <td><button class="skill-roll" name="Acrobatics" id="acrobatics">Roll</button></td>
+                        <td><input type="button" class="skill-roll" name="Acrobatics" id="acrobatics" value="Roll"></td>
                         <td>Acrobatics</td>
                         <td><select name="data.skills.acrobatics.rank" data-type="String">
                             {{#select actor.data.skills.acrobatics.rank}}
@@ -159,7 +159,7 @@
                         <td><input type="text" class="field-inputs" name="data.skills.acrobatics.tn" value="{{data.skills.acrobatics.tn}}" data-dtype="Number" disabled></td>
                     </tr>
                     <tr class="field-inputs">
-                        <td><button class="skill-roll" name="Athletics" id="athletics">Roll</button></td>
+                        <td><input type="button" class="skill-roll" name="Athletics" id="athletics" value="Roll"></td>
                         <td>Athletics</td>
                         <td><select name="data.skills.athletics.rank" data-type="String">
                             {{#select actor.data.skills.athletics.rank}}
@@ -178,7 +178,7 @@
                         <td><input type="text" class="field-inputs" name="data.skills.athletics.tn" value="{{data.skills.athletics.tn}}" data-dtype="Number" disabled></td>
                     </tr>
                     <tr class="field-inputs">
-                        <td><button class="skill-roll" name="Command" id="command">Roll</button></td>
+                        <td><input type="button" class="skill-roll" name="Command" id="command" value="Roll"></td>
                         <td>Command</td>
                         <td><select name="data.skills.command.rank" data-type="String">
                             {{#select actor.data.skills.command.rank}}
@@ -197,7 +197,7 @@
                         <td><input type="text" class="field-inputs" name="data.skills.command.tn" value="{{data.skills.command.tn}}" data-dtype="Number" disabled></td>
                     </tr>
                     <tr class="field-inputs">
-                        <td><button class="skill-roll" name="Commerce" id="commerce">Roll</button></td>
+                        <td><input type="button" class="skill-roll" name="Commerce" id="commerce" value="Roll"></td>
                         <td>Commerce</td>
                         <td><select name="data.skills.commerce.rank" data-type="String">
                             {{#select actor.data.skills.commerce.rank}}
@@ -216,7 +216,7 @@
                         <td><input type="text" class="field-inputs" name="data.skills.commerce.tn" value="{{data.skills.commerce.tn}}" data-dtype="Number" disabled></td>
                     </tr>
                     <tr class="field-inputs">
-                        <td><button class="skill-roll" name="Deceive" id="deceive">Roll</button></td>
+                        <td><input type="button" class="skill-roll" name="Deceive" id="deceive" value="Roll"></td>
                         <td>Deceive</td>
                         <td><select name="data.skills.deceive.rank" data-type="String">
                             {{#select actor.data.skills.deceive.rank}}
@@ -235,7 +235,7 @@
                         <td><input type="text" class="field-inputs" name="data.skills.deceive.tn" value="{{data.skills.deceive.tn}}" data-dtype="Number" disabled></td>
                     </tr>
                     <tr class="field-inputs">
-                        <td><button class="skill-roll" name="Evade" id="evade">Roll</button></td>
+                        <td><input type="button" class="skill-roll" name="Evade" id="evade" value="Roll"></td>
                         <td>Evade</td>
                         <td><select name="data.skills.evade.rank" data-type="String">
                             {{#select actor.data.skills.evade.rank}}
@@ -254,7 +254,7 @@
                         <td><input type="text" class="field-inputs" name="data.skills.evade.tn" value="{{data.skills.evade.tn}}" data-dtype="Number" disabled></td>
                     </tr>
                     <tr class="field-inputs">
-                        <td><button class="skill-roll" name="Investigate" id="investigate">Roll</button></td>
+                        <td><input type="button" class="skill-roll" name="Investigate" id="investigate" value="Roll"></td>
                         <td>Investigate</td>
                         <td><select name="data.skills.investigate.rank" data-type="String">
                             {{#select actor.data.skills.investigate.rank}}
@@ -273,7 +273,7 @@
                         <td><input type="text" class="field-inputs" name="data.skills.investigate.tn" value="{{data.skills.investigate.tn}}" data-dtype="Number" disabled></td>
                     </tr>
                     <tr class="field-inputs">
-                        <td><button class="skill-roll" name="Logic" id="logic">Roll</button></td>
+                        <td><input type="button" class="skill-roll" name="Logic" id="logic" value="Roll"></td>
                         <td>Logic</td>
                         <td><select name="data.skills.logic.rank" data-type="String">
                             {{#select actor.data.skills.logic.rank}}
@@ -292,7 +292,7 @@
                         <td><input type="text" class="field-inputs" name="data.skills.logic.tn" value="{{data.skills.logic.tn}}" data-dtype="Number" disabled></td>
                     </tr>
                     <tr class="field-inputs">
-                        <td><button class="skill-roll" name="Lore" id="lore">Roll</button></td>
+                        <td><input type="button" class="skill-roll" name="Lore" id="lore" value="Roll"></td>
                         <td>Lore</td>
                         <td><select name="data.skills.lore.rank" data-type="String">
                             {{#select actor.data.skills.lore.rank}}
@@ -311,7 +311,7 @@
                         <td><input type="text" class="field-inputs" name="data.skills.lore.tn" value="{{data.skills.lore.tn}}" data-dtype="Number" disabled></td>
                     </tr>
                     <tr class="field-inputs">
-                        <td><button class="skill-roll" name="Navigate" id="navigate">Roll</button></td>
+                        <td><input type="button" class="skill-roll" name="Navigate" id="navigate" value="Roll"></td>
                         <td>Navigate</td>
                         <td><select name="data.skills.navigate.rank" data-type="String">
                             {{#select actor.data.skills.navigate.rank}}
@@ -330,7 +330,7 @@
                         <td><input type="text" class="field-inputs" name="data.skills.navigate.tn" value="{{data.skills.navigate.tn}}" data-dtype="Number" disabled></td>
                     </tr>
                     <tr class="field-inputs">
-                        <td><button class="skill-roll" name="Observe" id="observe">Roll</button></td>
+                        <td><input type="button" class="skill-roll" name="Observe" id="observe" value="Roll"></td>
                         <td>Observe</td>
                         <td><select name="data.skills.observe.rank" data-type="String">
                             {{#select actor.data.skills.observe.rank}}
@@ -349,7 +349,7 @@
                         <td><input type="text" class="field-inputs" name="data.skills.observe.tn" value="{{data.skills.observe.tn}}" data-dtype="Number" disabled></td>
                     </tr>
                     <tr class="field-inputs">
-                        <td><button class="skill-roll" name="Persuade" id="persuade">Roll</button></td>
+                        <td><input type="button" class="skill-roll" name="Persuade" id="persuade" value="Roll"></td>
                         <td>Persuade</td>
                         <td><select name="data.skills.persuade.rank" data-type="String">
                             {{#select actor.data.skills.persuade.rank}}
@@ -368,7 +368,7 @@
                         <td><input type="text" class="field-inputs" name="data.skills.persuade.tn" value="{{data.skills.persuade.tn}}" data-dtype="Number" disabled></td>
                     </tr>
                     <tr class="field-inputs">
-                        <td><button class="skill-roll" name="{{data.skills.profession1.name}}" id="profession1">Roll</button></td>
+                        <td><input type="button" class="skill-roll" name="{{data.skills.profession1.name}}" id="profession1" value="Roll"></td>
                         <td><input type="text" name="data.skills.profession1.name" value="{{data.skills.profession1.name}}" data-dtype="String" placeholder="profession1"></td>
                         <td><select name="data.skills.profession1.rank" data-type="String">
                             {{#select actor.data.skills.profession1.rank}}
@@ -387,7 +387,7 @@
                         <td><input type="text" class="field-inputs" name="data.skills.profession1.tn" value="{{data.skills.profession1.tn}}" data-dtype="Number" disabled></td>
                     </tr>
                     <tr class="field-inputs">
-                        <td><button class="skill-roll" name="{{data.skills.profession2.name}}" id="profession2">Roll</button></td>
+                        <td><input type="button" class="skill-roll" name="{{data.skills.profession2.name}}" id="profession2" value="Roll"></td>
                         <td><input type="text" name="data.skills.profession2.name" value="{{data.skills.profession2.name}}" data-dtype="String" placeholder="profession2"></td>
                         <td><select name="data.skills.profession2.rank" data-type="String">
                             {{#select actor.data.skills.profession2.rank}}
@@ -406,7 +406,7 @@
                         <td><input type="text" class="field-inputs" name="data.skills.profession2.tn" value="{{data.skills.profession2.tn}}" data-dtype="Number" disabled></td>
                     </tr>
                     <tr class="field-inputs">
-                        <td><button class="skill-roll" name="{{data.skills.profession3.name}}" id="profession3">Roll</button></td>
+                        <td><input type="button" class="skill-roll" name="{{data.skills.profession3.name}}" id="profession3" value="Roll"></td>
                         <td><input type="text" name="data.skills.profession3.name" value="{{data.skills.profession3.name}}" data-dtype="String" placeholder="profession3"></td>
                         <td><select name="data.skills.profession3.rank" data-type="String">
                             {{#select actor.data.skills.profession3.rank}}
@@ -425,7 +425,7 @@
                         <td><input type="text" class="field-inputs" name="data.skills.profession3.tn" value="{{data.skills.profession3.tn}}" data-dtype="Number" disabled></td>
                     </tr>
                     <tr class="field-inputs">
-                        <td><button class="skill-roll" name="Ride" id="ride">Roll</button></td>
+                        <td><input type="button" class="skill-roll" name="Ride" id="ride" value="Roll"></td>
                         <td>Ride</td>
                         <td><select name="data.skills.ride.rank" data-type="String">
                             {{#select actor.data.skills.ride.rank}}
@@ -444,7 +444,7 @@
                         <td><input type="text" class="field-inputs" name="data.skills.ride.tn" value="{{data.skills.ride.tn}}" data-dtype="Number" disabled></td>
                     </tr>
                     <tr class="field-inputs">
-                        <td><button class="skill-roll" name="Stealth" id="stealth">Roll</button></td>
+                        <td><input type="button" class="skill-roll" name="Stealth" id="stealth" value="Roll"></td>
                         <td>Stealth</td>
                         <td><select name="data.skills.stealth.rank" data-type="String">
                             {{#select actor.data.skills.stealth.rank}}
@@ -463,7 +463,7 @@
                         <td><input type="text" class="field-inputs" name="data.skills.stealth.tn" value="{{data.skills.stealth.tn}}" data-dtype="Number" disabled></td>
                     </tr>
                     <tr class="field-inputs">
-                        <td><button class="skill-roll" name="Subterfuge" id="subterfuge">Roll</button></td>
+                        <td><input type="button" class="skill-roll" name="Subterfuge" id="subterfuge" value="Roll"></td>
                         <td>Subterfuge</td>
                         <td><select name="data.skills.subterfuge.rank" data-type="String">
                             {{#select actor.data.skills.subterfuge.rank}}
@@ -482,7 +482,7 @@
                         <td><input type="text" class="field-inputs" name="data.skills.subterfuge.tn" value="{{data.skills.subterfuge.tn}}" data-dtype="Number" disabled></td>
                     </tr>
                     <tr class="field-inputs">
-                        <td><button class="skill-roll" name="Survival" id="survival">Roll</button></td>
+                        <td><input type="button" class="skill-roll" name="Survival" id="survival" value="Roll"></td>
                         <td>Survival</td>
                         <td><select name="data.skills.survival.rank" data-type="String">
                             {{#select actor.data.skills.survival.rank}}
@@ -513,7 +513,7 @@
                         <th>TN</th>
                     </tr>
                     <tr class="field-inputs"> 
-                        <td><button class="magic-skill-roll" name="Alchemy" id="alchemy">Roll</button></td>
+                        <td><input type="button" class="magic-skill-roll" name="Alchemy" id="alchemy" value="Roll"></td>
                         <td>Alchemy</td>
                         <td><select name="data.magic_skills.alchemy.rank" data-type="String">
                             {{#select actor.data.magic_skills.alchemy.rank}}
@@ -532,7 +532,7 @@
                         <td><input type="text" class="field-inputs" name="data.magic_skills.alchemy.tn" value="{{data.magic_skills.alchemy.tn}}" data-dtype="Number" disabled></td>
                     </tr>
                     <tr class="field-inputs">
-                        <td><button class="magic-skill-roll" name="Alteration" id="alteration">Roll</button></td>
+                        <td><input type="button" class="magic-skill-roll" name="Alteration" id="alteration" value="Roll"></td>
                         <td>Alteration</td>
                         <td><select name="data.magic_skills.alteration.rank" data-type="String">
                             {{#select actor.data.magic_skills.alteration.rank}}
@@ -551,7 +551,7 @@
                         <td><input type="text" class="field-inputs" name="data.magic_skills.alteration.tn" value="{{data.magic_skills.alteration.tn}}" data-dtype="Number" disabled></td>
                     </tr>
                     <tr class="field-inputs">
-                        <td><button class="magic-skill-roll" name="Conjuration" id="conjuration">Roll</button></td>
+                        <td><input type="button" class="magic-skill-roll" name="Conjuration" id="conjuration" value="Roll"></td>
                         <td>Conjuration</td>
                         <td><select name="data.magic_skills.conjuration.rank" data-type="String">
                             {{#select actor.data.magic_skills.conjuration.rank}}
@@ -570,7 +570,7 @@
                         <td><input type="text" class="field-inputs" name="data.magic_skills.conjuration.tn" value="{{data.magic_skills.conjuration.tn}}" data-dtype="Number" disabled></td>
                     </tr>
                     <tr class="field-inputs">
-                        <td><button class="magic-skill-roll" name="Destruction" id="destruction">Roll</button></td>
+                        <td><input type="button" class="magic-skill-roll" name="Destruction" id="destruction" value="Roll"></td>
                         <td>Destruction</td>
                         <td><select name="data.magic_skills.destruction.rank" data-type="String">
                             {{#select actor.data.magic_skills.destruction.rank}}
@@ -589,7 +589,7 @@
                         <td><input type="text" class="field-inputs" name="data.magic_skills.destruction.tn" value="{{data.magic_skills.destruction.tn}}" data-dtype="Number" disabled></td>
                     </tr>
                     <tr class="field-inputs">
-                        <td><button class="magic-skill-roll" name="Enchant" id="enchant">Roll</button></td>
+                        <td><input type="button" class="magic-skill-roll" name="Enchant" id="enchant" value="Roll"></td>
                         <td>Enchant</td>
                         <td><select name="data.magic_skills.enchant.rank" data-type="String">
                             {{#select actor.data.magic_skills.enchant.rank}}
@@ -608,7 +608,7 @@
                         <td><input type="text" class="field-inputs" name="data.magic_skills.enchant.tn" value="{{data.magic_skills.enchant.tn}}" data-dtype="Number" disabled></td>
                     </tr>
                     <tr class="field-inputs">
-                        <td><button class="magic-skill-roll" name="Illusion" id="illusion">Roll</button></td>
+                        <td><input type="button" class="magic-skill-roll" name="Illusion" id="illusion" value="Roll"></td>
                         <td>Illusion</td>
                         <td><select name="data.magic_skills.illusion.rank" data-type="String">
                             {{#select actor.data.magic_skills.illusion.rank}}
@@ -627,7 +627,7 @@
                         <td><input type="text" class="field-inputs" name="data.magic_skills.illusion.tn" value="{{data.magic_skills.illusion.tn}}" data-dtype="Number" disabled></td>
                     </tr>
                     <tr class="field-inputs">
-                        <td><button class="magic-skill-roll" name="Mysticism" id="mysticism">Roll</button></td>
+                        <td><input type="button" class="magic-skill-roll" name="Mysticism" id="mysticism" value="Roll"></td>
                         <td>Mysticism</td>
                         <td><select name="data.magic_skills.mysticism.rank" data-type="String">
                             {{#select actor.data.magic_skills.mysticism.rank}}
@@ -646,7 +646,7 @@
                         <td><input type="text" class="field-inputs" name="data.magic_skills.mysticism.tn" value="{{data.magic_skills.mysticism.tn}}" data-dtype="Number" disabled></td>
                     </tr>
                     <tr class="field-inputs">
-                        <td><button class="magic-skill-roll" name="Necromancy" id="necromancy">Roll</button></td>
+                        <td><input type="button" class="magic-skill-roll" name="Necromancy" id="necromancy" value="Roll"></td>
                         <td>Necromancy</td>
                         <td><select name="data.magic_skills.necromancy.rank" data-type="String">
                             {{#select actor.data.magic_skills.necromancy.rank}}
@@ -665,7 +665,7 @@
                         <td><input type="text" class="field-inputs" name="data.magic_skills.necromancy.tn" value="{{data.magic_skills.necromancy.tn}}" data-dtype="Number" disabled></td>
                     </tr>
                     <tr class="field-inputs">
-                        <td><button class="magic-skill-roll" name="Restoration" id="restoration">Roll</button></td>
+                        <td><input type="button" class="magic-skill-roll" name="Restoration" id="restoration" value="Roll"></td>
                         <td>Restoration</td>
                         <td><select name="data.magic_skills.restoration.rank" data-type="String">
                             {{#select actor.data.magic_skills.restoration.rank}}
@@ -758,7 +758,7 @@
                         <th>Weapons</th>
                     </tr>
                     <tr class="field-inputs-small">
-                        <td><button class="combat-style-roll" name="{{data.combat_styles.cs1.name}}" id="cs1">Roll</button></td>
+                        <td><input type="button" class="combat-style-roll" name="{{data.combat_styles.cs1.name}}" id="cs1" value="Roll"></td>
                         <td><input name="data.combat_styles.cs1.name" type="text" value="{{data.combat_styles.cs1.name}}" data-dtype="String"></td>
                         <td><select name="data.combat_styles.cs1.rank" data-type="String">
                             {{#select actor.data.combat_styles.cs1.rank}}
@@ -776,7 +776,7 @@
                         <td><input type="text" name="data.combat_styles.cs1.weapons" value="{{data.combat_styles.cs1.weapons}}" data-dtype="String"></td>
                     </tr>
                     <tr class="field-inputs-small">
-                        <td><button class="combat-style-roll" name="{{data.combat_styles.cs2.name}}" id="cs2">Roll</button></td>
+                        <td><input type="button" class="combat-style-roll" name="{{data.combat_styles.cs2.name}}" id="cs2" value="Roll"></td>
                         <td><input name="data.combat_styles.cs2.name" type="text" value="{{data.combat_styles.cs2.name}}" data-dtype="String"></td>
                         <td><select name="data.combat_styles.cs2.rank" data-type="String">
                             {{#select actor.data.combat_styles.cs2.rank}}
@@ -854,21 +854,21 @@
                             <th>Quality</th>
                         </tr>
                         <tr class="field-inputs-small">
-                            <td><button class="weapon-roll" name="Primary Weapon" id="w1">Roll</button></td>
+                            <td><input type="button" class="weapon-roll" name="Primary Weapon" id="w1" value="Roll"></td>
                             <td><input type="text" name="data.weapons.w1.name" value="{{data.weapons.w1.name}}" data-dtype="String" disabled></td>
                             <td><input type="text" name="data.weapons.w1.dmg" value="{{data.weapons.w1.dmg}}" data-dtype="String" disabled></td>
                             <td><input type="text" name="data.weapons.w1.reach" value="{{data.weapons.w1.reach}}" data-dtype="String" disabled></td>
                             <td><input type="text" name="data.weapons.w1.qualities" value="{{data.weapons.w1.qualities}}" data-dtype="String" disabled></td>
                         </tr>
                         <tr class="field-inputs-small">
-                            <td><button class="weapon-roll" name="Secondary Weapon" id="w2">Roll</button></td>
+                            <td><input type="button" class="weapon-roll" name="Secondary Weapon" id="w2" value="Roll"></td>
                             <td><input type="text" name="data.weapons.w2.name" value="{{data.weapons.w2.name}}" data-dtype="String" disabled></td>
                             <td><input type="text" name="data.weapons.w2.dmg" value="{{data.weapons.w2.dmg}}" data-dtype="String" disabled></td>
                             <td><input type="text" name="data.weapons.w2.reach" value="{{data.weapons.w2.reach}}" data-dtype="String" disabled></td>
                             <td><input type="text" name="data.weapons.w2.qualities" value="{{data.weapons.w2.qualities}}" data-dtype="String" disabled></td>
                         </tr>
                         <tr class="field-inputs-small">
-                            <td><button class="weapon-roll" name="Sidearm Weapon" id="w3">Roll</button></td>
+                            <td><input type="button" class="weapon-roll" name="Sidearm Weapon" id="w3" value="Roll"></td>
                             <td><input type="text" name="data.weapons.w3.name" value="{{data.weapons.w3.name}}" data-dtype="String" disabled></td>
                             <td><input type="text" name="data.weapons.w3.dmg" value="{{data.weapons.w3.dmg}}" data-dtype="String" disabled></td>
                             <td><input type="text" name="data.weapons.w3.reach" value="{{data.weapons.w3.reach}}" data-dtype="String" disabled></td>
@@ -887,21 +887,21 @@
                             <th>Attributes</th>
                         </tr>
                         <tr class="field-inputs-small">
-                            <td><button class="spell-roll" name="Spell 1" id="s1">Roll</button></td>
+                            <td><input type="button" class="spell-roll" name="Spell 1" id="s1" value="Roll"></td>
                             <td><input type="text" name="data.prep_spells.s1.name" value="{{data.prep_spells.s1.name}}" data-dtype="String" disabled></td>
                             <td><input type="text" name="data.prep_spells.s1.dmg" value="{{data.prep_spells.s1.dmg}}" data-dtype="String" disabled></td>
                             <td><input type="text" name="data.prep_spells.s1.cost" value="{{data.prep_spells.s1.cost}}" data-dtype="String" disabled></td>
                             <td><input type="text" name="data.prep_spells.s1.attributes" value="{{data.prep_spells.s1.attributes}}" data-dtype="String" disabled></td>
                         </tr>
                         <tr class="field-inputs-small">
-                            <td><button class="spell-roll" name="Spell 2" id="s2">Roll</button></td>
+                            <td><input type="button" class="spell-roll" name="Spell 2" id="s2" value="Roll"></td>
                             <td><input type="text" name="data.prep_spells.s2.name" value="{{data.prep_spells.s2.name}}" data-dtype="String" disabled></td>
                             <td><input type="text" name="data.prep_spells.s2.dmg" value="{{data.prep_spells.s2.dmg}}" data-dtype="String" disabled></td>
                             <td><input type="text" name="data.prep_spells.s2.cost" value="{{data.prep_spells.s2.cost}}" data-dtype="String" disabled></td>
                             <td><input type="text" name="data.prep_spells.s2.attributes" value="{{data.prep_spells.s2.attributes}}" data-dtype="String" disabled></td>
                         </tr>
                         <tr class="field-inputs-small">
-                            <td><button class="spell-roll" name="Spell 3" id="s3">Roll</button></td>
+                            <td><input type="button" class="spell-roll" name="Spell 3" id="s3" value="Roll"></td>
                             <td><input type="text" name="data.prep_spells.s3.name" value="{{data.prep_spells.s3.name}}" data-dtype="String" disabled></td>
                             <td><input type="text" name="data.prep_spells.s3.dmg" value="{{data.prep_spells.s3.dmg}}" data-dtype="String" disabled></td>
                             <td><input type="text" name="data.prep_spells.s3.cost" value="{{data.prep_spells.s3.cost}}" data-dtype="String" disabled></td>

@@ -361,56 +361,96 @@
 .worldbuilding .characteristic-roll {
   font-family: "cyrodiil";
   src: url(../fonts/cyrodiil/cyrodiil.ttf);
+  background-color: transparent;
   font-weight: bold;
   border-radius: 10%;
+  border-style: groove;
   padding: 5px;
+}
+.worldbuilding .characteristic-roll:hover {
+  border-color: black;
 }
 .worldbuilding .skill-roll {
   font-family: "cyrodiil";
   src: url(../fonts/cyrodiil/cyrodiil.ttf);
+  background-color: transparent;
   font-weight: bold;
   border-radius: 10%;
+  border-style: groove;
   padding: 5px;
+}
+.worldbuilding .skill-roll:hover {
+  border-color: black;
 }
 .worldbuilding .professions-roll {
   font-family: "cyrodiil";
   src: url(../fonts/cyrodiil/cyrodiil.ttf);
+  background-color: transparent;
   font-weight: bold;
   border-radius: 10%;
+  border-style: groove;
   padding: 5px;
+}
+.worldbuilding .professions-roll:hover {
+  border-color: black;
 }
 .worldbuilding .magic-skill-roll {
   font-family: "cyrodiil";
   src: url(../fonts/cyrodiil/cyrodiil.ttf);
+  background-color: transparent;
   font-weight: bold;
   border-radius: 10%;
+  border-style: groove;
   padding: 5px;
+}
+.worldbuilding .magic-skill-roll:hover {
+  border-color: black;
 }
 .worldbuilding .weapon-roll {
   font-family: "cyrodiil";
   src: url(../fonts/cyrodiil/cyrodiil.ttf);
+  background-color: transparent;
   font-weight: bold;
   border-radius: 10%;
+  border-style: groove;
   padding: 5px;
+}
+.worldbuilding .weapon-roll:hover {
+  border-color: black;
 }
 .worldbuilding .spell-roll {
   font-family: "cyrodiil";
   src: url(../fonts/cyrodiil/cyrodiil.ttf);
+  background-color: transparent;
   font-weight: bold;
   border-radius: 10%;
+  border-style: groove;
   padding: 5px;
+}
+.worldbuilding .spell-roll:hover {
+  border-color: black;
 }
 .worldbuilding .combat-style-roll {
   font-family: "cyrodiil";
   src: url(../fonts/cyrodiil/cyrodiil.ttf);
+  background-color: transparent;
   font-weight: bold;
   border-radius: 10%;
+  border-style: groove;
   padding: 5px;
+}
+.worldbuilding .combat-style-roll:hover {
+  border-color: black;
 }
 .worldbuilding .unconventional-roll {
   font-family: "cyrodiil";
   src: url(../fonts/cyrodiil/cyrodiil.ttf);
+  background-color: transparent;
   font-weight: bold;
   border-radius: 10%;
+  border-style: groove;
   padding: 5px;
+}
+.worldbuilding .unconventional-roll:hover {
+  border-color: black;
 }

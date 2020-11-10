@@ -50,14 +50,14 @@
             <div>
             <table class="characteristic-table">
                 <tr>
-                    <th><button class="characteristic-roll" name="Strength" id="str">Str</button></th>
-                    <th><button class="characteristic-roll" name="Endurance" id="end">End</button></th>
-                    <th><button class="characteristic-roll" name="Agility" id="agi">Agi</button></th>
-                    <th><button class="characteristic-roll" name="Intelligence" id="int">Int</button></th>
-                    <th><button class="characteristic-roll" name="Willpower" id="wp">Wp</button></th>
-                    <th><button class="characteristic-roll" name="Perception" id="prc">Prc</button></th>
-                    <th><button class="characteristic-roll" name="Personality" id="prs">Prs</button></th>
-                    <th><button class="characteristic-roll" name="Luck" id="lck">Lck</button></th>
+                    <th><input type="button" class="characteristic-roll" name="STR" id="str" value="STR"></th>
+                    <th><input type="button" class="characteristic-roll" name="END" id="end" value="END"></th>
+                    <th><input type="button" class="characteristic-roll" name="AGI" id="agi" value="AGI"></th>
+                    <th><input type="button" class="characteristic-roll" name="INT" id="int" value="INT"></th>
+                    <th><input type="button" class="characteristic-roll" name="WP" id="wp" value="WP"></th>
+                    <th><input type="button" class="characteristic-roll" name="PRC" id="prc" value="PRC"></th>
+                    <th><input type="button" class="characteristic-roll" name="PRS" id="prs" value="PRS"></th>
+                    <th><input type="button" class="characteristic-roll" name="LCK" id="lck" value="LCK"></th>
                 </tr>
                 <tr>
                     <td><input name="data.characteristics.str.value" type="text" value="{{data.characteristics.str.value}}" data-dtype="Number"></td>
@@ -98,14 +98,14 @@
                 </table>
                 <table>
                     <tr class="characteristic-table">
-                        <th><button class="professions-roll" name="Combat" id="combat">Combat</button></th>
-                        <th><button class="professions-roll" name="Magic" id="magic">Magic</button></th>
-                        <th><button class="professions-roll" name="Evade" id="evade">Evade</button></th>
-                        <th><button class="professions-roll" name="Observe" id="observe">Observe</button></th>
-                        <th><button class="professions-roll" name="Stealth" id="stealth">Stealth</button></th>
-                        <th><button class="professions-roll" name="Knowledge" id="knowledge">Knowledge</button></th>
-                        <th><button class="professions-roll" name="Social" id="social">Social</button></th>
-                        <th><button class="professions-roll" name="Physical" id="physical">Physical</button></th>
+                        <th><input type="button" class="professions-roll" name="Combat" id="combat" value="Combat"></th>
+                        <th><input type="button" class="professions-roll" name="Magic" id="magic" value="Magic"></th>
+                        <th><input type="button" class="professions-roll" name="Evade" id="evade" value="Evade"></th>
+                        <th><input type="button" class="professions-roll" name="Observe" id="observe" value="Observe"></th>
+                        <th><input type="button" class="professions-roll" name="Stealth" id="stealth" value="Stealth"></th>
+                        <th><input type="button" class="professions-roll" name="Knowledge" id="knowledge" value="Knowledge"></th>
+                        <th><input type="button" class="professions-roll" name="Social" id="social" value="Social"></th>
+                        <th><input type="button" class="professions-roll" name="Physical" id="physical" value="Physical"></th>
                     </tr>
                     <tr class="field-inputs">
                         <td><input type="text" name="data.professions.combat" value="{{data.professions.combat}}" data-dtype="Number"></td>
@@ -126,17 +126,17 @@
                     <th>Value</th>
                 </tr>
                 <tr class="field-inputs-small">
-                    <td><button class="unconventional-roll" name="{{data.skills.profession1.name}}" id="profession1">Roll</button></td>
+                    <td><input type="button" class="unconventional-roll" name="{{data.skills.profession1.name}}" id="profession1" value="Roll"></td>
                     <td><input type="text" name="data.skills.profession1.name" value="{{data.skills.profession1.name}}" data-dtype="String"></td>
                     <td><input type="text" name="data.skills.profession1.bonus" value="{{data.skills.profession1.bonus}}" data-dtype="Number"></td>
                 </tr>
                 <tr class="field-inputs-small">
-                    <td><button class="unconventional-roll" name="{{data.skills.profession2.name}}" id="profession2">Roll</button></td>
+                    <td><input type="button" class="unconventional-roll" name="{{data.skills.profession2.name}}" id="profession2" value="Roll"></td>
                     <td><input type="text" name="data.skills.profession2.name" value="{{data.skills.profession2.name}}" data-dtype="String"></td>
                     <td><input type="text" name="data.skills.profession2.bonus" value="{{data.skills.profession2.bonus}}" data-dtype="Number"></td>
                 </tr>
                 <tr class="field-inputs-small">
-                    <td><button class="unconventional-roll" name="{{data.skills.profession3.name}}" id="profession3">Roll</button></td>
+                    <td><input type="button" class="unconventional-roll" name="{{data.skills.profession3.name}}" id="profession3" value="Roll"></td>
                     <td><input type="text" name="data.skills.profession3.name" value="{{data.skills.profession3.name}}" data-dtype="String"></td>
                     <td><input type="text" name="data.skills.profession3.bonus" value="{{data.skills.profession3.bonus}}" data-dtype="Number"></td>
                 </tr>
@@ -267,21 +267,21 @@
                             <th>Quality</th>
                         </tr>
                         <tr class="field-inputs-small">
-                            <td><button class="weapon-roll" name="Primary Weapon" id="w1">Roll</button></td>
+                            <td><input type="button" class="weapon-roll" name="Primary Weapon" id="w1" value="Roll"></td>
                             <td><input type="text" name="data.weapons.w1.name" value="{{data.weapons.w1.name}}" data-dtype="String"></td>
                             <td><input type="text" name="data.weapons.w1.dmg" value="{{data.weapons.w1.dmg}}" data-dtype="String"></td>
                             <td><input type="text" name="data.weapons.w1.reach" value="{{data.weapons.w1.reach}}" data-dtype="String"></td>
                             <td><input type="text" name="data.weapons.w1.qualities" value="{{data.weapons.w1.qualities}}" data-dtype="String"></td>
                         </tr>
                         <tr class="field-inputs-small">
-                            <td><button class="weapon-roll" name="Secondary Weapon" id="w2">Roll</button></td>
+                            <td><input type="button" class="weapon-roll" name="Secondary Weapon" id="w2" value="Roll"></td>
                             <td><input type="text" name="data.weapons.w2.name" value="{{data.weapons.w2.name}}" data-dtype="String"></td>
                             <td><input type="text" name="data.weapons.w2.dmg" value="{{data.weapons.w2.dmg}}" data-dtype="String"></td>
                             <td><input type="text" name="data.weapons.w2.reach" value="{{data.weapons.w2.reach}}" data-dtype="String"></td>
                             <td><input type="text" name="data.weapons.w2.qualities" value="{{data.weapons.w2.qualities}}" data-dtype="String"></td>
                         </tr>
                         <tr class="field-inputs-small">
-                            <td><button class="weapon-roll" name="Sidearm Weapon" id="w3">Roll</button></td>
+                            <td><input type="button" class="weapon-roll" name="Sidearm Weapon" id="w3" value="Roll"></td>
                             <td><input type="text" name="data.weapons.w3.name" value="{{data.weapons.w3.name}}" data-dtype="String"></td>
                             <td><input type="text" name="data.weapons.w3.dmg" value="{{data.weapons.w3.dmg}}" data-dtype="String"></td>
                             <td><input type="text" name="data.weapons.w3.reach" value="{{data.weapons.w3.reach}}" data-dtype="String"></td>
