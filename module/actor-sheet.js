@@ -216,16 +216,31 @@ export class SimpleActorSheet extends ActorSheet {
   _onWeaponRoll(event) {
     event.preventDefault()
     const element = event.currentTarget
+    let hit_loc = ""
 
     let roll = new Roll(this.actor.data.data.weapons[element.id].dmg);
     roll.roll();
     let hit = new Roll("1d10");
     hit.roll();
 
+    if (hit.total <= 5) {
+      hit_loc = "Body"
+    } else if (hit.total == 6) {
+      hit_loc = "Right Leg"
+    } else if (hit.total == 7) {
+      hit_loc = "Left Leg"
+    } else if (hit.total == 8) {
+      hit_loc = "Right Arm"
+    } else if (hit.total == 9) {
+      hit_loc = "Left Arm"
+    } else if (hit.total == 10) {
+      hit_loc = "Head"
+    }
+
     const content = `Rolls damage for their <b>${this.actor.data.data.weapons[element.id].name}!</b>
     <p></p>
     <b>Damage:</b> <b>[[${roll.total}]]</b><p></p>
-    <b>Hit Location:</b> <b>[[${hit.total}]]</b><p></p>
+    <b>Hit Location:</b> <b>${hit_loc}</b><p></p>
     <b>Qualities:</b> ${this.actor.data.data.weapons[element.id].qualities}
     `
     roll.toMessage({type: 1, user: game.user._id, speaker: ChatMessage.getSpeaker(), content: content});
@@ -234,17 +249,32 @@ export class SimpleActorSheet extends ActorSheet {
   _onSpellRoll(event) {
     event.preventDefault()
     const element = event.currentTarget
+    let hit_loc = ""
 
     let roll = new Roll(this.actor.data.data.prep_spells[element.id].dmg);
     roll.roll();
     let hit = new Roll("1d10");
     hit.roll();
 
+    if (hit.total <= 5) {
+      hit_loc = "Body"
+    } else if (hit.total == 6) {
+      hit_loc = "Right Leg"
+    } else if (hit.total == 7) {
+      hit_loc = "Left Leg"
+    } else if (hit.total == 8) {
+      hit_loc = "Right Arm"
+    } else if (hit.total == 9) {
+      hit_loc = "Left Arm"
+    } else if (hit.total == 10) {
+      hit_loc = "Head"
+    }
+
     const content = `Casts the spell <b>${this.actor.data.data.prep_spells[element.id].name}!</b>
     <p></p>
     <b>Damage:[[${roll.total}]]
     <p></p>
-    Hit Location: [[${hit.total}]]
+    Hit Location: ${hit_loc}
     <p></p>
     MP Cost: [[${this.actor.data.data.prep_spells[element.id].cost}]]
     <p></p>
