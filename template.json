@@ -45,42 +45,42 @@
       "str": {
         "value": 0,
         "favored": false,
-        "name": "Strength"
+        "name": "STR"
       },
       "end": {
         "value": 0,
         "favored": false,
-        "name": "Endurance"
+        "name": "END"
       },
       "agi": {
         "value": 0,
         "favored": false,
-        "name": "Agility"
+        "name": "AGI"
       },
       "int": {
         "value": 0,
         "favored": false,
-        "name": "Intelligence"
+        "name": "INT"
       },
       "wp": {
         "value": 0,
         "favored": false,
-        "name": "Willpower"
+        "name": "WP"
       },
       "prc": {
         "value": 0,
         "favored": false,
-        "name": "Perception"
+        "name": "PRC"
       },
       "prs": {
         "value": 0,
         "favored": false,
-        "name": "Personality"
+        "name": "PRS"
       },
       "lck": {
         "value": 0,
         "favored": false,
-        "name": "Luck"
+        "name": "LCK"
       }
     },
     "hp": {
