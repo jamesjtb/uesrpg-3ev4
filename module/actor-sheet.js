@@ -123,10 +123,34 @@ export class SimpleActorSheet extends ActorSheet {
   _onClickCharacteristic(event) {
     event.preventDefault()
     const element = event.currentTarget
+    let wounded_char = this.actor.data.data.characteristics[element.id].value - 20
 
     let roll = new Roll("1d100");
     roll.roll();
+
+    if (this.actor.data.data.wounded == true) {
+      if (roll.total == this.actor.data.data.lucky_numbers.ln1 || roll.total == this.actor.data.data.lucky_numbers.ln2 || roll.total == this.actor.data.data.lucky_numbers.ln3 || roll.total == this.actor.data.data.lucky_numbers.ln4 || roll.total == this.actor.data.data.lucky_numbers.ln5) {
+        const content = `Rolls for <b>${element.name}</b>!
+        <p></p><b>Target Number: [[${wounded_char}]]</b> <p></p>
+        <b>Result: [[${roll.total}]]</b><p></p>
+        <span style='color:green; font-size:120%;'> <b>LUCKY NUMBER!</b></span>`
+        roll.toMessage({type: 4, user: game.user._id, speaker: ChatMessage.getSpeaker(), content: content});
   
+      } else if (roll.total == this.actor.data.data.unlucky_numbers.ul1 || roll.total == this.actor.data.data.unlucky_numbers.ul2 || roll.total == this.actor.data.data.unlucky_numbers.ul3 || roll.total == this.actor.data.data.unlucky_numbers.ul4 || roll.total == this.actor.data.data.unlucky_numbers.ul5) {
+        const content = `Rolls for <b>${element.name}</b>!
+        <p></p><b>Target Number: [[${wounded_char}]]</b> <p></p>
+        <b>Result: [[${roll.total}]]</b><p></p>
+        <span style='color:red; font-size:120%;'> <b>UNLUCKY NUMBER!</b></span>`
+        roll.toMessage({type: 4, user: game.user._id, speaker: ChatMessage.getSpeaker(), content: content});
+  
+      } else {
+        const content = `Rolls for <b>${element.name}</b>!
+        <p></p><b>Target Number: [[${wounded_char}]]</b> <p></p>
+        <b>Result: [[${roll.total}]]</b><p></p>
+        <b>${roll.total<=wounded_char ? " <span style='color:green; font-size: 120%;'> <b>SUCCESS!</b></span>" : " <span style='color:red; font-size: 120%;'> <b>FAILURE!</b></span>"}`
+        roll.toMessage({type: 4, user: game.user._id, speaker: ChatMessage.getSpeaker(), content: content});
+      } 
+    } else {
     if (roll.total == this.actor.data.data.lucky_numbers.ln1 || roll.total == this.actor.data.data.lucky_numbers.ln2 || roll.total == this.actor.data.data.lucky_numbers.ln3 || roll.total == this.actor.data.data.lucky_numbers.ln4 || roll.total == this.actor.data.data.lucky_numbers.ln5) {
       const content = `Rolls for <b>${element.name}</b>!
       <p></p><b>Target Number: [[${this.actor.data.data.characteristics[element.id].value}]]</b> <p></p>
@@ -147,7 +171,8 @@ export class SimpleActorSheet extends ActorSheet {
       <b>Result: [[${roll.total}]]</b><p></p>
       <b>${roll.total<=this.actor.data.data.characteristics[element.id].value ? " <span style='color:green; font-size: 120%;'> <b>SUCCESS!</b></span>" : " <span style='color:red; font-size: 120%;'> <b>FAILURE!</b></span>"}`
       roll.toMessage({type: 4, user: game.user._id, speaker: ChatMessage.getSpeaker(), content: content});
-    } 
+    }
+  } 
   }
 
   _onSkillRoll(event) {

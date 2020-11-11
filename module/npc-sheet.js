@@ -125,16 +125,24 @@ export class npcSheet extends ActorSheet {
   _onClickCharacteristic(event) {
     event.preventDefault()
     const element = event.currentTarget
+    let wounded_char = this.actor.data.data.characteristics[element.id].value -20
 
     let roll = new Roll("1d100");
     roll.roll();
-  
+
+    if (this.actor.data.data.wounded == true) {
+      const content = `Rolls for <b>${element.name}</b>!
+      <p></p><b>Target Number: [[${wounded_char}]]</b> <p></p>
+      <b>Result: [[${roll.total}]]</b><p></p>
+      <b>${roll.total<=wounded_char ? " <span style='color:green; font-size: 120%;'> <b>SUCCESS!</b></span>" : " <span style='color:red; font-size: 120%;'> <b>FAILURE!</b></span>"}`
+      roll.toMessage({type: 4, user: game.user._id, speaker: ChatMessage.getSpeaker(), content: content});
+    } else {
     const content = `Rolls for <b>${element.name}</b>!
       <p></p><b>Target Number: [[${this.actor.data.data.characteristics[element.id].value}]]</b> <p></p>
       <b>Result: [[${roll.total}]]</b><p></p>
       <b>${roll.total<=this.actor.data.data.characteristics[element.id].value ? " <span style='color:green; font-size: 120%;'> <b>SUCCESS!</b></span>" : " <span style='color:red; font-size: 120%;'> <b>FAILURE!</b></span>"}`
       roll.toMessage({type: 4, user: game.user._id, speaker: ChatMessage.getSpeaker(), content: content});
- 
+    }
   }
 
   _onProfessionsRoll(event) {
