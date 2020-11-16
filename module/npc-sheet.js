@@ -100,8 +100,20 @@ export class npcSheet extends ActorSheet {
     // Everything below here is only needed if the sheet is editable
     if (!this.options.editable) return;
 
-    // Update Inventory Item
+    // Update Inventory/Spell Item
     html.find('.item-edit').click(ev => {
+      const li = $(ev.currentTarget).parents(".item");
+      const item = this.actor.getOwnedItem(li.data("itemId"));
+      item.sheet.render(true);
+    });
+
+    html.find('.item-name').click(ev => {
+      const li = $(ev.currentTarget).parents(".item");
+      const item = this.actor.getOwnedItem(li.data("itemId"));
+      item.sheet.render(true);
+    });
+
+    html.find('.item-img').click(ev => {
       const li = $(ev.currentTarget).parents(".item");
       const item = this.actor.getOwnedItem(li.data("itemId"));
       item.sheet.render(true);
