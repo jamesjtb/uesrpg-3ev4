@@ -270,6 +270,13 @@
 .worldbuilding .item-list .item-name {
   margin: 0;
 }
+.worldbuilding .item-list .item-name:hover {
+  font-weight: bold;
+}
+.worldbuilding .item-list .item-img:hover {
+  zoom: 150%;
+  background-color: gray;
+}
 .worldbuilding .item-list .item-controls {
   flex: 0 0 36px;
   margin-right: 5px;
@@ -308,6 +315,13 @@
 }
 .worldbuilding .spell-list .item-name {
   margin: 0;
+}
+.worldbuilding .spell-list .item-name:hover {
+  font-weight: bold;
+}
+.worldbuilding .spell-list .item-img:hover {
+  zoom: 150%;
+  background-color: gray;
 }
 .worldbuilding .spell-list .item-controls {
   flex: 0 0 36px;
@@ -369,6 +383,8 @@
 }
 .worldbuilding .characteristic-roll:hover {
   border-color: black;
+  background-color: red;
+  color: white;
 }
 .worldbuilding .skill-roll {
   font-family: "cyrodiil";
@@ -381,6 +397,8 @@
 }
 .worldbuilding .skill-roll:hover {
   border-color: black;
+  background-color: red;
+  color: white;
 }
 .worldbuilding .professions-roll {
   font-family: "cyrodiil";
@@ -393,6 +411,8 @@
 }
 .worldbuilding .professions-roll:hover {
   border-color: black;
+  background-color: red;
+  color: white;
 }
 .worldbuilding .magic-skill-roll {
   font-family: "cyrodiil";
@@ -405,6 +425,8 @@
 }
 .worldbuilding .magic-skill-roll:hover {
   border-color: black;
+  background-color: red;
+  color: white;
 }
 .worldbuilding .weapon-roll {
   font-family: "cyrodiil";
@@ -417,6 +439,8 @@
 }
 .worldbuilding .weapon-roll:hover {
   border-color: black;
+  background-color: red;
+  color: white;
 }
 .worldbuilding .spell-roll {
   font-family: "cyrodiil";
@@ -429,6 +453,8 @@
 }
 .worldbuilding .spell-roll:hover {
   border-color: black;
+  background-color: red;
+  color: white;
 }
 .worldbuilding .combat-style-roll {
   font-family: "cyrodiil";
@@ -441,6 +467,8 @@
 }
 .worldbuilding .combat-style-roll:hover {
   border-color: black;
+  background-color: red;
+  color: white;
 }
 .worldbuilding .unconventional-roll {
   font-family: "cyrodiil";
@@ -453,4 +481,6 @@
 }
 .worldbuilding .unconventional-roll:hover {
   border-color: black;
+  background-color: red;
+  color: white;
 }
