@@ -1157,7 +1157,7 @@ export class SimpleActor extends Actor {
 
   _painIntolerant(actorData) {
     let attribute = actorData.items.filter(item => item.data.painIntolerant == true);
-    let pain = true;
+    let pain = false;
     if (attribute.length >= 1) {
       pain = true;
     } 
