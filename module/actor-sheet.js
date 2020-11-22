@@ -36,8 +36,16 @@ export class SimpleActorSheet extends ActorSheet {
 
       //Initialize containers
       const gear = [];
-      const weapon = [];
+      const weapon = {
+        none: [],
+        weapon1: [],
+        weapon2: [],
+        weapon3: []
+      };
       const armor = [];
+      const power = [];
+      const trait = [];
+      const talent = [];
       const spell = {
         alteration: [],
         conjuration: [],
@@ -59,11 +67,25 @@ export class SimpleActorSheet extends ActorSheet {
         }
         //Append to weapons
         else if (i.type === 'weapon') {
-          weapon.push(i);
+          if (i.data.category != undefined) {
+            weapon[i.data.category].push(i);
+          }
         }
         //Append to armor
         else if (i.type === 'armor') {
           armor.push(i);
+        }
+        //Append to power
+        else if (i.type === 'power') {
+          power.push(i);
+        }
+        //Append to trait
+        else if (i.type === 'trait') {
+          trait.push(i);
+        }
+        //Append to talent
+        else if (i.type === 'talent') {
+          talent.push(i);
         }
         //Append to spell
         else if (i.type === 'spell') {
@@ -77,6 +99,9 @@ export class SimpleActorSheet extends ActorSheet {
       actorData.gear = gear;
       actorData.weapon = weapon;
       actorData.armor = armor;
+      actorData.power = power;
+      actorData.trait = trait;
+      actorData.talent = talent;
       actorData.spell = spell;
 
     }
@@ -345,7 +370,7 @@ export class SimpleActorSheet extends ActorSheet {
     const content = `Rolls damage for their <b>${this.actor.data.data.weapons[element.id].name}!</b>
     <p></p>
     <b>Damage:</b> <b>[[${roll.total}]]</b><p></p>
-    <b>Hit Location:</b> <b>${hit_loc}</b><p></p>
+    <b>Hit Location:</b> <b>${hit_loc} [[${hit.total}]]</b><p></p>
     <b>Qualities:</b> ${this.actor.data.data.weapons[element.id].qualities}
     `
     roll.toMessage({type: 1, user: game.user._id, speaker: ChatMessage.getSpeaker(), content: content});
@@ -379,7 +404,7 @@ export class SimpleActorSheet extends ActorSheet {
     <p></p>
     <b>Damage:[[${roll.total}]]
     <p></p>
-    Hit Location: ${hit_loc}
+    Hit Location: ${hit_loc} [[${hit.total}]]
     <p></p>
     MP Cost: [[${this.actor.data.data.prep_spells[element.id].cost}]]
     <p></p>

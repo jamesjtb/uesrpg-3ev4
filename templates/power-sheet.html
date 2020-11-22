@@ -1,0 +1,68 @@
+<form class="{{cssClass}}" autocomplete="off">
+    <header class="sheet-header">
+        <img class="profile-img" src="{{item.img}}" data-edit="img" title="{{item.name}}"/>
+        <div class="header-fields">
+            <h1 class="charname"><input name="name" type="text" value="{{item.name}}" placeholder="Name"/></h1>
+            <div class="item-resource">
+                <table>
+                    <tr>
+                        <th>Power Used</th>
+                        <th>Power Source</th>
+                    </tr>
+                    <tr>
+                        <td><input type="checkbox" name="data.dailyUse" {{checked data.dailyUse}}></td>
+                        <td><input type="text" name="data.source" value="{{data.source}}" data-dtype="String"></td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+    </header>
+
+    {{!-- Sheet Tab Navigation --}}
+    <nav class="sheet-tabs3 tabs" data-group="primary">
+        <a class="item" data-tab="description">Description</a>
+        <a class="item" data-tab="attributes">Attributes</a>
+    </nav>
+
+    {{!-- Sheet Body --}}
+    <section class="sheet-body">
+
+        {{!-- Description Tab --}}
+        <div class="tab" data-group="primary" data-tab="description">
+            {{editor content=data.description target="data.description" button=true owner=owner editable=editable}}
+        </div>
+
+        {{!-- Attributes Tab --}}
+        <div class="tab" data-group="primary" data-tab="attributes">
+            <table class="field-inputs-small">
+                <tr>
+                    <th>HP Bonus</th>
+                    <th>MP Bonus</th>
+                    <th>SP Bonus</th>
+                    <th>LP Bonus</th>
+                    <th>WT Bonus</th>
+                    <th>Initiative Bonus</th>
+                    <th>Speed Bonus</th>
+                </tr>
+                <tr>
+                    <td><input type="text" name="data.hpBonus" value="{{data.hpBonus}}" data-dtype="Number"></td>
+                    <td><input type="text" name="data.mpBonus" value="{{data.mpBonus}}" data-dtype="Number"></td>
+                    <td><input type="text" name="data.spBonus" value="{{data.spBonus}}" data-dtype="Number"></td>
+                    <td><input type="text" name="data.lpBonus" value="{{data.lpBonus}}" data-dtype="Number"></td>
+                    <td><input type="text" name="data.wtBonus" value="{{data.wtBonus}}" data-dtype="Number"></td>
+                    <td><input type="text" name="data.iniBonus" value="{{data.iniBonus}}" data-dtype="Number"></td>
+                    <td><input type="text" name="data.speedBonus" value="{{data.speedBonus}}" data-dtype="Number"></td>
+                </tr>
+            </table>
+            <table class="field-inputs-small">
+                <tr>
+                    <th>Attribute</th>
+                    <th>Toggle</th>
+                </tr>
+                <tr>
+                    <th>Centurion Sphere Form Shift</th>
+                    <td><input type="checkbox" name="data.shiftForm" {{checked data.shiftForm}}></td>
+                </tr>
+        </div>
+    </section>
+</form>

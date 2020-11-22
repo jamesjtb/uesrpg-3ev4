@@ -10,7 +10,7 @@ export class SimpleItemSheet extends ItemSheet {
       classes: ["worldbuilding", "sheet", "item"],
 			width: 520,
 			height: 480,
-      tabs: [{navSelector: ".sheet-tabs", contentSelector: ".sheet-body", initial: "description"}]
+      tabs: [{navSelector: ".sheet-tabs3", contentSelector: ".sheet-body", initial: "description"}]
 		});
   }
 
@@ -39,4 +39,11 @@ export class SimpleItemSheet extends ItemSheet {
 	activateListeners(html) {
     super.activateListeners(html);
   }
+
+  /**
+   * Handle clickables.
+   * @param {Event} event   The originating click event
+   * @private
+   */
+
 }

@@ -1,0 +1,103 @@
+<form class="{{cssClass}}" autocomplete="off">
+    <header class="sheet-header">
+        <img class="profile-img" src="{{item.img}}" data-edit="img" title="{{item.name}}"/>
+        <div class="header-fields">
+            <h1 class="charname"><input name="name" type="text" value="{{item.name}}" placeholder="Name"/></h1>
+            <div class="item-resource">
+                <table>
+                    <tr>
+                        <th>HP Bonus</th>
+                        <th>MP Bonus</th>
+                        <th>SP Bonus</th>
+                        <th>LP Bonus</th>
+                    </tr>
+                    <tr>
+                        <td><input type="text" name="data.hpBonus" value="{{data.hpBonus}}" data-dtype="Number"/></td>
+                        <td><input type="text" name="data.mpBonus" value="{{data.mpBonus}}" data-dtype="Number"></td>
+                        <td><input type="text" name="data.spBonus" value="{{data.spBonus}}" data-dtype="Number"></td>
+                        <td><input type="text" name="data.lpBonus" value="{{data.lpBonus}}" data-dtype="Number"></td>
+                    </tr>
+                    <tr>
+                        <th>WT Bonus</th>
+                        <th>Speed Bonus</th>
+                        <th>Initiative B.</th>
+                        <th>CrP</th>
+                    </tr>
+                    <tr>
+                        <td><input type="text" name="data.wtBonus" value="{{data.wtBonus}}" data-dtype="Number"></td>
+                        <td><input type="text" name="data.speedBonus" value="{{data.speedBonus}}" data-dtype="Number"></td>
+                        <td><input type="text" name="data.iniBonus" value="{{data.iniBonus}}" data-dtype="Number"></td>
+                        <td><input type="text" name="data.crpCost" value="{{data.crpCost}}" data-dtype="Number"></td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+    </header>
+
+    {{!-- Sheet Tab Navigation --}}
+    <nav class="sheet-tabs3 tabs" data-group="primary">
+        <a class="item" data-tab="description">Description</a>
+        <a class="item" data-tab="attributes">Attributes</a>
+    </nav>
+
+    {{!-- Sheet Body --}}
+    <section class="sheet-body">
+
+        {{!-- Description Tab --}}
+        <div class="tab" data-group="primary" data-tab="description">
+            {{editor content=data.description target="data.description" button=true owner=owner editable=editable}}
+        </div>
+
+        {{!-- Attributes Tab --}}
+        <div class="tab" data-group="primary" data-tab="attributes">
+            <table class="field-inputs-small">
+                <tr>
+                    <th colspan="7">Resistances & Weaknesses</th>
+                </tr>
+                <tr>
+                    <th>Disease %</th>
+                    <th>Fire</th>
+                    <th>Frost</th>
+                    <th>Shock</th>
+                    <th>Poison</th>
+                    <th>Magic</th>
+                    <th>Natural Toughness</th>
+                </tr>
+                <tr>
+                    <td><input type="text" name="data.diseaseR" value="{{data.diseaseR}}" data-dtype="Number"></td>
+                    <td><input type="text" name="data.fireR" value="{{data.fireR}}" data-dtype="Number"></td>
+                    <td><input type="text" name="data.frostR" value="{{data.frostR}}" data-dtype="Number"></td>
+                    <td><input type="text" name="data.shockR" value="{{data.shockR}}" data-dtype="Number"></td>
+                    <td><input type="text" name="data.poisonR" value="{{data.poisonR}}" data-dtype="Number"></td>
+                    <td><input type="text" name="data.magicR" value="{{data.magicR}}" data-dtype="Number"></td>
+                    <td><input type="text" name="data.natToughnessR" value="{{data.natToughnessR}}" data-dtype="Number"></td>
+                </tr>
+            </table>
+            <table class="field-inputs-small">
+                <tr>
+                    <th>Attribute</th>
+                    <th>Toggle</th>
+                </tr>
+                <tr>
+                    <th>1/2 Fatigue Penalty</th>
+                    <td><input type="checkbox" name="data.halfFatiguePenalty" {{checked data.halfFatiguePenalty}}></td>
+                </tr>
+                <tr>
+                    <th>1/2 Speed</th>
+                    <td><input type="checkbox" name="data.halfSpeed" {{checked data.halfSpeed}}></td>
+                </tr>
+                <tr>
+                    <th>1/2 Wound Penalty</th>
+                    <td><input type="checkbox" name="data.halfWoundPenalty" {{checked data.halfWoundPenalty}}></td>
+                </tr>
+                <tr>
+                    <th>Wounded Penalty to -30</th>
+                    <td><input type="checkbox" name="data.painIntolerant" {{checked data.painIntolerant}}></td>
+                </tr>
+                <tr>
+                    <th>Define as Mechanical</th>
+                    <td><input type="checkbox" name="data.mechanical" {{checked data.mechanical}}></td>
+                </tr>
+            </table>
+    </section>
+</form>

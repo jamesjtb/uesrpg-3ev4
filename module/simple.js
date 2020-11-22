@@ -33,16 +33,16 @@ Hooks.once("init", async function() {
   Actors.unregisterSheet("core", ActorSheet);
   Actors.registerSheet("dnd5e", SimpleActorSheet, {types: ["character"], makeDefault: true});
   Items.unregisterSheet("core", ItemSheet);
-  Items.registerSheet("uesrpg-d100", SimpleItemSheet, {types: ["item", "armor", "weapon", "spell"], makeDefault: true});
+  Items.registerSheet("uesrpg-d100", SimpleItemSheet, {types: ["item", "armor", "weapon", "spell", "trait", "talent", "power"], makeDefault: true});
   Actors.registerSheet("uesrpg-d100", npcSheet, {types: ["npc"], makeDefault: true});
 
   // Register system settings
-  game.settings.register("worldbuilding", "macroShorthand", {
-    name: "Shortened Macro Syntax",
-    hint: "Enable a shortened macro syntax which allows referencing attributes directly, for example @str instead of @attributes.str.value. Disable this setting if you need the ability to reference the full attribute model, for example @attributes.str.label.",
+  game.settings.register("uesrpg-d100", "legacyUntrainedPenalty", {
+    name: "Legacy Untrained Penalty",
+    hint: "Checking this option enables the UESRPG v2 penalty for Untrained skills at -20 instead of the standard -10. Must refresh the client manually (F5) after selecting this option to see the changes on actor sheets.",
     scope: "world",
-    type: Boolean,
-    default: true,
-    config: true
+    config: true,
+    default: false,
+    type: Boolean
   });
 });

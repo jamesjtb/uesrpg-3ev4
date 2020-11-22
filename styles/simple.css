@@ -66,7 +66,7 @@
   font-size: larger;
 }
 .worldbuilding .sheet-tabs3 {
-  background-color: rgb(84, 163, 124);
+  background-color: rgb(112, 172, 142);
   font-family: "cyrodiil";
   src: url("../fonts/cyrodiil/cyrodiil.ttf");
   font-size: larger;
@@ -243,6 +243,46 @@
   padding: 0;
   width: 100%;
   float: left;
+}
+.worldbuilding .ability-list {
+  display: inline-block;
+  margin: 7px 0;
+  padding: 0;
+  width: 100%;
+}
+.worldbuilding .ability-list li {
+  float: left;
+  list-style: outside none none;
+  width: 50%;
+}
+.worldbuilding .ability-list .item img {
+  flex: 0 0 24px;
+  margin-right: 5px;
+}
+.worldbuilding .ability-list .item {
+  height: 30px;
+  line-height: 25px;
+  padding: 3px 0;
+  border-bottom: 1px solid #BBB;
+}
+.worldbuilding .ability-list label {
+  width: 10px;
+  text-align: center;
+}
+.worldbuilding .ability-list .item-name {
+  margin: 0;
+}
+.worldbuilding .ability-list .item-name:hover {
+  font-weight: bold;
+}
+.worldbuilding .ability-list .item-img:hover {
+  zoom: 150%;
+  background-color: gray;
+}
+.worldbuilding .ability-list .item-controls {
+  flex: 0 0 36px;
+  margin-right: 5px;
+  margin-left: 0px;
 }
 .worldbuilding .item-list-resource input {
   width: 20%;
@@ -483,4 +523,7 @@
   border-color: black;
   background-color: red;
   color: white;
+}
+.worldbuilding .w1Open:hover {
+  font-weight: bold;
 }
