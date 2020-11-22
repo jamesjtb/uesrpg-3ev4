@@ -278,13 +278,13 @@ export class SimpleActor extends Actor {
 
     //Armor Weight Class Calculations
     if (data.armor_class == "super_heavy") {
-      data.speed.base = data.speed.base - 3;
+      data.speed.value = data.speed.value - 3;
     } else if (data.armor_class == "heavy") {
-      data.speed.base = data.speed.base - 2;
+      data.speed.value = data.speed.value - 2;
     } else if (data.armor_class == "medium") {
-      data.speed.base = data.speed.base - 1;
+      data.speed.value = data.speed.value - 1;
     } else {
-      data.speed.base = data.speed.base;
+      data.speed.value = data.speed.value;
     }
 
     //Wounded Penalties
