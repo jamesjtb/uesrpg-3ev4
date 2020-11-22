@@ -435,8 +435,8 @@ export class npcSheet extends ActorSheet {
 
     const content = `Rolls damage for their <b>${this.actor.data.data.weapons[element.id].name}!</b>
     <p></p>
-    <b>Damage:</b> <b>[[${roll.total}]]</b><p></p>
-    <b>Hit Location:</b> <b>${hit_loc} [[${hit.total}]]</b><p></p>
+    <b>Damage:</b> <b>[[${roll.total}]]</b> ${roll._formula}<p></p>
+    <b>Hit Location:</b> <b> [[${hit.total}]]</b> ${hit_loc}<p></p>
     <b>Qualities:</b> ${this.actor.data.data.weapons[element.id].qualities}
     `
     roll.toMessage({type: 1, user: game.user._id, speaker: ChatMessage.getSpeaker(), content: content});
@@ -468,9 +468,9 @@ export class npcSheet extends ActorSheet {
 
     const content = `Casts the spell <b>${this.actor.data.data.prep_spells[element.id].name}!</b>
     <p></p>
-    <b>Damage:[[${roll.total}]]
+    <b>Damage: [[${roll.total}]]</b> ${roll._formula}<b>
     <p></p>
-    Hit Location: ${hit_loc} [[${hit.total}]]
+    Hit Location: [[${hit.total}]]</b> ${hit_loc}<b>
     <p></p>
     MP Cost: [[${this.actor.data.data.prep_spells[element.id].cost}]]
     <p></p>
