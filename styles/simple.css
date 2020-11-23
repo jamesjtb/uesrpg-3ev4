@@ -39,7 +39,7 @@
   margin-bottom: 10px;
 }
 .worldbuilding .sheet-body {
-  overflow-y: scroll;
+  overflow-y: hidden;
   overflow-x: hidden;
   margin-left: 2%;
   margin-right: 2%;
