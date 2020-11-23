@@ -867,6 +867,14 @@ export class SimpleActor extends Actor {
         item.data.carried = false;
       } else if (item.data.category == "spell3") {
         item.data.carried = false;
+      } else if (item.data.category == "spell4") {
+        item.data.carried = false;
+      } else if (item.data.category == "spell5") {
+        item.data.carried = false;
+      } else if (item.data.category == "spell6") {
+        item.data.carried = false;
+      } else if (item.data.category == "spell7") {
+        item.data.carried = false;
       } else {
         item.data.carried = true;
       }
