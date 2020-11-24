@@ -689,196 +689,189 @@
 
         {{!-- Combat Tab --}}
         <div class="tab combat" data-group="primary" data-tab="combat">
-            <table class="actionPoints">
-                <tr class="combat_table_header">
-                    <th colspan="5">Stats & Bonuses</th>
-                </tr>
+            <table class="combat_table_header">
                 <tr>
-                    <th colspan="2">Action Points</th>
-                    <th>Wounded</th>
-                    <th>Size</th>
-                    <th>Armor Class</th>
-                </tr>
-                <tr>
-                    <td><input type="text" name="data.action_points.value" value="{{data.action_points.value}}" data-dtype="Number"></td>
-                    <td><input type="text" name="data.action_points.max" value="{{data.action_points.max}}" data-dtype="Number"></td>
-                    <td><input type="checkbox" name="data.wounded" {{checked data.wounded}}></td>
-                    <td><select name="data.size" data-type="String">
-                        {{#select actor.data.size}}
-                        {{#each actor.data.size_cat as |size_cat key|}}
-                        <option value="{{key}}">{{size_cat}}</option> 
-                        {{/each}} {{/select}}
-                    </select></td> 
-                    <td><select name="data.armor_class" data-type="String">
-                        {{#select actor.data.armor_class}}
-                        {{#each actor.data.armor_class_cat as |armor_class_cat key|}}
-                        <option value="{{key}}">{{armor_class_cat}}</option> 
-                        {{/each}} {{/select}}
-                    </select></td>
+                    <th>Combat Styles</th>
                 </tr>
             </table>
             <table>
                 <tr>
-                    <th></th>
+                    <th>Roll</th>
+                    <th>Combat Style</th>
+                    <th>Rank</th>
+                    <th>Bonus</th>
+                    <th>Base</th>
+                    <th>TN</th>
+                    <th>Weapons</th>
+                </tr>
+                <tr class="field-inputs-small">
+                    <td><input type="button" class="combat-style-roll" name="{{data.combat_styles.cs1.name}}" id="cs1" value="Roll"></td>
+                    <td><input name="data.combat_styles.cs1.name" type="text" value="{{data.combat_styles.cs1.name}}" data-dtype="String"></td>
+                    <td><select name="data.combat_styles.cs1.rank" data-type="String">
+                        {{#select actor.data.combat_styles.cs1.rank}}
+                        {{#each actor.data.skill_ranks as |skill_ranks key|}}
+                        <option value="{{key}}">{{skill_ranks.name}}</option> 
+                        {{/each}} {{/select}}
+                    </select></td>
+                    <td><input type="text" name="data.combat_styles.cs1.bonus" value="{{data.combat_styles.cs1.bonus}}" data-dtype="Number" disabled></td>
+                    <td><select name="data.combat_styles.cs1.characteristic" data-type="String">
+                        {{#select actor.data.combat_styles.cs1.characteristic}}
+                        {{#each actor.data.characteristics as |characteristics key|}}
+                        <option value="{{key}}">{{characteristics.name}}</option> 
+                        {{/each}} {{/select}}
+                    <td><input type="text" class="field-inputs" name="data.combat_styles.cs1.tn" value="{{data.combat_styles.cs1.tn}}" data-dtype="Number" disabled></td>
+                    <td><input type="text" name="data.combat_styles.cs1.weapons" value="{{data.combat_styles.cs1.weapons}}" data-dtype="String"></td>
+                </tr>
+                <tr class="field-inputs-small">
+                    <td><input type="button" class="combat-style-roll" name="{{data.combat_styles.cs2.name}}" id="cs2" value="Roll"></td>
+                    <td><input name="data.combat_styles.cs2.name" type="text" value="{{data.combat_styles.cs2.name}}" data-dtype="String"></td>
+                    <td><select name="data.combat_styles.cs2.rank" data-type="String">
+                        {{#select actor.data.combat_styles.cs2.rank}}
+                        {{#each actor.data.skill_ranks as |skill_ranks key|}}
+                        <option value="{{key}}">{{skill_ranks.name}}</option> 
+                        {{/each}} {{/select}}
+                    </select></td>
+                    <td><input type="text" name="data.combat_styles.cs2.bonus" value="{{data.combat_styles.cs2.bonus}}" data-dtype="Number" disabled></td>
+                    <td><select name="data.combat_styles.cs2.characteristic" data-type="String">
+                        {{#select actor.data.combat_styles.cs2.characteristic}}
+                        {{#each actor.data.characteristics as |characteristics key|}}
+                        <option value="{{key}}">{{characteristics.name}}</option> 
+                        {{/each}} {{/select}}
+                    <td><input type="text" class="field-inputs" name="data.combat_styles.cs2.tn" value="{{data.combat_styles.cs2.tn}}" data-dtype="Number" disabled></td>
+                    <td><input type="text" name="data.combat_styles.cs2.weapons" value="{{data.combat_styles.cs2.weapons}}" data-dtype="String"></td>
+                </tr>
+            </table>
+            <div class="combat-sidebar">
+                <table class="combat_table_header">
+                    <tr>
+                        <th>Weapons & Armor</th>
+                    </tr>
+                </table>
+                <table>
+                    <tr>
+                        <th>Size</th>
+                        <td><select name="data.size" data-type="String">
+                            {{#select actor.data.size}}
+                            {{#each actor.data.size_cat as |size_cat key|}}
+                            <option value="{{key}}">{{size_cat}}</option> 
+                            {{/each}} {{/select}}
+                            </select></td>
+                        <th>Armor Class</th>
+                        <td><select name="data.armor_class" data-type="String">
+                            {{#select actor.data.armor_class}}
+                            {{#each actor.data.armor_class_cat as |armor_class_cat key|}}
+                            <option value="{{key}}">{{armor_class_cat}}</option> 
+                            {{/each}} {{/select}}
+                            </select></td>
+                    </tr>
+                </table>
+                <table>
+                    <tr>
+                        <th colspan="3">Weapon Damage Rolls</th>
+                    </tr>
+                    <tr>
+                        <td><input type="button" class="weapon-roll" name="weapon1" id="w1" value="Roll Weapon 1"></td>
+                        <td><input type="button" class="weapon-roll" name="weapon2" id="w2" value="Roll Weapon 2"></td>
+                        <td><input type="button" class="weapon-roll" name="weapon3" id="w3" value="Roll Weapon 3"></td>
+                    </tr>
+                </table>
+                <h2 class="weapon-header">Weapons</h2>
+                <ol class="item-list">
+                    {{#each actor.weapon as |weapon category|}}
+                    {{#each weapon as |item id|}}
+                        <li class="item flexrow" data-item-id="{{item._id}}">
+                            <img class="item-img" src="{{item.img}}" title="{{item.name}}" width="24" height="24"/>
+                            <h4 class="item-name">{{item.name}}</h4>
+                            <label class="item-name">{{item.data.category}}</label>
+                            <div class="item-controls">
+                                <a class="item-control item-delete" title="Delete Item"><i class="fas fa-trash"></i></a>
+                            </div>
+                        </li>
+                    {{/each}}
+                {{/each}}
+            </ol>
+            <h2 class="weapon-header">Armor</h2>
+            <ol class="item-list">
+                {{#each actor.armor as |item id|}}
+                    <li class="item flexrow" data-item-id="{{item._id}}">
+                        <img class="item-img" src="{{item.img}}" title="{{item.name}}" width="24" height="24"/>
+                        <h4 class="item-name">{{item.name}}</h4>
+                        <label class="item-name">{{item.data.category}}</label>
+                        <div class="item-controls">
+                            <a class="item-control item-delete" title="Delete Item"><i class="fas fa-trash"></i></a>
+                        </div>
+                    </li>
+                {{/each}}
+            </ol>
+            </div>
+            <div class="combat-sidebar2">
+            <table class="combat_table_header">
+                <tr>
+                    <th>Stats</th>
+                </tr>
+            </table>
+            <table>
+                <tr class="ap-inputs">
+                    <th>Action Points</th>
+                    <td><input type="text" name="data.action_points.value" value="{{data.action_points.value}}" data-dtype="Number"></td>
+                    <td><input type="text" name="data.action_points.max" value="{{data.action_points.max}}" data-dtype="Number"></td>
+                </tr>
+            </table>
+            <table>
+                <tr>
                     <th>Wound</th>
                     <th>Speed</th>
                     <th>Initiative</th>
-                    <th>HP Bonus</th>
-                    <th>MP Bonus</th>
-                    <th>SP Bonus</th>
                 </tr>
-                <tr class="field-inputs">
-                    <th>Value</th>
-                    <td><input type="text" name="data.wound_threshold.value" value="{{data.wound_threshold.value}}" data-dtype="Number" disabled></td>
+                <tr class="ap-inputs">
+                    <td><input type="text" name="data.wound_threshold.value" value="{{data.wound_threshold.value}}" disabled></td>
                     <td><input type="text" name="data.speed.value" value="{{data.speed.value}}" data-dtype="Number" disabled></td>
-                    <td><input type="text" name="data.initiative.value" value="{{data.initiative.value}}" data-dtype="Number" disabled></td>
-                    <td><input type="text" name="data.hp.bonus" value="{{data.hp.bonus}}" data-dtype="Number" disabled></td>
-                    <td><input type="text" name="data.magicka.bonus" value="{{data.magicka.bonus}}" data-dtype="Number" disabled></td>
-                    <td><input type="text" name="data.stamina.bonus" value="{{data.stamina.bonus}}" data-dtype="Number" disabled></td>
-                </tr>
-                <tr class="field-inputs">
-                    <th>Bonus</th>
-                    <td><input type="text" name="data.wound_threshold.bonus" value="{{data.wound_threshold.bonus}}" data-dtype="Number" disabled></td>
-                    <td><input type="text" name="data.speed.bonus" value="{{data.speed.bonus}}" data-dtype="Number" disabled></td>
-                    <td><input type="text" name="data.initiative.bonus" value="{{data.initiative.bonus}}" data-dtype="Number" disabled></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
+                    <td><input type="text" name="data.initiative.value" value="{{data.initiative.value}}" disabled></td>
                 </tr>
             </table>
-            <div class="combat_table">
-                <table>
-                    <tr class="combat_table_header">
-                        <th colspan="7">Combat Styles</th>
-                    </tr>
-                    <tr>
-                        <th>Roll</th>
-                        <th>Combat Style</th>
-                        <th>Rank</th>
-                        <th>Bonus</th>
-                        <th>Base</th>
-                        <th>TN</th>
-                        <th>Weapons</th>
-                    </tr>
-                    <tr class="field-inputs-small">
-                        <td><input type="button" class="combat-style-roll" name="{{data.combat_styles.cs1.name}}" id="cs1" value="Roll"></td>
-                        <td><input name="data.combat_styles.cs1.name" type="text" value="{{data.combat_styles.cs1.name}}" data-dtype="String"></td>
-                        <td><select name="data.combat_styles.cs1.rank" data-type="String">
-                            {{#select actor.data.combat_styles.cs1.rank}}
-                            {{#each actor.data.skill_ranks as |skill_ranks key|}}
-                            <option value="{{key}}">{{skill_ranks.name}}</option> 
-                            {{/each}} {{/select}}
-                        </select></td>
-                        <td><input type="text" name="data.combat_styles.cs1.bonus" value="{{data.combat_styles.cs1.bonus}}" data-dtype="Number" disabled></td>
-                        <td><select name="data.combat_styles.cs1.characteristic" data-type="String">
-                            {{#select actor.data.combat_styles.cs1.characteristic}}
-                            {{#each actor.data.characteristics as |characteristics key|}}
-                            <option value="{{key}}">{{characteristics.name}}</option> 
-                            {{/each}} {{/select}}
-                        <td><input type="text" class="field-inputs" name="data.combat_styles.cs1.tn" value="{{data.combat_styles.cs1.tn}}" data-dtype="Number" disabled></td>
-                        <td><input type="text" name="data.combat_styles.cs1.weapons" value="{{data.combat_styles.cs1.weapons}}" data-dtype="String"></td>
-                    </tr>
-                    <tr class="field-inputs-small">
-                        <td><input type="button" class="combat-style-roll" name="{{data.combat_styles.cs2.name}}" id="cs2" value="Roll"></td>
-                        <td><input name="data.combat_styles.cs2.name" type="text" value="{{data.combat_styles.cs2.name}}" data-dtype="String"></td>
-                        <td><select name="data.combat_styles.cs2.rank" data-type="String">
-                            {{#select actor.data.combat_styles.cs2.rank}}
-                            {{#each actor.data.skill_ranks as |skill_ranks key|}}
-                            <option value="{{key}}">{{skill_ranks.name}}</option> 
-                            {{/each}} {{/select}}
-                        </select></td>
-                        <td><input type="text" name="data.combat_styles.cs2.bonus" value="{{data.combat_styles.cs2.bonus}}" data-dtype="Number" disabled></td>
-                        <td><select name="data.combat_styles.cs2.characteristic" data-type="String">
-                            {{#select actor.data.combat_styles.cs2.characteristic}}
-                            {{#each actor.data.characteristics as |characteristics key|}}
-                            <option value="{{key}}">{{characteristics.name}}</option> 
-                            {{/each}} {{/select}}
-                        <td><input type="text" class="field-inputs" name="data.combat_styles.cs2.tn" value="{{data.combat_styles.cs2.tn}}" data-dtype="Number" disabled></td>
-                        <td><input type="text" name="data.combat_styles.cs2.weapons" value="{{data.combat_styles.cs2.weapons}}" data-dtype="String"></td>
-                    </tr>
-                </table>
-            <div>
-            </div>
-            <div>
-                <table class="combat_table">
-                    <tr>
-                        <th colspan="8" class="combat_table_header">Armor Locations</th>
-                    </tr>
-                    <tr>
-                        <td></td>
-                        <td>0</td>
-                        <td>9</td>
-                        <td>8</td>
-                        <td>7</td>
-                        <td>6</td>
-                        <td>1-5</td>
-                    </tr>
-                    <tr>
-                        <th></th>
-                        <th>Head</th>
-                        <th>L. Arm</th>
-                        <th>R. Arm</th>
-                        <th>L. Leg</th>
-                        <th>R. Leg</th>
-                        <th>Body</th>
-                        <th>Shield</th>
-                    </tr>
-                    <tr class="field-inputs-small">
-                        <td>AR</td>
-                        <td><input type="text" name="data.armor.head.ar" value="{{data.armor.head.ar}}" data-dtype="Number" disabled></td>
-                        <td><input type="text" name="data.armor.l_arm.ar" value="{{data.armor.l_arm.ar}}" data-dtype="Number" disabled></td>
-                        <td><input type="text" name="data.armor.r_arm.ar" value="{{data.armor.r_arm.ar}}" data-dtype="Number" disabled></td>
-                        <td><input type="text" name="data.armor.l_leg.ar" value="{{data.armor.l_leg.ar}}" data-dtype="Number" disabled></td>
-                        <td><input type="text" name="data.armor.r_leg.ar" value="{{data.armor.r_leg.ar}}" data-dtype="Number" disabled></td>
-                        <td><input type="text" name="data.armor.body.ar" value="{{data.armor.body.ar}}" data-dtype="Number" disabled></td>
-                        <td><input type="text" name="data.shield.br" value="{{data.shield.br}}" data-dtype="Number" disabled></td>
-                    </tr>
-                    <tr class="field-inputs-small">
-                        <td class="field-inputs-small">MR</td>
-                        <td><input type="text" name="data.armor.head.magic_ar" value="{{data.armor.head.magic_ar}}" data-dtype="String" disabled></td>
-                        <td><input type="text" name="data.armor.l_arm.magic_ar" value="{{data.armor.l_arm.magic_ar}}" data-dtype="String" disabled></td>
-                        <td><input type="text" name="data.armor.r_arm.magic_ar" value="{{data.armor.r_arm.magic_ar}}" data-dtype="String" disabled></td>
-                        <td><input type="text" name="data.armor.l_leg.magic_ar" value="{{data.armor.l_leg.magic_ar}}" data-dtype="String" disabled></td>
-                        <td><input type="text" name="data.armor.r_leg.magic_ar" value="{{data.armor.r_leg.magic_ar}}" data-dtype="String" disabled></td>
-                        <td><input type="text" name="data.armor.body.magic_ar" value="{{data.armor.body.magic_ar}}" data-dtype="String" disabled></td>
-                        <td><input type="text" name="data.shield.magic_br" value="{{data.shield.magic_br}}" data-dtype="String" disabled></td>
-                    </tr>
-                </table>
-            </div>
-                    <table>
-                        <tr>
-                            <th colspan="4" class="combat_table_header">Weapons</th>
-                        </tr>
-                        <tr colspan="4">
-                            <td><input type="button" class="weapon-roll" name="Primary Weapon" id="w1" value="Roll Weapon 1"></td>
-                            <td><input type="button" class="weapon-roll" name="Secondary Weapon" id="w2" value="Roll Weapon 2"></td>
-                            <td><input type="button" class="weapon-roll" name="Sidearm Weapon" id="w3" value="Roll Weapon 3"></td>
-                        </tr>
-                    </table>
-                    <table>
-                            <th>Weapon</th>
-                            <th>Equip 2H Damage</th>
-                            <th>Equip Slot</th>
-                        </tr>
-                    </table>
-                    <ol class="item-list">
-                        {{#each actor.weapon as |weapon category|}}
-                        {{#each weapon as |item id|}}
-                            <li class="item flexrow" data-item-id="{{item._id}}">
-                                        <img class="item-img" src="{{item.img}}" title="{{item.name}}" width="24" height="24"/>
-                                        <h4 class="item-name">{{item.name}}</h4>
-                                        <h4 class="item-name"><input type="checkbox" name="item.data.weapon2H" {{checked item.data.weapon2H}}></h4>
-                                        <h4 class="item-name">{{item.data.category}}</h4>
-                                        <div class="item-controls">
-                                            <a class="item-control item-edit" title="Edit Item"><i class="fas fa-edit"></i></a>
-                                            <a class="item-control item-delete" title="Delete Item"><i class="fas fa-trash"></i></a>
-                                        </div>
-                            </li>
-                        {{/each}}
-                    {{/each}}
-                </ol>
+            <table class="field-inputs-small">
+                <tr>
+                    <th colspan="2">Resistances</th>
+                </tr>
+                <tr>
+                    <th><input type="button" class="resistance-roll" name="Disease" id="diseaseR" value="Disease %"></th>
+                    <td><input type="text" name="data.resistance.diseaseR" value="{{data.resistance.diseaseR}}" data-dtype="Number" disabled></td>
+                </tr>
+                <tr>
+                    <th>Fire</th>
+                    <td><input type="text" name="data.resistance.fireR" value="{{data.resistance.fireR}}" data-dtype="Number" disabled></td>
+                </tr>
+                <tr>
+                    <th>Frost</th>
+                    <td><input type="text" name="data.resistance.frostR" value="{{data.resistance.frostR}}" data-dtype="Number" disabled></td>
+                </tr>
+                <tr>
+                    <th>Shock</th>
+                    <td><input type="text" name="data.resistance.shockR" value="{{data.resistance.shockR}}" data-dtype="Number" disabled></td>
+                </tr>
+                <tr>
+                    <th>Poison</th>
+                    <td><input type="text" name="data.resistance.poisonR" value="{{data.resistance.poisonR}}" data-dtype="Number" disabled></td>
+                </tr>
+                <tr>
+                    <th>Magic</th>
+                    <td><input type="text" name="data.resistance.magicR" value="{{data.resistance.magicR}}" data-dtype="Number" disabled></td>
+                </tr>
+                <tr>
+                    <th>Natural Toughness</th>
+                    <td><input type="text" name="data.resistance.natToughness" value="{{data.resistance.natToughness}}" data-dtype="Number" disabled></td>
+                </tr>
+                <tr>
+                    <th>Wounded</th>
+                    <td><input type="checkbox" name="data.wounded" {{checked data.wounded}}></td>
+                </tr>
+                <tr>
+                    <td colspan="2"><textarea name="data.woundNotes">{{data.woundNotes}}</textarea>
+                </tr>
+            </table>
         </div>
     </div>
+    
 
 
         {{!-- Talents Tab --}}
