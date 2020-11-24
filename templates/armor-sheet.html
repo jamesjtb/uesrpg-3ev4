@@ -42,6 +42,7 @@
     {{!-- Sheet Tab Navigation --}}
     <nav class="sheet-tabs3 tabs" data-group="primary">
         <a class="item" data-tab="description">Description</a>
+        <a class="item" data-tab="attributes">Attributes</a>
     </nav>
 
     {{!-- Sheet Body --}}
@@ -50,6 +51,33 @@
         {{!-- Description Tab --}}
         <div class="tab" data-group="primary" data-tab="description">
             {{editor content=data.description target="data.description" button=true owner=owner editable=editable}}
+        </div>
+
+        {{!-- Attributes Tab --}}
+        <div class="tab" data-group="primary" data-tab="attributes">
+            <table class="field-inputs-small">
+                <tr>
+                    <th colspan="7">Resistances & Weaknesses</th>
+                </tr>
+                <tr>
+                    <th>Disease %</th>
+                    <th>Fire</th>
+                    <th>Frost</th>
+                    <th>Shock</th>
+                    <th>Poison</th>
+                    <th>Magic</th>
+                    <th>Natural Toughness</th>
+                </tr>
+                <tr>
+                    <td><input type="text" name="data.diseaseR" value="{{data.diseaseR}}" data-dtype="Number"></td>
+                    <td><input type="text" name="data.fireR" value="{{data.fireR}}" data-dtype="Number"></td>
+                    <td><input type="text" name="data.frostR" value="{{data.frostR}}" data-dtype="Number"></td>
+                    <td><input type="text" name="data.shockR" value="{{data.shockR}}" data-dtype="Number"></td>
+                    <td><input type="text" name="data.poisonR" value="{{data.poisonR}}" data-dtype="Number"></td>
+                    <td><input type="text" name="data.magicR" value="{{data.magicR}}" data-dtype="Number"></td>
+                    <td><input type="text" name="data.natToughnessR" value="{{data.natToughnessR}}" data-dtype="Number"></td>
+                </tr>
+            </table>
         </div>
     </section>
 </form>

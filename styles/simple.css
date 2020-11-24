@@ -216,6 +216,19 @@
   src: url(../fonts/cyrodiil/cyrodiil.ttf);
   width: 10%;
 }
+.worldbuilding .combat-sidebar {
+  float: right;
+  width: 70%;
+  border-right: groove;
+}
+.worldbuilding .combat-sidebar2 {
+  float: left;
+  width: 30%;
+  border-right: groove;
+}
+.worldbuilding .combat-sidebar2 .ap-inputs {
+  text-align: center;
+}
 .worldbuilding .combat_table {
   margin-top: 2px;
   text-align: center;
@@ -269,6 +282,9 @@
   width: 10px;
   text-align: center;
 }
+.worldbuilding .ability-list .item-category {
+  margin: 0;
+}
 .worldbuilding .ability-list .item-name {
   margin: 0;
 }
@@ -283,6 +299,9 @@
   flex: 0 0 36px;
   margin-right: 5px;
   margin-left: 0px;
+}
+.worldbuilding .weapon-header {
+  text-align: center;
 }
 .worldbuilding .item-list-resource input {
   width: 20%;
@@ -306,6 +325,7 @@
 .worldbuilding .item-list .item img {
   flex: 0 0 24px;
   margin-right: 5px;
+  margin-left: 5px;
 }
 .worldbuilding .item-list .item-name {
   margin: 0;
@@ -319,7 +339,6 @@
 }
 .worldbuilding .item-list .item-controls {
   flex: 0 0 36px;
-  margin-right: 5px;
   margin-left: 0px;
 }
 .worldbuilding .spell-list {
@@ -468,6 +487,20 @@
   background-color: red;
   color: white;
 }
+.worldbuilding .resistance-roll {
+  background-color: transparent;
+  font-weight: bold;
+  border-radius: 10%;
+  border-style: groove;
+  padding: 5px;
+  margin-left: auto;
+  margin-right: auto;
+}
+.worldbuilding .resistance-roll:hover {
+  border-color: black;
+  background-color: red;
+  color: white;
+}
 .worldbuilding .weapon-roll {
   font-family: "cyrodiil";
   src: url(../fonts/cyrodiil/cyrodiil.ttf);
@@ -476,6 +509,8 @@
   border-radius: 10%;
   border-style: groove;
   padding: 5px;
+  margin-left: auto;
+  margin-right: auto;
 }
 .worldbuilding .weapon-roll:hover {
   border-color: black;

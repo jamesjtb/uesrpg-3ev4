@@ -122,6 +122,7 @@ export class npcSheet extends ActorSheet {
     html.find(".weapon-roll").click(this._onWeaponRoll.bind(this));
     html.find(".unconventional-roll").click(this._onUnconventionalRoll.bind(this));
     html.find(".spell-roll").click(this._onSpellRoll.bind(this));
+    html.find(".resistance-roll").click(this._onResistanceRoll.bind(this));
 
     // Everything below here is only needed if the sheet is editable
     if (!this.options.editable) return;
@@ -477,6 +478,60 @@ export class npcSheet extends ActorSheet {
     Attributes:</b> ${this.actor.data.data.prep_spells[element.id].attributes}`
 
     roll.toMessage({type: 1, user: game.user._id, speaker: ChatMessage.getSpeaker(), content: content});
+  }
+
+  _onResistanceRoll(event) {
+    event.preventDefault()
+    const element = event.currentTarget
+
+    let d = new Dialog({
+      title: "Apply Roll Modifier",
+      content: `<form>
+                  <div class="dialogForm">
+                  <label><b>${element.name} Resistance Modifier: </b></label><input placeholder="ex. -20, +10" id="playerInput" value="0" style=" text-align: center; width: 50%; border-style: groove; float: right;" type="text"></input></div>
+                </form>`,
+      buttons: {
+        one: {
+          label: "Roll!",
+          callback: html => {
+            const playerInput = parseInt(html.find('[id="playerInput"]').val());
+
+          let roll = new Roll("1d100");
+          roll.roll();
+
+          if (roll.total == this.actor.data.data.lucky_numbers.ln1 || roll.total == this.actor.data.data.lucky_numbers.ln2 || roll.total == this.actor.data.data.lucky_numbers.ln3 || roll.total == this.actor.data.data.lucky_numbers.ln4 || roll.total == this.actor.data.data.lucky_numbers.ln5) {
+            const content = `Rolls Resistance for <b>${element.name}</b>!
+            <p></p><b>Target Number: [[${this.actor.data.data.resistance[element.id]} + ${playerInput}]]</b> <p></p>
+            <b>Result: [[${roll.total}]]</b><p></p>
+            <span style='color:green; font-size:120%;'> <b>LUCKY NUMBER!</b></span>`
+            roll.toMessage({type: 4, user: game.user._id, speaker: ChatMessage.getSpeaker(), content: content});
+
+          } else if (roll.total == this.actor.data.data.unlucky_numbers.ul1 || roll.total == this.actor.data.data.unlucky_numbers.ul2 || roll.total == this.actor.data.data.unlucky_numbers.ul3 || roll.total == this.actor.data.data.unlucky_numbers.ul4 || roll.total == this.actor.data.data.unlucky_numbers.ul5) {
+            const content = `Rolls Resistance for <b>${element.name}</b>!
+            <p></p><b>Target Number: [[${this.actor.data.data.resistance[element.id]} + ${playerInput}]]</b> <p></p>
+            <b>Result: [[${roll.total}]]</b><p></p>
+            <span style='color:red; font-size:120%;'> <b>UNLUCKY NUMBER!</b></span>`
+            roll.toMessage({type: 4, user: game.user._id, speaker: ChatMessage.getSpeaker(), content: content});
+
+          } else {
+            const content = `Rolls Resistance for <b>${element.name}</b>!
+            <p></p><b>Target Number: [[${this.actor.data.data.resistance[element.id]} + ${playerInput}]]</b> <p></p>
+            <b>Result: [[${roll.total}]]</b><p></p>
+            <b>${roll.total<=(this.actor.data.data.resistance[element.id] + playerInput) ? " <span style='color:green; font-size: 120%;'> <b>SUCCESS!</b></span>" : " <span style='color: red; font-size: 120%;'> <b>FAILURE!</b></span>"}`
+            roll.toMessage({type: 4, user: game.user._id, speaker: ChatMessage.getSpeaker(), content: content});
+          }
+        }
+      },
+      two: {
+        label: "Cancel",
+        callback: html => console.log("Cancelled")
+      }
+      },
+      default: "one",
+      close: html => console.log()
+      });
+      d.render(true);
+
   }
 
 }
