@@ -1047,6 +1047,7 @@
     "armor": 0,
     "magic_ar": 0,
     "enchant_level": 0,
+    "excludeENC": false,
     "qualities": "",
     "category": "",
     "item_cat": {
@@ -1077,6 +1078,7 @@
     "hands": 0,
     "price": 0,
     "armor": 0,
+    "excludeENC": false,
     "magic_ar": 0,
     "enchant_level": 0,
     "qualities": "",
@@ -1103,6 +1105,7 @@
     "damage2": "",
     "weapon2H": false,
     "carried": false,
+    "excludeENC": false,
     "hands": 0,
     "price": 0,
     "armor": 0,

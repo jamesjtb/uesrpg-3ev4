@@ -262,7 +262,7 @@ export class SimpleActor extends Actor {
 
     data.carry_rating.max = Math.floor((4 * strBonus) + (2 * endBonus)) + data.carry_rating.bonus;
     this._sortCarriedItems(actorData);
-    data.current_enc = (this._calculateENC(actorData) - this._armorWeight(actorData)) .toFixed(1);
+    data.current_enc = (this._calculateENC(actorData) - this._armorWeight(actorData) - this._excludeENC(actorData)).toFixed(1);
 
     //ENC Burden Calculations
     if (data.current_enc > data.carry_rating.max * 3) {
@@ -528,7 +528,7 @@ export class SimpleActor extends Actor {
 
     data.carry_rating.max = Math.floor((4 * strBonus) + (2 * endBonus)) + data.carry_rating.bonus;
     this._sortCarriedItems(actorData);
-    data.current_enc = this._calculateENC(actorData) - this._armorWeight(actorData) .toFixed(1);
+    data.current_enc = (this._calculateENC(actorData) - this._armorWeight(actorData) - this._excludeENC(actorData)).toFixed(1);
 
     //ENC Burden Calculations
     if (data.current_enc > data.carry_rating.max * 3) {
@@ -897,6 +897,15 @@ export class SimpleActor extends Actor {
       armorENC = armorENC + ((item.data.enc / 2) * item.data.quantity);
     } 
     return armorENC
+  }
+
+  _excludeENC(actorData) {
+    let excluded = actorData.items.filter(item => item.data.excludeENC == true);
+    let totalWeight = 0.0;
+    for (let item of excluded) {
+      totalWeight = totalWeight + (item.data.enc * item.data.quantity);
+    }
+    return totalWeight
   }
 
   _hpBonus(actorData) {
