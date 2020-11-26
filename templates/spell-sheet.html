@@ -1,0 +1,58 @@
+<form class="{{cssClass}}" autocomplete="off">
+    <header class="sheet-header">
+        <img class="profile-img" src="{{item.img}}" data-edit="img" title="{{item.name}}"/>
+        <div class="header-fields">
+            <h1 class="charname"><input name="name" type="text" value="{{item.name}}" placeholder="Name"/></h1>
+            <div class="item-resource">
+                <table>
+                    <tr>
+                        <th>Spell Level</th>
+                        <th>MP Cost</th>
+                        <th>Prepared?</th>
+                        <th>School</th>
+                    </tr>
+                    <tr>
+                        <td><input type="text" name="data.level" value="{{data.level}}" data-dtype="Number"/></td>
+                        <td><input type="text" name="data.cost" value="{{data.cost}}" data-dtype="Number"></td>
+                        <td><select name="data.category" data-type="String">
+                            {{#select item.data.category}}
+                            {{#each item.data.spell_cat as |spell_cat key|}}
+                            <option value="{{key}}">{{spell_cat}}</option> 
+                            {{/each}} {{/select}}
+                        </select></td>
+                        <td><select name="data.school" data-dtype="String">
+                            {{#select item.data.school}}
+                            {{#each item.data.school_cat as | school_cat key|}}
+                            <option value="{{key}}">{{school_cat}}</option>
+                            {{/each}} {{/select}}
+                        </select></td>
+                    </tr>
+                    <tr>
+                        <th>Damage</th>
+                        <th>Form</th>
+                        <th colspan="2">Attributes</th>
+                    </tr>
+                    <tr>
+                        <td><input type="text" name="data.damage" value="{{data.damage}}" data-dtype="String"/></td>
+                        <td><input type="text" name="data.form" value="{{data.form}}" data-dtype="String"></td>
+                        <td colspan="2"><input type="text" name="data.attributes" value="{{data.attributes}}" data-dtype="String"></td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+    </header>
+
+    {{!-- Sheet Tab Navigation --}}
+    <nav class="sheet-tabs3 tabs" data-group="primary">
+        <a class="item" data-tab="description">Description</a>
+    </nav>
+
+    {{!-- Sheet Body --}}
+    <section class="sheet-body">
+
+        {{!-- Description Tab --}}
+        <div class="tab" data-group="primary" data-tab="description">
+            {{editor content=data.description target="data.description" button=true owner=owner editable=editable}}
+        </div>
+    </section>
+</form>
