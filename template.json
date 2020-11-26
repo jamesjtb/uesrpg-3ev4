@@ -1,0 +1,1185 @@
+{
+"Actor": {
+  "types": ["character", "npc"],
+  "character": {
+    "race": "",
+    "birthsign": "",
+    "age": "",
+    "height": "",
+    "weight": "",
+    "elite_adv": "",
+    "wounded": false,
+    "woundNotes": "",
+    "bio": "",
+    "journal": "",
+    "notes": "",
+    "resistance": {
+      "fireR": 0,
+      "frostR": 0,
+      "shockR": 0,
+      "magicR": 0,
+      "poisonR": 0,
+      "diseaseR": 0,
+      "natToughness": 0
+    },
+    "lucky_numbers": {
+      "ln1": 0,
+      "ln2": 0,
+      "ln3": 0,
+      "ln4": 0,
+      "ln5": 0
+    },
+    "unlucky_numbers": {
+      "ul1": 0,
+      "ul2": 0,
+      "ul3": 0,
+      "ul4": 0,
+      "ul5": 0
+    },
+    "supply": "",
+    "supply_cat": {
+      "1d2": "1d2",
+      "1d4": "1d4",
+      "1d6": "1d6",
+      "1d8": "1d8",
+      "1d10": "1d10"
+    },
+    "wealth": 0,
+    "current_enc": 0.0,
+    "carry_rating": {
+      "current": 0,
+      "max": 0,
+      "bonus": 0
+    },
+    "characteristics": {
+      "str": {
+        "value": 0,
+        "favored": false,
+        "name": "STR"
+      },
+      "end": {
+        "value": 0,
+        "favored": false,
+        "name": "END"
+      },
+      "agi": {
+        "value": 0,
+        "favored": false,
+        "name": "AGI"
+      },
+      "int": {
+        "value": 0,
+        "favored": false,
+        "name": "INT"
+      },
+      "wp": {
+        "value": 0,
+        "favored": false,
+        "name": "WP"
+      },
+      "prc": {
+        "value": 0,
+        "favored": false,
+        "name": "PRC"
+      },
+      "prs": {
+        "value": 0,
+        "favored": false,
+        "name": "PRS"
+      },
+      "lck": {
+        "value": 0,
+        "favored": false,
+        "name": "LCK"
+      }
+    },
+    "hp": {
+      "base": 0,
+      "value": 0,
+      "max": 0,
+      "temp": 0,
+      "bonus": 0
+    },
+    "action_points": {
+      "value": 0,
+      "max": 3
+    },
+    "luck_points": {
+      "value": 0,
+      "max": 0,
+      "bonus": 0
+    },
+    "stamina": {
+      "value": 0,
+      "max": 0,
+      "bonus": 0
+    },
+    "magicka": {
+      "value": 0,
+      "max": 0,
+      "bonus": 0
+    },
+    "xp": 0,
+    "wound_threshold": {
+      "value": 0,
+      "base": 0,
+      "bonus": 0,
+      "traitBonus": 0,
+      "talentBonus": 0
+    },
+    "initiative": {
+      "value": 0,
+      "base": 0,
+      "bonus": 0,
+      "traitBonus": 0,
+      "talentBonus": 0
+    },
+    "speed": {
+      "value": 0,
+      "base": 0,
+      "bonus": 0,
+      "traitBonus": 0,
+      "talentBonus": 0
+    },
+    "fatigueLevel": 0,
+    "size": "",
+    "size_cat": {
+      "puny": "Puny",
+      "tiny": "Tiny",
+      "small": "Small",
+      "standard": "Standard",
+      "large": "Large",
+      "huge": "Huge",
+      "enormous": "Enormous"
+    },
+    "skill_ranks": {
+      "untrained": {
+        "name": "Untrained",
+        "rank": "",
+        "bonus": "",
+        "specialization": ""
+      },
+      "novice": {
+          "name": " (0) Novice",
+          "rank": "",
+          "bonus": "",
+          "specialization": ""
+        },
+      "apprentice": {
+          "name": "(1) Apprentice",
+          "rank": "",
+          "bonus": "",
+          "specialization": ""
+        },
+      "journeyman": {
+          "name": "(2) Journeyman",
+          "rank": "",
+          "bonus": "",
+          "specialization": ""
+        },
+      "adept": {
+          "name": "(3) Adept",
+          "rank": "",
+          "bonus": "",
+          "specialization": ""
+        },
+      "expert": {
+          "name": "(4) Expert",
+          "rank": "",
+          "bonus": "",
+          "specialization": ""
+        },
+      "master": {
+          "name": "(5) Master",
+          "rank": "",
+          "bonus": "",
+          "specialization": ""
+        }
+    },
+    "skills": {
+      "acrobatics": {
+        "rank": "",
+        "bonus": 0,
+        "specialization": "",
+        "characteristic": "",
+        "tn": 0
+      },
+      "athletics": {
+        "rank":"",
+        "bonus": 0,
+        "specialization": "",
+        "characteristic": "",
+        "tn": 0
+      },
+      "command": {
+        "rank": "",
+        "bonus": 0,
+        "specialization": "",
+        "characteristic": "",
+        "tn": 0
+      },
+      "commerce": {
+        "rank": "",
+        "bonus": 0,
+        "specialization": "",
+        "characteristic": "",
+        "tn": 0
+      },
+      "deceive": {
+        "rank": "",
+        "bonus": 0,
+        "specialization": ""
+      },
+      "evade": {
+        "rank": "",
+        "bonus": 0,
+        "specialization": "",
+        "characteristic": "",
+        "tn": 0
+      },
+      "investigate": {
+        "rank": "",
+        "bonus": 0,
+        "specialization": "",
+        "characteristic": "",
+        "tn": 0
+      },
+      "logic": {
+        "rank": "",
+        "bonus": 0,
+        "specialization": "",
+        "characteristic": "",
+        "tn": 0
+      },
+      "lore": {
+        "rank": "",
+        "bonus": 0,
+        "specialization": "",
+        "characteristic": "",
+        "tn": 0
+      },
+      "navigate": {
+        "rank": "",
+        "bonus": 0,
+        "specialization": "",
+        "characteristic": "",
+        "tn": 0
+      },
+      "observe": {
+        "rank": "",
+        "bonus": 0,
+        "specialization": "",
+        "characteristic": "",
+        "tn": 0
+      },
+      "persuade": {
+        "rank": "",
+        "bonus": 0,
+        "specialization": "",
+        "characteristic": "",
+        "tn": 0
+      },
+      "profession1": {
+        "rank": "", 
+        "bonus": 0,
+        "specialization": "",
+        "characteristic": "",
+        "tn": 0
+      },
+      "profession2": {
+        "rank": "", 
+        "bonus": 0,
+        "specialization": "",
+        "characteristic": "",
+        "tn": 0
+      },
+      "profession3": {
+        "rank": "", 
+        "bonus": 0,
+        "specialization": "",
+        "characteristic": "",
+        "tn": 0
+      },
+      "ride": {
+        "rank": "",
+        "bonus": 0,
+        "specialization": "",
+        "characteristic": "",
+        "tn": 0
+      },
+      "stealth": {
+        "rank": "",
+        "bonus": 0,
+        "specialization": "",
+        "characteristic": "",
+        "tn": 0
+      },
+      "subterfuge": {
+        "rank": "",
+        "bonus": 0,
+        "specialization": "",
+        "characteristic": "",
+        "tn": 0
+      },
+      "survival": {
+        "rank": "",
+        "bonus": 0,
+        "specialization": "",
+        "characteristic": "",
+        "tn": 0
+      }
+    },
+    "magic_skills": {
+      "alchemy": {
+        "rank": "",
+        "bonus": 0,
+        "specialization": "",
+        "characteristic": "",
+        "tn": 0
+      },
+      "alteration": {
+        "rank": "",
+        "bonus": 0,
+        "specialization": "",
+        "characteristic": "",
+        "tn": 0
+      },
+      "conjuration": {
+        "rank": "",
+        "bonus": 0,
+        "specialization": "",
+        "characteristic": "",
+        "tn": 0
+      },
+      "destruction": {
+        "rank": "",
+        "bonus": 0,
+        "specialization": "",
+        "characteristic": "",
+        "tn": 0
+      },
+      "enchant": {
+        "rank": "",
+        "bonus": 0,
+        "specialization": "",
+        "characteristic": "",
+        "tn": 0
+      },
+      "illusion": {
+        "rank": "",
+        "bonus": 0,
+        "specialization": "",
+        "characteristic": "",
+        "tn": 0
+      },
+      "mysticism": {
+        "rank": "",
+        "bonus": 0,
+        "specialization": "",
+        "characteristic": "",
+        "tn": 0
+      },
+      "restoration": {
+        "rank": "",
+        "bonus": 0,
+        "specialization": "",
+        "characteristic": "",
+        "tn": 0
+      },
+      "necromancy": {
+        "rank": "",
+        "bonus": 0,
+        "specialization": "",
+        "characteristic": "",
+        "tn": 0
+      }
+    },
+    "talents": "",
+    "traits": "",
+    "powers": "",
+    "spells": "",
+    "combat_styles": {
+      "cs1": {
+        "name": "",
+        "rank": 0,
+        "bonus": 0,
+        "weapons": "",
+        "characteristic": "",
+        "tn": 0
+      },
+      "cs2": {
+        "name": "",
+        "rank": 0,
+        "bonus": 0,
+        "weapons": "",
+        "characteristic": "",
+        "tn": 0
+      },
+      "cs3": {
+        "name": "",
+        "rank": 0,
+        "bonus": 0,
+        "weapons": "",
+        "characteristic": "",
+        "tn": 0
+      }
+    },
+    "prep_spells": {
+      "s1": {
+        "name": "",
+        "dmg": "",
+        "cost": "",
+        "school": "",
+        "form": "",
+        "attributes": "",
+        "level": ""
+      },
+      "s2": {
+        "name": "",
+        "dmg": "",
+        "cost": "",
+        "school": "",
+        "form": "",
+        "attributes": "",
+        "level": ""
+      },
+      "s3": {
+        "name": "",
+        "dmg": "",
+        "cost": "",
+        "school": "",
+        "form": "",
+        "attributes": "",
+        "level": ""
+      },
+      "s4": {
+        "name": "",
+        "dmg": "",
+        "cost": "",
+        "school": "",
+        "form": "",
+        "attributes": "",
+        "level": ""
+      },
+      "s5": {
+        "name": "",
+        "dmg": "",
+        "cost": "",
+        "school": "",
+        "form": "",
+        "attributes": "",
+        "level": ""
+      }, 
+      "s6": {
+        "name": "",
+        "dmg": "",
+        "cost": "",
+        "school": "",
+        "form": "",
+        "attributes": "",
+        "level": ""
+      },
+      "s7": {
+        "name": "",
+        "dmg": "",
+        "cost": "",
+        "school": "",
+        "form": "",
+        "attributes": "",
+        "level": ""
+      }
+    },
+    "weapons": {
+      "w1": {
+        "name": "",
+        "dmg": "",
+        "hands": "",
+        "reach": "",
+        "qualities": ""
+      },
+      "w2": {
+        "name": "",
+        "dmg": "",
+        "hands": "",
+        "reach": "",
+        "qualities": ""
+      },
+      "w3": {
+        "name": "",
+        "dmg": "",
+        "hands": "",
+        "reach": "",
+        "qualities": ""
+      },
+      "w4": {
+        "name": "",
+        "dmg": "",
+        "hands": "",
+        "reach": "",
+        "qualities": ""
+      },
+      "w5": {
+        "name": "",
+        "dmg": "",
+        "hands": "",
+        "reach": "",
+        "qualities": ""
+      }
+    },
+    "shield": {
+      "name": "",
+      "br": 0,
+      "magic_br": "",
+      "class": "",
+      "qualities": ""
+    },
+    "armor_class": "",
+    "armor_class_cat": {
+      "none": "None",
+      "super_light": "Super Light",
+      "light": "Light",
+      "medium": "Medium",
+      "heavy": "Heavy",
+      "super_heavy": "Super Heavy"
+    },
+    "armor": {
+      "head": {
+        "name": "",
+        "enc": 0,
+        "ar": 0,
+        "magic_ar": "",
+        "class": ""
+      },
+      "body": {
+        "name": "",
+        "enc": 0,
+        "ar": 0,
+        "magic_ar": "",
+        "class": ""
+      },
+      "r_leg":{
+        "name": "",
+        "enc": 0,
+        "ar": 0,
+        "magic_ar": "",
+        "class": ""
+      },
+      "l_leg": {
+        "name": "",
+        "enc": 0,
+        "ar": 0,
+        "magic_ar": "",
+        "class": ""
+      },
+      "r_arm": {
+        "name": "",
+        "enc": 0,
+        "ar": 0,
+        "magic_ar": "",
+        "class": ""
+      },
+      "l_arm": {
+        "name": "",
+        "enc": 0,
+        "ar": 0,
+        "magic_ar": "",
+        "class": ""
+      }
+    }
+  },
+  "npc": {
+    "race": "",
+    "birthsign": "",
+    "age": "",
+    "height": "",
+    "weight": "",
+    "elite_adv": "",
+    "wounded": false,
+    "woundNotes": "",
+    "bio": "",
+    "soul_energy": "",
+    "journal": "",
+    "notes": "",
+    "threat": "",
+    "threatCategory": {
+      "minorSolo": "Minor Solo",
+      "minorGroup": "Minor Group",
+      "majorSolo": "Major Solo",
+      "majorGroup": "Major Group",
+      "deadlySolo": "Deadly Solo",
+      "deadlyGroup": "Deadly Group",
+      "legendarySolo": "Legendary Solo",
+      "legendaryGroup": "Legendary Group"
+    },
+    "resistance": {
+      "fireR": 0,
+      "frostR": 0,
+      "shockR": 0,
+      "magicR": 0,
+      "poisonR": 0,
+      "diseaseR": 0,
+      "natToughness": 0
+    },
+    "fatigueLevel": 0,
+    "lucky_numbers": {
+      "ln1": 0,
+      "ln2": 0,
+      "ln3": 0,
+      "ln4": 0,
+      "ln5": 0,
+      "ln6": 0,
+      "ln7": 0,
+      "ln8": 0,
+      "ln9": 0,
+      "ln10": 0
+    },
+    "unlucky_numbers": {
+      "ul1": 0,
+      "ul2": 0,
+      "ul3": 0,
+      "ul4": 0,
+      "ul5": 0,
+      "ul6": 0
+    },
+    "supply": "",
+    "supply_cat": {
+      "1d2": "1d2",
+      "1d4": "1d4",
+      "1d6": "1d6",
+      "1d8": "1d8",
+      "1d10": "1d10"
+    },
+    "wealth": 0,
+    "current_enc": 0.0,
+    "carry_rating": {
+      "current": 0,
+      "max": 0,
+      "bonus": 0
+    },
+    "characteristics": {
+      "str": {
+        "value": 0,
+        "favored": false
+      },
+      "end": {
+        "value": 0,
+        "favored": false
+      },
+      "agi": {
+        "value": 0,
+        "favored": false
+      },
+      "int": {
+        "value": 0,
+        "favored": false
+      },
+      "wp": {
+        "value": 0,
+        "favored": false
+      },
+      "prc": {
+        "value": 0,
+        "favored": false
+      },
+      "prs": {
+        "value": 0,
+        "favored": false
+      },
+      "lck": {
+        "value": 0,
+        "favored": false
+      }
+    },
+    "professions": {
+      "combat": 0,
+      "magic": 0,
+      "evade": 0,
+      "observe": 0,
+      "stealth": 0,
+      "knowledge": 0,
+      "social": 0,
+      "physical": 0
+    },
+    "hp": {
+      "base": 0,
+      "value": 0,
+      "max": 0,
+      "temp": 0,
+      "bonus": 0
+    },
+    "action_points": {
+      "value": 0,
+      "max": 3
+    },
+    "luck_points": {
+      "value": 0,
+      "max": 0
+    },
+    "stamina": {
+      "value": 0,
+      "max": 0,
+      "bonus": 0
+    },
+    "magicka": {
+      "value": 0,
+      "max": 0,
+      "bonus": 0
+    },
+    "xp": 0,
+    "wound_threshold": {
+      "value": 0,
+      "base": 0,
+      "bonus": 0
+    },
+    "initiative": {
+      "value": 0,
+      "base": 0,
+      "bonus": 0
+    },
+    "speed": {
+      "value": 0,
+      "base": 0,
+      "bonus": 0
+    },
+    "size": "",
+    "size_cat": {
+      "puny": "Puny",
+      "tiny": "Tiny",
+      "small": "Small",
+      "standard": "Standard",
+      "large": "Large",
+      "huge": "Huge",
+      "enormous": "Enormous"
+    },
+    "skill_ranks": {
+      "untrained": {
+        "name": "Untrained",
+        "rank": "",
+        "bonus": "",
+        "specialization": ""
+      },
+      "novice": {
+          "name": " (0) Novice",
+          "rank": "",
+          "bonus": "",
+          "specialization": ""
+        },
+      "apprentice": {
+          "name": "(1) Apprentice",
+          "rank": "",
+          "bonus": "",
+          "specialization": ""
+        },
+      "journeyman": {
+          "name": "(2) Journeyman",
+          "rank": "",
+          "bonus": "",
+          "specialization": ""
+        },
+      "adept": {
+          "name": "(3) Adept",
+          "rank": "",
+          "bonus": "",
+          "specialization": ""
+        },
+      "expert": {
+          "name": "(4) Expert",
+          "rank": "",
+          "bonus": "",
+          "specialization": ""
+        },
+      "master": {
+          "name": "(5) Master",
+          "rank": "",
+          "bonus": "",
+          "specialization": ""
+        }
+    },
+    "skills": {
+      "profession1": {
+        "rank": "", 
+        "bonus": 0,
+        "specialization": "",
+        "characteristic": "",
+        "tn": 0
+      },
+      "profession2": {
+        "rank": "", 
+        "bonus": 0,
+        "specialization": "",
+        "characteristic": "",
+        "tn": 0
+      },
+      "profession3": {
+        "rank": "", 
+        "bonus": 0,
+        "specialization": "",
+        "characteristic": "",
+        "tn": 0
+      }
+    },
+    "talents": "",
+    "traits": "",
+    "powers": "",
+    "spells": "",
+    "weapons": {
+      "w1": {
+        "name": "",
+        "dmg": "",
+        "hands": "",
+        "reach": "",
+        "qualities": ""
+      },
+      "w2": {
+        "name": "",
+        "dmg": "",
+        "hands": "",
+        "reach": "",
+        "qualities": ""
+      },
+      "w3": {
+        "name": "",
+        "dmg": "",
+        "hands": "",
+        "reach": "",
+        "qualities": ""
+      },
+      "w4": {
+        "name": "",
+        "dmg": "",
+        "hands": "",
+        "reach": "",
+        "qualities": ""
+      },
+      "w5": {
+        "name": "",
+        "dmg": "",
+        "hands": "",
+        "reach": "",
+        "qualities": ""
+      }
+    },
+    "prep_spells": {
+      "s1": {
+        "name": "",
+        "dmg": "",
+        "cost": "",
+        "school": "",
+        "form": "",
+        "attributes": "",
+        "level": ""
+      },
+      "s2": {
+        "name": "",
+        "dmg": "",
+        "cost": "",
+        "school": "",
+        "form": "",
+        "attributes": "",
+        "level": ""
+      },
+      "s3": {
+        "name": "",
+        "dmg": "",
+        "cost": "",
+        "school": "",
+        "form": "",
+        "attributes": "",
+        "level": ""
+      },
+      "s4": {
+        "name": "",
+        "dmg": "",
+        "cost": "",
+        "school": "",
+        "form": "",
+        "attributes": "",
+        "level": ""
+      },
+      "s5": {
+        "name": "",
+        "dmg": "",
+        "cost": "",
+        "school": "",
+        "form": "",
+        "attributes": "",
+        "level": ""
+      }, 
+      "s6": {
+        "name": "",
+        "dmg": "",
+        "cost": "",
+        "school": "",
+        "form": "",
+        "attributes": "",
+        "level": ""
+      },
+      "s7": {
+        "name": "",
+        "dmg": "",
+        "cost": "",
+        "school": "",
+        "form": "",
+        "attributes": "",
+        "level": ""
+      }
+    },
+    "shield": {
+      "name": "",
+      "br": 0,
+      "magic_br": "",
+      "class": "",
+      "qualities": ""
+    },
+    "armor_class": "",
+    "armor_class_cat": {
+      "none": "None",
+      "super_light": "Super Light",
+      "light": "Light",
+      "medium": "Medium",
+      "heavy": "Heavy",
+      "super_heavy": "Super Heavy"
+    },
+    "armor": {
+      "head": {
+        "name": "",
+        "enc": 0,
+        "ar": 0,
+        "magic_ar": "",
+        "class": ""
+      },
+      "body": {
+        "name": "",
+        "enc": 0,
+        "ar": 0,
+        "magic_ar": "",
+        "class": ""
+      },
+      "r_leg":{
+        "name": "",
+        "enc": 0,
+        "ar": 0,
+        "magic_ar": "",
+        "class": ""
+      },
+      "l_leg": {
+        "name": "",
+        "enc": 0,
+        "ar": 0,
+        "magic_ar": "",
+        "class": ""
+      },
+      "r_arm": {
+        "name": "",
+        "enc": 0,
+        "ar": 0,
+        "magic_ar": "",
+        "class": ""
+      },
+      "l_arm": {
+        "name": "",
+        "enc": 0,
+        "ar": 0,
+        "magic_ar": "",
+        "class": ""
+      }
+    }
+  }
+    
+},
+"Item": {
+  "types": ["item", "armor", "weapon", "spell", "trait", "power", "talent"],
+  "templates": {
+    "characteristicArray": {
+      "characteristics": {
+        "str": "STR",
+        "end": "END",
+        "agi": "AGI",
+        "int": "INT",
+        "wp": "WP",
+        "prc": "PRC",
+        "prs": "PRS",
+        "lck": "LCK"
+      }
+    },
+    "replaceAttributesArray": {
+      "replace": {
+        "ini": {
+          "iniToggle": false,
+          "value": 0,
+          "characteristic": ""
+        },
+        "wt": {
+          "wtToggle": false,
+          "value": 0,
+          "characteristic": ""
+        }
+      }
+    },
+    "resistanceArray": {
+      "mpBonus": 0,
+      "hpBonus": 0,
+      "spBonus": 0,
+      "lpBonus": 0,
+      "wtBonus": 0,
+      "iniBonus": 0,
+      "speedBonus": 0,
+      "diseaseR": 0,
+      "fireR": 0,
+      "frostR": 0,
+      "shockR": 0,
+      "poisonR": 0,
+      "magicR": 0,
+      "natToughnessR": 0
+    }
+  },
+  "item": {
+    "templates": ["characteristicArray", "replaceAttributesArray", "resistanceArray"],
+    "description": "",
+    "quantity": 1,
+    "enc": 0,
+    "totalENC": 0,
+    "reach": "",
+    "damage": "",
+    "carried": false,
+    "hands": 0,
+    "price": 0,
+    "armor": 0,
+    "magic_ar": 0,
+    "enchant_level": 0,
+    "excludeENC": false,
+    "qualities": "",
+    "category": "",
+    "item_cat": {
+      "none": "None",
+      "head": "Helmet",
+      "l_arm": "Left Gauntlet",
+      "r_arm": "Right Gauntlet",
+      "l_leg": "Left Leg",
+      "r_leg": "Right Leg",
+      "body": "Chestplate",
+      "shield": "Shield",
+      "weapon1": "Primary Weapon",
+      "weapon2": "Secondary Weapon",
+      "weapon3": "Sidearm"
+    },
+    "attributes": {}
+  },
+  "armor": {
+    "templates": ["resistanceArray", "characteristicArray", "replaceAttributesArray"],
+    "description": "",
+    "quantity": 1,
+    "enc": 0,
+    "totalENC": 0,
+    "reach": "",
+    "damage": "",
+    "equipped": false,
+    "carried": false,
+    "hands": 0,
+    "price": 0,
+    "armor": 0,
+    "excludeENC": false,
+    "magic_ar": 0,
+    "enchant_level": 0,
+    "qualities": "",
+    "category": "",
+    "item_cat": {
+      "none": "None",
+      "head": "Helmet",
+      "l_arm": "Left Gauntlet",
+      "r_arm": "Right Gauntlet",
+      "l_leg": "Left Leg",
+      "r_leg": "Right Leg",
+      "body": "Chestplate",
+      "shield": "Shield"
+     }
+  },
+  "weapon": {
+    "templates": ["resistanceArray", "characteristicArray", "replaceAttributesArray"],
+    "description": "",
+    "quantity": 1,
+    "enc": 0,
+    "totalENC": 0,
+    "reach": "",
+    "damage": "",
+    "damage2": "",
+    "weapon2H": false,
+    "carried": false,
+    "excludeENC": false,
+    "hands": 0,
+    "price": 0,
+    "armor": 0,
+    "magic_ar": 0,
+    "enchant_level": 0,
+    "qualities": "",
+    "category": "",
+    "item_cat": {
+      "none": "None",
+      "weapon1": "Weapon 1",
+      "weapon2": "Weapon 2",
+      "weapon3": "Weapon 3"
+    }
+  },
+  "spell": {
+    "description": "",
+    "damage": "",
+    "level": 0,
+    "cost": 0,
+    "spell_str": "",
+    "attributes": "",
+    "form": "",
+    "school": "",
+    "school_cat": {
+      "alteration": "Alteration",
+      "conjuration": "Conjuration",
+      "destruction": "Destruction",
+      "illusion": "Illusion",
+      "mysticism": "Mysticism",
+      "necromancy": "Necromancy",
+      "restoration": "Restoration"
+    },
+    "category": "",
+    "spell_cat": {
+      "none": "None",
+      "spell1": "Spell 1",
+      "spell2": "Spell 2",
+      "spell3": "Spell 3", 
+      "spell4": "Spell 4",
+      "spell5": "Spell 5",
+      "spell6": "Spell 6",
+      "spell7": "Spell 7"
+    }
+  },
+  "trait": {
+    "templates": ["resistanceArray", "replaceAttributesArray", "characteristicArray"],
+    "description": "",
+    "halfSpeed": false,
+    "halfFatiguePenalty": false,
+    "mechanical": false,
+    "crpCost": 0,
+    "halfWoundPenalty": false,
+    "painIntolerant": false
+  },
+  "power": {
+    "templates": ["resistanceArray", "characteristicArray"],
+    "description": "",
+    "dailyUse": false,
+    "source": "",
+    "shiftForm": false
+  },
+  "talent": {
+    "templates": ["resistanceArray", "replaceAttributesArray", "characteristicArray"],
+    "description": "",
+    "xpCost": 0,
+    "level": 0,
+    "talentReq": "",
+    "miscReq": "",
+    "halfFatiguePenalty": false,
+    "halfWoundPenalty": false,
+    "untrainedException": false,
+    "fatigueException": false,
+    "addIntToMP": false,
+    "armorAcrobaticsException": false
+  }
+}
+}
