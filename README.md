@@ -32,10 +32,11 @@ Item Sheet Types:
 - NPC Build Reference: An All-in-One type of compendium useful for quickly creating NPC's by dragging powers/traits/talents directly onto NPC sheets
 - Loot Tables: A small collection of useful rollable tables for GM use
 
-Features:
+<b>Features:</b>
 - Can equip armor/weapons/spells from their respective sheets using a dropdown menu. This adds them to the Combat Tab along with important information for use in quick rolls which output to chat when the "roll" button is clicked. Equipped armor will also count as 1/2 ENC when equipped in this fashion.
 - Dropdown characteristic value for skill base so GM's can have the freedom to ask for unique or uncommon skill/characterstic combinations.
 - Encumbrance levels automatically impose penalties based on their current carry weight.
-- Ticking the "Wounded" checkmark on the Combat tab automatically imposes a -20 penalty to all skill rolls (except characteristics) and a -2 penalty to initiative rolls.
+- Ticking the "Wounded" checkmark on the Combat tab automatically imposes a -20 penalty to all skill rolls and a -2 penalty to initiative rolls.
 - Auto-sorting inventory tab for Item, Armor, and Weapon types.
 - Lucky/Unlucky Number determination in skill/characteristic/combat rolls if data is input into the Lucky/Unlucky Number fields on the Core Tab.
+- Certain talents/traits automatically add resistances/weaknesses and affect your character's stats directly upon adding to your sheet. Most have been designed to be toggled on/off as well. 
