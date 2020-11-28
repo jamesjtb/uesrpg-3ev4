@@ -120,6 +120,7 @@
       "bonus": 0
     },
     "xp": 0,
+    "xpTotal": 0,
     "wound_threshold": {
       "value": 0,
       "base": 0,
