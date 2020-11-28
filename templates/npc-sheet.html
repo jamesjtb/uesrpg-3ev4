@@ -214,7 +214,7 @@
                     </tr>
                 </table>
                 <h2 class="weapon-header">Weapons</h2>
-                <ol class="item-list">
+                <ol class="combat-list">
                     {{#each actor.weapon as |weapon category|}}
                     {{#each weapon as |item id|}}
                         <li class="item flexrow" data-item-id="{{item._id}}">
@@ -229,7 +229,7 @@
                 {{/each}}
             </ol>
             <h2 class="weapon-header">Armor</h2>
-            <ol class="item-list">
+            <ol class="combat-list">
                 {{#each actor.armor as |item id|}}
                     <li class="item flexrow" data-item-id="{{item._id}}">
                         <img class="item-img" src="{{item.img}}" title="{{item.name}}" width="24" height="24"/>
@@ -492,6 +492,7 @@
                         <tr>
                             <td class="itemHeaderQTY">QTY</td>
                             <td class="itemHeaderQTY">ENC</td>
+                            <td class="itemHeaderQTY">LOCATION</td>
                             <td class="itemHeaderItem">ITEM</td>
                         </tr>
                     </table>
@@ -503,6 +504,7 @@
                                 <div class="item-list-resource">
                                     <input name="data.quantity" type="text" value="{{data.quantity}}" data-dtype="Number" disabled>
                                     <input type="text" name="data.enc" value="{{data.enc}}" data-dtype="Number" disabled>
+                                    <input type="text" name="data.category" value="{{data.category}}" disabled>
                                 </div>
                                 <img class="item-img" src="{{item.img}}" title="{{item.name}}" width="24" height="24"/>
                                 <h4 class="item-name">{{item.name}}</h4>

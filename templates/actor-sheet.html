@@ -1,581 +1,1129 @@
-.worldbuilding {
-  /* Sheet Tabs */
-  /* Items List */
-  /* Attributes */
-}
+<form class="{{cssClass}}" autocomplete="off">
 
-@font-face {
-  font-family: "cyrodiil";
-  src: url("../fonts/cyrodiil/cyrodiil.ttf");
-}
-.worldbuilding .editor {
-  min-height: 200px;
-}
-.worldbuilding .editor-content {
-  min-height: 200px;
-  margin-left: 10px;
-  margin-top: 10px;
-}
-.worldbuilding table {
-  font-size: 12px;
-}
-.worldbuilding .window-content {
-  height: 100%;
-  padding: 5px;
-  overflow-y: scroll;
-  overflow-x: hidden;
-  min-width: 200px;
-  background: url("../images/parchment6.jpg");
-  background-repeat: repeat;
-  background-attachment: local;
-}
-.worldbuilding .sheet-header {
-  height: 180px;
-  overflow: hidden;
-  display: flex;
-  flex-direction: row;
-  flex-wrap: nowrap;
-  justify-content: flex-start;
-  margin-bottom: 10px;
-}
-.worldbuilding .sheet-body {
-  overflow-y: hidden;
-  overflow-x: hidden;
-  margin-left: 2%;
-  margin-right: 2%;
-}
-.worldbuilding .resources {
- display: inline-block;
-}
-.worldbuilding .sheet-header .profile-img {
-  flex: 0 0 180px;
-  height: 180px;
-  margin-right: 10px;
-  border: none;
-}
-.worldbuilding .sheet-tabs {
-  background-color: rgb(219, 181, 77);
-  font-family: "cyrodiil";
-  src: url("../fonts/cyrodiil/cyrodiil.ttf");
-  font-size: larger;
-}
-.worldbuilding .sheet-tabs2 {
-  background-color: rgb(189, 116, 106);
-  font-family: "cyrodiil";
-  src: url("../fonts/cyrodiil/cyrodiil.ttf");
-  font-size: larger;
-}
-.worldbuilding .sheet-tabs3 {
-  background-color: rgb(112, 172, 142);
-  font-family: "cyrodiil";
-  src: url("../fonts/cyrodiil/cyrodiil.ttf");
-  font-size: larger;
-}
-.worldbuilding .charname {
-  font-family: "cyrodiil";
-  src: url("../fonts/cyrodiil/cyrodiil.ttf");
-}
-.worldbuilding .resource-label {
-  font-family: "cyrodiil";
-  src: url("../fonts/cyrodiil/cyrodiil.ttf");
-  display: block;
-  text-align: center;
-  width: 95px;
-  font-size: larger;
-}
-.worldbuilding .resource-hp {
-  font-family: "cyrodiil";
-  src: url("../fonts/cyrodiil/cyrodiil.ttf");
-  background: firebrick;
-  border-radius: 50%;
-  width: 40px;
-  height: 40px;
-  text-align: center;
-  font-size: x-large;
-  color: white;
-  margin-left: 5px;
-}
-.worldbuilding .resource-hp-max {
-  font-family: "cyrodiil";
-  src: url("../fonts/cyrodiil/cyrodiil.ttf");
-  background:firebrick;
-  border-radius: 50%;
-  width: 30px;
-  height: 30px;
-  text-align: center;
-  font-size: larger;
-  color: white;
-  margin-right: 3px;
-}
-.worldbuilding .resource-mp {
-  font-family: "cyrodiil";
-  src: url("../fonts/cyrodiil/cyrodiil.ttf");
-  background: #1E90FF ;
-  border-radius: 50%;
-  width: 40px;
-  height: 40px;
-  text-align: center;
-  font-size: x-large;
-  color: white;
-  margin-left: 5px;
-}
-.worldbuilding .resource-mp-max {
-  font-family: "cyrodiil";
-  src: url("../fonts/cyrodiil/cyrodiil.ttf");
-  background: #1E90FF;
-  border-radius: 50%;
-  width: 30px;
-  height: 30px;
-  text-align: center;
-  font-size: larger;
-  color: white;
-}
-.worldbuilding .resource-sp {
-  font-family: "cyrodiil";
-  src: url("../fonts/cyrodiil/cyrodiil.ttf");
-  background: #228B22;
-  border-radius: 50%;
-  width: 40px;
-  height: 40px;
-  text-align: center;
-  font-size: x-large;
-  color: white;
-  margin-left: 5px;
-}
-.worldbuilding .resource-sp-max {
-  font-family: "cyrodiil";
-  src: url("../fonts/cyrodiil/cyrodiil.ttf");
-  background: #228B22;
-  border-radius: 50%;
-  width: 30px;
-  height: 30px;
-  text-align: center;
-  font-size: larger;
-  color: white;
-}
-.worldbuilding .resource-lp {
-  font-family: "cyrodiil";
-  src: url("../fonts/cyrodiil/cyrodiil.ttf");
-  background: purple;
-  border-radius: 50%;
-  width: 40px;
-  height: 40px;
-  text-align: center;
-  font-size: x-large;
-  color: white;
-  margin-left: 5px;
-}
-.worldbuilding .resource-lp-max {
-  font-family: "cyrodiil";
-  src: url("../fonts/cyrodiil/cyrodiil.ttf");
-  background:purple;
-  border-radius: 50%;
-  width: 30px;
-  height: 30px;
-  text-align: center;
-  font-size: larger;
-  color: white;
-}
-.worldbuilding .skill-table {
-  text-align: center;
-  font-size: 15px;
-  margin-top: 5px;
-  font-family: "cyrodiil";
-  src: url("../fonts/cyrodiil/cyrodiil.ttf");
-}
-.worldbuilding .core-sidebar1 {
-  text-align: center;
-  float: left;
-  width: 20%;
-  padding-right: 5px;
-  border-right: groove;
-}
-.worldbuilding .core-sidebar2 {
-  width: 80%;
-  float: right;
-  font-size: 15px;
-  margin-top: 5px;
-  padding-left: 5px;
-}
-.worldbuilding .xpPoints {
-  text-align: center;
-  border-radius: 30%;
-  width: 100%;
-}
-.worldbuilding .bioHeader {
-  font-family: "cyrodiil";
-  src: url(../fonts/cyrodiil/cyrodiil.ttf);
-  text-align: center;
-}
-.worldbuilding .derived_attributes_table {
-  text-align: center;
-  width: 10%;
-  float: left;
-  margin-top: 5px;
-  font-family: "cyrodiil";
-  src: url("../fonts/cyrodiil/cyrodiil.ttf");
-}
-.worldbuilding .skills-header {
-  font-family: "cyrodiil";
-  src: url(../fonts/cyrodiil/cyrodiil.ttf);
-  font-size: 15px;
-  background-color: goldenrod;
-}
-.worldbuilding .actionPoints {
-  text-align: center;
-  padding: 10px;
-}
-.worldbuilding .size_table {
-  font-family: "cyrodiil";
-  src: url(../fonts/cyrodiil/cyrodiil.ttf);
-  width: 10%;
-}
-.worldbuilding .combat-sidebar {
-  float: right;
-  padding-left: 5px;
-  width: 70%;
-  border-right: groove;
-}
-.worldbuilding .combat-sidebar2 {
-  float: left;
-  padding-right: 5px;
-  width: 30%;
-  border-right: groove;
-}
-.worldbuilding .combat-sidebar2 .ap-inputs {
-  text-align: center;
-}
-.worldbuilding .combat_table {
-  margin-top: 2px;
-  text-align: center;
-  font-weight: bold;
-}
-.worldbuilding .combat_table_header {
-  font-family: "cyrodiil";
-  src: url(../fonts/cyrodiil/cyrodiil.ttf);
-  font-size: large;
-  margin-top: 2px;
-  text-align: center;
-  background-color: rgb(219, 181, 77);
-}
-.worldbuilding .combat_table_header2 {
-  font-family: "cyrodiil";
-  src: url(../fonts/cyrodiil/cyrodiil.ttf);
-  font-size: large;
-  margin-top: 2px;
-  text-align: center;
-  background-color: rgb(189, 116, 106);
-}
-.worldbuilding .item-list {
-  list-style: none;
-  margin: 7px 0;
-  padding: 0;
-  width: 100%;
-  float: left;
-}
-.worldbuilding .ability-list {
-  display: inline-block;
-  margin: 7px 0;
-  padding: 0;
-  width: 100%;
-}
-.worldbuilding .ability-list li {
-  float: left;
-  list-style: outside none none;
-  width: 50%;
-}
-.worldbuilding .ability-list .item img {
-  flex: 0 0 24px;
-  margin-right: 5px;
-}
-.worldbuilding .ability-list .item {
-  height: 30px;
-  line-height: 25px;
-  padding: 3px 0;
-  border-bottom: 1px solid #BBB;
-}
-.worldbuilding .ability-list label {
-  width: 10px;
-  text-align: center;
-}
-.worldbuilding .ability-list .item-category {
-  margin: 0;
-}
-.worldbuilding .ability-list .item-name {
-  margin: 0;
-}
-.worldbuilding .ability-list .item-name:hover {
-  font-weight: bold;
-}
-.worldbuilding .ability-list .item-img:hover {
-  zoom: 150%;
-  background-color: gray;
-}
-.worldbuilding .ability-list .item-controls {
-  flex: 0 0 36px;
-  margin-right: 5px;
-  margin-left: 0px;
-}
-.worldbuilding .weapon-header {
-  text-align: center;
-}
-.worldbuilding .item-list-resource input {
-  width: 20%;
-  height: 18px;
-  text-align: center;
-  margin-left: 15px;
-  margin-right: 5px;
-  margin-bottom: 20px;
-  margin-top: 1px;
-}
-.worldbuilding .item-list .item {
-  height: 30px;
-  line-height: 25px;
-  padding: 3px 0;
-  border-bottom: 1px solid #BBB;
-}
-.worldbuilding .item-list label {
-  width: 10px;
-  text-align: center;
-}
-.worldbuilding .item-list .item img {
-  flex: 0 0 24px;
-  margin-right: 5px;
-  margin-left: 5px;
-}
-.worldbuilding .item-list .item-name {
-  margin: 0;
-  margin-right: -80px;
-}
-.worldbuilding .item-list .item-name:hover {
-  font-weight: bold;
-}
-.worldbuilding .item-list .item-img:hover {
-  zoom: 150%;
-  background-color: gray;
-}
-.worldbuilding .item-list .item-controls {
-  flex: 0 0 20px;
-  margin-left: 0px;
-}
-.worldbuilding .spell-list {
-  list-style: none;
-  margin: 7px 0;
-  padding: 0;
-  width: 100%;
-  float: center;
-}
-.worldbuilding .spell-list-resource input {
-  width: 20%;
-  height: 18px;
-  text-align: center;
-  margin-left: 15px;
-  margin-right: 5px;
-  margin-bottom: 20px;
-  margin-top: 1px;
-}
-.worldbuilding .spell-list .item {
-  height: 30px;
-  line-height: 25px;
-  padding: 3px 0;
-  border-bottom: 1px solid #BBB;
-}
-.worldbuilding .spell-list label {
-  width: 10px;
-  text-align: center;
-}
-.worldbuilding .spell-list .item img {
-  flex: 0 0 24px;
-  margin-right: 5px;
-  margin-left: 5%;
-}
-.worldbuilding .spell-list .item-name {
-  margin: 0;
-}
-.worldbuilding .spell-list .item-name:hover {
-  font-weight: bold;
-}
-.worldbuilding .spell-list .item-img:hover {
-  zoom: 150%;
-  background-color: gray;
-}
-.worldbuilding .spell-list .item-controls {
-  flex: 0 0 36px;
-  margin-right: 5px;
-  margin-left: 0px;
-}
-.worldbuilding .itemHeader {
-  font-family: "cyrodiil";
-  src: url(../fonts/cyrodiil/cyrodiil.ttf);
-  text-align: center;
-  font-size: large;
-}
-.worldbuilding .spellHeader {
-  font-family: "cyrodiil";
-  src: url(../fonts/cyrodiil/cyrodiil.ttf);
-  text-align: center;
-  background-color: rgb(200, 185, 143);
-  font-size: large;
-  border-bottom: thin;
-}
-.worldbuilding .itemHeaderQTY {
-  width: 14%;
-}
-.worldbuilding .item-resource {
-  text-align: center;
-}
-.worldbuilding .field-inputs {
-  text-align: center;
-  font-size: small;
-}
-.worldbuilding .field-inputs-small {
-  text-align: center;
-  font-size: small;
-  font-weight: bold;
-}
-.worldbuilding .tall-input {
-  text-align: center;
-  line-height: 140%;
-}
-.worldbuilding .enc-color-red {
-  background-color: red;
-  color: white;
-}
-.worldbuilding .enc-color-orange {
-  background-color: orange;
-  color: white;
-}
-.worldbuilding .enc-color-none {
-  background-color: none;
-}
-.worldbuilding .characteristic-roll {
-  font-family: "cyrodiil";
-  src: url(../fonts/cyrodiil/cyrodiil.ttf);
-  background-color: transparent;
-  font-weight: bold;
-  border-radius: 10%;
-  border-style: groove;
-  padding: 5px;
-}
-.worldbuilding .characteristic-roll:hover {
-  border-color: black;
-  background-color: red;
-  color: white;
-}
-.worldbuilding .skill-roll {
-  font-family: "cyrodiil";
-  src: url(../fonts/cyrodiil/cyrodiil.ttf);
-  background-color: transparent;
-  font-weight: bold;
-  border-radius: 10%;
-  border-style: groove;
-  padding: 5px;
-}
-.worldbuilding .skill-roll:hover {
-  border-color: black;
-  background-color: red;
-  color: white;
-}
-.worldbuilding .professions-roll {
-  font-family: "cyrodiil";
-  src: url(../fonts/cyrodiil/cyrodiil.ttf);
-  background-color: transparent;
-  font-weight: bold;
-  border-radius: 10%;
-  border-style: groove;
-  padding: 5px;
-}
-.worldbuilding .professions-roll:hover {
-  border-color: black;
-  background-color: red;
-  color: white;
-}
-.worldbuilding .magic-skill-roll {
-  font-family: "cyrodiil";
-  src: url(../fonts/cyrodiil/cyrodiil.ttf);
-  background-color: transparent;
-  font-weight: bold;
-  border-radius: 10%;
-  border-style: groove;
-  padding: 5px;
-}
-.worldbuilding .magic-skill-roll:hover {
-  border-color: black;
-  background-color: red;
-  color: white;
-}
-.worldbuilding .resistance-roll {
-  background-color: transparent;
-  font-weight: bold;
-  border-radius: 10%;
-  border-style: groove;
-  padding: 5px;
-  margin-left: auto;
-  margin-right: auto;
-}
-.worldbuilding .resistance-roll:hover {
-  border-color: black;
-  background-color: red;
-  color: white;
-}
-.worldbuilding .weapon-roll {
-  font-family: "cyrodiil";
-  src: url(../fonts/cyrodiil/cyrodiil.ttf);
-  background-color: transparent;
-  font-weight: bold;
-  border-radius: 10%;
-  border-style: groove;
-  padding: 5px;
-  margin-left: auto;
-  margin-right: auto;
-}
-.worldbuilding .weapon-roll:hover {
-  border-color: black;
-  background-color: red;
-  color: white;
-}
-.worldbuilding .spell-roll {
-  font-family: "cyrodiil";
-  src: url(../fonts/cyrodiil/cyrodiil.ttf);
-  background-color: transparent;
-  font-weight: bold;
-  border-radius: 10%;
-  border-style: groove;
-  padding: 5px;
-}
-.worldbuilding .spell-roll:hover {
-  border-color: black;
-  background-color: red;
-  color: white;
-}
-.worldbuilding .combat-style-roll {
-  font-family: "cyrodiil";
-  src: url(../fonts/cyrodiil/cyrodiil.ttf);
-  background-color: transparent;
-  font-weight: bold;
-  border-radius: 10%;
-  border-style: groove;
-  padding: 5px;
-}
-.worldbuilding .combat-style-roll:hover {
-  border-color: black;
-  background-color: red;
-  color: white;
-}
-.worldbuilding .unconventional-roll {
-  font-family: "cyrodiil";
-  src: url(../fonts/cyrodiil/cyrodiil.ttf);
-  background-color: transparent;
-  font-weight: bold;
-  border-radius: 10%;
-  border-style: groove;
-  padding: 5px;
-}
-.worldbuilding .unconventional-roll:hover {
-  border-color: black;
-  background-color: red;
-  color: white;
-}
-.worldbuilding .w1Open:hover {
-  font-weight: bold;
-}
+    {{!-- Sheet Header --}}
+    <header class="sheet-header">
+        <img class="profile-img" src="{{actor.img}}" data-edit="img" title="{{actor.name}}" height="100" width="100"/>
+        <div class="header-fields">
+            <h1 class="charname"><input name="name" type="text" value="{{actor.name}}" placeholder="Name"/></h1>
+            <div class="resources">
+                <label class="resource-label">Health</label><p>
+                <input class="resource-hp" type="text" name="data.hp.value" value="{{data.hp.value}}" data-dtype="Number"/>
+                <span>-</span>
+                <input class="resource-hp-max" type="text" name="data.hp.max" value="{{data.hp.max}}" data-dtype="Number"/>
+            </div>
+            <div class="resources">
+                <label class="resource-label">Magicka</label><p>
+                <input class="resource-mp" type="text" name="data.magicka.value" value="{{data.magicka.value}}" data-dtype="Number"/>
+                <span>-</span>
+                <input class="resource-mp-max" type="text" name="data.magicka.max" value="{{data.magicka.max}}" data-dtype="Number"/>
+            </div>
+            <div class="resources">
+                <label class="resource-label">Stamina</label><p>
+                <input class="resource-sp" name="data.stamina.value" value="{{data.stamina.value}}" data-dtype="Number"/>
+                <span>-</span>
+                <input class="resource-sp-max" name="data.stamina.max" value="{{data.stamina.max}}" data-dtype="Number"/>
+            </div>
+            <div class="resources">
+                <label class="resource-label">Luck Points</label><p>
+                <input class="resource-lp" name="data.luck_points.value" value="{{data.luck_points.value}}" data-dtype="Number"/>
+                <span>-</span>
+                <input class="resource-lp-max" name="data.luck_points.max" value="{{data.luck_points.max}}" data-dtype="Number"/>
+            </div>
+        </div>
+    </header>
+
+    {{!-- Sheet Tab Navigation --}}
+    <nav class="sheet-tabs tabs" data-group="primary">
+        <a class="item" data-tab="core">Core</a>
+        <a class="item" data-tab="skills">Skills</a>
+        <a class="item" data-tab="combat">Combat</a>
+        <a class="item" data-tab="talents">Talents</a>
+        <a class="item" data-tab="spells">Spells</a>
+        <a class="item" data-tab="journal">Journal</a>
+        <a class="item" data-tab="items">Equipment</a>
+    </nav>
+
+    {{!-- Sheet Body --}}
+    <section class="sheet-body">
+
+        {{!-- Core Tab --}}
+        <div class="tab core" data-group="primary" data-tab="core">
+            <div>
+            <table class="core-sidebar1">
+                <tr>
+                    <th colspan="3" class="combat_table_header">Characteristics</th>
+                </tr>
+                <tr>
+                    <td><input type="checkbox" name="data.characteristics.str.favored" {{checked data.characteristics.str.favored}}></td>
+                    <th><input type="button" class="characteristic-roll" name="STR" id="str" value="STR"></th>
+                    <td><input name="data.characteristics.str.value" type="text" value="{{data.characteristics.str.value}}" data-dtype="Number"></td>
+                </tr>
+                <tr>
+                    <td><input type="checkbox" name="data.characteristics.end.favored" {{checked data.characteristics.end.favored}}></td>
+                    <th><input type="button" class="characteristic-roll" name="END" id="end" value="END"></th>
+                    <td><input name="data.characteristics.end.value" type="text" value="{{data.characteristics.end.value}}" data-dtype="Number"></td>
+                </tr>
+                <tr>
+                    <td><input type="checkbox" name="data.characteristics.agi.favored" {{checked data.characteristics.agi.favored}}></td>
+                    <th><input type="button" class="characteristic-roll" name="AGI" id="agi" value="AGI"></th>
+                    <td><input name="data.characteristics.agi.value" type="text" value="{{data.characteristics.agi.value}}" data-dtype="Number"></td>
+                </tr>
+                <tr>
+                    <td><input type="checkbox" name="data.characteristics.int.favored" {{checked data.characteristics.int.favored}}></td>
+                    <th><input type="button" class="characteristic-roll" name="INT" id="int" value="INT"></th>
+                    <td><input name="data.characteristics.int.value" type="text" value="{{data.characteristics.int.value}}" data-dtype="Number"></td>
+                </tr>
+                <tr>
+                    <td><input type="checkbox" name="data.characteristics.wp.favored" {{checked data.characteristics.wp.favored}}></td>
+                    <th><input type="button" class="characteristic-roll" name="WP" id="wp" value="WP"></th>
+                    <td><input name="data.characteristics.wp.value" type="text" value="{{data.characteristics.wp.value}}" data-dtype="Number"></td>
+                </tr>
+                <tr>
+                    <td><input type="checkbox" name="data.characteristics.prc.favored" {{checked data.characteristics.prc.favored}}></td>
+                    <th><input type="button" class="characteristic-roll" name="PRC" id="prc" value="PRC"></th>
+                    <td><input name="data.characteristics.prc.value" type="text" value="{{data.characteristics.prc.value}}" data-dtype="Number"></td>
+                </tr>
+                <tr>
+                    <td><input type="checkbox" name="data.characteristics.prs.favored" {{checked data.characteristics.prs.favored}}></td>
+                    <th><input type="button" class="characteristic-roll" name="PRS" id="prs" value="PRS"></th>
+                    <td><input name="data.characteristics.prs.value" type="text" value="{{data.characteristics.prs.value}}" data-dtype="Number"></td>
+                </tr>
+                <tr>
+                    <td><input type="checkbox" name="data.characteristics.lck.favored" {{checked data.characteristics.lck.favored}}></td>
+                    <th><input type="button" class="characteristic-roll" name="LCK" id="lck" value="LCK"></th>
+                    <td><input name="data.characteristics.lck.value" type="text" value="{{data.characteristics.lck.value}}" data-dtype="Number"></td>
+                </tr>
+            </table>
+            </div>
+            <div class="core-sidebar2">
+                <table>
+                    <tr>
+                        <th>Race</th>
+                        <th>Birthsign</th>
+                        <th>Current XP</th>
+                        <th>Total XP</th>
+                    </tr>
+                    <tr class="field-inputs">
+                        <td><input type="text" name="data.race" value="{{data.race}}"></td>
+                        <td><input type="text" name="data.birthsign" value="{{data.birthsign}}"></td>
+                        <td><input type="text" name="data.height" value="{{data.xp}}"></td>
+                        <td><input type="text" name="data.weight" value="{{data.xpTotal}}"></td>
+                    </tr>
+                </table>
+                <table>
+                    <tr>
+                        <th colspan="5">Lucky Numbers</th>
+                        <th colspan="7">Unlucky Numbers</th>
+                    </tr>
+                    <tr>
+                        <tr class="field-inputs">
+                            <td><input type="text" name="data.lucky_numbers.ln1" value="{{data.lucky_numbers.ln1}}"></td>
+                            <td><input type="text" name="data.lucky_numbers.ln2" value="{{data.lucky_numbers.ln2}}"></td>
+                            <td><input type="text" name="data.lucky_numbers.ln3" value="{{data.lucky_numbers.ln3}}"></td>
+                            <td><input type="text" name="data.lucky_numbers.ln4" value="{{data.lucky_numbers.ln4}}"></td>
+                            <td><input type="text" name="data.lucky_numbers.ln5" value="{{data.lucky_numbers.ln5}}"></td>
+                            <td><input type="text" disabled></td>
+                            <td><input type="text" name="data.unlucky_numbers.ul1" value="{{data.unlucky_numbers.ul1}}"></td>
+                            <td><input type="text" name="data.unlucky_numbers.ul2" value="{{data.unlucky_numbers.ul2}}"></td>
+                            <td><input type="text" name="data.unlucky_numbers.ul3" value="{{data.unlucky_numbers.ul3}}"></td>
+                            <td><input type="text" name="data.unlucky_numbers.ul4" value="{{data.unlucky_numbers.ul4}}"></td>
+                            <td><input type="text" name="data.unlucky_numbers.ul5" value="{{data.unlucky_numbers.ul5}}"></td>
+                        </tr>
+                    </tr>
+                </table>
+                <div>
+                    <h2 class="bioHeader">Biography - Languages - Bonds</h2>
+                    {{editor content=data.bio target="data.bio" button=true owner=owner editable=editable}}
+                </div>
+            </div>
+        </div>
+
+        {{!-- Skills Tab --}}
+        <div class="tab skills" data-group="primary" data-tab="skills">
+            <div>
+                <table>
+                    <tr class="skill-table">
+                        <th>Roll</th>
+                        <th>Skill</th>
+                        <th>Rank</th>
+                        <th>Characteristic</th>
+                        <th>Bonus</th>
+                        <th>Specialization</th>
+                        <th>TN</th>
+                    </tr>
+                    <tr class="field-inputs">
+                        <td><input type="button" class="skill-roll" name="Acrobatics" id="acrobatics" value="Roll"></td>
+                        <td>Acrobatics</td>
+                        <td><select name="data.skills.acrobatics.rank" data-type="String">
+                            {{#select actor.data.skills.acrobatics.rank}}
+                            {{#each actor.data.skill_ranks as |skill_ranks key|}}
+                            <option value="{{key}}">{{skill_ranks.name}}</option> 
+                            {{/each}} {{/select}}
+                        </select></td>
+                        <td><select name="data.skills.acrobatics.characteristic" data-type="String">
+                            {{#select actor.data.skills.acrobatics.characteristic}}
+                            {{#each actor.data.characteristics as |characteristics key|}}
+                            <option value="{{key}}">{{characteristics.name}}</option> 
+                            {{/each}} {{/select}}
+                        </select></td>
+                        <td><input type="text" name="data.skills.acrobatics.bonus" value="{{data.skills.acrobatics.bonus}}" data-dtype="Number"></td>
+                        <td><input class="field-inputs" type="text" name="data.skills.acrobatics.specialization" value="{{data.skills.acrobatics.specialization}}" data-dtype="String"></td>
+                        <td><input type="text" class="field-inputs" name="data.skills.acrobatics.tn" value="{{data.skills.acrobatics.tn}}" data-dtype="Number" disabled></td>
+                    </tr>
+                    <tr class="field-inputs">
+                        <td><input type="button" class="skill-roll" name="Athletics" id="athletics" value="Roll"></td>
+                        <td>Athletics</td>
+                        <td><select name="data.skills.athletics.rank" data-type="String">
+                            {{#select actor.data.skills.athletics.rank}}
+                            {{#each actor.data.skill_ranks as |skill_ranks key|}}
+                            <option value="{{key}}">{{skill_ranks.name}}</option> 
+                            {{/each}} {{/select}}
+                        </select></td>
+                        <td><select name="data.skills.athletics.characteristic" data-type="String">
+                            {{#select actor.data.skills.athletics.characteristic}}
+                            {{#each actor.data.characteristics as |characteristics key|}}
+                            <option value="{{key}}">{{characteristics.name}}</option> 
+                            {{/each}} {{/select}}
+                        </select></td>
+                        <td><input type="text" name="data.skills.athletics.bonus" value="{{data.skills.athletics.bonus}}" data-dtype="Number"></td>
+                        <td><input class="field-inputs" type="text" name="data.skills.athletics.specialization" value="{{data.skills.athletics.specialization}}" data-dtype="String"></td>
+                        <td><input type="text" class="field-inputs" name="data.skills.athletics.tn" value="{{data.skills.athletics.tn}}" data-dtype="Number" disabled></td>
+                    </tr>
+                    <tr class="field-inputs">
+                        <td><input type="button" class="skill-roll" name="Command" id="command" value="Roll"></td>
+                        <td>Command</td>
+                        <td><select name="data.skills.command.rank" data-type="String">
+                            {{#select actor.data.skills.command.rank}}
+                            {{#each actor.data.skill_ranks as |skill_ranks key|}}
+                            <option value="{{key}}">{{skill_ranks.name}}</option> 
+                            {{/each}} {{/select}}
+                        </select></td>
+                        <td><select name="data.skills.command.characteristic" data-type="String">
+                            {{#select actor.data.skills.command.characteristic}}
+                            {{#each actor.data.characteristics as |characteristics key|}}
+                            <option value="{{key}}">{{characteristics.name}}</option> 
+                            {{/each}} {{/select}}
+                        </select></td>
+                        <td><input type="text" name="data.skills.command.bonus" value="{{data.skills.command.bonus}}" data-dtype="Number"></td>
+                        <td><input class="field-inputs" type="text" name="data.skills.command.specialization" value="{{data.skills.command.specialization}}" data-dtype="String"></td>
+                        <td><input type="text" class="field-inputs" name="data.skills.command.tn" value="{{data.skills.command.tn}}" data-dtype="Number" disabled></td>
+                    </tr>
+                    <tr class="field-inputs">
+                        <td><input type="button" class="skill-roll" name="Commerce" id="commerce" value="Roll"></td>
+                        <td>Commerce</td>
+                        <td><select name="data.skills.commerce.rank" data-type="String">
+                            {{#select actor.data.skills.commerce.rank}}
+                            {{#each actor.data.skill_ranks as |skill_ranks key|}}
+                            <option value="{{key}}">{{skill_ranks.name}}</option> 
+                            {{/each}} {{/select}}
+                        </select></td>
+                        <td><select name="data.skills.commerce.characteristic" data-type="String">
+                            {{#select actor.data.skills.commerce.characteristic}}
+                            {{#each actor.data.characteristics as |characteristics key|}}
+                            <option value="{{key}}">{{characteristics.name}}</option> 
+                            {{/each}} {{/select}}
+                        </select></td>
+                        <td><input type="text" name="data.skills.commerce.bonus" value="{{data.skills.commerce.bonus}}" data-dtype="Number"></td>
+                        <td><input class="field-inputs" type="text" name="data.skills.commerce.specialization" value="{{data.skills.commerce.specialization}}" data-dtype="String"></td>
+                        <td><input type="text" class="field-inputs" name="data.skills.commerce.tn" value="{{data.skills.commerce.tn}}" data-dtype="Number" disabled></td>
+                    </tr>
+                    <tr class="field-inputs">
+                        <td><input type="button" class="skill-roll" name="Deceive" id="deceive" value="Roll"></td>
+                        <td>Deceive</td>
+                        <td><select name="data.skills.deceive.rank" data-type="String">
+                            {{#select actor.data.skills.deceive.rank}}
+                            {{#each actor.data.skill_ranks as |skill_ranks key|}}
+                            <option value="{{key}}">{{skill_ranks.name}}</option> 
+                            {{/each}} {{/select}}
+                        </select></td>
+                        <td><select name="data.skills.deceive.characteristic" data-type="String">
+                            {{#select actor.data.skills.deceive.characteristic}}
+                            {{#each actor.data.characteristics as |characteristics key|}}
+                            <option value="{{key}}">{{characteristics.name}}</option> 
+                            {{/each}} {{/select}}
+                        </select></td>
+                        <td><input type="text" name="data.skills.deceive.bonus" value="{{data.skills.deceive.bonus}}" data-dtype="Number"></td>
+                        <td><input class="field-inputs" type="text" name="data.skills.deceive.specialization" value="{{data.skills.deceive.specialization}}" data-dtype="String"></td>
+                        <td><input type="text" class="field-inputs" name="data.skills.deceive.tn" value="{{data.skills.deceive.tn}}" data-dtype="Number" disabled></td>
+                    </tr>
+                    <tr class="field-inputs">
+                        <td><input type="button" class="skill-roll" name="Evade" id="evade" value="Roll"></td>
+                        <td>Evade</td>
+                        <td><select name="data.skills.evade.rank" data-type="String">
+                            {{#select actor.data.skills.evade.rank}}
+                            {{#each actor.data.skill_ranks as |skill_ranks key|}}
+                            <option value="{{key}}">{{skill_ranks.name}}</option> 
+                            {{/each}} {{/select}}
+                        </select></td>
+                        <td><select name="data.skills.evade.characteristic" data-type="String">
+                            {{#select actor.data.skills.evade.characteristic}}
+                            {{#each actor.data.characteristics as |characteristics key|}}
+                            <option value="{{key}}">{{characteristics.name}}</option> 
+                            {{/each}} {{/select}}
+                        </select></td>
+                        <td><input type="text" name="data.skills.evade.bonus" value="{{data.skills.evade.bonus}}" data-dtype="Number"></td>
+                        <td><input class="field-inputs" type="text" name="data.skills.evade.specialization" value="{{data.skills.evade.specialization}}" data-dtype="String"></td>
+                        <td><input type="text" class="field-inputs" name="data.skills.evade.tn" value="{{data.skills.evade.tn}}" data-dtype="Number" disabled></td>
+                    </tr>
+                    <tr class="field-inputs">
+                        <td><input type="button" class="skill-roll" name="Investigate" id="investigate" value="Roll"></td>
+                        <td>Investigate</td>
+                        <td><select name="data.skills.investigate.rank" data-type="String">
+                            {{#select actor.data.skills.investigate.rank}}
+                            {{#each actor.data.skill_ranks as |skill_ranks key|}}
+                            <option value="{{key}}">{{skill_ranks.name}}</option> 
+                            {{/each}} {{/select}}
+                        </select></td>
+                        <td><select name="data.skills.investigate.characteristic" data-type="String">
+                            {{#select actor.data.skills.investigate.characteristic}}
+                            {{#each actor.data.characteristics as |characteristics key|}}
+                            <option value="{{key}}">{{characteristics.name}}</option> 
+                            {{/each}} {{/select}}
+                        </select></td>
+                        <td><input type="text" name="data.skills.investigate.bonus" value="{{data.skills.investigate.bonus}}" data-dtype="Number"></td>
+                        <td><input class="field-inputs" type="text" name="data.skills.investigate.specialization" value="{{data.skills.investigate.specialization}}" data-dtype="String"></td>
+                        <td><input type="text" class="field-inputs" name="data.skills.investigate.tn" value="{{data.skills.investigate.tn}}" data-dtype="Number" disabled></td>
+                    </tr>
+                    <tr class="field-inputs">
+                        <td><input type="button" class="skill-roll" name="Logic" id="logic" value="Roll"></td>
+                        <td>Logic</td>
+                        <td><select name="data.skills.logic.rank" data-type="String">
+                            {{#select actor.data.skills.logic.rank}}
+                            {{#each actor.data.skill_ranks as |skill_ranks key|}}
+                            <option value="{{key}}">{{skill_ranks.name}}</option> 
+                            {{/each}} {{/select}}
+                        </select></td>
+                        <td><select name="data.skills.logic.characteristic" data-type="String">
+                            {{#select actor.data.skills.logic.characteristic}}
+                            {{#each actor.data.characteristics as |characteristics key|}}
+                            <option value="{{key}}">{{characteristics.name}}</option> 
+                            {{/each}} {{/select}}
+                        </select></td>
+                        <td><input type="text" name="data.skills.logic.bonus" value="{{data.skills.logic.bonus}}" data-dtype="Number"></td>
+                        <td><input class="field-inputs" type="text" name="data.skills.logic.specialization" value="{{data.skills.logic.specialization}}" data-dtype="String"></td>
+                        <td><input type="text" class="field-inputs" name="data.skills.logic.tn" value="{{data.skills.logic.tn}}" data-dtype="Number" disabled></td>
+                    </tr>
+                    <tr class="field-inputs">
+                        <td><input type="button" class="skill-roll" name="Lore" id="lore" value="Roll"></td>
+                        <td>Lore</td>
+                        <td><select name="data.skills.lore.rank" data-type="String">
+                            {{#select actor.data.skills.lore.rank}}
+                            {{#each actor.data.skill_ranks as |skill_ranks key|}}
+                            <option value="{{key}}">{{skill_ranks.name}}</option> 
+                            {{/each}} {{/select}}
+                        </select></td>
+                        <td><select name="data.skills.lore.characteristic" data-type="String">
+                            {{#select actor.data.skills.lore.characteristic}}
+                            {{#each actor.data.characteristics as |characteristics key|}}
+                            <option value="{{key}}">{{characteristics.name}}</option> 
+                            {{/each}} {{/select}}
+                        </select></td>
+                        <td><input type="text" name="data.skills.lore.bonus" value="{{data.skills.lore.bonus}}" data-dtype="Number"></td>
+                        <td><input class="field-inputs" type="text" name="data.skills.lore.specialization" value="{{data.skills.lore.specialization}}" data-dtype="String"></td>
+                        <td><input type="text" class="field-inputs" name="data.skills.lore.tn" value="{{data.skills.lore.tn}}" data-dtype="Number" disabled></td>
+                    </tr>
+                    <tr class="field-inputs">
+                        <td><input type="button" class="skill-roll" name="Navigate" id="navigate" value="Roll"></td>
+                        <td>Navigate</td>
+                        <td><select name="data.skills.navigate.rank" data-type="String">
+                            {{#select actor.data.skills.navigate.rank}}
+                            {{#each actor.data.skill_ranks as |skill_ranks key|}}
+                            <option value="{{key}}">{{skill_ranks.name}}</option> 
+                            {{/each}} {{/select}}
+                        </select></td>
+                        <td><select name="data.skills.navigate.characteristic" data-type="String">
+                            {{#select actor.data.skills.navigate.characteristic}}
+                            {{#each actor.data.characteristics as |characteristics key|}}
+                            <option value="{{key}}">{{characteristics.name}}</option> 
+                            {{/each}} {{/select}}
+                        </select></td>
+                        <td><input type="text" name="data.skills.navigate.bonus" value="{{data.skills.navigate.bonus}}" data-dtype="Number"></td>
+                        <td><input class="field-inputs" type="text" name="data.skills.navigate.specialization" value="{{data.skills.navigate.specialization}}" data-dtype="String"></td>
+                        <td><input type="text" class="field-inputs" name="data.skills.navigate.tn" value="{{data.skills.navigate.tn}}" data-dtype="Number" disabled></td>
+                    </tr>
+                    <tr class="field-inputs">
+                        <td><input type="button" class="skill-roll" name="Observe" id="observe" value="Roll"></td>
+                        <td>Observe</td>
+                        <td><select name="data.skills.observe.rank" data-type="String">
+                            {{#select actor.data.skills.observe.rank}}
+                            {{#each actor.data.skill_ranks as |skill_ranks key|}}
+                            <option value="{{key}}">{{skill_ranks.name}}</option> 
+                            {{/each}} {{/select}}
+                        </select></td>
+                        <td><select name="data.skills.observe.characteristic" data-type="String">
+                            {{#select actor.data.skills.observe.characteristic}}
+                            {{#each actor.data.characteristics as |characteristics key|}}
+                            <option value="{{key}}">{{characteristics.name}}</option> 
+                            {{/each}} {{/select}}
+                        </select></td>
+                        <td><input type="text" name="data.skills.observe.bonus" value="{{data.skills.observe.bonus}}" data-dtype="Number"></td>
+                        <td><input class="field-inputs" type="text" name="data.skills.observe.specialization" value="{{data.skills.observe.specialization}}" data-dtype="String"></td>
+                        <td><input type="text" class="field-inputs" name="data.skills.observe.tn" value="{{data.skills.observe.tn}}" data-dtype="Number" disabled></td>
+                    </tr>
+                    <tr class="field-inputs">
+                        <td><input type="button" class="skill-roll" name="Persuade" id="persuade" value="Roll"></td>
+                        <td>Persuade</td>
+                        <td><select name="data.skills.persuade.rank" data-type="String">
+                            {{#select actor.data.skills.persuade.rank}}
+                            {{#each actor.data.skill_ranks as |skill_ranks key|}}
+                            <option value="{{key}}">{{skill_ranks.name}}</option> 
+                            {{/each}} {{/select}}
+                        </select></td>
+                        <td><select name="data.skills.persuade.characteristic" data-type="String">
+                            {{#select actor.data.skills.persuade.characteristic}}
+                            {{#each actor.data.characteristics as |characteristics key|}}
+                            <option value="{{key}}">{{characteristics.name}}</option> 
+                            {{/each}} {{/select}}
+                        </select></td>
+                        <td><input type="text" name="data.skills.persuade.bonus" value="{{data.skills.persuade.bonus}}" data-dtype="Number"></td>
+                        <td><input class="field-inputs" type="text" name="data.skills.persuade.specialization" value="{{data.skills.persuade.specialization}}" data-dtype="String"></td>
+                        <td><input type="text" class="field-inputs" name="data.skills.persuade.tn" value="{{data.skills.persuade.tn}}" data-dtype="Number" disabled></td>
+                    </tr>
+                    <tr class="field-inputs">
+                        <td><input type="button" class="skill-roll" name="{{data.skills.profession1.name}}" id="profession1" value="Roll"></td>
+                        <td><input type="text" name="data.skills.profession1.name" value="{{data.skills.profession1.name}}" data-dtype="String" placeholder="profession1"></td>
+                        <td><select name="data.skills.profession1.rank" data-type="String">
+                            {{#select actor.data.skills.profession1.rank}}
+                            {{#each actor.data.skill_ranks as |skill_ranks key|}}
+                            <option value="{{key}}">{{skill_ranks.name}}</option> 
+                            {{/each}} {{/select}}
+                        </select></td>
+                        <td><select name="data.skills.profession1.characteristic" data-type="String">
+                            {{#select actor.data.skills.profession1.characteristic}}
+                            {{#each actor.data.characteristics as |characteristics key|}}
+                            <option value="{{key}}">{{characteristics.name}}</option> 
+                            {{/each}} {{/select}}
+                        </select></td>
+                        <td><input type="text" name="data.skills.profession1.bonus" value="{{data.skills.profession1.bonus}}" data-dtype="Number"></td>
+                        <td><input class="field-inputs" type="text" name="data.skills.profession1.specialization" value="{{data.skills.profession1.specialization}}" data-dtype="String"></td>
+                        <td><input type="text" class="field-inputs" name="data.skills.profession1.tn" value="{{data.skills.profession1.tn}}" data-dtype="Number" disabled></td>
+                    </tr>
+                    <tr class="field-inputs">
+                        <td><input type="button" class="skill-roll" name="{{data.skills.profession2.name}}" id="profession2" value="Roll"></td>
+                        <td><input type="text" name="data.skills.profession2.name" value="{{data.skills.profession2.name}}" data-dtype="String" placeholder="profession2"></td>
+                        <td><select name="data.skills.profession2.rank" data-type="String">
+                            {{#select actor.data.skills.profession2.rank}}
+                            {{#each actor.data.skill_ranks as |skill_ranks key|}}
+                            <option value="{{key}}">{{skill_ranks.name}}</option> 
+                            {{/each}} {{/select}}
+                        </select></td>
+                        <td><select name="data.skills.profession2.characteristic" data-type="String">
+                            {{#select actor.data.skills.profession2.characteristic}}
+                            {{#each actor.data.characteristics as |characteristics key|}}
+                            <option value="{{key}}">{{characteristics.name}}</option> 
+                            {{/each}} {{/select}}
+                        </select></td>
+                        <td><input type="text" name="data.skills.profession2.bonus" value="{{data.skills.profession2.bonus}}" data-dtype="Number"></td>
+                        <td><input class="field-inputs" type="text" name="data.skills.profession2.specialization" value="{{data.skills.profession2.specialization}}" data-dtype="String"></td>
+                        <td><input type="text" class="field-inputs" name="data.skills.profession2.tn" value="{{data.skills.profession2.tn}}" data-dtype="Number" disabled></td>
+                    </tr>
+                    <tr class="field-inputs">
+                        <td><input type="button" class="skill-roll" name="{{data.skills.profession3.name}}" id="profession3" value="Roll"></td>
+                        <td><input type="text" name="data.skills.profession3.name" value="{{data.skills.profession3.name}}" data-dtype="String" placeholder="profession3"></td>
+                        <td><select name="data.skills.profession3.rank" data-type="String">
+                            {{#select actor.data.skills.profession3.rank}}
+                            {{#each actor.data.skill_ranks as |skill_ranks key|}}
+                            <option value="{{key}}">{{skill_ranks.name}}</option> 
+                            {{/each}} {{/select}}
+                        </select></td>
+                        <td><select name="data.skills.profession3.characteristic" data-type="String">
+                            {{#select actor.data.skills.profession3.characteristic}}
+                            {{#each actor.data.characteristics as |characteristics key|}}
+                            <option value="{{key}}">{{characteristics.name}}</option> 
+                            {{/each}} {{/select}}
+                        </select></td>
+                        <td><input type="text" name="data.skills.profession3.bonus" value="{{data.skills.profession3.bonus}}" data-dtype="Number"></td>
+                        <td><input class="field-inputs" type="text" name="data.skills.profession3.specialization" value="{{data.skills.profession3.specialization}}" data-dtype="String"></td>
+                        <td><input type="text" class="field-inputs" name="data.skills.profession3.tn" value="{{data.skills.profession3.tn}}" data-dtype="Number" disabled></td>
+                    </tr>
+                    <tr class="field-inputs">
+                        <td><input type="button" class="skill-roll" name="Ride" id="ride" value="Roll"></td>
+                        <td>Ride</td>
+                        <td><select name="data.skills.ride.rank" data-type="String">
+                            {{#select actor.data.skills.ride.rank}}
+                            {{#each actor.data.skill_ranks as |skill_ranks key|}}
+                            <option value="{{key}}">{{skill_ranks.name}}</option> 
+                            {{/each}} {{/select}}
+                        </select></td>
+                        <td><select name="data.skills.ride.characteristic" data-type="String">
+                            {{#select actor.data.skills.ride.characteristic}}
+                            {{#each actor.data.characteristics as |characteristics key|}}
+                            <option value="{{key}}">{{characteristics.name}}</option> 
+                            {{/each}} {{/select}}
+                        </select></td>
+                        <td><input type="text" name="data.skills.ride.bonus" value="{{data.skills.ride.bonus}}" data-dtype="Number"></td>
+                        <td><input class="field-inputs" type="text" name="data.skills.ride.specialization" value="{{data.skills.ride.specialization}}" data-dtype="String"></td>
+                        <td><input type="text" class="field-inputs" name="data.skills.ride.tn" value="{{data.skills.ride.tn}}" data-dtype="Number" disabled></td>
+                    </tr>
+                    <tr class="field-inputs">
+                        <td><input type="button" class="skill-roll" name="Stealth" id="stealth" value="Roll"></td>
+                        <td>Stealth</td>
+                        <td><select name="data.skills.stealth.rank" data-type="String">
+                            {{#select actor.data.skills.stealth.rank}}
+                            {{#each actor.data.skill_ranks as |skill_ranks key|}}
+                            <option value="{{key}}">{{skill_ranks.name}}</option> 
+                            {{/each}} {{/select}}
+                        </select></td>
+                        <td><select name="data.skills.stealth.characteristic" data-type="String">
+                            {{#select actor.data.skills.stealth.characteristic}}
+                            {{#each actor.data.characteristics as |characteristics key|}}
+                            <option value="{{key}}">{{characteristics.name}}</option> 
+                            {{/each}} {{/select}}
+                        </select></td>
+                        <td><input type="text" name="data.skills.stealth.bonus" value="{{data.skills.stealth.bonus}}" data-dtype="Number"></td>
+                        <td><input class="field-inputs" type="text" name="data.skills.stealth.specialization" value="{{data.skills.stealth.specialization}}" data-dtype="String"></td>
+                        <td><input type="text" class="field-inputs" name="data.skills.stealth.tn" value="{{data.skills.stealth.tn}}" data-dtype="Number" disabled></td>
+                    </tr>
+                    <tr class="field-inputs">
+                        <td><input type="button" class="skill-roll" name="Subterfuge" id="subterfuge" value="Roll"></td>
+                        <td>Subterfuge</td>
+                        <td><select name="data.skills.subterfuge.rank" data-type="String">
+                            {{#select actor.data.skills.subterfuge.rank}}
+                            {{#each actor.data.skill_ranks as |skill_ranks key|}}
+                            <option value="{{key}}">{{skill_ranks.name}}</option> 
+                            {{/each}} {{/select}}
+                        </select></td>
+                        <td><select name="data.skills.subterfuge.characteristic" data-type="String">
+                            {{#select actor.data.skills.subterfuge.characteristic}}
+                            {{#each actor.data.characteristics as |characteristics key|}}
+                            <option value="{{key}}">{{characteristics.name}}</option> 
+                            {{/each}} {{/select}}
+                        </select></td>
+                        <td><input type="text" name="data.skills.subterfuge.bonus" value="{{data.skills.subterfuge.bonus}}" data-dtype="Number"></td>
+                        <td><input class="field-inputs" type="text" name="data.skills.subterfuge.specialization" value="{{data.skills.subterfuge.specialization}}" data-dtype="String"></td>
+                        <td><input type="text" class="field-inputs" name="data.skills.subterfuge.tn" value="{{data.skills.subterfuge.tn}}" data-dtype="Number" disabled></td>
+                    </tr>
+                    <tr class="field-inputs">
+                        <td><input type="button" class="skill-roll" name="Survival" id="survival" value="Roll"></td>
+                        <td>Survival</td>
+                        <td><select name="data.skills.survival.rank" data-type="String">
+                            {{#select actor.data.skills.survival.rank}}
+                            {{#each actor.data.skill_ranks as |skill_ranks key|}}
+                            <option value="{{key}}">{{skill_ranks.name}}</option> 
+                            {{/each}} {{/select}}
+                        </select></td>
+                        <td><select name="data.skills.survival.characteristic" data-type="String">
+                            {{#select actor.data.skills.survival.characteristic}}
+                            {{#each actor.data.characteristics as |characteristics key|}}
+                            <option value="{{key}}">{{characteristics.name}}</option> 
+                            {{/each}} {{/select}}
+                        </select></td>
+                        <td><input type="text" name="data.skills.survival.bonus" value="{{data.skills.survival.bonus}}" data-dtype="Number"></td>
+                        <td><input class="field-inputs" type="text" name="data.skills.survival.specialization" value="{{data.skills.survival.specialization}}" data-dtype="String"></td>
+                        <td><input type="text" class="field-inputs" name="data.skills.survival.tn" value="{{data.skills.survival.tn}}" data-dtype="Number" disabled></td>
+                    </tr>
+                    <tr>
+                        <th colspan="7" class="skills-header">Magic Skills</th>
+                    </tr>
+                    <tr class="skill-table">
+                        <th>Roll</th>
+                        <th>Skill</th>
+                        <th>Rank</th>
+                        <th>Characteristic</th>
+                        <th>Bonus</th>
+                        <th>Specialization</th>
+                        <th>TN</th>
+                    </tr>
+                    <tr class="field-inputs"> 
+                        <td><input type="button" class="magic-skill-roll" name="Alchemy" id="alchemy" value="Roll"></td>
+                        <td>Alchemy</td>
+                        <td><select name="data.magic_skills.alchemy.rank" data-type="String">
+                            {{#select actor.data.magic_skills.alchemy.rank}}
+                            {{#each actor.data.skill_ranks as |skill_ranks key|}}
+                            <option value="{{key}}">{{skill_ranks.name}}</option> 
+                            {{/each}} {{/select}}
+                        </select></td>
+                        <td><select name="data.magic_skills.alchemy.characteristic" data-type="String">
+                            {{#select actor.data.magic_skills.alchemy.characteristic}}
+                            {{#each actor.data.characteristics as |characteristics key|}}
+                            <option value="{{key}}">{{characteristics.name}}</option> 
+                            {{/each}} {{/select}}
+                        </select></td>
+                        <td><input type="text" name="data.magic_skills.alchemy.bonus" value="{{data.magic_skills.alchemy.bonus}}" data-dtype="Number"></td>
+                        <td><input class="field-inputs" type="text" name="data.magic_skills.alchemy.specialization" value="{{data.magic_skills.alchemy.specialization}}" data-dtype="String"></td>
+                        <td><input type="text" class="field-inputs" name="data.magic_skills.alchemy.tn" value="{{data.magic_skills.alchemy.tn}}" data-dtype="Number" disabled></td>
+                    </tr>
+                    <tr class="field-inputs">
+                        <td><input type="button" class="magic-skill-roll" name="Alteration" id="alteration" value="Roll"></td>
+                        <td>Alteration</td>
+                        <td><select name="data.magic_skills.alteration.rank" data-type="String">
+                            {{#select actor.data.magic_skills.alteration.rank}}
+                            {{#each actor.data.skill_ranks as |skill_ranks key|}}
+                            <option value="{{key}}">{{skill_ranks.name}}</option> 
+                            {{/each}} {{/select}}
+                        </select></td>
+                        <td><select name="data.magic_skills.alteration.characteristic" data-type="String">
+                            {{#select actor.data.magic_skills.alteration.characteristic}}
+                            {{#each actor.data.characteristics as |characteristics key|}}
+                            <option value="{{key}}">{{characteristics.name}}</option> 
+                            {{/each}} {{/select}}
+                        </select></td>
+                        <td><input type="text" name="data.magic_skills.alteration.bonus" value="{{data.magic_skills.alteration.bonus}}" data-dtype="Number"></td>
+                        <td><input class="field-inputs" type="text" name="data.magic_skills.alteration.specialization" value="{{data.magic_skills.alteration.specialization}}" data-dtype="String"></td>
+                        <td><input type="text" class="field-inputs" name="data.magic_skills.alteration.tn" value="{{data.magic_skills.alteration.tn}}" data-dtype="Number" disabled></td>
+                    </tr>
+                    <tr class="field-inputs">
+                        <td><input type="button" class="magic-skill-roll" name="Conjuration" id="conjuration" value="Roll"></td>
+                        <td>Conjuration</td>
+                        <td><select name="data.magic_skills.conjuration.rank" data-type="String">
+                            {{#select actor.data.magic_skills.conjuration.rank}}
+                            {{#each actor.data.skill_ranks as |skill_ranks key|}}
+                            <option value="{{key}}">{{skill_ranks.name}}</option> 
+                            {{/each}} {{/select}}
+                        </select></td>
+                        <td><select name="data.magic_skills.conjuration.characteristic" data-type="String">
+                            {{#select actor.data.magic_skills.conjuration.characteristic}}
+                            {{#each actor.data.characteristics as |characteristics key|}}
+                            <option value="{{key}}">{{characteristics.name}}</option> 
+                            {{/each}} {{/select}}
+                        </select></td>
+                        <td><input type="text" name="data.magic_skills.conjuration.bonus" value="{{data.magic_skills.conjuration.bonus}}" data-dtype="Number"></td>
+                        <td><input class="field-inputs" type="text" name="data.magic_skills.conjuration.specialization" value="{{data.magic_skills.conjuration.specialization}}" data-dtype="String"></td>
+                        <td><input type="text" class="field-inputs" name="data.magic_skills.conjuration.tn" value="{{data.magic_skills.conjuration.tn}}" data-dtype="Number" disabled></td>
+                    </tr>
+                    <tr class="field-inputs">
+                        <td><input type="button" class="magic-skill-roll" name="Destruction" id="destruction" value="Roll"></td>
+                        <td>Destruction</td>
+                        <td><select name="data.magic_skills.destruction.rank" data-type="String">
+                            {{#select actor.data.magic_skills.destruction.rank}}
+                            {{#each actor.data.skill_ranks as |skill_ranks key|}}
+                            <option value="{{key}}">{{skill_ranks.name}}</option> 
+                            {{/each}} {{/select}}
+                        </select></td>
+                        <td><select name="data.magic_skills.destruction.characteristic" data-type="String">
+                            {{#select actor.data.magic_skills.destruction.characteristic}}
+                            {{#each actor.data.characteristics as |characteristics key|}}
+                            <option value="{{key}}">{{characteristics.name}}</option> 
+                            {{/each}} {{/select}}
+                        </select></td>
+                        <td><input type="text" name="data.magic_skills.destruction.bonus" value="{{data.magic_skills.destruction.bonus}}" data-dtype="Number"></td>
+                        <td><input class="field-inputs" type="text" name="data.magic_skills.destruction.specialization" value="{{data.magic_skills.destruction.specialization}}" data-dtype="String"></td>
+                        <td><input type="text" class="field-inputs" name="data.magic_skills.destruction.tn" value="{{data.magic_skills.destruction.tn}}" data-dtype="Number" disabled></td>
+                    </tr>
+                    <tr class="field-inputs">
+                        <td><input type="button" class="magic-skill-roll" name="Enchant" id="enchant" value="Roll"></td>
+                        <td>Enchant</td>
+                        <td><select name="data.magic_skills.enchant.rank" data-type="String">
+                            {{#select actor.data.magic_skills.enchant.rank}}
+                            {{#each actor.data.skill_ranks as |skill_ranks key|}}
+                            <option value="{{key}}">{{skill_ranks.name}}</option> 
+                            {{/each}} {{/select}}
+                        </select></td>
+                        <td><select name="data.magic_skills.enchant.characteristic" data-type="String">
+                            {{#select actor.data.magic_skills.enchant.characteristic}}
+                            {{#each actor.data.characteristics as |characteristics key|}}
+                            <option value="{{key}}">{{characteristics.name}}</option> 
+                            {{/each}} {{/select}}
+                        </select></td>
+                        <td><input type="text" name="data.magic_skills.enchant.bonus" value="{{data.magic_skills.enchant.bonus}}" data-dtype="Number"></td>
+                        <td><input class="field-inputs" type="text" name="data.magic_skills.enchant.specialization" value="{{data.magic_skills.enchant.specialization}}" data-dtype="String"></td>
+                        <td><input type="text" class="field-inputs" name="data.magic_skills.enchant.tn" value="{{data.magic_skills.enchant.tn}}" data-dtype="Number" disabled></td>
+                    </tr>
+                    <tr class="field-inputs">
+                        <td><input type="button" class="magic-skill-roll" name="Illusion" id="illusion" value="Roll"></td>
+                        <td>Illusion</td>
+                        <td><select name="data.magic_skills.illusion.rank" data-type="String">
+                            {{#select actor.data.magic_skills.illusion.rank}}
+                            {{#each actor.data.skill_ranks as |skill_ranks key|}}
+                            <option value="{{key}}">{{skill_ranks.name}}</option> 
+                            {{/each}} {{/select}}
+                        </select></td>
+                        <td><select name="data.magic_skills.illusion.characteristic" data-type="String">
+                            {{#select actor.data.magic_skills.illusion.characteristic}}
+                            {{#each actor.data.characteristics as |characteristics key|}}
+                            <option value="{{key}}">{{characteristics.name}}</option> 
+                            {{/each}} {{/select}}
+                        </select></td>
+                        <td><input type="text" name="data.magic_skills.illusion.bonus" value="{{data.magic_skills.illusion.bonus}}" data-dtype="Number"></td>
+                        <td><input class="field-inputs" type="text" name="data.magic_skills.illusion.specialization" value="{{data.magic_skills.illusion.specialization}}" data-dtype="String"></td>
+                        <td><input type="text" class="field-inputs" name="data.magic_skills.illusion.tn" value="{{data.magic_skills.illusion.tn}}" data-dtype="Number" disabled></td>
+                    </tr>
+                    <tr class="field-inputs">
+                        <td><input type="button" class="magic-skill-roll" name="Mysticism" id="mysticism" value="Roll"></td>
+                        <td>Mysticism</td>
+                        <td><select name="data.magic_skills.mysticism.rank" data-type="String">
+                            {{#select actor.data.magic_skills.mysticism.rank}}
+                            {{#each actor.data.skill_ranks as |skill_ranks key|}}
+                            <option value="{{key}}">{{skill_ranks.name}}</option> 
+                            {{/each}} {{/select}}
+                        </select></td>
+                        <td><select name="data.magic_skills.mysticism.characteristic" data-type="String">
+                            {{#select actor.data.magic_skills.mysticism.characteristic}}
+                            {{#each actor.data.characteristics as |characteristics key|}}
+                            <option value="{{key}}">{{characteristics.name}}</option> 
+                            {{/each}} {{/select}}
+                        </select></td>
+                        <td><input type="text" name="data.magic_skills.mysticism.bonus" value="{{data.magic_skills.mysticism.bonus}}" data-dtype="Number"></td>
+                        <td><input class="field-inputs" type="text" name="data.magic_skills.mysticism.specialization" value="{{data.magic_skills.mysticism.specialization}}" data-dtype="String"></td>
+                        <td><input type="text" class="field-inputs" name="data.magic_skills.mysticism.tn" value="{{data.magic_skills.mysticism.tn}}" data-dtype="Number" disabled></td>
+                    </tr>
+                    <tr class="field-inputs">
+                        <td><input type="button" class="magic-skill-roll" name="Necromancy" id="necromancy" value="Roll"></td>
+                        <td>Necromancy</td>
+                        <td><select name="data.magic_skills.necromancy.rank" data-type="String">
+                            {{#select actor.data.magic_skills.necromancy.rank}}
+                            {{#each actor.data.skill_ranks as |skill_ranks key|}}
+                            <option value="{{key}}">{{skill_ranks.name}}</option> 
+                            {{/each}} {{/select}}
+                        </select></td>
+                        <td><select name="data.magic_skills.necromancy.characteristic" data-type="String">
+                            {{#select actor.data.magic_skills.necromancy.characteristic}}
+                            {{#each actor.data.characteristics as |characteristics key|}}
+                            <option value="{{key}}">{{characteristics.name}}</option> 
+                            {{/each}} {{/select}}
+                        </select></td>
+                        <td><input type="text" name="data.magic_skills.necromancy.bonus" value="{{data.magic_skills.necromancy.bonus}}" data-dtype="Number"></td>
+                        <td><input class="field-inputs" type="text" name="data.magic_skills.necromancy.specialization" value="{{data.magic_skills.necromancy.specialization}}" data-dtype="String"></td>
+                        <td><input type="text" class="field-inputs" name="data.magic_skills.necromancy.tn" value="{{data.magic_skills.necromancy.tn}}" data-dtype="Number" disabled></td>
+                    </tr>
+                    <tr class="field-inputs">
+                        <td><input type="button" class="magic-skill-roll" name="Restoration" id="restoration" value="Roll"></td>
+                        <td>Restoration</td>
+                        <td><select name="data.magic_skills.restoration.rank" data-type="String">
+                            {{#select actor.data.magic_skills.restoration.rank}}
+                            {{#each actor.data.skill_ranks as |skill_ranks key|}}
+                            <option value="{{key}}">{{skill_ranks.name}}</option> 
+                            {{/each}} {{/select}}
+                        </select></td>
+                        <td><select name="data.magic_skills.restoration.characteristic" data-type="String">
+                            {{#select actor.data.magic_skills.restoration.characteristic}}
+                            {{#each actor.data.characteristics as |characteristics key|}}
+                            <option value="{{key}}">{{characteristics.name}}</option> 
+                            {{/each}} {{/select}}
+                        </select></td>
+                        <td><input type="text" name="data.magic_skills.restoration.bonus" value="{{data.magic_skills.restoration.bonus}}" data-dtype="Number"></td>
+                        <td><input class="field-inputs" type="text" name="data.magic_skills.restoration.specialization" value="{{data.magic_skills.restoration.specialization}}" data-dtype="String"></td>
+                        <td><input type="text" class="field-inputs" name="data.magic_skills.restoration.tn" value="{{data.magic_skills.restoration.tn}}" data-dtype="Number" disabled></td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+
+        {{!-- Combat Tab --}}
+        <div class="tab combat" data-group="primary" data-tab="combat">
+            <table class="combat_table_header">
+                <tr>
+                    <th>Combat Styles</th>
+                </tr>
+            </table>
+            <table>
+                <tr>
+                    <th>Roll</th>
+                    <th>Combat Style</th>
+                    <th>Rank</th>
+                    <th>Bonus</th>
+                    <th>Base</th>
+                    <th>TN</th>
+                    <th>Weapons</th>
+                </tr>
+                <tr class="field-inputs-small">
+                    <td><input type="button" class="combat-style-roll" name="{{data.combat_styles.cs1.name}}" id="cs1" value="Roll"></td>
+                    <td><input name="data.combat_styles.cs1.name" type="text" value="{{data.combat_styles.cs1.name}}" data-dtype="String"></td>
+                    <td><select name="data.combat_styles.cs1.rank" data-type="String">
+                        {{#select actor.data.combat_styles.cs1.rank}}
+                        {{#each actor.data.skill_ranks as |skill_ranks key|}}
+                        <option value="{{key}}">{{skill_ranks.name}}</option> 
+                        {{/each}} {{/select}}
+                    </select></td>
+                    <td><input type="text" name="data.combat_styles.cs1.bonus" value="{{data.combat_styles.cs1.bonus}}" data-dtype="Number" disabled></td>
+                    <td><select name="data.combat_styles.cs1.characteristic" data-type="String">
+                        {{#select actor.data.combat_styles.cs1.characteristic}}
+                        {{#each actor.data.characteristics as |characteristics key|}}
+                        <option value="{{key}}">{{characteristics.name}}</option> 
+                        {{/each}} {{/select}}
+                    <td><input type="text" class="field-inputs" name="data.combat_styles.cs1.tn" value="{{data.combat_styles.cs1.tn}}" data-dtype="Number" disabled></td>
+                    <td><input type="text" name="data.combat_styles.cs1.weapons" value="{{data.combat_styles.cs1.weapons}}" data-dtype="String"></td>
+                </tr>
+                <tr class="field-inputs-small">
+                    <td><input type="button" class="combat-style-roll" name="{{data.combat_styles.cs2.name}}" id="cs2" value="Roll"></td>
+                    <td><input name="data.combat_styles.cs2.name" type="text" value="{{data.combat_styles.cs2.name}}" data-dtype="String"></td>
+                    <td><select name="data.combat_styles.cs2.rank" data-type="String">
+                        {{#select actor.data.combat_styles.cs2.rank}}
+                        {{#each actor.data.skill_ranks as |skill_ranks key|}}
+                        <option value="{{key}}">{{skill_ranks.name}}</option> 
+                        {{/each}} {{/select}}
+                    </select></td>
+                    <td><input type="text" name="data.combat_styles.cs2.bonus" value="{{data.combat_styles.cs2.bonus}}" data-dtype="Number" disabled></td>
+                    <td><select name="data.combat_styles.cs2.characteristic" data-type="String">
+                        {{#select actor.data.combat_styles.cs2.characteristic}}
+                        {{#each actor.data.characteristics as |characteristics key|}}
+                        <option value="{{key}}">{{characteristics.name}}</option> 
+                        {{/each}} {{/select}}
+                    <td><input type="text" class="field-inputs" name="data.combat_styles.cs2.tn" value="{{data.combat_styles.cs2.tn}}" data-dtype="Number" disabled></td>
+                    <td><input type="text" name="data.combat_styles.cs2.weapons" value="{{data.combat_styles.cs2.weapons}}" data-dtype="String"></td>
+                </tr>
+            </table>
+            <div class="combat-sidebar">
+                <table class="combat_table_header">
+                    <tr>
+                        <th>Weapons & Armor</th>
+                    </tr>
+                </table>
+                <table>
+                    <tr>
+                        <th>Size</th>
+                        <td><select name="data.size" data-type="String">
+                            {{#select actor.data.size}}
+                            {{#each actor.data.size_cat as |size_cat key|}}
+                            <option value="{{key}}">{{size_cat}}</option> 
+                            {{/each}} {{/select}}
+                            </select></td>
+                        <th>Armor Class</th>
+                        <td><select name="data.armor_class" data-type="String">
+                            {{#select actor.data.armor_class}}
+                            {{#each actor.data.armor_class_cat as |armor_class_cat key|}}
+                            <option value="{{key}}">{{armor_class_cat}}</option> 
+                            {{/each}} {{/select}}
+                            </select></td>
+                    </tr>
+                </table>
+                <table>
+                    <tr>
+                        <th colspan="3">Weapon Damage Rolls</th>
+                    </tr>
+                    <tr>
+                        <td><input type="button" class="weapon-roll" name="weapon1" id="w1" value="Roll Weapon 1"></td>
+                        <td><input type="button" class="weapon-roll" name="weapon2" id="w2" value="Roll Weapon 2"></td>
+                        <td><input type="button" class="weapon-roll" name="weapon3" id="w3" value="Roll Weapon 3"></td>
+                    </tr>
+                </table>
+                <h2 class="weapon-header">Weapons</h2>
+                <ol class="combat-list">
+                    {{#each actor.weapon as |weapon category|}}
+                    {{#each weapon as |item id|}}
+                        <li class="item flexrow" data-item-id="{{item._id}}">
+                            <img class="item-img" src="{{item.img}}" title="{{item.name}}" width="24" height="24"/>
+                            <h4 class="item-name">{{item.name}}</h4>
+                            <label class="item-name">{{item.data.category}}</label>
+                            <div class="item-controls">
+                                <a class="item-control item-delete" title="Delete Item"><i class="fas fa-trash"></i></a>
+                            </div>
+                        </li>
+                    {{/each}}
+                {{/each}}
+            </ol>
+            <h2 class="weapon-header">Armor</h2>
+            <ol class="combat-list">
+                {{#each actor.armor as |item id|}}
+                    <li class="item flexrow" data-item-id="{{item._id}}">
+                        <img class="item-img" src="{{item.img}}" title="{{item.name}}" width="24" height="24"/>
+                        <h4 class="item-name">{{item.name}}</h4>
+                        <label class="item-name">{{item.data.category}}</label>
+                        <div class="item-controls">
+                            <a class="item-control item-delete" title="Delete Item"><i class="fas fa-trash"></i></a>
+                        </div>
+                    </li>
+                {{/each}}
+            </ol>
+            </div>
+            <div class="combat-sidebar2">
+            <table class="combat_table_header">
+                <tr>
+                    <th>Stats</th>
+                </tr>
+            </table>
+            <table>
+                <tr class="ap-inputs">
+                    <th>Action Points</th>
+                    <td><input type="text" name="data.action_points.value" value="{{data.action_points.value}}" data-dtype="Number"></td>
+                    <td><input type="text" name="data.action_points.max" value="{{data.action_points.max}}" data-dtype="Number"></td>
+                </tr>
+            </table>
+            <table>
+                <tr>
+                    <th>Wound</th>
+                    <th>Speed</th>
+                    <th>Initiative</th>
+                </tr>
+                <tr class="ap-inputs">
+                    <td><input type="text" name="data.wound_threshold.value" value="{{data.wound_threshold.value}}" disabled></td>
+                    <td><input type="text" name="data.speed.value" value="{{data.speed.value}}" data-dtype="Number" disabled></td>
+                    <td><input type="text" name="data.initiative.value" value="{{data.initiative.value}}" disabled></td>
+                </tr>
+            </table>
+            <table class="field-inputs-small">
+                <tr>
+                    <th colspan="2">Resistances</th>
+                </tr>
+                <tr>
+                    <th><input type="button" class="resistance-roll" name="Disease" id="diseaseR" value="Disease %"></th>
+                    <td><input type="text" name="data.resistance.diseaseR" value="{{data.resistance.diseaseR}}" data-dtype="Number" disabled></td>
+                </tr>
+                <tr>
+                    <th>Fire</th>
+                    <td><input type="text" name="data.resistance.fireR" value="{{data.resistance.fireR}}" data-dtype="Number" disabled></td>
+                </tr>
+                <tr>
+                    <th>Frost</th>
+                    <td><input type="text" name="data.resistance.frostR" value="{{data.resistance.frostR}}" data-dtype="Number" disabled></td>
+                </tr>
+                <tr>
+                    <th>Shock</th>
+                    <td><input type="text" name="data.resistance.shockR" value="{{data.resistance.shockR}}" data-dtype="Number" disabled></td>
+                </tr>
+                <tr>
+                    <th>Poison</th>
+                    <td><input type="text" name="data.resistance.poisonR" value="{{data.resistance.poisonR}}" data-dtype="Number" disabled></td>
+                </tr>
+                <tr>
+                    <th>Magic</th>
+                    <td><input type="text" name="data.resistance.magicR" value="{{data.resistance.magicR}}" data-dtype="Number" disabled></td>
+                </tr>
+                <tr>
+                    <th>Natural Toughness</th>
+                    <td><input type="text" name="data.resistance.natToughness" value="{{data.resistance.natToughness}}" data-dtype="Number" disabled></td>
+                </tr>
+                <tr>
+                    <th>Wounded</th>
+                    <td><input type="checkbox" name="data.wounded" {{checked data.wounded}}></td>
+                </tr>
+                <tr>
+                    <td colspan="2"><textarea name="data.woundNotes">{{data.woundNotes}}</textarea>
+                </tr>
+            </table>
+        </div>
+    </div>
+    
+
+
+        {{!-- Talents Tab --}}
+        <div class="tab talents" data-group="primary" data-tab="talents">
+            <table class="field-inputs-small">
+                <tr>
+                    <th colspan="7">Resistances & Weaknesses</th>
+                </tr>
+                <tr>
+                    <th>Disease %</th>
+                    <th>Fire</th>
+                    <th>Frost</th>
+                    <th>Shock</th>
+                    <th>Poison</th>
+                    <th>Magic</th>
+                    <th>Natural Toughness</th>
+                </tr>
+                <tr>
+                    <td><input type="text" name="data.resistance.diseaseR" value="{{data.resistance.diseaseR}}" data-dtype="Number" disabled></td>
+                    <td><input type="text" name="data.resistance.fireR" value="{{data.resistance.fireR}}" data-dtype="Number" disabled></td>
+                    <td><input type="text" name="data.resistance.frostR" value="{{data.resistance.frostR}}" data-dtype="Number" disabled></td>
+                    <td><input type="text" name="data.resistance.shockR" value="{{data.resistance.shockR}}" data-dtype="Number" disabled></td>
+                    <td><input type="text" name="data.resistance.poisonR" value="{{data.resistance.poisonR}}" data-dtype="Number" disabled></td>
+                    <td><input type="text" name="data.resistance.magicR" value="{{data.resistance.magicR}}" data-dtype="Number" disabled></td>
+                    <td><input type="text" name="data.resistance.natToughness" value="{{data.resistance.natToughness}}" data-dtype="Number" disabled></td>
+                </tr>
+            </table>
+                <table>
+                    <tr>
+                        <td class="itemHeader">Traits</td>
+                    </tr>
+                </table>
+                <ol class="ability-list">
+                    {{#each actor.trait as |item id|}}
+                        <li class="item flexrow" data-item-id="{{item._id}}">
+                            <img class="item-img" src="{{item.img}}" title="{{item.name}}" width="24" height="24"/>
+                            <h4 class="item-name">{{item.name}}</h4>
+                            <div class="item-controls">
+                                <a class="item-control item-delete" title="Delete Item"><i class="fas fa-trash"></i></a>
+                            </div>
+                        </li>
+                    {{/each}}
+            </ol>
+                    <table>
+                        <tr>
+                            <td class="itemHeader">Powers</td>
+                        </tr>
+                    </table>
+                    <ol class="ability-list">
+                        {{#each actor.power as |item id|}}
+                            <li class="item flexrow" data-item-id="{{item._id}}">
+                                <img class="item-img" src="{{item.img}}" title="{{item.name}}" width="24" height="24"/>
+                                <h4 class="item-name">{{item.name}}</h4>
+                                <div class="item-controls">
+                                    <a class="item-control item-delete" title="Delete Item"><i class="fas fa-trash"></i></a>
+                                </div>
+                            </li>
+                        {{/each}}
+                </ol>
+                        <table>
+                            <tr>
+                                <td class="itemHeader">Talents</td>
+                            </tr>
+                        </table>
+                        <ol class="ability-list">
+                            {{#each actor.talent as |item id|}}
+                                <li class="item flexrow" data-item-id="{{item._id}}">
+                                    <img class="item-img" src="{{item.img}}" title="{{item.name}}" width="24" height="24"/>
+                                    <h4 class="item-name">{{item.name}}</h4>
+                                    <div class="item-controls">
+                                        <a class="item-control item-delete" title="Delete Item"><i class="fas fa-trash"></i></a>
+                                    </div>
+                                </li>
+                            {{/each}}
+                    </ol> 
+            <div>
+                <h2 class="itemHeader">Special Abilities</h2>
+                {{editor content=data.talents target="data.talents" button=true owner=owner editable=editable}}
+            </div>
+        </div>
+
+        {{!-- Spells Tab --}}
+        <div class="tab spells" data-group="primary" data-tab="spells">
+            <table>
+                <tr>
+                    <th colspan="7" class="spellHeader">Damage Rolls</th>
+                </tr>
+                <tr colspan="4">
+                    <td><input type="button" class="spell-roll" name="Spell 1" id="s1" value="Roll Spell 1"></td>
+                    <td><input type="button" class="spell-roll" name="Spell 2" id="s2" value="Roll Spell 2"></td>
+                    <td><input type="button" class="spell-roll" name="Spell 3" id="s3" value="Roll Spell 3"></td>
+                    <td><input type="button" class="spell-roll" name="Spell 4" id="s4" value="Roll Spell 4"></td>
+                    <td><input type="button" class="spell-roll" name="Spell 5" id="s5" value="Roll Spell 5"></td>
+                    <td><input type="button" class="spell-roll" name="Spell 6" id="s6" value="Roll Spell 6"></td>
+                    <td><input type="button" class="spell-roll" name="Spell 7" id="s7" value="Roll Spell 7"></td>
+                </tr>
+            </table>
+            <ol class="item-list">
+                {{#each actor.spell as |spell school|}}
+                <div>
+                    <table>
+                        <tr>
+                            <td colspan="2" class="itemHeader">{{school}} spells</th>
+                        </tr>
+                    </table>
+                </div>
+                {{#each spell as |item id|}}
+                    <li class="item flexrow" data-item-id="{{item._id}}">
+                        <img class="item-img" src="{{item.img}}" title="{{item.name}}" width="24" height="24"/>
+                        <h4 class="item-name">{{item.name}}</h4>
+                        <h4 class="item-name">{{item.data.category}}</h4>
+                        <div class="item-controls">
+                            <a class="item-control item-delete" title="Delete Item"><i class="fas fa-trash"></i></a>
+                        </div>
+                    </li>
+                {{/each}}
+            {{/each}}
+        </ol>
+        </div>
+
+        {{!-- Journal Tab --}}
+        <div class="tab journal" data-group="primary" data-tab="journal">
+            <div>
+            {{editor content=data.notes target="data.notes" button=true owner=owner editable=editable}}
+            </div>
+        </div>
+
+        {{!-- Owned Items Tab --}}
+        <div class="tab items" data-group="primary" data-tab="items">
+            <div>
+                <table class="skill-table">
+                    <tr>
+                        <th>Wealth</th>
+                        <th>Supply</th>
+                        <th>Carry Bonus</th>
+                        <th>Carry Rating</th>
+                        <th>Current ENC</th>
+                    </tr>
+                    <tr>
+                        <td><input type="text" name="data.wealth" value="{{data.wealth}}" data-dtype="Number"></td>
+                        <td><select name="data.supply" data-dtype="String">
+                            {{#select actor.data.supply}}
+                            {{#each actor.data.supply_cat as |supply_cat key|}}
+                            <option value="{{key}}">{{supply_cat}}</option>
+                            {{/each}} {{/select}}
+                        </select></td>
+                        <td><input type="text" name="data.carry_rating.bonus" value="{{data.carry_rating.bonus}}" data-dtype="Number"></td>
+                        <td><input type="text" name="data.carry_rating.max" value="{{data.carry_rating.max}}" data-dtype="Number" disabled></td>
+                        <td><input class="enc-color-green" type="text" name="data.current_enc" value="{{data.current_enc}}" data-dtype="Number" disabled></td>
+                    </tr>
+                </table>
+            </div>
+            <div class="itemHeader">
+            <table>
+                <tr>
+                    <th colspan="4">ARMOR</th>
+                </tr>
+                <tr>
+                    <td class="itemHeaderQTY">QTY</td>
+                    <td class="itemHeaderQTY">ENC</td>
+                    <td class="itemHeaderQTY">LOCATION</td>
+                    <td class="itemHeaderItem">ITEM</td>
+                </tr>
+            </table>
+            </div>
+               <ol class="item-list">
+                        {{#each actor.armor as |item id|}}
+                            <li class="item flexrow" data-item-id="{{item._id}}">
+                                <div class="item-list-resource">
+                                <input name="data.quantity" type="text" value="{{data.quantity}}" data-dtype="Number" disabled>
+                                <input type="text" name="data.enc" value="{{data.enc}}" data-dtype="Number" disabled>
+                                <input type="text" name="data.category" value="{{data.category}}" disabled>
+                                </div>
+                                <img class="item-img" src="{{item.img}}" title="{{item.name}}" width="24" height="24"/>
+                                <h4 class="item-name">{{item.name}}</h4>
+                                <div class="item-controls">
+                                    <a class="item-control item-delete" title="Delete Item"><i class="fas fa-trash"></i></a>
+                                </div>
+                            </li>
+                        {{/each}}
+                </ol>
+                <div class="itemHeader">
+                    <table>
+                        <tr>
+                            <th colspan="4">WEAPONS</th>
+                        </tr>
+                        <tr>
+                            <td class="itemHeaderQTY">QTY</td>
+                            <td class="itemHeaderQTY">ENC</td>
+                            <td class="itemHeaderQTY">LOCATION</td>
+                            <td class="itemHeaderItem">ITEM</td>
+                        </tr>
+                    </table>
+                    </div>
+                    <ol class="item-list">
+                        {{#each actor.weapon as |weapon category|}}
+                        {{#each weapon as |item id|}}
+                            <li class="item flexrow" data-item-id="{{item._id}}">
+                                <div class="item-list-resource">
+                                    <input name="data.quantity" type="text" value="{{data.quantity}}" data-dtype="Number" disabled>
+                                    <input type="text" name="data.enc" value="{{data.enc}}" data-dtype="Number" disabled>
+                                    <input type="text" name="data.category" value="{{data.category}}" disabled>
+                                </div>
+                                <img class="item-img" src="{{item.img}}" title="{{item.name}}" width="24" height="24"/>
+                                <h4 class="item-name">{{item.name}}</h4>
+                                <div class="item-controls">
+                                    <a class="item-control item-delete" title="Delete Item"><i class="fas fa-trash"></i></a>
+                                </div>
+                            </li>
+                        {{/each}}
+                    {{/each}}
+                </ol>
+            <div class="itemHeader">
+                <table>
+                    <tr>
+                        <th colspan="3">EQUIPMENT</th>
+                    </tr>
+                    <tr>
+                        <td class="itemHeaderQTY">QTY</td>
+                        <td class="itemHeaderQTY">ENC</td>
+                        <td class="itemHeaderItem">Item</td>
+                    </tr>
+                </table>
+                </div>
+            <ol class="item-list">
+                {{#each actor.gear as |item id|}}
+                    <li class="item flexrow" data-item-id="{{item._id}}">
+                        <div class="item-list-resource">
+                        <input name="data.quantity" type="text" value="{{data.quantity}}" data-dtype="Number" disabled>
+                        <input type="text" name="data.enc" value="{{data.enc}}" data-dtype="Number" disabled>
+                        </div>
+                        <img class="item-img" src="{{item.img}}" title="{{item.name}}" width="24" height="24"/>
+                        <h4 class="item-name">{{item.name}}</h4>
+                        <div class="item-controls">
+                            <a class="item-control item-delete" title="Delete Item"><i class="fas fa-trash"></i></a>
+                        </div>
+                    </li>
+                {{/each}}
+        </ol>
+        </div> 
+    </section>
+</form>
+

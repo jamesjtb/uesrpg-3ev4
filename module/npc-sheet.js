@@ -410,38 +410,53 @@ export class npcSheet extends ActorSheet {
       d.render(true);
         }
 
-  _onWeaponRoll(event) {
-    event.preventDefault()
-    const element = event.currentTarget
-    let hit_loc = ""
-
-    let roll = new Roll(this.actor.data.data.weapons[element.id].dmg);
-    roll.roll();
-    let hit = new Roll("1d10");
-    hit.roll();
-
-    if (hit.total <= 5) {
-      hit_loc = "Body"
-    } else if (hit.total == 6) {
-      hit_loc = "Right Leg"
-    } else if (hit.total == 7) {
-      hit_loc = "Left Leg"
-    } else if (hit.total == 8) {
-      hit_loc = "Right Arm"
-    } else if (hit.total == 9) {
-      hit_loc = "Left Arm"
-    } else if (hit.total == 10) {
-      hit_loc = "Head"
-    }
-
-    const content = `Rolls damage for their <b>${this.actor.data.data.weapons[element.id].name}!</b>
-    <p></p>
-    <b>Damage:</b> <b>[[${roll.total}]]</b> ${roll._formula}<p></p>
-    <b>Hit Location:</b> <b> [[${hit.total}]]</b> ${hit_loc}<p></p>
-    <b>Qualities:</b> ${this.actor.data.data.weapons[element.id].qualities}
-    `
-    roll.toMessage({type: 1, user: game.user._id, speaker: ChatMessage.getSpeaker(), content: content});
-  }
+        _onWeaponRoll(event) {
+          event.preventDefault()
+          const element = event.currentTarget
+          let hit_loc = ""
+      
+          let superior = new Roll(this.actor.data.data.weapons[element.id].dmg);
+      
+          let roll = new Roll(this.actor.data.data.weapons[element.id].dmg);
+          roll.roll();
+          superior.roll();
+      
+          let hit = new Roll("1d10");
+          hit.roll();
+      
+          if (hit.total <= 5) {
+            hit_loc = "Body"
+          } else if (hit.total == 6) {
+            hit_loc = "Right Leg"
+          } else if (hit.total == 7) {
+            hit_loc = "Left Leg"
+          } else if (hit.total == 8) {
+            hit_loc = "Right Arm"
+          } else if (hit.total == 9) {
+            hit_loc = "Left Arm"
+          } else if (hit.total == 10) {
+            hit_loc = "Head"
+          }
+      
+          if (this.actor.data.data.weapons[element.id].superior == true) {
+            const content = `Rolls damage for their <b>${this.actor.data.data.weapons[element.id].name}!</b>
+            <p></p>
+            <b>Damage:</b> <b> [[${roll.total}]] [[${superior.total}]]</b> ${roll._formula}<p></p>
+            <b>Hit Location:</b> <b> [[${hit.total}]] </b> ${hit_loc}<p></p>
+            <b>Qualities:</b> ${this.actor.data.data.weapons[element.id].qualities}`
+      
+            roll.toMessage({type: 1, user: game.user._id, speaker: ChatMessage.getSpeaker(), content: content});
+      
+          } else {
+            const content = `Rolls damage for their <b>${this.actor.data.data.weapons[element.id].name}!</b>
+            <p></p>
+            <b>Damage:</b> <b> [[${roll.total}]]</b> ${roll._formula}<p></p>
+            <b>Hit Location:</b> <b> [[${hit.total}]] </b> ${hit_loc}<p></p>
+            <b>Qualities:</b> ${this.actor.data.data.weapons[element.id].qualities}`
+      
+            roll.toMessage({type: 1, user: game.user._id, speaker: ChatMessage.getSpeaker(), content: content});
+          }
+        }
 
   _onSpellRoll(event) {
     event.preventDefault()

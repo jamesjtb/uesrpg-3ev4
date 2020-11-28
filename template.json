@@ -494,6 +494,7 @@
       "w1": {
         "name": "",
         "dmg": "",
+        "superior": false,
         "hands": "",
         "reach": "",
         "qualities": ""
@@ -501,6 +502,7 @@
       "w2": {
         "name": "",
         "dmg": "",
+        "superior": false,
         "hands": "",
         "reach": "",
         "qualities": ""
@@ -508,6 +510,7 @@
       "w3": {
         "name": "",
         "dmg": "",
+        "superior": false,
         "hands": "",
         "reach": "",
         "qualities": ""
@@ -515,6 +518,7 @@
       "w4": {
         "name": "",
         "dmg": "",
+        "superior": false,
         "hands": "",
         "reach": "",
         "qualities": ""
@@ -522,6 +526,7 @@
       "w5": {
         "name": "",
         "dmg": "",
+        "superior": false,
         "hands": "",
         "reach": "",
         "qualities": ""
@@ -1107,6 +1112,7 @@
     "weapon2H": false,
     "carried": false,
     "excludeENC": false,
+    "superior": false,
     "hands": 0,
     "price": 0,
     "armor": 0,

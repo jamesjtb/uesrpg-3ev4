@@ -349,8 +349,12 @@ export class SimpleActorSheet extends ActorSheet {
     const element = event.currentTarget
     let hit_loc = ""
 
+    let superior = new Roll(this.actor.data.data.weapons[element.id].dmg);
+
     let roll = new Roll(this.actor.data.data.weapons[element.id].dmg);
     roll.roll();
+    superior.roll();
+
     let hit = new Roll("1d10");
     hit.roll();
 
@@ -368,13 +372,24 @@ export class SimpleActorSheet extends ActorSheet {
       hit_loc = "Head"
     }
 
-    const content = `Rolls damage for their <b>${this.actor.data.data.weapons[element.id].name}!</b>
-    <p></p>
-    <b>Damage:</b> <b> [[${roll.total}]]</b> ${roll._formula}<p></p>
-    <b>Hit Location:</b> <b> [[${hit.total}]] </b> ${hit_loc}<p></p>
-    <b>Qualities:</b> ${this.actor.data.data.weapons[element.id].qualities}
-    `
-    roll.toMessage({type: 1, user: game.user._id, speaker: ChatMessage.getSpeaker(), content: content});
+    if (this.actor.data.data.weapons[element.id].superior == true) {
+      const content = `Rolls damage for their <b>${this.actor.data.data.weapons[element.id].name}!</b>
+      <p></p>
+      <b>Damage:</b> <b> [[${roll.total}]] [[${superior.total}]]</b> ${roll._formula}<p></p>
+      <b>Hit Location:</b> <b> [[${hit.total}]] </b> ${hit_loc}<p></p>
+      <b>Qualities:</b> ${this.actor.data.data.weapons[element.id].qualities}`
+
+      roll.toMessage({type: 1, user: game.user._id, speaker: ChatMessage.getSpeaker(), content: content});
+
+    } else {
+      const content = `Rolls damage for their <b>${this.actor.data.data.weapons[element.id].name}!</b>
+      <p></p>
+      <b>Damage:</b> <b> [[${roll.total}]]</b> ${roll._formula}<p></p>
+      <b>Hit Location:</b> <b> [[${hit.total}]] </b> ${hit_loc}<p></p>
+      <b>Qualities:</b> ${this.actor.data.data.weapons[element.id].qualities}`
+
+      roll.toMessage({type: 1, user: game.user._id, speaker: ChatMessage.getSpeaker(), content: content});
+    }
   }
 
   _onSpellRoll(event) {

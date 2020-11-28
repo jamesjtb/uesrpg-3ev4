@@ -417,16 +417,19 @@ export class SimpleActor extends Actor {
     data.weapons.w1.dmg = this._w1Dam(actorData);
     data.weapons.w1.reach = this._w1Reach(actorData);
     data.weapons.w1.qualities = this._w1Qualities(actorData);
+    data.weapons.w1.superior = this._w1Superior(actorData);
 
     data.weapons.w2.name = this._w2Name(actorData);
     data.weapons.w2.dmg = this._w2Dam(actorData);
     data.weapons.w2.reach = this._w2Reach(actorData);
     data.weapons.w2.qualities = this._w2Qualities(actorData);
+    data.weapons.w2.superior = this._w2Superior(actorData);
 
     data.weapons.w3.name = this._w3Name(actorData);
     data.weapons.w3.dmg = this._w3Dam(actorData);
     data.weapons.w3.reach = this._w3Reach(actorData);
     data.weapons.w3.qualities = this._w3Qualities(actorData);
+    data.weapons.w3.superior = this._w3Superior(actorData);
 
     data.prep_spells.s1.name = this._s1Name(actorData);
     data.prep_spells.s1.dmg = this._s1Dam(actorData);
@@ -659,16 +662,19 @@ export class SimpleActor extends Actor {
     data.weapons.w1.dmg = this._w1Dam(actorData);
     data.weapons.w1.reach = this._w1Reach(actorData);
     data.weapons.w1.qualities = this._w1Qualities(actorData);
+    data.weapons.w1.superior = this._w1Superior(actorData);
 
     data.weapons.w2.name = this._w2Name(actorData);
     data.weapons.w2.dmg = this._w2Dam(actorData);
     data.weapons.w2.reach = this._w2Reach(actorData);
     data.weapons.w2.qualities = this._w2Qualities(actorData);
+    data.weapons.w2.superior = this._w2Superior(actorData);
 
     data.weapons.w3.name = this._w3Name(actorData);
     data.weapons.w3.dmg = this._w3Dam(actorData);
     data.weapons.w3.reach = this._w3Reach(actorData);
     data.weapons.w3.qualities = this._w3Qualities(actorData);
+    data.weapons.w3.superior = this._w3Superior(actorData);
 
     data.prep_spells.s1.name = this._s1Name(actorData);
     data.prep_spells.s1.dmg = this._s1Dam(actorData);
@@ -1347,6 +1353,17 @@ export class SimpleActor extends Actor {
       return qualities
   }
 
+  _w1Superior(actorData) {
+    let primary = actorData.items.filter(item => item.data.category == "weapon1");
+    let rollTwice = false;
+    for (let item of primary) {
+      if (item.data.superior == true) {
+        rollTwice = true;
+      }
+    }
+    return rollTwice
+  }
+
   _w2Name(actorData) {
     let primary = actorData.items.filter(item => item.data.category == "weapon2");
     let name = "";
@@ -1387,6 +1404,17 @@ export class SimpleActor extends Actor {
       return qualities
   }
 
+  _w2Superior(actorData) {
+    let primary = actorData.items.filter(item => item.data.category == "weapon2");
+    let rollTwice = false;
+    for (let item of primary) {
+      if (item.data.superior == true) {
+        rollTwice = true;
+      }
+    }
+    return rollTwice
+  }
+
   _w3Name(actorData) {
     let primary = actorData.items.filter(item => item.data.category == "weapon3");
     let name = "";
@@ -1425,6 +1453,17 @@ export class SimpleActor extends Actor {
         qualities = item.data.qualities;
       }
       return qualities
+  }
+
+  _w3Superior(actorData) {
+    let primary = actorData.items.filter(item => item.data.category == "weapon3");
+    let rollTwice = false;
+    for (let item of primary) {
+      if (item.data.superior == true) {
+        rollTwice = true;
+      }
+    }
+    return rollTwice
   }
 
   _s1Name(actorData) {

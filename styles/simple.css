@@ -54,19 +54,19 @@
   border: none;
 }
 .worldbuilding .sheet-tabs {
-  background-color: rgb(219, 181, 77);
+  background-color: rgba(219, 181, 77, 0.808);
   font-family: "cyrodiil";
   src: url("../fonts/cyrodiil/cyrodiil.ttf");
   font-size: larger;
 }
 .worldbuilding .sheet-tabs2 {
-  background-color: rgb(189, 116, 106);
+  background-color: rgba(189, 116, 106, 0.808);
   font-family: "cyrodiil";
   src: url("../fonts/cyrodiil/cyrodiil.ttf");
   font-size: larger;
 }
 .worldbuilding .sheet-tabs3 {
-  background-color: rgb(112, 172, 142);
+  background-color: rgba(112, 172, 142, 0.808);
   font-family: "cyrodiil";
   src: url("../fonts/cyrodiil/cyrodiil.ttf");
   font-size: larger;
@@ -219,7 +219,7 @@
   font-family: "cyrodiil";
   src: url(../fonts/cyrodiil/cyrodiil.ttf);
   font-size: 15px;
-  background-color: goldenrod;
+  background-color: rgba(219, 181, 77, 0.808);
 }
 .worldbuilding .actionPoints {
   text-align: center;
@@ -256,7 +256,7 @@
   font-size: large;
   margin-top: 2px;
   text-align: center;
-  background-color: rgb(219, 181, 77);
+  background-color: rgba(219, 181, 77, 0.808);
 }
 .worldbuilding .combat_table_header2 {
   font-family: "cyrodiil";
@@ -264,7 +264,7 @@
   font-size: large;
   margin-top: 2px;
   text-align: center;
-  background-color: rgb(189, 116, 106);
+  background-color: rgba(189, 116, 106, 0.808);
 }
 .worldbuilding .item-list {
   list-style: none;
@@ -272,6 +272,43 @@
   padding: 0;
   width: 100%;
   float: left;
+}
+.worldbuilding .combat-list {
+  list-style: none;
+  margin: 7px 0;
+  padding: 0;
+  width: 100%;
+  float: left;
+}
+.worldbuilding .combat-list .item {
+  height: 30px;
+  line-height: 25px;
+  padding: 3px 0;
+  border-bottom: 1px solid #BBB;
+}
+.worldbuilding .combat-list label {
+  width: 10px;
+  text-align: center;
+}
+.worldbuilding .combat-list .item img {
+  flex: 0 0 24px;
+  margin-right: 5px;
+  margin-left: 5px;
+}
+.worldbuilding .combat-list .item-name {
+  margin: 0;
+  margin-right: -80px;
+}
+.worldbuilding .combat-list .item-name:hover {
+  font-weight: bold;
+}
+.worldbuilding .combat-list .item-img:hover {
+  zoom: 150%;
+  background-color: gray;
+}
+.worldbuilding .combat-list .item-controls {
+  flex: 0 0 20px;
+  margin-left: 0px;
 }
 .worldbuilding .ability-list {
   display: inline-block;
@@ -323,7 +360,7 @@
   width: 20%;
   height: 18px;
   text-align: center;
-  margin-left: 15px;
+  margin-left: 5px;
   margin-right: 5px;
   margin-bottom: 20px;
   margin-top: 1px;
@@ -341,7 +378,7 @@
 .worldbuilding .item-list .item img {
   flex: 0 0 24px;
   margin-right: 5px;
-  margin-left: 5px;
+  margin-left: -75px;
 }
 .worldbuilding .item-list .item-name {
   margin: 0;
@@ -414,7 +451,7 @@
   font-family: "cyrodiil";
   src: url(../fonts/cyrodiil/cyrodiil.ttf);
   text-align: center;
-  background-color: rgb(200, 185, 143);
+  background-color: rgba(219, 181, 77, 0.808);
   font-size: large;
   border-bottom: thin;
 }
