@@ -17,12 +17,19 @@ Item Sheet Types:
 - Armor
 - Weapon
 - Spell
+- Trait
+- Talent
+- Power
 
 <b>Compendiums:</b>
 - Creatures: Full stats and tokens on creatures from Scrolls of Beasts, Undeath, Oblivion, Ayleids, Dwemer, etc. More will be added in the future
 - Items: Full stats and hand drawn images for all weapons/armor, generic alchemy ingredients, and soul gems in core rulebook along with some other commonly used items
 - Spells: Full stats for all spells included in the core rulebook
 - Macros: Macro library for rolling most dice rolls on the character sheet for those who prefer to use the hotbar instead of rolling directly from the sheet
+- Talents: A compendium filled with all of the core rulebook talents in addition to many others from the Scroll of Oblivion, Book of Circles, and others
+- Traits: A compendium filled with many of the traits in the core rulebook among others
+- Powers: A compendium filled with many of the powers from the core rulebook and others
+- NPC Build Reference: An All-in-One type of compendium useful for quickly creating NPC's by dragging powers/traits/talents directly onto NPC sheets
 - Loot Tables: A small collection of useful rollable tables for GM use
 
 Features:
