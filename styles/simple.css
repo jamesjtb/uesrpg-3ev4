@@ -331,6 +331,7 @@
 }
 .worldbuilding .item-list .item-name {
   margin: 0;
+  margin-right: -80px;
 }
 .worldbuilding .item-list .item-name:hover {
   font-weight: bold;
@@ -340,7 +341,7 @@
   background-color: gray;
 }
 .worldbuilding .item-list .item-controls {
-  flex: 0 0 25px;
+  flex: 0 0 20px;
   margin-left: 0px;
 }
 .worldbuilding .spell-list {
