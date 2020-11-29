@@ -12,7 +12,7 @@ export class npcSheet extends ActorSheet {
       width: 600,
       height: 600,
       tabs: [{navSelector: ".sheet-tabs2", contentSelector: ".sheet-body", initial: "core"}],
-      dragDrop: [{dragSelector: ".item-list .item", dropSelector: null}]
+      dragDrop: [{dragSelector: [".item-list .item", ".combat-list .item", ".ability-list .item", ".spell-list .item"], dropSelector: null}]
     });
   }
 

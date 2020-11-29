@@ -12,7 +12,7 @@ export class SimpleActorSheet extends ActorSheet {
       width: 600,
       height: 600,
       tabs: [{navSelector: ".sheet-tabs", contentSelector: ".sheet-body", initial: "description"}],
-      dragDrop: [{dragSelector: ".item-list .item", dropSelector: null}]
+      dragDrop: [{dragSelector: [".item-list .item", ".combat-list .item", ".ability-list .item", ".spell-list .item"], dropSelector: null}]
     });
   }
 
