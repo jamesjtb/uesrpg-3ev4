@@ -2,7 +2,7 @@
   "name": "uesrpg-d100",
   "title": "UESRPG d100",
   "description": "A system based off of Atropos Worldbuilding system used to play the UESRPG d100 system.",
-  "version": 1.09,
+  "version": 1.10,
   "minimumCoreVersion": "0.5.6",
   "compatibleCoreVersion": "0.7.7",
   "templateVersion": 2,
@@ -16,6 +16,13 @@
       "system": "uesrpg-d100",
       "path": "./packs/items-uesrpg.db",
       "entity": "Item"
+    },
+    {
+      "label": "Scroll of People",
+      "entity": "Actor",
+      "name": "scroll-of-people",
+      "path": "packs/scroll-of-people.db",
+      "system": "uesrpg-d100"
     },
     {
       "label": "Scroll of Beasts",
