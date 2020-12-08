@@ -1032,66 +1032,6 @@
                 </table>
             </div>
             <div class="itemHeader">
-            <table>
-                <tr>
-                    <th colspan="4">ARMOR</th>
-                </tr>
-                <tr>
-                    <td class="itemHeaderQTY">QTY</td>
-                    <td class="itemHeaderQTY">ENC</td>
-                    <td class="itemHeaderQTY">EQUIPPED?</td>
-                    <td class="itemHeaderItem">ITEM</td>
-                </tr>
-            </table>
-            </div>
-            <ol class="item-list">
-                {{#each actor.armor as |armor equipped|}}
-                {{#each armor as |item id|}}
-                    <li class="item flexrow" data-item-id="{{item._id}}">
-                        <div class="item-list-resource">
-                            <input name="data.quantity" type="text" value="{{data.quantity}}" data-dtype="Number" disabled>
-                            <input type="text" name="data.enc" value="{{data.enc}}" data-dtype="Number" disabled>
-                            <input type="text" name="data.equipped" value="{{data.equipped}}" disabled>
-                        </div>
-                        <img class="item-img" src="{{item.img}}" title="{{item.name}}" width="24" height="24"/>
-                        <h4 class="item-name">{{item.name}}</h4>
-                        <div class="item-controls">
-                            <a class="item-control item-delete" title="Delete Item"><i class="fas fa-trash"></i></a>
-                        </div>
-                    </li>
-                {{/each}}
-            {{/each}}
-        </ol>
-                <div class="itemHeader">
-                    <table>
-                        <tr>
-                            <th colspan="4">WEAPONS</th>
-                        </tr>
-                        <tr>
-                            <td class="itemHeaderQTY">QTY</td>
-                            <td class="itemHeaderQTY">ENC</td>
-                            <td class="itemHeaderQTY">DAMAGE</td>
-                            <td class="itemHeaderItem">ITEM</td>
-                        </tr>
-                    </table>
-                    </div>
-                    <ol class="item-list">
-                        {{#each actor.weapon as |item id|}}
-                            <li class="item flexrow" data-item-id="{{item._id}}">
-                                <div class="item-list-resource">
-                                    <input name="data.quantity" type="text" value="{{data.quantity}}" data-dtype="Number" disabled>
-                                    <input type="text" name="data.enc" value="{{data.enc}}" data-dtype="Number" disabled>
-                                    <input type="text" name="data.damage" value="{{data.damage}}" disabled>
-                                </div>
-                                <img class="item-img" src="{{item.img}}" title="{{item.name}}" width="24" height="24"/>
-                                <h4 class="item-name">{{item.name}}</h4>
-                                <div class="item-controls">
-                                    <a class="item-control item-delete" title="Delete Item"><i class="fas fa-trash"></i></a>
-                                </div>
-                            </li>
-                        {{/each}}
-                    </ol>
-            <div class="itemHeader">
                 <table>
                     <tr>
                         <th colspan="3">EQUIPMENT</th>
