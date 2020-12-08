@@ -8,18 +8,11 @@
                     <tr>
                         <th>Spell Level</th>
                         <th>MP Cost</th>
-                        <th>Prepared?</th>
                         <th>School</th>
                     </tr>
                     <tr>
                         <td><input type="text" name="data.level" value="{{data.level}}" data-dtype="Number"/></td>
                         <td><input type="text" name="data.cost" value="{{data.cost}}" data-dtype="Number"></td>
-                        <td><select name="data.category" data-type="String">
-                            {{#select item.data.category}}
-                            {{#each item.data.spell_cat as |spell_cat key|}}
-                            <option value="{{key}}">{{spell_cat}}</option> 
-                            {{/each}} {{/select}}
-                        </select></td>
                         <td><select name="data.school" data-dtype="String">
                             {{#select item.data.school}}
                             {{#each item.data.school_cat as | school_cat key|}}

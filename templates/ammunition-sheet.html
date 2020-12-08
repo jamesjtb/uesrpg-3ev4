@@ -9,25 +9,21 @@
                         <th>Quantity</th>
                         <th>ENC</th>
                         <th>Price</th>
-                        <th>Equip Armor</th>
                     </tr>
                     <tr>
                         <td><input type="text" name="data.quantity" value="{{data.quantity}}" data-dtype="Number"/></td>
                         <td><input type="text" name="data.enc" value="{{data.enc}}" data-dtype="Number"/></td>
                         <td><input type="text" name="data.price" value="{{data.price}}" data-dtype="Number"></td>
-                        <td><input type="checkbox" name="data.equipped" {{checked data.equipped}}></td>
                     </tr>
                     <tr>
-                        <th>AR</th>
-                        <th>MR</th>
+                        <th>Damage Bonus</th>
                         <th>EL</th>
-                        <th>Qualities</th>
+                        <th colspan="2">Qualities</th>
                     </tr>
                     <tr>
-                        <td><input type="text" name="data.armor" value="{{data.armor}}" data-dtype="Number"></td>
-                        <td><input type="text" name="data.magic_ar" value="{{data.magic_ar}}" data-dtype="String"></td>
+                        <td><input type="text" name="data.damage" value="{{data.damage}}" data-dtype="String"></td>
                         <td><input type="text" name="data.enchant_level" value="{{data.enchant_level}}" data-dtype="Number"></td>
-                        <td><input type="text" name="data.qualities" value="{{data.qualities}}" data-dtype="String"></td>
+                        <td colspan="2"><input type="text" name="data.qualities" value="{{data.qualities}}" data-dtype="String"></td>
                     </tr>
                 </table>
             </div>
@@ -52,29 +48,6 @@
         <div class="tab" data-group="primary" data-tab="attributes">
             <table class="field-inputs-small">
                 <tr>
-                    <th colspan="7">Resistances & Weaknesses</th>
-                </tr>
-                <tr>
-                    <th>Disease %</th>
-                    <th>Fire</th>
-                    <th>Frost</th>
-                    <th>Shock</th>
-                    <th>Poison</th>
-                    <th>Magic</th>
-                    <th>Natural Toughness</th>
-                </tr>
-                <tr>
-                    <td><input type="text" name="data.diseaseR" value="{{data.diseaseR}}" data-dtype="Number"></td>
-                    <td><input type="text" name="data.fireR" value="{{data.fireR}}" data-dtype="Number"></td>
-                    <td><input type="text" name="data.frostR" value="{{data.frostR}}" data-dtype="Number"></td>
-                    <td><input type="text" name="data.shockR" value="{{data.shockR}}" data-dtype="Number"></td>
-                    <td><input type="text" name="data.poisonR" value="{{data.poisonR}}" data-dtype="Number"></td>
-                    <td><input type="text" name="data.magicR" value="{{data.magicR}}" data-dtype="Number"></td>
-                    <td><input type="text" name="data.natToughnessR" value="{{data.natToughnessR}}" data-dtype="Number"></td>
-                </tr>
-            </table>
-            <table class="field-inputs-small">
-                <tr>
                     <th>Attribute</th>
                     <th>Toggle</th>
                 </tr>
@@ -83,6 +56,5 @@
                     <td><input type="checkbox" name="data.excludeENC" {{checked data.excludeENC}}></td>
                 </tr>
             </table>
-        </div>
     </section>
 </form>

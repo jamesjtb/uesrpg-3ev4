@@ -36,16 +36,15 @@ export class SimpleActorSheet extends ActorSheet {
 
       //Initialize containers
       const gear = [];
-      const weapon = {
-        none: [],
-        weapon1: [],
-        weapon2: [],
-        weapon3: []
+      const weapon = [];
+      const armor = {
+        Equipped: [],
+        Unequipped: []
       };
-      const armor = [];
       const power = [];
       const trait = [];
       const talent = [];
+      const combatStyle = [];
       const spell = {
         alteration: [],
         conjuration: [],
@@ -55,6 +54,7 @@ export class SimpleActorSheet extends ActorSheet {
         necromancy: [],
         restoration: []
       };
+      const ammunition = [];
 
       //Iterate through items, allocating to containers
       //let totaWeight = 0;
@@ -67,13 +67,15 @@ export class SimpleActorSheet extends ActorSheet {
         }
         //Append to weapons
         else if (i.type === 'weapon') {
-          if (i.data.category != undefined) {
-            weapon[i.data.category].push(i);
-          }
+            weapon.push(i);
         }
         //Append to armor
         else if (i.type === 'armor') {
-          armor.push(i);
+          if (i.data.equipped === true) {
+          armor.Equipped.push(i);
+          } else {
+            armor.Unequipped.push(i);
+          }
         }
         //Append to power
         else if (i.type === 'power') {
@@ -87,11 +89,19 @@ export class SimpleActorSheet extends ActorSheet {
         else if (i.type === 'talent') {
           talent.push(i);
         }
+        //Append to combatStyle
+        else if (i.type === 'combatStyle') {
+          combatStyle.push(i);
+        }
         //Append to spell
         else if (i.type === 'spell') {
           if (i.data.school != undefined) {
             spell[i.data.school].push(i);
           }
+        }
+        //Append to ammunition
+        else if (i.type === 'ammunition') {
+          ammunition.push(i);
         }
       }
 
@@ -102,7 +112,9 @@ export class SimpleActorSheet extends ActorSheet {
       actorData.power = power;
       actorData.trait = trait;
       actorData.talent = talent;
+      actorData.combatStyle = combatStyle;
       actorData.spell = spell;
+      actorData.ammunition = ammunition;
 
     }
 
@@ -116,10 +128,17 @@ export class SimpleActorSheet extends ActorSheet {
     html.find(".characteristic-roll").click(this._onClickCharacteristic.bind(this));
     html.find(".skill-roll").click(this._onSkillRoll.bind(this));
     html.find(".magic-skill-roll").click(this._onMagicSkillRoll.bind(this));
-    html.find(".weapon-roll").click(this._onWeaponRoll.bind(this));
-    html.find(".combat-style-roll").click(this._onCombatRoll.bind(this));
-    html.find(".spell-roll").click(this._onSpellRoll.bind(this));
+    html.find(".combat-roll").click(this._onCombatRoll.bind(this));
+    html.find(".magic-roll").click(this._onSpellRoll.bind(this));
     html.find(".resistance-roll").click(this._onResistanceRoll.bind(this));
+    html.find(".damage-roll").click(this._onDamageRoll.bind(this));
+    html.find(".armor-roll").click(this._onArmorRoll.bind(this));
+
+    //Update Item Attributes from Actor Sheet
+    html.find(".toggle2H").click(this._onToggle2H.bind(this));
+    html.find(".ammo-plus").click(this._onPlusAmmo.bind(this));
+    html.find(".ammo-minus").click(this._onMinusAmmo.bind(this));
+    html.find(".itemEquip").click(this._onItemEquip.bind(this));
 
     // Everything below here is only needed if the sheet is editable
     if (!this.options.editable) return;
@@ -342,62 +361,17 @@ export class SimpleActorSheet extends ActorSheet {
         close: html => console.log()
         });
         d.render(true);
-          }
-
-  _onWeaponRoll(event) {
-    event.preventDefault()
-    const element = event.currentTarget
-    let hit_loc = ""
-
-    let superior = new Roll(this.actor.data.data.weapons[element.id].dmg);
-
-    let roll = new Roll(this.actor.data.data.weapons[element.id].dmg);
-    roll.roll();
-    superior.roll();
-
-    let hit = new Roll("1d10");
-    hit.roll();
-
-    if (hit.total <= 5) {
-      hit_loc = "Body"
-    } else if (hit.total == 6) {
-      hit_loc = "Right Leg"
-    } else if (hit.total == 7) {
-      hit_loc = "Left Leg"
-    } else if (hit.total == 8) {
-      hit_loc = "Right Arm"
-    } else if (hit.total == 9) {
-      hit_loc = "Left Arm"
-    } else if (hit.total == 10) {
-      hit_loc = "Head"
-    }
-
-    if (this.actor.data.data.weapons[element.id].superior == true) {
-      const content = `Rolls damage for their <b>${this.actor.data.data.weapons[element.id].name}!</b>
-      <p></p>
-      <b>Damage:</b> <b> [[${roll.total}]] [[${superior.total}]]</b> ${roll._formula}<p></p>
-      <b>Hit Location:</b> <b> [[${hit.total}]] </b> ${hit_loc}<p></p>
-      <b>Qualities:</b> ${this.actor.data.data.weapons[element.id].qualities}`
-
-      roll.toMessage({type: 1, user: game.user._id, speaker: ChatMessage.getSpeaker(), content: content});
-
-    } else {
-      const content = `Rolls damage for their <b>${this.actor.data.data.weapons[element.id].name}!</b>
-      <p></p>
-      <b>Damage:</b> <b> [[${roll.total}]]</b> ${roll._formula}<p></p>
-      <b>Hit Location:</b> <b> [[${hit.total}]] </b> ${hit_loc}<p></p>
-      <b>Qualities:</b> ${this.actor.data.data.weapons[element.id].qualities}`
-
-      roll.toMessage({type: 1, user: game.user._id, speaker: ChatMessage.getSpeaker(), content: content});
-    }
   }
 
   _onSpellRoll(event) {
     event.preventDefault()
-    const element = event.currentTarget
+    let button = $(event.currentTarget);
+    const li = button.parents(".item");
+    const item = this.actor.getOwnedItem(li.data("itemId"));
+
     let hit_loc = ""
 
-    let roll = new Roll(this.actor.data.data.prep_spells[element.id].dmg);
+    let roll = new Roll(item.data.data.damage);
     roll.roll();
     let hit = new Roll("1d10");
     hit.roll();
@@ -416,28 +390,30 @@ export class SimpleActorSheet extends ActorSheet {
       hit_loc = "Head"
     }
 
-    const content = `Casts the spell <b>${this.actor.data.data.prep_spells[element.id].name}!</b>
+    const content = `Casts the spell <b>${item.name}!</b>
     <p></p>
     <b>Damage: [[${roll.total}]]</b> ${roll._formula}<b>
     <p></p>
     Hit Location: [[${hit.total}]]</b> ${hit_loc}<b>
     <p></p>
-    MP Cost: [[${this.actor.data.data.prep_spells[element.id].cost}]]
+    MP Cost: [[${item.data.data.cost}]]
     <p></p>
-    Attributes:</b> ${this.actor.data.data.prep_spells[element.id].attributes}`
+    Attributes:</b> ${item.data.data.attributes}`
 
     roll.toMessage({type: 1, user: game.user._id, speaker: ChatMessage.getSpeaker(), content: content});
   }
 
   _onCombatRoll(event) {
     event.preventDefault()
-    const element = event.currentTarget
+    let button = $(event.currentTarget);
+    const li = button.parents(".item");
+    const item = this.actor.getOwnedItem(li.data("itemId"));
 
     let d = new Dialog({
       title: "Apply Roll Modifier",
       content: `<form>
                   <div class="dialogForm">
-                  <label><b>${element.name} Modifier: </b></label><input placeholder="ex. -20, +10" id="playerInput" value="0" style=" text-align: center; width: 50%; border-style: groove; float: right;" type="text"></input></div>
+                  <label><b>${item.name} Modifier: </b></label><input placeholder="ex. -20, +10" id="playerInput" value="0" style=" text-align: center; width: 50%; border-style: groove; float: right;" type="text"></input></div>
                 </form>`,
       buttons: {
         one: {
@@ -449,24 +425,24 @@ export class SimpleActorSheet extends ActorSheet {
           roll.roll();
 
           if (roll.total == this.actor.data.data.lucky_numbers.ln1 || roll.total == this.actor.data.data.lucky_numbers.ln2 || roll.total == this.actor.data.data.lucky_numbers.ln3 || roll.total == this.actor.data.data.lucky_numbers.ln4 || roll.total == this.actor.data.data.lucky_numbers.ln5) {
-            const content = `Rolls Combat Style <b>${element.name}</b>!
-            <p></p><b>Target Number: [[${this.actor.data.data.combat_styles[element.id].tn} + ${playerInput}]]</b> <p></p>
+            const content = `Rolls Combat Style <b>${item.name}</b>!
+            <p></p><b>Target Number: [[${item.data.data.value} + ${playerInput}]]</b> <p></p>
             <b>Result: [[${roll.total}]]</b><p></p>
             <span style='color:green; font-size:120%;'> <b>LUCKY NUMBER!</b></span>`
             roll.toMessage({type: 4, user: game.user._id, speaker: ChatMessage.getSpeaker(), content: content});
 
           } else if (roll.total == this.actor.data.data.unlucky_numbers.ul1 || roll.total == this.actor.data.data.unlucky_numbers.ul2 || roll.total == this.actor.data.data.unlucky_numbers.ul3 || roll.total == this.actor.data.data.unlucky_numbers.ul4 || roll.total == this.actor.data.data.unlucky_numbers.ul5) {
-            const content = `Rolls Combat Style <b>${element.name}</b>!
-            <p></p><b>Target Number: [[${this.actor.data.data.combat_styles[element.id].tn} + ${playerInput}]]</b> <p></p>
+            const content = `Rolls Combat Style <b>${item.name}</b>!
+            <p></p><b>Target Number: [[${item.data.data.value} + ${playerInput}]]</b> <p></p>
             <b>Result: [[${roll.total}]]</b><p></p>
             <span style='color:red; font-size:120%;'> <b>UNLUCKY NUMBER!</b></span>`
             roll.toMessage({type: 4, user: game.user._id, speaker: ChatMessage.getSpeaker(), content: content});
 
           } else {
-            const content = `Rolls Combat Style <b>${element.name}</b>!
-            <p></p><b>Target Number: [[${this.actor.data.data.combat_styles[element.id].tn} + ${playerInput}]]</b> <p></p>
+            const content = `Rolls Combat Style <b>${item.name}</b>!
+            <p></p><b>Target Number: [[${item.data.data.value} + ${playerInput}]]</b> <p></p>
             <b>Result: [[${roll.total}]]</b><p></p>
-            <b>${roll.total<=(this.actor.data.data.combat_styles[element.id].tn + playerInput) ? " <span style='color:green; font-size: 120%;'> <b>SUCCESS!</b></span>" : " <span style='color: red; font-size: 120%;'> <b>FAILURE!</b></span>"}`
+            <b>${roll.total<=(item.data.data.value + playerInput) ? " <span style='color:green; font-size: 120%;'> <b>SUCCESS!</b></span>" : " <span style='color: red; font-size: 120%;'> <b>FAILURE!</b></span>"}`
             roll.toMessage({type: 4, user: game.user._id, speaker: ChatMessage.getSpeaker(), content: content});
           }
         }
@@ -534,6 +510,144 @@ export class SimpleActorSheet extends ActorSheet {
       });
       d.render(true);
 
+  }
+
+  _onDamageRoll(event) {
+    event.preventDefault()
+    let button = $(event.currentTarget);
+    const li = button.parents(".item");
+    const item = this.actor.getOwnedItem(li.data("itemId"));
+
+    let hit_loc = "";
+
+    let hit = new Roll("1d10");
+    hit.roll();
+
+    if (hit.total <= 5) {
+      hit_loc = "Body"
+    } else if (hit.total == 6) {
+      hit_loc = "Right Leg"
+    } else if (hit.total == 7) {
+      hit_loc = "Left Leg"
+    } else if (hit.total == 8) {
+      hit_loc = "Right Arm"
+    } else if (hit.total == 9) {
+      hit_loc = "Left Arm"
+    } else if (hit.total == 10) {
+      hit_loc = "Head"
+    }
+
+    let roll = new Roll(item.data.data.damage);
+    let supRoll = new Roll(item.data.data.damage);
+    let roll2H = new Roll(item.data.data.damage2);
+    let supRoll2H = new Roll(item.data.data.damage2);
+    roll.roll();
+    supRoll.roll();
+    roll2H.roll();
+    supRoll2H.roll();
+
+    if (item.data.data.weapon2H == true) {
+      if (item.data.data.superior == true) {
+        const content = `Rolls damage for their <b>${item.name}!</b>
+          <p></p>
+          <b>Damage:</b> <b> [[${roll2H.total}]] [[${supRoll2H.total}]]</b> ${roll2H._formula}<p></p>
+          <b>Hit Location:</b> <b> [[${hit.total}]] </b> ${hit_loc}<p></p>
+          <b>Qualities:</b> ${item.data.data.qualities}`
+          roll.toMessage({type: 1, user: game.user._id, speaker: ChatMessage.getSpeaker(), content: content});
+
+      } else {
+          const content = `Rolls damage for their <b>${item.name}!</b>
+            <p></p>
+            <b>Damage:</b> <b> [[${roll2H.total}]]</b> ${roll2H._formula}<p></p>
+            <b>Hit Location:</b> <b> [[${hit.total}]] </b> ${hit_loc}<p></p>
+            <b>Qualities:</b> ${item.data.data.qualities}`
+            roll.toMessage({type: 1, user: game.user._id, speaker: ChatMessage.getSpeaker(), content: content});
+        }
+
+    } else {
+        if (item.data.data.superior == true) {
+          const content = `Rolls damage for their <b>${item.name}!</b>
+            <p></p>
+            <b>Damage:</b> <b> [[${roll.total}]] [[${supRoll.total}]]</b> ${roll._formula}<p></p>
+            <b>Hit Location:</b> <b> [[${hit.total}]] </b> ${hit_loc}<p></p>
+            <b>Qualities:</b> ${item.data.data.qualities}`
+            roll.toMessage({type: 1, user: game.user._id, speaker: ChatMessage.getSpeaker(), content: content});
+
+      } else {
+          const content = `Rolls damage for their <b>${item.name}!</b>
+            <p></p>
+            <b>Damage:</b> <b> [[${roll.total}]]</b> ${roll._formula}<p></p>
+            <b>Hit Location:</b> <b> [[${hit.total}]] </b> ${hit_loc}<p></p>
+            <b>Qualities:</b> ${item.data.data.qualities}`
+            roll.toMessage({type: 1, user: game.user._id, speaker: ChatMessage.getSpeaker(), content: content});
+          }
+        }
+  }
+  
+  _onArmorRoll(event) {
+    event.preventDefault()
+    let button = $(event.currentTarget);
+    const li = button.parents(".item");
+    const item = this.actor.getOwnedItem(li.data("itemId"));
+
+    let roll = new Roll("1d10")
+    roll.roll();
+
+    const content = `<h2>${item.name}</h2><p>
+      <b>AR:</b> ${item.data.data.armor}<p>
+      <b>Magic AR:</b> ${item.data.data.magic_ar}<p>
+      <b>Qualities</b> ${item.data.data.qualities}`
+      roll.toMessage({type: 1, user: game.user._id, speaker: ChatMessage.getSpeaker(), content: content});
+  }
+
+  _onToggle2H(event) {
+    event.preventDefault()
+    let toggle = $(event.currentTarget);
+    const li = toggle.parents(".item");
+    const item = this.actor.getOwnedItem(li.data("itemId"));
+
+    if (item.data.data.weapon2H === false) {
+      item.data.data.weapon2H = true;
+    } else if (item.data.data.weapon2H === true) {
+      item.data.data.weapon2H = false;
+    }
+    item.update({"data.weapon2H" : item.data.data.weapon2H})
+  }
+
+  _onPlusAmmo(event) {
+    event.preventDefault()
+    let toggle = $(event.currentTarget);
+    const li = toggle.parents(".item");
+    const item = this.actor.getOwnedItem(li.data("itemId"));
+
+    item.data.data.quantity = item.data.data.quantity + 1;
+
+    item.update({"data.quantity" : item.data.data.quantity})
+  }
+
+  _onMinusAmmo(event) {
+    event.preventDefault()
+    let toggle = $(event.currentTarget);
+    const li = toggle.parents(".item");
+    const item = this.actor.getOwnedItem(li.data("itemId"));
+
+    item.data.data.quantity = item.data.data.quantity - 1;
+
+    item.update({"data.quantity" : item.data.data.quantity})
+  }
+
+  _onItemEquip(event) {
+    event.preventDefault()
+    let toggle = $(event.currentTarget);
+    const li = toggle.parents(".item");
+    const item = this.actor.getOwnedItem(li.data("itemId"));
+
+    if (item.data.data.equipped === false) {
+      item.data.data.equipped = true;
+    } else if (item.data.data.equipped === true) {
+      item.data.data.equipped = false;
+    }
+    item.update({"data.equipped" : item.data.data.equipped})
   }
 
 }

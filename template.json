@@ -994,7 +994,7 @@
     
 },
 "Item": {
-  "types": ["item", "armor", "weapon", "spell", "trait", "power", "talent"],
+  "types": ["item", "armor", "weapon", "spell", "trait", "power", "talent", "combatStyle", "ammunition"],
   "templates": {
     "characteristicArray": {
       "characteristics": {
@@ -1021,7 +1021,18 @@
           "characteristic": ""
         }
       }
-    },
+      },
+      "rankArray": {
+        "skillRanks": {
+          "untrained": "Untrained",
+          "novice": "(0) Novice",
+          "apprentice": "(1) Apprentice",
+          "journeyman": "(2) Journeyman",
+          "adept": "(3) Adept",
+          "expert": "(4) Expert",
+          "master": "(5) Master"
+        }
+      },
     "resistanceArray": {
       "mpBonus": 0,
       "hpBonus": 0,
@@ -1054,22 +1065,7 @@
     "magic_ar": 0,
     "enchant_level": 0,
     "excludeENC": false,
-    "qualities": "",
-    "category": "",
-    "item_cat": {
-      "none": "None",
-      "head": "Helmet",
-      "l_arm": "Left Gauntlet",
-      "r_arm": "Right Gauntlet",
-      "l_leg": "Left Leg",
-      "r_leg": "Right Leg",
-      "body": "Chestplate",
-      "shield": "Shield",
-      "weapon1": "Primary Weapon",
-      "weapon2": "Secondary Weapon",
-      "weapon3": "Sidearm"
-    },
-    "attributes": {}
+    "qualities": ""
   },
   "armor": {
     "templates": ["resistanceArray", "characteristicArray", "replaceAttributesArray"],
@@ -1108,7 +1104,7 @@
     "totalENC": 0,
     "reach": "",
     "damage": "",
-    "damage2": "",
+    "damage2": 0,
     "weapon2H": false,
     "carried": false,
     "excludeENC": false,
@@ -1118,14 +1114,7 @@
     "armor": 0,
     "magic_ar": 0,
     "enchant_level": 0,
-    "qualities": "",
-    "category": "",
-    "item_cat": {
-      "none": "None",
-      "weapon1": "Weapon 1",
-      "weapon2": "Weapon 2",
-      "weapon3": "Weapon 3"
-    }
+    "qualities": ""
   },
   "spell": {
     "description": "",
@@ -1144,17 +1133,6 @@
       "mysticism": "Mysticism",
       "necromancy": "Necromancy",
       "restoration": "Restoration"
-    },
-    "category": "",
-    "spell_cat": {
-      "none": "None",
-      "spell1": "Spell 1",
-      "spell2": "Spell 2",
-      "spell3": "Spell 3", 
-      "spell4": "Spell 4",
-      "spell5": "Spell 5",
-      "spell6": "Spell 6",
-      "spell7": "Spell 7"
     }
   },
   "trait": {
@@ -1187,6 +1165,31 @@
     "fatigueException": false,
     "addIntToMP": false,
     "armorAcrobaticsException": false
+  },
+  "combatStyle": {
+    "templates": ["characteristicArray", "rankArray"],
+    "value": 0,
+    "rank": "",
+    "bonus": "",
+    "specialization": "",
+    "baseCha": "",
+    "trainedItems": ""
+  },
+  "ammunition": {
+    "templates": ["resistanceArray", "characteristicArray", "replaceAttributesArray"],
+    "description": "",
+    "quantity": 1,
+    "enc": 0,
+    "totalENC": 0,
+    "damage": 0,
+    "carried": false,
+    "excludeENC": false,
+    "superior": false,
+    "price": 0,
+    "armor": 0,
+    "magic_ar": 0,
+    "enchant_level": 1,
+    "qualities": ""
   }
 }
 }

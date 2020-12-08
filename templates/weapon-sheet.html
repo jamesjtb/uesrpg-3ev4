@@ -9,30 +9,23 @@
                         <th>Quantity</th>
                         <th>ENC</th>
                         <th>Price</th>
-                        <th>Equip Weapon</th>
+                        <th>1H Damage</th>
                     </tr>
                     <tr>
                         <td><input type="text" name="data.quantity" value="{{data.quantity}}" data-dtype="Number"/></td>
                         <td><input type="text" name="data.enc" value="{{data.enc}}" data-dtype="Number"/></td>
                         <td><input type="text" name="data.price" value="{{data.price}}" data-dtype="Number"></td>
-                        <td><select class="select" id="wCategory" name="data.category" data-type="String">
-                            {{#select item.data.category}}
-                            {{#each item.data.item_cat as |item_cat key|}}
-                            <option value="{{key}}">{{item_cat}}</option> 
-                            {{/each}} {{/select}}
-                        </select></td>
+                        <td><input type="text" name="data.damage" value="{{data.damage}}" data-dtype="String"></td>
                     </tr>
                     <tr>
-                        <th>Damage</th>
                         <th>Reach</th>
                         <th>EL</th>
-                        <th>Qualities</th>
+                        <th colspan="2">Qualities</th>
                     </tr>
                     <tr>
-                        <td><input type="text" name="data.damage" value="{{data.damage}}" data-dtype="String"></td>
                         <td><input type="text" name="data.reach" value="{{data.reach}}" data-dtype="String"></td>
                         <td><input type="text" name="data.enchant_level" value="{{data.enchant_level}}" data-dtype="Number"></td>
-                        <td><input type="text" name="data.qualities" value="{{data.qualities}}" data-dtype="String"></td>
+                        <td colspan="2"><input type="text" name="data.qualities" value="{{data.qualities}}" data-dtype="String"></td>
                     </tr>
                 </table>
             </div>

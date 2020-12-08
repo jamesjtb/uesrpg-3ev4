@@ -6,6 +6,7 @@
 
 // Import Modules
 import { SimpleActor } from "./actor.js";
+import { SimpleItem } from "./item.js";
 import { SimpleItemSheet } from "./item-sheet.js";
 import { SimpleActorSheet } from "./actor-sheet.js";
 import { npcSheet } from "./npc-sheet.js";
@@ -28,12 +29,13 @@ Hooks.once("init", async function() {
 
 	// Define custom Entity classes
   CONFIG.Actor.entityClass = SimpleActor;
+  CONFIG.Item.entityClass = SimpleItem;
 
   // Register sheet application classes
   Actors.unregisterSheet("core", ActorSheet);
   Actors.registerSheet("dnd5e", SimpleActorSheet, {types: ["character"], makeDefault: true});
   Items.unregisterSheet("core", ItemSheet);
-  Items.registerSheet("uesrpg-d100", SimpleItemSheet, {types: ["item", "armor", "weapon", "spell", "trait", "talent", "power"], makeDefault: true});
+  Items.registerSheet("uesrpg-d100", SimpleItemSheet, {types: ["item", "armor", "weapon", "spell", "trait", "talent", "power", "combatStyle", "ammunition"], makeDefault: true});
   Actors.registerSheet("uesrpg-d100", npcSheet, {types: ["npc"], makeDefault: true});
 
   // Register system settings
