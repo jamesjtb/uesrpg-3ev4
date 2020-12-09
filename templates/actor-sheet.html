@@ -725,13 +725,12 @@
                             </select></td>
                     </tr>
                 </table>
-                <div>
-                    <table>
+                    <table class="combatHeader">
                         <tr>
-                            <td colspan="2" class="itemHeader">Combat Styles</th>
+                            <td><input type="button" class="combat-create" id="combatStyle" value="+"></td>
+                            <td>Combat Styles</td>
                         </tr>
                     </table>
-                </div>
                 <ol class="combat-list">
                     {{#each actor.combatStyle as |item id|}}
                         <li class="item flexrow" data-item-id="{{item._id}}">
@@ -745,13 +744,12 @@
                         </li>
                     {{/each}}
                 </ol>
-                <div>
-                    <table>
+                    <table class="combatHeader">
                         <tr>
-                            <td colspan="2" class="itemHeader">Weapons</th>
+                            <td><input type="button" class="weapon-create" id="weapon" value="+"></td>
+                            <td>Weapons</td>
                         </tr>
                     </table>
-                </div>
                 <ol class="combat-list">
                     {{#each actor.weapon as |item id|}}
                         <li class="item flexrow" data-item-id="{{item._id}}">
@@ -765,13 +763,12 @@
                         </li>
                     {{/each}}
                 </ol>
-                <div>
-                    <table>
+                    <table class="combatHeader">
                         <tr>
-                            <td colspan="2" class="itemHeader">Ammunition</th>
+                            <td><input type="button" class="ammo-create" id="ammunition" value="+"></td>
+                            <td>Ammunition</td>
                         </tr>
                     </table>
-                </div>
                 <ol class="combat-list">
                     {{#each actor.ammunition as |item id|}}
                         <li class="item flexrow" data-item-id="{{item._id}}">
@@ -791,10 +788,11 @@
                 </ol>
             <ol class="combat-list">
                 {{#each actor.armor as |armor equipped|}}
-                <div>
-                    <table>
+                <div class="armor-header-wrapper">
+                    <table class="combatHeader">
                         <tr>
-                            <td colspan="2" class="itemHeader">{{equipped}} Armor</th>
+                            <td><input type="button" class="armor-create" id="armor" value="+"></td>
+                            <td>{{equipped}} Armor</td>
                         </tr>
                     </table>
                 </div>
@@ -900,9 +898,9 @@
             <ol class="spell-list">
                 {{#each actor.spell as |spell school|}}
                 <div>
-                    <table>
+                    <table class="itemHeader">
                         <tr>
-                            <td colspan="2" class="itemHeader">{{school}} spells</th>
+                            <td title="Drag Spells from Compendium">{{school}} spells</th>
                         </tr>
                     </table>
                 </div>
@@ -945,9 +943,10 @@
                     <td><input type="text" name="data.resistance.natToughness" value="{{data.resistance.natToughness}}" data-dtype="Number" disabled></td>
                 </tr>
             </table>
-                <table>
+                <table class="itemHeader">
                     <tr>
-                        <td class="itemHeader">Traits</td>
+                        <td><input type="button" class="trait-create" id="trait" value="+"></td>
+                        <td class="talentsLabel">Traits</td>
                     </tr>
                 </table>
                 <ol class="ability-list">
@@ -960,10 +959,11 @@
                             </div>
                         </li>
                     {{/each}}
-            </ol>
-                    <table>
+                </ol>
+                    <table class="itemHeader">
                         <tr>
-                            <td class="itemHeader">Powers</td>
+                            <td><input type="button" class="power-create" id="power" value="+"></td>
+                            <td class="talentsLabel">Powers</td>
                         </tr>
                     </table>
                     <ol class="ability-list">
@@ -976,10 +976,11 @@
                                 </div>
                             </li>
                         {{/each}}
-                </ol>
-                        <table>
+                    </ol>
+                        <table class="itemHeader">
                             <tr>
-                                <td class="itemHeader">Talents</td>
+                                <td><input type="button" class="talent-create" id="talent" value="+"></td>
+                                <td class="talentsLabel">Talents</td>
                             </tr>
                         </table>
                         <ol class="ability-list">
@@ -992,9 +993,9 @@
                                     </div>
                                 </li>
                             {{/each}}
-                    </ol> 
+                        </ol> 
             <div>
-                <h2 class="itemHeader">Special Abilities</h2>
+                <h2 class="combatHeader">Special Abilities</h2>
                 {{editor content=data.talents target="data.talents" button=true owner=owner editable=editable}}
             </div>
         </div>
@@ -1031,9 +1032,10 @@
                     </tr>
                 </table>
             </div>
-            <div class="itemHeader">
+            <div class="equipmentHeader">
                 <table>
                     <tr>
+                        <th><input type="button" class="gear-create" id="item" value="+"></th>
                         <th colspan="3">EQUIPMENT</th>
                     </tr>
                     <tr>

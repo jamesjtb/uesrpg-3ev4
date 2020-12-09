@@ -203,73 +203,72 @@
                             </select></td>
                     </tr>
                 </table>
-                <div>
-                    <table>
-                        <tr>
-                            <td colspan="2" class="itemHeader">Weapons</th>
-                        </tr>
-                    </table>
-                </div>
-                <ol class="combat-list">
-                    {{#each actor.weapon as |item id|}}
-                        <li class="item flexrow" data-item-id="{{item._id}}">
-                            <a class="damage-roll" data-roll="{{item.data.value}}"><i class="fas fa-dice-d20"></i></a>
-                            <img class="item-img" src="{{item.img}}" title="{{item.name}}" width="24" height="24"/>
-                            <h4 class="item-name">{{item.name}}</h4>
-                            <h4 class="item-cat">2H<input class="toggle2H" type="checkbox" {{checked item.data.weapon2H}} title="Toggle 2H Damage"></h4>
-                            <div class="item-controls">
-                                <a class="item-control item-delete" title="Delete Item"><i class="fas fa-trash"></i></a>
-                            </div>
-                        </li>
-                    {{/each}}
-                </ol>
-                <div>
-                    <table>
-                        <tr>
-                            <td colspan="2" class="itemHeader">Ammunition</th>
-                        </tr>
-                    </table>
-                </div>
-                <ol class="combat-list">
-                    {{#each actor.ammunition as |item id|}}
-                        <li class="item flexrow" data-item-id="{{item._id}}">
-                            <a class="ammo-roll" data-roll="{{item.data.value}}"><i class="fas fa-dice-d20"></i></a>
-                            <img class="item-img" src="{{item.img}}" title="{{item.name}}" width="24" height="24"/>
-                            <h4 class="item-name">{{item.name}}</h4>
-                            <div class="ammo-controls">
-                                <a><input title="-1" class="ammo-minus" type="button" value="-"></a>
-                                <a><input title="+1" class="ammo-plus" type="button" value="+"></a>
-                            </div>
-                            <h4 class="item-cat"><input class="ammo-field" type="number" value="{{item.data.quantity}}" title="Ammo Qty" disabled></h4>
-                            <div class="item-controls">
-                                <a class="item-control item-delete" title="Delete Item"><i class="fas fa-trash"></i></a>
-                            </div>
-                        </li>
-                    {{/each}}
-                </ol>
+                <table class="combatHeader">
+                    <tr>
+                        <td><input type="button" class="weapon-create" id="weapon" value="+"></td>
+                        <td>Weapons</td>
+                    </tr>
+                </table>
             <ol class="combat-list">
-                {{#each actor.armor as |armor equipped|}}
-                <div>
-                    <table>
-                        <tr>
-                            <td colspan="2" class="itemHeader">{{equipped}} Armor</th>
-                        </tr>
-                    </table>
-                </div>
-                {{#each armor as |item id|}}
+                {{#each actor.weapon as |item id|}}
                     <li class="item flexrow" data-item-id="{{item._id}}">
-                        <a title="Send Stats to Chat" class="armor-roll" data-roll="{{item.data.value}}"><i class="fas fa-dice-d20"></i></a>
+                        <a class="damage-roll" data-roll="{{item.data.value}}"><i class="fas fa-dice-d20"></i></a>
                         <img class="item-img" src="{{item.img}}" title="{{item.name}}" width="24" height="24"/>
                         <h4 class="item-name">{{item.name}}</h4>
-                        <h4 class="item-cat" title="{{item.data.magic_ar}}">{{item.data.armor}}AR</h4>
-                        <h4 class="item-equip"><input class="itemEquip" type="checkbox" {{checked item.data.equipped}} title="Equip Armor"></h4>
+                        <h4 class="item-cat">2H<input class="toggle2H" type="checkbox" {{checked item.data.weapon2H}} title="Toggle 2H Damage"></h4>
                         <div class="item-controls">
                             <a class="item-control item-delete" title="Delete Item"><i class="fas fa-trash"></i></a>
                         </div>
                     </li>
                 {{/each}}
+            </ol>
+            <table class="combatHeader">
+                <tr>
+                    <td><input type="button" class="ammo-create" id="ammunition" value="+"></td>
+                    <td>Ammunition</td>
+                </tr>
+            </table>
+        <ol class="combat-list">
+            {{#each actor.ammunition as |item id|}}
+                <li class="item flexrow" data-item-id="{{item._id}}">
+                    <a class="ammo-roll" data-roll="{{item.data.value}}"><i class="fas fa-dice-d20"></i></a>
+                    <img class="item-img" src="{{item.img}}" title="{{item.name}}" width="24" height="24"/>
+                    <h4 class="item-name">{{item.name}}</h4>
+                    <div class="ammo-controls">
+                        <a><input title="-1" class="ammo-minus" type="button" value="-"></a>
+                        <a><input title="+1" class="ammo-plus" type="button" value="+"></a>
+                    </div>
+                    <h4 class="item-cat"><input class="ammo-field" type="number" value="{{item.data.quantity}}" title="Ammo Qty" disabled></h4>
+                    <div class="item-controls">
+                        <a class="item-control item-delete" title="Delete Item"><i class="fas fa-trash"></i></a>
+                    </div>
+                </li>
             {{/each}}
         </ol>
+        <ol class="combat-list">
+            {{#each actor.armor as |armor equipped|}}
+            <div class="armor-header-wrapper">
+                <table class="combatHeader">
+                    <tr>
+                        <td><input type="button" class="armor-create" id="armor" value="+"></td>
+                        <td>{{equipped}} Armor</td>
+                    </tr>
+                </table>
+            </div>
+            {{#each armor as |item id|}}
+                <li class="item flexrow" data-item-id="{{item._id}}">
+                    <a title="Send Stats to Chat" class="armor-roll" data-roll="{{item.data.value}}"><i class="fas fa-dice-d20"></i></a>
+                    <img class="item-img" src="{{item.img}}" title="{{item.name}}" width="24" height="24"/>
+                    <h4 class="item-name">{{item.name}}</h4>
+                    <h4 class="item-cat" title="{{item.data.magic_ar}}">{{item.data.armor}}AR</h4>
+                    <h4 class="item-equip"><input class="itemEquip" type="checkbox" {{checked item.data.equipped}} title="Equip Armor"></h4>
+                    <div class="item-controls">
+                        <a class="item-control item-delete" title="Delete Item"><i class="fas fa-trash"></i></a>
+                    </div>
+                </li>
+            {{/each}}
+        {{/each}}
+    </ol>
             </div>
             <div class="combat-sidebar2">
             <table class="combat_table_header2">
@@ -398,9 +397,10 @@
                         <td><input type="text" name="data.resistance.natToughness" value="{{data.resistance.natToughness}}" data-dtype="Number" disabled></td>
                     </tr>
                 </table>
-                <table>
+                <table class="itemHeader">
                     <tr>
-                        <td class="itemHeader">Traits</td>
+                        <td><input type="button" class="trait-create" id="trait" value="+"></td>
+                        <td>Traits</td>
                     </tr>
                 </table>
                 <ol class="ability-list">
@@ -413,10 +413,11 @@
                             </div>
                         </li>
                     {{/each}}
-            </ol>
-                    <table>
+                </ol>
+                    <table class="itemHeader">
                         <tr>
-                            <td class="itemHeader">Powers</td>
+                            <td><input type="button" class="power-create" id="power" value="+"></td>
+                            <td>Powers</td>
                         </tr>
                     </table>
                     <ol class="ability-list">
@@ -429,10 +430,11 @@
                                 </div>
                             </li>
                         {{/each}}
-                </ol>
-                        <table>
+                    </ol>
+                        <table class="itemHeader">
                             <tr>
-                                <td class="itemHeader">Talents</td>
+                                <td><input type="button" class="talent-create" id="talent" value="+"></td>
+                                <td>Talents</td>
                             </tr>
                         </table>
                         <ol class="ability-list">
@@ -445,7 +447,7 @@
                                     </div>
                                 </li>
                             {{/each}}
-                    </ol>
+                        </ol>
             </div>
             <div>
                 <h2 class="itemHeader">Special Abilities</h2>
@@ -478,9 +480,10 @@
                     </tr>
                 </table>
             </div>
-            <div class="itemHeader">
+            <div class="equipmentHeader">
                 <table>
                     <tr>
+                        <th><input type="button" class="gear-create" id="item" value="+"></th>
                         <th colspan="3">EQUIPMENT</th>
                     </tr>
                     <tr>
@@ -504,7 +507,7 @@
                         </div>
                     </li>
                 {{/each}}
-        </ol>
+            </ol>
         </div> 
     </section>
 </form>

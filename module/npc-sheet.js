@@ -143,6 +143,15 @@ export class npcSheet extends ActorSheet {
     html.find(".ammo-minus").click(this._onMinusAmmo.bind(this));
     html.find(".itemEquip").click(this._onItemEquip.bind(this));
 
+    //Item Create Buttons
+    html.find(".weapon-create").click(this._onItemCreate.bind(this));
+    html.find(".ammo-create").click(this._onItemCreate.bind(this));
+    html.find(".armor-create").click(this._onItemCreate.bind(this));
+    html.find(".gear-create").click(this._onItemCreate.bind(this));
+    html.find(".trait-create").click(this._onItemCreate.bind(this));
+    html.find(".power-create").click(this._onItemCreate.bind(this));
+    html.find(".talent-create").click(this._onItemCreate.bind(this));
+
     // Everything below here is only needed if the sheet is editable
     if (!this.options.editable) return;
 
@@ -713,6 +722,18 @@ export class npcSheet extends ActorSheet {
       item.data.data.equipped = false;
     }
     item.update({"data.equipped" : item.data.data.equipped})
+  }
+
+  _onItemCreate(event) {
+    event.preventDefault()
+    const element = event.currentTarget
+
+    const itemData = {
+      name: element.id,
+      type: element.id,
+    }
+
+    this.actor.createOwnedItem(itemData);
   }
 
 }

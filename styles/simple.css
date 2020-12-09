@@ -491,6 +491,15 @@
 .worldbuilding .itemHeader {
   font-family: "cyrodiil";
   src: url(../fonts/cyrodiil/cyrodiil.ttf);
+  text-align: left;
+  font-size: large;
+}
+.worldbuilding .itemHeader .talentsLabel {
+  text-align: left;
+}
+.worldbuilding .equipmentHeader {
+  font-family: "cyrodiil";
+  src: url(../fonts/cyrodiil/cyrodiil.ttf);
   text-align: center;
   font-size: large;
 }
@@ -635,5 +644,102 @@
   text-align: left;
   margin-right: -170px;
   margin-left: 5px;
+}
+.worldbuilding .combat-create {
+  position: relative;
+  right: 0px;
+  top: 0px;
+  background: none;
+  border: groove;
+}
+.worldbuilding .weapon-create {
+  position: relative;
+  right: 0px;
+  top: 0px;
+  background: none;
+  border: groove;
+}
+.worldbuilding .ammo-create {
+  position: relative;
+  right: 0px;
+  top: 0px;
+  background: none;
+  border: groove;
+}
+.worldbuilding .armor-create {
+  position: relative;
+  right: 0px;
+  top: 0px;
+  background: none;
+  border: groove;
+}
+.worldbuilding .gear-create {
+  position: relative;
+  right: 0px;
+  top: 0px;
+  background: none;
+  border: groove;
+}
+.worldbuilding .trait-create {
+  position: relative;
+  right: 0px;
+  top: 0px;
+  background: none;
+  border: groove;
+}
+.worldbuilding .power-create {
+  position: relative;
+  right: 0px;
+  top: 0px;
+  background: none;
+  border: groove;
+}
+.worldbuilding .talent-create {
+  position: relative;
+  right: 0px;
+  top: 0px;
+  background: none;
+  border: groove;
+}
+.worldbuilding .spell-create {
+  position: relative;
+  right: 0px;
+  top: 0px;
+  background: none;
+  border: groove;
+}
+.worldbuilding .combat-create:hover {
+  background-color: rgba(0, 0, 0, 0.308);
+}
+.worldbuilding .weapon-create:hover {
+  background-color: rgba(0, 0, 0, 0.308);
+}
+.worldbuilding .ammo-create:hover {
+  background-color: rgba(0, 0, 0, 0.308);
+}
+.worldbuilding .armor-create:hover {
+  background-color: rgba(0, 0, 0, 0.308);
+}
+.worldbuilding .gear-create:hover {
+  background-color: rgba(0, 0, 0, 0.308);
+}
+.worldbuilding .trait-create:hover {
+  background-color: rgba(0, 0, 0, 0.308);
+}
+.worldbuilding .power-create:hover {
+  background-color: rgba(0, 0, 0, 0.308);
+}
+.worldbuilding .talent-create:hover {
+  background-color: rgba(0, 0, 0, 0.308);
+}
+.worldbuilding .spell-create:hover {
+  background-color: rgba(0, 0, 0, 0.308);
+}
+.worldbuilding .combatHeader {
+  font-family: "cyrodiil";
+  src: url(../fonts/cyrodiil/cyrodiil.ttf);
+  text-align: center;
+  font-size: large;
+  text-align: left;
 }
 
