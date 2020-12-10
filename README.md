@@ -1,4 +1,5 @@
 # UESRPG d100
+Please consider supporting the development of this system on Patreon here: https://www.patreon.com/user?u=30258550&fan_landing=true
 
 A system and a few compendiums used to play the UESRPG game. The system is basd off of the Simple Worldbuilding system developed by Atropos. Special thanks to 2Minute Tabletop and to drhodesw for the tokens and help creating the compendiums.
 
