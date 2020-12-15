@@ -136,6 +136,7 @@ export class npcSheet extends ActorSheet {
     html.find(".magic-roll").click(this._onSpellRoll.bind(this));
     html.find(".resistance-roll").click(this._onResistanceRoll.bind(this));
     html.find(".armor-roll").click(this._onArmorRoll.bind(this));
+    html.find(".ammo-roll").click(this._onAmmoRoll.bind(this));
 
     //Update Item Attributes from Actor Sheet
     html.find(".toggle2H").click(this._onToggle2H.bind(this));
@@ -670,6 +671,24 @@ export class npcSheet extends ActorSheet {
     const content = `<h2>${item.name}</h2><p>
       <b>AR:</b> ${item.data.data.armor}<p>
       <b>Magic AR:</b> ${item.data.data.magic_ar}<p>
+      <b>Qualities</b> ${item.data.data.qualities}`
+      roll.toMessage({type: 1, user: game.user._id, speaker: ChatMessage.getSpeaker(), content: content});
+  }
+
+  _onAmmoRoll(event) {
+    event.preventDefault()
+    let button = $(event.currentTarget);
+    const li = button.parents(".item");
+    const item = this.actor.getOwnedItem(li.data("itemId"));
+
+    item.data.data.quantity = item.data.data.quantity - 1;
+    item.update({"data.quantity" : item.data.data.quantity})
+
+    let roll = new Roll("1d10")
+    roll.roll();
+
+    const content = `<h2>${item.name}</h2><p>
+      <b>Damage Bonus:</b> ${item.data.data.damage}<p>
       <b>Qualities</b> ${item.data.data.qualities}`
       roll.toMessage({type: 1, user: game.user._id, speaker: ChatMessage.getSpeaker(), content: content});
   }

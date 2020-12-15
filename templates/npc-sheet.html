@@ -231,7 +231,7 @@
         <ol class="combat-list">
             {{#each actor.ammunition as |item id|}}
                 <li class="item flexrow" data-item-id="{{item._id}}">
-                    <a class="ammo-roll" data-roll="{{item.data.value}}"><i class="fas fa-dice-d20"></i></a>
+                    <a class="ammo-roll" title="Send Stats to Chat and Reduce Ammo by 1" data-roll="{{item.data.value}}"><i class="fas fa-dice-d20"></i></a>
                     <img class="item-img" src="{{item.img}}" title="{{item.name}}" width="24" height="24"/>
                     <h4 class="item-name">{{item.name}}</h4>
                     <div class="ammo-controls">
