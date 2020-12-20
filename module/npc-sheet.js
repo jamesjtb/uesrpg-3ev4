@@ -137,6 +137,7 @@ export class npcSheet extends ActorSheet {
     html.find(".resistance-roll").click(this._onResistanceRoll.bind(this));
     html.find(".armor-roll").click(this._onArmorRoll.bind(this));
     html.find(".ammo-roll").click(this._onAmmoRoll.bind(this));
+    html.find(".ability-list .item-img").click(this._onTalentRoll.bind(this));
 
     //Update Item Attributes from Actor Sheet
     html.find(".toggle2H").click(this._onToggle2H.bind(this));
@@ -164,12 +165,6 @@ export class npcSheet extends ActorSheet {
     });
 
     html.find('.item-name').click(ev => {
-      const li = $(ev.currentTarget).parents(".item");
-      const item = this.actor.getOwnedItem(li.data("itemId"));
-      item.sheet.render(true);
-    });
-
-    html.find('.item-img').click(ev => {
       const li = $(ev.currentTarget).parents(".item");
       const item = this.actor.getOwnedItem(li.data("itemId"));
       item.sheet.render(true);
@@ -753,6 +748,20 @@ export class npcSheet extends ActorSheet {
     }
 
     this.actor.createOwnedItem(itemData);
+  }
+
+  _onTalentRoll(event) {
+    event.preventDefault()
+    let button = $(event.currentTarget);
+    const li = button.parents(".item");
+    const item = this.actor.getOwnedItem(li.data("itemId"));
+
+    let roll = new Roll("1d10")
+    roll.roll();
+
+    const content = `<h2>${item.name} (${item.type})</h2><p>
+      <i>${item.data.data.description}</i>`
+      roll.toMessage({typ: 1, user: game.user._id, speaker: ChatMessage.getSpeaker(), content: content});
   }
 
 }
