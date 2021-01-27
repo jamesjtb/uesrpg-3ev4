@@ -141,6 +141,7 @@ export class SimpleActorSheet extends ActorSheet {
     html.find(".ammo-plus").click(this._onPlusAmmo.bind(this));
     html.find(".ammo-minus").click(this._onMinusAmmo.bind(this));
     html.find(".itemEquip").click(this._onItemEquip.bind(this));
+    html.find(".item-name").click(this._updateCombatValues.bind(this));
 
     //Item Create Buttons
     html.find(".combat-create").click(this._onItemCreate.bind(this));
@@ -462,6 +463,8 @@ export class SimpleActorSheet extends ActorSheet {
       close: html => console.log()
       });
       d.render(true);
+
+      item.update({"data.value" : item.data.data.value})
   }
 
   _onResistanceRoll(event) {
@@ -700,5 +703,14 @@ export class SimpleActorSheet extends ActorSheet {
       <i>${item.data.data.description}</i>`
       roll.toMessage({typ: 1, user: game.user._id, speaker: ChatMessage.getSpeaker(), content: content});
   }
+
+  _updateCombatValues(event) {
+    event.preventDefault()
+    let toggle = $(event.currentTarget);
+    const li = toggle.parents(".item");
+    const item = this.actor.getOwnedItem(li.data("itemId"));
+
+    item.update({"data.value" : item.data.data.value})
+    }
 
 }
