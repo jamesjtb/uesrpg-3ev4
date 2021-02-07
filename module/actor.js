@@ -265,13 +265,13 @@ export class SimpleActor extends Actor {
 
     //ENC Burden Calculations
     if (data.current_enc > data.carry_rating.max * 3) {
-      data.speed.base = 0;
+      data.speed.value = 0;
       data.stamina.max = data.stamina.max - 5;
     } else if (data.current_enc > data.carry_rating.max * 2) {
-      data.speed.base = Math.floor(data.speed.base / 2);
+      data.speed.value = Math.floor(data.speed.base / 2);
       data.stamina.max = data.stamina.max - 3;
     } else if (data.current_enc > data.carry_rating.max) {
-      data.speed.base = data.speed.base - 1;
+      data.speed.value = data.speed.value - 1;
       data.stamina.max = data.stamina.max - 1;
     }
 
