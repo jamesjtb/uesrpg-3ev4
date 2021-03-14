@@ -247,8 +247,8 @@ export class SimpleActor extends Actor {
     
     data.speed.base = strBonus + (2 * agiBonus) + (data.speed.bonus);
     data.speed.value = this._speedCalc(actorData);
-    data.speed.swimSpeed = (data.speed.value/2).toFixed(0);
-    data.speed.flySpeed = 0;
+    data.speed.swimSpeed = parseFloat(this._swimCalc(actorData)) + parseFloat((data.speed.value/2).toFixed(0));
+    data.speed.flySpeed = this._flyCalc(actorData);
 
     data.initiative.base = agiBonus + intBonus + prcBonus + (data.initiative.bonus);
     data.initiative.value = data.initiative.base;
@@ -561,8 +561,8 @@ export class SimpleActor extends Actor {
         data.speed.base = strBonus + (2 * agiBonus) + (data.speed.bonus);
     }
     data.speed.value = this._speedCalc(actorData);
-    data.speed.swimSpeed = (data.speed.value/2).toFixed(0);
-    data.speed.flySpeed = 0;
+    data.speed.swimSpeed = parseFloat(this._swimCalc(actorData)) + parseFloat((data.speed.value/2).toFixed(0));
+    data.speed.flySpeed = this._flyCalc(actorData);
 
     data.initiative.base = agiBonus + intBonus + prcBonus + (data.initiative.bonus);
     data.initiative.value = data.initiative.base;
@@ -1130,6 +1130,24 @@ export class SimpleActor extends Actor {
         bonus = bonus + item.data.sunlightR;
       }
       return bonus
+  }
+
+  _swimCalc(actorData) {
+    let attribute = actorData.items.filter(item => item.data.hasOwnProperty("swimBonus"));
+    let bonus = 0;
+    for (let item of attribute) {
+      bonus = bonus + item.data.swimBonus;
+    }
+    return bonus
+  }
+
+  _flyCalc(actorData) {
+    let attribute = actorData.items.filter(item => item.data.hasOwnProperty("flyBonus"));
+    let bonus = 0;
+    for (let item of attribute) {
+      bonus = bonus + item.data.flyBonus;
+    }
+    return bonus
   }
 
   _speedCalc(actorData) {
