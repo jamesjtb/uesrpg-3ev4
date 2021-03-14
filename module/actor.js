@@ -233,6 +233,8 @@ export class SimpleActor extends Actor {
     data.resistance.poisonR = this._poisonR(actorData);
     data.resistance.magicR = this._magicR(actorData);
     data.resistance.natToughness = this._natToughnessR(actorData);
+    data.resistance.silverR = this._silverR(actorData);
+    data.resistance.sunlightR = this._sunlightR(actorData);
 
     //Derived Calculations
     if (this._isMechanical(actorData) == true) {
@@ -245,6 +247,8 @@ export class SimpleActor extends Actor {
     
     data.speed.base = strBonus + (2 * agiBonus) + (data.speed.bonus);
     data.speed.value = this._speedCalc(actorData);
+    data.speed.swimSpeed = (data.speed.value/2).toFixed(0);
+    data.speed.flySpeed = 0;
 
     data.initiative.base = agiBonus + intBonus + prcBonus + (data.initiative.bonus);
     data.initiative.value = data.initiative.base;
@@ -263,6 +267,98 @@ export class SimpleActor extends Actor {
     this._sortCarriedItems(actorData);
     data.current_enc = (this._calculateENC(actorData) - this._armorWeight(actorData) - this._excludeENC(actorData)).toFixed(1);
 
+    //Form Shift Calcs
+    if (this._wereWolfForm(actorData) === true) {
+      actorData.data.resistance.silverR = actorData.data.resistance.silverR - 5;
+      actorData.data.resistance.diseaseR = actorData.data.resistance.diseaseR + 200;
+      actorData.data.hp.max = actorData.data.hp.max + 5;
+      actorData.data.stamina.max = actorData.data.stamina.max + 1;
+      actorData.data.speed.value = parseFloat(this._speedCalc(actorData)) + 9;
+      data.speed.swimSpeed = (data.speed.value/2).toFixed(0);
+      actorData.data.resistance.natToughness = 5;
+      actorData.data.wound_threshold.base = actorData.data.wound_threshold.base + 5;
+      actorData.data.action_points.max = actorData.data.action_points.max - 1;
+      actorData.data.skills.survival.tn = actorData.data.skills.survival.tn + 30;
+      actorData.data.skills.navigate.tn = actorData.data.skills.navigate.tn + 30;
+      actorData.data.skills.observe.tn = actorData.data.skills.observe.tn + 30;
+    } else if (this._wereBatForm(actorData) === true) {
+        actorData.data.resistance.silverR = actorData.data.resistance.silverR - 5;
+        actorData.data.resistance.diseaseR = actorData.data.resistance.diseaseR + 200;
+        actorData.data.hp.max = actorData.data.hp.max + 5;
+        actorData.data.stamina.max = actorData.data.stamina.max + 1;
+        actorData.data.speed.value = (this._speedCalc(actorData)/2).toFixed(0);
+        actorData.data.speed.flySpeed = actorData.data.speed.base + 9;
+        data.speed.swimSpeed = (data.speed.value/2).toFixed(0);
+        actorData.data.resistance.natToughness = 5;
+        actorData.data.wound_threshold.base = actorData.data.wound_threshold.base + 3;
+        actorData.data.action_points.max = actorData.data.action_points.max - 1;
+        actorData.data.skills.survival.tn = actorData.data.skills.survival.tn + 30;
+        actorData.data.skills.navigate.tn = actorData.data.skills.navigate.tn + 30;
+        actorData.data.skills.observe.tn = actorData.data.skills.observe.tn + 30;
+    } else if (this._wereBoarForm(actorData) === true) {
+        actorData.data.resistance.silverR = actorData.data.resistance.silverR - 5;
+        actorData.data.resistance.diseaseR = actorData.data.resistance.diseaseR + 200;
+        actorData.data.hp.max = actorData.data.hp.max + 5;
+        actorData.data.speed.value = parseFloat(this._speedCalc(actorData)) + 9;
+        data.speed.swimSpeed = (data.speed.value/2).toFixed(0);
+        actorData.data.resistance.natToughness = 7;
+        actorData.data.wound_threshold.base = actorData.data.wound_threshold.base + 5;
+        actorData.data.action_points.max = actorData.data.action_points.max - 1;
+        actorData.data.skills.survival.tn = actorData.data.skills.survival.tn + 30;
+        actorData.data.skills.navigate.tn = actorData.data.skills.navigate.tn + 30;
+        actorData.data.skills.observe.tn = actorData.data.skills.observe.tn + 30;
+    } else if (this._wereBearForm(actorData) === true) {
+        actorData.data.resistance.silverR = actorData.data.resistance.silverR - 5;
+        actorData.data.resistance.diseaseR = actorData.data.resistance.diseaseR + 200;
+        actorData.data.hp.max = actorData.data.hp.max + 10;
+        actorData.data.stamina.max = actorData.data.stamina.max + 1;
+        actorData.data.speed.value = parseFloat(this._speedCalc(actorData)) + 5;
+        data.speed.swimSpeed = (data.speed.value/2).toFixed(0);
+        actorData.data.resistance.natToughness = 5;
+        actorData.data.wound_threshold.base = actorData.data.wound_threshold.base + 5;
+        actorData.data.action_points.max = actorData.data.action_points.max - 1;
+        actorData.data.skills.survival.tn = actorData.data.skills.survival.tn + 30;
+        actorData.data.skills.navigate.tn = actorData.data.skills.navigate.tn + 30;
+        actorData.data.skills.observe.tn = actorData.data.skills.observe.tn + 30;
+    } else if (this._wereCrocodileForm(actorData) === true) {
+        actorData.data.resistance.silverR = actorData.data.resistance.silverR - 5;
+        actorData.data.resistance.diseaseR = actorData.data.resistance.diseaseR + 200;
+        actorData.data.hp.max = actorData.data.hp.max + 5;
+        actorData.data.stamina.max = actorData.data.stamina.max + 1;
+        actorData.data.speed.value = (this._addHalfSpeed(actorData)).toFixed(0);
+        actorData.data.speed.swimSpeed = parseFloat(this._speedCalc(actorData)) + 9;
+        actorData.data.resistance.natToughness = 5;
+        actorData.data.wound_threshold.base = actorData.data.wound_threshold.base + 5;
+        actorData.data.action_points.max = actorData.data.action_points.max - 1;
+        actorData.data.skills.survival.tn = actorData.data.skills.survival.tn + 30;
+        actorData.data.skills.navigate.tn = actorData.data.skills.navigate.tn + 30;
+        actorData.data.skills.observe.tn = actorData.data.skills.observe.tn + 30;
+    } else if (this._wereVultureForm(actorData) === true) {
+        actorData.data.resistance.silverR = actorData.data.resistance.silverR - 5;
+        actorData.data.resistance.diseaseR = actorData.data.resistance.diseaseR + 200;
+        actorData.data.hp.max = actorData.data.hp.max + 5;
+        actorData.data.stamina.max = actorData.data.stamina.max + 1;
+        actorData.data.speed.value = (this._speedCalc(actorData)/2).toFixed(0);
+        actorData.data.speed.flySpeed = actorData.data.speed.base + 9;
+        data.speed.swimSpeed = (data.speed.value/2).toFixed(0);
+        actorData.data.resistance.natToughness = 5;
+        actorData.data.wound_threshold.base = actorData.data.wound_threshold.base + 3;
+        actorData.data.action_points.max = actorData.data.action_points.max - 1;
+        actorData.data.skills.survival.tn = actorData.data.skills.survival.tn + 30;
+        actorData.data.skills.navigate.tn = actorData.data.skills.navigate.tn + 30;
+        actorData.data.skills.observe.tn = actorData.data.skills.observe.tn + 30;
+    } else if (this._vampireLordForm(actorData) === true) {
+        actorData.data.resistance.fireR = actorData.data.resistance.fireR - 1;
+        actorData.data.resistance.sunlightR = actorData.data.resistance.sunlightR - 1;
+        actorData.data.speed.flySpeed = 5;
+        actorData.data.hp.max = actorData.data.hp.max + 5;
+        actorData.data.magicka.max = actorData.data.magicka.max + 25;
+        actorData.data.resistance.natToughness = 3;
+    }
+
+    //Speed Recalculation
+    actorData.data.speed.value = this._addHalfSpeed(actorData);
+
     //ENC Burden Calculations
     if (data.current_enc > data.carry_rating.max * 3) {
       data.speed.value = 0;
@@ -278,12 +374,16 @@ export class SimpleActor extends Actor {
     //Armor Weight Class Calculations
     if (data.armor_class == "super_heavy") {
       data.speed.value = data.speed.value - 3;
+      data.speed.swimSpeed = data.speed.swimSpeed - 3;
     } else if (data.armor_class == "heavy") {
       data.speed.value = data.speed.value - 2;
+      data.speed.swimSpeed = data.speed.swimSpeed - 2;
     } else if (data.armor_class == "medium") {
       data.speed.value = data.speed.value - 1;
+      data.speed.swimSpeed = data.speed.swimSpeed - 1;
     } else {
       data.speed.value = data.speed.value;
+      data.speed.swimSpeed = data.speed.swimSpeed;
     }
 
     //Wounded Penalties
@@ -461,6 +561,8 @@ export class SimpleActor extends Actor {
         data.speed.base = strBonus + (2 * agiBonus) + (data.speed.bonus);
     }
     data.speed.value = this._speedCalc(actorData);
+    data.speed.swimSpeed = (data.speed.value/2).toFixed(0);
+    data.speed.flySpeed = 0;
 
     data.initiative.base = agiBonus + intBonus + prcBonus + (data.initiative.bonus);
     data.initiative.value = data.initiative.base;
@@ -479,6 +581,81 @@ export class SimpleActor extends Actor {
     this._sortCarriedItems(actorData);
     data.current_enc = (this._calculateENC(actorData) - this._armorWeight(actorData) - this._excludeENC(actorData)).toFixed(1);
 
+    //Form Shift Calcs
+    if (this._wereWolfForm(actorData) === true) {
+      actorData.data.resistance.silverR = actorData.data.resistance.silverR - 5;
+      actorData.data.resistance.diseaseR = actorData.data.resistance.diseaseR + 200;
+      actorData.data.hp.max = actorData.data.hp.max + 5;
+      actorData.data.stamina.max = actorData.data.stamina.max + 1;
+      actorData.data.speed.value = parseFloat(this._speedCalc(actorData)) + 9;
+      data.speed.swimSpeed = (data.speed.value/2).toFixed(0);
+      actorData.data.resistance.natToughness = 5;
+      actorData.data.wound_threshold.base = actorData.data.wound_threshold.base + 5;
+      actorData.data.action_points.max = actorData.data.action_points.max - 1;
+    } else if (this._wereBatForm(actorData) === true) {
+        actorData.data.resistance.silverR = actorData.data.resistance.silverR - 5;
+        actorData.data.resistance.diseaseR = actorData.data.resistance.diseaseR + 200;
+        actorData.data.hp.max = actorData.data.hp.max + 5;
+        actorData.data.stamina.max = actorData.data.stamina.max + 1;
+        actorData.data.speed.value = (this._speedCalc(actorData)/2).toFixed(0);
+        actorData.data.speed.flySpeed = actorData.data.speed.base + 9;
+        data.speed.swimSpeed = (data.speed.value/2).toFixed(0);
+        actorData.data.resistance.natToughness = 5;
+        actorData.data.wound_threshold.base = actorData.data.wound_threshold.base + 3;
+        actorData.data.action_points.max = actorData.data.action_points.max - 1;
+    } else if (this._wereBoarForm(actorData) === true) {
+        actorData.data.resistance.silverR = actorData.data.resistance.silverR - 5;
+        actorData.data.resistance.diseaseR = actorData.data.resistance.diseaseR + 200;
+        actorData.data.hp.max = actorData.data.hp.max + 5;
+        actorData.data.speed.value = parseFloat(this._speedCalc(actorData)) + 9;
+        data.speed.swimSpeed = (data.speed.value/2).toFixed(0);
+        actorData.data.resistance.natToughness = 7;
+        actorData.data.wound_threshold.base = actorData.data.wound_threshold.base + 5;
+        actorData.data.action_points.max = actorData.data.action_points.max - 1;
+    } else if (this._wereBearForm(actorData) === true) {
+        actorData.data.resistance.silverR = actorData.data.resistance.silverR - 5;
+        actorData.data.resistance.diseaseR = actorData.data.resistance.diseaseR + 200;
+        actorData.data.hp.max = actorData.data.hp.max + 10;
+        actorData.data.stamina.max = actorData.data.stamina.max + 1;
+        actorData.data.speed.value = parseFloat(this._speedCalc(actorData)) + 5;
+        data.speed.swimSpeed = (data.speed.value/2).toFixed(0);
+        actorData.data.resistance.natToughness = 5;
+        actorData.data.wound_threshold.base = actorData.data.wound_threshold.base + 5;
+        actorData.data.action_points.max = actorData.data.action_points.max - 1;
+    } else if (this._wereCrocodileForm(actorData) === true) {
+        actorData.data.resistance.silverR = actorData.data.resistance.silverR - 5;
+        actorData.data.resistance.diseaseR = actorData.data.resistance.diseaseR + 200;
+        actorData.data.hp.max = actorData.data.hp.max + 5;
+        actorData.data.stamina.max = actorData.data.stamina.max + 1;
+        actorData.data.speed.value = (this._addHalfSpeed(actorData)).toFixed(0);
+        actorData.data.speed.swimSpeed = parseFloat(this._speedCalc(actorData)) + 9;
+        actorData.data.resistance.natToughness = 5;
+        actorData.data.wound_threshold.base = actorData.data.wound_threshold.base + 5;
+        actorData.data.action_points.max = actorData.data.action_points.max - 1;
+
+    } else if (this._wereVultureForm(actorData) === true) {
+        actorData.data.resistance.silverR = actorData.data.resistance.silverR - 5;
+        actorData.data.resistance.diseaseR = actorData.data.resistance.diseaseR + 200;
+        actorData.data.hp.max = actorData.data.hp.max + 5;
+        actorData.data.stamina.max = actorData.data.stamina.max + 1;
+        actorData.data.speed.value = (this._speedCalc(actorData)/2).toFixed(0);
+        actorData.data.speed.flySpeed = actorData.data.speed.base + 9;
+        data.speed.swimSpeed = (data.speed.value/2).toFixed(0);
+        actorData.data.resistance.natToughness = 5;
+        actorData.data.wound_threshold.base = actorData.data.wound_threshold.base + 3;
+        actorData.data.action_points.max = actorData.data.action_points.max - 1;
+    }else if (this._vampireLordForm(actorData) === true) {
+        actorData.data.resistance.fireR = actorData.data.resistance.fireR - 1;
+        actorData.data.resistance.sunlightR = actorData.data.resistance.sunlightR - 1;
+        actorData.data.speed.flySpeed = 5;
+        actorData.data.hp.max = actorData.data.hp.max + 5;
+        actorData.data.magicka.max = actorData.data.magicka.max + 25;
+        actorData.data.resistance.natToughness = 3;
+    }
+
+    //Speed Recalculation
+    actorData.data.speed.value = this._addHalfSpeed(actorData);
+
     //ENC Burden Calculations
     if (data.current_enc > data.carry_rating.max * 3) {
       data.speed.base = 0;
@@ -493,13 +670,17 @@ export class SimpleActor extends Actor {
 
     //Armor Weight Class Calculations
     if (data.armor_class == "super_heavy") {
-      data.speed.base = data.speed.base - 3;
+      data.speed.value = data.speed.value - 3;
+      data.speed.swimSpeed = data.speed.swimSpeed - 3;
     } else if (data.armor_class == "heavy") {
-      data.speed.base = data.speed.base - 2;
+      data.speed.value = data.speed.value - 2;
+      data.speed.swimSpeed = data.speed.swimSpeed - 2;
     } else if (data.armor_class == "medium") {
-      data.speed.base = data.speed.base - 1;
+      data.speed.value = data.speed.value - 1;
+      data.speed.swimSpeed = data.speed.swimSpeed - 1;
     } else {
-      data.speed.base = data.speed.base;
+      data.speed.value = data.speed.value;
+      data.speed.swimSpeed = data.speed.swimSpeed;
     }
 
     //Wounded Penalties
@@ -933,15 +1114,33 @@ export class SimpleActor extends Actor {
       return bonus
   }
 
+  _silverR(actorData) {
+    let attribute = actorData.items.filter(item => item.data.hasOwnProperty("silverR"));
+    let bonus = 0;
+    for (let item of attribute) {
+        bonus = bonus + item.data.silverR;
+      }
+      return bonus
+  }
+
+  _sunlightR(actorData) {
+    let attribute = actorData.items.filter(item => item.data.hasOwnProperty("sunlightR"));
+    let bonus = 0;
+    for (let item of attribute) {
+        bonus = bonus + item.data.sunlightR;
+      }
+      return bonus
+  }
+
   _speedCalc(actorData) {
     let attribute = actorData.items.filter(item => item.data.halfSpeed == true);
     let speed = actorData.data.speed.base;
-    if (attribute.length == 0) {
+    if (attribute.length === 0) {
       speed = speed;
     } else if (attribute.length >= 1) {
       speed = Math.ceil(speed/2);
     }
-    return speed .toFixed(0);
+    return speed;
   }
 
   _iniCalc(actorData) {
@@ -968,7 +1167,7 @@ export class SimpleActor extends Actor {
           }
         }
       }
-    return init .toFixed(0);
+    return init;
   }
 
   _woundThresholdCalc(actorData) {
@@ -995,7 +1194,7 @@ export class SimpleActor extends Actor {
           }
         }
       }
-    return wound .toFixed(0);
+    return wound;
   }
 
   _halfFatiguePenalty(actorData) {
@@ -1071,6 +1270,69 @@ export class SimpleActor extends Actor {
     return shift
   }
 
+  _vampireLordForm(actorData) {
+    let form = actorData.items.filter(item => item.data.shiftFormStyle === "shiftFormVampireLord");
+    let shift = false;
+    if(form.length > 0) {
+      shift = true;
+    }
+    return shift
+  }
+
+  _wereWolfForm(actorData) {
+    let form = actorData.items.filter(item => item.data.shiftFormStyle === "shiftFormWereWolf"||item.data.shiftFormStyle === "shiftFormWereLion");
+    let shift = false;
+    if(form.length > 0) {
+      shift = true;
+    }
+    return shift
+  }
+
+  _wereBatForm(actorData) {
+    let form = actorData.items.filter(item => item.data.shiftFormStyle === "shiftFormWereBat");
+    let shift = false;
+    if(form.length > 0) {
+      shift = true;
+    }
+    return shift
+  }
+
+  _wereBoarForm(actorData) {
+    let form = actorData.items.filter(item => item.data.shiftFormStyle === "shiftFormWereBoar");
+    let shift = false;
+    if(form.length > 0) {
+      shift = true;
+    }
+    return shift
+  }
+
+  _wereBearForm(actorData) {
+    let form = actorData.items.filter(item => item.data.shiftFormStyle === "shiftFormWereBear");
+    let shift = false;
+    if(form.length > 0) {
+      shift = true;
+    }
+    return shift
+  }
+
+  _wereCrocodileForm(actorData) {
+    let form = actorData.items.filter(item => item.data.shiftFormStyle === "shiftFormWereCrocodile");
+    let shift = false;
+    if(form.length > 0) {
+      shift = true;
+    }
+    return shift
+  }
+
+  _wereVultureForm(actorData) {
+    let form = actorData.items.filter(item => item.data.shiftFormStyle === "shiftFormWereVulture");
+    let shift = false;
+    if(form.length > 0) {
+      shift = true;
+    }
+    return shift
+  }
+
   _painIntolerant(actorData) {
     let attribute = actorData.items.filter(item => item.data.painIntolerant == true);
     let pain = false;
@@ -1078,6 +1340,22 @@ export class SimpleActor extends Actor {
       pain = true;
     } 
     return pain
+  }
+
+  _addHalfSpeed(actorData) {
+    let halfSpeedItems = actorData.items.filter(item => item.data.addHalfSpeed === true);
+    let isWereCroc = actorData.items.filter(item => item.data.shiftFormStyle === "shiftFormWereCrocodile");
+    let speed = 0;
+    if (isWereCroc.length > 0 && halfSpeedItems.length > 0) {
+      speed = actorData.data.speed.value;
+    } else if (isWereCroc.length < 1 && halfSpeedItems.length > 0) {
+      speed = Math.ceil(actorData.data.speed.value/2) + actorData.data.speed.value;
+    } else if (isWereCroc.length > 0 && halfSpeedItems.length < 1) {
+      speed = Math.ceil(actorData.data.speed.value/2);
+    } else {
+      speed = actorData.data.speed.value;
+    }
+    return speed
   }
 
   _helmetArmor(actorData) {
