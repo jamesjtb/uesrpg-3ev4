@@ -832,7 +832,7 @@
                 </tr>
                 <tr class="ap-inputs">
                     <td><input type="text" name="data.wound_threshold.value" value="{{data.wound_threshold.value}}" disabled></td>
-                    <td><input type="text" name="data.speed.value" value="{{data.speed.value}}" data-dtype="Number" disabled></td>
+                    <td title= "Swim: {{data.speed.swimSpeed}} Fly: {{data.speed.flySpeed}}"><input type="text" name="data.speed.value" value="{{data.speed.value}}" data-dtype="Number" disabled></td>
                     <td><input type="text" name="data.initiative.value" value="{{data.initiative.value}}" disabled></td>
                 </tr>
             </table>
@@ -865,10 +865,18 @@
                     <td><input type="text" name="data.resistance.magicR" value="{{data.resistance.magicR}}" data-dtype="Number" disabled></td>
                 </tr>
                 <tr>
-                    <th>Natural Toughness</th>
+                    <th>Toughness</th>
                     <td><input type="text" name="data.resistance.natToughness" value="{{data.resistance.natToughness}}" data-dtype="Number" disabled></td>
                 </tr>
                 <tr>
+                    <th>Silver</th>
+                    <td><input type="text" name="data.resistance.silverR" value="{{data.resistance.silverR}}" data-dtype="Number" disabled></td>
+                </tr>
+                <tr>
+                    <th>Sunlight</th>
+                    <td><input type="text" name="data.resistance.sunlightR" value="{{data.resistance.sunlightR}}" data-dtype="Number" disabled></td>
+                </tr>
+                <tr title="Check to toggle wounded penalties to initiative and skill rolls">
                     <th>Wounded</th>
                     <td><input type="checkbox" name="data.wounded" {{checked data.wounded}}></td>
                 </tr>
@@ -922,7 +930,7 @@
         <div class="tab talents" data-group="primary" data-tab="talents">
             <table class="field-inputs-small">
                 <tr>
-                    <th colspan="7">Resistances & Weaknesses</th>
+                    <th colspan="9">Resistances & Weaknesses</th>
                 </tr>
                 <tr>
                     <th>Disease %</th>
@@ -931,7 +939,9 @@
                     <th>Shock</th>
                     <th>Poison</th>
                     <th>Magic</th>
-                    <th>Natural Toughness</th>
+                    <th>Tough</th>
+                    <th>Silver</th>
+                    <th>Sunlight</th>
                 </tr>
                 <tr>
                     <td><input type="text" name="data.resistance.diseaseR" value="{{data.resistance.diseaseR}}" data-dtype="Number" disabled></td>
@@ -941,6 +951,8 @@
                     <td><input type="text" name="data.resistance.poisonR" value="{{data.resistance.poisonR}}" data-dtype="Number" disabled></td>
                     <td><input type="text" name="data.resistance.magicR" value="{{data.resistance.magicR}}" data-dtype="Number" disabled></td>
                     <td><input type="text" name="data.resistance.natToughness" value="{{data.resistance.natToughness}}" data-dtype="Number" disabled></td>
+                    <td><input type="text" name="data.resistance.silverR" value="{{data.resistance.silverR}}" data-dtype="Number" disabled></td>
+                    <td><input type="text" name="data.resistance.sunlightR" value="{{data.resistance.sunlightR}}" data-dtype="Number" disabled></td>
                 </tr>
             </table>
                 <table class="itemHeader">
