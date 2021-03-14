@@ -20,7 +20,9 @@
       "magicR": 0,
       "poisonR": 0,
       "diseaseR": 0,
-      "natToughness": 0
+      "natToughness": 0,
+      "sunlightR": 0,
+      "silverR": 0
     },
     "lucky_numbers": {
       "ln1": 0,
@@ -140,7 +142,9 @@
       "base": 0,
       "bonus": 0,
       "traitBonus": 0,
-      "talentBonus": 0
+      "talentBonus": 0,
+      "swimSpeed": 0,
+      "flySpeed": 0
     },
     "fatigueLevel": 0,
     "size": "",
@@ -624,7 +628,9 @@
       "magicR": 0,
       "poisonR": 0,
       "diseaseR": 0,
-      "natToughness": 0
+      "natToughness": 0,
+      "silverR": 0,
+      "sunlightR": 0
     },
     "fatigueLevel": 0,
     "lucky_numbers": {
@@ -1041,13 +1047,17 @@
       "wtBonus": 0,
       "iniBonus": 0,
       "speedBonus": 0,
+      "flyBonus": 0,
+      "swimBonus": 0,
       "diseaseR": 0,
       "fireR": 0,
       "frostR": 0,
       "shockR": 0,
       "poisonR": 0,
       "magicR": 0,
-      "natToughnessR": 0
+      "natToughnessR": 0,
+      "silverR": 0,
+      "sunlightR": 0
     }
   },
   "item": {
@@ -1139,6 +1149,7 @@
     "templates": ["resistanceArray", "replaceAttributesArray", "characteristicArray"],
     "description": "",
     "halfSpeed": false,
+    "addHalfSpeed": false,
     "halfFatiguePenalty": false,
     "mechanical": false,
     "crpCost": 0,
@@ -1150,7 +1161,19 @@
     "description": "",
     "dailyUse": false,
     "source": "",
-    "shiftForm": false
+    "shiftForm": false, 
+    "shiftFormStyle": "",
+    "shiftStyles": {
+      "shiftFormNone": "Regular Form",
+      "shiftFormVampireLord": "Vampire Lord",
+      "shiftFormWereWolf": "Werewolf",
+      "shiftFormWereBat": "Werebat",
+      "shiftFormWereBoar": "Wereboar",
+      "shiftFormWereBear": "Werebear",
+      "shiftFormWereCrocodile": "Werecrocodile",
+      "shiftFormWereVulture": "Werevulture",
+      "shiftFormWereLion": "Werelion"
+    }
   },
   "talent": {
     "templates": ["resistanceArray", "replaceAttributesArray", "characteristicArray"],
@@ -1164,7 +1187,8 @@
     "untrainedException": false,
     "fatigueException": false,
     "addIntToMP": false,
-    "armorAcrobaticsException": false
+    "armorAcrobaticsException": false,
+    "addHalfSpeed": false
   },
   "combatStyle": {
     "templates": ["characteristicArray", "rankArray"],
