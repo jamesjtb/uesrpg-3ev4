@@ -6,7 +6,7 @@
             <div class="item-resource">
                 <table>
                     <tr>
-                        <th>Power Used</th>
+                        <th>Daily Used</th>
                         <th>Power Source</th>
                     </tr>
                     <tr>
@@ -36,13 +36,15 @@
         <div class="tab" data-group="primary" data-tab="attributes">
             <table class="field-inputs-small">
                 <tr>
-                    <th>HP Bonus</th>
-                    <th>MP Bonus</th>
-                    <th>SP Bonus</th>
-                    <th>LP Bonus</th>
-                    <th>WT Bonus</th>
-                    <th>Initiative Bonus</th>
-                    <th>Speed Bonus</th>
+                    <th>HP+</th>
+                    <th>MP+</th>
+                    <th>SP+</th>
+                    <th>LP+</th>
+                    <th>WT+</th>
+                    <th>Init.+</th>
+                    <th>Speed+</th>
+                    <th>Fly+</th>
+                    <th>Swim+</th>
                 </tr>
                 <tr>
                     <td><input type="text" name="data.hpBonus" value="{{data.hpBonus}}" data-dtype="Number"></td>
@@ -52,6 +54,8 @@
                     <td><input type="text" name="data.wtBonus" value="{{data.wtBonus}}" data-dtype="Number"></td>
                     <td><input type="text" name="data.iniBonus" value="{{data.iniBonus}}" data-dtype="Number"></td>
                     <td><input type="text" name="data.speedBonus" value="{{data.speedBonus}}" data-dtype="Number"></td>
+                    <td><input type="text" name="data.flyBonus" value="{{data.flyBonus}}" data-dtype="Number"></td>
+                    <td><input type="text" name="data.swimBonus" value="{{data.swimBonus}}" data-dtype="Number"></td>
                 </tr>
             </table>
             <table class="field-inputs-small">
@@ -62,6 +66,15 @@
                 <tr>
                     <th>Centurion Sphere Form Shift</th>
                     <td><input type="checkbox" name="data.shiftForm" {{checked data.shiftForm}}></td>
+                </tr>
+                <tr>
+                    <th>Form Shift Selection</th>
+                    <td><select name="data.shiftFormStyle" data-type="String">
+                        {{#select item.data.shiftFormStyle}}
+                        {{#each item.data.shiftStyles as |shiftStyles key|}}
+                        <option value="{{key}}">{{shiftStyles}}</option> 
+                        {{/each}} {{/select}}
+                    </select></td>
                 </tr>
         </div>
     </section>
