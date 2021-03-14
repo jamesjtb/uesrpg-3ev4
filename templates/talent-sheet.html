@@ -44,7 +44,7 @@
         <div class="tab" data-group="primary" data-tab="attributes">
             <table class="field-inputs-small">
                 <tr>
-                    <th colspan="7">Resistances & Weaknesses</th>
+                    <th colspan="9">Resistances & Weaknesses</th>
                 </tr>
                 <tr>
                     <th>Disease %</th>
@@ -53,7 +53,9 @@
                     <th>Shock</th>
                     <th>Poison</th>
                     <th>Magic</th>
-                    <th>Natural Toughness</th>
+                    <th>Toughness</th>
+                    <th>Silver</th>
+                    <th>Sunlight</th>
                 </tr>
                 <tr>
                     <td><input type="text" name="data.diseaseR" value="{{data.diseaseR}}" data-dtype="Number"></td>
@@ -63,6 +65,8 @@
                     <td><input type="text" name="data.poisonR" value="{{data.poisonR}}" data-dtype="Number"></td>
                     <td><input type="text" name="data.magicR" value="{{data.magicR}}" data-dtype="Number"></td>
                     <td><input type="text" name="data.natToughnessR" value="{{data.natToughnessR}}" data-dtype="Number"></td>
+                    <td><input type="text" name="data.silverR" value="{{data.silverR}}" data-dtype="Number"></td>
+                    <td><input type="text" name="data.sunlightR" value="{{data.sunlightR}}" data-dtype="Number"></td>
                 </tr>
             </table>
             <table class="field-inputs-small">
@@ -94,13 +98,15 @@
             </table>
             <table class="field-inputs-small">
                 <tr>
-                    <th>HP Bonus</th>
-                    <th>MP Bonus</th>
-                    <th>SP Bonus</th>
-                    <th>LP Bonus</th>
-                    <th>WT Bonus</th>
-                    <th>Initiative Bonus</th>
-                    <th>Speed Bonus</th>
+                    <th>HP+</th>
+                    <th>MP+</th>
+                    <th>SP+</th>
+                    <th>LP+</th>
+                    <th>WT+</th>
+                    <th>Init.+</th>
+                    <th>Speed+</th>
+                    <th>Fly+</th>
+                    <th>Swim+</th>
                 </tr>
                 <tr>
                     <td><input type="text" name="data.hpBonus" value="{{data.hpBonus}}" data-dtype="Number"></td>
@@ -110,6 +116,8 @@
                     <td><input type="text" name="data.wtBonus" value="{{data.wtBonus}}" data-dtype="Number"></td>
                     <td><input type="text" name="data.iniBonus" value="{{data.iniBonus}}" data-dtype="Number"></td>
                     <td><input type="text" name="data.speedBonus" value="{{data.speedBonus}}" data-dtype="Number"></td>
+                    <td><input type="text" name="data.flyBonus" value="{{data.flyBonus}}" data-dtype="Number"></td>
+                    <td><input type="text" name="data.swimBonus" value="{{data.swimBonus}}" data-dtype="Number"></td>
                 </tr>
             </table>
             <table class="field-inputs-small">
@@ -132,6 +140,10 @@
                 <tr>
                     <th>No Untrained Combat Penalty</th>
                     <td><input type="checkbox" name="data.untrainedException" {{checked data.untrainedException}}></td>
+                </tr>
+                <tr>
+                    <th>Add 1/2 Speed</th>
+                    <td><input type="checkbox" name="data.addHalfSpeed" {{checked data.addHalfSpeed}}></td>
                 </tr>
             </table>
         </div>
