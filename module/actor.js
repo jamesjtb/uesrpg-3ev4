@@ -547,6 +547,8 @@ export class SimpleActor extends Actor {
     data.resistance.poisonR = this._poisonR(actorData);
     data.resistance.magicR = this._magicR(actorData);
     data.resistance.natToughness = this._natToughnessR(actorData);
+    data.resistance.silverR = this._silverR(actorData);
+    data.resistance.sunlightR = this._sunlightR(actorData);
 
     //Derived Calculations
     if (this._isMechanical(actorData) == true) {
