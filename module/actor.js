@@ -391,9 +391,11 @@ export class SimpleActor extends Actor {
 
     //Wounded Penalties
     let woundPen = -20;
+    data.woundPenalty = woundPen;
 
-    if (this._painIntolerant(actorData) == true) {
+    if (this._painIntolerant(actorData) === true) {
       woundPen = -30;
+      data.woundPenalty = woundPen;
     }
 
     let halfWound = woundPen / 2;
@@ -401,7 +403,7 @@ export class SimpleActor extends Actor {
     let halfWoundIni = woundIni / 2;
 
     if (data.wounded == true) {
-      if (this._halfWoundPenalty(actorData) == true) {
+      if (this._halfWoundPenalty(actorData) === true) {
         for (var skill in data.skills) {
           data.skills[skill].tn = data.skills[skill].tn + halfWound;
         }
@@ -412,7 +414,9 @@ export class SimpleActor extends Actor {
           data.combat_styles[skill].tn = data.combat_styles[skill].tn + halfWound;
         }
         data.initiative.base = data.initiative.base + halfWoundIni;
-      } else if (this._halfWoundPenalty(actorData) == false) {
+        data.woundPenalty = halfWound;
+
+      } else if (this._halfWoundPenalty(actorData) === false) {
         for (var skill in data.skills) {
           data.skills[skill].tn = data.skills[skill].tn + woundPen;
         }
@@ -423,6 +427,7 @@ export class SimpleActor extends Actor {
           data.combat_styles[skill].tn = data.combat_styles[skill].tn + woundPen;
         }
         data.initiative.base = data.initiative.base + woundIni;
+        data.woundPenalty = woundPen;
       }
     }
 
