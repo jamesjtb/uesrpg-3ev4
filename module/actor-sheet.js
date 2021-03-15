@@ -445,6 +445,13 @@ export class SimpleActorSheet extends ActorSheet {
             <span style='color:red; font-size:120%;'> <b>UNLUCKY NUMBER!</b></span>`
             roll.toMessage({type: 4, user: game.user._id, speaker: ChatMessage.getSpeaker(), content: content});
 
+          } else if (this.actor.data.data.wounded === true) {
+            const content = `Rolls Combat Style <b>${item.name}</b>!
+            <p></p><b>Target Number: [[${item.data.data.value} + ${playerInput} + ${this.actor.data.data.woundPenalty}]]</b> <p></p>
+            <b>Result: [[${roll.total}]]</b><p></p>
+            <b>${roll.total<=(item.data.data.value + playerInput + this.actor.data.data.woundPenalty) ? " <span style='color:green; font-size: 120%;'> <b>SUCCESS!</b></span>" : " <span style='color: red; font-size: 120%;'> <b>FAILURE!</b></span>"}`
+            roll.toMessage({type: 4, user: game.user._id, speaker: ChatMessage.getSpeaker(), content: content});
+
           } else {
             const content = `Rolls Combat Style <b>${item.name}</b>!
             <p></p><b>Target Number: [[${item.data.data.value} + ${playerInput}]]</b> <p></p>
