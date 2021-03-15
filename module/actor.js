@@ -413,7 +413,7 @@ export class SimpleActor extends Actor {
         for (var skill in data.combat_styles) {
           data.combat_styles[skill].tn = data.combat_styles[skill].tn + halfWound;
         }
-        data.initiative.base = data.initiative.base + halfWoundIni;
+        data.initiative.value = data.initiative.base + halfWoundIni;
         data.woundPenalty = halfWound;
 
       } else if (this._halfWoundPenalty(actorData) === false) {
@@ -426,7 +426,7 @@ export class SimpleActor extends Actor {
         for (var skill in data.combat_styles) {
           data.combat_styles[skill].tn = data.combat_styles[skill].tn + woundPen;
         }
-        data.initiative.base = data.initiative.base + woundIni;
+        data.initiative.value = data.initiative.base + woundIni;
         data.woundPenalty = woundPen;
       }
     }
@@ -716,7 +716,7 @@ export class SimpleActor extends Actor {
         for (var skill in data.skills) {
           data.skills[skill].tn = data.skills[skill].tn + halfWound;
         }
-        data.initiative.base = data.initiative.base + halfWoundIni;
+        data.initiative.value = data.initiative.base + halfWoundIni;
       } else if (this._halfWoundPenalty(actorData) == false) {
         for (var skill in data.professions) {
           data.professions[skill] = data.professions[skill] + woundPen;
@@ -724,7 +724,7 @@ export class SimpleActor extends Actor {
         for (var skill in data.skills) {
           data.skills[skill].tn = data.skills[skill].tn + woundPen;
         }
-        data.initiative.base = data.initiative.base + woundIni;
+        data.initiative.value = data.initiative.base + woundIni;
         }
       }
 
