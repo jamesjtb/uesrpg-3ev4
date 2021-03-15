@@ -75,6 +75,7 @@ export class SimpleItem extends Item {
   }
 
     // Combat Style Skill Calculation
+    if (actorData.data.wounded === false) {
       if (data.baseCha == "str") {
         data.value = actorData.data.characteristics.str.value + data.bonus;
       } else if (data.baseCha == "end") {
@@ -92,6 +93,25 @@ export class SimpleItem extends Item {
       } else if (data.baseCha == "lck") {
         data.value = actorData.data.characteristics.lck.value + data.bonus;
       }
+    } else if (actorData.data.wounded === true) {
+      if (data.baseCha == "str") {
+        data.value = actorData.data.characteristics.str.value + actorData.data.woundPenalty + data.bonus;
+      } else if (data.baseCha == "end") {
+        data.value = actorData.data.characteristics.end.value + actorData.data.woundPenalty + data.bonus;
+      } else if (data.baseCha == "agi") {
+        data.value = actorData.data.characteristics.agi.value + actorData.data.woundPenalty + data.bonus;
+      } else if (data.baseCha == "int") {
+        data.value = actorData.data.characteristics.int.value + actorData.data.woundPenalty + data.bonus;
+      } else if (data.baseCha == "wp") {
+        data.value = actorData.data.characteristics.wp.value + actorData.data.woundPenalty + data.bonus;
+      } else if (data.baseCha == "prc") {
+        data.value = actorData.data.characteristics.prc.value + actorData.data.woundPenalty + data.bonus;
+      } else if (data.baseCha == "prs") {
+        data.value = actorData.data.characteristics.prs.value + actorData.data.woundPenalty + data.bonus;
+      } else if (data.baseCha == "lck") {
+        data.value = actorData.data.characteristics.lck.value + actorData.data.woundPenalty + data.bonus;
+      }
+    }
   }
 
   /**
