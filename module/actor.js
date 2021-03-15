@@ -273,7 +273,8 @@ export class SimpleActor extends Actor {
       actorData.data.resistance.diseaseR = actorData.data.resistance.diseaseR + 200;
       actorData.data.hp.max = actorData.data.hp.max + 5;
       actorData.data.stamina.max = actorData.data.stamina.max + 1;
-      actorData.data.speed.value = parseFloat(this._speedCalc(actorData)) + 9;
+      actorData.data.speed.base = data.speed.base + 9;
+      data.speed.value = this._speedCalc(actorData);
       data.speed.swimSpeed = (data.speed.value/2).toFixed(0);
       actorData.data.resistance.natToughness = 5;
       actorData.data.wound_threshold.base = actorData.data.wound_threshold.base + 5;
@@ -299,7 +300,8 @@ export class SimpleActor extends Actor {
         actorData.data.resistance.silverR = actorData.data.resistance.silverR - 5;
         actorData.data.resistance.diseaseR = actorData.data.resistance.diseaseR + 200;
         actorData.data.hp.max = actorData.data.hp.max + 5;
-        actorData.data.speed.value = parseFloat(this._speedCalc(actorData)) + 9;
+        actorData.data.speed.base = data.speed.base + 9;
+      data.speed.value = this._speedCalc(actorData);
         data.speed.swimSpeed = (data.speed.value/2).toFixed(0);
         actorData.data.resistance.natToughness = 7;
         actorData.data.wound_threshold.base = actorData.data.wound_threshold.base + 5;
@@ -312,7 +314,8 @@ export class SimpleActor extends Actor {
         actorData.data.resistance.diseaseR = actorData.data.resistance.diseaseR + 200;
         actorData.data.hp.max = actorData.data.hp.max + 10;
         actorData.data.stamina.max = actorData.data.stamina.max + 1;
-        actorData.data.speed.value = parseFloat(this._speedCalc(actorData)) + 5;
+        actorData.data.speed.base = data.speed.base + 5;
+        data.speed.value = this._speedCalc(actorData);
         data.speed.swimSpeed = (data.speed.value/2).toFixed(0);
         actorData.data.resistance.natToughness = 5;
         actorData.data.wound_threshold.base = actorData.data.wound_threshold.base + 5;
@@ -587,7 +590,8 @@ export class SimpleActor extends Actor {
       actorData.data.resistance.diseaseR = actorData.data.resistance.diseaseR + 200;
       actorData.data.hp.max = actorData.data.hp.max + 5;
       actorData.data.stamina.max = actorData.data.stamina.max + 1;
-      actorData.data.speed.value = parseFloat(this._speedCalc(actorData)) + 9;
+      actorData.data.speed.base = data.speed.base + 9;
+      data.speed.value = this._speedCalc(actorData);
       data.speed.swimSpeed = (data.speed.value/2).toFixed(0);
       actorData.data.resistance.natToughness = 5;
       actorData.data.wound_threshold.base = actorData.data.wound_threshold.base + 5;
@@ -607,7 +611,8 @@ export class SimpleActor extends Actor {
         actorData.data.resistance.silverR = actorData.data.resistance.silverR - 5;
         actorData.data.resistance.diseaseR = actorData.data.resistance.diseaseR + 200;
         actorData.data.hp.max = actorData.data.hp.max + 5;
-        actorData.data.speed.value = parseFloat(this._speedCalc(actorData)) + 9;
+        actorData.data.speed.base = data.speed.base + 9;
+        data.speed.value = this._speedCalc(actorData);
         data.speed.swimSpeed = (data.speed.value/2).toFixed(0);
         actorData.data.resistance.natToughness = 7;
         actorData.data.wound_threshold.base = actorData.data.wound_threshold.base + 5;
@@ -617,7 +622,8 @@ export class SimpleActor extends Actor {
         actorData.data.resistance.diseaseR = actorData.data.resistance.diseaseR + 200;
         actorData.data.hp.max = actorData.data.hp.max + 10;
         actorData.data.stamina.max = actorData.data.stamina.max + 1;
-        actorData.data.speed.value = parseFloat(this._speedCalc(actorData)) + 5;
+        actorData.data.speed.base = data.speed.base + 5;
+        data.speed.value = this._speedCalc(actorData);
         data.speed.swimSpeed = (data.speed.value/2).toFixed(0);
         actorData.data.resistance.natToughness = 5;
         actorData.data.wound_threshold.base = actorData.data.wound_threshold.base + 5;
@@ -1151,7 +1157,7 @@ export class SimpleActor extends Actor {
   }
 
   _speedCalc(actorData) {
-    let attribute = actorData.items.filter(item => item.data.halfSpeed == true);
+    let attribute = actorData.items.filter(item => item.data.halfSpeed === true);
     let speed = actorData.data.speed.base;
     if (attribute.length === 0) {
       speed = speed;
