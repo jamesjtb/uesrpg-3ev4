@@ -3,6 +3,26 @@
  * @extends {Actor}
  */
 export class SimpleActor extends Actor {
+  async _preCreate(data, options, user) {
+    await super._preCreate(data, options, user);
+    if (data.type === "character") {
+      let skillPack = game.packs.get("uesrpg-d100.standard-skills");
+      let collection = await skillPack.getDocuments();
+      collection.sort(function (a, b) {
+        let nameA = a.name.toUpperCase();
+        let nameB = b.name.toUpperCase();
+        if (nameA < nameB) {
+          return -1;
+        } if (nameA > nameB) {
+          return 1;
+        }
+        return 0
+      });
+      this.data.update({
+        items: collection.map(i => i.toObject())
+      });
+    }
+  }
 
   prepareData() {
     super.prepareData();
@@ -75,147 +95,6 @@ export class SimpleActor extends Actor {
     }
   }
 
-    //Magic Skill Bonus Calculation
-    if (legacyUntrained) {
-      for (var skill in data.magic_skills) {
-        if (data.magic_skills[skill].rank == "untrained") {
-          data.magic_skills[skill].bonus = -20;
-        } else if (data.magic_skills[skill].rank == "novice") {
-          data.magic_skills[skill].bonus = 0;
-        } else if (data.magic_skills[skill].rank == "apprentice") {
-          data.magic_skills[skill].bonus = 10;
-        } else if (data.magic_skills[skill].rank == "journeyman") {
-          data.magic_skills[skill].bonus = 20;
-        } else if (data.magic_skills[skill].rank == "adept") {
-          data.magic_skills[skill].bonus = 30;
-        } else if (data.magic_skills[skill].rank == "expert") {
-          data.magic_skills[skill].bonus = 40;
-        } else if (data.magic_skills[skill].rank == "master") {
-          data.magic_skills[skill].bonus = 50;
-      }
-    }
-  } else {
-      for (var skill in data.magic_skills) {
-        if (data.magic_skills[skill].rank == "untrained") {
-          data.magic_skills[skill].bonus = -10;
-        } else if (data.magic_skills[skill].rank == "novice") {
-          data.magic_skills[skill].bonus = 0;
-        } else if (data.magic_skills[skill].rank == "apprentice") {
-          data.magic_skills[skill].bonus = 10;
-        } else if (data.magic_skills[skill].rank == "journeyman") {
-          data.magic_skills[skill].bonus = 20;
-        } else if (data.magic_skills[skill].rank == "adept") {
-          data.magic_skills[skill].bonus = 30;
-        } else if (data.magic_skills[skill].rank == "expert") {
-          data.magic_skills[skill].bonus = 40;
-        } else if (data.magic_skills[skill].rank == "master") {
-          data.magic_skills[skill].bonus = 50;
-      }
-    }
-  }
-
-    //Combat Style Skill Bonus Calculation
-    if (legacyUntrained) {
-      for (var skill in data.combat_styles) {
-        if (data.combat_styles[skill].rank == "untrained") {
-          data.combat_styles[skill].bonus = -20 + this._untrainedException(actorData);
-        } else if (data.combat_styles[skill].rank == "novice") {
-          data.combat_styles[skill].bonus = 0;
-        } else if (data.combat_styles[skill].rank == "apprentice") {
-          data.combat_styles[skill].bonus = 10;
-        } else if (data.combat_styles[skill].rank == "journeyman") {
-          data.combat_styles[skill].bonus = 20;
-        } else if (data.combat_styles[skill].rank == "adept") {
-          data.combat_styles[skill].bonus = 30;
-        } else if (data.combat_styles[skill].rank == "expert") {
-          data.combat_styles[skill].bonus = 40;
-        } else if (data.combat_styles[skill].rank == "master") {
-          data.combat_styles[skill].bonus = 50;
-      }
-    }
-    } else {
-        for (var skill in data.combat_styles) {
-          if (data.combat_styles[skill].rank == "untrained") {
-            data.combat_styles[skill].bonus = -10 + this._untrainedException(actorData);
-          } else if (data.combat_styles[skill].rank == "novice") {
-            data.combat_styles[skill].bonus = 0;
-          } else if (data.combat_styles[skill].rank == "apprentice") {
-            data.combat_styles[skill].bonus = 10;
-          } else if (data.combat_styles[skill].rank == "journeyman") {
-            data.combat_styles[skill].bonus = 20;
-          } else if (data.combat_styles[skill].rank == "adept") {
-            data.combat_styles[skill].bonus = 30;
-          } else if (data.combat_styles[skill].rank == "expert") {
-            data.combat_styles[skill].bonus = 40;
-          } else if (data.combat_styles[skill].rank == "master") {
-            data.combat_styles[skill].bonus = 50;
-      }
-    }
-  }
-
-    // Skill TN Calculation
-    for (var skill in data.skills) {
-      if (data.skills[skill].characteristic == "str") {
-        data.skills[skill].tn = data.characteristics.str.value + data.skills[skill].bonus;
-      } else if (data.skills[skill].characteristic == "end") {
-        data.skills[skill].tn = data.characteristics.end.value + data.skills[skill].bonus;
-      } else if (data.skills[skill].characteristic == "agi") {
-        data.skills[skill].tn = data.characteristics.agi.value + data.skills[skill].bonus;
-      } else if (data.skills[skill].characteristic == "int") {
-        data.skills[skill].tn = data.characteristics.int.value + data.skills[skill].bonus;
-      } else if (data.skills[skill].characteristic == "wp") {
-        data.skills[skill].tn = data.characteristics.wp.value + data.skills[skill].bonus;
-      } else if (data.skills[skill].characteristic == "prc") {
-        data.skills[skill].tn = data.characteristics.prc.value + data.skills[skill].bonus;
-      } else if (data.skills[skill].characteristic == "prs") {
-        data.skills[skill].tn = data.characteristics.prs.value + data.skills[skill].bonus;
-      } else if (data.skills[skill].characteristic == "lck") {
-        data.skills[skill].tn = data.characteristics.lck.value + data.skills[skill].bonus;
-      }
-    }
-
-    //Magic Skill TN Calculation
-    for (var skill in data.magic_skills) {
-      if (data.magic_skills[skill].characteristic == "str") {
-        data.magic_skills[skill].tn = data.characteristics.str.value + data.magic_skills[skill].bonus;
-      } else if (data.magic_skills[skill].characteristic == "end") {
-        data.magic_skills[skill].tn = data.characteristics.end.value + data.magic_skills[skill].bonus;
-      } else if (data.magic_skills[skill].characteristic == "agi") {
-        data.magic_skills[skill].tn = data.characteristics.agi.value + data.magic_skills[skill].bonus;
-      } else if (data.magic_skills[skill].characteristic == "int") {
-        data.magic_skills[skill].tn = data.characteristics.int.value + data.magic_skills[skill].bonus;
-      } else if (data.magic_skills[skill].characteristic == "wp") {
-        data.magic_skills[skill].tn = data.characteristics.wp.value + data.magic_skills[skill].bonus;
-      } else if (data.magic_skills[skill].characteristic == "prc") {
-        data.magic_skills[skill].tn = data.characteristics.prc.value + data.magic_skills[skill].bonus;
-      } else if (data.magic_skills[skill].characteristic == "prs") {
-        data.magic_skills[skill].tn = data.characteristics.prs.value + data.magic_skills[skill].bonus;
-      } else if (data.magic_skills[skill].characteristic == "lck") {
-        data.magic_skills[skill].tn = data.characteristics.lck.value + data.magic_skills[skill].bonus;
-      }
-    }
-
-    // Combat Style Skill Calculation
-    for (var skill in data.combat_styles) {
-      if (data.combat_styles[skill].characteristic == "str") {
-        data.combat_styles[skill].tn = data.characteristics.str.value + data.combat_styles[skill].bonus;
-      } else if (data.combat_styles[skill].characteristic == "end") {
-        data.combat_styles[skill].tn = data.characteristics.end.value + data.combat_styles[skill].bonus;
-      } else if (data.combat_styles[skill].characteristic == "agi") {
-        data.combat_styles[skill].tn = data.characteristics.agi.value + data.combat_styles[skill].bonus;
-      } else if (data.combat_styles[skill].characteristic == "int") {
-        data.combat_styles[skill].tn = data.characteristics.int.value + data.combat_styles[skill].bonus;
-      } else if (data.combat_styles[skill].characteristic == "wp") {
-        data.combat_styles[skill].tn = data.characteristics.wp.value + data.combat_styles[skill].bonus;
-      } else if (data.combat_styles[skill].characteristic == "prc") {
-        data.combat_styles[skill].tn = data.characteristics.prc.value + data.combat_styles[skill].bonus;
-      } else if (data.combat_styles[skill].characteristic == "prs") {
-        data.combat_styles[skill].tn = data.characteristics.prs.value + data.combat_styles[skill].bonus;
-      } else if (data.combat_styles[skill].characteristic == "lck") {
-        data.combat_styles[skill].tn = data.characteristics.lck.value + data.combat_styles[skill].bonus;
-      }
-    }
-
     //Talent/Power/Trait Resource Bonuses
     data.hp.bonus = this._hpBonus(actorData);
     data.magicka.bonus = this._mpBonus(actorData);
@@ -264,7 +143,6 @@ export class SimpleActor extends Actor {
     data.luck_points.max = lckBonus + data.luck_points.bonus;
 
     data.carry_rating.max = Math.floor((4 * strBonus) + (2 * endBonus)) + data.carry_rating.bonus;
-    this._sortCarriedItems(actorData);
     data.current_enc = (this._calculateENC(actorData) - this._armorWeight(actorData) - this._excludeENC(actorData)).toFixed(1);
 
     //Form Shift Calcs
@@ -497,29 +375,6 @@ export class SimpleActor extends Actor {
         }
       }
 
-
-    //Worn Armor/Weapons to Actor Sheet
-    data.armor.head.ar = this._helmetArmor(actorData);
-    data.armor.head.magic_ar = this._helmetMagicArmor(actorData);
-
-    data.armor.l_arm.ar = this._larmArmor(actorData);
-    data.armor.l_arm.magic_ar = this._larmMagicArmor(actorData);
-
-    data.armor.r_arm.ar = this._rarmArmor(actorData);
-    data.armor.r_arm.magic_ar = this._rarmMagicArmor(actorData);
-
-    data.armor.l_leg.ar = this._llegArmor(actorData);
-    data.armor.l_leg.magic_ar = this._llegMagicArmor(actorData);
-
-    data.armor.r_leg.ar = this._rlegArmor(actorData);
-    data.armor.r_leg.magic_ar = this._rlegMagicArmor(actorData);
-
-    data.armor.body.ar = this._bodyArmor(actorData);
-    data.armor.body.magic_ar = this._bodyMagicArmor(actorData);
-
-    data.shield.br = this._shieldBR(actorData);
-    data.shield.magic_br = this._shieldMR(actorData);
-
   } 
 
   _prepareNPCData(actorData) {
@@ -588,7 +443,6 @@ export class SimpleActor extends Actor {
     data.luck_points.max = lckBonus + data.luck_points.bonus;
 
     data.carry_rating.max = Math.floor((4 * strBonus) + (2 * endBonus)) + data.carry_rating.bonus;
-    this._sortCarriedItems(actorData);
     data.current_enc = (this._calculateENC(actorData) - this._armorWeight(actorData) - this._excludeENC(actorData)).toFixed(1);
 
     //Form Shift Calcs
@@ -708,24 +562,28 @@ export class SimpleActor extends Actor {
       woundPen = -20;
     }
 
-    if (data.wounded == true) {
-      if (this._halfWoundPenalty(actorData) == true) {
-        for (var skill in data.professions) {
-          data.professions[skill] = data.professions[skill] + halfWound;
-        }
-        for (var skill in data.skills) {
-          data.skills[skill].tn = data.skills[skill].tn + halfWound;
+    if (data.wounded === true) {
+      if (this._halfWoundPenalty(actorData) === true) {
+        for (var skill in data.professionsWound) {
+          data.professionsWound[skill] = data.professions[skill] + halfWound;
         }
         data.initiative.value = data.initiative.base + halfWoundIni;
-      } else if (this._halfWoundPenalty(actorData) == false) {
-        for (var skill in data.professions) {
-          data.professions[skill] = data.professions[skill] + woundPen;
-        }
-        for (var skill in data.skills) {
-          data.skills[skill].tn = data.skills[skill].tn + woundPen;
+      } else if (this._halfWoundPenalty(actorData) === false) {
+        for (var skill in data.professionsWound) {
+          data.professionsWound[skill] = data.professions[skill] + woundPen;
         }
         data.initiative.value = data.initiative.base + woundIni;
         }
+      } else if (data.wounded === false) {
+        if (this._halfWoundPenalty(actorData) === false) {
+          for (var skill in data.professionsWound) {
+            data.professionsWound[skill] = data.professions[skill];
+          }
+        } else if (this._halfWoundPenalty(actorData) === false) {
+          for (var skill in data.professionsWound) {
+            data.professionsWound[skill] = data.professions[skill];
+          }
+          }
       }
 
     //Fatigue Penalties
@@ -775,28 +633,6 @@ export class SimpleActor extends Actor {
         data.skills[skill].bonus = 0;
       }
     }
-
-    //Worn Armor/Weapons to Actor Sheet
-    data.armor.head.ar = this._helmetArmor(actorData);
-    data.armor.head.magic_ar = this._helmetMagicArmor(actorData);
-
-    data.armor.l_arm.ar = this._larmArmor(actorData);
-    data.armor.l_arm.magic_ar = this._larmMagicArmor(actorData);
-
-    data.armor.r_arm.ar = this._rarmArmor(actorData);
-    data.armor.r_arm.magic_ar = this._rarmMagicArmor(actorData);
-
-    data.armor.l_leg.ar = this._llegArmor(actorData);
-    data.armor.l_leg.magic_ar = this._llegMagicArmor(actorData);
-
-    data.armor.r_leg.ar = this._rlegArmor(actorData);
-    data.armor.r_leg.magic_ar = this._rlegMagicArmor(actorData);
-
-    data.armor.body.ar = this._bodyArmor(actorData);
-    data.armor.body.magic_ar = this._bodyMagicArmor(actorData);
-
-    data.shield.br = this._shieldBR(actorData);
-    data.shield.magic_br = this._shieldMR(actorData);
 
     // Set Lucky/Unlucky Numbers based on Threat Category
     if (data.threat == "minorSolo") {
@@ -939,232 +775,197 @@ export class SimpleActor extends Actor {
 
   }
 
-  _sortCarriedItems(actorData) {
-    let carried = actorData.items.filter(item => item.data.hasOwnProperty("category"));
-    for (let item of carried) {
-      if (item.data.category == "none") {
-        item.data.carried = false;
-      } else if (item.data.category == "") {
-        item.data.carried = false;
-      } else if (item.data.category == "shield") {
-        item.data.carried = false;
-      } else if (item.data.category == "weapon1") {
-        item.data.carried = false;
-      } else if (item.data.category == "weapon2") {
-        item.data.carried = false;
-      } else if (item.data.category == "weapon3") {
-        item.data.carried = false;
-      } else if (item.data.category == "spell1") {
-        item.data.carried = false;
-      } else if (item.data.category == "spell2") {
-        item.data.carried = false;
-      } else if (item.data.category == "spell3") {
-        item.data.carried = false;
-      } else if (item.data.category == "spell4") {
-        item.data.carried = false;
-      } else if (item.data.category == "spell5") {
-        item.data.carried = false;
-      } else if (item.data.category == "spell6") {
-        item.data.carried = false;
-      } else if (item.data.category == "spell7") {
-        item.data.carried = false;
-      } else {
-        item.data.carried = true;
-      }
-    }
-  }
-
   _calculateENC(actorData) {
-    let weighted = actorData.items.filter(item => item.data.hasOwnProperty("enc"));
+    let weighted = actorData.items.filter(item => item.data.data.hasOwnProperty("enc"));
     let totalWeight = 0.0;
     for (let item of weighted) {
-      totalWeight = totalWeight + (item.data.enc * item.data.quantity);
+      totalWeight = totalWeight + (item.data.data.enc * item.data.data.quantity);
     }
     return totalWeight
   }
 
   _armorWeight(actorData) {
-    let worn = actorData.items.filter(item => item.data.equipped == true);
+    let worn = actorData.items.filter(item => item.data.data.equipped == true);
     let armorENC = 0.0;
     for (let item of worn) {
-      armorENC = armorENC + ((item.data.enc / 2) * item.data.quantity);
+      armorENC = armorENC + ((item.data.data.enc / 2) * item.data.data.quantity);
     } 
     return armorENC
   }
 
   _excludeENC(actorData) {
-    let excluded = actorData.items.filter(item => item.data.excludeENC == true);
+    let excluded = actorData.items.filter(item => item.data.data.excludeENC == true);
     let totalWeight = 0.0;
     for (let item of excluded) {
-      totalWeight = totalWeight + (item.data.enc * item.data.quantity);
+      totalWeight = totalWeight + (item.data.data.enc * item.data.data.quantity);
     }
     return totalWeight
   }
 
   _hpBonus(actorData) {
-    let attribute = actorData.items.filter(item => item.data.hasOwnProperty("hpBonus"));
+    let attribute = actorData.items.filter(item => item.data.data.hasOwnProperty("hpBonus"));
     let bonus = 0;
     for (let item of attribute) {
-      bonus = bonus + item.data.hpBonus;
+      bonus = bonus + item.data.data.hpBonus;
     }
     return bonus
   }
 
   _mpBonus(actorData) {
-    let attribute = actorData.items.filter(item => item.data.hasOwnProperty("mpBonus"));
+    let attribute = actorData.items.filter(item => item.data.data.hasOwnProperty("mpBonus"));
     let bonus = 0;
     for (let item of attribute) {
-      bonus = bonus + item.data.mpBonus;
+      bonus = bonus + item.data.data.mpBonus;
     }
     return bonus
   }
 
   _spBonus(actorData) {
-    let attribute = actorData.items.filter(item => item.data.hasOwnProperty("spBonus"));
+    let attribute = actorData.items.filter(item => item.data.data.hasOwnProperty("spBonus"));
     let bonus = 0;
     for (let item of attribute) {
-      bonus = bonus + item.data.spBonus;
+      bonus = bonus + item.data.data.spBonus;
     }
     return bonus
   }
 
   _lpBonus(actorData) {
-    let attribute = actorData.items.filter(item => item.data.hasOwnProperty("lpBonus"));
+    let attribute = actorData.items.filter(item => item.data.data.hasOwnProperty("lpBonus"));
     let bonus = 0;
     for (let item of attribute) {
-      bonus = bonus + item.data.lpBonus;
+      bonus = bonus + item.data.data.lpBonus;
     }
     return bonus
   }
 
   _wtBonus(actorData) {
-    let attribute = actorData.items.filter(item => item.data.hasOwnProperty("wtBonus"));
+    let attribute = actorData.items.filter(item => item.data.data.hasOwnProperty("wtBonus"));
     let bonus = 0;
     for (let item of attribute) {
-      bonus = bonus + item.data.wtBonus;
+      bonus = bonus + item.data.data.wtBonus;
     }
     return bonus
   }
 
   _speedBonus(actorData) {
-    let attribute = actorData.items.filter(item => item.data.hasOwnProperty("speedBonus"));
+    let attribute = actorData.items.filter(item => item.data.data.hasOwnProperty("speedBonus"));
     let bonus = 0;
     for (let item of attribute) {
-      bonus = bonus + item.data.speedBonus;
+      bonus = bonus + item.data.data.speedBonus;
     }
     return bonus
   }
 
   _iniBonus(actorData) {
-    let attribute = actorData.items.filter(item => item.data.hasOwnProperty("iniBonus"));
+    let attribute = actorData.items.filter(item => item.data.data.hasOwnProperty("iniBonus"));
     let bonus = 0;
     for (let item of attribute) {
-      bonus = bonus + item.data.iniBonus;
+      bonus = bonus + item.data.data.iniBonus;
     }
     return bonus
   }
 
   _diseaseR(actorData) {
-    let attribute = actorData.items.filter(item => item.data.hasOwnProperty("diseaseR"));
+    let attribute = actorData.items.filter(item => item.data.data.hasOwnProperty("diseaseR"));
     let bonus = 0;
     for (let item of attribute) {
-      bonus = bonus + item.data.diseaseR;
+      bonus = bonus + item.data.data.diseaseR;
     }
     return bonus
   }
 
   _fireR(actorData) {
-    let attribute = actorData.items.filter(item => item.data.hasOwnProperty("fireR"));
+    let attribute = actorData.items.filter(item => item.data.data.hasOwnProperty("fireR"));
     let bonus = 0;
     for (let item of attribute) {
-        bonus = bonus + item.data.fireR;
+        bonus = bonus + item.data.data.fireR;
       }
       return bonus
   }
 
   _frostR(actorData) {
-    let attribute = actorData.items.filter(item => item.data.hasOwnProperty("frostR"));
+    let attribute = actorData.items.filter(item => item.data.data.hasOwnProperty("frostR"));
     let bonus = 0;
     for (let item of attribute) {
-        bonus = bonus + item.data.frostR;
+        bonus = bonus + item.data.data.frostR;
       }
       return bonus
   }
 
   _shockR(actorData) {
-    let attribute = actorData.items.filter(item => item.data.hasOwnProperty("shockR"));
+    let attribute = actorData.items.filter(item => item.data.data.hasOwnProperty("shockR"));
     let bonus = 0;
     for (let item of attribute) {
-        bonus = bonus + item.data.shockR;
+        bonus = bonus + item.data.data.shockR;
       }
       return bonus
   }
 
   _poisonR(actorData) {
-    let attribute = actorData.items.filter(item => item.data.hasOwnProperty("poisonR"));
+    let attribute = actorData.items.filter(item => item.data.data.hasOwnProperty("poisonR"));
     let bonus = 0;
     for (let item of attribute) {
-        bonus = bonus + item.data.poisonR;
+        bonus = bonus + item.data.data.poisonR;
       }
       return bonus
   }
 
   _magicR(actorData) {
-    let attribute = actorData.items.filter(item => item.data.hasOwnProperty("magicR"));
+    let attribute = actorData.items.filter(item => item.data.data.hasOwnProperty("magicR"));
     let bonus = 0;
     for (let item of attribute) {
-        bonus = bonus + item.data.magicR;
+        bonus = bonus + item.data.data.magicR;
       }
       return bonus
   }
 
   _natToughnessR(actorData) {
-    let attribute = actorData.items.filter(item => item.data.hasOwnProperty("natToughnessR"));
+    let attribute = actorData.items.filter(item => item.data.data.hasOwnProperty("natToughnessR"));
     let bonus = 0;
     for (let item of attribute) {
-        bonus = bonus + item.data.natToughnessR;
+        bonus = bonus + item.data.data.natToughnessR;
       }
       return bonus
   }
 
   _silverR(actorData) {
-    let attribute = actorData.items.filter(item => item.data.hasOwnProperty("silverR"));
+    let attribute = actorData.items.filter(item => item.data.data.hasOwnProperty("silverR"));
     let bonus = 0;
     for (let item of attribute) {
-        bonus = bonus + item.data.silverR;
+        bonus = bonus + item.data.data.silverR;
       }
       return bonus
   }
 
   _sunlightR(actorData) {
-    let attribute = actorData.items.filter(item => item.data.hasOwnProperty("sunlightR"));
+    let attribute = actorData.items.filter(item => item.data.data.hasOwnProperty("sunlightR"));
     let bonus = 0;
     for (let item of attribute) {
-        bonus = bonus + item.data.sunlightR;
+        bonus = bonus + item.data.data.sunlightR;
       }
       return bonus
   }
 
   _swimCalc(actorData) {
-    let attribute = actorData.items.filter(item => item.data.hasOwnProperty("swimBonus"));
+    let attribute = actorData.items.filter(item => item.data.data.hasOwnProperty("swimBonus"));
     let bonus = 0;
     for (let item of attribute) {
-      bonus = bonus + item.data.swimBonus;
+      bonus = bonus + item.data.data.swimBonus;
     }
     return bonus
   }
 
   _flyCalc(actorData) {
-    let attribute = actorData.items.filter(item => item.data.hasOwnProperty("flyBonus"));
+    let attribute = actorData.items.filter(item => item.data.data.hasOwnProperty("flyBonus"));
     let bonus = 0;
     for (let item of attribute) {
-      bonus = bonus + item.data.flyBonus;
+      bonus = bonus + item.data.data.flyBonus;
     }
     return bonus
   }
 
   _speedCalc(actorData) {
-    let attribute = actorData.items.filter(item => item.data.halfSpeed === true);
+    let attribute = actorData.items.filter(item => item.data.data.halfSpeed === true);
     let speed = actorData.data.speed.base;
     if (attribute.length === 0) {
       speed = speed;
@@ -1178,22 +979,22 @@ export class SimpleActor extends Actor {
     let attribute = actorData.items.filter(item => item.type == "trait"|| item.type == "talent");
     let init = actorData.data.initiative.base;
       for (let item of attribute) {
-        if (item.data.replace.ini.iniToggle == true) {
-          if (item.data.replace.ini.characteristic == "str") {
+        if (item.data.data.replace.ini.iniToggle == true) {
+          if (item.data.data.replace.ini.characteristic == "str") {
             init = Math.floor(actorData.data.characteristics.str.value / 10) * 3;
-          } else if (item.data.replace.ini.characteristic == "end") {
+          } else if (item.data.data.replace.ini.characteristic == "end") {
             init = Math.floor(actorData.data.characteristics.end.value / 10) * 3;
-          } else if (item.data.replace.ini.characteristic == "agi") {
+          } else if (item.data.data.replace.ini.characteristic == "agi") {
             init = Math.floor(actorData.data.characteristics.agi.value / 10) * 3;
-          } else if (item.data.replace.ini.characteristic == "int") {
+          } else if (item.data.data.replace.ini.characteristic == "int") {
             init = Math.floor(actorData.data.characteristics.int.value / 10) * 3;
-          } else if (item.data.replace.ini.characteristic == "wp") {
+          } else if (item.data.data.replace.ini.characteristic == "wp") {
             init = Math.floor(actorData.data.characteristics.wp.value / 10) * 3;
-          } else if (item.data.replace.ini.characteristic == "prc") {
+          } else if (item.data.data.replace.ini.characteristic == "prc") {
             init = Math.floor(actorData.data.characteristics.prc.value / 10) * 3;
-          } else if (item.data.replace.ini.characteristic == "prs") {
+          } else if (item.data.data.replace.ini.characteristic == "prs") {
             init = Math.floor(actorData.data.characteristics.prs.value / 10) * 3;
-          } else if (item.data.replace.ini.characteristic == "lck") {
+          } else if (item.data.data.replace.ini.characteristic == "lck") {
             init = Math.floor(actorData.data.characteristics.lck.value / 10) * 3;
           }
         }
@@ -1202,25 +1003,25 @@ export class SimpleActor extends Actor {
   }
 
   _woundThresholdCalc(actorData) {
-    let attribute = actorData.items.filter(item => item.type == "trait"|| item.type == "talent");
+    let attribute = actorData.items.filter(item => item.type === "trait"|| item.type === "talent");
     let wound = actorData.data.wound_threshold.base;
       for (let item of attribute) {
-        if (item.data.replace.wt.wtToggle == true) {
-          if (item.data.replace.wt.characteristic == "str") {
+        if (item.data.data.replace.wt.wtToggle === true) {
+          if (item.data.data.replace.wt.characteristic === "str") {
             wound = Math.floor(actorData.data.characteristics.str.value / 10) * 3;
-          } else if (item.data.replace.wt.characteristic == "end") {
+          } else if (item.data.data.replace.wt.characteristic === "end") {
             wound = Math.floor(actorData.data.characteristics.end.value / 10) * 3;
-          } else if (item.data.replace.wt.characteristic == "agi") {
+          } else if (item.data.data.replace.wt.characteristic === "agi") {
             wound = Math.floor(actorData.data.characteristics.agi.value / 10) * 3;
-          } else if (item.data.replace.wt.characteristic == "int") {
+          } else if (item.data.data.replace.wt.characteristic === "int") {
             wound = Math.floor(actorData.data.characteristics.int.value / 10) * 3;
-          } else if (item.data.replace.wt.characteristic == "wp") {
+          } else if (item.data.data.replace.wt.characteristic === "wp") {
             wound = Math.floor(actorData.data.characteristics.wp.value / 10) * 3;
-          } else if (item.data.replace.wt.characteristic == "prc") {
+          } else if (item.data.data.replace.wt.characteristic === "prc") {
             wound = Math.floor(actorData.data.characteristics.prc.value / 10) * 3;
-          } else if (item.data.replace.wt.characteristic == "prs") {
+          } else if (item.data.data.replace.wt.characteristic === "prs") {
             wound = Math.floor(actorData.data.characteristics.prs.value / 10) * 3;
-          } else if (item.data.replace.wt.characteristic == "lck") {
+          } else if (item.data.data.replace.wt.characteristic === "lck") {
             wound = Math.floor(actorData.data.characteristics.lck.value / 10) * 3;
           }
         }
@@ -1229,7 +1030,7 @@ export class SimpleActor extends Actor {
   }
 
   _halfFatiguePenalty(actorData) {
-    let attribute = actorData.items.filter(item => item.data.halfFatiguePenalty == true);
+    let attribute = actorData.items.filter(item => item.data.data.halfFatiguePenalty == true);
     let fatigueReduction = 0;
     if (attribute.length >= 1) {
       fatigueReduction = actorData.data.fatigueLevel / 2;
@@ -1240,7 +1041,7 @@ export class SimpleActor extends Actor {
   }
 
   _halfWoundPenalty(actorData) {
-    let attribute = actorData.items.filter(item => item.data.halfWoundPenalty == true);
+    let attribute = actorData.items.filter(item => item.data.data.halfWoundPenalty == true);
     let woundReduction = false;
     if (attribute.length >= 1) {
       woundReduction = true;
@@ -1251,7 +1052,7 @@ export class SimpleActor extends Actor {
   }
 
   _addIntToMP(actorData) {
-    let attribute = actorData.items.filter(item => item.data.addIntToMP == true);
+    let attribute = actorData.items.filter(item => item.data.data.addIntToMP == true);
     let mp = 0;
     if (attribute.length >= 1) {
       mp = actorData.data.characteristics.int.value;
@@ -1262,7 +1063,7 @@ export class SimpleActor extends Actor {
   }
 
   _untrainedException(actorData) {
-    let attribute = actorData.items.filter(item => item.data.untrainedException == true);
+    let attribute = actorData.items.filter(item => item.data.data.untrainedException == true);
     const legacyUntrained = game.settings.get("uesrpg-d100", "legacyUntrainedPenalty");
     let x = 0;
     if (legacyUntrained) {
@@ -1276,7 +1077,7 @@ export class SimpleActor extends Actor {
   }
 
   _isMechanical(actorData) {
-    let attribute = actorData.items.filter(item => item.data.mechanical == true);
+    let attribute = actorData.items.filter(item => item.data.data.mechanical == true);
     let isMechanical = false;
     if (attribute.length >= 1) {
       isMechanical = true;
@@ -1287,11 +1088,11 @@ export class SimpleActor extends Actor {
   }
 
   _dwemerSphere(actorData) {
-    let attribute = actorData.items.filter(item => item.data.shiftForm == true);
+    let attribute = actorData.items.filter(item => item.data.data.shiftForm == true);
     let shift = false;
     if (attribute.length >= 1) {
       for (let item of attribute) {
-        if (item.data.dailyUse == true) {
+        if (item.data.data.dailyUse == true) {
           shift = true;
         }
       }
@@ -1302,7 +1103,7 @@ export class SimpleActor extends Actor {
   }
 
   _vampireLordForm(actorData) {
-    let form = actorData.items.filter(item => item.data.shiftFormStyle === "shiftFormVampireLord");
+    let form = actorData.items.filter(item => item.data.data.shiftFormStyle === "shiftFormVampireLord");
     let shift = false;
     if(form.length > 0) {
       shift = true;
@@ -1311,7 +1112,7 @@ export class SimpleActor extends Actor {
   }
 
   _wereWolfForm(actorData) {
-    let form = actorData.items.filter(item => item.data.shiftFormStyle === "shiftFormWereWolf"||item.data.shiftFormStyle === "shiftFormWereLion");
+    let form = actorData.items.filter(item => item.data.data.shiftFormStyle === "shiftFormWereWolf"||item.data.data.shiftFormStyle === "shiftFormWereLion");
     let shift = false;
     if(form.length > 0) {
       shift = true;
@@ -1320,7 +1121,7 @@ export class SimpleActor extends Actor {
   }
 
   _wereBatForm(actorData) {
-    let form = actorData.items.filter(item => item.data.shiftFormStyle === "shiftFormWereBat");
+    let form = actorData.items.filter(item => item.data.data.shiftFormStyle === "shiftFormWereBat");
     let shift = false;
     if(form.length > 0) {
       shift = true;
@@ -1329,7 +1130,7 @@ export class SimpleActor extends Actor {
   }
 
   _wereBoarForm(actorData) {
-    let form = actorData.items.filter(item => item.data.shiftFormStyle === "shiftFormWereBoar");
+    let form = actorData.items.filter(item => item.data.data.shiftFormStyle === "shiftFormWereBoar");
     let shift = false;
     if(form.length > 0) {
       shift = true;
@@ -1338,7 +1139,7 @@ export class SimpleActor extends Actor {
   }
 
   _wereBearForm(actorData) {
-    let form = actorData.items.filter(item => item.data.shiftFormStyle === "shiftFormWereBear");
+    let form = actorData.items.filter(item => item.data.data.shiftFormStyle === "shiftFormWereBear");
     let shift = false;
     if(form.length > 0) {
       shift = true;
@@ -1347,7 +1148,7 @@ export class SimpleActor extends Actor {
   }
 
   _wereCrocodileForm(actorData) {
-    let form = actorData.items.filter(item => item.data.shiftFormStyle === "shiftFormWereCrocodile");
+    let form = actorData.items.filter(item => item.data.data.shiftFormStyle === "shiftFormWereCrocodile");
     let shift = false;
     if(form.length > 0) {
       shift = true;
@@ -1356,7 +1157,7 @@ export class SimpleActor extends Actor {
   }
 
   _wereVultureForm(actorData) {
-    let form = actorData.items.filter(item => item.data.shiftFormStyle === "shiftFormWereVulture");
+    let form = actorData.items.filter(item => item.data.data.shiftFormStyle === "shiftFormWereVulture");
     let shift = false;
     if(form.length > 0) {
       shift = true;
@@ -1365,7 +1166,7 @@ export class SimpleActor extends Actor {
   }
 
   _painIntolerant(actorData) {
-    let attribute = actorData.items.filter(item => item.data.painIntolerant == true);
+    let attribute = actorData.items.filter(item => item.data.data.painIntolerant == true);
     let pain = false;
     if (attribute.length >= 1) {
       pain = true;
@@ -1374,8 +1175,8 @@ export class SimpleActor extends Actor {
   }
 
   _addHalfSpeed(actorData) {
-    let halfSpeedItems = actorData.items.filter(item => item.data.addHalfSpeed === true);
-    let isWereCroc = actorData.items.filter(item => item.data.shiftFormStyle === "shiftFormWereCrocodile");
+    let halfSpeedItems = actorData.items.filter(item => item.data.data.addHalfSpeed === true);
+    let isWereCroc = actorData.items.filter(item => item.data.data.shiftFormStyle === "shiftFormWereCrocodile");
     let speed = 0;
     if (isWereCroc.length > 0 && halfSpeedItems.length > 0) {
       speed = actorData.data.speed.value;
@@ -1387,132 +1188,6 @@ export class SimpleActor extends Actor {
       speed = actorData.data.speed.value;
     }
     return speed
-  }
-
-  _helmetArmor(actorData) {
-    let armor = actorData.items.filter(item => item.data.category == "head");
-    let ar = "";
-      for (let item of armor) {
-        ar = item.data.armor;
-      }
-      return ar
-  }
-
-  _helmetMagicArmor(actorData) {
-    let armor = actorData.items.filter(item => item.data.category == "head");
-    let mr = "";
-      for (let item of armor) {
-        mr = item.data.magic_ar;
-      }
-      return mr
-  }
-
-  _larmArmor(actorData) {
-    let armor = actorData.items.filter(item => item.data.category == "l_arm");
-    let ar = "";
-      for (let item of armor) {
-        ar = item.data.armor;
-      }
-      return ar
-  }
-
-  _larmMagicArmor(actorData) {
-    let armor = actorData.items.filter(item => item.data.category == "l_arm");
-    let mr = "";
-      for (let item of armor) {
-        mr = item.data.magic_ar;
-      }
-      return mr
-  }
-
-  _rarmArmor(actorData) {
-    let armor = actorData.items.filter(item => item.data.category == "r_arm");
-    let ar = "";
-      for (let item of armor) {
-        ar = item.data.armor;
-      }
-      return ar
-  }
-
-  _rarmMagicArmor(actorData) {
-    let armor = actorData.items.filter(item => item.data.category == "r_arm");
-    let mr = "";
-      for (let item of armor) {
-        mr = item.data.magic_ar;
-      }
-      return mr
-  }
-
-  _llegArmor(actorData) {
-    let armor = actorData.items.filter(item => item.data.category == "l_leg");
-    let ar = "";
-      for (let item of armor) {
-        ar = item.data.armor;
-      }
-      return ar
-  }
-
-  _llegMagicArmor(actorData) {
-    let armor = actorData.items.filter(item => item.data.category == "l_leg");
-    let mr = "";
-      for (let item of armor) {
-        mr = item.data.magic_ar;
-      }
-      return mr
-  }
-
-  _rlegArmor(actorData) {
-    let armor = actorData.items.filter(item => item.data.category == "r_leg");
-    let ar = "";
-      for (let item of armor) {
-        ar = item.data.armor;
-      }
-      return ar
-  }
-
-  _rlegMagicArmor(actorData) {
-    let armor = actorData.items.filter(item => item.data.category == "r_leg");
-    let mr = "";
-      for (let item of armor) {
-        mr = item.data.magic_ar;
-      }
-      return mr
-  }
-
-  _bodyArmor(actorData) {
-    let armor = actorData.items.filter(item => item.data.category == "body");
-    let ar = "";
-      for (let item of armor) {
-        ar = item.data.armor;
-      }
-      return ar
-  }
-
-  _bodyMagicArmor(actorData) {
-    let armor = actorData.items.filter(item => item.data.category == "body");
-    let mr = "";
-      for (let item of armor) {
-        mr = item.data.magic_ar;
-      }
-      return mr
-  }
-
-  _shieldBR(actorData) {
-    let armor = actorData.items.filter(item => item.data.category == "shield");
-    let ar = "";
-      for (let item of armor) {
-        ar = item.data.armor;
-      }
-      return ar
-  }
-
-  _shieldMR(actorData) {
-    let armor = actorData.items.filter(item => item.data.category == "shield");
-    let mr = "";
-      for (let item of armor) {
-        mr = item.data.magic_ar;
-      }
-      return mr
   }
 
 }
