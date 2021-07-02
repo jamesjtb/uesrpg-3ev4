@@ -202,348 +202,6 @@
           "specialization": ""
         }
     },
-    "skills": {
-      "acrobatics": {
-        "rank": "",
-        "bonus": 0,
-        "specialization": "",
-        "characteristic": "",
-        "tn": 0
-      },
-      "athletics": {
-        "rank":"",
-        "bonus": 0,
-        "specialization": "",
-        "characteristic": "",
-        "tn": 0
-      },
-      "command": {
-        "rank": "",
-        "bonus": 0,
-        "specialization": "",
-        "characteristic": "",
-        "tn": 0
-      },
-      "commerce": {
-        "rank": "",
-        "bonus": 0,
-        "specialization": "",
-        "characteristic": "",
-        "tn": 0
-      },
-      "deceive": {
-        "rank": "",
-        "bonus": 0,
-        "specialization": ""
-      },
-      "evade": {
-        "rank": "",
-        "bonus": 0,
-        "specialization": "",
-        "characteristic": "",
-        "tn": 0
-      },
-      "investigate": {
-        "rank": "",
-        "bonus": 0,
-        "specialization": "",
-        "characteristic": "",
-        "tn": 0
-      },
-      "logic": {
-        "rank": "",
-        "bonus": 0,
-        "specialization": "",
-        "characteristic": "",
-        "tn": 0
-      },
-      "lore": {
-        "rank": "",
-        "bonus": 0,
-        "specialization": "",
-        "characteristic": "",
-        "tn": 0
-      },
-      "navigate": {
-        "rank": "",
-        "bonus": 0,
-        "specialization": "",
-        "characteristic": "",
-        "tn": 0
-      },
-      "observe": {
-        "rank": "",
-        "bonus": 0,
-        "specialization": "",
-        "characteristic": "",
-        "tn": 0
-      },
-      "persuade": {
-        "rank": "",
-        "bonus": 0,
-        "specialization": "",
-        "characteristic": "",
-        "tn": 0
-      },
-      "profession1": {
-        "rank": "", 
-        "bonus": 0,
-        "specialization": "",
-        "characteristic": "",
-        "tn": 0
-      },
-      "profession2": {
-        "rank": "", 
-        "bonus": 0,
-        "specialization": "",
-        "characteristic": "",
-        "tn": 0
-      },
-      "profession3": {
-        "rank": "", 
-        "bonus": 0,
-        "specialization": "",
-        "characteristic": "",
-        "tn": 0
-      },
-      "ride": {
-        "rank": "",
-        "bonus": 0,
-        "specialization": "",
-        "characteristic": "",
-        "tn": 0
-      },
-      "stealth": {
-        "rank": "",
-        "bonus": 0,
-        "specialization": "",
-        "characteristic": "",
-        "tn": 0
-      },
-      "subterfuge": {
-        "rank": "",
-        "bonus": 0,
-        "specialization": "",
-        "characteristic": "",
-        "tn": 0
-      },
-      "survival": {
-        "rank": "",
-        "bonus": 0,
-        "specialization": "",
-        "characteristic": "",
-        "tn": 0
-      }
-    },
-    "magic_skills": {
-      "alchemy": {
-        "rank": "",
-        "bonus": 0,
-        "specialization": "",
-        "characteristic": "",
-        "tn": 0
-      },
-      "alteration": {
-        "rank": "",
-        "bonus": 0,
-        "specialization": "",
-        "characteristic": "",
-        "tn": 0
-      },
-      "conjuration": {
-        "rank": "",
-        "bonus": 0,
-        "specialization": "",
-        "characteristic": "",
-        "tn": 0
-      },
-      "destruction": {
-        "rank": "",
-        "bonus": 0,
-        "specialization": "",
-        "characteristic": "",
-        "tn": 0
-      },
-      "enchant": {
-        "rank": "",
-        "bonus": 0,
-        "specialization": "",
-        "characteristic": "",
-        "tn": 0
-      },
-      "illusion": {
-        "rank": "",
-        "bonus": 0,
-        "specialization": "",
-        "characteristic": "",
-        "tn": 0
-      },
-      "mysticism": {
-        "rank": "",
-        "bonus": 0,
-        "specialization": "",
-        "characteristic": "",
-        "tn": 0
-      },
-      "restoration": {
-        "rank": "",
-        "bonus": 0,
-        "specialization": "",
-        "characteristic": "",
-        "tn": 0
-      },
-      "necromancy": {
-        "rank": "",
-        "bonus": 0,
-        "specialization": "",
-        "characteristic": "",
-        "tn": 0
-      }
-    },
-    "talents": "",
-    "traits": "",
-    "powers": "",
-    "spells": "",
-    "combat_styles": {
-      "cs1": {
-        "name": "",
-        "rank": 0,
-        "bonus": 0,
-        "weapons": "",
-        "characteristic": "",
-        "tn": 0
-      },
-      "cs2": {
-        "name": "",
-        "rank": 0,
-        "bonus": 0,
-        "weapons": "",
-        "characteristic": "",
-        "tn": 0
-      },
-      "cs3": {
-        "name": "",
-        "rank": 0,
-        "bonus": 0,
-        "weapons": "",
-        "characteristic": "",
-        "tn": 0
-      }
-    },
-    "prep_spells": {
-      "s1": {
-        "name": "",
-        "dmg": "",
-        "cost": "",
-        "school": "",
-        "form": "",
-        "attributes": "",
-        "level": ""
-      },
-      "s2": {
-        "name": "",
-        "dmg": "",
-        "cost": "",
-        "school": "",
-        "form": "",
-        "attributes": "",
-        "level": ""
-      },
-      "s3": {
-        "name": "",
-        "dmg": "",
-        "cost": "",
-        "school": "",
-        "form": "",
-        "attributes": "",
-        "level": ""
-      },
-      "s4": {
-        "name": "",
-        "dmg": "",
-        "cost": "",
-        "school": "",
-        "form": "",
-        "attributes": "",
-        "level": ""
-      },
-      "s5": {
-        "name": "",
-        "dmg": "",
-        "cost": "",
-        "school": "",
-        "form": "",
-        "attributes": "",
-        "level": ""
-      }, 
-      "s6": {
-        "name": "",
-        "dmg": "",
-        "cost": "",
-        "school": "",
-        "form": "",
-        "attributes": "",
-        "level": ""
-      },
-      "s7": {
-        "name": "",
-        "dmg": "",
-        "cost": "",
-        "school": "",
-        "form": "",
-        "attributes": "",
-        "level": ""
-      }
-    },
-    "weapons": {
-      "w1": {
-        "name": "",
-        "dmg": "",
-        "superior": false,
-        "hands": "",
-        "reach": "",
-        "qualities": ""
-      },
-      "w2": {
-        "name": "",
-        "dmg": "",
-        "superior": false,
-        "hands": "",
-        "reach": "",
-        "qualities": ""
-      },
-      "w3": {
-        "name": "",
-        "dmg": "",
-        "superior": false,
-        "hands": "",
-        "reach": "",
-        "qualities": ""
-      },
-      "w4": {
-        "name": "",
-        "dmg": "",
-        "superior": false,
-        "hands": "",
-        "reach": "",
-        "qualities": ""
-      },
-      "w5": {
-        "name": "",
-        "dmg": "",
-        "superior": false,
-        "hands": "",
-        "reach": "",
-        "qualities": ""
-      }
-    },
-    "shield": {
-      "name": "",
-      "br": 0,
-      "magic_br": "",
-      "class": "",
-      "qualities": ""
-    },
     "armor_class": "",
     "armor_class_cat": {
       "none": "None",
@@ -552,50 +210,6 @@
       "medium": "Medium",
       "heavy": "Heavy",
       "super_heavy": "Super Heavy"
-    },
-    "armor": {
-      "head": {
-        "name": "",
-        "enc": 0,
-        "ar": 0,
-        "magic_ar": "",
-        "class": ""
-      },
-      "body": {
-        "name": "",
-        "enc": 0,
-        "ar": 0,
-        "magic_ar": "",
-        "class": ""
-      },
-      "r_leg":{
-        "name": "",
-        "enc": 0,
-        "ar": 0,
-        "magic_ar": "",
-        "class": ""
-      },
-      "l_leg": {
-        "name": "",
-        "enc": 0,
-        "ar": 0,
-        "magic_ar": "",
-        "class": ""
-      },
-      "r_arm": {
-        "name": "",
-        "enc": 0,
-        "ar": 0,
-        "magic_ar": "",
-        "class": ""
-      },
-      "l_arm": {
-        "name": "",
-        "enc": 0,
-        "ar": 0,
-        "magic_ar": "",
-        "class": ""
-      }
     }
   },
   "npc": {
@@ -705,6 +319,16 @@
       }
     },
     "professions": {
+      "combat": 0,
+      "magic": 0,
+      "evade": 0,
+      "observe": 0,
+      "stealth": 0,
+      "knowledge": 0,
+      "social": 0,
+      "physical": 0
+    },
+    "professionsWound": {
       "combat": 0,
       "magic": 0,
       "evade": 0,
@@ -836,115 +460,6 @@
     "traits": "",
     "powers": "",
     "spells": "",
-    "weapons": {
-      "w1": {
-        "name": "",
-        "dmg": "",
-        "hands": "",
-        "reach": "",
-        "qualities": ""
-      },
-      "w2": {
-        "name": "",
-        "dmg": "",
-        "hands": "",
-        "reach": "",
-        "qualities": ""
-      },
-      "w3": {
-        "name": "",
-        "dmg": "",
-        "hands": "",
-        "reach": "",
-        "qualities": ""
-      },
-      "w4": {
-        "name": "",
-        "dmg": "",
-        "hands": "",
-        "reach": "",
-        "qualities": ""
-      },
-      "w5": {
-        "name": "",
-        "dmg": "",
-        "hands": "",
-        "reach": "",
-        "qualities": ""
-      }
-    },
-    "prep_spells": {
-      "s1": {
-        "name": "",
-        "dmg": "",
-        "cost": "",
-        "school": "",
-        "form": "",
-        "attributes": "",
-        "level": ""
-      },
-      "s2": {
-        "name": "",
-        "dmg": "",
-        "cost": "",
-        "school": "",
-        "form": "",
-        "attributes": "",
-        "level": ""
-      },
-      "s3": {
-        "name": "",
-        "dmg": "",
-        "cost": "",
-        "school": "",
-        "form": "",
-        "attributes": "",
-        "level": ""
-      },
-      "s4": {
-        "name": "",
-        "dmg": "",
-        "cost": "",
-        "school": "",
-        "form": "",
-        "attributes": "",
-        "level": ""
-      },
-      "s5": {
-        "name": "",
-        "dmg": "",
-        "cost": "",
-        "school": "",
-        "form": "",
-        "attributes": "",
-        "level": ""
-      }, 
-      "s6": {
-        "name": "",
-        "dmg": "",
-        "cost": "",
-        "school": "",
-        "form": "",
-        "attributes": "",
-        "level": ""
-      },
-      "s7": {
-        "name": "",
-        "dmg": "",
-        "cost": "",
-        "school": "",
-        "form": "",
-        "attributes": "",
-        "level": ""
-      }
-    },
-    "shield": {
-      "name": "",
-      "br": 0,
-      "magic_br": "",
-      "class": "",
-      "qualities": ""
-    },
     "armor_class": "",
     "armor_class_cat": {
       "none": "None",
@@ -953,56 +468,12 @@
       "medium": "Medium",
       "heavy": "Heavy",
       "super_heavy": "Super Heavy"
-    },
-    "armor": {
-      "head": {
-        "name": "",
-        "enc": 0,
-        "ar": 0,
-        "magic_ar": "",
-        "class": ""
-      },
-      "body": {
-        "name": "",
-        "enc": 0,
-        "ar": 0,
-        "magic_ar": "",
-        "class": ""
-      },
-      "r_leg":{
-        "name": "",
-        "enc": 0,
-        "ar": 0,
-        "magic_ar": "",
-        "class": ""
-      },
-      "l_leg": {
-        "name": "",
-        "enc": 0,
-        "ar": 0,
-        "magic_ar": "",
-        "class": ""
-      },
-      "r_arm": {
-        "name": "",
-        "enc": 0,
-        "ar": 0,
-        "magic_ar": "",
-        "class": ""
-      },
-      "l_arm": {
-        "name": "",
-        "enc": 0,
-        "ar": 0,
-        "magic_ar": "",
-        "class": ""
-      }
     }
   }
     
 },
 "Item": {
-  "types": ["item", "armor", "weapon", "spell", "trait", "power", "talent", "combatStyle", "ammunition"],
+  "types": ["item", "armor", "weapon", "spell", "trait", "power", "talent", "combatStyle", "skill", "magicSkill", "ammunition"],
   "templates": {
     "characteristicArray": {
       "characteristics": {
@@ -1115,7 +586,7 @@
     "enc": 0,
     "totalENC": 0,
     "reach": "",
-    "damage": "",
+    "damage": 0,
     "damage2": 0,
     "weapon2H": false,
     "carried": false,
@@ -1196,9 +667,31 @@
     "templates": ["characteristicArray", "rankArray"],
     "value": 0,
     "rank": "",
-    "bonus": "",
+    "bonus": 0,
     "specialization": "",
     "baseCha": "",
+    "trainedItems": ""
+  },
+  "skill": {
+    "templates": ["characteristicArray", "rankArray"],
+    "value": 0,
+    "rank": "",
+    "bonus": 0,
+    "specialization": "",
+    "description": "",
+    "baseCha": "",
+    "governingCha": "",
+    "trainedItems": ""
+  },
+  "magicSkill": {
+    "templates": ["characteristicArray", "rankArray"],
+    "value": 0,
+    "rank": "",
+    "bonus": 0,
+    "specialization": "",
+    "description": "",
+    "baseCha": "",
+    "governingCha": "",
     "trainedItems": ""
   },
   "ammunition": {
