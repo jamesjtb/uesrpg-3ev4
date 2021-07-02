@@ -23,14 +23,14 @@
                             <option value="{{key}}">{{characteristics}}</option> 
                             {{/each}} {{/select}}
                         </select></td>
-                        <td><input type="text" name="data.value" value="{{data.value}}" data-dtype="Number" disabled></td>
+                        <td><input type="number" name="data.value" value="{{data.value}}" disabled></td>
                     </tr>
                     <tr>
                         <th>Bonus</th>
                         <th colspan="2">Trained Weapons/Armor</th>
                     </tr>
                     <tr>
-                        <td><input type="text" name="data.bonus" value="{{data.bonus}}" data-dtype="Number" disabled></td>
+                        <td><input type="number" name="data.bonus" value="{{data.bonus}}" disabled></td>
                         <td colspan="2"><input type="text" name="data.trainedItems" value="{{data.trainedItems}}" data-dtype="String"></td>
                     </tr>
                 </table>
@@ -48,7 +48,7 @@
 
         {{!-- Description Tab --}}
         <div class="tab" data-group="primary" data-tab="description">
-            {{editor content=data.description target="data.description" button=true owner=owner editable=editable}}
+            {{editor content=data.data.description target="data.data.description" button=true owner=owner editable=this.options.editable}}
         </div>
     </section>
 </form>
