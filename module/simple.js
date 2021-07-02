@@ -1,15 +1,9 @@
-/**
- * A simple and flexible system for world-building using an arbitrary collection of character and item attributes
- * Author: Atropos
- * Software License: GNU GPLv3
- */
-
 // Import Modules
 import { SimpleActor } from "./actor.js";
+import { npcSheet } from "./npc-sheet.js";
+import { SimpleActorSheet } from "./actor-sheet.js";
 import { SimpleItem } from "./item.js";
 import { SimpleItemSheet } from "./item-sheet.js";
-import { SimpleActorSheet } from "./actor-sheet.js";
-import { npcSheet } from "./npc-sheet.js";
 
 /* -------------------------------------------- */
 /*  Foundry VTT Initialization                  */
@@ -28,14 +22,27 @@ Hooks.once("init", async function() {
   };
 
 	// Define custom Entity classes
-  CONFIG.Actor.entityClass = SimpleActor;
-  CONFIG.Item.entityClass = SimpleItem;
+  CONFIG.Actor.documentClass = SimpleActor;
+  CONFIG.Item.documentClass = SimpleItem;
 
   // Register sheet application classes
   Actors.unregisterSheet("core", ActorSheet);
   Actors.registerSheet("dnd5e", SimpleActorSheet, {types: ["character"], makeDefault: true});
   Items.unregisterSheet("core", ItemSheet);
-  Items.registerSheet("uesrpg-d100", SimpleItemSheet, {types: ["item", "armor", "weapon", "spell", "trait", "talent", "power", "combatStyle", "ammunition"], makeDefault: true});
+  Items.registerSheet("uesrpg-d100", SimpleItemSheet, 
+    {types: [
+          "item", 
+          "armor", 
+          "weapon", 
+          "spell", 
+          "trait", 
+          "talent", 
+          "power", 
+          "combatStyle", 
+          "skill", 
+          "magicSkill", 
+          "ammunition"], 
+    makeDefault: true});
   Actors.registerSheet("uesrpg-d100", npcSheet, {types: ["npc"], makeDefault: true});
 
   // Register system settings
