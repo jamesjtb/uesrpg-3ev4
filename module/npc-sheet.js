@@ -21,16 +21,23 @@ export class npcSheet extends ActorSheet {
   getData() {
     const  data = super.getData(); 
     data.dtypes = ["String", "Number", "Boolean"];
+    data.isGM = game.user.isGM;
+    data.editable = data.options.editable;
+    const actorData = data.data;
+    data.actor = actorData;
+    data.data = actorData.data;
 
     // Prepare Items
-    if (this.actor.data.type == 'npc') {
+    if (this.actor.data.type === 'npc') {
       this._prepareCharacterItems(data);
-    } 
-    return  data;
     }
+
+    return data;
+    }
+
   
     _prepareCharacterItems(sheetData) {
-      const actorData = sheetData.actor;
+      const actorData = sheetData.actor.data;
 
       //Initialize containers
       const gear = [];
@@ -125,56 +132,50 @@ export class npcSheet extends ActorSheet {
   /* -------------------------------------------- */
 
   /** @override */
-	activateListeners(html) {
+	async activateListeners(html) {
     super.activateListeners(html);
 
     // Rollable Buttons
-    html.find(".characteristic-roll").click(this._onClickCharacteristic.bind(this));
-    html.find(".professions-roll").click(this._onProfessionsRoll.bind(this));
-    html.find(".damage-roll").click(this._onDamageRoll.bind(this));
-    html.find(".unconventional-roll").click(this._onUnconventionalRoll.bind(this));
-    html.find(".magic-roll").click(this._onSpellRoll.bind(this));
-    html.find(".resistance-roll").click(this._onResistanceRoll.bind(this));
-    html.find(".armor-roll").click(this._onArmorRoll.bind(this));
-    html.find(".ammo-roll").click(this._onAmmoRoll.bind(this));
-    html.find(".ability-list .item-img").click(this._onTalentRoll.bind(this));
+    html.find(".characteristic-roll").click(await this._onClickCharacteristic.bind(this));
+    html.find(".professions-roll").click(await this._onProfessionsRoll.bind(this));
+    html.find(".damage-roll").click(await this._onDamageRoll.bind(this));
+    html.find(".unconventional-roll").click(await this._onUnconventionalRoll.bind(this));
+    html.find(".magic-roll").click(await this._onSpellRoll.bind(this));
+    html.find(".resistance-roll").click(await this._onResistanceRoll.bind(this));
+    html.find(".armor-roll").click(await this._onArmorRoll.bind(this));
+    html.find(".ammo-roll").click(await this._onAmmoRoll.bind(this));
+    html.find(".ability-list .item-img").click(await this._onTalentRoll.bind(this));
 
     //Update Item Attributes from Actor Sheet
-    html.find(".toggle2H").click(this._onToggle2H.bind(this));
-    html.find(".ammo-plus").click(this._onPlusAmmo.bind(this));
-    html.find(".ammo-minus").click(this._onMinusAmmo.bind(this));
-    html.find(".itemEquip").click(this._onItemEquip.bind(this));
+    html.find(".toggle2H").click(await this._onToggle2H.bind(this));
+    html.find(".ammo-plus").click(await this._onPlusAmmo.bind(this));
+    html.find(".ammo-minus").click(await this._onMinusAmmo.bind(this));
+    html.find(".itemEquip").click(await this._onItemEquip.bind(this));
 
     //Item Create Buttons
-    html.find(".weapon-create").click(this._onItemCreate.bind(this));
-    html.find(".ammo-create").click(this._onItemCreate.bind(this));
-    html.find(".armor-create").click(this._onItemCreate.bind(this));
-    html.find(".gear-create").click(this._onItemCreate.bind(this));
-    html.find(".trait-create").click(this._onItemCreate.bind(this));
-    html.find(".power-create").click(this._onItemCreate.bind(this));
-    html.find(".talent-create").click(this._onItemCreate.bind(this));
+    html.find(".weapon-create").click(await this._onItemCreate.bind(this));
+    html.find(".ammo-create").click(await this._onItemCreate.bind(this));
+    html.find(".armor-create").click(await this._onItemCreate.bind(this));
+    html.find(".gear-create").click(await this._onItemCreate.bind(this));
+    html.find(".trait-create").click(await this._onItemCreate.bind(this));
+    html.find(".power-create").click(await this._onItemCreate.bind(this));
+    html.find(".talent-create").click(await this._onItemCreate.bind(this));
 
     // Everything below here is only needed if the sheet is editable
     if (!this.options.editable) return;
 
-    // Update Inventory/Spell Item
-    html.find('.item-edit').click(ev => {
-      const li = $(ev.currentTarget).parents(".item");
-      const item = this.actor.getOwnedItem(li.data("itemId"));
+    // Update Inventory Item
+    html.find('.item-name').click( async (ev) => {
+      const li = ev.currentTarget.closest(".item");
+      const item = this.actor.items.get(li.dataset.itemId);
       item.sheet.render(true);
-    });
-
-    html.find('.item-name').click(ev => {
-      const li = $(ev.currentTarget).parents(".item");
-      const item = this.actor.getOwnedItem(li.data("itemId"));
-      item.sheet.render(true);
+      await item.update({"data.value" : item.data.data.value})
     });
 
     // Delete Inventory Item
     html.find('.item-delete').click(ev => {
-      const li = $(ev.currentTarget).parents(".item");
-      this.actor.deleteOwnedItem(li.data("itemId"));
-      li.slideUp(200, () => this.render(false));
+      const li = ev.currentTarget.closest(".item");
+      this.actor.deleteEmbeddedDocuments("Item", [li.dataset.itemId]);
     });
 
   }
@@ -185,7 +186,7 @@ export class npcSheet extends ActorSheet {
    * @private
    */
 
-  _onClickCharacteristic(event) {
+  async _onClickCharacteristic(event) {
     event.preventDefault()
     const element = event.currentTarget
     let wounded_char = this.actor.data.data.characteristics[element.id].value - 20
@@ -202,8 +203,9 @@ export class npcSheet extends ActorSheet {
           callback: html => {
             const playerInput = parseInt(html.find('[id="playerInput"]').val());
 
+    let contentString = "";
     let roll = new Roll("1d100");
-    roll.roll();
+    roll.roll({async:false});
 
       if (this.actor.data.data.wounded == true) {
         if (roll.total == this.actor.data.data.lucky_numbers.ln1 || 
@@ -218,11 +220,11 @@ export class npcSheet extends ActorSheet {
           roll.total == this.actor.data.data.lucky_numbers.ln10)
 
          {
-          const content = `Rolls for <b>${element.name}</b>!
+          contentString = `<h4>Rolls for <b>${element.name}</b>!</h4>
           <p></p><b>Target Number: [[${wounded_char} + ${playerInput}]]</b> <p></p>
-          <b>Result: [[${roll.total}]]</b><p></p>
+          <b>Result: [[${roll.result}]]</b><p></p>
           <span style='color:green; font-size:120%;'> <b>LUCKY NUMBER!</b></span>`
-          roll.toMessage({type: 4, user: game.user._id, speaker: ChatMessage.getSpeaker(), content: content});
+
     
         } else if (roll.total == this.actor.data.data.unlucky_numbers.ul1 || 
           roll.total == this.actor.data.data.unlucky_numbers.ul2 || 
@@ -231,18 +233,18 @@ export class npcSheet extends ActorSheet {
           roll.total == this.actor.data.data.unlucky_numbers.ul5 ||
           roll.total == this.actor.data.data.unlucky_numbers.ul6) 
           {
-          const content = `Rolls for <b>${element.name}</b>!
+          contentString = `<h4>Rolls for <b>${element.name}</b>!</h4>
           <p></p><b>Target Number: [[${wounded_char} + ${playerInput}]]</b> <p></p>
-          <b>Result: [[${roll.total}]]</b><p></p>
+          <b>Result: [[${roll.result}]]</b><p></p>
           <span style='color:red; font-size:120%;'> <b>UNLUCKY NUMBER!</b></span>`
-          roll.toMessage({type: 4, user: game.user._id, speaker: ChatMessage.getSpeaker(), content: content});
+
     
         } else {
-          const content = `Rolls for <b>${element.name}</b>!
+          contentString = `<h4>Rolls for <b>${element.name}</b>!</h4>
           <p></p><b>Target Number: [[${wounded_char} + ${playerInput}]]</b> <p></p>
-          <b>Result: [[${roll.total}]]</b><p></p>
+          <b>Result: [[${roll.result}]]</b><p></p>
           <b>${roll.total<=wounded_char ? " <span style='color:green; font-size: 120%;'> <b>SUCCESS!</b></span>" : " <span style='color:red; font-size: 120%;'> <b>FAILURE!</b></span>"}`
-          roll.toMessage({type: 4, user: game.user._id, speaker: ChatMessage.getSpeaker(), content: content});
+
         } 
       } else {
         if (roll.total == this.actor.data.data.lucky_numbers.ln1 || 
@@ -257,11 +259,11 @@ export class npcSheet extends ActorSheet {
           roll.total == this.actor.data.data.lucky_numbers.ln10)
 
       {
-        const content = `Rolls for <b>${element.name}</b>!
+        contentString = `<h4>Rolls for <b>${element.name}</b>!</h4>
         <p></p><b>Target Number: [[${this.actor.data.data.characteristics[element.id].value} + ${playerInput}]]</b> <p></p>
-        <b>Result: [[${roll.total}]]</b><p></p>
+        <b>Result: [[${roll.result}]]</b><p></p>
         <span style='color:green; font-size:120%;'> <b>LUCKY NUMBER!</b></span>`
-        roll.toMessage({type: 4, user: game.user._id, speaker: ChatMessage.getSpeaker(), content: content});
+
 
       } else if (roll.total == this.actor.data.data.unlucky_numbers.ul1 || 
           roll.total == this.actor.data.data.unlucky_numbers.ul2 || 
@@ -271,19 +273,25 @@ export class npcSheet extends ActorSheet {
           roll.total == this.actor.data.data.unlucky_numbers.ul6) 
 
       {
-        const content = `Rolls for <b>${element.name}</b>!
+        contentString = `<h4>Rolls for <b>${element.name}</b>!</h4>
         <p></p><b>Target Number: [[${this.actor.data.data.characteristics[element.id].value} + ${playerInput}]]</b> <p></p>
-        <b>Result: [[${roll.total}]]</b><p></p>
+        <b>Result: [[${roll.result}]]</b><p></p>
         <span style='color:red; font-size:120%;'> <b>UNLUCKY NUMBER!</b></span>`
-        roll.toMessage({type: 4, user: game.user._id, speaker: ChatMessage.getSpeaker(), content: content});
+
 
       } else {
-        const content = `Rolls for <b>${element.name}</b>!
+        contentString = `<h4>Rolls for <b>${element.name}</b>!</h4>
         <p></p><b>Target Number: [[${this.actor.data.data.characteristics[element.id].value} + ${playerInput}]]</b> <p></p>
-        <b>Result: [[${roll.total}]]</b><p></p>
+        <b>Result: [[${roll.result}]]</b><p></p>
         <b>${roll.total<=(this.actor.data.data.characteristics[element.id].value + playerInput) ? " <span style='color:green; font-size: 120%;'> <b>SUCCESS!</b></span>" : " <span style='color:red; font-size: 120%;'> <b>FAILURE!</b></span>"}`
-        roll.toMessage({type: 4, user: game.user._id, speaker: ChatMessage.getSpeaker(), content: content});
+
       }
+       roll.toMessage({
+        async: false,
+        user: game.user.id,
+        speaker: ChatMessage.getSpeaker(),
+        content: contentString
+      })
     } 
     }
   },
@@ -298,7 +306,7 @@ export class npcSheet extends ActorSheet {
   d.render(true);
   }
 
-  _onProfessionsRoll(event) {
+   _onProfessionsRoll(event) {
     event.preventDefault()
     const element = event.currentTarget
 
@@ -314,6 +322,7 @@ export class npcSheet extends ActorSheet {
           callback: html => {
             const playerInput = parseInt(html.find('[id="playerInput"]').val());
 
+            let contentString = "";
             let roll = new Roll("1d100");
             roll.roll();
 
@@ -328,11 +337,11 @@ export class npcSheet extends ActorSheet {
               roll.total == this.actor.data.data.lucky_numbers.ln9 ||
               roll.total == this.actor.data.data.lucky_numbers.ln10)
               {
-              const content = `Rolls for <b>${element.name}</b>!
-              <p></p><b>Target Number: [[${this.actor.data.data.professions[element.id]} + ${playerInput}]]</b> <p></p>
-              <b>Result: [[${roll.total}]]</b><p></p>
+              contentString = `<h4>Rolls for <b>${element.name}</b>!</h4>
+              <p></p><b>Target Number: [[${this.actor.data.data.professionsWound[element.id]} + ${playerInput}]]</b> <p></p>
+              <b>Result: [[${roll.result}]]</b><p></p>
               <span style='color:green; font-size:120%;'> <b>LUCKY NUMBER!</b></span>`
-              roll.toMessage({type: 4, user: game.user._id, speaker: ChatMessage.getSpeaker(), content: content});
+
               }
               else if (roll.total == this.actor.data.data.unlucky_numbers.ul1 || 
                 roll.total == this.actor.data.data.unlucky_numbers.ul2 || 
@@ -341,18 +350,23 @@ export class npcSheet extends ActorSheet {
                 roll.total == this.actor.data.data.unlucky_numbers.ul5 ||
                 roll.total == this.actor.data.data.unlucky_numbers.ul6) 
                 {
-                  const content = `Rolls for <b>${element.name}</b>!
-                  <p></p><b>Target Number: [[${this.actor.data.data.professions[element.id]} + ${playerInput}]]</b> <p></p>
-                  <b>Result: [[${roll.total}]]</b><p></p>
+                  contentString = `<h4>Rolls for <b>${element.name}</b>!</h4>
+                  <p></p><b>Target Number: [[${this.actor.data.data.professionsWound[element.id]} + ${playerInput}]]</b> <p></p>
+                  <b>Result: [[${roll.result}]]</b><p></p>
                   <span style='color:red; font-size:120%;'> <b>UNLUCKY NUMBER!</b></span>`
-                  roll.toMessage({type: 4, user: game.user._id, speaker: ChatMessage.getSpeaker(), content: content});
+
                 } else {
-                  const content = `Rolls for <b>${element.name}</b>!
-                  <p></p><b>Target Number: [[${this.actor.data.data.professions[element.id]} + ${playerInput}]]</b> <p></p>
-                  <b>Result: [[${roll.total}]]</b><p></p>
-                  <b>${roll.total<=(this.actor.data.data.professions[element.id] + playerInput) ? " <span style='color:green; font-size: 120%;'> <b>SUCCESS!</b></span>" : " <span style='color:red; font-size: 120%;'> <b>FAILURE!</b></span>"}`
-                  roll.toMessage({type: 4, user: game.user._id, speaker: ChatMessage.getSpeaker(), content: content});
+                  contentString = `<h4>Rolls for <b>${element.name}</b>!</h4>
+                  <p></p><b>Target Number: [[${this.actor.data.data.professionsWound[element.id]} + ${playerInput}]]</b> <p></p>
+                  <b>Result: [[${roll.result}]]</b><p></p>
+                  <b>${roll.total<=(this.actor.data.data.professionsWound[element.id] + playerInput) ? " <span style='color:green; font-size: 120%;'> <b>SUCCESS!</b></span>" : " <span style='color:red; font-size: 120%;'> <b>FAILURE!</b></span>"}`
+
                 }
+                 roll.toMessage({
+                  user: game.user.id,
+                  speaker: ChatMessage.getSpeaker(),
+                  content: contentString
+                })
           }
         },
         two: {
@@ -366,7 +380,7 @@ export class npcSheet extends ActorSheet {
         d.render(true);
   }
 
-  _onUnconventionalRoll(event) {
+   _onUnconventionalRoll(event) {
     event.preventDefault()
     const element = event.currentTarget
 
@@ -382,6 +396,7 @@ export class npcSheet extends ActorSheet {
           callback: html => {
             const playerInput = parseInt(html.find('[id="playerInput"]').val());
 
+          let contentString = "";
           let roll = new Roll("1d100");
           roll.roll();
 
@@ -396,11 +411,11 @@ export class npcSheet extends ActorSheet {
             roll.total == this.actor.data.data.lucky_numbers.ln9 ||
             roll.total == this.actor.data.data.lucky_numbers.ln10)
             {
-              const content = `Rolls for <b>${element.name}</b>!
+              contentString = `<h4>Rolls for <b>${element.name}</b>!</h4>
               <p></p><b>Target Number: [[${this.actor.data.data.skills[element.id].bonus} + ${playerInput}]]</b> <p></p>
-              <b>Result: [[${roll.total}]]</b><p></p>
+              <b>Result: [[${roll.result}]]</b><p></p>
               <span style='color:green; font-size:120%;'> <b>LUCKY NUMBER!</b></span>`
-              roll.toMessage({type: 4, user: game.user._id, speaker: ChatMessage.getSpeaker(), content: content});
+
             } else if (roll.total == this.actor.data.data.unlucky_numbers.ul1 || 
               roll.total == this.actor.data.data.unlucky_numbers.ul2 || 
               roll.total == this.actor.data.data.unlucky_numbers.ul3 || 
@@ -408,18 +423,23 @@ export class npcSheet extends ActorSheet {
               roll.total == this.actor.data.data.unlucky_numbers.ul5 ||
               roll.total == this.actor.data.data.unlucky_numbers.ul6) 
               {
-                const content = `Rolls for <b>${element.name}</b>!
+                contentString = `<h4>Rolls for <b>${element.name}</b>!</h4>
                 <p></p><b>Target Number: [[${this.actor.data.data.skills[element.id].bonus} + ${playerInput}]]</b> <p></p>
-                <b>Result: [[${roll.total}]]</b><p></p>
+                <b>Result: [[${roll.result}]]</b><p></p>
                 <span style='color:red; font-size:120%;'> <b>UNLUCKY NUMBER!</b></span>`
-                roll.toMessage({type: 4, user: game.user._id, speaker: ChatMessage.getSpeaker(), content: content});
+
               } else {
-                const content = `Rolls for <b>${element.name}</b>!
+                contentString = `<h4>Rolls for <b>${element.name}</b>!</h4>
                 <p></p><b>Target Number: [[${this.actor.data.data.skills[element.id].bonus} + ${playerInput}]]</b> <p></p>
-                <b>Result: [[${roll.total}]]</b><p></p>
+                <b>Result: [[${roll.result}]]</b><p></p>
                 <b>${roll.total<=(this.actor.data.data.skills[element.id].bonus + playerInput) ? " <span style='color:green; font-size: 120%;'> <b>SUCCESS!</b></span>" : " <span style='color:red; font-size: 120%;'> <b>FAILURE!</b></span>"}`
-                roll.toMessage({type: 4, user: game.user._id, speaker: ChatMessage.getSpeaker(), content: content});
+
               }
+               roll.toMessage({
+                user: game.user.id,
+                speaker: ChatMessage.getSpeaker(),
+                content: contentString
+              })
         }
       },
       two: {
@@ -433,17 +453,19 @@ export class npcSheet extends ActorSheet {
       d.render(true);
   }
 
-  _onDamageRoll(event) {
+  async _onDamageRoll(event) {
     event.preventDefault()
-    let button = $(event.currentTarget);
-    const li = button.parents(".item");
-    const item = this.actor.getOwnedItem(li.data("itemId"));
-      
+    const button = event.currentTarget;
+    const li = button.closest(".item");
+    const item = this.actor.items.get(li?.dataset.itemId);
+    const d1 = this.actor.items.get(li?.dataset.itemId).data.data.damage;
+    const d2 = this.actor.items.get(li?.dataset.itemId).data.data.damage2;
+
     let hit_loc = "";
-      
+
     let hit = new Roll("1d10");
-    hit.roll();
-      
+    hit.roll({async:false});
+
     if (hit.total <= 5) {
       hit_loc = "Body"
     } else if (hit.total == 6) {
@@ -457,66 +479,91 @@ export class npcSheet extends ActorSheet {
     } else if (hit.total == 10) {
       hit_loc = "Head"
     }
-      
-    let roll = new Roll(item.data.data.damage);
-    let supRoll = new Roll(item.data.data.damage);
-    let roll2H = new Roll(item.data.data.damage2);
-    let supRoll2H = new Roll(item.data.data.damage2);
-    roll.roll();
-    supRoll.roll();
-    roll2H.roll();
-    supRoll2H.roll();
-      
-          if (item.data.data.weapon2H == true) {
-            if (item.data.data.superior == true) {
-              const content = `Rolls damage for their <b>${item.name}!</b>
-                <p></p>
-                <b>Damage:</b> <b> [[${roll2H.total}]] [[${supRoll2H.total}]]</b> ${roll2H._formula}<p></p>
-                <b>Hit Location:</b> <b> [[${hit.total}]] </b> ${hit_loc}<p></p>
-                <b>Qualities:</b> ${item.data.data.qualities}`
-                roll.toMessage({type: 1, user: game.user._id, speaker: ChatMessage.getSpeaker(), content: content});
-      
-            } else {
-                const content = `Rolls damage for their <b>${item.name}!</b>
-                  <p></p>
-                  <b>Damage:</b> <b> [[${roll2H.total}]]</b> ${roll2H._formula}<p></p>
-                  <b>Hit Location:</b> <b> [[${hit.total}]] </b> ${hit_loc}<p></p>
-                  <b>Qualities:</b> ${item.data.data.qualities}`
-                  roll.toMessage({type: 1, user: game.user._id, speaker: ChatMessage.getSpeaker(), content: content});
-              }
-      
-          } else {
-              if (item.data.data.superior == true) {
-                const content = `Rolls damage for their <b>${item.name}!</b>
-                  <p></p>
-                  <b>Damage:</b> <b> [[${roll.total}]] [[${supRoll.total}]]</b> ${roll._formula}<p></p>
-                  <b>Hit Location:</b> <b> [[${hit.total}]] </b> ${hit_loc}<p></p>
-                  <b>Qualities:</b> ${item.data.data.qualities}`
-                  roll.toMessage({type: 1, user: game.user._id, speaker: ChatMessage.getSpeaker(), content: content});
-      
-            } else {
-                const content = `Rolls damage for their <b>${item.name}!</b>
-                  <p></p>
-                  <b>Damage:</b> <b> [[${roll.total}]]</b> ${roll._formula}<p></p>
-                  <b>Hit Location:</b> <b> [[${hit.total}]] </b> ${hit_loc}<p></p>
-                  <b>Qualities:</b> ${item.data.data.qualities}`
-                  roll.toMessage({type: 1, user: game.user._id, speaker: ChatMessage.getSpeaker(), content: content});
-                }
-              }
+
+    let roll = new Roll(d1);
+    let supRoll = new Roll(d1);
+    let roll2H = new Roll(d2);
+    let supRoll2H = new Roll(d2);
+    let contentString = "";
+    roll.roll({async:false});
+    supRoll.roll({async:false});
+    roll2H.roll({async:false});
+    supRoll2H.roll({async:false});
+
+    if (item.data.data.weapon2H === true) {
+      if (item.data.data.superior === true) {
+        contentString = `<h4>Rolls damage for their <b>${item.name}!</b></h4>
+          <p></p>
+          <b>Damage:</b> <b> [[${roll2H.result}]] [[${supRoll2H.result}]]</b> ${roll2H._formula}<p></p>
+          <b>Hit Location:</b> <b> [[${hit.total}]] </b> ${hit_loc}<p></p>
+          <b>Qualities:</b> ${item.data.data.qualities}`
+          ChatMessage.create({
+            type: CONST.CHAT_MESSAGE_TYPES.ROLL,
+            user: game.user.id,
+            speaker: ChatMessage.getSpeaker(),
+            content: contentString,
+            roll: supRoll2H, roll2H
+          })
+
+      } else {
+        contentString = `<h4>Rolls damage for their <b>${item.name}!</b></h4>
+            <p></p>
+            <b>Damage:</b> <b> [[${roll2H.result}]]</b> ${roll2H._formula}<p></p>
+            <b>Hit Location:</b> <b> [[${hit.total}]] </b> ${hit_loc}<p></p>
+            <b>Qualities:</b> ${item.data.data.qualities}`
+            ChatMessage.create({
+              type: CONST.CHAT_MESSAGE_TYPES.ROLL,
+              user: game.user.id,
+              speaker: ChatMessage.getSpeaker(),
+              content: contentString,
+              roll: roll2H
+            })
+        }
+
+    } else {
+        if (item.data.data.superior === true) {
+          contentString = `<h4>Rolls damage for their <b>${item.name}!</b></h4>
+            <p></p>
+            <b>Damage:</b> <b> [[${roll.result}]] [[${supRoll.result}]]</b> ${roll._formula}<p></p>
+            <b>Hit Location:</b> <b> [[${hit.total}]] </b> ${hit_loc}<p></p>
+            <b>Qualities:</b> ${item.data.data.qualities}`
+            ChatMessage.create({
+              type: CONST.CHAT_MESSAGE_TYPES.ROLL,
+              user: game.user.id,
+              speaker: ChatMessage.getSpeaker(),
+              content: contentString,
+              roll: roll, supRoll
+            })
+
+      } else {
+        contentString = `<h4>Rolls damage for their <b>${item.name}!</b></h4>
+            <p></p>
+            <b>Damage:</b> <b> [[${roll.result}]]</b> ${roll._formula}<p></p>
+            <b>Hit Location:</b> <b> [[${hit.total}]] </b> ${hit_loc}<p></p>
+            <b>Qualities:</b> ${item.data.data.qualities}`
+            ChatMessage.create({
+              type: CONST.CHAT_MESSAGE_TYPES.ROLL,
+              user: game.user.id,
+              speaker: ChatMessage.getSpeaker(),
+              content: contentString,
+              roll: roll
+            })
+          }
+        }
   }
 
-  _onSpellRoll(event) {
+   _onSpellRoll(event) {
       event.preventDefault()
       let button = $(event.currentTarget);
       const li = button.parents(".item");
-      const item = this.actor.getOwnedItem(li.data("itemId"));
+      const item = this.actor.getEmbeddedDocument("Item", li.data("itemId"));
       
       let hit_loc = ""
       
       let roll = new Roll(item.data.data.damage);
-      roll.roll();
+      roll.roll({async:false});
       let hit = new Roll("1d10");
-      hit.roll();
+      hit.roll({async:false});
       
       if (hit.total <= 5) {
         hit_loc = "Body"
@@ -534,7 +581,7 @@ export class npcSheet extends ActorSheet {
     
       const content = `Casts the spell <b>${item.name}!</b>
        <p></p>
-       <b>Damage: [[${roll.total}]]</b> ${roll._formula}<b>
+       <b>Damage: [[${roll.result}]]</b> ${roll._formula}<b>
       <p></p>
       Hit Location: [[${hit.total}]]</b> ${hit_loc}<b>
        <p></p>
@@ -542,14 +589,14 @@ export class npcSheet extends ActorSheet {
       <p></p>
        Attributes:</b> ${item.data.data.attributes}`
       
-      roll.toMessage({type: 1, user: game.user._id, speaker: ChatMessage.getSpeaker(), content: content});
+       roll.toMessage({async:false, type: 1, user: game.user.id, speaker: ChatMessage.getSpeaker(), content: content});
   }
       
-  _onCombatRoll(event) {
+   _onCombatRoll(event) {
   event.preventDefault()
   let button = $(event.currentTarget);
   const li = button.parents(".item");
-  const item = this.actor.getOwnedItem(li.data("itemId"));
+  const item = this.actor.getEmbeddedDocument("Item", li.data("itemId"));
       
   let d = new Dialog({
     title: "Apply Roll Modifier",
@@ -563,30 +610,34 @@ export class npcSheet extends ActorSheet {
             callback: html => {
               const playerInput = parseInt(html.find('[id="playerInput"]').val());
       
+            let contentString = "";
             let roll = new Roll("1d100");
-            roll.roll();
+            roll.roll({async:false});
       
                 if (roll.total == this.actor.data.data.lucky_numbers.ln1 || roll.total == this.actor.data.data.lucky_numbers.ln2 || roll.total == this.actor.data.data.lucky_numbers.ln3 || roll.total == this.actor.data.data.lucky_numbers.ln4 || roll.total == this.actor.data.data.lucky_numbers.ln5) {
-                  const content = `Rolls Combat Style <b>${item.name}</b>!
+                  contentString = `<h4>Rolls Combat Style <b>${item.name}</b>!</h4>
                   <p></p><b>Target Number: [[${item.data.data.value} + ${playerInput}]]</b> <p></p>
-                  <b>Result: [[${roll.total}]]</b><p></p>
+                  <b>Result: [[${roll.result}]]</b><p></p>
                   <span style='color:green; font-size:120%;'> <b>LUCKY NUMBER!</b></span>`
-                  roll.toMessage({type: 4, user: game.user._id, speaker: ChatMessage.getSpeaker(), content: content});
       
                 } else if (roll.total == this.actor.data.data.unlucky_numbers.ul1 || roll.total == this.actor.data.data.unlucky_numbers.ul2 || roll.total == this.actor.data.data.unlucky_numbers.ul3 || roll.total == this.actor.data.data.unlucky_numbers.ul4 || roll.total == this.actor.data.data.unlucky_numbers.ul5) {
-                  const content = `Rolls Combat Style <b>${item.name}</b>!
+                  contentString = `<h4>Rolls Combat Style <b>${item.name}</b>!</h4>
                   <p></p><b>Target Number: [[${item.data.data.value} + ${playerInput}]]</b> <p></p>
-                  <b>Result: [[${roll.total}]]</b><p></p>
+                  <b>Result: [[${roll.result}]]</b><p></p>
                   <span style='color:red; font-size:120%;'> <b>UNLUCKY NUMBER!</b></span>`
-                  roll.toMessage({type: 4, user: game.user._id, speaker: ChatMessage.getSpeaker(), content: content});
       
                 } else {
-                  const content = `Rolls Combat Style <b>${item.name}</b>!
+                  contentString = `<h4>Rolls Combat Style <b>${item.name}</b>!</h4>
                   <p></p><b>Target Number: [[${item.data.data.value} + ${playerInput}]]</b> <p></p>
-                  <b>Result: [[${roll.total}]]</b><p></p>
+                  <b>Result: [[${roll.result}]]</b><p></p>
                   <b>${roll.total<=(item.data.data.value + playerInput) ? " <span style='color:green; font-size: 120%;'> <b>SUCCESS!</b></span>" : " <span style='color: red; font-size: 120%;'> <b>FAILURE!</b></span>"}`
-                  roll.toMessage({type: 4, user: game.user._id, speaker: ChatMessage.getSpeaker(), content: content});
                 }
+                 roll.toMessage({
+                  async: false,
+                  user: game.user.id, 
+                  speaker: ChatMessage.getSpeaker(),
+                  content: contentString
+                })
               }
             },
             two: {
@@ -600,7 +651,7 @@ export class npcSheet extends ActorSheet {
             d.render(true);
   }
 
-  _onResistanceRoll(event) {
+   _onResistanceRoll(event) {
     event.preventDefault()
     const element = event.currentTarget
 
@@ -615,31 +666,35 @@ export class npcSheet extends ActorSheet {
           label: "Roll!",
           callback: html => {
             const playerInput = parseInt(html.find('[id="playerInput"]').val());
-
+          
+          let contentString = "";
           let roll = new Roll("1d100");
-          roll.roll();
+          roll.roll({async:false});
 
           if (roll.total == this.actor.data.data.lucky_numbers.ln1 || roll.total == this.actor.data.data.lucky_numbers.ln2 || roll.total == this.actor.data.data.lucky_numbers.ln3 || roll.total == this.actor.data.data.lucky_numbers.ln4 || roll.total == this.actor.data.data.lucky_numbers.ln5) {
-            const content = `Rolls Resistance for <b>${element.name}</b>!
+            contentString = `<h4>Rolls Resistance for <b>${element.name}</b>!</h4>
             <p></p><b>Target Number: [[${this.actor.data.data.resistance[element.id]} + ${playerInput}]]</b> <p></p>
-            <b>Result: [[${roll.total}]]</b><p></p>
+            <b>Result: [[${roll.result}]]</b><p></p>
             <span style='color:green; font-size:120%;'> <b>LUCKY NUMBER!</b></span>`
-            roll.toMessage({type: 4, user: game.user._id, speaker: ChatMessage.getSpeaker(), content: content});
 
           } else if (roll.total == this.actor.data.data.unlucky_numbers.ul1 || roll.total == this.actor.data.data.unlucky_numbers.ul2 || roll.total == this.actor.data.data.unlucky_numbers.ul3 || roll.total == this.actor.data.data.unlucky_numbers.ul4 || roll.total == this.actor.data.data.unlucky_numbers.ul5) {
-            const content = `Rolls Resistance for <b>${element.name}</b>!
+            contentString = `<h4>Rolls Resistance for <b>${element.name}</b>!</h4>
             <p></p><b>Target Number: [[${this.actor.data.data.resistance[element.id]} + ${playerInput}]]</b> <p></p>
-            <b>Result: [[${roll.total}]]</b><p></p>
+            <b>Result: [[${roll.result}]]</b><p></p>
             <span style='color:red; font-size:120%;'> <b>UNLUCKY NUMBER!</b></span>`
-            roll.toMessage({type: 4, user: game.user._id, speaker: ChatMessage.getSpeaker(), content: content});
 
           } else {
-            const content = `Rolls Resistance for <b>${element.name}</b>!
+            contentString = `<h4>Rolls Resistance for <b>${element.name}</b>!</h4>
             <p></p><b>Target Number: [[${this.actor.data.data.resistance[element.id]} + ${playerInput}]]</b> <p></p>
-            <b>Result: [[${roll.total}]]</b><p></p>
+            <b>Result: [[${roll.result}]]</b><p></p>
             <b>${roll.total<=(this.actor.data.data.resistance[element.id] + playerInput) ? " <span style='color:green; font-size: 120%;'> <b>SUCCESS!</b></span>" : " <span style='color: red; font-size: 120%;'> <b>FAILURE!</b></span>"}`
-            roll.toMessage({type: 4, user: game.user._id, speaker: ChatMessage.getSpeaker(), content: content});
           }
+           roll.toMessage({
+            async: false,
+            user: game.user.id,
+            speaker: ChatMessage.getSpeaker(),
+            content: contentString
+          })
         }
       },
       two: {
@@ -654,114 +709,129 @@ export class npcSheet extends ActorSheet {
 
   }
 
-  _onArmorRoll(event) {
+   _onArmorRoll(event) {
     event.preventDefault()
     let button = $(event.currentTarget);
     const li = button.parents(".item");
-    const item = this.actor.getOwnedItem(li.data("itemId"));
+    const item = this.actor.getEmbeddedDocument("Item", li.data("itemId"));
 
     let roll = new Roll("1d10")
-    roll.roll();
+    roll.roll({async:false});
 
     const content = `<h2>${item.name}</h2><p>
       <b>AR:</b> ${item.data.data.armor}<p>
       <b>Magic AR:</b> ${item.data.data.magic_ar}<p>
       <b>Qualities</b> ${item.data.data.qualities}`
-      roll.toMessage({type: 1, user: game.user._id, speaker: ChatMessage.getSpeaker(), content: content});
+      roll.toMessage({async:false, type: 1, user: game.user.id, speaker: ChatMessage.getSpeaker(), content: content});
   }
 
   _onAmmoRoll(event) {
     event.preventDefault()
     let button = $(event.currentTarget);
     const li = button.parents(".item");
-    const item = this.actor.getOwnedItem(li.data("itemId"));
+    const item = this.actor.getEmbeddedDocument("Item", li.data("itemId"));
 
-    item.data.data.quantity = item.data.data.quantity - 1;
-    item.update({"data.quantity" : item.data.data.quantity})
-
-    let roll = new Roll("1d10")
-    roll.roll();
-
-    const content = `<h2>${item.name}</h2><p>
+    const contentString = `<h2>${item.name}</h2><p>
       <b>Damage Bonus:</b> ${item.data.data.damage}<p>
       <b>Qualities</b> ${item.data.data.qualities}`
-      roll.toMessage({type: 1, user: game.user._id, speaker: ChatMessage.getSpeaker(), content: content});
+
+      if (item.data.data.quantity > 0){
+         ChatMessage.create({
+          user: game.user.id,
+          speaker: ChatMessage.getSpeaker(),
+          content: contentString
+        })
+      }
+
+    item.data.data.quantity = item.data.data.quantity - 1;
+    if (item.data.data.quantity < 0){
+      item.data.data.quantity = 0;
+      ui.notifications.info("Out of Ammunition!");
+    }
+       item.update({"data.quantity" : item.data.data.quantity})
   }
 
-  _onToggle2H(event) {
+   _onToggle2H(event) {
     event.preventDefault()
     let toggle = $(event.currentTarget);
     const li = toggle.parents(".item");
-    const item = this.actor.getOwnedItem(li.data("itemId"));
+    const item = this.actor.getEmbeddedDocument("Item", li.data("itemId"));
 
     if (item.data.data.weapon2H === false) {
       item.data.data.weapon2H = true;
     } else if (item.data.data.weapon2H === true) {
       item.data.data.weapon2H = false;
     }
-    item.update({"data.weapon2H" : item.data.data.weapon2H})
+     item.update({"data.weapon2H" : item.data.data.weapon2H})
   }
 
-  _onPlusAmmo(event) {
+   _onPlusAmmo(event) {
     event.preventDefault()
     let toggle = $(event.currentTarget);
     const li = toggle.parents(".item");
-    const item = this.actor.getOwnedItem(li.data("itemId"));
+    const item = this.actor.getEmbeddedDocument("Item", li.data("itemId"));
 
     item.data.data.quantity = item.data.data.quantity + 1;
 
-    item.update({"data.quantity" : item.data.data.quantity})
+     item.update({"data.quantity" : item.data.data.quantity})
   }
 
-  _onMinusAmmo(event) {
+   _onMinusAmmo(event) {
     event.preventDefault()
     let toggle = $(event.currentTarget);
     const li = toggle.parents(".item");
-    const item = this.actor.getOwnedItem(li.data("itemId"));
+    const item = this.actor.getEmbeddedDocument("Item", li.data("itemId"));
 
     item.data.data.quantity = item.data.data.quantity - 1;
+    if (item.data.data.quantity < 0){
+      item.data.data.quantity = 0;
+      ui.notifications.info("Out of Ammunition!");
+    }
 
-    item.update({"data.quantity" : item.data.data.quantity})
+     item.update({"data.quantity" : item.data.data.quantity})
   }
 
-  _onItemEquip(event) {
+   _onItemEquip(event) {
     event.preventDefault()
     let toggle = $(event.currentTarget);
     const li = toggle.parents(".item");
-    const item = this.actor.getOwnedItem(li.data("itemId"));
+    const item = this.actor.getEmbeddedDocument("Item", li.data("itemId"));
 
     if (item.data.data.equipped === false) {
       item.data.data.equipped = true;
     } else if (item.data.data.equipped === true) {
       item.data.data.equipped = false;
     }
-    item.update({"data.equipped" : item.data.data.equipped})
+     item.update({"data.equipped" : item.data.data.equipped})
   }
 
-  _onItemCreate(event) {
+   _onItemCreate(event) {
     event.preventDefault()
     const element = event.currentTarget
 
-    const itemData = {
+    const itemData = [{
       name: element.id,
       type: element.id,
-    }
+    }]
 
-    this.actor.createOwnedItem(itemData);
+     this.actor.createEmbeddedDocuments("Item", itemData);
   }
 
-  _onTalentRoll(event) {
+   async _onTalentRoll(event) {
     event.preventDefault()
     let button = $(event.currentTarget);
     const li = button.parents(".item");
-    const item = this.actor.getOwnedItem(li.data("itemId"));
+    const item = this.actor.getEmbeddedDocument("Item", li.data("itemId"));
 
-    let roll = new Roll("1d10")
-    roll.roll();
-
-    const content = `<h2>${item.name} (${item.type})</h2><p>
+    let contentString = `<h2>${item.name}</h2><p>
+    <i><b>${item.type}</b></i><p>
       <i>${item.data.data.description}</i>`
-      roll.toMessage({typ: 1, user: game.user._id, speaker: ChatMessage.getSpeaker(), content: content});
+
+     await ChatMessage.create({
+      user: game.user.id,
+      speaker: ChatMessage.getSpeaker(),
+      content: contentString
+    })
   }
 
 }
