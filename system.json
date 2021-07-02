@@ -123,6 +123,6 @@
   "secondaryTokenAttribute": "action_points",
   "url": "https://gitlab.com/DogBoneZone/uesrpg-3e/",
   "manifest": "https://gitlab.com/DogBoneZone/uesrpg-3e/raw/master/system.json",
-  "download": "https://gitlab.com/DogBoneZone/uesrpg-3e/-/archive/1.26/uesrpg-3e-1.26.zip",
+  "download": "https://gitlab.com/DogBoneZone/uesrpg-3e/-/archive/1.30/uesrpg-3e-1.30.zip",
   "license": "LICENSE.txt"
 }
