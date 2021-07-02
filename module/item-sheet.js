@@ -22,6 +22,18 @@ export class SimpleItemSheet extends ItemSheet {
       return `${path}/${this.item.data.type}-sheet.html`;
     }
 
+    getData() {
+      const  data = super.getData(); 
+      data.dtypes = ["String", "Number", "Boolean"];
+      data.isGM = game.user.isGM;
+      data.editable = data.options.editable;
+      const itemData = data.data;
+      data.actor = itemData;
+      data.data = itemData.data;
+  
+      return data;
+      }
+
   /* -------------------------------------------- */
 
   /** @override */
