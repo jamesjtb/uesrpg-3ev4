@@ -100,7 +100,7 @@ export class npcSheet extends ActorSheet {
         }
         //Append to spell
         else if (i.type === 'spell') {
-          if (i.data.school != undefined) {
+          if (i.data.school !== undefined) {
             spell[i.data.school].push(i);
           }
         }
