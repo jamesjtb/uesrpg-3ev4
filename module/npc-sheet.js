@@ -589,7 +589,12 @@ export class npcSheet extends ActorSheet {
       <p></p>
        Attributes:</b> ${item.data.data.attributes}`
       
-       roll.toMessage({async:false, type: 1, user: game.user.id, speaker: ChatMessage.getSpeaker(), content: content});
+       roll.toMessage({
+         async:false, 
+         type: CONST.CHAT_MESSAGE_TYPES.ROLL, 
+         user: game.user.id, 
+         speaker: ChatMessage.getSpeaker(), 
+         content: content});
   }
       
    _onCombatRoll(event) {
@@ -634,6 +639,7 @@ export class npcSheet extends ActorSheet {
                 }
                  roll.toMessage({
                   async: false,
+                  type: CONST.CHAT_MESSAGE_TYPES.ROLL,
                   user: game.user.id, 
                   speaker: ChatMessage.getSpeaker(),
                   content: contentString
@@ -691,6 +697,7 @@ export class npcSheet extends ActorSheet {
           }
            roll.toMessage({
             async: false,
+            type: CONST.CHAT_MESSAGE_TYPES.ROLL,
             user: game.user.id,
             speaker: ChatMessage.getSpeaker(),
             content: contentString
@@ -715,14 +722,14 @@ export class npcSheet extends ActorSheet {
     const li = button.parents(".item");
     const item = this.actor.getEmbeddedDocument("Item", li.data("itemId"));
 
-    let roll = new Roll("1d10")
-    roll.roll({async:false});
-
     const content = `<h2>${item.name}</h2><p>
       <b>AR:</b> ${item.data.data.armor}<p>
       <b>Magic AR:</b> ${item.data.data.magic_ar}<p>
       <b>Qualities</b> ${item.data.data.qualities}`
-      roll.toMessage({async:false, type: 1, user: game.user.id, speaker: ChatMessage.getSpeaker(), content: content});
+      ChatMessage.create(
+        {user: game.user.id, 
+          speaker: ChatMessage.getSpeaker(), 
+          content: content});
   }
 
   _onAmmoRoll(event) {
