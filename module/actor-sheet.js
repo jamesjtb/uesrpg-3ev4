@@ -390,6 +390,7 @@
     Attributes:</b> ${item.data.data.attributes}`
 
     await roll.toMessage({
+      type: CONST.CHAT_MESSAGE_TYPES.ROLL,
       async: false,
       user: game.user.id,
       speaker: ChatMessage.getSpeaker(),
@@ -627,13 +628,13 @@
     const li = button.parents(".item");
     const item = this.actor.items.get(li.data("itemId"));
 
-    let roll = new Roll("1d10")
-
     const content = `<h2>${item.name}</h2><p>
       <b>AR:</b> ${item.data.data.armor}<p>
       <b>Magic AR:</b> ${item.data.data.magic_ar}<p>
       <b>Qualities</b> ${item.data.data.qualities}`
-      await roll.toMessage({async: false, type: 1, user: game.user.id, speaker: ChatMessage.getSpeaker(), content: content});
+      await ChatMessage.create({user: game.user.id, 
+        speaker: ChatMessage.getSpeaker(), 
+        content: content});
   }
 
   async _onAmmoRoll(event) {
