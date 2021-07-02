@@ -169,14 +169,14 @@
                     <th><input type="button" class="professions-roll" name="Physical" id="physical" value="Physical"></th>
                 </tr>
                 <tr class="field-inputs">
-                    <td><input type="text" value="{{data.professions.combat}}" disabled></td>
-                    <td><input type="text" value="{{data.professions.magic}}" disabled></td>
-                    <td><input type="text" value="{{data.professions.evade}}" disabled></td>
-                    <td><input type="text" value="{{data.professions.observe}}" disabled></td>
-                    <td><input type="text" value="{{data.professions.stealth}}" disabled></td>
-                    <td><input type="text" value="{{data.professions.knowledge}}" disabled></td>
-                    <td><input type="text" value="{{data.professions.social}}" disabled></td>
-                    <td><input type="text" value="{{data.professions.physical}}" disabled></td>
+                    <td><input type="number" value="{{data.professionsWound.combat}}" disabled></td>
+                    <td><input type="number" value="{{data.professionsWound.magic}}" disabled></td>
+                    <td><input type="number" value="{{data.professionsWound.evade}}" disabled></td>
+                    <td><input type="number" value="{{data.professionsWound.observe}}" disabled></td>
+                    <td><input type="number" value="{{data.professionsWound.stealth}}" disabled></td>
+                    <td><input type="number" value="{{data.professionsWound.knowledge}}" disabled></td>
+                    <td><input type="number" value="{{data.professionsWound.social}}" disabled></td>
+                    <td><input type="number" value="{{data.professionsWound.physical}}" disabled></td>
                 </tr>
             </table>
             <div class="combat-sidebar">
@@ -210,7 +210,7 @@
                     </tr>
                 </table>
             <ol class="combat-list">
-                {{#each actor.weapon as |item id|}}
+                {{#each actor.data.weapon as |item id|}}
                     <li class="item flexrow" data-item-id="{{item._id}}">
                         <a class="damage-roll" data-roll="{{item.data.value}}"><i class="fas fa-dice-d20"></i></a>
                         <img class="item-img" src="{{item.img}}" title="{{item.name}}" width="24" height="24"/>
@@ -229,7 +229,7 @@
                 </tr>
             </table>
         <ol class="combat-list">
-            {{#each actor.ammunition as |item id|}}
+            {{#each actor.data.ammunition as |item id|}}
                 <li class="item flexrow" data-item-id="{{item._id}}">
                     <a class="ammo-roll" title="Send Stats to Chat and Reduce Ammo by 1" data-roll="{{item.data.value}}"><i class="fas fa-dice-d20"></i></a>
                     <img class="item-img" src="{{item.img}}" title="{{item.name}}" width="24" height="24"/>
@@ -246,7 +246,7 @@
             {{/each}}
         </ol>
         <ol class="combat-list">
-            {{#each actor.armor as |armor equipped|}}
+            {{#each actor.data.armor as |armor equipped|}}
             <div class="armor-header-wrapper">
                 <table class="combatHeader">
                     <tr>
@@ -357,7 +357,7 @@
                 </tr>
             </table>
             <ol class="spell-list">
-                {{#each actor.spell as |spell school|}}
+                {{#each actor.data.spell as |spell school|}}
                 <div>
                     <table>
                         <tr>
@@ -416,7 +416,7 @@
                     </tr>
                 </table>
                 <ol class="ability-list">
-                    {{#each actor.trait as |item id|}}
+                    {{#each actor.data.trait as |item id|}}
                         <li class="item flexrow" data-item-id="{{item._id}}">
                             <img class="item-img" src="{{item.img}}" title="Send to Chat" width="24" height="24"/>
                             <h4 class="item-name">{{item.name}}</h4>
@@ -433,7 +433,7 @@
                         </tr>
                     </table>
                     <ol class="ability-list">
-                        {{#each actor.power as |item id|}}
+                        {{#each actor.data.power as |item id|}}
                             <li class="item flexrow" data-item-id="{{item._id}}">
                                 <img class="item-img" src="{{item.img}}" title="Send to Chat" width="24" height="24"/>
                                 <h4 class="item-name">{{item.name}}</h4>
@@ -450,7 +450,7 @@
                             </tr>
                         </table>
                         <ol class="ability-list">
-                            {{#each actor.talent as |item id|}}
+                            {{#each actor.data.talent as |item id|}}
                                 <li class="item flexrow" data-item-id="{{item._id}}">
                                     <img class="item-img" src="{{item.img}}" title="Send to Chat" width="24" height="24"/>
                                     <h4 class="item-name">{{item.name}}</h4>
@@ -506,7 +506,7 @@
                 </table>
                 </div>
             <ol class="item-list">
-                {{#each actor.gear as |item id|}}
+                {{#each actor.data.gear as |item id|}}
                     <li class="item flexrow" data-item-id="{{item._id}}">
                         <div class="item-list-resource">
                         <input name="data.quantity" type="text" value="{{data.quantity}}" data-dtype="Number" disabled>
