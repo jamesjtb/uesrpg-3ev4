@@ -273,6 +273,14 @@
   width: 100%;
   float: left;
 }
+.worldbuilding .skills-list {
+  list-style: none;
+  margin: 7px 0;
+  padding: 0;
+  width: 100%;
+  float: left;
+  text-align: center;
+}
 .worldbuilding .combat-list {
   list-style: none;
   margin: 7px 0;
@@ -405,6 +413,11 @@
   flex: 0 0 36px;
   margin-right: 5px;
   margin-left: 0px;
+}
+.worldbuilding .ability-list .item-cat {
+  text-align: right;
+  margin-right: 5px;
+  margin-left: 0;
 }
 .worldbuilding .weapon-header {
   text-align: center;
@@ -551,18 +564,12 @@
   color: white;
 }
 .worldbuilding .skill-roll {
-  font-family: "cyrodiil";
-  src: url(../fonts/cyrodiil/cyrodiil.ttf);
   background-color: transparent;
   font-weight: bold;
-  border-radius: 10%;
-  border-style: groove;
-  padding: 5px;
+  margin-right: -70px;
 }
 .worldbuilding .skill-roll:hover {
-  border-color: black;
-  background-color: red;
-  color: white;
+  font-weight: bold;
 }
 .worldbuilding .professions-roll {
   font-family: "cyrodiil";
