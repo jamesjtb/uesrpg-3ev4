@@ -79,8 +79,8 @@
                     <td><input type="checkbox" name="data.replace.ini.iniToggle" {{checked data.replace.ini.iniToggle}}></td>
                     <td>Replace Initiative</td>
                     <td><select name="data.replace.ini.characteristic" data-type="String">
-                        {{#select item.data.replace.ini.characteristic}}
-                        {{#each item.data.characteristics as |characteristics key|}}
+                        {{#select data.replace.ini.characteristic}}
+                        {{#each data.characteristics as |characteristics key|}}
                         <option value="{{key}}">{{characteristics}}</option> 
                         {{/each}} {{/select}}
                     </select></td>
@@ -89,8 +89,8 @@
                     <td><input type="checkbox" name="data.replace.wt.wtToggle" {{checked data.replace.wt.wtToggle}}></td>
                     <td>Replace Wound Threshold</dh>
                     <td><select name="data.replace.wt.characteristic" data-type="String">
-                        {{#select item.data.replace.wt.characteristic}}
-                        {{#each item.data.characteristics as |characteristics key|}}
+                        {{#select data.replace.wt.characteristic}}
+                        {{#each data.characteristics as |characteristics key|}}
                         <option value="{{key}}">{{characteristics}}</option> 
                         {{/each}} {{/select}}
                     </select></td>
