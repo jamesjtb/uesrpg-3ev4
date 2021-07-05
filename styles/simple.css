@@ -306,6 +306,9 @@
 .worldbuilding .combat-list .item-name {
   margin: 0;
   text-align: left;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 .worldbuilding .combat-list .item-cat {
   text-align: left;
@@ -402,6 +405,9 @@
 }
 .worldbuilding .ability-list .item-name {
   margin: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 .worldbuilding .ability-list .item-name:hover {
   font-weight: bold;
@@ -449,6 +455,9 @@
 .worldbuilding .item-list .item-name {
   margin: 0;
   margin-right: -80px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 .worldbuilding .item-list .item-name:hover {
   font-weight: bold;
@@ -495,6 +504,9 @@
 }
 .worldbuilding .spell-list .item-name {
   margin: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 .worldbuilding .spell-list .item-name:hover {
   font-weight: bold;
