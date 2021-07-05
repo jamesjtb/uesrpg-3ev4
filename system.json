@@ -2,7 +2,7 @@
   "name": "uesrpg-d100",
   "title": "UESRPG d100",
   "description": "A system based off of Atropos Worldbuilding system used to play the UESRPG d100 system.",
-  "version": 1.30,
+  "version": 1.31,
   "minimumCoreVersion": "0.8.6",
   "compatibleCoreVersion": "0.8.8",
   "templateVersion": 2,
