@@ -51,6 +51,12 @@
   margin-left: 2%;
   margin-right: 2%;
 }
+.worldbuilding .sheet-body-items {
+  overflow-y: auto;
+  overflow-x: hidden;
+  margin-left: 2%;
+  margin-right: 2%;
+}
 .worldbuilding .resources {
  display: inline-block;
 }
