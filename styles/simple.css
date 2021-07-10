@@ -389,6 +389,7 @@
 .worldbuilding .ability-list .item img {
   flex: 0 0 24px;
   margin-right: 5px;
+  margin-left: -30px;
 }
 .worldbuilding .ability-list .item {
   height: 30px;
@@ -404,7 +405,8 @@
   margin: 0;
 }
 .worldbuilding .ability-list .item-name {
-  margin: 0;
+  margin-right: -60px;
+  margin-left: 0px;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -425,6 +427,67 @@
   margin-right: 5px;
   margin-left: 0;
 }
+
+
+
+.worldbuilding .talents-list {
+  display: inline-block;
+  margin: 7px 0;
+  margin-left: 15px;
+  padding: 0;
+  width: 100%;
+}
+.worldbuilding .talents-list li {
+  float: left;
+  list-style: outside none none;
+  width: 50%;
+}
+.worldbuilding .talents-list .item img {
+  flex: 0 0 24px;
+  margin-right: 5px;
+  margin-left: 0px;
+}
+.worldbuilding .talents-list .item {
+  height: 30px;
+  line-height: 25px;
+  padding: 3px 0;
+  border-bottom: 1px solid #BBB;
+}
+.worldbuilding .talents-list label {
+  width: 10px;
+  text-align: center;
+}
+.worldbuilding .talents-list .item-category {
+  margin: 0;
+}
+.worldbuilding .talents-list .item-name {
+  margin-right: -60px;
+  margin-left: 0px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.worldbuilding .talents-list .item-name:hover {
+  font-weight: bold;
+}
+.worldbuilding .item-img:hover {
+  zoom: 1.1;
+}
+.worldbuilding .talents-list .item-controls {
+  flex: 0 0 36px;
+  margin-right: 5px;
+  margin-left: 0px;
+}
+.worldbuilding .talents-list .item-cat {
+  text-align: right;
+  margin-right: 5px;
+  margin-left: 0;
+}
+
+
+
+
+
 .worldbuilding .weapon-header {
   text-align: center;
 }
@@ -469,7 +532,7 @@
 .worldbuilding .spell-list {
   display: inline-block;
   margin: 7px 0;
-  margin-left: 15px;
+  margin-left: 5px;
   padding: 0;
   width: 100%;
 }
@@ -519,17 +582,24 @@
 .worldbuilding .itemHeader {
   font-family: "cyrodiil";
   src: url(../fonts/cyrodiil/cyrodiil.ttf);
-  text-align: left;
-  font-size: large;
+  display: flex;
+  align-items: left;
 }
 .worldbuilding .itemHeader .talentsLabel {
   text-align: left;
+  position: relative;
+  font-size: large;
+  left: 10px;
 }
 .worldbuilding .equipmentHeader {
   font-family: "cyrodiil";
   src: url(../fonts/cyrodiil/cyrodiil.ttf);
   text-align: center;
   font-size: large;
+  margin: 7px 0;
+  padding: 0;
+  width: 100%;
+  float: left;
 }
 .worldbuilding .itemHeaderQTY {
   width: 14%;
@@ -669,15 +739,11 @@
 }
 .worldbuilding .combat-create {
   position: relative;
-  right: 0px;
-  top: 0px;
   background: none;
   border: groove;
 }
 .worldbuilding .weapon-create {
   position: relative;
-  right: 0px;
-  top: 0px;
   background: none;
   border: groove;
 }
@@ -704,29 +770,21 @@
 }
 .worldbuilding .trait-create {
   position: relative;
-  right: 0px;
-  top: 0px;
   background: none;
   border: groove;
 }
 .worldbuilding .power-create {
   position: relative;
-  right: 0px;
-  top: 0px;
   background: none;
   border: groove;
 }
 .worldbuilding .talent-create {
-  position: relative;
-  right: 0px;
-  top: 0px;
+  position: static;
   background: none;
   border: groove;
 }
 .worldbuilding .spell-create {
   position: relative;
-  right: 0px;
-  top: 0px;
   background: none;
   border: groove;
 }
@@ -760,8 +818,14 @@
 .worldbuilding .combatHeader {
   font-family: "cyrodiil";
   src: url(../fonts/cyrodiil/cyrodiil.ttf);
-  text-align: center;
-  font-size: large;
   text-align: left;
+  font-size: large;
+  display: flex;
+}
+.worldbuilding .combatHeader .combatLabel {
+  text-align: left;
+  position: relative;
+  font-size: large;
+  left: 10px;
 }
 
