@@ -29,6 +29,13 @@
   background-repeat: repeat;
   background-attachment: local;
 }
+.worldbuilding .stickyHeader {
+  position: -webkit-sticky;
+  position: sticky;
+  top: 0;
+  background: url("../images/parchment6.jpg");
+  z-index: +2;
+}
 .worldbuilding .sheet-header {
   height: 180px;
   overflow: hidden;
@@ -191,6 +198,7 @@
   border-right: groove;
 }
 .worldbuilding .core-sidebar2 {
+  text-align: center;
   width: 80%;
   float: right;
   font-size: 15px;
@@ -272,6 +280,17 @@
   padding: 0;
   width: 100%;
   float: left;
+}
+.worldbuilding .item-list .item-img {
+  position: relative;
+  right: 80px;
+}
+.worldbuilding .item-list .item-name {
+  position: relative;
+  right: 75px;
+}
+.worldbuilding .item-resource {
+  text-align: center;
 }
 .worldbuilding .skills-list {
   list-style: none;
@@ -415,7 +434,7 @@
   font-weight: bold;
 }
 .worldbuilding .item-img:hover {
-  zoom: 1.1;
+  zoom: 1.05;
 }
 .worldbuilding .ability-list .item-controls {
   flex: 0 0 36px;
@@ -591,45 +610,17 @@
   font-size: large;
   left: 10px;
 }
-.worldbuilding .equipmentHeader {
-  font-family: "cyrodiil";
-  src: url(../fonts/cyrodiil/cyrodiil.ttf);
-  text-align: center;
-  font-size: large;
-  margin: 7px 0;
-  padding: 0;
-  width: 100%;
-  float: left;
-}
-.worldbuilding .itemHeaderQTY {
-  width: 14%;
-}
-.worldbuilding .item-resource {
-  text-align: center;
-}
-.worldbuilding .field-inputs {
-  text-align: center;
-  font-size: small;
-}
 .worldbuilding .field-inputs-small {
   text-align: center;
   font-size: small;
   font-weight: bold;
 }
+.worldbuilding .field-inputs {
+  text-align: center;
+}
 .worldbuilding .tall-input {
   text-align: center;
   line-height: 140%;
-}
-.worldbuilding .enc-color-red {
-  background-color: red;
-  color: white;
-}
-.worldbuilding .enc-color-orange {
-  background-color: orange;
-  color: white;
-}
-.worldbuilding .enc-color-none {
-  background-color: none;
 }
 .worldbuilding .characteristic-roll {
   font-family: "cyrodiil";
