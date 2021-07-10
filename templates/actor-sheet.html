@@ -147,7 +147,26 @@
                 </tr>
             </table>
             <ol class="ability-list">
-                {{#each actor.data.skill as |item id|}}
+                {{#each actor.data.skill.skill as |item id|}}
+                    <li class="item flexrow" data-item-id="{{item._id}}">
+                        <a class="skill-roll" data-roll="{{item.data.value}}"><i class="fas fa-dice-d20"></i></a>
+                        <img class="item-img" src="{{item.img}}" title="Send to Chat" width="24" height="24"/>
+                        <h4 class="item-name">{{item.name}}</h4>
+                        <h4 class="item-cat">{{item.data.value}}%</h4>
+                        <div class="item-controls">
+                            <a class="item-control item-delete" title="Delete Item"><i class="fas fa-trash"></i></a>
+                        </div>
+                    </li>
+                {{/each}}
+            </ol>
+            <table class="itemHeader">
+                <tr>
+                    <td><input type="button" class="power-create" id="skill" value="+"></td>
+                    <td class="talentsLabel">Languages</td>
+                </tr>
+            </table>
+            <ol class="ability-list">
+                {{#each actor.data.skill.language as |item id|}}
                     <li class="item flexrow" data-item-id="{{item._id}}">
                         <a class="skill-roll" data-roll="{{item.data.value}}"><i class="fas fa-dice-d20"></i></a>
                         <img class="item-img" src="{{item.img}}" title="Send to Chat" width="24" height="24"/>
@@ -190,7 +209,7 @@
                     <table class="combatHeader">
                         <tr>
                             <td><input type="button" class="combat-create" id="combatStyle" value="+"></td>
-                            <td>Combat Styles</td>
+                            <td class="combatLabel">Combat Styles</td>
                         </tr>
                     </table>
                 <ol class="combat-list">
@@ -209,7 +228,7 @@
                     <table class="combatHeader">
                         <tr>
                             <td><input type="button" class="weapon-create" id="weapon" value="+"></td>
-                            <td>Weapons</td>
+                            <td class="combatLabel">Weapons</td>
                         </tr>
                     </table>
                 <ol class="combat-list">
@@ -228,7 +247,7 @@
                     <table class="combatHeader">
                         <tr>
                             <td><input type="button" class="ammo-create" id="ammunition" value="+"></td>
-                            <td>Ammunition</td>
+                            <td class="combatLabel">Ammunition</td>
                         </tr>
                     </table>
                 <ol class="combat-list">
@@ -254,7 +273,7 @@
                     <table class="combatHeader">
                         <tr>
                             <td><input type="button" class="armor-create" id="armor" value="+"></td>
-                            <td>{{equipped}} Armor</td>
+                            <td class="combatLabel">{{equipped}} Armor</td>
                         </tr>
                     </table>
                 </div>
@@ -375,7 +394,7 @@
                 <div>
                     <table class="itemHeader">
                         <tr>
-                            <td title="Drag Spells from Compendium">{{school}} spells</th>
+                            <td class="talentsLabel" title="Drag Spells from Compendium">{{school}} spells</th>
                         </tr>
                     </table>
                 </div>
@@ -422,13 +441,13 @@
                     <td><input type="text" name="data.resistance.sunlightR" value="{{data.resistance.sunlightR}}" data-dtype="Number" disabled></td>
                 </tr>
             </table>
-                <table class="itemHeader">
-                    <tr>
-                        <td><input type="button" class="trait-create" id="trait" value="+"></td>
-                        <td class="talentsLabel">Traits</td>
-                    </tr>
-                </table>
-                <ol class="ability-list">
+            <table class="itemHeader">
+                <tr>
+                    <td><input type="button" class="trait-create" id="trait" value="+"></td>
+                    <td class="talentsLabel">Traits</td>
+                </tr>
+            </table>
+                <ol class="talents-list">
                     {{#each actor.data.trait as |item id|}}
                         <li class="item flexrow" data-item-id="{{item._id}}">
                             <img class="item-img" src="{{item.img}}" title="Send to Chat" width="24" height="24"/>
@@ -445,7 +464,7 @@
                             <td class="talentsLabel">Powers</td>
                         </tr>
                     </table>
-                    <ol class="ability-list">
+                    <ol class="talents-list">
                         {{#each actor.data.power as |item id|}}
                             <li class="item flexrow" data-item-id="{{item._id}}">
                                 <img class="item-img" src="{{item.img}}" title="Send to Chat" width="24" height="24"/>
@@ -462,7 +481,7 @@
                                 <td class="talentsLabel">Talents</td>
                             </tr>
                         </table>
-                        <ol class="ability-list">
+                        <ol class="talents-list">
                             {{#each actor.data.talent as |item id|}}
                                 <li class="item flexrow" data-item-id="{{item._id}}">
                                     <img class="item-img" src="{{item.img}}" title="Send to Chat" width="24" height="24"/>
@@ -482,7 +501,25 @@
         {{!-- Journal Tab --}}
         <div class="tab journal" data-group="primary" data-tab="journal">
             <div>
-            {{editor content=data.notes target="data.notes" button=true owner=owner editable=this.options.editable}}
+                <table class="itemHeader">
+                    <tr>
+                        <td class="talentsLabel">Journal</td>
+                    </tr>
+                </table>
+                <ol class="ability-list">
+                    {{#each actor.data.journalEntry as |item id|}}
+                        <li class="item flexrow" data-item-id="{{item._id}}">
+                            <img class="item-img" src="{{item.img}}" title="Send to Chat" width="24" height="24"/>
+                            <h4 class="item-name">{{item.name}}</h4>
+                            <div class="item-controls">
+                                <a class="item-control item-delete" title="Delete Item"><i class="fas fa-trash"></i></a>
+                            </div>
+                        </li>
+                    {{/each}}
+                </ol>
+            </div>
+            <div>
+                {{editor content=data.notes target="data.notes" button=true owner=owner editable=this.options.editable}}
             </div>
         </div>
 
@@ -515,7 +552,7 @@
                 <table>
                     <tr>
                         <th><input type="button" class="gear-create" id="item" value="+"></th>
-                        <th colspan="3">EQUIPMENT</th>
+                        <th colspan="3">Inventory List</th>
                     </tr>
                     <tr>
                         <td class="itemHeaderQTY">QTY</td>
