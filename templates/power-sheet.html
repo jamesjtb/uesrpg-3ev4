@@ -70,8 +70,8 @@
                 <tr>
                     <th>Form Shift Selection</th>
                     <td><select name="data.shiftFormStyle" data-type="String">
-                        {{#select item.data.shiftFormStyle}}
-                        {{#each item.data.shiftStyles as |shiftStyles key|}}
+                        {{#select data.shiftFormStyle}}
+                        {{#each data.shiftStyles as |shiftStyles key|}}
                         <option value="{{key}}">{{shiftStyles}}</option> 
                         {{/each}} {{/select}}
                     </select></td>
