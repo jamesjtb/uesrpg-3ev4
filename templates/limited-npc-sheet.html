@@ -1,33 +1,34 @@
 <form class="{{cssClass}}" autocomplete="off">
 
     {{!-- Sheet Header --}}
+    <div class="stickyHeader">
     <header class="sheet-header">
         <img class="profile-img" src="{{actor.img}}" data-edit="img" title="{{actor.name}}" height="100" width="100"/>
         <div class="header-fields">
             <h1 class="charname"><input name="name" type="text" value="{{actor.name}}" placeholder="Name"/></h1>
             <div class="resources">
                 <label class="resource-label">Health</label><p>
-                <input class="resource-hp" type="text" name="data.hp.value" value="{{data.hp.value}}" data-dtype="Number"/>
+                <input class="resource-hp" type="number" name="data.hp.value" value="{{data.hp.value}}" />
                 <span>-</span>
-                <input class="resource-hp-max" type="text" name="data.hp.max" value="{{data.hp.max}}" data-dtype="Number"/>
+                <input class="resource-hp-max" type="number" name="data.hp.max" value="{{data.hp.max}}" />
             </div>
             <div class="resources">
                 <label class="resource-label">Magicka</label><p>
-                <input class="resource-mp" type="text" name="data.magicka.value" value="{{data.magicka.value}}" data-dtype="Number"/>
+                <input class="resource-mp" type="number" name="data.magicka.value" value="{{data.magicka.value}}" />
                 <span>-</span>
-                <input class="resource-mp-max" type="text" name="data.magicka.max" value="{{data.magicka.max}}" data-dtype="Number"/>
+                <input class="resource-mp-max" type="number" name="data.magicka.max" value="{{data.magicka.max}}" />
             </div>
             <div class="resources">
                 <label class="resource-label">Stamina</label><p>
-                <input class="resource-sp" name="data.stamina.value" value="{{data.stamina.value}}" data-dtype="Number"/>
+                <input class="resource-sp" type="number" name="data.stamina.value" value="{{data.stamina.value}}" />
                 <span>-</span>
-                <input class="resource-sp-max" name="data.stamina.max" value="{{data.stamina.max}}" data-dtype="Number"/>
+                <input class="resource-sp-max" type="number" name="data.stamina.max" value="{{data.stamina.max}}" />
             </div>
             <div class="resources">
                 <label class="resource-label">Luck</label><p>
-                <input class="resource-lp" name="data.luck.value" value="{{data.luck.value}}" data-dtype="Number"/>
+                <input class="resource-lp" type="number" name="data.luck.value" value="{{data.luck.value}}" />
                 <span>-</span>
-                <input class="resource-lp-max" name="data.luck.max" value="{{data.luck.max}}" data-dtype="Number"/>
+                <input class="resource-lp-max" type="number" name="data.luck.max" value="{{data.luck.max}}" />
             </div>
         </div>
     </header>
@@ -36,9 +37,10 @@
     <nav class="sheet-tabs2 tabs" data-group="primary">
         <a class="item" data-tab="desc">Biography</a>
     </nav>
+    </div>
 
     {{!-- Sheet Body --}}
-    <section class="sheet-body">
+    <section class="sheet-body-items">
 
         {{!-- Bio Tab --}}
         <div class="tab desc" data-group="primary" data-tab="desc">
