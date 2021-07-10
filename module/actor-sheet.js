@@ -62,7 +62,10 @@
         necromancy: [],
         restoration: []
       };
-      const skill = [];
+      const skill = {
+        skill: [],
+        language: []
+      };
       const magicSkill = [];
       const ammunition = [];
 
@@ -111,7 +114,11 @@
         }
         //Append to skill
         else if (i.type === 'skill') {
-          skill.push(i);
+          if (i.name.includes("Language")) {
+            skill.language.push(i);
+          } else {
+            skill.skill.push(i);
+          }
         }
         //Append to magicSkill
         else if (i.type === 'magicSkill') {
@@ -154,6 +161,10 @@
     html.find(".armor-roll").click(await this._onArmorRoll.bind(this));
     html.find(".ammo-roll").click(await this._onAmmoRoll.bind(this));
     html.find(".ability-list .item-img").click(await this._onTalentRoll.bind(this));
+    html.find(".talents-list .item-img").click(await this._onTalentRoll.bind(this));
+    html.find(".spell-list .item-img").click(await this._onTalentRoll.bind(this));
+    html.find(".combat-list .item-img").click(await this._onTalentRoll.bind(this));
+    html.find(".item-list .item-img").click(await this._onTalentRoll.bind(this));
 
     //Update Item Attributes from Actor Sheet
     html.find(".toggle2H").click(await this._onToggle2H.bind(this));
