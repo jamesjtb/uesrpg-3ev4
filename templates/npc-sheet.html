@@ -1,33 +1,34 @@
 <form class="{{cssClass}}" autocomplete="off">
 
     {{!-- Sheet Header --}}
+    <div class="stickyHeader">
     <header class="sheet-header">
         <img class="profile-img" src="{{actor.img}}" data-edit="img" title="{{actor.name}}" height="100" width="100"/>
         <div class="header-fields">
             <h1 class="charname"><input name="name" type="text" value="{{actor.name}}" placeholder="Name"/></h1>
             <div class="resources">
                 <label class="resource-label">Health</label><p>
-                <input class="resource-hp" type="text" name="data.hp.value" value="{{data.hp.value}}" />
+                <input class="resource-hp" type="number" name="data.hp.value" value="{{data.hp.value}}" />
                 <span>-</span>
-                <input class="resource-hp-max" type="text" name="data.hp.max" value="{{data.hp.max}}" />
+                <input class="resource-hp-max" type="number" name="data.hp.max" value="{{data.hp.max}}" />
             </div>
             <div class="resources">
                 <label class="resource-label">Magicka</label><p>
-                <input class="resource-mp" type="text" name="data.magicka.value" value="{{data.magicka.value}}" />
+                <input class="resource-mp" type="number" name="data.magicka.value" value="{{data.magicka.value}}" />
                 <span>-</span>
-                <input class="resource-mp-max" type="text" name="data.magicka.max" value="{{data.magicka.max}}" />
+                <input class="resource-mp-max" type="number" name="data.magicka.max" value="{{data.magicka.max}}" />
             </div>
             <div class="resources">
                 <label class="resource-label">Stamina</label><p>
-                <input class="resource-sp" name="data.stamina.value" value="{{data.stamina.value}}" />
+                <input class="resource-sp" type="number" name="data.stamina.value" value="{{data.stamina.value}}" />
                 <span>-</span>
-                <input class="resource-sp-max" name="data.stamina.max" value="{{data.stamina.max}}" />
+                <input class="resource-sp-max" type="number" name="data.stamina.max" value="{{data.stamina.max}}" />
             </div>
             <div class="resources">
                 <label class="resource-label">Luck Points</label><p>
-                <input class="resource-lp" name="data.luck_points.value" value="{{data.luck_points.value}}" />
+                <input class="resource-lp" type="number" name="data.luck_points.value" value="{{data.luck_points.value}}" />
                 <span>-</span>
-                <input class="resource-lp-max" name="data.luck_points.max" value="{{data.luck_points.max}}" />
+                <input class="resource-lp-max" type="number" name="data.luck_points.max" value="{{data.luck_points.max}}" />
             </div>
         </div>
     </header>
@@ -41,6 +42,7 @@
         <a class="item" data-tab="talents">Abilities</a>
         <a class="item" data-tab="items">Equipment</a>
     </nav>
+    </div>
 
     {{!-- Sheet Body --}}
     <section class="sheet-body">
@@ -60,14 +62,14 @@
                     <th><input type="button" class="characteristic-roll" name="LCK" id="lck" value="LCK"></th>
                 </tr>
                 <tr>
-                    <td><input name="data.characteristics.str.value" type="text" value="{{data.characteristics.str.value}}" ></td>
-                    <td><input name="data.characteristics.end.value" type="text" value="{{data.characteristics.end.value}}" ></td>
-                    <td><input name="data.characteristics.agi.value" type="text" value="{{data.characteristics.agi.value}}" ></td>
-                    <td><input name="data.characteristics.int.value" type="text" value="{{data.characteristics.int.value}}" ></td>
-                    <td><input name="data.characteristics.wp.value" type="text" value="{{data.characteristics.wp.value}}" ></td>
-                    <td><input name="data.characteristics.prc.value" type="text" value="{{data.characteristics.prc.value}}" ></td>
-                    <td><input name="data.characteristics.prs.value" type="text" value="{{data.characteristics.prs.value}}" ></td>
-                    <td><input name="data.characteristics.lck.value" type="text" value="{{data.characteristics.lck.value}}" ></td>
+                    <td><input name="data.characteristics.str.value" type="number" value="{{data.characteristics.str.value}}" ></td>
+                    <td><input name="data.characteristics.end.value" type="number" value="{{data.characteristics.end.value}}" ></td>
+                    <td><input name="data.characteristics.agi.value" type="number" value="{{data.characteristics.agi.value}}" ></td>
+                    <td><input name="data.characteristics.int.value" type="number" value="{{data.characteristics.int.value}}" ></td>
+                    <td><input name="data.characteristics.wp.value" type="number" value="{{data.characteristics.wp.value}}" ></td>
+                    <td><input name="data.characteristics.prc.value" type="number" value="{{data.characteristics.prc.value}}" ></td>
+                    <td><input name="data.characteristics.prs.value" type="number" value="{{data.characteristics.prs.value}}" ></td>
+                    <td><input name="data.characteristics.lck.value" type="number" value="{{data.characteristics.lck.value}}" ></td>
                 </tr>
                 <tr>
                     <td><input type="checkbox" name="data.characteristics.str.favored" {{checked data.characteristics.str.favored}}></td>
@@ -97,8 +99,8 @@
                             <option value="{{key}}">{{threatCategory}}</option> 
                             {{/each}} {{/select}}
                         </select></td> 
-                        <td><input type="text" name="data.age" value="{{data.age}}" ></td>
-                        <td><input type="text" name="data.soul_energy" value="{{data.soul_energy}}" ></td>
+                        <td><input type="number" name="data.age" value="{{data.age}}" ></td>
+                        <td><input type="number" name="data.soul_energy" value="{{data.soul_energy}}" ></td>
                     </tr>
                 </table>
                 <table>
@@ -113,14 +115,14 @@
                         <th><input type="button" class="professions-roll" name="Physical" id="physical" value="Physical"></th>
                     </tr>
                     <tr class="field-inputs">
-                        <td><input type="text" name="data.professions.combat" value="{{data.professions.combat}}" ></td>
-                        <td><input type="text" name="data.professions.magic" value="{{data.professions.magic}}" ></td>
-                        <td><input type="text" name="data.professions.evade" value="{{data.professions.evade}}" ></td>
-                        <td><input type="text" name="data.professions.observe" value="{{data.professions.observe}}" ></td>
-                        <td><input type="text" name="data.professions.stealth" value="{{data.professions.stealth}}" ></td>
-                        <td><input type="text" name="data.professions.knowledge" value="{{data.professions.knowledge}}" ></td>
-                        <td><input type="text" name="data.professions.social" value="{{data.professions.social}}" ></td>
-                        <td><input type="text" name="data.professions.physical" value="{{data.professions.physical}}" ></td>
+                        <td><input type="number" name="data.professions.combat" value="{{data.professions.combat}}" ></td>
+                        <td><input type="number" name="data.professions.magic" value="{{data.professions.magic}}" ></td>
+                        <td><input type="number" name="data.professions.evade" value="{{data.professions.evade}}" ></td>
+                        <td><input type="number" name="data.professions.observe" value="{{data.professions.observe}}" ></td>
+                        <td><input type="number" name="data.professions.stealth" value="{{data.professions.stealth}}" ></td>
+                        <td><input type="number" name="data.professions.knowledge" value="{{data.professions.knowledge}}" ></td>
+                        <td><input type="number" name="data.professions.social" value="{{data.professions.social}}" ></td>
+                        <td><input type="number" name="data.professions.physical" value="{{data.professions.physical}}" ></td>
                     </tr>
                 </table>
             </div>
@@ -133,17 +135,17 @@
                 <tr class="field-inputs-small">
                     <td><input type="button" class="unconventional-roll" name="{{data.skills.profession1.name}}" id="profession1" value="Roll"></td>
                     <td><input type="text" name="data.skills.profession1.name" value="{{data.skills.profession1.name}}" ></td>
-                    <td><input type="text" name="data.skills.profession1.bonus" value="{{data.skills.profession1.bonus}}" ></td>
+                    <td><input type="number" name="data.skills.profession1.bonus" value="{{data.skills.profession1.bonus}}" ></td>
                 </tr>
                 <tr class="field-inputs-small">
                     <td><input type="button" class="unconventional-roll" name="{{data.skills.profession2.name}}" id="profession2" value="Roll"></td>
                     <td><input type="text" name="data.skills.profession2.name" value="{{data.skills.profession2.name}}" ></td>
-                    <td><input type="text" name="data.skills.profession2.bonus" value="{{data.skills.profession2.bonus}}" ></td>
+                    <td><input type="number" name="data.skills.profession2.bonus" value="{{data.skills.profession2.bonus}}" ></td>
                 </tr>
                 <tr class="field-inputs-small">
                     <td><input type="button" class="unconventional-roll" name="{{data.skills.profession3.name}}" id="profession3" value="Roll"></td>
                     <td><input type="text" name="data.skills.profession3.name" value="{{data.skills.profession3.name}}" ></td>
-                    <td><input type="text" name="data.skills.profession3.bonus" value="{{data.skills.profession3.bonus}}" ></td>
+                    <td><input type="number" name="data.skills.profession3.bonus" value="{{data.skills.profession3.bonus}}" ></td>
                 </tr>
             </table>
         </div>
@@ -279,8 +281,8 @@
             <table>
                 <tr class="ap-inputs">
                     <th>Action Points</th>
-                    <td><input type="text" name="data.action_points.value" value="{{data.action_points.value}}" ></td>
-                    <td><input type="text" name="data.action_points.max" value="{{data.action_points.max}}" ></td>
+                    <td><input type="number" name="data.action_points.value" value="{{data.action_points.value}}" ></td>
+                    <td><input type="number" name="data.action_points.max" value="{{data.action_points.max}}" ></td>
                 </tr>
             </table>
             <table>
@@ -290,9 +292,9 @@
                     <th>Initiative</th>
                 </tr>
                 <tr class="ap-inputs">
-                    <td><input type="text" name="data.wound_threshold.value" value="{{data.wound_threshold.value}}" disabled></td>
-                    <td title= "Swim: {{data.speed.swimSpeed}} Fly: {{data.speed.flySpeed}}"><input type="text" name="data.speed.value" value="{{data.speed.value}}"  disabled></td>
-                    <td><input type="text" name="data.initiative.value" value="{{data.initiative.value}}" disabled></td>
+                    <td><input type="number" name="data.wound_threshold.value" value="{{data.wound_threshold.value}}" disabled></td>
+                    <td title= "Swim: {{data.speed.swimSpeed}} Fly: {{data.speed.flySpeed}}"><input type="number" name="data.speed.value" value="{{data.speed.value}}"  disabled></td>
+                    <td><input type="number" name="data.initiative.value" value="{{data.initiative.value}}" disabled></td>
                 </tr>
             </table>
             <table class="field-inputs-small">
@@ -301,39 +303,39 @@
                 </tr>
                 <tr>
                     <th><input type="button" class="resistance-roll" name="Disease" id="diseaseR" value="Disease %"></th>
-                    <td><input type="text" name="data.resistance.diseaseR" value="{{data.resistance.diseaseR}}"  disabled></td>
+                    <td><input type="number" name="data.resistance.diseaseR" value="{{data.resistance.diseaseR}}"  disabled></td>
                 </tr>
                 <tr>
                     <th>Fire</th>
-                    <td><input type="text" name="data.resistance.fireR" value="{{data.resistance.fireR}}"  disabled></td>
+                    <td><input type="number" name="data.resistance.fireR" value="{{data.resistance.fireR}}"  disabled></td>
                 </tr>
                 <tr>
                     <th>Frost</th>
-                    <td><input type="text" name="data.resistance.frostR" value="{{data.resistance.frostR}}"  disabled></td>
+                    <td><input type="number" name="data.resistance.frostR" value="{{data.resistance.frostR}}"  disabled></td>
                 </tr>
                 <tr>
                     <th>Shock</th>
-                    <td><input type="text" name="data.resistance.shockR" value="{{data.resistance.shockR}}"  disabled></td>
+                    <td><input type="number" name="data.resistance.shockR" value="{{data.resistance.shockR}}"  disabled></td>
                 </tr>
                 <tr>
                     <th>Poison</th>
-                    <td><input type="text" name="data.resistance.poisonR" value="{{data.resistance.poisonR}}"  disabled></td>
+                    <td><input type="number" name="data.resistance.poisonR" value="{{data.resistance.poisonR}}"  disabled></td>
                 </tr>
                 <tr>
                     <th>Magic</th>
-                    <td><input type="text" name="data.resistance.magicR" value="{{data.resistance.magicR}}"  disabled></td>
+                    <td><input type="number" name="data.resistance.magicR" value="{{data.resistance.magicR}}"  disabled></td>
                 </tr>
                 <tr>
                     <th>Toughness</th>
-                    <td><input type="text" name="data.resistance.natToughness" value="{{data.resistance.natToughness}}"  disabled></td>
+                    <td><input type="number" name="data.resistance.natToughness" value="{{data.resistance.natToughness}}"  disabled></td>
                 </tr>
                 <tr>
                     <th>Silver</th>
-                    <td><input type="text" name="data.resistance.silverR" value="{{data.resistance.silverR}}"  disabled></td>
+                    <td><input type="number" name="data.resistance.silverR" value="{{data.resistance.silverR}}"  disabled></td>
                 </tr>
                 <tr>
                     <th>Sunlight</th>
-                    <td><input type="text" name="data.resistance.sunlightR" value="{{data.resistance.sunlightR}}"  disabled></td>
+                    <td><input type="number" name="data.resistance.sunlightR" value="{{data.resistance.sunlightR}}"  disabled></td>
                 </tr>
                 <tr title="Check to toggle wounded penalties to initiative and skill rolls">
                     <th>Wounded</th>
@@ -398,15 +400,15 @@
                         <th>Sunlight</th>
                     </tr>
                     <tr>
-                        <td><input type="text" name="data.resistance.diseaseR" value="{{data.resistance.diseaseR}}"  disabled></td>
-                        <td><input type="text" name="data.resistance.fireR" value="{{data.resistance.fireR}}"  disabled></td>
-                        <td><input type="text" name="data.resistance.frostR" value="{{data.resistance.frostR}}"  disabled></td>
-                        <td><input type="text" name="data.resistance.shockR" value="{{data.resistance.shockR}}"  disabled></td>
-                        <td><input type="text" name="data.resistance.poisonR" value="{{data.resistance.poisonR}}"  disabled></td>
-                        <td><input type="text" name="data.resistance.magicR" value="{{data.resistance.magicR}}"  disabled></td>
-                        <td><input type="text" name="data.resistance.natToughness" value="{{data.resistance.natToughness}}"  disabled></td>
-                        <td><input type="text" name="data.resistance.silverR" value="{{data.resistance.silverR}}"  disabled></td>
-                        <td><input type="text" name="data.resistance.sunlightR" value="{{data.resistance.sunlightR}}"  disabled></td>
+                        <td><input type="number" name="data.resistance.diseaseR" value="{{data.resistance.diseaseR}}"  disabled></td>
+                        <td><input type="number" name="data.resistance.fireR" value="{{data.resistance.fireR}}"  disabled></td>
+                        <td><input type="number" name="data.resistance.frostR" value="{{data.resistance.frostR}}"  disabled></td>
+                        <td><input type="number" name="data.resistance.shockR" value="{{data.resistance.shockR}}"  disabled></td>
+                        <td><input type="number" name="data.resistance.poisonR" value="{{data.resistance.poisonR}}"  disabled></td>
+                        <td><input type="number" name="data.resistance.magicR" value="{{data.resistance.magicR}}"  disabled></td>
+                        <td><input type="number" name="data.resistance.natToughness" value="{{data.resistance.natToughness}}"  disabled></td>
+                        <td><input type="number" name="data.resistance.silverR" value="{{data.resistance.silverR}}"  disabled></td>
+                        <td><input type="number" name="data.resistance.sunlightR" value="{{data.resistance.sunlightR}}"  disabled></td>
                     </tr>
                 </table>
                 <table class="itemHeader">
@@ -479,16 +481,16 @@
                         <th>Current ENC</th>
                     </tr>
                     <tr>
-                        <td><input type="text" name="data.wealth" value="{{data.wealth}}" ></td>
+                        <td><input type="number" name="data.wealth" value="{{data.wealth}}" ></td>
                         <td><select name="data.supply" >
                             {{#select actor.data.supply}}
                             {{#each actor.data.supply_cat as |supply_cat key|}}
                             <option value="{{key}}">{{supply_cat}}</option>
                             {{/each}} {{/select}}
                         </select></td>
-                        <td><input type="text" name="data.carry_rating.bonus" value="{{data.carry_rating.bonus}}" ></td>
-                        <td><input type="text" name="data.carry_rating.max" value="{{data.carry_rating.max}}"  disabled></td>
-                        <td><input class="enc-color-green" type="text" name="data.current_enc" value="{{data.current_enc}}"  disabled></td>
+                        <td><input type="number" name="data.carry_rating.bonus" value="{{data.carry_rating.bonus}}" ></td>
+                        <td><input type="number" name="data.carry_rating.max" value="{{data.carry_rating.max}}"  disabled></td>
+                        <td><input class="enc-color-green" type="number" name="data.current_enc" value="{{data.current_enc}}"  disabled></td>
                     </tr>
                 </table>
             </div>
@@ -504,8 +506,8 @@
                 {{#each actor.data.gear as |item id|}}
                     <li class="item flexrow" data-item-id="{{item._id}}">
                         <div class="item-list-resource">
-                        <input name="data.quantity" type="text" value="{{data.quantity}}" title="QTY" disabled>
-                        <input type="text" name="data.enc" value="{{data.enc}}" title="ENC" disabled>
+                        <input name="data.quantity" type="number" value="{{data.quantity}}" title="QTY" disabled>
+                        <input type="number" name="data.enc" value="{{data.enc}}" title="ENC" disabled>
                         </div>
                         <img class="item-img" src="{{item.img}}" title="{{item.name}}" width="24" height="24"/>
                         <h4 class="item-name">{{item.name}}</h4>
