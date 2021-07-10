@@ -147,98 +147,98 @@ export class SimpleActor extends Actor {
 
     //Form Shift Calcs
     if (this._wereWolfForm(actorData) === true) {
-      actorData.data.resistance.silverR = actorData.data.resistance.silverR - 5;
-      actorData.data.resistance.diseaseR = actorData.data.resistance.diseaseR + 200;
-      actorData.data.hp.max = actorData.data.hp.max + 5;
-      actorData.data.stamina.max = actorData.data.stamina.max + 1;
-      actorData.data.speed.base = data.speed.base + 9;
+      data.resistance.silverR = data.resistance.silverR - 5;
+      data.resistance.diseaseR = data.resistance.diseaseR + 200;
+      data.hp.max = data.hp.max + 5;
+      data.stamina.max = data.stamina.max + 1;
+      data.speed.base = data.speed.base + 9;
       data.speed.value = this._speedCalc(actorData);
       data.speed.swimSpeed = (data.speed.value/2).toFixed(0);
-      actorData.data.resistance.natToughness = 5;
-      actorData.data.wound_threshold.base = actorData.data.wound_threshold.base + 5;
-      actorData.data.action_points.max = actorData.data.action_points.max - 1;
-      actorData.data.skills.survival.tn = actorData.data.skills.survival.tn + 30;
-      actorData.data.skills.navigate.tn = actorData.data.skills.navigate.tn + 30;
-      actorData.data.skills.observe.tn = actorData.data.skills.observe.tn + 30;
+      data.resistance.natToughness = 5;
+      data.wound_threshold.value = data.wound_threshold.value + 5;
+      data.action_points.max = data.action_points.max - 1;
+      data.skills.survival.tn = data.skills.survival.tn + 30;
+      data.skills.navigate.tn = data.skills.navigate.tn + 30;
+      data.skills.observe.tn = data.skills.observe.tn + 30;
     } else if (this._wereBatForm(actorData) === true) {
-        actorData.data.resistance.silverR = actorData.data.resistance.silverR - 5;
-        actorData.data.resistance.diseaseR = actorData.data.resistance.diseaseR + 200;
-        actorData.data.hp.max = actorData.data.hp.max + 5;
-        actorData.data.stamina.max = actorData.data.stamina.max + 1;
-        actorData.data.speed.value = (this._speedCalc(actorData)/2).toFixed(0);
-        actorData.data.speed.flySpeed = actorData.data.speed.base + 9;
+        data.resistance.silverR = data.resistance.silverR - 5;
+        data.resistance.diseaseR = data.resistance.diseaseR + 200;
+        data.hp.max = data.hp.max + 5;
+        data.stamina.max = data.stamina.max + 1;
+        data.speed.value = (this._speedCalc(actorData)/2).toFixed(0);
+        data.speed.flySpeed = data.speed.base + 9;
         data.speed.swimSpeed = (data.speed.value/2).toFixed(0);
-        actorData.data.resistance.natToughness = 5;
-        actorData.data.wound_threshold.base = actorData.data.wound_threshold.base + 3;
-        actorData.data.action_points.max = actorData.data.action_points.max - 1;
-        actorData.data.skills.survival.tn = actorData.data.skills.survival.tn + 30;
-        actorData.data.skills.navigate.tn = actorData.data.skills.navigate.tn + 30;
-        actorData.data.skills.observe.tn = actorData.data.skills.observe.tn + 30;
+        data.resistance.natToughness = 5;
+        data.wound_threshold.value = data.wound_threshold.value + 3;
+        data.action_points.max = data.action_points.max - 1;
+        data.skills.survival.tn = data.skills.survival.tn + 30;
+        data.skills.navigate.tn = data.skills.navigate.tn + 30;
+        data.skills.observe.tn = data.skills.observe.tn + 30;
     } else if (this._wereBoarForm(actorData) === true) {
-        actorData.data.resistance.silverR = actorData.data.resistance.silverR - 5;
-        actorData.data.resistance.diseaseR = actorData.data.resistance.diseaseR + 200;
-        actorData.data.hp.max = actorData.data.hp.max + 5;
-        actorData.data.speed.base = data.speed.base + 9;
+        data.resistance.silverR = data.resistance.silverR - 5;
+        data.resistance.diseaseR = data.resistance.diseaseR + 200;
+        data.hp.max = data.hp.max + 5;
+        data.speed.base = data.speed.base + 9;
       data.speed.value = this._speedCalc(actorData);
         data.speed.swimSpeed = (data.speed.value/2).toFixed(0);
-        actorData.data.resistance.natToughness = 7;
-        actorData.data.wound_threshold.base = actorData.data.wound_threshold.base + 5;
-        actorData.data.action_points.max = actorData.data.action_points.max - 1;
-        actorData.data.skills.survival.tn = actorData.data.skills.survival.tn + 30;
-        actorData.data.skills.navigate.tn = actorData.data.skills.navigate.tn + 30;
-        actorData.data.skills.observe.tn = actorData.data.skills.observe.tn + 30;
+        data.resistance.natToughness = 7;
+        data.wound_threshold.value = data.wound_threshold.value + 5;
+        data.action_points.max = data.action_points.max - 1;
+        data.skills.survival.tn = data.skills.survival.tn + 30;
+        data.skills.navigate.tn = data.skills.navigate.tn + 30;
+        data.skills.observe.tn = data.skills.observe.tn + 30;
     } else if (this._wereBearForm(actorData) === true) {
-        actorData.data.resistance.silverR = actorData.data.resistance.silverR - 5;
-        actorData.data.resistance.diseaseR = actorData.data.resistance.diseaseR + 200;
-        actorData.data.hp.max = actorData.data.hp.max + 10;
-        actorData.data.stamina.max = actorData.data.stamina.max + 1;
-        actorData.data.speed.base = data.speed.base + 5;
+        data.resistance.silverR = data.resistance.silverR - 5;
+        data.resistance.diseaseR = data.resistance.diseaseR + 200;
+        data.hp.max = data.hp.max + 10;
+        data.stamina.max = data.stamina.max + 1;
+        data.speed.base = data.speed.base + 5;
         data.speed.value = this._speedCalc(actorData);
         data.speed.swimSpeed = (data.speed.value/2).toFixed(0);
-        actorData.data.resistance.natToughness = 5;
-        actorData.data.wound_threshold.base = actorData.data.wound_threshold.base + 5;
-        actorData.data.action_points.max = actorData.data.action_points.max - 1;
-        actorData.data.skills.survival.tn = actorData.data.skills.survival.tn + 30;
-        actorData.data.skills.navigate.tn = actorData.data.skills.navigate.tn + 30;
-        actorData.data.skills.observe.tn = actorData.data.skills.observe.tn + 30;
+        data.resistance.natToughness = 5;
+        data.wound_threshold.value = data.wound_threshold.value + 5;
+        data.action_points.max = data.action_points.max - 1;
+        data.skills.survival.tn = data.skills.survival.tn + 30;
+        data.skills.navigate.tn = data.skills.navigate.tn + 30;
+        data.skills.observe.tn = data.skills.observe.tn + 30;
     } else if (this._wereCrocodileForm(actorData) === true) {
-        actorData.data.resistance.silverR = actorData.data.resistance.silverR - 5;
-        actorData.data.resistance.diseaseR = actorData.data.resistance.diseaseR + 200;
-        actorData.data.hp.max = actorData.data.hp.max + 5;
-        actorData.data.stamina.max = actorData.data.stamina.max + 1;
-        actorData.data.speed.value = (this._addHalfSpeed(actorData)).toFixed(0);
-        actorData.data.speed.swimSpeed = parseFloat(this._speedCalc(actorData)) + 9;
-        actorData.data.resistance.natToughness = 5;
-        actorData.data.wound_threshold.base = actorData.data.wound_threshold.base + 5;
-        actorData.data.action_points.max = actorData.data.action_points.max - 1;
-        actorData.data.skills.survival.tn = actorData.data.skills.survival.tn + 30;
-        actorData.data.skills.navigate.tn = actorData.data.skills.navigate.tn + 30;
-        actorData.data.skills.observe.tn = actorData.data.skills.observe.tn + 30;
+        data.resistance.silverR = data.resistance.silverR - 5;
+        data.resistance.diseaseR = data.resistance.diseaseR + 200;
+        data.hp.max = data.hp.max + 5;
+        data.stamina.max = data.stamina.max + 1;
+        data.speed.value = (this._addHalfSpeed(actorData)).toFixed(0);
+        data.speed.swimSpeed = parseFloat(this._speedCalc(actorData)) + 9;
+        data.resistance.natToughness = 5;
+        data.wound_threshold.value = data.wound_threshold.value + 5;
+        data.action_points.max = data.action_points.max - 1;
+        data.skills.survival.tn = data.skills.survival.tn + 30;
+        data.skills.navigate.tn = data.skills.navigate.tn + 30;
+        data.skills.observe.tn = data.skills.observe.tn + 30;
     } else if (this._wereVultureForm(actorData) === true) {
-        actorData.data.resistance.silverR = actorData.data.resistance.silverR - 5;
-        actorData.data.resistance.diseaseR = actorData.data.resistance.diseaseR + 200;
-        actorData.data.hp.max = actorData.data.hp.max + 5;
-        actorData.data.stamina.max = actorData.data.stamina.max + 1;
-        actorData.data.speed.value = (this._speedCalc(actorData)/2).toFixed(0);
-        actorData.data.speed.flySpeed = actorData.data.speed.base + 9;
+        data.resistance.silverR = data.resistance.silverR - 5;
+        data.resistance.diseaseR = data.resistance.diseaseR + 200;
+        data.hp.max = data.hp.max + 5;
+        data.stamina.max = data.stamina.max + 1;
+        data.speed.value = (this._speedCalc(actorData)/2).toFixed(0);
+        data.speed.flySpeed = data.speed.base + 9;
         data.speed.swimSpeed = (data.speed.value/2).toFixed(0);
-        actorData.data.resistance.natToughness = 5;
-        actorData.data.wound_threshold.base = actorData.data.wound_threshold.base + 3;
-        actorData.data.action_points.max = actorData.data.action_points.max - 1;
-        actorData.data.skills.survival.tn = actorData.data.skills.survival.tn + 30;
-        actorData.data.skills.navigate.tn = actorData.data.skills.navigate.tn + 30;
-        actorData.data.skills.observe.tn = actorData.data.skills.observe.tn + 30;
+        data.resistance.natToughness = 5;
+        data.wound_threshold.value = data.wound_threshold.value + 3;
+        data.action_points.max = data.action_points.max - 1;
+        data.skills.survival.tn = data.skills.survival.tn + 30;
+        data.skills.navigate.tn = data.skills.navigate.tn + 30;
+        data.skills.observe.tn = data.skills.observe.tn + 30;
     } else if (this._vampireLordForm(actorData) === true) {
-        actorData.data.resistance.fireR = actorData.data.resistance.fireR - 1;
-        actorData.data.resistance.sunlightR = actorData.data.resistance.sunlightR - 1;
-        actorData.data.speed.flySpeed = 5;
-        actorData.data.hp.max = actorData.data.hp.max + 5;
-        actorData.data.magicka.max = actorData.data.magicka.max + 25;
-        actorData.data.resistance.natToughness = 3;
+        data.resistance.fireR = data.resistance.fireR - 1;
+        data.resistance.sunlightR = data.resistance.sunlightR - 1;
+        data.speed.flySpeed = 5;
+        data.hp.max = data.hp.max + 5;
+        data.magicka.max = data.magicka.max + 25;
+        data.resistance.natToughness = 3;
     }
 
     //Speed Recalculation
-    actorData.data.speed.value = this._addHalfSpeed(actorData);
+    data.speed.value = this._addHalfSpeed(actorData);
 
     //ENC Burden Calculations
     if (data.current_enc > data.carry_rating.max * 3) {
@@ -447,81 +447,81 @@ export class SimpleActor extends Actor {
 
     //Form Shift Calcs
     if (this._wereWolfForm(actorData) === true) {
-      actorData.data.resistance.silverR = actorData.data.resistance.silverR - 5;
-      actorData.data.resistance.diseaseR = actorData.data.resistance.diseaseR + 200;
-      actorData.data.hp.max = actorData.data.hp.max + 5;
-      actorData.data.stamina.max = actorData.data.stamina.max + 1;
-      actorData.data.speed.base = data.speed.base + 9;
+      data.resistance.silverR = data.resistance.silverR - 5;
+      data.resistance.diseaseR = data.resistance.diseaseR + 200;
+      data.hp.max = data.hp.max + 5;
+      data.stamina.max = data.stamina.max + 1;
+      data.speed.base = data.speed.base + 9;
       data.speed.value = this._speedCalc(actorData);
       data.speed.swimSpeed = (data.speed.value/2).toFixed(0);
-      actorData.data.resistance.natToughness = 5;
-      actorData.data.wound_threshold.base = actorData.data.wound_threshold.base + 5;
-      actorData.data.action_points.max = actorData.data.action_points.max - 1;
+      data.resistance.natToughness = 5;
+      data.wound_threshold.value = data.wound_threshold.value + 5;
+      data.action_points.max = data.action_points.max - 1;
     } else if (this._wereBatForm(actorData) === true) {
-        actorData.data.resistance.silverR = actorData.data.resistance.silverR - 5;
-        actorData.data.resistance.diseaseR = actorData.data.resistance.diseaseR + 200;
-        actorData.data.hp.max = actorData.data.hp.max + 5;
-        actorData.data.stamina.max = actorData.data.stamina.max + 1;
-        actorData.data.speed.value = (this._speedCalc(actorData)/2).toFixed(0);
-        actorData.data.speed.flySpeed = actorData.data.speed.base + 9;
+        data.resistance.silverR = data.resistance.silverR - 5;
+        data.resistance.diseaseR = data.resistance.diseaseR + 200;
+        data.hp.max = data.hp.max + 5;
+        data.stamina.max = data.stamina.max + 1;
+        data.speed.value = (this._speedCalc(actorData)/2).toFixed(0);
+        data.speed.flySpeed = data.speed.base + 9;
         data.speed.swimSpeed = (data.speed.value/2).toFixed(0);
-        actorData.data.resistance.natToughness = 5;
-        actorData.data.wound_threshold.base = actorData.data.wound_threshold.base + 3;
-        actorData.data.action_points.max = actorData.data.action_points.max - 1;
+        data.resistance.natToughness = 5;
+        data.wound_threshold.value = data.wound_threshold.value + 3;
+        data.action_points.max = data.action_points.max - 1;
     } else if (this._wereBoarForm(actorData) === true) {
-        actorData.data.resistance.silverR = actorData.data.resistance.silverR - 5;
-        actorData.data.resistance.diseaseR = actorData.data.resistance.diseaseR + 200;
-        actorData.data.hp.max = actorData.data.hp.max + 5;
-        actorData.data.speed.base = data.speed.base + 9;
+        data.resistance.silverR = data.resistance.silverR - 5;
+        data.resistance.diseaseR = data.resistance.diseaseR + 200;
+        data.hp.max = data.hp.max + 5;
+        data.speed.base = data.speed.base + 9;
         data.speed.value = this._speedCalc(actorData);
         data.speed.swimSpeed = (data.speed.value/2).toFixed(0);
-        actorData.data.resistance.natToughness = 7;
-        actorData.data.wound_threshold.base = actorData.data.wound_threshold.base + 5;
-        actorData.data.action_points.max = actorData.data.action_points.max - 1;
+        data.resistance.natToughness = 7;
+        data.wound_threshold.value = data.wound_threshold.value + 5;
+        data.action_points.max = data.action_points.max - 1;
     } else if (this._wereBearForm(actorData) === true) {
-        actorData.data.resistance.silverR = actorData.data.resistance.silverR - 5;
-        actorData.data.resistance.diseaseR = actorData.data.resistance.diseaseR + 200;
-        actorData.data.hp.max = actorData.data.hp.max + 10;
-        actorData.data.stamina.max = actorData.data.stamina.max + 1;
-        actorData.data.speed.base = data.speed.base + 5;
+        data.resistance.silverR = data.resistance.silverR - 5;
+        data.resistance.diseaseR = data.resistance.diseaseR + 200;
+        data.hp.max = data.hp.max + 10;
+        data.stamina.max = data.stamina.max + 1;
+        data.speed.base = data.speed.base + 5;
         data.speed.value = this._speedCalc(actorData);
         data.speed.swimSpeed = (data.speed.value/2).toFixed(0);
-        actorData.data.resistance.natToughness = 5;
-        actorData.data.wound_threshold.base = actorData.data.wound_threshold.base + 5;
-        actorData.data.action_points.max = actorData.data.action_points.max - 1;
+        data.resistance.natToughness = 5;
+        data.wound_threshold.value = data.wound_threshold.value + 5;
+        data.action_points.max = data.action_points.max - 1;
     } else if (this._wereCrocodileForm(actorData) === true) {
-        actorData.data.resistance.silverR = actorData.data.resistance.silverR - 5;
-        actorData.data.resistance.diseaseR = actorData.data.resistance.diseaseR + 200;
-        actorData.data.hp.max = actorData.data.hp.max + 5;
-        actorData.data.stamina.max = actorData.data.stamina.max + 1;
-        actorData.data.speed.value = (this._addHalfSpeed(actorData)).toFixed(0);
-        actorData.data.speed.swimSpeed = parseFloat(this._speedCalc(actorData)) + 9;
-        actorData.data.resistance.natToughness = 5;
-        actorData.data.wound_threshold.base = actorData.data.wound_threshold.base + 5;
-        actorData.data.action_points.max = actorData.data.action_points.max - 1;
+        data.resistance.silverR = data.resistance.silverR - 5;
+        data.resistance.diseaseR = data.resistance.diseaseR + 200;
+        data.hp.max = data.hp.max + 5;
+        data.stamina.max = data.stamina.max + 1;
+        data.speed.value = (this._addHalfSpeed(actorData)).toFixed(0);
+        data.speed.swimSpeed = parseFloat(this._speedCalc(actorData)) + 9;
+        data.resistance.natToughness = 5;
+        data.wound_threshold.value = data.wound_threshold.value + 5;
+        data.action_points.max = data.action_points.max - 1;
 
     } else if (this._wereVultureForm(actorData) === true) {
-        actorData.data.resistance.silverR = actorData.data.resistance.silverR - 5;
-        actorData.data.resistance.diseaseR = actorData.data.resistance.diseaseR + 200;
-        actorData.data.hp.max = actorData.data.hp.max + 5;
-        actorData.data.stamina.max = actorData.data.stamina.max + 1;
-        actorData.data.speed.value = (this._speedCalc(actorData)/2).toFixed(0);
-        actorData.data.speed.flySpeed = actorData.data.speed.base + 9;
+        data.resistance.silverR = data.resistance.silverR - 5;
+        data.resistance.diseaseR = data.resistance.diseaseR + 200;
+        data.hp.max = data.hp.max + 5;
+        data.stamina.max = data.stamina.max + 1;
+        data.speed.value = (this._speedCalc(actorData)/2).toFixed(0);
+        data.speed.flySpeed = data.speed.base + 9;
         data.speed.swimSpeed = (data.speed.value/2).toFixed(0);
-        actorData.data.resistance.natToughness = 5;
-        actorData.data.wound_threshold.base = actorData.data.wound_threshold.base + 3;
-        actorData.data.action_points.max = actorData.data.action_points.max - 1;
+        data.resistance.natToughness = 5;
+        data.wound_threshold.value = data.wound_threshold.value + 3;
+        data.action_points.max = data.action_points.max - 1;
     }else if (this._vampireLordForm(actorData) === true) {
-        actorData.data.resistance.fireR = actorData.data.resistance.fireR - 1;
-        actorData.data.resistance.sunlightR = actorData.data.resistance.sunlightR - 1;
-        actorData.data.speed.flySpeed = 5;
-        actorData.data.hp.max = actorData.data.hp.max + 5;
-        actorData.data.magicka.max = actorData.data.magicka.max + 25;
-        actorData.data.resistance.natToughness = 3;
+        data.resistance.fireR = data.resistance.fireR - 1;
+        data.resistance.sunlightR = data.resistance.sunlightR - 1;
+        data.speed.flySpeed = 5;
+        data.hp.max = data.hp.max + 5;
+        data.magicka.max = data.magicka.max + 25;
+        data.resistance.natToughness = 3;
     }
 
     //Speed Recalculation
-    actorData.data.speed.value = this._addHalfSpeed(actorData);
+    data.speed.value = this._addHalfSpeed(actorData);
 
     //ENC Burden Calculations
     if (data.current_enc > data.carry_rating.max * 3) {
@@ -1177,13 +1177,13 @@ export class SimpleActor extends Actor {
   _addHalfSpeed(actorData) {
     let halfSpeedItems = actorData.items.filter(item => item.data.data.addHalfSpeed === true);
     let isWereCroc = actorData.items.filter(item => item.data.data.shiftFormStyle === "shiftFormWereCrocodile");
-    let speed = 0;
+    let speed = actorData.data.speed.value;
     if (isWereCroc.length > 0 && halfSpeedItems.length > 0) {
-      speed = actorData.data.speed.value;
-    } else if (isWereCroc.length < 1 && halfSpeedItems.length > 0) {
-      speed = Math.ceil(actorData.data.speed.value/2) + actorData.data.speed.value;
-    } else if (isWereCroc.length > 0 && halfSpeedItems.length < 1) {
-      speed = Math.ceil(actorData.data.speed.value/2);
+      speed = actorData.data.speed.base;
+    } else if (isWereCroc.length == 0 && halfSpeedItems.length > 0) {
+      speed = Math.ceil(actorData.data.speed.value/2) + actorData.data.speed.base;
+    } else if (isWereCroc.length > 0 && halfSpeedItems.length == 0) {
+      speed = Math.ceil(actorData.data.speed.base/2);
     } else {
       speed = actorData.data.speed.value;
     }
