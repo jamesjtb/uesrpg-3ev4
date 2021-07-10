@@ -145,6 +145,10 @@ export class npcSheet extends ActorSheet {
     html.find(".armor-roll").click(await this._onArmorRoll.bind(this));
     html.find(".ammo-roll").click(await this._onAmmoRoll.bind(this));
     html.find(".ability-list .item-img").click(await this._onTalentRoll.bind(this));
+    html.find(".talents-list .item-img").click(await this._onTalentRoll.bind(this));
+    html.find(".spell-list .item-img").click(await this._onTalentRoll.bind(this));
+    html.find(".combat-list .item-img").click(await this._onTalentRoll.bind(this));
+    html.find(".item-list .item-img").click(await this._onTalentRoll.bind(this));
 
     //Update Item Attributes from Actor Sheet
     html.find(".toggle2H").click(await this._onToggle2H.bind(this));
