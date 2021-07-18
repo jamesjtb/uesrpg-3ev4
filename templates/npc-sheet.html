@@ -10,25 +10,25 @@
                 <label class="resource-label">Health</label><p>
                 <input class="resource-hp" type="number" name="data.hp.value" value="{{data.hp.value}}" />
                 <span>-</span>
-                <input class="resource-hp-max" type="number" name="data.hp.max" value="{{data.hp.max}}" />
+                <input class="resource-hp-max" type="number" name="data.hp.max" value="{{data.hp.max}}" disabled/>
             </div>
             <div class="resources">
                 <label class="resource-label">Magicka</label><p>
                 <input class="resource-mp" type="number" name="data.magicka.value" value="{{data.magicka.value}}" />
                 <span>-</span>
-                <input class="resource-mp-max" type="number" name="data.magicka.max" value="{{data.magicka.max}}" />
+                <input class="resource-mp-max" type="number" name="data.magicka.max" value="{{data.magicka.max}}" disabled/>
             </div>
             <div class="resources">
                 <label class="resource-label">Stamina</label><p>
                 <input class="resource-sp" type="number" name="data.stamina.value" value="{{data.stamina.value}}" />
                 <span>-</span>
-                <input class="resource-sp-max" type="number" name="data.stamina.max" value="{{data.stamina.max}}" />
+                <input class="resource-sp-max" type="number" name="data.stamina.max" value="{{data.stamina.max}}" disabled/>
             </div>
             <div class="resources">
                 <label class="resource-label">Luck Points</label><p>
                 <input class="resource-lp" type="number" name="data.luck_points.value" value="{{data.luck_points.value}}" />
                 <span>-</span>
-                <input class="resource-lp-max" type="number" name="data.luck_points.max" value="{{data.luck_points.max}}" />
+                <input class="resource-lp-max" type="number" name="data.luck_points.max" value="{{data.luck_points.max}}" disabled/>
             </div>
         </div>
     </header>
@@ -205,16 +205,14 @@
                             </select></td>
                     </tr>
                 </table>
-                <table class="combatHeader">
-                    <tr>
-                        <td><input type="button" class="weapon-create" id="weapon" value="+"></td>
-                        <td class="combatLabel">Weapons</td>
-                    </tr>
-                </table>
             <ol class="combat-list">
+                <h4 class="list-header-skills">
+                    <button class="weapon-create" id="weapon">+</button>
+                    <label>Weapons</label>
+                </h4>
                 {{#each actor.data.weapon as |item id|}}
                     <li class="item flexrow" data-item-id="{{item._id}}">
-                        <a class="damage-roll" data-roll="{{item.data.value}}"><i class="fas fa-dice-d20"></i></a>
+                        <button class="damage-roll" data-roll="{{item.data.value}}"><i class="fas fa-dice-d20"></i></button>
                         <img class="item-img" src="{{item.img}}" title="{{item.name}}" width="24" height="24"/>
                         <h4 class="item-name">{{item.name}}</h4>
                         <h4 class="item-cat">2H<input class="toggle2H" type="checkbox" {{checked item.data.weapon2H}} title="Toggle 2H Damage"></h4>
@@ -224,46 +222,39 @@
                     </li>
                 {{/each}}
             </ol>
-            <table class="combatHeader">
-                <tr>
-                    <td><input type="button" class="ammo-create" id="ammunition" value="+"></td>
-                    <td class="combatLabel">Ammunition</td>
-                </tr>
-            </table>
-        <ol class="combat-list">
-            {{#each actor.data.ammunition as |item id|}}
-                <li class="item flexrow" data-item-id="{{item._id}}">
-                    <a class="ammo-roll" title="Send Stats to Chat and Reduce Ammo by 1" data-roll="{{item.data.value}}"><i class="fas fa-dice-d20"></i></a>
-                    <img class="item-img" src="{{item.img}}" title="{{item.name}}" width="24" height="24"/>
-                    <h4 class="item-name">{{item.name}}</h4>
-                    <div class="ammo-controls">
-                        <a><input title="-1" class="ammo-minus" type="button" value="-"></a>
-                        <a><input title="+1" class="ammo-plus" type="button" value="+"></a>
-                    </div>
-                    <h4 class="item-cat"><input class="ammo-field" type="number" value="{{item.data.quantity}}" title="Ammo Qty" disabled></h4>
-                    <div class="item-controls">
-                        <a class="item-control item-delete" title="Delete Item"><i class="fas fa-trash"></i></a>
-                    </div>
-                </li>
-            {{/each}}
-        </ol>
+            <ol class="combat-list">
+                <h4 class="list-header-skills">
+                    <button class="ammo-create" id="ammunition">+</button>
+                    <label>Ammunition</label>
+                </h4>
+                {{#each actor.data.ammunition as |item id|}}
+                    <li class="item flexrow" data-item-id="{{item._id}}">
+                        <button class="ammo-roll" title="Send Stats to Chat and Reduce Ammo Count by 1" data-roll="{{item.data.value}}"><i class="fas fa-dice-d20"></i></button>
+                        <img class="item-img" src="{{item.img}}" title="{{item.name}}" width="24" height="24"/>
+                        <h4 class="item-name">{{item.name}}</h4>
+                        <h4 class="item-cat"><input class="ammo-field" type="number" value="{{item.data.quantity}}" title="Ammo Qty" disabled></h4>
+                        <h4 class="ammo-controls">
+                            <a><input title="-1" class="ammo-minus" type="button" value="-"></a>
+                            <a><input title="+1" class="ammo-plus" type="button" value="+"></a>
+                        </h4>
+                        <div class="item-controls">
+                            <a class="item-control item-delete" title="Delete Item"><i class="fas fa-trash"></i></a>
+                        </div>
+                    </li>
+                {{/each}}
+            </ol>
         <ol class="combat-list">
             {{#each actor.data.armor as |armor equipped|}}
-            <div class="armor-header-wrapper">
-                <table class="combatHeader">
-                    <tr>
-                        <td><input type="button" class="armor-create" id="armor" value="+"></td>
-                        <td class="combatLabel">{{equipped}} Armor</td>
-                    </tr>
-                </table>
-            </div>
+            <h4 class="list-header-skills">
+                <button class="armor-create" id="armor">+</button>
+                <label>{{equipped}} Armor</label>
+            </h4> <p></p>
             {{#each armor as |item id|}}
                 <li class="item flexrow" data-item-id="{{item._id}}">
-                    <a title="Send Stats to Chat" class="armor-roll" data-roll="{{item.data.value}}"><i class="fas fa-dice-d20"></i></a>
+                    <button title="Send Stats to Chat" class="armor-roll" data-roll="{{item.data.value}}"><i class="fas fa-dice-d20"></i></button>
                     <img class="item-img" src="{{item.img}}" title="{{item.name}}" width="24" height="24"/>
                     <h4 class="item-name">{{item.name}}</h4>
-                    <h4 class="item-cat" title="{{item.data.magic_ar}}">{{item.data.armor}}AR</h4>
-                    <h4 class="item-equip"><input class="itemEquip" type="checkbox" {{checked item.data.equipped}} title="Equip Armor"></h4>
+                    <h4 class="item-cat" title="{{item.data.magic_ar}}">{{item.data.armor}}AR<input class="itemEquip" type="checkbox" {{checked item.data.equipped}} title="Equip Armor"></h4>
                     <div class="item-controls">
                         <a class="item-control item-delete" title="Delete Item"><i class="fas fa-trash"></i></a>
                     </div>
@@ -297,49 +288,49 @@
                     <td><input type="number" name="data.initiative.value" value="{{data.initiative.value}}" disabled></td>
                 </tr>
             </table>
-            <table class="field-inputs-small">
+            <table class="vResistTable">
                 <tr>
-                    <th colspan="2">Resistances</th>
+                    <th colspan="2"><div class="resistHeader">Resistances</div></th>
                 </tr>
                 <tr>
-                    <th><input type="button" class="resistance-roll" name="Disease" id="diseaseR" value="Disease %"></th>
-                    <td><input type="number" name="data.resistance.diseaseR" value="{{data.resistance.diseaseR}}"  disabled></td>
+                    <td><button class="resistance-roll" name="Disease" id="diseaseR"> <span class="fas fa-bacteria"></span> Disease</button></td>
+                    <th><label type="number" name="data.resistance.diseaseR"></label>{{data.resistance.diseaseR}}%</th>
                 </tr>
                 <tr>
-                    <th>Fire</th>
-                    <td><input type="number" name="data.resistance.fireR" value="{{data.resistance.fireR}}"  disabled></td>
+                    <td><span class="fa fa-fire"></span> Fire</td>
+                    <th><label type="number" name="data.resistance.fireR">{{data.resistance.fireR}}</label></th>
                 </tr>
                 <tr>
-                    <th>Frost</th>
-                    <td><input type="number" name="data.resistance.frostR" value="{{data.resistance.frostR}}"  disabled></td>
+                    <td><span class="fas fa-snowflake"></span> Frost</td>
+                    <th><label type="number" name="data.resistance.frostR">{{data.resistance.frostR}}</label></th>
                 </tr>
                 <tr>
-                    <th>Shock</th>
-                    <td><input type="number" name="data.resistance.shockR" value="{{data.resistance.shockR}}"  disabled></td>
+                    <td><span class="fa fa-bolt"></span> Shock</td>
+                    <th><label type="number" name="data.resistance.shockR">{{data.resistance.shockR}}</label></th>
                 </tr>
                 <tr>
-                    <th>Poison</th>
-                    <td><input type="number" name="data.resistance.poisonR" value="{{data.resistance.poisonR}}"  disabled></td>
+                    <td><span class="fas fa-skull-crossbones"></span> Poison</td>
+                    <th><label type="number" name="data.resistance.poisonR"></label>{{data.resistance.poisonR}}</th>
                 </tr>
                 <tr>
-                    <th>Magic</th>
-                    <td><input type="number" name="data.resistance.magicR" value="{{data.resistance.magicR}}"  disabled></td>
+                    <td><span class="fas fa-hand-sparkles"></span> Magic</td>
+                    <th><label type="number" name="data.resistance.magicR"></label>{{data.resistance.magicR}}</th>
                 </tr>
                 <tr>
-                    <th>Toughness</th>
-                    <td><input type="number" name="data.resistance.natToughness" value="{{data.resistance.natToughness}}"  disabled></td>
+                    <td><span class="fa fa-fist-raised"></span> Toughness</td>
+                    <th><label type="number" name="data.resistance.natToughness"></label>{{data.resistance.natToughness}}</th>
                 </tr>
                 <tr>
-                    <th>Silver</th>
-                    <td><input type="number" name="data.resistance.silverR" value="{{data.resistance.silverR}}"  disabled></td>
+                    <td><span class="fab fa-wolf-pack-battalion"></span> Silver</td>
+                    <th><label type="number" name="data.resistance.silverR"></label>{{data.resistance.silverR}}</th>
                 </tr>
                 <tr>
-                    <th>Sunlight</th>
-                    <td><input type="number" name="data.resistance.sunlightR" value="{{data.resistance.sunlightR}}"  disabled></td>
+                    <td><span class="fas fa-sun"></span> Sunlight</td>
+                    <th><label type="number" name="data.resistance.sunlightR"></label>{{data.resistance.sunlightR}}</th>
                 </tr>
                 <tr title="Check to toggle wounded penalties to initiative and skill rolls">
-                    <th>Wounded</th>
-                    <td><input type="checkbox" name="data.wounded" {{checked data.wounded}}></td>
+                    <td><span>Wounded</span></td>
+                    <th><input class="woundCheckBox" type="checkbox" name="data.wounded" {{checked data.wounded}}></th>
                 </tr>
                 <tr>
                     <td colspan="2"><textarea name="data.woundNotes">{{data.woundNotes}}</textarea>
@@ -352,10 +343,10 @@
         <div class="tab spells" data-group="primary" data-tab="spells">
             <table>
                 <tr>
-                    <th colspan="7" class="combat_table_header2">Magic Skill Roll</th>
+                    <th class="combat_table_header2">Magic Skill Roll</th>
                 </tr>
                 <tr>
-                    <th><input type="button" class="professions-roll" name="Magic" id="magic" value="Magic"></th>
+                    <th><button class="professions-roll" name="Magic" id="magic">Magic</button></th>
                 </tr>
             </table>
             <ol class="spell-list">
@@ -369,7 +360,7 @@
                 </div>
                 {{#each spell as |item id|}}
                     <li class="item flexrow" data-item-id="{{item._id}}">
-                        <a class="magic-roll" data-roll="{{item.data.value}}"><i class="fas fa-dice-d20"></i></a>
+                        <button class="magic-roll" data-roll="{{item.data.value}}"><i class="fas fa-dice-d20"></i></button>
                         <img class="item-img" src="{{item.img}}" title="{{item.name}}" width="24" height="24"/>
                         <h4 class="item-name">{{item.name}}</h4>
                         <div class="item-controls">
@@ -386,10 +377,10 @@
             <div>
                 <table class="field-inputs-small">
                     <tr>
-                        <th colspan="9">Resistances & Weaknesses</th>
+                        <th colspan="9"><span>Resistances & Weaknesses</span></th>
                     </tr>
                     <tr>
-                        <th>Disease %</th>
+                        <th>Disease</th>
                         <th>Fire</th>
                         <th>Frost</th>
                         <th>Shock</th>
@@ -400,24 +391,22 @@
                         <th>Sunlight</th>
                     </tr>
                     <tr>
-                        <td><input type="number" name="data.resistance.diseaseR" value="{{data.resistance.diseaseR}}"  disabled></td>
-                        <td><input type="number" name="data.resistance.fireR" value="{{data.resistance.fireR}}"  disabled></td>
-                        <td><input type="number" name="data.resistance.frostR" value="{{data.resistance.frostR}}"  disabled></td>
-                        <td><input type="number" name="data.resistance.shockR" value="{{data.resistance.shockR}}"  disabled></td>
-                        <td><input type="number" name="data.resistance.poisonR" value="{{data.resistance.poisonR}}"  disabled></td>
-                        <td><input type="number" name="data.resistance.magicR" value="{{data.resistance.magicR}}"  disabled></td>
-                        <td><input type="number" name="data.resistance.natToughness" value="{{data.resistance.natToughness}}"  disabled></td>
-                        <td><input type="number" name="data.resistance.silverR" value="{{data.resistance.silverR}}"  disabled></td>
-                        <td><input type="number" name="data.resistance.sunlightR" value="{{data.resistance.sunlightR}}"  disabled></td>
-                    </tr>
-                </table>
-                <table class="itemHeader">
-                    <tr>
-                        <td><input type="button" class="trait-create" id="trait" value="+"></td>
-                        <td class="talentsLabel">Traits</td>
+                        <td title="Disease Resistance"><span class="fas fa-bacteria"></span> {{data.resistance.diseaseR}}%</td>
+                        <td title="Fire Resistance"><span class="fas fa-fire"></span> {{data.resistance.fireR}}</td>
+                        <td title="Frost Resistance"><span class="fas fa-snowflake"></span> {{data.resistance.frostR}}</td>
+                        <td title="Shock Resistance"><span class="fas fa-bolt"></span> {{data.resistance.shockR}}</td>
+                        <td title="Poison Resistance"><span class="fas fa-skull-crossbones"></span> {{data.resistance.poisonR}}</td>
+                        <td title="Magic Resistance"><span class="fas fa-hand-sparkles"></span> {{data.resistance.magicR}}</td>
+                        <td title="Natural Toughness"><span class="fas fa-fist-raised"></span> {{data.resistance.natToughness}}</td>
+                        <td title="Silver Resistance"><span class="fab fa-wolf-pack-battalion"></span> {{data.resistance.silverR}}</td>
+                        <td title="Sunlight Resistance"><span class="fas fa-sun"></span> {{data.resistance.sunlightR}}</td>
                     </tr>
                 </table>
                 <ol class="talents-list">
+                    <h4 class="list-header-skills">
+                        <button class="trait-create" id="trait">+</button>
+                        <label>Traits</label>
+                    </h4>
                     {{#each actor.data.trait as |item id|}}
                         <li class="item flexrow" data-item-id="{{item._id}}">
                             <img class="item-img" src="{{item.img}}" title="Send to Chat" width="24" height="24"/>
@@ -428,12 +417,10 @@
                         </li>
                     {{/each}}
                 </ol>
-                    <table class="itemHeader">
-                        <tr>
-                            <td><input type="button" class="power-create" id="power" value="+"></td>
-                            <td class="talentsLabel">Powers</td>
-                        </tr>
-                    </table>
+                <h4 class="list-header-skills">
+                    <button class="power-create" id="power">+</button>
+                    <label>Powers</label>
+                </h4>
                     <ol class="talents-list">
                         {{#each actor.data.power as |item id|}}
                             <li class="item flexrow" data-item-id="{{item._id}}">
@@ -445,13 +432,11 @@
                             </li>
                         {{/each}}
                     </ol>
-                        <table class="itemHeader">
-                            <tr>
-                                <td><input type="button" class="talent-create" id="talent" value="+"></td>
-                                <td class="talentsLabel">Talents</td>
-                            </tr>
-                        </table>
                         <ol class="talents-list">
+                            <h4 class="list-header-skills">
+                                <button class="talent-create" id="talent">+</button>
+                                <label>Talents</label>
+                            </h4>
                             {{#each actor.data.talent as |item id|}}
                                 <li class="item flexrow" data-item-id="{{item._id}}">
                                     <img class="item-img" src="{{item.img}}" title="Send to Chat" width="24" height="24"/>
@@ -498,20 +483,20 @@
                     </tr>
                 </table>
             </div>
-            <div>
-                <table>
-                    <tr class="itemHeader">
-                        <td><input type="button" class="gear-create" id="item" value="+"></td>
-                        <td class="talentsLabel">Inventory</td>
-                    </tr>
-                </table>
-            </div>
             <ol class="item-list">
+                <h4 class="list-header">
+                    <label>QTY</label>
+                    <label>ENC</label>
+                    <label>Item Name</label>
+                    <button class="gear-create" id="item">+</button>
+                </h4>
                 {{#each actor.data.gear as |item id|}}
                     <li class="item flexrow" data-item-id="{{item._id}}">
                         <div class="item-list-resource">
-                        <input name="data.quantity" type="number" value="{{data.quantity}}" title="QTY" disabled>
-                        <input type="number" name="data.enc" value="{{data.enc}}" title="ENC" disabled>
+                        <label name="data.quantity" type="number" title="QTY">{{data.quantity}}</label>
+                        </div>
+                        <div class="item-list-resource">
+                        <label type="number" name="data.enc" title="ENC">{{data.enc}}</label>
                         </div>
                         <img class="item-img" src="{{item.img}}" title="{{item.name}}" width="24" height="24"/>
                         <h4 class="item-name">{{item.name}}</h4>
