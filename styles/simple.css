@@ -44,6 +44,7 @@
   flex-wrap: nowrap;
   justify-content: flex-start;
   margin-bottom: 10px;
+  background: none;
 }
 .worldbuilding .sheet-body {
   overflow-y: hidden;
@@ -61,10 +62,13 @@
  display: inline-block;
 }
 .worldbuilding .sheet-header .profile-img {
-  flex: 0 0 180px;
-  height: 180px;
+  flex: 0 0 175px;
+  height: 175px;
   margin-right: 10px;
-  border: none;
+  margin-left: 15px;
+  margin-top: 10px;
+  margin-bottom: 10px;
+  border: solid transparent;
 }
 .worldbuilding .sheet-tabs {
   background-color: rgba(219, 181, 77, 0.808);
@@ -218,7 +222,7 @@
 }
 .worldbuilding .bioHeader {
   font-family: "cyrodiil";
-  src: url(../fonts/cyrodiil/cyrodiil.ttf);
+  src: url('../fonts/cyrodiil/cyrodiil.ttf');
   text-align: center;
 }
 .worldbuilding .derived_attributes_table {
@@ -231,7 +235,7 @@
 }
 .worldbuilding .skills-header {
   font-family: "cyrodiil";
-  src: url(../fonts/cyrodiil/cyrodiil.ttf);
+  src: url('../fonts/cyrodiil/cyrodiil.ttf');
   font-size: 15px;
   background-color: rgba(219, 181, 77, 0.808);
 }
@@ -241,14 +245,13 @@
 }
 .worldbuilding .size_table {
   font-family: "cyrodiil";
-  src: url(../fonts/cyrodiil/cyrodiil.ttf);
+  src: url('../fonts/cyrodiil/cyrodiil.ttf');
   width: 10%;
 }
 .worldbuilding .combat-sidebar {
   float: right;
   padding-left: 5px;
   width: 70%;
-  border-right: groove;
 }
 .worldbuilding .combat-sidebar2 {
   float: left;
@@ -266,15 +269,16 @@
 }
 .worldbuilding .combat_table_header {
   font-family: "cyrodiil";
-  src: url(../fonts/cyrodiil/cyrodiil.ttf);
+  src: url('../fonts/cyrodiil/cyrodiil.ttf');
   font-size: large;
   margin-top: 2px;
   text-align: center;
   background-color: rgba(219, 181, 77, 0.808);
+  border: outset;
 }
 .worldbuilding .combat_table_header2 {
   font-family: "cyrodiil";
-  src: url(../fonts/cyrodiil/cyrodiil.ttf);
+  src: url('../fonts/cyrodiil/cyrodiil.ttf');
   font-size: large;
   margin-top: 2px;
   text-align: center;
@@ -286,17 +290,51 @@
   padding: 0;
   width: 100%;
   float: left;
+  text-align: center;
 }
-.worldbuilding .item-list .item-img {
+.worldbuilding .item-list .item img {
   position: relative;
-  right: 80px;
-}
-.worldbuilding .item-list .item-name {
-  position: relative;
-  right: 75px;
+  flex: 0 0 24px;
+  float: left;
+  margin-left: 5px;
+  margin-right: 5px;
 }
 .worldbuilding .item-resource {
   text-align: center;
+}
+.worldbuilding .item-list .item-list-resource {
+  position: relative;
+  flex: 0 0 24px;
+  text-align: right;
+  margin-left: 15px;
+  margin-right: 20px;
+}
+.worldbuilding .item-list .item {
+  height: 30px;
+  line-height: 25px;
+  padding: 3px 0;
+  border-bottom: 1px solid #BBB;
+}
+.worldbuilding .item-list label {
+  width: 10px;
+  text-align: center;
+}
+.worldbuilding .item-list .item-name {
+  position: relative;
+  float: left;
+  margin-left: 5px;
+  margin-right: 5px;
+  text-align: left;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.worldbuilding .item-list .item-name:hover {
+  font-weight: bold;
+}
+.worldbuilding .item-list .item-controls {
+  position: relative;
+  flex: 0 0 24px;;
 }
 .worldbuilding .skills-list {
   list-style: none;
@@ -314,6 +352,15 @@
   float: left;
   text-align: center;
 }
+.worldbuilding .combat-list button {
+  flex: 0 0 24px;
+  background: transparent;
+  float: left;
+  padding: 0px;
+  text-align: center;
+  height: 24px;
+  line-height: 18px;
+}
 .worldbuilding .combat-list .item {
   height: 30px;
   line-height: 25px;
@@ -326,9 +373,11 @@
 }
 .worldbuilding .combat-list .item img {
   flex: 0 0 24px;
+  position: relative;
   margin-right: 5px;
 }
 .worldbuilding .combat-list .item-name {
+  position: relative;
   margin: 0;
   text-align: left;
   white-space: nowrap;
@@ -336,39 +385,50 @@
   text-overflow: ellipsis;
 }
 .worldbuilding .combat-list .item-cat {
-  text-align: left;
-  margin-right: -240px;
-  margin-left: -50px;
-}
-.worldbuilding .combat-list .item-equip {
+  text-align: right;
   position: relative;
-  text-align: left;
-  margin-right: -250px;
-  margin-left: -50px;
-  left: 25px;
+  flex: 0 0 24px;
+  right: 10px;
+}
+.worldbuilding .combat-list .item-cat .toggle2H {
+  flex: 0 0 24px;
+  position: relative;
+  margin: 5px;
+  bottom: 27px;
+  right: 20px;
 }
 .worldbuilding .combat-list .item-cat .ammo-field {
-  width: 30px;
+  flex: 0 0 24px;
+  width: 45px;
   text-align: center;
   position: relative;
-  right: 90px;
   border-radius: 50%;
+  border: groove;
+}
+.worldbuilding .combat-list .item-cat .itemEquip {
+  flex: 0 0 24px;
+  position: relative;
+  margin: 5px;
+  bottom: 27px;
+  right: 25px;
 }
 .worldbuilding .combat-list .ammo-controls {
-  text-align: center;
+  text-align: right;
   position: relative;
-  right: 55px;
-  top: 15px;
+  left: 30px;
+  flex: 0 0 24px;
 }
 .worldbuilding .combat-list .ammo-controls a {
   display: block;
   position: relative;
-  bottom: 2px;
-  margin-bottom: -20px;
+  right: 80px;
   height: 5px;
 }
 .worldbuilding .combat-list .ammo-controls .ammo-plus {
   text-align: center;
+  position: relative;
+  left: 35px;
+  top: -8px;
   background-color: transparent;
   font-weight: bold;
   border-radius: 50%;
@@ -378,6 +438,9 @@
 }
 .worldbuilding .combat-list .ammo-controls .ammo-minus {
   text-align: center;
+  position: relative;
+  left: 35px;
+  top: 12px;
   background-color: transparent;
   font-weight: bold;
   border-radius: 50%;
@@ -401,20 +464,29 @@
 }
 .worldbuilding .ability-list {
   display: inline-block;
-  margin: 7px 0;
-  margin-left: 15px;
+  flex: 0 0 24px;
   padding: 0;
   width: 100%;
 }
 .worldbuilding .ability-list li {
+  flex: 0 0 24px;
   float: left;
   list-style: outside none none;
   width: 50%;
 }
+.worldbuilding .ability-list button {
+  flex: 0 0 24px;
+  float: left;
+  border: none;
+  background: transparent;
+  padding: 0px;
+  text-align: center;
+  line-height: 18px;
+}
 .worldbuilding .ability-list .item img {
   flex: 0 0 24px;
+  position: relative;
   margin-right: 5px;
-  margin-left: -30px;
 }
 .worldbuilding .ability-list .item {
   height: 30px;
@@ -439,8 +511,8 @@
 .worldbuilding .ability-list .item-name:hover {
   font-weight: bold;
 }
-.worldbuilding .item-img:hover {
-  zoom: 1.05;
+.worldbuilding .item img:hover {
+  zoom: 1.2;
 }
 .worldbuilding .ability-list .item-controls {
   flex: 0 0 36px;
@@ -452,13 +524,8 @@
   margin-right: 5px;
   margin-left: 0;
 }
-
-
-
 .worldbuilding .talents-list {
   display: inline-block;
-  margin: 7px 0;
-  margin-left: 15px;
   padding: 0;
   width: 100%;
 }
@@ -495,9 +562,6 @@
 .worldbuilding .talents-list .item-name:hover {
   font-weight: bold;
 }
-.worldbuilding .item-img:hover {
-  zoom: 1.1;
-}
 .worldbuilding .talents-list .item-controls {
   flex: 0 0 36px;
   margin-right: 5px;
@@ -508,72 +572,29 @@
   margin-right: 5px;
   margin-left: 0;
 }
-
-
-
-
-
 .worldbuilding .weapon-header {
   text-align: center;
 }
-.worldbuilding .item-list-resource input {
-  width: 20%;
-  height: 18px;
-  text-align: center;
-  margin-left: 5px;
-  margin-right: 5px;
-  margin-bottom: 20px;
-  margin-top: 1px;
-}
-.worldbuilding .item-list .item {
-  height: 30px;
-  line-height: 25px;
-  padding: 3px 0;
-  border-bottom: 1px solid #BBB;
-}
-.worldbuilding .item-list label {
-  width: 10px;
-  text-align: center;
-}
-.worldbuilding .item-list .item img {
-  flex: 0 0 24px;
-  margin-right: 5px;
-  margin-left: -75px;
-}
-.worldbuilding .item-list .item-name {
-  margin: 0;
-  margin-right: -80px;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-.worldbuilding .item-list .item-name:hover {
-  font-weight: bold;
-}
-.worldbuilding .item-list .item-controls {
-  flex: 0 0 20px;
-  margin-left: 0px;
-}
 .worldbuilding .spell-list {
   display: inline-block;
-  margin: 7px 0;
-  margin-left: 5px;
+  flex: 0 0 24px;
   padding: 0;
   width: 100%;
 }
 .worldbuilding .spell-list li {
+  flex: 0 0 24px;
   float: left;
   list-style: outside none none;
   width: 50%;
 }
-.worldbuilding .spell-list-resource input {
-  width: 20%;
-  height: 18px;
+.worldbuilding .spell-list button {
+  flex: 0 0 24px;
+  float: left;
+  border: none;
+  background: transparent;
+  padding: 0px;
   text-align: center;
-  margin-left: 15px;
-  margin-right: 5px;
-  margin-bottom: 20px;
-  margin-top: 1px;
+  line-height: 18px;
 }
 .worldbuilding .spell-list .item {
   height: 30px;
@@ -581,17 +602,15 @@
   padding: 3px 0;
   border-bottom: 1px solid #BBB;
 }
-.worldbuilding .spell-list label {
-  width: 10px;
-  text-align: center;
-}
-.worldbuilding .spell-list .item img {
+.worldbuilding .spell-list .item-img {
   flex: 0 0 24px;
+  position: relative;
   margin-right: 5px;
-  margin-left: -45%;
 }
 .worldbuilding .spell-list .item-name {
+  position: relative;
   margin: 0;
+  text-align: left;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -606,7 +625,7 @@
 }
 .worldbuilding .itemHeader {
   font-family: "cyrodiil";
-  src: url(../fonts/cyrodiil/cyrodiil.ttf);
+  src: url('../fonts/cyrodiil/cyrodiil.ttf');
   display: flex;
   align-items: left;
 }
@@ -620,6 +639,31 @@
   text-align: center;
   font-size: small;
   font-weight: bold;
+  table-layout: fixed;
+  border: outset;
+}
+.worldbuilding .field-inputs-small td {
+  font-weight: normal;
+}
+.worldbuilding .vResistTable {
+  font-size: small;
+  table-layout: fixed;
+  border: outset;
+  padding: 0px;
+}
+.worldbuilding .vResistTable .resistHeader {
+  font-weight: bold;
+}
+.worldbuilding .vResistTable th {
+  font-weight: normal;
+}
+.worldbuilding .vResistTable span {
+  margin-left: 5px;
+}
+.worldbuilding .vResistTable button {
+  line-height: 18px;
+  font-size: small;
+  padding: 0px;
 }
 .worldbuilding .field-inputs {
   text-align: center;
@@ -630,7 +674,7 @@
 }
 .worldbuilding .characteristic-roll {
   font-family: "cyrodiil";
-  src: url(../fonts/cyrodiil/cyrodiil.ttf);
+  src: url('../fonts/cyrodiil/cyrodiil.ttf');
   background-color: transparent;
   font-weight: bold;
   border-radius: 10%;
@@ -643,16 +687,19 @@
   color: white;
 }
 .worldbuilding .skill-roll {
-  background-color: transparent;
-  font-weight: bold;
-  margin-right: -70px;
+  flex: 0 0 24px;
+  float: left;
+  padding: 0px;
+  bottom: 7px;
+  text-align: center;
+  height: 24px;
 }
 .worldbuilding .skill-roll:hover {
   font-weight: bold;
 }
 .worldbuilding .professions-roll {
   font-family: "cyrodiil";
-  src: url(../fonts/cyrodiil/cyrodiil.ttf);
+  src: url('../fonts/cyrodiil/cyrodiil.ttf');
   background-color: transparent;
   font-weight: bold;
   border-radius: 10%;
@@ -666,7 +713,7 @@
 }
 .worldbuilding .magic-skill-roll {
   font-family: "cyrodiil";
-  src: url(../fonts/cyrodiil/cyrodiil.ttf);
+  src: url('../fonts/cyrodiil/cyrodiil.ttf');
   background-color: transparent;
   font-weight: bold;
   border-radius: 10%;
@@ -694,7 +741,7 @@
 }
 .worldbuilding .unconventional-roll {
   font-family: "cyrodiil";
-  src: url(../fonts/cyrodiil/cyrodiil.ttf);
+  src: url('../fonts/cyrodiil/cyrodiil.ttf');
   background-color: transparent;
   font-weight: bold;
   border-radius: 10%;
@@ -710,80 +757,24 @@
   font-weight: bold;
 }
 .worldbuilding .damage-roll {
-  text-align: left;
-  margin-right: -270px;
-  margin-left: 5px;
+  text-align: center;
+  border: none;
 }
 .worldbuilding .combat-roll {
-  text-align: left;
-  margin-right: -270px;
-  margin-left: 5px;
+  text-align: center;
+  border: none;
 }
 .worldbuilding .armor-roll {
-  text-align: left;
-  margin-right: -270px;
-  margin-left: 5px;
+  text-align: center;
+  border: none;
 }
 .worldbuilding .magic-roll {
-  text-align: left;
-  margin-right: -30px;
-  margin-left: 5px;
+  text-align: center;
+  border: none;
 }
 .worldbuilding .ammo-roll {
-  text-align: left;
-  margin-right: -170px;
-  margin-left: 5px;
-}
-.worldbuilding .combat-create {
-  position: relative;
-  background: none;
-  border: groove;
-}
-.worldbuilding .weapon-create {
-  position: relative;
-  background: none;
-  border: groove;
-}
-.worldbuilding .ammo-create {
-  position: relative;
-  right: 0px;
-  top: 0px;
-  background: none;
-  border: groove;
-}
-.worldbuilding .armor-create {
-  position: relative;
-  right: 0px;
-  top: 0px;
-  background: none;
-  border: groove;
-}
-.worldbuilding .gear-create {
-  position: relative;
-  right: 0px;
-  top: 0px;
-  background: none;
-  border: groove;
-}
-.worldbuilding .trait-create {
-  position: relative;
-  background: none;
-  border: groove;
-}
-.worldbuilding .power-create {
-  position: relative;
-  background: none;
-  border: groove;
-}
-.worldbuilding .talent-create {
-  position: static;
-  background: none;
-  border: groove;
-}
-.worldbuilding .spell-create {
-  position: relative;
-  background: none;
-  border: groove;
+  text-align: center;
+  border: none;
 }
 .worldbuilding .combat-create:hover {
   background-color: rgba(0, 0, 0, 0.308);
@@ -812,9 +803,12 @@
 .worldbuilding .spell-create:hover {
   background-color: rgba(0, 0, 0, 0.308);
 }
+.worldbuilding .sortSkills:hover {
+  background-color: rgba(0, 0, 0, 0.308);
+}
 .worldbuilding .combatHeader {
   font-family: "cyrodiil";
-  src: url(../fonts/cyrodiil/cyrodiil.ttf);
+  src: url('../fonts/cyrodiil/cyrodiil.ttf');
   text-align: left;
   font-size: large;
   display: flex;
@@ -825,4 +819,53 @@
   font-size: large;
   left: 10px;
 }
-
+.worldbuilding .list-header {
+  text-align: left;
+  flex: 0 0 24px;
+  background-color: rgba(78, 78, 78, 0.137);
+  font-size: 18px;
+  border: outset;
+}
+.worldbuilding .list-header label {
+  flex: 0 0 24px;
+  text-align: left;
+  margin-left: 15px;
+  margin-right: 10px;
+  font-family: "cyrodiil";
+  src: url("../fonts/cyrodiil/cyrodiil.ttf")
+}
+.worldbuilding .list-header button {
+  position: relative;
+  flex: 0 0 24px;
+  width: 24px;
+  height: 24px;
+  line-height: 18px;
+  float: right;
+  text-align: center;
+  border: groove;
+}
+.worldbuilding .list-header-skills {
+  text-align: left;
+  flex: 0 0 24px;
+  background-color: rgba(78, 78, 78, 0.137);
+  font-size: 18px;
+  border: outset;
+}
+.worldbuilding .list-header-skills label {
+  flex: 0 0 24px;
+  text-align: left;
+  margin-left: 10px;
+  margin-right: 10px;
+  font-family: "cyrodiil";
+  src: url("../fonts/cyrodiil/cyrodiil.ttf")
+}
+.worldbuilding .list-header-skills button {
+  position: relative;
+  flex: 0 0 24px;
+  width: 24px;
+  height: 24px;
+  line-height: 18px;
+  float: left;
+  text-align: center;
+  border: groove;
+}
