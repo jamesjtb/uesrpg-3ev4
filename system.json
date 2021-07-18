@@ -1,8 +1,8 @@
 {
   "name": "uesrpg-d100",
   "title": "UESRPG d100",
-  "description": "A system based off of Atropos Worldbuilding system used to play the UESRPG d100 system.",
-  "version": 1.32,
+  "description": "A system used to play the UESRPG (Unofficial Elder Scrolls Roleplaying Game) d100 system.",
+  "version": 1.33,
   "minimumCoreVersion": "0.8.6",
   "compatibleCoreVersion": "0.8.8",
   "templateVersion": 2,
@@ -10,55 +10,6 @@
   "esmodules": ["module/simple.js"],
   "styles": ["styles/simple.css"],
   "packs": [
-    {
-      "name": "items-uesrpg",
-      "label": "Items",
-      "system": "uesrpg-d100",
-      "path": "./packs/items-uesrpg.db",
-      "entity": "Item"
-    },
-    {
-      "label": "Scroll of People",
-      "entity": "Actor",
-      "name": "scroll-of-people",
-      "path": "packs/scroll-of-people.db",
-      "system": "uesrpg-d100"
-    },
-    {
-      "label": "Scroll of Beasts",
-      "entity": "Actor",
-      "name": "scroll-of-beasts",
-      "path": "packs/scroll-of-beasts.db",
-      "system": "uesrpg-d100"
-    },
-    {
-      "label": "Scroll of Oblivion",
-      "entity": "Actor",
-      "name": "scroll-of-oblivion",
-      "path": "packs/scroll-of-oblivion.db",
-      "system": "uesrpg-d100"
-    },
-    {
-      "label": "Scroll of Dwemer",
-      "entity": "Actor",
-      "name": "scroll-of-dwemer",
-      "path": "packs/scroll-of-dwemer.db",
-      "system": "uesrpg-d100"
-    },
-    {
-      "label": "Scroll of Undeath",
-      "entity": "Actor",
-      "name": "scroll-of-undeath",
-      "path": "packs/scroll-of-undeath.db",
-      "system": "uesrpg-d100"
-    },
-    {
-      "name": "spells",
-      "label": "Spells",
-      "system": "uesrpg-d100",
-      "path": "./packs/spells.db",
-      "entity": "Item"
-    },
     {
       "name": "roll-tables",
       "label": "Loot Tables",
@@ -102,13 +53,6 @@
       "entity": "Item"
     },
     {
-      "name": "uesrpg-3e-reference",
-      "label": "Reference Journals",
-      "system": "uesrpg-d100",
-      "path": "./packs/uesrpg-3e-reference.db",
-      "entity": "JournalEntry"
-    },
-    {
       "name": "standard-skills",
       "label": "Standard Skills",
       "system": "uesrpg-d100",
@@ -123,6 +67,6 @@
   "secondaryTokenAttribute": "action_points",
   "url": "https://gitlab.com/DogBoneZone/uesrpg-3e/",
   "manifest": "https://gitlab.com/DogBoneZone/uesrpg-3e/raw/master/system.json",
-  "download": "https://gitlab.com/DogBoneZone/uesrpg-3e/-/archive/1.32/uesrpg-3e-1.32.zip",
+  "download": "https://gitlab.com/DogBoneZone/uesrpg-3e/-/archive/1.33/uesrpg-3e-1.33.zip",
   "license": "LICENSE.txt"
 }
