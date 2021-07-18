@@ -240,14 +240,14 @@ export class npcSheet extends ActorSheet {
           contentString = `<h4>Rolls for <b>${element.name}</b>!</h4>
           <p></p><b>Target Number: [[${wounded_char} + ${playerInput}]]</b> <p></p>
           <b>Result: [[${roll.result}]]</b><p></p>
-          <span style='color:red; font-size:120%;'> <b>UNLUCKY NUMBER!</b></span>`
+          <span style='color:rgb(168, 5, 5); font-size:120%;'> <b>UNLUCKY NUMBER!</b></span>`
 
     
         } else {
           contentString = `<h4>Rolls for <b>${element.name}</b>!</h4>
           <p></p><b>Target Number: [[${wounded_char} + ${playerInput}]]</b> <p></p>
           <b>Result: [[${roll.result}]]</b><p></p>
-          <b>${roll.total<=wounded_char ? " <span style='color:green; font-size: 120%;'> <b>SUCCESS!</b></span>" : " <span style='color:red; font-size: 120%;'> <b>FAILURE!</b></span>"}`
+          <b>${roll.total<=wounded_char ? " <span style='color:green; font-size: 120%;'> <b>SUCCESS!</b></span>" : " <span style='color:rgb(168, 5, 5); font-size: 120%;'> <b>FAILURE!</b></span>"}`
 
         } 
       } else {
@@ -280,14 +280,14 @@ export class npcSheet extends ActorSheet {
         contentString = `<h4>Rolls for <b>${element.name}</b>!</h4>
         <p></p><b>Target Number: [[${this.actor.data.data.characteristics[element.id].value} + ${playerInput}]]</b> <p></p>
         <b>Result: [[${roll.result}]]</b><p></p>
-        <span style='color:red; font-size:120%;'> <b>UNLUCKY NUMBER!</b></span>`
+        <span style='color:rgb(168, 5, 5); font-size:120%;'> <b>UNLUCKY NUMBER!</b></span>`
 
 
       } else {
         contentString = `<h4>Rolls for <b>${element.name}</b>!</h4>
         <p></p><b>Target Number: [[${this.actor.data.data.characteristics[element.id].value} + ${playerInput}]]</b> <p></p>
         <b>Result: [[${roll.result}]]</b><p></p>
-        <b>${roll.total<=(this.actor.data.data.characteristics[element.id].value + playerInput) ? " <span style='color:green; font-size: 120%;'> <b>SUCCESS!</b></span>" : " <span style='color:red; font-size: 120%;'> <b>FAILURE!</b></span>"}`
+        <b>${roll.total<=(this.actor.data.data.characteristics[element.id].value + playerInput) ? " <span style='color:green; font-size: 120%;'> <b>SUCCESS!</b></span>" : " <span style='color:rgb(168, 5, 5); font-size: 120%;'> <b>FAILURE!</b></span>"}`
 
       }
        roll.toMessage({
@@ -341,7 +341,7 @@ export class npcSheet extends ActorSheet {
               roll.total == this.actor.data.data.lucky_numbers.ln9 ||
               roll.total == this.actor.data.data.lucky_numbers.ln10)
               {
-              contentString = `<h4>Rolls for <b>${element.name}</b>!</h4>
+              contentString = `<h2 style='font-size: large'>${element.name}</h2>
               <p></p><b>Target Number: [[${this.actor.data.data.professionsWound[element.id]} + ${playerInput}]]</b> <p></p>
               <b>Result: [[${roll.result}]]</b><p></p>
               <span style='color:green; font-size:120%;'> <b>LUCKY NUMBER!</b></span>`
@@ -354,16 +354,16 @@ export class npcSheet extends ActorSheet {
                 roll.total == this.actor.data.data.unlucky_numbers.ul5 ||
                 roll.total == this.actor.data.data.unlucky_numbers.ul6) 
                 {
-                  contentString = `<h4>Rolls for <b>${element.name}</b>!</h4>
+                  contentString = `<h2 style='font-size: large'>${element.name}</h2>
                   <p></p><b>Target Number: [[${this.actor.data.data.professionsWound[element.id]} + ${playerInput}]]</b> <p></p>
                   <b>Result: [[${roll.result}]]</b><p></p>
-                  <span style='color:red; font-size:120%;'> <b>UNLUCKY NUMBER!</b></span>`
+                  <span style='color:rgb(168, 5, 5); font-size:120%;'> <b>UNLUCKY NUMBER!</b></span>`
 
                 } else {
-                  contentString = `<h4>Rolls for <b>${element.name}</b>!</h4>
+                  contentString = `<h2 style='font-size: large'>${element.name}</h2>
                   <p></p><b>Target Number: [[${this.actor.data.data.professionsWound[element.id]} + ${playerInput}]]</b> <p></p>
                   <b>Result: [[${roll.result}]]</b><p></p>
-                  <b>${roll.total<=(this.actor.data.data.professionsWound[element.id] + playerInput) ? " <span style='color:green; font-size: 120%;'> <b>SUCCESS!</b></span>" : " <span style='color:red; font-size: 120%;'> <b>FAILURE!</b></span>"}`
+                  <b>${roll.total<=(this.actor.data.data.professionsWound[element.id] + playerInput) ? " <span style='color:green; font-size: 120%;'> <b>SUCCESS!</b></span>" : " <span style='color:rgb(168, 5, 5); font-size: 120%;'> <b>FAILURE!</b></span>"}`
 
                 }
                  roll.toMessage({
@@ -415,7 +415,7 @@ export class npcSheet extends ActorSheet {
             roll.total == this.actor.data.data.lucky_numbers.ln9 ||
             roll.total == this.actor.data.data.lucky_numbers.ln10)
             {
-              contentString = `<h4>Rolls for <b>${element.name}</b>!</h4>
+              contentString = `<h2 style='font-size: large'>${element.name}</h2>
               <p></p><b>Target Number: [[${this.actor.data.data.skills[element.id].bonus} + ${playerInput}]]</b> <p></p>
               <b>Result: [[${roll.result}]]</b><p></p>
               <span style='color:green; font-size:120%;'> <b>LUCKY NUMBER!</b></span>`
@@ -427,16 +427,16 @@ export class npcSheet extends ActorSheet {
               roll.total == this.actor.data.data.unlucky_numbers.ul5 ||
               roll.total == this.actor.data.data.unlucky_numbers.ul6) 
               {
-                contentString = `<h4>Rolls for <b>${element.name}</b>!</h4>
+                contentString = `<h2 style='font-size: large'>${element.name}</h2>
                 <p></p><b>Target Number: [[${this.actor.data.data.skills[element.id].bonus} + ${playerInput}]]</b> <p></p>
                 <b>Result: [[${roll.result}]]</b><p></p>
-                <span style='color:red; font-size:120%;'> <b>UNLUCKY NUMBER!</b></span>`
+                <span style='color:rgb(168, 5, 5); font-size:120%;'> <b>UNLUCKY NUMBER!</b></span>`
 
               } else {
-                contentString = `<h4>Rolls for <b>${element.name}</b>!</h4>
+                contentString = `<h2 style='font-size: large'>${element.name}</h2>
                 <p></p><b>Target Number: [[${this.actor.data.data.skills[element.id].bonus} + ${playerInput}]]</b> <p></p>
                 <b>Result: [[${roll.result}]]</b><p></p>
-                <b>${roll.total<=(this.actor.data.data.skills[element.id].bonus + playerInput) ? " <span style='color:green; font-size: 120%;'> <b>SUCCESS!</b></span>" : " <span style='color:red; font-size: 120%;'> <b>FAILURE!</b></span>"}`
+                <b>${roll.total<=(this.actor.data.data.skills[element.id].bonus + playerInput) ? " <span style='color:green; font-size: 120%;'> <b>SUCCESS!</b></span>" : " <span style='color:rgb(168, 5, 5); font-size: 120%;'> <b>FAILURE!</b></span>"}`
 
               }
                roll.toMessage({
@@ -496,7 +496,7 @@ export class npcSheet extends ActorSheet {
 
     if (item.data.data.weapon2H === true) {
       if (item.data.data.superior === true) {
-        contentString = `<h4>Rolls damage for their <b>${item.name}!</b></h4>
+        contentString = `<h2 style='font-size: large'><img src="${item.img}" height=20 width=20 style='margin-right: 5px;'</img>${item.name}</h2>
           <p></p>
           <b>Damage:</b> <b> [[${roll2H.result}]] [[${supRoll2H.result}]]</b> ${roll2H._formula}<p></p>
           <b>Hit Location:</b> <b> [[${hit.total}]] </b> ${hit_loc}<p></p>
@@ -510,7 +510,7 @@ export class npcSheet extends ActorSheet {
           })
 
       } else {
-        contentString = `<h4>Rolls damage for their <b>${item.name}!</b></h4>
+        contentString = `<h2 style='font-size: large'><img src="${item.img}" height=20 width=20 style='margin-right: 5px;'</img>${item.name}</h2>
             <p></p>
             <b>Damage:</b> <b> [[${roll2H.result}]]</b> ${roll2H._formula}<p></p>
             <b>Hit Location:</b> <b> [[${hit.total}]] </b> ${hit_loc}<p></p>
@@ -526,7 +526,7 @@ export class npcSheet extends ActorSheet {
 
     } else {
         if (item.data.data.superior === true) {
-          contentString = `<h4>Rolls damage for their <b>${item.name}!</b></h4>
+          contentString = `<h2 style='font-size: large'><img src="${item.img}" height=20 width=20 style='margin-right: 5px;'</img>${item.name}</h2>
             <p></p>
             <b>Damage:</b> <b> [[${roll.result}]] [[${supRoll.result}]]</b> ${roll._formula}<p></p>
             <b>Hit Location:</b> <b> [[${hit.total}]] </b> ${hit_loc}<p></p>
@@ -540,7 +540,7 @@ export class npcSheet extends ActorSheet {
             })
 
       } else {
-        contentString = `<h4>Rolls damage for their <b>${item.name}!</b></h4>
+        contentString = `<h2 style='font-size: large'><img src="${item.img}" height=20 width=20 style='margin-right: 5px;'</img>${item.name}</h2>
             <p></p>
             <b>Damage:</b> <b> [[${roll.result}]]</b> ${roll._formula}<p></p>
             <b>Hit Location:</b> <b> [[${hit.total}]] </b> ${hit_loc}<p></p>
@@ -583,7 +583,7 @@ export class npcSheet extends ActorSheet {
         hit_loc = "Head"
       }
     
-      const content = `Casts the spell <b>${item.name}!</b>
+      const content = `<h2 style='font-size: large'><img src="${item.img}" height=20 width=20 style='margin-right: 5px;'</img>${item.name}</h2>
        <p></p>
        <b>Damage: [[${roll.result}]]</b> ${roll._formula}<b>
       <p></p>
@@ -624,22 +624,22 @@ export class npcSheet extends ActorSheet {
             roll.roll({async:false});
       
                 if (roll.total == this.actor.data.data.lucky_numbers.ln1 || roll.total == this.actor.data.data.lucky_numbers.ln2 || roll.total == this.actor.data.data.lucky_numbers.ln3 || roll.total == this.actor.data.data.lucky_numbers.ln4 || roll.total == this.actor.data.data.lucky_numbers.ln5) {
-                  contentString = `<h4>Rolls Combat Style <b>${item.name}</b>!</h4>
+                  contentString = `<h2 style='font-size: large'><img src="${item.img}" height=20 width=20 style='margin-right: 5px;'</img>${item.name}</h2>
                   <p></p><b>Target Number: [[${item.data.data.value} + ${playerInput}]]</b> <p></p>
                   <b>Result: [[${roll.result}]]</b><p></p>
                   <span style='color:green; font-size:120%;'> <b>LUCKY NUMBER!</b></span>`
       
                 } else if (roll.total == this.actor.data.data.unlucky_numbers.ul1 || roll.total == this.actor.data.data.unlucky_numbers.ul2 || roll.total == this.actor.data.data.unlucky_numbers.ul3 || roll.total == this.actor.data.data.unlucky_numbers.ul4 || roll.total == this.actor.data.data.unlucky_numbers.ul5) {
-                  contentString = `<h4>Rolls Combat Style <b>${item.name}</b>!</h4>
+                  contentString = `<h2 style='font-size: large'><img src="${item.img}" height=20 width=20 style='margin-right: 5px;'</img>${item.name}</h2>
                   <p></p><b>Target Number: [[${item.data.data.value} + ${playerInput}]]</b> <p></p>
                   <b>Result: [[${roll.result}]]</b><p></p>
-                  <span style='color:red; font-size:120%;'> <b>UNLUCKY NUMBER!</b></span>`
+                  <span style='color:rgb(168, 5, 5); font-size:120%;'> <b>UNLUCKY NUMBER!</b></span>`
       
                 } else {
-                  contentString = `<h4>Rolls Combat Style <b>${item.name}</b>!</h4>
+                  contentString = `<h2 style='font-size: large'><img src="${item.img}" height=20 width=20 style='margin-right: 5px;'</img>${item.name}</h2>
                   <p></p><b>Target Number: [[${item.data.data.value} + ${playerInput}]]</b> <p></p>
                   <b>Result: [[${roll.result}]]</b><p></p>
-                  <b>${roll.total<=(item.data.data.value + playerInput) ? " <span style='color:green; font-size: 120%;'> <b>SUCCESS!</b></span>" : " <span style='color: red; font-size: 120%;'> <b>FAILURE!</b></span>"}`
+                  <b>${roll.total<=(item.data.data.value + playerInput) ? " <span style='color:green; font-size: 120%;'> <b>SUCCESS!</b></span>" : " <span style='color: rgb(168, 5, 5); font-size: 120%;'> <b>FAILURE!</b></span>"}`
                 }
                  roll.toMessage({
                   async: false,
@@ -682,22 +682,22 @@ export class npcSheet extends ActorSheet {
           roll.roll({async:false});
 
           if (roll.total == this.actor.data.data.lucky_numbers.ln1 || roll.total == this.actor.data.data.lucky_numbers.ln2 || roll.total == this.actor.data.data.lucky_numbers.ln3 || roll.total == this.actor.data.data.lucky_numbers.ln4 || roll.total == this.actor.data.data.lucky_numbers.ln5) {
-            contentString = `<h4>Rolls Resistance for <b>${element.name}</b>!</h4>
+            contentString = `<h2 style='font-size: large;'${element.name} Resistance</h2>
             <p></p><b>Target Number: [[${this.actor.data.data.resistance[element.id]} + ${playerInput}]]</b> <p></p>
             <b>Result: [[${roll.result}]]</b><p></p>
             <span style='color:green; font-size:120%;'> <b>LUCKY NUMBER!</b></span>`
 
           } else if (roll.total == this.actor.data.data.unlucky_numbers.ul1 || roll.total == this.actor.data.data.unlucky_numbers.ul2 || roll.total == this.actor.data.data.unlucky_numbers.ul3 || roll.total == this.actor.data.data.unlucky_numbers.ul4 || roll.total == this.actor.data.data.unlucky_numbers.ul5) {
-            contentString = `<h4>Rolls Resistance for <b>${element.name}</b>!</h4>
+            contentString = `<h4>${element.name} Resistance</h4>
             <p></p><b>Target Number: [[${this.actor.data.data.resistance[element.id]} + ${playerInput}]]</b> <p></p>
             <b>Result: [[${roll.result}]]</b><p></p>
-            <span style='color:red; font-size:120%;'> <b>UNLUCKY NUMBER!</b></span>`
+            <span style='color:rgb(168, 5, 5); font-size:120%;'> <b>UNLUCKY NUMBER!</b></span>`
 
           } else {
-            contentString = `<h4>Rolls Resistance for <b>${element.name}</b>!</h4>
+            contentString = `<h4>${element.name} Resistance</h4>
             <p></p><b>Target Number: [[${this.actor.data.data.resistance[element.id]} + ${playerInput}]]</b> <p></p>
             <b>Result: [[${roll.result}]]</b><p></p>
-            <b>${roll.total<=(this.actor.data.data.resistance[element.id] + playerInput) ? " <span style='color:green; font-size: 120%;'> <b>SUCCESS!</b></span>" : " <span style='color: red; font-size: 120%;'> <b>FAILURE!</b></span>"}`
+            <b>${roll.total<=(this.actor.data.data.resistance[element.id] + playerInput) ? " <span style='color:green; font-size: 120%;'> <b>SUCCESS!</b></span>" : " <span style='color: rgb(168, 5, 5); font-size: 120%;'> <b>FAILURE!</b></span>"}`
           }
            roll.toMessage({
             async: false,
@@ -726,7 +726,7 @@ export class npcSheet extends ActorSheet {
     const li = button.parents(".item");
     const item = this.actor.getEmbeddedDocument("Item", li.data("itemId"));
 
-    const content = `<h2>${item.name}</h2><p>
+    const content = `<h2 style='font-size: large;'>${item.name}</h2><p>
       <b>AR:</b> ${item.data.data.armor}<p>
       <b>Magic AR:</b> ${item.data.data.magic_ar}<p>
       <b>Qualities</b> ${item.data.data.qualities}`
@@ -742,7 +742,7 @@ export class npcSheet extends ActorSheet {
     const li = button.parents(".item");
     const item = this.actor.getEmbeddedDocument("Item", li.data("itemId"));
 
-    const contentString = `<h2>${item.name}</h2><p>
+    const contentString = `<h2 style='font-size: large;'>${item.name}</h2><p>
       <b>Damage Bonus:</b> ${item.data.data.damage}<p>
       <b>Qualities</b> ${item.data.data.qualities}`
 
