@@ -240,13 +240,13 @@
           contentString = `<h4>Rolls for <b>${element.name}</b>!</h4>
           <p></p><b>Target Number: [[${wounded_char} + ${playerInput}]]</b> <p></p>
           <b>Result: [[${roll.result}]]</b><p></p>
-          <span style='color:red; font-size:120%;'> <b>UNLUCKY NUMBER!</b></span>`
+          <span style='color:rgb(168, 5, 5); font-size:120%;'> <b>UNLUCKY NUMBER!</b></span>`
     
         } else {
           contentString = `<h4>Rolls for <b>${element.name}</b>!</h4>
           <p></p><b>Target Number: [[${wounded_char} + ${playerInput}]]</b> <p></p>
           <b>Result: [[${roll.result}]]</b><p></p>
-          <b>${roll.total<=wounded_char ? " <span style='color:green; font-size: 120%;'> <b>SUCCESS!</b></span>" : " <span style='color:red; font-size: 120%;'> <b>FAILURE!</b></span>"}`
+          <b>${roll.total<=wounded_char ? " <span style='color:green; font-size: 120%;'> <b>SUCCESS!</b></span>" : " <span style='color:rgb(168, 5, 5); font-size: 120%;'> <b>FAILURE!</b></span>"}`
         } 
       } else {
       if (roll.total === this.actor.data.data.lucky_numbers.ln1 || roll.total == this.actor.data.data.lucky_numbers.ln2 || roll.total == this.actor.data.data.lucky_numbers.ln3 || roll.total == this.actor.data.data.lucky_numbers.ln4 || roll.total == this.actor.data.data.lucky_numbers.ln5) {
@@ -259,13 +259,13 @@
         contentString = `<h4>Rolls for <b>${element.name}</b>!</h4>
         <p></p><b>Target Number: [[${this.actor.data.data.characteristics[element.id].value} + ${playerInput}]]</b> <p></p>
         <b>Result: [[${roll.result}]]</b><p></p>
-        <span style='color:red; font-size:120%;'> <b>UNLUCKY NUMBER!</b></span>`
+        <span style='color:rgb(168, 5, 5); font-size:120%;'> <b>UNLUCKY NUMBER!</b></span>`
 
       } else {
         contentString = `<h4>Rolls for <b>${element.name}</b>!</h4>
         <p></p><b>Target Number: [[${this.actor.data.data.characteristics[element.id].value} + ${playerInput}]]</b> <p></p>
         <b>Result: [[${roll.result}]]</b><p></p>
-        <b>${roll.total<=(this.actor.data.data.characteristics[element.id].value + playerInput) ? " <span style='color:green; font-size: 120%;'> <b>SUCCESS!</b></span>" : " <span style='color:red; font-size: 120%;'> <b>FAILURE!</b></span>"}`
+        <b>${roll.total<=(this.actor.data.data.characteristics[element.id].value + playerInput) ? " <span style='color:green; font-size: 120%;'> <b>SUCCESS!</b></span>" : " <span style='color:rgb(168, 5, 5); font-size: 120%;'> <b>FAILURE!</b></span>"}`
       }
     }
     await roll.toMessage({
@@ -319,28 +319,28 @@
             roll.roll({async:false});
 
           if (roll.total === luck1 || roll.total === luck2 || roll.total === luck3 || roll.total === luck4 || roll.total === luck5) {
-            contentString = `<h4>Rolls for <b>${item.name}</b>!</h4>
+            contentString = `<h2 style='font-size: large'><img src="${item.img}" height=20 width=20 style='margin-right: 5px;'</img>${item.name}</h2>
             <p></p><b>Target Number: [[${item.data.data.value} + ${playerInput}]]</b> <p></p>
             <b>Result: [[${roll.result}]]</b><p></p>
             <span style='color:green; font-size:120%;'> <b>LUCKY NUMBER!</b></span>`
 
           } else if (roll.total == luck6 || roll.total === luck7 || roll.total === luck8 || roll.total === luck9 || roll.total === luck10) {
-            contentString = `<h4>Rolls for <b>${item.name}</b></h4>!
+            contentString = `<h2 style='font-size: large'><img src="${item.img}" height=20 width=20 style='margin-right: 5px;'</img>${item.name}</h2>
             <p></p><b>Target Number: [[${item.data.data.value} + ${playerInput}]]</b> <p></p>
             <b>Result: [[${roll.result}]]</b><p></p>
-            <span style='color:red; font-size:120%;'> <b>UNLUCKY NUMBER!</b></span>`
+            <span style='color:rgb(168, 5, 5); font-size:120%;'> <b>UNLUCKY NUMBER!</b></span>`
 
           } else if (this.actor.data.data.wounded === true) {
-            contentString = `<h4>Rolls for <b>${item.name}</b>!</h4>
+            contentString = `<h2 style='font-size: large'><img src="${item.img}" height=20 width=20 style='margin-right: 5px;'</img>${item.name}</h2>
             <p></p><b>Target Number: [[${item.data.data.value} + ${playerInput} + ${this.actor.data.data.woundPenalty}]]</b> <p></p>
             <b>Result: [[${roll.result}]]</b><p></p>
-            <b>${roll.total<=(item.data.data.value + playerInput + this.actor.data.data.woundPenalty) ? " <span style='color:green; font-size: 120%;'> <b>SUCCESS!</b></span>" : " <span style='color: red; font-size: 120%;'> <b>FAILURE!</b></span>"}`
+            <b>${roll.total<=(item.data.data.value + playerInput + this.actor.data.data.woundPenalty) ? " <span style='color:green; font-size: 120%;'> <b>SUCCESS!</b></span>" : " <span style='color: rgb(168, 5, 5); font-size: 120%;'> <b>FAILURE!</b></span>"}`
 
           } else {
-            contentString = `<h4>Rolls for <b>${item.name}</b>!</h4>
+            contentString = `<h2 style='font-size: large'><img src="${item.img}" height=20 width=20 style='margin-right: 5px;'</img>${item.name}</h2>
             <p></p><b>Target Number: [[${item.data.data.value} + ${playerInput}]]</b> <p></p>
             <b>Result: [[${roll.result}]]</b><p></p>
-            <b>${roll.total<=(item.data.data.value + playerInput) ? " <span style='color:green; font-size: 120%;'> <b>SUCCESS!</b></span>" : " <span style='color: red; font-size: 120%;'> <b>FAILURE!</b></span>"}`
+            <b>${roll.total<=(item.data.data.value + playerInput) ? " <span style='color:green; font-size: 120%;'> <b>SUCCESS!</b></span>" : " <span style='color: rgb(168, 5, 5); font-size: 120%;'> <b>FAILURE!</b></span>"}`
           }
           await roll.toMessage({
             async: false,
@@ -390,7 +390,7 @@
       hit_loc = "Head"
     }
 
-    let contentString = `<h4>Casts the spell <b>${item.name}!</b></h4>
+    let contentString = `<h2 style='font-size: large'><img src="${item.img}" height=20 width=20 style='margin-right: 5px;'</img>${item.name}</h2>
     <p></p>
     <b>Damage: [[${roll.result}]]</b> ${roll._formula}<b>
     <p></p>
@@ -432,28 +432,28 @@
           let contentString = "";
           
           if (roll.total == this.actor.data.data.lucky_numbers.ln1 || roll.total == this.actor.data.data.lucky_numbers.ln2 || roll.total == this.actor.data.data.lucky_numbers.ln3 || roll.total == this.actor.data.data.lucky_numbers.ln4 || roll.total == this.actor.data.data.lucky_numbers.ln5) {
-            contentString = `<h4>Rolls Combat Style <b>${item.name}</b>!</h4>
+            contentString = `<h2 style='font-size: large'><img src="${item.img}" height=20 width=20 style='margin-right: 5px;'</img>${item.name}</h2>
             <p></p><b>Target Number: [[${item.data.data.value} + ${playerInput}]]</b> <p></p>
             <b>Result: [[${roll.result}]]</b><p></p>
             <span style='color:green; font-size:120%;'> <b>LUCKY NUMBER!</b></span>`
 
           } else if (roll.total == this.actor.data.data.unlucky_numbers.ul1 || roll.total == this.actor.data.data.unlucky_numbers.ul2 || roll.total == this.actor.data.data.unlucky_numbers.ul3 || roll.total == this.actor.data.data.unlucky_numbers.ul4 || roll.total == this.actor.data.data.unlucky_numbers.ul5) {
-            contentString = `<h4>Rolls Combat Style <b>${item.name}</b>!</h4>
+            contentString = `<h2 style='font-size: large'><img src="${item.img}" height=20 width=20 style='margin-right: 5px;'</img>${item.name}</h2>
             <p></p><b>Target Number: [[${item.data.data.value} + ${playerInput}]]</b> <p></p>
             <b>Result: [[${roll.result}]]</b><p></p>
-            <span style='color:red; font-size:120%;'> <b>UNLUCKY NUMBER!</b></span>`
+            <span style='color:rgb(168, 5, 5); font-size:120%;'> <b>UNLUCKY NUMBER!</b></span>`
 
           } else if (this.actor.data.data.wounded === true) {
-            contentString = `<h4>Rolls Combat Style <b>${item.name}</b>!</h4>
+            contentString = `<h2 style='font-size: large'><img src="${item.img}" height=20 width=20 style='margin-right: 5px;'</img>${item.name}</h2>
             <p></p><b>Target Number: [[${item.data.data.value} + ${playerInput} + ${this.actor.data.data.woundPenalty}]]</b> <p></p>
             <b>Result: [[${roll.result}]]</b><p></p>
-            <b>${roll.total<=(item.data.data.value + playerInput + this.actor.data.data.woundPenalty) ? " <span style='color:green; font-size: 120%;'> <b>SUCCESS!</b></span>" : " <span style='color: red; font-size: 120%;'> <b>FAILURE!</b></span>"}`
+            <b>${roll.total<=(item.data.data.value + playerInput + this.actor.data.data.woundPenalty) ? " <span style='color:green; font-size: 120%;'> <b>SUCCESS!</b></span>" : " <span style='color: rgb(168, 5, 5); font-size: 120%;'> <b>FAILURE!</b></span>"}`
 
           } else {
-            contentString = `<h4>Rolls Combat Style <b>${item.name}</b>!</h4>
+            contentString = `<h2 style='font-size: large'><img src="${item.img}" height=20 width=20 style='margin-right: 5px;'</img>${item.name}</h2>
             <p></p><b>Target Number: [[${item.data.data.value} + ${playerInput}]]</b> <p></p>
             <b>Result: [[${roll.result}]]</b><p></p>
-            <b>${roll.total<=(item.data.data.value + playerInput) ? " <span style='color:green; font-size: 120%;'> <b>SUCCESS!</b></span>" : " <span style='color: red; font-size: 120%;'> <b>FAILURE!</b></span>"}`
+            <b>${roll.total<=(item.data.data.value + playerInput) ? " <span style='color:green; font-size: 120%;'> <b>SUCCESS!</b></span>" : " <span style='color: rgb(168, 5, 5); font-size: 120%;'> <b>FAILURE!</b></span>"}`
           }
           await roll.toMessage({
             async: false,
@@ -497,22 +497,22 @@
           let contentString = "";
 
           if (roll.total == this.actor.data.data.lucky_numbers.ln1 || roll.total == this.actor.data.data.lucky_numbers.ln2 || roll.total == this.actor.data.data.lucky_numbers.ln3 || roll.total == this.actor.data.data.lucky_numbers.ln4 || roll.total == this.actor.data.data.lucky_numbers.ln5) {
-            contentString = `<h4>Rolls Resistance for <b>${element.name}</b>!</h4>
+            contentString = `<h2 style='font-size: large;'>${element.name} Resistance</h2>
             <p></p><b>Target Number: [[${this.actor.data.data.resistance[element.id]} + ${playerInput}]]</b> <p></p>
             <b>Result: [[${roll.result}]]</b><p></p>
             <span style='color:green; font-size:120%;'> <b>LUCKY NUMBER!</b></span>`
 
           } else if (roll.total == this.actor.data.data.unlucky_numbers.ul1 || roll.total == this.actor.data.data.unlucky_numbers.ul2 || roll.total == this.actor.data.data.unlucky_numbers.ul3 || roll.total == this.actor.data.data.unlucky_numbers.ul4 || roll.total == this.actor.data.data.unlucky_numbers.ul5) {
-            contentString = `<h4>Rolls Resistance for <b>${element.name}</b>!</h4>
+            contentString = `<h4 style='font-size: large;'>${element.name} Resistance</h4>
             <p></p><b>Target Number: [[${this.actor.data.data.resistance[element.id]} + ${playerInput}]]</b> <p></p>
             <b>Result: [[${roll.result}]]</b><p></p>
-            <span style='color:red; font-size:120%;'> <b>UNLUCKY NUMBER!</b></span>`
+            <span style='color:rgb(168, 5, 5); font-size:120%;'> <b>UNLUCKY NUMBER!</b></span>`
 
           } else {
-            contentString = `<h4>Rolls Resistance for <b>${element.name}</b>!</h4>
+            contentString = `<h4 style='font-size: large;'>${element.name} Resistance</h4>
             <p></p><b>Target Number: [[${this.actor.data.data.resistance[element.id]} + ${playerInput}]]</b> <p></p>
             <b>Result: [[${roll.result}]]</b><p></p>
-            <b>${roll.total<=(this.actor.data.data.resistance[element.id] + playerInput) ? " <span style='color:green; font-size: 120%;'> <b>SUCCESS!</b></span>" : " <span style='color: red; font-size: 120%;'> <b>FAILURE!</b></span>"}`
+            <b>${roll.total<=(this.actor.data.data.resistance[element.id] + playerInput) ? " <span style='color:green; font-size: 120%;'> <b>SUCCESS!</b></span>" : " <span style='color: rgb(168, 5, 5); font-size: 120%;'> <b>FAILURE!</b></span>"}`
           }
           await roll.toMessage({
             async: false,
@@ -573,7 +573,7 @@
 
     if (item.data.data.weapon2H === true) {
       if (item.data.data.superior === true) {
-        contentString = `<h4>Rolls damage for their <b>${item.name}!</b></h4>
+        contentString = `<h2 style='font-size: large'><img src="${item.img}" height=20 width=20 style='margin-right: 5px;'</img>${item.name}</h2>
           <p></p>
           <b>Damage:</b> <b> [[${roll2H.result}]] [[${supRoll2H.result}]]</b> ${roll2H._formula}<p></p>
           <b>Hit Location:</b> <b> [[${hit.total}]] </b> ${hit_loc}<p></p>
@@ -587,7 +587,7 @@
           })
 
       } else {
-        contentString = `<h4>Rolls damage for their <b>${item.name}!</b></h4>
+        contentString = `<h2 style='font-size: large'><img src="${item.img}" height=20 width=20 style='margin-right: 5px;'</img>${item.name}</h2>
             <p></p>
             <b>Damage:</b> <b> [[${roll2H.result}]]</b> ${roll2H._formula}<p></p>
             <b>Hit Location:</b> <b> [[${hit.total}]] </b> ${hit_loc}<p></p>
@@ -603,7 +603,7 @@
 
     } else {
         if (item.data.data.superior === true) {
-          contentString = `<h4>Rolls damage for their <b>${item.name}!</b></h4>
+          contentString = `<h2 style='font-size: large'><img src="${item.img}" height=20 width=20 style='margin-right: 5px;'</img>${item.name}</h2>
             <p></p>
             <b>Damage:</b> <b> [[${roll.result}]] [[${supRoll.result}]]</b> ${roll._formula}<p></p>
             <b>Hit Location:</b> <b> [[${hit.total}]] </b> ${hit_loc}<p></p>
@@ -617,7 +617,7 @@
             })
 
       } else {
-        contentString = `<h4>Rolls damage for their <b>${item.name}!</b></h4>
+        contentString = `<h2 style='font-size: large'><img src="${item.img}" height=20 width=20 style='margin-right: 5px;'</img>${item.name}</h2>
             <p></p>
             <b>Damage:</b> <b> [[${roll.result}]]</b> ${roll._formula}<p></p>
             <b>Hit Location:</b> <b> [[${hit.total}]] </b> ${hit_loc}<p></p>
@@ -639,7 +639,7 @@
     const li = button.parents(".item");
     const item = this.actor.items.get(li.data("itemId"));
 
-    const content = `<h2>${item.name}</h2><p>
+    const content = `<h2 style='font-size: large;'><img src="${item.img}" height=20 width=20 style='margin-right: 5px;'</img>${item.name}</h2><p>
       <b>AR:</b> ${item.data.data.armor}<p>
       <b>Magic AR:</b> ${item.data.data.magic_ar}<p>
       <b>Qualities</b> ${item.data.data.qualities}`
@@ -654,7 +654,7 @@
     const li = button.parents(".item");
     const item = this.actor.getEmbeddedDocument("Item", li.data("itemId"));
 
-    const contentString = `<h2>${item.name}</h2><p>
+    const contentString = `<h2 style='font-size: large;'><img src="${item.img}" height=20 width=20 style='margin-right: 5px;'</img>${item.name}</h2><p>
       <b>Damage Bonus:</b> ${item.data.data.damage}<p>
       <b>Qualities</b> ${item.data.data.qualities}`
 
@@ -746,7 +746,7 @@
     const li = button.parents(".item");
     const item = this.actor.getEmbeddedDocument("Item", li.data("itemId"));
 
-    let contentString = `<h2>${item.name}</h2><p>
+    let contentString = `<h2 style='font-size: large'><img src="${item.img}" height=20 width=20 style='margin-right: 5px;'</img>${item.name}</h2><p>
     <i><b>${item.type}</b></i><p>
       <i>${item.data.data.description}</i>`
 
