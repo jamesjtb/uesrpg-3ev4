@@ -21,12 +21,16 @@
                     <tr>
                         <th>Reach</th>
                         <th>EL</th>
-                        <th colspan="2">Qualities</th>
+                        <th colspan="2">Magic Charge</th>
                     </tr>
                     <tr>
-                        <td><input type="number" name="data.reach" value="{{data.reach}}"></td>
+                        <td><input type="text" name="data.reach" value="{{data.reach}}"></td>
                         <td><input type="number" name="data.enchant_level" value="{{data.enchant_level}}"></td>
-                        <td colspan="2"><input type="text" name="data.qualities" value="{{data.qualities}}"></td>
+                        <td class="magicChargeInputs" colspan="2">
+                            <button class="chargePlus">+</button>
+                            <button class="chargeMinus">-</button>
+                            <label type="number" name="data.charge.value">{{data.charge.value}} / {{data.charge.max}}</label>
+                    </td>
                     </tr>
                 </table>
             </div>
@@ -53,19 +57,11 @@
             <table class="field-inputs-small">
                 <tr>
                     <th>Attribute</th>
-                    <th>Input</th>
-                    <th>Toggle</th>
+                    <th>Value</th>
                 </tr>
                 <tr>
-                    <th>2H Weapon Damage</th>
-                    <td><input type="text" name="data.damage2" value="{{data.damage2}}"></td>
-                    <td><input type="checkbox" name="data.weapon2H" {{checked data.weapon2H}}></td>
-                </tr>
-            </table>
-            <table class="field-inputs-small">
-                <tr>
-                    <th>Attribute</th>
-                    <th>Toggle</th>
+                    <td>Max Magic Charge</td>
+                    <td><input type="number" name="data.charge.max" value="{{data.charge.max}}"></td>
                 </tr>
                 <tr>
                     <td>Roll Damage Twice</td>
@@ -74,6 +70,44 @@
                 <tr>
                     <td>Exclude from current ENC</td>
                     <td><input type="checkbox" name="data.excludeENC" {{checked data.excludeENC}}></td>
+                </tr>
+            </table>
+            <table class="field-inputs-small">
+                <tr>
+                    <th>STR+</th>
+                    <th>END+</th>
+                    <th>AGI+</th>
+                    <th>INT+</th>
+                    <th>WP+</th>
+                    <th>PRC+</th>
+                    <th>PRS+</th>
+                    <th>LCK+</th>
+                </tr>
+                <tr>
+                    <td><input type="number" name="data.characteristicBonus.strChaBonus" value="{{data.characteristicBonus.strChaBonus}}"></td>
+                    <td><input type="number" name="data.characteristicBonus.endChaBonus" value="{{data.characteristicBonus.endChaBonus}}"></td>
+                    <td><input type="number" name="data.characteristicBonus.agiChaBonus" value="{{data.characteristicBonus.agiChaBonus}}"></td>
+                    <td><input type="number" name="data.characteristicBonus.intChaBonus" value="{{data.characteristicBonus.intChaBonus}}"></td>
+                    <td><input type="number" name="data.characteristicBonus.wpChaBonus" value="{{data.characteristicBonus.wpChaBonus}}"></td>
+                    <td><input type="number" name="data.characteristicBonus.prcChaBonus" value="{{data.characteristicBonus.prcChaBonus}}"></td>
+                    <td><input type="number" name="data.characteristicBonus.prsChaBonus" value="{{data.characteristicBonus.prsChaBonus}}"></td>
+                    <td><input type="number" name="data.characteristicBonus.lckChaBonus" value="{{data.characteristicBonus.lckChaBonus}}"></td>
+                </tr>
+            </table>
+            <table class="field-inputs-small">
+                <tr>
+                    <th>Attribute</th>
+                    <th>Input</th>
+                    <th>Toggle</th>
+                </tr>
+                <tr>
+                    <th>2H Damage</th>
+                    <td><input type="text" name="data.damage2" value="{{data.damage2}}"></td>
+                    <td><input type="checkbox" name="data.weapon2H" {{checked data.weapon2H}}></td>
+                </tr>
+                <tr>
+                    <th>Qualities</th>
+                    <td colspan="2">{{editor content=data.qualities target="data.qualities" button=true owner=owner editable=editable}}</td>
                 </tr>
             </table>
     </section>
