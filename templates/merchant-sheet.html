@@ -1,0 +1,281 @@
+<form class="{{cssClass}}" autocomplete="off">
+
+    {{!-- Sheet Header --}}
+    <div class="stickyHeader">
+    <header class="sheet-header">
+        <img class="profile-img" src="{{actor.img}}" data-edit="img" title="{{actor.name}}" height="100" width="100"/>
+        <div class="header-fields">
+            <h1 class="charname"><input name="name" type="text" value="{{actor.name}}" placeholder="Name"/></h1>
+            <div class="sliderContainer">
+                <button class="decreasePriceMod"><i class="fa fa-angle-double-left "></i></button>
+                <label type="text"><b> Price Modifier: </b><span id="merchantPriceValue">{{data.priceMod}}</span>%</label>
+                <button class="increasePriceMod"><i class="fa fa-angle-double-right "></i></button>
+                <input class="merchantPriceSlider" type="range" step="5" name="data.priceMod" value="{{data.priceMod}}" min="-100" max="100" id="merchantSlider" disabled/>
+                <label><b>Wealth</b></label>
+                <input type="number" name="data.wealth" value="{{data.wealth}}">
+            </div>
+            <div class="merchantSkills">
+                <button class="professions-roll" name="Social" id="social"><span class="fas fa-dice-d20"></span> Social {{data.professions.social}}%</button>
+                <button class="commerce-roll" name="Commerce" id="commerce"><span class="fas fa-dice-d20"></span> Commerce {{data.skills.commerce.bonus}}%</button>
+                <button class="professions-roll" name="Knowledge" id="knowledge"><span class="fas fa-dice-d20"></span> Knowledge {{data.professions.knowledge}}%</button>
+            </div>           
+        </div>
+    </header>
+
+    {{!-- Sheet Tab Navigation --}}
+    <nav class="sheet-tabs2 tabs" data-group="primary">
+        <a class="item" data-tab="merchant">Merchant</a>
+        <a class="item" data-tab="core" id="coreTab">Core</a>
+        <a class="item" data-tab="talents" id="abilitiesTab">Abilities</a>
+    </nav>
+    </div>
+
+    {{!-- Sheet Body --}}
+    <section class="sheet-body">
+
+        {{!-- Items List Tab --}}
+        <div class="tab core" data-group="primary" data-tab="merchant">
+            <input class="storeName" type="text" name="data.storeName" value="{{data.storeName}}">
+            <ol class="merchant-list">
+                <h4 class="merchant-list-header">
+                    <button class="weapon-create" id="weapon">+</button>
+                    <label>Weapons</label>
+                    <label class="rightFloat">Price</label>
+                    <label class="rightFloat">Qty</label>
+                </h4>
+                {{#each actor.data.weapon as |item id|}}
+                    <li class="item flexrow" data-item-id="{{item._id}}">
+                        <a class="buyButton" title="Buy Item"><i class="fas fa-coins"></i></a>
+                        <img class="item-img" src="{{item.img}}" title="{{item.name}}" width="24" height="24"/>
+                        <h4 class="item-name">{{item.name}}</h4>
+                        <label class="merchantPrice">{{item.data.quantity}}</label>
+                        <label class="merchantPrice">{{item.data.modPrice}}</label>
+                        <div class="item-controls">
+                            <a class="item-control item-delete" title="Delete Item"><i class="fas fa-trash"></i></a>
+                        </div>
+                    </li>
+                {{/each}}
+            </ol>
+            <ol class="merchant-list">
+                <h4 class="merchant-list-header">
+                    <button class="ammo-create" id="ammunition">+</button>
+                    <label>Ammunition</label>
+                    <label class="rightFloat">Price</label>
+                    <label class="rightFloat">Qty</label>
+                </h4>
+                {{#each actor.data.ammunition as |item id|}}
+                    <li class="item flexrow" data-item-id="{{item._id}}">
+                        <a class="buyButton" title="Buy Item"><i class="fas fa-coins"></i></a>
+                        <img class="item-img" src="{{item.img}}" title="{{item.name}}" width="24" height="24"/>
+                        <h4 class="item-name">{{item.name}}</h4>
+                        <label class="merchantPrice">{{item.data.quantity}}</label>
+                        <label class="merchantPrice">{{item.data.modPrice}}</label>
+                        <div class="item-controls">
+                            <a class="item-control item-delete" title="Delete Item"><i class="fas fa-trash"></i></a>
+                        </div>
+                    </li>
+                {{/each}}
+            </ol>
+            <ol class="merchant-list">
+                <h4 class="merchant-list-header">
+                    <button class="armor-create" id="armor">+</button>
+                    <label>{{equipped}} Armor</label>
+                    <label class="rightFloat">Price</label>
+                    <label class="rightFloat">Qty</label>
+                </h4>
+                {{#each actor.data.armor as |armor equipped|}}
+                {{#each armor as |item id|}}
+                    <li class="item flexrow" data-item-id="{{item._id}}">
+                        <a class="buyButton" title="Buy Item"><i class="fas fa-coins"></i></a>
+                        <img class="item-img" src="{{item.img}}" title="{{item.name}}" width="24" height="24"/>
+                        <h4 class="item-name">{{item.name}}</h4>
+                        <label class="merchantPrice">{{item.data.quantity}}</label>
+                        <label class="merchantPrice">{{item.data.modPrice}}</label>
+                        <div class="item-controls">
+                            <a class="item-control item-delete" title="Delete Item"><i class="fas fa-trash"></i></a>
+                        </div>
+                    </li>
+                {{/each}}
+            {{/each}}
+            </ol>
+            <ol class="merchant-list">
+                <h4 class="merchant-list-header">
+                    <button class="gear-create" id="item">+</button>
+                    <label>Items</label>
+                    <label class="rightFloat">Price</label>
+                    <label class="rightFloat">Qty</label>
+                </h4>
+                {{#each actor.data.gear as |item id|}}
+                    <li class="item flexrow" data-item-id="{{item._id}}">
+                        <a class="buyButton" title="Buy Item"><i class="fas fa-coins"></i></a>
+                        <img class="item-img" src="{{item.img}}" title="{{item.name}}" width="24" height="24"/>
+                        <h4 class="item-name">{{item.name}}</h4>
+                        <label class="merchantPrice">{{item.data.quantity}}</label>
+                        <label class="merchantPrice">{{item.data.modPrice}}</label>
+                        <div class="item-controls">
+                            <a class="item-control item-delete" title="Delete Item"><i class="fas fa-trash"></i></a>
+                        </div>
+                    </li>
+                {{/each}}
+            </ol>          
+        </div>
+
+        {{!-- Core Tab --}}
+        <div class="tab core" data-group="primary" data-tab="core">
+            <div>
+            <table class="skill-table">
+                <tr>
+                    <th><input type="button" class="characteristic-roll" name="STR" id="str" value="STR"></th>
+                    <th><input type="button" class="characteristic-roll" name="END" id="end" value="END"></th>
+                    <th><input type="button" class="characteristic-roll" name="AGI" id="agi" value="AGI"></th>
+                    <th><input type="button" class="characteristic-roll" name="INT" id="int" value="INT"></th>
+                    <th><input type="button" class="characteristic-roll" name="WP" id="wp" value="WP"></th>
+                    <th><input type="button" class="characteristic-roll" name="PRC" id="prc" value="PRC"></th>
+                    <th><input type="button" class="characteristic-roll" name="PRS" id="prs" value="PRS"></th>
+                    <th><input type="button" class="characteristic-roll" name="LCK" id="lck" value="LCK"></th>
+                </tr>
+                <tr>
+                    <td class="chaValue">{{data.characteristics.str.total}}</td>
+                    <td class="chaValue">{{data.characteristics.end.total}}</td>
+                    <td class="chaValue">{{data.characteristics.agi.total}}</td>
+                    <td class="chaValue">{{data.characteristics.int.total}}</td>
+                    <td class="chaValue">{{data.characteristics.wp.total}}</td>
+                    <td class="chaValue">{{data.characteristics.prc.total}}</td>
+                    <td class="chaValue">{{data.characteristics.prs.total}}</td>
+                    <td class="chaValue">{{data.characteristics.lck.total}}</td>
+                </tr>
+                <tr>
+                    <td><input type="checkbox" name="data.characteristics.str.favored" {{checked data.characteristics.str.favored}}></td>
+                    <td><input type="checkbox" name="data.characteristics.end.favored" {{checked data.characteristics.end.favored}}></td>
+                    <td><input type="checkbox" name="data.characteristics.agi.favored" {{checked data.characteristics.agi.favored}}></td>
+                    <td><input type="checkbox" name="data.characteristics.int.favored" {{checked data.characteristics.int.favored}}></td>
+                    <td><input type="checkbox" name="data.characteristics.wp.favored" {{checked data.characteristics.wp.favored}}></td>
+                    <td><input type="checkbox" name="data.characteristics.prc.favored" {{checked data.characteristics.prc.favored}}></td>
+                    <td><input type="checkbox" name="data.characteristics.prs.favored" {{checked data.characteristics.prs.favored}}></td>
+                    <td><input type="checkbox" name="data.characteristics.lck.favored" {{checked data.characteristics.lck.favored}}></td>
+                </tr>
+            </table>
+            </div>
+            <div>
+                <table>
+                    <tr class="skill-table">
+                        <th>Race/Species</th>
+                        <th>Threat Rating</th>
+                        <th>Age</th>
+                        <th>Soul Energy</th>
+                    </tr>
+                    <tr class="field-inputs">
+                        <td><input type="text" name="data.race" value="{{data.race}}" ></td>
+                        <td><select name="data.threat" data-type="String">
+                            {{#select actor.data.threat}}
+                            {{#each actor.data.threatCategory as |threatCategory key|}}
+                            <option value="{{key}}">{{threatCategory}}</option> 
+                            {{/each}} {{/select}}
+                        </select></td> 
+                        <td><input type="number" name="data.age" value="{{data.age}}" ></td>
+                        <td><input type="number" name="data.soul_energy" value="{{data.soul_energy}}" ></td>
+                    </tr>
+                </table>
+                <table>
+                    <tr class="skill-table">
+                        <th><input type="button" class="professions-roll" name="Combat" id="combat" value="Combat"></th>
+                        <th><input type="button" class="professions-roll" name="Magic" id="magic" value="Magic"></th>
+                        <th><input type="button" class="professions-roll" name="Evade" id="evade" value="Evade"></th>
+                        <th><input type="button" class="professions-roll" name="Observe" id="observe" value="Observe"></th>
+                        <th><input type="button" class="professions-roll" name="Stealth" id="stealth" value="Stealth"></th>
+                        <th><input type="button" class="professions-roll" name="Knowledge" id="knowledge" value="Knowledge"></th>
+                        <th><input type="button" class="professions-roll" name="Social" id="social" value="Social"></th>
+                        <th><input type="button" class="professions-roll" name="Physical" id="physical" value="Physical"></th>
+                    </tr>
+                    <tr class="field-inputs">
+                        <td><input type="number" name="data.professions.combat" value="{{data.professions.combat}}" ></td>
+                        <td><input type="number" name="data.professions.magic" value="{{data.professions.magic}}" ></td>
+                        <td><input type="number" name="data.professions.evade" value="{{data.professions.evade}}" ></td>
+                        <td><input type="number" name="data.professions.observe" value="{{data.professions.observe}}" ></td>
+                        <td><input type="number" name="data.professions.stealth" value="{{data.professions.stealth}}" ></td>
+                        <td><input type="number" name="data.professions.knowledge" value="{{data.professions.knowledge}}" ></td>
+                        <td><input type="number" name="data.professions.social" value="{{data.professions.social}}" ></td>
+                        <td><input type="number" name="data.professions.physical" value="{{data.professions.physical}}" ></td>
+                    </tr>
+                </table>
+            </div>
+            <table>
+                <tr class="skill-table">
+                    <th>Roll</th>
+                    <th>Unconventional Skill</th>
+                    <th>Value</th>
+                </tr>
+                <tr class="field-inputs-small">
+                    <td><input type="button" class="unconventional-roll" name="commerce" id="commerce" value="Roll"></td>
+                    <td><label>Commerce</label></td>
+                    <td><input type="number" name="data.skills.commerce.bonus" value="{{data.skills.commerce.bonus}}"></td>
+                </tr>
+                <tr class="field-inputs-small">
+                    <td><input type="button" class="unconventional-roll" name="{{data.skills.profession1.name}}" id="profession1" value="Roll"></td>
+                    <td><input type="text" name="data.skills.profession1.name" value="{{data.skills.profession1.name}}" ></td>
+                    <td><input type="number" name="data.skills.profession1.bonus" value="{{data.skills.profession1.bonus}}" ></td>
+                </tr>
+                <tr class="field-inputs-small">
+                    <td><input type="button" class="unconventional-roll" name="{{data.skills.profession2.name}}" id="profession2" value="Roll"></td>
+                    <td><input type="text" name="data.skills.profession2.name" value="{{data.skills.profession2.name}}" ></td>
+                    <td><input type="number" name="data.skills.profession2.bonus" value="{{data.skills.profession2.bonus}}" ></td>
+                </tr>
+                <tr class="field-inputs-small">
+                    <td><input type="button" class="unconventional-roll" name="{{data.skills.profession3.name}}" id="profession3" value="Roll"></td>
+                    <td><input type="text" name="data.skills.profession3.name" value="{{data.skills.profession3.name}}" ></td>
+                    <td><input type="number" name="data.skills.profession3.bonus" value="{{data.skills.profession3.bonus}}" ></td>
+                </tr>
+            </table>
+        </div>
+
+        {{!-- Talents Tab --}}
+        <div class="tab talents" data-group="primary" data-tab="talents">
+            <ol class="talents-list">
+                <h4 class="list-header-skills">
+                    <button class="trait-create" id="trait">+</button>
+                    <label>Traits</label>
+                </h4>
+                {{#each actor.data.trait as |item id|}}
+                    <li class="item flexrow" data-item-id="{{item._id}}">
+                        <img class="item-img" src="{{item.img}}" title="Send to Chat" width="24" height="24"/>
+                        <h4 class="item-name">{{item.name}}</h4>
+                        <div class="item-controls">
+                            <a class="item-control item-delete" title="Delete Item"><i class="fas fa-trash"></i></a>
+                        </div>
+                    </li>
+                {{/each}}
+            </ol>
+            <h4 class="list-header-skills">
+                <button class="power-create" id="power">+</button>
+                <label>Powers</label>
+            </h4>
+                <ol class="talents-list">
+                    {{#each actor.data.power as |item id|}}
+                        <li class="item flexrow" data-item-id="{{item._id}}">
+                            <img class="item-img" src="{{item.img}}" title="Send to Chat" width="24" height="24"/>
+                            <h4 class="item-name">{{item.name}}</h4>
+                            <div class="item-controls">
+                                <a class="item-control item-delete" title="Delete Item"><i class="fas fa-trash"></i></a>
+                            </div>
+                        </li>
+                    {{/each}}
+                </ol>
+                    <ol class="talents-list">
+                        <h4 class="list-header-skills">
+                            <button class="talent-create" id="talent">+</button>
+                            <label>Talents</label>
+                        </h4>
+                        {{#each actor.data.talent as |item id|}}
+                            <li class="item flexrow" data-item-id="{{item._id}}">
+                                <img class="item-img" src="{{item.img}}" title="Send to Chat" width="24" height="24"/>
+                                <h4 class="item-name">{{item.name}}</h4>
+                                <div class="item-controls">
+                                    <a class="item-control item-delete" title="Delete Item"><i class="fas fa-trash"></i></a>
+                                </div>
+                            </li>
+                        {{/each}}
+                    </ol>
+        </div>
+    </section>
+</form>
+
