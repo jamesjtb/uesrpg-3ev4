@@ -1,0 +1,36 @@
+<form class="{{cssClass}}" autocomplete="off">
+    <div class="stickyHeader">
+    <header class="sheet-header">
+        <img class="profile-img" src="{{item.img}}" data-edit="img" title="{{item.name}}"/>
+        <div class="header-fields">
+            <h1 class="charname"><input name="name" type="text" value="{{item.name}}" placeholder="Name"/></h1>
+            <div class="item-resource">
+                <table>
+                    <tr>
+                       <th>Read/Write</th>
+                       <th>Speak</th>
+                    </tr>
+                    <tr>
+                        <td><input type="checkbox" name="data.readWrite" {{checked data.readWrite}}/></td>
+                        <td><input type="checkbox" name="data.speak" {{checked data.speak}}/></td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+    </header>
+
+    {{!-- Sheet Tab Navigation --}}
+    <nav class="sheet-tabs3 tabs" data-group="primary">
+        <a class="item" data-tab="description">Description</a>
+    </nav>
+    </div>
+
+    {{!-- Sheet Body --}}
+    <section class="sheet-body-items">
+
+        {{!-- Description Tab --}}
+        <div class="tab" data-group="primary" data-tab="description">
+            {{editor content=data.description target="data.description" button=true owner=owner editable=editable}}
+        </div>
+    </section>
+</form>
