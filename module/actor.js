@@ -6,6 +6,7 @@ export class SimpleActor extends Actor {
   async _preCreate(data, options, user) {
     await super._preCreate(data, options, user);
     if (data.type === "character") {
+      this.data.token.update({vision: true, actorLink: true, disposition: 1})
       let skillPack = game.packs.get("uesrpg-d100.standard-skills");
       let collection = await skillPack.getDocuments();
       collection.sort(function (a, b) {
@@ -43,15 +44,26 @@ export class SimpleActor extends Actor {
   _prepareCharacterData(actorData) {
     const data = actorData.data;
 
+    //Add bonuses from items to Characteristics
+    data.characteristics.str.total = data.characteristics.str.base + this._strBonusCalc(actorData);
+    data.characteristics.end.total = data.characteristics.end.base + this._endBonusCalc(actorData);
+    data.characteristics.agi.total = data.characteristics.agi.base + this._agiBonusCalc(actorData);
+    data.characteristics.int.total = data.characteristics.int.base + this._intBonusCalc(actorData);
+    data.characteristics.wp.total = data.characteristics.wp.base + this._wpBonusCalc(actorData);
+    data.characteristics.prc.total = data.characteristics.prc.base + this._prcBonusCalc(actorData);
+    data.characteristics.prs.total = data.characteristics.prs.base + this._prsBonusCalc(actorData);
+    data.characteristics.lck.total = data.characteristics.lck.base + this._lckBonusCalc(actorData);
+
+
     //Characteristic Bonuses
-    var strBonus = Math.floor(data.characteristics.str.value / 10);
-    var endBonus = Math.floor(data.characteristics.end.value / 10);
-    var agiBonus = Math.floor(data.characteristics.agi.value / 10);
-    var intBonus = Math.floor(data.characteristics.int.value / 10);
-    var wpBonus = Math.floor(data.characteristics.wp.value / 10);
-    var prcBonus = Math.floor(data.characteristics.prc.value / 10);
-    var prsBonus = Math.floor(data.characteristics.prs.value / 10);
-    var lckBonus = Math.floor(data.characteristics.lck.value / 10);
+    var strBonus = Math.floor(data.characteristics.str.total / 10);
+    var endBonus = Math.floor(data.characteristics.end.total / 10);
+    var agiBonus = Math.floor(data.characteristics.agi.total / 10);
+    var intBonus = Math.floor(data.characteristics.int.total / 10);
+    var wpBonus = Math.floor(data.characteristics.wp.total / 10);
+    var prcBonus = Math.floor(data.characteristics.prc.total / 10);
+    var prsBonus = Math.floor(data.characteristics.prs.total / 10);
+    var lckBonus = Math.floor(data.characteristics.lck.total / 10);
 
     //Skill Bonus Calculation
     const legacyUntrained = game.settings.get("uesrpg-d100", "legacyUntrainedPenalty");
@@ -95,6 +107,19 @@ export class SimpleActor extends Actor {
     }
   }
 
+  //Set Campaign Rank
+  if (data.xpTotal >= 5000) {
+    data.campaignRank = "Master"
+  } else if (data.xpTotal >= 4000) {
+    data.campaignRank = "Expert"
+  } else if (data.xpTotal >= 3000) {
+    data.campaignRank = "Adept"
+  } else if (data.xpTotal >= 2000) {
+    data.campaignRank = "Journeyman"
+  } else {
+    data.campaignRank = "Apprentice"
+  }
+
     //Talent/Power/Trait Resource Bonuses
     data.hp.bonus = this._hpBonus(actorData);
     data.magicka.bonus = this._mpBonus(actorData);
@@ -133,10 +158,10 @@ export class SimpleActor extends Actor {
     data.initiative.value = data.initiative.base;
     data.initiative.value = this._iniCalc(actorData);
 
-    data.hp.base = Math.ceil(data.characteristics.end.value / 2);
+    data.hp.base = Math.ceil(data.characteristics.end.total / 2);
     data.hp.max = data.hp.base + data.hp.bonus;
 
-    data.magicka.max = data.characteristics.int.value + data.magicka.bonus + this._addIntToMP(actorData);
+    data.magicka.max = data.characteristics.int.total + data.magicka.bonus + this._addIntToMP(actorData);
 
     data.stamina.max = endBonus + data.stamina.bonus;
 
@@ -380,15 +405,26 @@ export class SimpleActor extends Actor {
   _prepareNPCData(actorData) {
     const data = actorData.data;
 
+    //Add bonuses from items to Characteristics
+    data.characteristics.str.total = data.characteristics.str.base + this._strBonusCalc(actorData);
+    data.characteristics.end.total = data.characteristics.end.base + this._endBonusCalc(actorData);
+    data.characteristics.agi.total = data.characteristics.agi.base + this._agiBonusCalc(actorData);
+    data.characteristics.int.total = data.characteristics.int.base + this._intBonusCalc(actorData);
+    data.characteristics.wp.total = data.characteristics.wp.base + this._wpBonusCalc(actorData);
+    data.characteristics.prc.total = data.characteristics.prc.base + this._prcBonusCalc(actorData);
+    data.characteristics.prs.total = data.characteristics.prs.base + this._prsBonusCalc(actorData);
+    data.characteristics.lck.total = data.characteristics.lck.base + this._lckBonusCalc(actorData);
+
+
     //Characteristic Bonuses
-    var strBonus = Math.floor(data.characteristics.str.value / 10);
-    var endBonus = Math.floor(data.characteristics.end.value / 10);
-    var agiBonus = Math.floor(data.characteristics.agi.value / 10);
-    var intBonus = Math.floor(data.characteristics.int.value / 10);
-    var wpBonus = Math.floor(data.characteristics.wp.value / 10);
-    var prcBonus = Math.floor(data.characteristics.prc.value / 10);
-    var prsBonus = Math.floor(data.characteristics.prs.value / 10);
-    var lckBonus = Math.floor(data.characteristics.lck.value / 10);
+    var strBonus = Math.floor(data.characteristics.str.total / 10);
+    var endBonus = Math.floor(data.characteristics.end.total / 10);
+    var agiBonus = Math.floor(data.characteristics.agi.total / 10);
+    var intBonus = Math.floor(data.characteristics.int.total / 10);
+    var wpBonus = Math.floor(data.characteristics.wp.total / 10);
+    var prcBonus = Math.floor(data.characteristics.prc.total / 10);
+    var prsBonus = Math.floor(data.characteristics.prs.total / 10);
+    var lckBonus = Math.floor(data.characteristics.lck.total / 10);
 
     //Talent/Power/Trait Bonuses
     data.hp.bonus = this._hpBonus(actorData);
@@ -433,10 +469,10 @@ export class SimpleActor extends Actor {
     data.initiative.value = data.initiative.base;
     data.initiative.value = this._iniCalc(actorData);
 
-    data.hp.base = Math.ceil(data.characteristics.end.value / 2);
+    data.hp.base = Math.ceil(data.characteristics.end.total / 2);
     data.hp.max = data.hp.base + data.hp.bonus;
 
-    data.magicka.max = data.characteristics.int.value + data.magicka.bonus + this._addIntToMP(actorData);
+    data.magicka.max = data.characteristics.int.total + data.magicka.bonus + this._addIntToMP(actorData);
 
     data.stamina.max = endBonus + data.stamina.bonus;
 
@@ -775,6 +811,78 @@ export class SimpleActor extends Actor {
 
   }
 
+  _strBonusCalc(actorData) {
+    let strBonusItems = actorData.items.filter(item => item.data.data.hasOwnProperty("characteristicBonus"));
+    let totalBonus = 0;
+    for (let item of strBonusItems) {
+      totalBonus = totalBonus + item.data.data.characteristicBonus.strChaBonus;
+    }
+    return totalBonus
+  }
+
+  _endBonusCalc(actorData) {
+    let strBonusItems = actorData.items.filter(item => item.data.data.hasOwnProperty("characteristicBonus"));
+    let totalBonus = 0;
+    for (let item of strBonusItems) {
+      totalBonus = totalBonus + item.data.data.characteristicBonus.endChaBonus;
+    }
+    return totalBonus
+  }
+
+  _agiBonusCalc(actorData) {
+    let strBonusItems = actorData.items.filter(item => item.data.data.hasOwnProperty("characteristicBonus"));
+    let totalBonus = 0;
+    for (let item of strBonusItems) {
+      totalBonus = totalBonus + item.data.data.characteristicBonus.agiChaBonus;
+    }
+    return totalBonus
+  }
+
+  _intBonusCalc(actorData) {
+    let strBonusItems = actorData.items.filter(item => item.data.data.hasOwnProperty("characteristicBonus"));
+    let totalBonus = 0;
+    for (let item of strBonusItems) {
+      totalBonus = totalBonus + item.data.data.characteristicBonus.intChaBonus;
+    }
+    return totalBonus
+  }
+
+  _wpBonusCalc(actorData) {
+    let strBonusItems = actorData.items.filter(item => item.data.data.hasOwnProperty("characteristicBonus"));
+    let totalBonus = 0;
+    for (let item of strBonusItems) {
+      totalBonus = totalBonus + item.data.data.characteristicBonus.wpChaBonus;
+    }
+    return totalBonus
+  }
+
+  _prcBonusCalc(actorData) {
+    let strBonusItems = actorData.items.filter(item => item.data.data.hasOwnProperty("characteristicBonus"));
+    let totalBonus = 0;
+    for (let item of strBonusItems) {
+      totalBonus = totalBonus + item.data.data.characteristicBonus.prcChaBonus;
+    }
+    return totalBonus
+  }
+
+  _prsBonusCalc(actorData) {
+    let strBonusItems = actorData.items.filter(item => item.data.data.hasOwnProperty("characteristicBonus"));
+    let totalBonus = 0;
+    for (let item of strBonusItems) {
+      totalBonus = totalBonus + item.data.data.characteristicBonus.prsChaBonus;
+    }
+    return totalBonus
+  }
+
+  _lckBonusCalc(actorData) {
+    let strBonusItems = actorData.items.filter(item => item.data.data.hasOwnProperty("characteristicBonus"));
+    let totalBonus = 0;
+    for (let item of strBonusItems) {
+      totalBonus = totalBonus + item.data.data.characteristicBonus.lckChaBonus;
+    }
+    return totalBonus
+  }
+
   _calculateENC(actorData) {
     let weighted = actorData.items.filter(item => item.data.data.hasOwnProperty("enc"));
     let totalWeight = 0.0;
@@ -981,21 +1089,21 @@ export class SimpleActor extends Actor {
       for (let item of attribute) {
         if (item.data.data.replace.ini.iniToggle == true) {
           if (item.data.data.replace.ini.characteristic == "str") {
-            init = Math.floor(actorData.data.characteristics.str.value / 10) * 3;
+            init = Math.floor(actorData.data.characteristics.str.total / 10) * 3;
           } else if (item.data.data.replace.ini.characteristic == "end") {
-            init = Math.floor(actorData.data.characteristics.end.value / 10) * 3;
+            init = Math.floor(actorData.data.characteristics.end.total / 10) * 3;
           } else if (item.data.data.replace.ini.characteristic == "agi") {
-            init = Math.floor(actorData.data.characteristics.agi.value / 10) * 3;
+            init = Math.floor(actorData.data.characteristics.agi.total / 10) * 3;
           } else if (item.data.data.replace.ini.characteristic == "int") {
-            init = Math.floor(actorData.data.characteristics.int.value / 10) * 3;
+            init = Math.floor(actorData.data.characteristics.int.total / 10) * 3;
           } else if (item.data.data.replace.ini.characteristic == "wp") {
-            init = Math.floor(actorData.data.characteristics.wp.value / 10) * 3;
+            init = Math.floor(actorData.data.characteristics.wp.total / 10) * 3;
           } else if (item.data.data.replace.ini.characteristic == "prc") {
-            init = Math.floor(actorData.data.characteristics.prc.value / 10) * 3;
+            init = Math.floor(actorData.data.characteristics.prc.total / 10) * 3;
           } else if (item.data.data.replace.ini.characteristic == "prs") {
-            init = Math.floor(actorData.data.characteristics.prs.value / 10) * 3;
+            init = Math.floor(actorData.data.characteristics.prs.total / 10) * 3;
           } else if (item.data.data.replace.ini.characteristic == "lck") {
-            init = Math.floor(actorData.data.characteristics.lck.value / 10) * 3;
+            init = Math.floor(actorData.data.characteristics.lck.total / 10) * 3;
           }
         }
       }
@@ -1008,21 +1116,21 @@ export class SimpleActor extends Actor {
       for (let item of attribute) {
         if (item.data.data.replace.wt.wtToggle === true) {
           if (item.data.data.replace.wt.characteristic === "str") {
-            wound = Math.floor(actorData.data.characteristics.str.value / 10) * 3;
+            wound = Math.floor(actorData.data.characteristics.str.total / 10) * 3;
           } else if (item.data.data.replace.wt.characteristic === "end") {
-            wound = Math.floor(actorData.data.characteristics.end.value / 10) * 3;
+            wound = Math.floor(actorData.data.characteristics.end.total / 10) * 3;
           } else if (item.data.data.replace.wt.characteristic === "agi") {
-            wound = Math.floor(actorData.data.characteristics.agi.value / 10) * 3;
+            wound = Math.floor(actorData.data.characteristics.agi.total / 10) * 3;
           } else if (item.data.data.replace.wt.characteristic === "int") {
-            wound = Math.floor(actorData.data.characteristics.int.value / 10) * 3;
+            wound = Math.floor(actorData.data.characteristics.int.total / 10) * 3;
           } else if (item.data.data.replace.wt.characteristic === "wp") {
-            wound = Math.floor(actorData.data.characteristics.wp.value / 10) * 3;
+            wound = Math.floor(actorData.data.characteristics.wp.total / 10) * 3;
           } else if (item.data.data.replace.wt.characteristic === "prc") {
-            wound = Math.floor(actorData.data.characteristics.prc.value / 10) * 3;
+            wound = Math.floor(actorData.data.characteristics.prc.total / 10) * 3;
           } else if (item.data.data.replace.wt.characteristic === "prs") {
-            wound = Math.floor(actorData.data.characteristics.prs.value / 10) * 3;
+            wound = Math.floor(actorData.data.characteristics.prs.total / 10) * 3;
           } else if (item.data.data.replace.wt.characteristic === "lck") {
-            wound = Math.floor(actorData.data.characteristics.lck.value / 10) * 3;
+            wound = Math.floor(actorData.data.characteristics.lck.total / 10) * 3;
           }
         }
       }
@@ -1055,7 +1163,7 @@ export class SimpleActor extends Actor {
     let attribute = actorData.items.filter(item => item.data.data.addIntToMP == true);
     let mp = 0;
     if (attribute.length >= 1) {
-      mp = actorData.data.characteristics.int.value;
+      mp = actorData.data.characteristics.int.total;
     } else {
       mp = 0;
     }
