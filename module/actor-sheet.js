@@ -12,7 +12,14 @@
       width: 600,
       height: 600,
       tabs: [{navSelector: ".sheet-tabs", contentSelector: ".sheet-body", initial: "description"}],
-      dragDrop: [{dragSelector: [".item-list .item", ".combat-list .item", ".ability-list .item", ".spell-list .item"], dropSelector: null}]
+      dragDrop: [{dragSelector: [
+        ".item-list .item", 
+        ".combat-list .item", 
+        ".ability-list .item", 
+        ".spell-list .item",
+        ".talents-list .item"
+      ], 
+      dropSelector: null}]
     });
   }
 
@@ -62,12 +69,10 @@
         necromancy: [],
         restoration: []
       };
-      const skill = {
-        skill: [],
-        language: []
-      };
+      const skill = [];
       const magicSkill = [];
       const ammunition = [];
+      const language = [];
 
       //Iterate through items, allocating to containers
       //let totaWeight = 0;
@@ -114,11 +119,7 @@
         }
         //Append to skill
         else if (i.type === 'skill') {
-          if (i.name.includes("Language")) {
-            skill.language.push(i);
-          } else {
-            skill.skill.push(i);
-          }
+            skill.push(i);
         }
         //Append to magicSkill
         else if (i.type === 'magicSkill') {
@@ -127,6 +128,9 @@
         //Append to ammunition
         else if (i.type === 'ammunition') {
           ammunition.push(i);
+        }
+        else if (i.type === "language") {
+          language.push(i);
         }
       }
 
@@ -142,6 +146,7 @@
       actorData.skill = skill;
       actorData.magicSkill = magicSkill;
       actorData.ammunition = ammunition;
+      actorData.language = language;
 
     }
 
@@ -165,12 +170,15 @@
     html.find(".spell-list .item-img").click(await this._onTalentRoll.bind(this));
     html.find(".combat-list .item-img").click(await this._onTalentRoll.bind(this));
     html.find(".item-list .item-img").click(await this._onTalentRoll.bind(this));
+    html.find(".itemTabInfo .supplyRoll").click(await this._onSupplyRoll.bind(this));
 
     //Update Item Attributes from Actor Sheet
     html.find(".toggle2H").click(await this._onToggle2H.bind(this));
     html.find(".ammo-plus").click(await this._onPlusAmmo.bind(this));
     html.find(".ammo-minus").click(await this._onMinusAmmo.bind(this));
     html.find(".itemEquip").click(await this._onItemEquip.bind(this));
+    html.find(".itemTabInfo .wealthCalc").click(await this._onWealthCalc.bind(this));
+    html.find(".setBaseCharacteristics").click(await this._onSetBaseCharacteristics.bind(this));
 
     //Item Create Buttons
     html.find(".combat-create").click(await this._onItemCreate.bind(this));
@@ -207,11 +215,198 @@
    * @private
    */
   
+  async _onSetBaseCharacteristics(event) {
+    event.preventDefault()
+    const strBonusArray = [];
+    const endBonusArray = [];
+    const agiBonusArray = [];
+    const intBonusArray = [];
+    const wpBonusArray = [];
+    const prcBonusArray = [];
+    const prsBonusArray = [];
+    const lckBonusArray = [];
+
+    const bonusItems = this.actor.items.filter(item => item.data.data.hasOwnProperty("characteristicBonus"));
+
+    for (let item of bonusItems) {
+      if (item.data.data.characteristicBonus.strChaBonus !==0) {
+        let name = item.name;
+        strBonusArray.push(name);
+      } else if (item.data.data.characteristicBonus.endChaBonus !==0) {
+          let name = item.name;
+          endBonusArray.push(name);
+      } else if (item.data.data.characteristicBonus.agiChaBonus !==0) {
+          let name = item.name;
+          agiBonusArray.push(name);
+      } else if (item.data.data.characteristicBonus.intChaBonus !==0) {
+          let name = item.name;
+          intBonusArray.push(name);
+      } else if (item.data.data.characteristicBonus.wpChaBonus !==0) {
+          let name = item.name;
+          wpBonusArray.push(name);
+      } else if (item.data.data.characteristicBonus.prcChaBonus !==0) {
+          let name = item.name;
+          prcBonusArray.push(name);
+      } else if (item.data.data.characteristicBonus.prsChaBonus !==0) {
+          let name = item.name;
+          prsBonusArray.push(name);
+      } else if (item.data.data.characteristicBonus.lckChaBonus !==0) {
+          let name = item.name;
+          lckBonusArray.push(name);
+      }
+    }
+
+    let d = new Dialog({
+      title: "Set Base Characteristics",
+      content: `<form>
+                  <h2>Set the Character's Base Characteristics.</h2>
+
+                  <div style="border: inset; margin-bottom: 10px; padding: 5px;">
+                  <i>Use this menu to adjust characteristic values on the character 
+                     when first creating a character or when spending XP to increase 
+                     their characteristics.
+                  </i>
+                  </div>
+
+                  <div style="margin-bottom: 10px;">
+                    <label><b>Points Total: </b></label>
+                    <label>
+                    ${this.actor.data.data.characteristics.str.base +
+                    this.actor.data.data.characteristics.end.base +
+                    this.actor.data.data.characteristics.agi.base +
+                    this.actor.data.data.characteristics.int.base +
+                    this.actor.data.data.characteristics.wp.base +
+                    this.actor.data.data.characteristics.prc.base +
+                    this.actor.data.data.characteristics.prs.base +
+                    this.actor.data.data.characteristics.lck.base}
+                    </label>
+                    <table style="table-layout: fixed; text-align: center;">
+                      <tr>
+                        <th>STR</th>
+                        <th>END</th>
+                        <th>AGI</th>
+                        <th>INT</th>
+                        <th>WP</th>
+                        <th>PRC</th>
+                        <th>PRS</th>
+                        <th>LCK</th>
+                      </tr>
+                      <tr>
+                        <td><input type="number" id="strInput" value="${this.actor.data.data.characteristics.str.base}"></td>
+                        <td><input type="number" id="endInput" value="${this.actor.data.data.characteristics.end.base}"></td>
+                        <td><input type="number" id="agiInput" value="${this.actor.data.data.characteristics.agi.base}"></td>
+                        <td><input type="number" id="intInput" value="${this.actor.data.data.characteristics.int.base}"></td>
+                        <td><input type="number" id="wpInput" value="${this.actor.data.data.characteristics.wp.base}"></td>
+                        <td><input type="number" id="prcInput" value="${this.actor.data.data.characteristics.prc.base}"></td>
+                        <td><input type="number" id="prsInput" value="${this.actor.data.data.characteristics.prs.base}"></td>
+                        <td><input type="number" id="lckInput" value="${this.actor.data.data.characteristics.lck.base}"></td>
+                      </tr>
+                    </table>
+                  </div>
+
+                  <div style="border: inset; padding: 5px;">
+                    <h2 style="font-size: small; font-weight: bold;">STR Modifiers</h2>
+                    <span style="font-size: small">${strBonusArray}</span>
+                  </div>
+
+                  <div style="border: inset; padding: 5px;">
+                    <h2 style="font-size: small; font-weight: bold;">END Modifiers</h2>
+                    <span style="font-size: small">${endBonusArray}</span>
+                  </div>
+
+                  <div style="border: inset; padding: 5px;">
+                    <h2 style="font-size: small; font-weight: bold;">AGI Modifiers</h2>
+                    <span style="font-size: small">${agiBonusArray}</span>
+                  </div>
+
+                  <div style="border: inset; padding: 5px;">
+                    <h2 style="font-size: small; font-weight: bold;">INT Modifiers</h2>
+                    <span style="font-size: small">${intBonusArray}</span>
+                  </div>
+
+                  <div style="border: inset; padding: 5px;">
+                    <h2 style="font-size: small; font-weight: bold;">WP Modifiers</h2>
+                    <span style="font-size: small">${wpBonusArray}</span>
+                  </div>
+
+                  <div style="border: inset; padding: 5px;">
+                    <h2 style="font-size: small; font-weight: bold;">PRC Modifiers</h2>
+                    <span style="font-size: small">${prcBonusArray}</span>
+                  </div>
+
+                  <div style="border: inset; padding: 5px;">
+                    <h2 style="font-size: small; font-weight: bold;">PRS Modifiers</h2>
+                    <span style="font-size: small">${prsBonusArray}</span>
+                  </div>
+
+                  <div style="border: inset; padding: 5px;">
+                    <h2 style="font-size: small; font-weight: bold;">LCK Modifiers</h2>
+                    <span style="font-size: small">${lckBonusArray}</span>
+                  </div>
+
+                </form>`,
+      buttons: {
+        one: {
+          label: "Submit",
+          callback: async (html) => {
+            const strInput = parseInt(html.find('[id="strInput"]').val());
+            const endInput = parseInt(html.find('[id="endInput"]').val());
+            const agiInput = parseInt(html.find('[id="agiInput"]').val());
+            const intInput = parseInt(html.find('[id="intInput"]').val());
+            const wpInput = parseInt(html.find('[id="wpInput"]').val());
+            const prcInput = parseInt(html.find('[id="prcInput"]').val());
+            const prsInput = parseInt(html.find('[id="prsInput"]').val());
+            const lckInput = parseInt(html.find('[id="lckInput"]').val());
+
+            let strBase = this.actor.data.data.characteristics.str.base;
+            let endBase = this.actor.data.data.characteristics.end.base;
+            let agiBase = this.actor.data.data.characteristics.agi.base;
+            let intBase = this.actor.data.data.characteristics.int.base;
+            let wpBase = this.actor.data.data.characteristics.wp.base;
+            let prcBase = this.actor.data.data.characteristics.prc.base;
+            let prsBase = this.actor.data.data.characteristics.prs.base;
+            let lckBase = this.actor.data.data.characteristics.lck.base;
+
+            strBase = strInput;
+            this.actor.update({"data.characteristics.str.base" : strBase})
+
+            endBase = endInput;
+            this.actor.update({"data.characteristics.end.base" : endBase})
+
+            agiBase = agiInput;
+            this.actor.update({"data.characteristics.agi.base" : agiBase})
+
+            intBase = intInput;
+            this.actor.update({"data.characteristics.int.base" : intBase})
+
+            wpBase = wpInput;
+            this.actor.update({"data.characteristics.wp.base" : wpBase})
+
+            prcBase = prcInput;
+            this.actor.update({"data.characteristics.prc.base" : prcBase})
+
+            prsBase = prsInput;
+            this.actor.update({"data.characteristics.prs.base" : prsBase})
+
+            lckBase = lckInput;
+            this.actor.update({"data.characteristics.lck.base" : lckBase})
+          }
+        },
+        two: {
+          label: "Cancel",
+          callback: html => console.log("Cancelled")
+        }
+      },
+      default: "one",
+      close: html => console.log()
+    })
+    d.render(true);
+  }
 
   async _onClickCharacteristic(event) {
     event.preventDefault()
     const element = event.currentTarget
-    let wounded_char = this.actor.data.data.characteristics[element.id].value - 20
+    let wounded_char = this.actor.data.data.characteristics[element.id].total - 20
 
     let d = new Dialog({
       title: "Apply Roll Modifier",
@@ -231,41 +426,41 @@
 
       if (this.actor.data.data.wounded === true) {
         if (roll.total == this.actor.data.data.lucky_numbers.ln1 || roll.total == this.actor.data.data.lucky_numbers.ln2 || roll.total == this.actor.data.data.lucky_numbers.ln3 || roll.total == this.actor.data.data.lucky_numbers.ln4 || roll.total == this.actor.data.data.lucky_numbers.ln5) {
-          contentString = `<h4>Rolls for <b>${element.name}</b>!</h4>
+          contentString = `<h2>${element.name}</h2>
           <p></p><b>Target Number: [[${wounded_char} + ${playerInput}]]</b> <p></p>
           <b>Result: [[${roll.result}]]</b><p></p>
           <span style='color:green; font-size:120%;'> <b>LUCKY NUMBER!</b></span>`
     
         } else if (roll.total === this.actor.data.data.unlucky_numbers.ul1 || roll.total == this.actor.data.data.unlucky_numbers.ul2 || roll.total == this.actor.data.data.unlucky_numbers.ul3 || roll.total == this.actor.data.data.unlucky_numbers.ul4 || roll.total == this.actor.data.data.unlucky_numbers.ul5) {
-          contentString = `<h4>Rolls for <b>${element.name}</b>!</h4>
+          contentString = `<h2>${element.name}</h2>
           <p></p><b>Target Number: [[${wounded_char} + ${playerInput}]]</b> <p></p>
           <b>Result: [[${roll.result}]]</b><p></p>
           <span style='color:rgb(168, 5, 5); font-size:120%;'> <b>UNLUCKY NUMBER!</b></span>`
     
         } else {
-          contentString = `<h4>Rolls for <b>${element.name}</b>!</h4>
+          contentString = `<h2>${element.name}</h2>
           <p></p><b>Target Number: [[${wounded_char} + ${playerInput}]]</b> <p></p>
           <b>Result: [[${roll.result}]]</b><p></p>
           <b>${roll.total<=wounded_char ? " <span style='color:green; font-size: 120%;'> <b>SUCCESS!</b></span>" : " <span style='color:rgb(168, 5, 5); font-size: 120%;'> <b>FAILURE!</b></span>"}`
         } 
       } else {
       if (roll.total === this.actor.data.data.lucky_numbers.ln1 || roll.total == this.actor.data.data.lucky_numbers.ln2 || roll.total == this.actor.data.data.lucky_numbers.ln3 || roll.total == this.actor.data.data.lucky_numbers.ln4 || roll.total == this.actor.data.data.lucky_numbers.ln5) {
-        contentString = `<h4>Rolls for <b>${element.name}</b>!</h4>
-        <p></p><b>Target Number: [[${this.actor.data.data.characteristics[element.id].value} + ${playerInput}]]</b> <p></p>
+        contentString = `<h2>${element.name}</h2>
+        <p></p><b>Target Number: [[${this.actor.data.data.characteristics[element.id].total} + ${playerInput}]]</b> <p></p>
         <b>Result: [[${roll.result}]]</b><p></p>
         <span style='color:green; font-size:120%;'> <b>LUCKY NUMBER!</b></span>`
 
       } else if (roll.total === this.actor.data.data.unlucky_numbers.ul1 || roll.total == this.actor.data.data.unlucky_numbers.ul2 || roll.total == this.actor.data.data.unlucky_numbers.ul3 || roll.total == this.actor.data.data.unlucky_numbers.ul4 || roll.total == this.actor.data.data.unlucky_numbers.ul5) {
-        contentString = `<h4>Rolls for <b>${element.name}</b>!</h4>
-        <p></p><b>Target Number: [[${this.actor.data.data.characteristics[element.id].value} + ${playerInput}]]</b> <p></p>
+        contentString = `<h2>${element.name}</h2>
+        <p></p><b>Target Number: [[${this.actor.data.data.characteristics[element.id].total} + ${playerInput}]]</b> <p></p>
         <b>Result: [[${roll.result}]]</b><p></p>
         <span style='color:rgb(168, 5, 5); font-size:120%;'> <b>UNLUCKY NUMBER!</b></span>`
 
       } else {
-        contentString = `<h4>Rolls for <b>${element.name}</b>!</h4>
-        <p></p><b>Target Number: [[${this.actor.data.data.characteristics[element.id].value} + ${playerInput}]]</b> <p></p>
+        contentString = `<h2>${element.name}</h2>
+        <p></p><b>Target Number: [[${this.actor.data.data.characteristics[element.id].total} + ${playerInput}]]</b> <p></p>
         <b>Result: [[${roll.result}]]</b><p></p>
-        <b>${roll.total<=(this.actor.data.data.characteristics[element.id].value + playerInput) ? " <span style='color:green; font-size: 120%;'> <b>SUCCESS!</b></span>" : " <span style='color:rgb(168, 5, 5); font-size: 120%;'> <b>FAILURE!</b></span>"}`
+        <b>${roll.total<=(this.actor.data.data.characteristics[element.id].total + playerInput) ? " <span style='color:green; font-size: 120%;'> <b>SUCCESS!</b></span>" : " <span style='color:rgb(168, 5, 5); font-size: 120%;'> <b>FAILURE!</b></span>"}`
       }
     }
     await roll.toMessage({
@@ -503,13 +698,13 @@
             <span style='color:green; font-size:120%;'> <b>LUCKY NUMBER!</b></span>`
 
           } else if (roll.total == this.actor.data.data.unlucky_numbers.ul1 || roll.total == this.actor.data.data.unlucky_numbers.ul2 || roll.total == this.actor.data.data.unlucky_numbers.ul3 || roll.total == this.actor.data.data.unlucky_numbers.ul4 || roll.total == this.actor.data.data.unlucky_numbers.ul5) {
-            contentString = `<h4 style='font-size: large;'>${element.name} Resistance</h4>
+            contentString = `<h2 style='font-size: large;'>${element.name} Resistance</h2>
             <p></p><b>Target Number: [[${this.actor.data.data.resistance[element.id]} + ${playerInput}]]</b> <p></p>
             <b>Result: [[${roll.result}]]</b><p></p>
             <span style='color:rgb(168, 5, 5); font-size:120%;'> <b>UNLUCKY NUMBER!</b></span>`
 
           } else {
-            contentString = `<h4 style='font-size: large;'>${element.name} Resistance</h4>
+            contentString = `<h2 style='font-size: large;'>${element.name} Resistance</h2>
             <p></p><b>Target Number: [[${this.actor.data.data.resistance[element.id]} + ${playerInput}]]</b> <p></p>
             <b>Result: [[${roll.result}]]</b><p></p>
             <b>${roll.total<=(this.actor.data.data.resistance[element.id] + playerInput) ? " <span style='color:green; font-size: 120%;'> <b>SUCCESS!</b></span>" : " <span style='color: rgb(168, 5, 5); font-size: 120%;'> <b>FAILURE!</b></span>"}`
@@ -755,6 +950,60 @@
       speaker: ChatMessage.getSpeaker(),
       content: contentString
     })
+  }
+
+  async _onSupplyRoll(event) {
+    event.preventDefault()
+    const supplyDice = this.actor.data.data.supply;
+
+    let supplyRoll = new Roll(supplyDice);
+    supplyRoll.roll({async:false});
+
+    ChatMessage.create({
+      user: game.user.id,
+      speaker: ChatMessage.getSpeaker(),
+      type: CONST.CHAT_MESSAGE_TYPES.ROLL,
+      roll: supplyRoll,
+      content: `<h2 style='font-size: large'>Supply Dice Roll</h2>
+                <i>Reduce your Supply Dice Tier if you roll a 1.</i>
+                <p></p>
+                <label><b>Result: </b></label> <b>[[${supplyRoll.result}]]</b> ${supplyRoll._formula}
+                <p></p>
+                <b>${supplyRoll.result == 1 ? "<span><i>Your supplies begin to diminish.</i></span>" 
+                : "<span><i>Your supplies remain intact.</i></span>"}</b>`
+    })
+  }
+
+  async _onWealthCalc(event) {
+    event.preventDefault()
+
+    let d = new Dialog({
+      title: "Add/Subtract Wealth",
+      content: `<form>
+                <div class="dialogForm">
+                <label><b>Add/Subtract: </b></label><input placeholder="ex. -20, +10" id="playerInput" value="0" style=" text-align: center; width: 50%; border-style: groove; float: right;" type="text"></input></div>
+                </form>`,
+      buttons: {
+        one: {
+          label: "Cancel",
+          callback: html => console.log("Cancelled")
+        },
+        two: {
+          label: "Submit",
+          callback: async (html) => {
+            const playerInput = parseInt(html.find('[id="playerInput"]').val());
+            let wealth = this.actor.data.data.wealth;
+
+            wealth = wealth + playerInput;
+            this.actor.update({"data.wealth" : wealth});
+
+          }
+        }
+      },
+      default: "two",
+      close: html => console.log()
+    })
+    d.render(true);
   }
 
 }
