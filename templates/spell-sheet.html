@@ -23,13 +23,11 @@
                     </tr>
                     <tr>
                         <th>Damage</th>
-                        <th>Form</th>
-                        <th colspan="2">Attributes</th>
+                        <th colspan="2">Form</th>
                     </tr>
                     <tr>
                         <td><input type="text" name="data.damage" value="{{data.damage}}" data-dtype="String"/></td>
-                        <td><input type="text" name="data.form" value="{{data.form}}" data-dtype="String"></td>
-                        <td colspan="2"><input type="text" name="data.attributes" value="{{data.attributes}}" data-dtype="String"></td>
+                        <td colspan="2"><input type="text" name="data.form" value="{{data.form}}" data-dtype="String"></td>
                     </tr>
                 </table>
             </div>
@@ -39,6 +37,7 @@
     {{!-- Sheet Tab Navigation --}}
     <nav class="sheet-tabs3 tabs" data-group="primary">
         <a class="item" data-tab="description">Description</a>
+        <a class="item" data-tab="attributes">Attributes</a>
     </nav>
     </div>
 
@@ -49,5 +48,19 @@
         <div class="tab" data-group="primary" data-tab="description">
             {{editor content=data.description target="data.description" button=true owner=owner editable=editable}}
         </div>
+
+        {{!-- Attributes Tab --}}
+        <div class="tab" data-group="primary" data-tab="attributes">
+            <table class="field-inputs-small">
+                <tr>
+                    <th>Attribute</th>
+                    <th colspan="2">Input</th>
+                </tr>
+                <tr>
+                    <th>Spell Attributes</th>
+                    <td colspan="2">{{editor content=data.attributes target="data.attributes" button=true owner=owner editable=editable}}</td>
+                </tr>
+            </table>
+
     </section>
 </form>
