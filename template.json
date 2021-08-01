@@ -57,41 +57,65 @@
     "characteristics": {
       "str": {
         "value": 0,
+        "total": 0,
+        "base": 0,
+        "bonus": 0,
         "favored": false,
         "name": "STR"
       },
       "end": {
         "value": 0,
+        "total": 0,
+        "base": 0,
+        "bonus": 0,
         "favored": false,
         "name": "END"
       },
       "agi": {
         "value": 0,
+        "total": 0,
+        "base": 0,
+        "bonus": 0,
         "favored": false,
         "name": "AGI"
       },
       "int": {
         "value": 0,
+        "total": 0,
+        "base": 0,
+        "bonus": 0,
         "favored": false,
         "name": "INT"
       },
       "wp": {
         "value": 0,
+        "total": 0,
+        "base": 0,
+        "bonus": 0,
         "favored": false,
         "name": "WP"
       },
       "prc": {
         "value": 0,
+        "total": 0,
+        "base": 0,
+        "bonus": 0,
         "favored": false,
         "name": "PRC"
       },
       "prs": {
         "value": 0,
+        "total": 0,
+        "base": 0,
+        "bonus": 0,
         "favored": false,
         "name": "PRS"
       },
       "lck": {
         "value": 0,
+        "total": 0,
+        "base": 0,
+        "bonus": 0,
         "favored": false,
         "name": "LCK"
       }
@@ -124,6 +148,7 @@
     },
     "xp": 0,
     "xpTotal": 0,
+    "campaignRank": "",
     "wound_threshold": {
       "value": 0,
       "base": 0,
@@ -287,34 +312,50 @@
     "characteristics": {
       "str": {
         "value": 0,
+        "total": 0,
+        "base": 0,
         "favored": false
       },
       "end": {
         "value": 0,
+        "total": 0,
+        "base": 0,
         "favored": false
       },
       "agi": {
         "value": 0,
+        "total": 0,
+        "base": 0,
         "favored": false
       },
       "int": {
         "value": 0,
+        "total": 0,
+        "base": 0,
         "favored": false
       },
       "wp": {
         "value": 0,
+        "total": 0,
+        "base": 0,
         "favored": false
       },
       "prc": {
         "value": 0,
+        "total": 0,
+        "base": 0,
         "favored": false
       },
       "prs": {
         "value": 0,
+        "total": 0,
+        "base": 0,
         "favored": false
       },
       "lck": {
         "value": 0,
+        "total": 0,
+        "base": 0,
         "favored": false
       }
     },
@@ -454,6 +495,12 @@
         "specialization": "",
         "characteristic": "",
         "tn": 0
+      }, 
+      "commerce": {
+        "bonus": 0,
+        "specialization": "",
+        "characteristic": "",
+        "tn": 0
       }
     },
     "talents": "",
@@ -468,12 +515,27 @@
       "medium": "Medium",
       "heavy": "Heavy",
       "super_heavy": "Super Heavy"
-    }
+    },
+    "storeName": "",
+    "priceMod": 0
   }
     
 },
 "Item": {
-  "types": ["item", "armor", "weapon", "spell", "trait", "power", "talent", "combatStyle", "skill", "magicSkill", "ammunition"],
+  "types": [
+    "item", 
+    "armor", 
+    "weapon", 
+    "spell", 
+    "trait", 
+    "power", 
+    "talent", 
+    "combatStyle", 
+    "skill", 
+    "magicSkill", 
+    "ammunition",
+    "language"
+  ],
   "templates": {
     "characteristicArray": {
       "characteristics": {
@@ -485,6 +547,16 @@
         "prc": "PRC",
         "prs": "PRS",
         "lck": "LCK"
+      },
+      "characteristicBonus": {
+        "strChaBonus": 0,
+        "endChaBonus": 0,
+        "agiChaBonus": 0,
+        "intChaBonus": 0,
+        "wpChaBonus": 0,
+        "prcChaBonus": 0,
+        "prsChaBonus": 0,
+        "lckChaBonus": 0
       }
     },
     "replaceAttributesArray": {
@@ -544,11 +616,16 @@
     "carried": false,
     "hands": 0,
     "price": 0,
+    "modPrice": 0,
     "armor": 0,
     "magic_ar": 0,
     "enchant_level": 0,
     "excludeENC": false,
-    "qualities": ""
+    "qualities": "",
+    "charge": {
+      "value": 0,
+      "max": 0
+    }
   },
   "armor": {
     "templates": ["resistanceArray", "characteristicArray", "replaceAttributesArray"],
@@ -562,7 +639,9 @@
     "carried": false,
     "hands": 0,
     "price": 0,
+    "modPrice": 0,
     "armor": 0,
+    "blockRating": 0,
     "excludeENC": false,
     "magic_ar": 0,
     "enchant_level": 0,
@@ -577,7 +656,11 @@
       "r_leg": "Right Leg",
       "body": "Chestplate",
       "shield": "Shield"
-     }
+     },
+     "charge": {
+      "value": 0,
+      "max": 0
+    }
   },
   "weapon": {
     "templates": ["resistanceArray", "characteristicArray", "replaceAttributesArray"],
@@ -594,10 +677,15 @@
     "superior": false,
     "hands": 0,
     "price": 0,
+    "modPrice": 0,
     "armor": 0,
     "magic_ar": 0,
     "enchant_level": 0,
-    "qualities": ""
+    "qualities": "",
+    "charge": {
+      "value": 0,
+      "max": 0
+    }
   },
   "spell": {
     "description": "",
@@ -706,10 +794,20 @@
     "excludeENC": false,
     "superior": false,
     "price": 0,
+    "modPrice": 0,
     "armor": 0,
     "magic_ar": 0,
     "enchant_level": 1,
-    "qualities": ""
+    "qualities": "",
+    "charge": {
+      "value": 0,
+      "max": 0
+    }
+  },
+  "language": {
+    "description": "",
+    "readWrite": true,
+    "speak": true
   }
 }
 }
