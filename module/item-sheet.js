@@ -50,6 +50,10 @@ export class SimpleItemSheet extends ItemSheet {
   /** @override */
 	activateListeners(html) {
     super.activateListeners(html);
+
+    //Item Value Change Buttons
+    html.find(".chargePlus").click(this._onChargePlus.bind(this));
+    html.find(".chargeMinus").click(this._onChargeMinus.bind(this));
   }
 
   /**
@@ -57,5 +61,30 @@ export class SimpleItemSheet extends ItemSheet {
    * @param {Event} event   The originating click event
    * @private
    */
+
+  async _onChargePlus(event) {
+    event.preventDefault()
+    let chargeMax = this.document.data.data.charge.max;
+    let currentCharge = this.document.data.data.charge.value;
+
+    if (currentCharge >= chargeMax) {
+      ui.notifications.info("Your item is fully charged.")
+    } else {
+    currentCharge = currentCharge + 1;
+    this.document.update({"data.charge.value" : currentCharge});
+    }
+  }
+
+  async _onChargeMinus(event) {
+    event.preventDefault()
+    let currentCharge = this.document.data.data.charge.value;
+
+    if (currentCharge <= 0) {
+      ui.notifications.info("Your item is completely drained.")
+    } else {
+    currentCharge = currentCharge - 1;
+    this.document.update({"data.charge.value" : currentCharge});
+    }
+  }
 
 }
