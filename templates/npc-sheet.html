@@ -52,6 +52,9 @@
             <div>
             <table class="skill-table">
                 <tr>
+                    <th colspan="8"><button class="setBaseCharacteristicsNPC">Characteristics</button></th>
+                </tr>
+                <tr>
                     <th><input type="button" class="characteristic-roll" name="STR" id="str" value="STR"></th>
                     <th><input type="button" class="characteristic-roll" name="END" id="end" value="END"></th>
                     <th><input type="button" class="characteristic-roll" name="AGI" id="agi" value="AGI"></th>
@@ -62,14 +65,14 @@
                     <th><input type="button" class="characteristic-roll" name="LCK" id="lck" value="LCK"></th>
                 </tr>
                 <tr>
-                    <td><input name="data.characteristics.str.value" type="number" value="{{data.characteristics.str.value}}" ></td>
-                    <td><input name="data.characteristics.end.value" type="number" value="{{data.characteristics.end.value}}" ></td>
-                    <td><input name="data.characteristics.agi.value" type="number" value="{{data.characteristics.agi.value}}" ></td>
-                    <td><input name="data.characteristics.int.value" type="number" value="{{data.characteristics.int.value}}" ></td>
-                    <td><input name="data.characteristics.wp.value" type="number" value="{{data.characteristics.wp.value}}" ></td>
-                    <td><input name="data.characteristics.prc.value" type="number" value="{{data.characteristics.prc.value}}" ></td>
-                    <td><input name="data.characteristics.prs.value" type="number" value="{{data.characteristics.prs.value}}" ></td>
-                    <td><input name="data.characteristics.lck.value" type="number" value="{{data.characteristics.lck.value}}" ></td>
+                    <td class="chaValue">{{data.characteristics.str.total}}</td>
+                    <td class="chaValue">{{data.characteristics.end.total}}</td>
+                    <td class="chaValue">{{data.characteristics.agi.total}}</td>
+                    <td class="chaValue">{{data.characteristics.int.total}}</td>
+                    <td class="chaValue">{{data.characteristics.wp.total}}</td>
+                    <td class="chaValue">{{data.characteristics.prc.total}}</td>
+                    <td class="chaValue">{{data.characteristics.prs.total}}</td>
+                    <td class="chaValue">{{data.characteristics.lck.total}}</td>
                 </tr>
                 <tr>
                     <td><input type="checkbox" name="data.characteristics.str.favored" {{checked data.characteristics.str.favored}}></td>
@@ -460,28 +463,32 @@
 
         {{!-- Owned Items Tab --}}
         <div class="tab items" data-group="primary" data-tab="items">
-            <div>
-                <table class="skill-table">
-                    <tr>
-                        <th>Wealth</th>
-                        <th>Supply</th>
-                        <th>Carry Bonus</th>
-                        <th>Carry Rating</th>
-                        <th>Current ENC</th>
-                    </tr>
-                    <tr>
-                        <td><input type="number" name="data.wealth" value="{{data.wealth}}" ></td>
-                        <td><select name="data.supply" >
-                            {{#select actor.data.supply}}
-                            {{#each actor.data.supply_cat as |supply_cat key|}}
-                            <option value="{{key}}">{{supply_cat}}</option>
-                            {{/each}} {{/select}}
-                        </select></td>
-                        <td><input type="number" name="data.carry_rating.bonus" value="{{data.carry_rating.bonus}}" ></td>
-                        <td><input type="number" name="data.carry_rating.max" value="{{data.carry_rating.max}}"  disabled></td>
-                        <td><input class="enc-color-green" type="number" name="data.current_enc" value="{{data.current_enc}}"  disabled></td>
-                    </tr>
-                </table>
+            <div class="itemTabInfo">
+                <div>
+                    <span class="wealthCalc" title="Add/Subtract from Wealth">
+                        <label class="itemTabInfoLabel"><a class="fas fa-coins"></a> Wealth</label>
+                    </span>
+                    <input type="number" name="data.wealth" value="{{data.wealth}}">
+                </div>
+                <div>
+                    <span class="supplyRoll" title="Roll Supply Dice">
+                        <label class="itemTabInfoLabel"><a class="fas fa-campground"></a> Supply</label>
+                    </span>
+                    <select name="data.supply" >
+                        {{#select actor.data.supply}}
+                        {{#each actor.data.supply_cat as |supply_cat key|}}
+                        <option value="{{key}}">{{supply_cat}}</option>
+                        {{/each}} {{/select}}
+                    </select>
+                </div>
+                <div>
+                    <label class="itemTabInfoLabel"><a class="fas fa-weight-hanging"></a> Carry Rating</label>
+                    <label class="itemTabInfoValue">{{data.carry_rating.max}}</label>
+                </div>
+                <div>
+                    <label class="itemTabInfoLabel"><a class="fas fa-weight-hanging"></a> Current Load</label>
+                    <label class="itemTabInfoValue">{{data.current_enc}} ENC</label>
+                </div>
             </div>
             <ol class="item-list">
                 <h4 class="list-header">
