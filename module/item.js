@@ -14,8 +14,8 @@ export class SimpleItem extends Item {
     if (this.type === 'combatStyle'||this.type === 'skill'||this.type === 'magicSkill') {
       if (this.isEmbedded) {
         // Get the data of the actor that owns the item
-        const actor = this.actor;
-        const actorData = this.actor.data;
+        const actor = await this.actor;
+        const actorData = await this.actor.data;
         if (actor && actorData) {
         this._prepareCombatStyleData(actorData, itemData);
         }
@@ -33,7 +33,7 @@ export class SimpleItem extends Item {
    * @param {*} actorData
    */
 
-  _prepareCombatStyleData(actorData, itemData) {
+  async _prepareCombatStyleData(actorData, itemData) {
     const data = itemData;
 
     //Skill Bonus Calculation
@@ -78,40 +78,56 @@ export class SimpleItem extends Item {
     // Combat Style Skill Calculation
     if (actorData.data.wounded === true) {
       if (data.baseCha === "str") {
-        data.value = actorData.data.characteristics.str.value + actorData.data.woundPenalty + data.bonus;
+        data.value = actorData.data.characteristics.str.total + actorData.data.woundPenalty + data.bonus;
+        this.update({"data.value" : data.value});
       } else if (data.baseCha === "end") {
-        data.value = actorData.data.characteristics.end.value + actorData.data.woundPenalty + data.bonus;
+        data.value = actorData.data.characteristics.end.total + actorData.data.woundPenalty + data.bonus;
+        this.update({"data.value" : data.value});
       } else if (data.baseCha === "agi") {
-        data.value = actorData.data.characteristics.agi.value + actorData.data.woundPenalty + data.bonus;
+        data.value = actorData.data.characteristics.agi.total + actorData.data.woundPenalty + data.bonus;
+        this.update({"data.value" : data.value});
       } else if (data.baseCha === "int") {
-        data.value = actorData.data.characteristics.int.value + actorData.data.woundPenalty + data.bonus;
+        data.value = actorData.data.characteristics.int.total + actorData.data.woundPenalty + data.bonus;
+        this.update({"data.value" : data.value});
       } else if (data.baseCha === "wp") {
-        data.value = actorData.data.characteristics.wp.value + actorData.data.woundPenalty + data.bonus;
+        data.value = actorData.data.characteristics.wp.total + actorData.data.woundPenalty + data.bonus;
+        this.update({"data.value" : data.value});
       } else if (data.baseCha === "prc") {
-        data.value = actorData.data.characteristics.prc.value + actorData.data.woundPenalty + data.bonus;
+        data.value = actorData.data.characteristics.prc.total + actorData.data.woundPenalty + data.bonus;
+        this.update({"data.value" : data.value});
       } else if (data.baseCha === "prs") {
-        data.value = actorData.data.characteristics.prs.value + actorData.data.woundPenalty + data.bonus;
+        data.value = actorData.data.characteristics.prs.total + actorData.data.woundPenalty + data.bonus;
+        this.update({"data.value" : data.value});
       } else if (data.baseCha === "lck") {
-        data.value = actorData.data.characteristics.lck.value + actorData.data.woundPenalty + data.bonus;
+        data.value = actorData.data.characteristics.lck.total + actorData.data.woundPenalty + data.bonus;
+        this.update({"data.value" : data.value});
       }
 
     } else {
       if (data.baseCha === "str") {
-        data.value = actorData.data.characteristics.str.value + data.bonus;
+        data.value = actorData.data.characteristics.str.total + data.bonus;
+        this.update({"data.value" : data.value});
       } else if (data.baseCha === "end") {
-        data.value = actorData.data.characteristics.end.value + data.bonus;
+        data.value = actorData.data.characteristics.end.total + data.bonus;
+        this.update({"data.value" : data.value});
       } else if (data.baseCha === "agi") {
-        data.value = actorData.data.characteristics.agi.value + data.bonus;
+        data.value = actorData.data.characteristics.agi.total + data.bonus;
+        this.update({"data.value" : data.value});
       } else if (data.baseCha === "int") {
-        data.value = actorData.data.characteristics.int.value + data.bonus;
+        data.value = actorData.data.characteristics.int.total + data.bonus;
+        this.update({"data.value" : data.value});
       } else if (data.baseCha === "wp") {
-        data.value = actorData.data.characteristics.wp.value + data.bonus;
+        data.value = actorData.data.characteristics.wp.total + data.bonus;
+        this.update({"data.value" : data.value});
       } else if (data.baseCha === "prc") {
-        data.value = actorData.data.characteristics.prc.value + data.bonus;
+        data.value = actorData.data.characteristics.prc.total + data.bonus;
+        this.update({"data.value" : data.value});
       } else if (data.baseCha === "prs") {
-        data.value = actorData.data.characteristics.prs.value + data.bonus;
+        data.value = actorData.data.characteristics.prs.total + data.bonus;
+        this.update({"data.value" : data.value});
       } else if (data.baseCha === "lck") {
-        data.value = actorData.data.characteristics.lck.value + data.bonus;
+        data.value = actorData.data.characteristics.lck.total + data.bonus;
+        this.update({"data.value" : data.value});
       }
     }
   }
