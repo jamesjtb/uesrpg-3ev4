@@ -179,6 +179,7 @@
     html.find(".itemEquip").click(await this._onItemEquip.bind(this));
     html.find(".itemTabInfo .wealthCalc").click(await this._onWealthCalc.bind(this));
     html.find(".setBaseCharacteristics").click(await this._onSetBaseCharacteristics.bind(this));
+    html.find(".carryBonus").click(await this._onCarryBonus.bind(this));
 
     //Item Create Buttons
     html.find(".combat-create").click(await this._onItemCreate.bind(this));
@@ -368,37 +369,43 @@
             let lckBase = this.actor.data.data.characteristics.lck.base;
 
             strBase = strInput;
-            this.actor.update({"data.characteristics.str.base" : strBase})
+            await this.actor.update({"data.characteristics.str.base" : strBase});
 
             endBase = endInput;
-            this.actor.update({"data.characteristics.end.base" : endBase})
+            await this.actor.update({"data.characteristics.end.base" : endBase});
 
             agiBase = agiInput;
-            this.actor.update({"data.characteristics.agi.base" : agiBase})
+            await this.actor.update({"data.characteristics.agi.base" : agiBase});
 
             intBase = intInput;
-            this.actor.update({"data.characteristics.int.base" : intBase})
+            await this.actor.update({"data.characteristics.int.base" : intBase});
 
             wpBase = wpInput;
-            this.actor.update({"data.characteristics.wp.base" : wpBase})
+            await this.actor.update({"data.characteristics.wp.base" : wpBase});
 
             prcBase = prcInput;
-            this.actor.update({"data.characteristics.prc.base" : prcBase})
+            await this.actor.update({"data.characteristics.prc.base" : prcBase});
 
             prsBase = prsInput;
-            this.actor.update({"data.characteristics.prs.base" : prsBase})
+            await this.actor.update({"data.characteristics.prs.base" : prsBase});
 
             lckBase = lckInput;
-            this.actor.update({"data.characteristics.lck.base" : lckBase})
+            await this.actor.update({"data.characteristics.lck.base" : lckBase});
+
+            for (let i of this.actor.items) {
+              if (i.type === "skill"||i.type === "magicSkill"||i.type === "combatStyle") {
+                i.update({"data.value": i.data.data.value});
+              }
+            }
           }
         },
         two: {
           label: "Cancel",
-          callback: html => console.log("Cancelled")
+          callback: async (html) => console.log("Cancelled")
         }
       },
       default: "one",
-      close: html => console.log()
+      close: async (html) => console.log()
     })
     d.render(true);
   }
@@ -554,8 +561,6 @@
       close: html => console.log()
       });
       d.render(true);
-
-      await item.update({"data.data.value" : item.data.data.value});
   }
 
   async _onSpellRoll(event) {
@@ -667,8 +672,6 @@
       close: html => console.log()
       });
       d.render(true);
-
-      await item.update({"data.value" : item.data.data.value});
   }
 
   async _onResistanceRoll(event) {
@@ -981,7 +984,7 @@
       title: "Add/Subtract Wealth",
       content: `<form>
                 <div class="dialogForm">
-                <label><b>Add/Subtract: </b></label><input placeholder="ex. -20, +10" id="playerInput" value="0" style=" text-align: center; width: 50%; border-style: groove; float: right;" type="text"></input></div>
+                <label><i class="fas fa-coins"></i><b> Add/Subtract: </b></label><input placeholder="ex. -20, +10" id="playerInput" value="0" style=" text-align: center; width: 50%; border-style: groove; float: right;" type="text"></input></div>
                 </form>`,
       buttons: {
         one: {
@@ -1006,4 +1009,42 @@
     d.render(true);
   }
 
+  async _onCarryBonus(event) {
+    event.preventDefault()
+
+    let d = new Dialog({
+      title: "Carry Rating Bonus",
+      content: `<form>
+                  <div class="dialogForm">
+                  <div style="margin: 5px;">
+                    <label><b>Current Carry Rating Bonus: </b></label>
+                    <label style=" text-align: center; float: right; width: 50%;">${this.actor.data.data.carry_rating.bonus}</label>
+                  </div>
+
+                  <div style="margin: 5px;">
+                  <label><b> Set Carry Weight Bonus:</b></label>
+                  <input placeholder="10, -10, etc." id="playerInput" value="0" style=" text-align: center; width: 50%; border-style: groove; float: right;" type="text"></input></div>
+                  </div>
+
+                </form>`,
+      buttons: {
+        one: {
+          label: "Cancel",
+          callback: html => console.log("Cancelled")
+        },
+        two: {
+          label: "Submit",
+          callback: async (html) => {
+            const playerInput = parseInt(html.find('[id="playerInput"]').val());
+            this.actor.data.data.carry_rating.bonus = playerInput;
+            this.actor.update({"data.carry_rating.bonus" : this.actor.data.data.carry_rating.bonus});
+          }
+        }
+      },
+      default: "two",
+      close: html => console.log()
+    })
+    d.render(true);
+  }
 }
+
