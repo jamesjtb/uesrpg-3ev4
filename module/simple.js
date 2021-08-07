@@ -7,9 +7,6 @@ import { merchantSheet } from "./merchant-sheet.js";
 import { SimpleItem } from "./item.js";
 import { SimpleItemSheet } from "./item-sheet.js";
 
-// Import Helpers
-import * as migrations from "./migration.js";
-
 
 /* -------------------------------------------- */
 /*  Foundry VTT Initialization                  */
@@ -86,14 +83,6 @@ Hooks.once("init", async function() {
     default: true,
     type: Boolean
   })
-
-  game.settings.register("uesrpg-d100", "systemMigrationVersion", {
-		name: "System Migration Version",
-		scope: "world",
-		config: false,
-		type: String,
-		default: 1.32
-	});
 
   const startUpDialog = game.settings.get("uesrpg-d100", "startUpDialog");
   let discordIcon = `<a class="fab fa-discord fa-2x"></a>`;
@@ -315,20 +304,3 @@ Hooks.once("ready", async function() {
     }
   }
 })
-
-Hooks.once("ready", function() {
-	// Determine whether a system migration is required and feasible
-	if ( !game.user.isGM ) return;
-	const currentVersion = game.settings.get("uesrpg-d100", "systemMigrationVersion");
-	const NEEDS_MIGRATION_VERSION = 1.32;
-	const COMPATIBLE_MIGRATION_VERSION = 1.32;
-	const needsMigration = isNewerVersion(NEEDS_MIGRATION_VERSION, currentVersion);
-	if ( !needsMigration ) return game.settings.set("uesrpg-d100", "systemMigrationVersion", game.system.data.version);
-
-	// Perform the migration
-	if ( isNewerVersion(COMPATIBLE_MIGRATION_VERSION, currentVersion) ) {
-		const warning = `Your UESRPG system data is from too old a Foundry version and cannot be reliably migrated to the latest version. The process will be attempted, but errors may occur.`;
-		ui.notifications.error(warning, {permanent: true});
-	}
-	migrations.migrateWorld();
-});
