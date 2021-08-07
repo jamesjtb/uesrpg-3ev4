@@ -998,7 +998,6 @@
   src: url("../fonts/cyrodiil/cyrodiil.ttf");
   font-size: x-large;
   border: transparent;
-  text-decoration-line: underline;
   margin-top: 5px;
   margin-bottom: 5px;
 }
@@ -1072,4 +1071,13 @@
   line-height: 18px;
   height: 24px;
   width: 24px;
+}
+.worldbuilding .wealthCalc:hover {
+  color: rgba(241, 0, 0, 0.808);
+}
+.worldbuilding .supplyRoll:hover {
+  color: rgba(241, 0, 0, 0.808);
+}
+.worldbuilding .carryBonus:hover {
+  color: rgba(241, 0, 0, 0.808);
 }
