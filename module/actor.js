@@ -65,48 +65,6 @@ export class SimpleActor extends Actor {
     var prsBonus = Math.floor(data.characteristics.prs.total / 10);
     var lckBonus = Math.floor(data.characteristics.lck.total / 10);
 
-    //Skill Bonus Calculation
-    const legacyUntrained = game.settings.get("uesrpg-d100", "legacyUntrainedPenalty");
-
-    if (legacyUntrained) {
-      for (var skill in data.skills) {
-        if (data.skills[skill].rank == "untrained") {
-          data.skills[skill].bonus = -20;
-        } else if (data.skills[skill].rank == "novice") {
-          data.skills[skill].bonus = 0;
-        } else if (data.skills[skill].rank == "apprentice") {
-          data.skills[skill].bonus = 10;
-        } else if (data.skills[skill].rank == "journeyman") {
-          data.skills[skill].bonus = 20;
-        } else if (data.skills[skill].rank == "adept") {
-          data.skills[skill].bonus = 30;
-        } else if (data.skills[skill].rank == "expert") {
-          data.skills[skill].bonus = 40;
-        } else if (data.skills[skill].rank == "master") {
-          data.skills[skill].bonus = 50;
-        }
-      }
-
-    } else {
-    for (var skill in data.skills) {
-      if (data.skills[skill].rank == "untrained") {
-        data.skills[skill].bonus = -10;
-      } else if (data.skills[skill].rank == "novice") {
-        data.skills[skill].bonus = 0;
-      } else if (data.skills[skill].rank == "apprentice") {
-        data.skills[skill].bonus = 10;
-      } else if (data.skills[skill].rank == "journeyman") {
-        data.skills[skill].bonus = 20;
-      } else if (data.skills[skill].rank == "adept") {
-        data.skills[skill].bonus = 30;
-      } else if (data.skills[skill].rank == "expert") {
-        data.skills[skill].bonus = 40;
-      } else if (data.skills[skill].rank == "master") {
-        data.skills[skill].bonus = 50;
-      }
-    }
-  }
-
   //Set Campaign Rank
   if (data.xpTotal >= 5000) {
     data.campaignRank = "Master"
