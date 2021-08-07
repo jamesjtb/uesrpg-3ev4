@@ -103,7 +103,7 @@
                             {{/each}} {{/select}}
                         </select></td> 
                         <td><input type="number" name="data.age" value="{{data.age}}" ></td>
-                        <td><input type="number" name="data.soul_energy" value="{{data.soul_energy}}" ></td>
+                        <td><input type="text" name="data.soul_energy" value="{{data.soul_energy}}" ></td>
                     </tr>
                 </table>
                 <table>
@@ -482,8 +482,10 @@
                     </select>
                 </div>
                 <div>
-                    <label class="itemTabInfoLabel"><a class="fas fa-weight-hanging"></a> Carry Rating</label>
-                    <label class="itemTabInfoValue">{{data.carry_rating.max}}</label>
+                    <span class="carryBonus" title="Edit Carry Bonus">
+                        <label class="itemTabInfoLabel"><a class="fas fa-weight-hanging"></a> Carry Rating</label>
+                    </span>
+                    <label class="itemTabInfoValue">{{data.carry_rating.max}} ENC</label>
                 </div>
                 <div>
                     <label class="itemTabInfoLabel"><a class="fas fa-weight-hanging"></a> Current Load</label>
