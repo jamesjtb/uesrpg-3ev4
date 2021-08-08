@@ -359,44 +359,66 @@
             const prsInput = parseInt(html.find('[id="prsInput"]').val());
             const lckInput = parseInt(html.find('[id="lckInput"]').val());
 
-            let strBase = this.actor.data.data.characteristics.str.base;
-            let endBase = this.actor.data.data.characteristics.end.base;
-            let agiBase = this.actor.data.data.characteristics.agi.base;
-            let intBase = this.actor.data.data.characteristics.int.base;
-            let wpBase = this.actor.data.data.characteristics.wp.base;
-            let prcBase = this.actor.data.data.characteristics.prc.base;
-            let prsBase = this.actor.data.data.characteristics.prs.base;
-            let lckBase = this.actor.data.data.characteristics.lck.base;
+            //Shortcut for characteristics
+            const chaPath = this.actor.data.data.characteristics;
 
-            strBase = strInput;
-            await this.actor.update({"data.characteristics.str.base" : strBase});
+            //Assign values to characteristics
+            chaPath.str.base = strInput;
+            chaPath.str.total = strInput + chaPath.str.bonus;
+            await this.actor.update({
+              "data.characteristics.str.base" : strInput,
+              "data.characteristics.str.total": chaPath.str.total
+            });
 
-            endBase = endInput;
-            await this.actor.update({"data.characteristics.end.base" : endBase});
+            chaPath.end.base = endInput;
+            chaPath.end.total = endInput + chaPath.end.bonus;
+            await this.actor.update({
+              "data.characteristics.end.base" : endInput,
+              "data.characteristics.end.total": chaPath.end.total
+            });
 
-            agiBase = agiInput;
-            await this.actor.update({"data.characteristics.agi.base" : agiBase});
+            chaPath.agi.base = agiInput;
+            chaPath.agi.total = agiInput + chaPath.agi.bonus;
+            await this.actor.update({
+              "data.characteristics.agi.base" : agiInput,
+              "data.characteristics.agi.total": chaPath.agi.total
+            });
 
-            intBase = intInput;
-            await this.actor.update({"data.characteristics.int.base" : intBase});
+            chaPath.int.base = intInput;
+            chaPath.int.total = intInput + chaPath.int.bonus;
+            await this.actor.update({
+              "data.characteristics.int.base" : intInput,
+              "data.characteristics.int.total": chaPath.int.total
+            });
 
-            wpBase = wpInput;
-            await this.actor.update({"data.characteristics.wp.base" : wpBase});
+            chaPath.wp.base = wpInput;
+            chaPath.wp.total = wpInput + chaPath.wp.bonus;
+            await this.actor.update({
+              "data.characteristics.wp.base" : wpInput,
+              "data.characteristics.wp.total": chaPath.wp.total
+            });
 
-            prcBase = prcInput;
-            await this.actor.update({"data.characteristics.prc.base" : prcBase});
+            chaPath.prc.base = prcInput;
+            chaPath.prc.total = prcInput + chaPath.prc.bonus;
+            await this.actor.update({
+              "data.characteristics.prc.base" : prcInput,
+              "data.characteristics.prc.total": chaPath.prc.total
+            });
 
-            prsBase = prsInput;
-            await this.actor.update({"data.characteristics.prs.base" : prsBase});
+            chaPath.prs.base = prsInput;
+            chaPath.prs.total = prsInput + chaPath.prs.bonus;
+            await this.actor.update({
+              "data.characteristics.prs.base" : prsInput,
+              "data.characteristics.prs.total": chaPath.prs.total
+            });
 
-            lckBase = lckInput;
-            await this.actor.update({"data.characteristics.lck.base" : lckBase});
+            chaPath.lck.base = lckInput;
+            chaPath.lck.total = lckInput + chaPath.lck.bonus;
+            await this.actor.update({
+              "data.characteristics.lck.base" : lckInput,
+              "data.characteristics.lck.total": chaPath.lck.total
+            });
 
-            for (let i of this.actor.items) {
-              if (i.type === "skill"||i.type === "magicSkill"||i.type === "combatStyle") {
-                i.update({"data.value": i.data.data.value});
-              }
-            }
           }
         },
         two: {
@@ -935,6 +957,10 @@
       type: element.id
     }];
     const created = await Item.create(itemData, {parent: actor});
+    console.log(created);
+    if (created.type === "skill"||created.type === "magicSkill"||created.type === "combatStyle") {
+      created.update({"data.baseCha": created.data.data.baseCha, "data.bonus": created.data.data.bonus});
+    }
     return created;
   }
 
