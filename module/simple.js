@@ -156,7 +156,6 @@ Hooks.once("ready", async function() {
   const actorCompendiums = game.packs.filter(pack => pack.documentName == "Actor");
   const itemCompendiums = game.packs.filter(pack => pack.documentName == "Item");
   const docArray = [];
-  const actorArray = [];
   const itemArray = [];
 
   console.log(actorCompendiums);
@@ -164,25 +163,17 @@ Hooks.once("ready", async function() {
   //Unlock Actor Compendiums for Updating
   if (migrateCharacteristicData){
     for (let i of actorCompendiums) {
-      await i.configure({locked: false});
-      let docs = i.getDocuments();
+      i.configure({locked: false});
+      let docs = await i.getDocuments();
       docArray.push(docs);
     }
 
-  for (let b of actorCompendiums) {
-    let x = await b.getDocuments();
-    actorArray.push(x);
-  }
-
   for (let i of itemCompendiums) {
-    await i.configure({locked: false});
+    i.configure({locked: false});
     let x = await i.getDocuments();
     itemArray.push(x);
   }
 
-  console.log(actorArray);
-
-  //Migrate the Data
   //Migrate World Actor Data
     console.log("Migrating Actor Characteristic Data to new Data Model")
     for (let a of worldActors) {
@@ -242,6 +233,7 @@ Hooks.once("ready", async function() {
           }
         }
       }
+      await b.configure({locked: true});
     }
 
     //Migrate Item Compendiums
@@ -259,6 +251,7 @@ Hooks.once("ready", async function() {
             console.log("This filepath has now been updated to %s", a.img)
           }
       }
+      await b.configure({locked: true});
     }
   
     
@@ -293,14 +286,5 @@ Hooks.once("ready", async function() {
       close: html => console.log()
     })
     d.render(true);
-
-    //Set the Compendiums back to locked
-    for (let i of actorCompendiums) {
-      await i.configure({locked: true});
-    }
-
-    for (let i of itemCompendiums) {
-      await i.configure({locked: true});
-    }
   }
 })
