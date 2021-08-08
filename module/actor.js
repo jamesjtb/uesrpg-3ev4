@@ -45,6 +45,8 @@ export class SimpleActor extends Actor {
     const data = actorData.data;
 
     //Add bonuses from items to Characteristics
+    console.log("%s|| Agility Base: %i", this.name, data.characteristics.agi.base);
+    console.log("%s|| Agility Total: %i", this.name, data.characteristics.agi.total);
     data.characteristics.str.total = data.characteristics.str.base + this._strBonusCalc(actorData);
     data.characteristics.end.total = data.characteristics.end.base + this._endBonusCalc(actorData);
     data.characteristics.agi.total = data.characteristics.agi.base + this._agiBonusCalc(actorData);
@@ -53,6 +55,17 @@ export class SimpleActor extends Actor {
     data.characteristics.prc.total = data.characteristics.prc.base + this._prcBonusCalc(actorData);
     data.characteristics.prs.total = data.characteristics.prs.base + this._prsBonusCalc(actorData);
     data.characteristics.lck.total = data.characteristics.lck.base + this._lckBonusCalc(actorData);
+
+    this.update({
+      "data.characteristics.str.total": data.characteristics.str.total,
+      "data.characteristics.end.total": data.characteristics.end.total,
+      "data.characteristics.agi.total": data.characteristics.agi.total,
+      "data.characteristics.int.total": data.characteristics.int.total,
+      "data.characteristics.wp.total": data.characteristics.wp.total,
+      "data.characteristics.prc.total": data.characteristics.prc.total,
+      "data.characteristics.prs.total": data.characteristics.prs.total,
+      "data.characteristics.lck.total": data.characteristics.lck.total,
+    });
 
 
     //Characteristic Bonuses
@@ -372,6 +385,17 @@ export class SimpleActor extends Actor {
     data.characteristics.prc.total = data.characteristics.prc.base + this._prcBonusCalc(actorData);
     data.characteristics.prs.total = data.characteristics.prs.base + this._prsBonusCalc(actorData);
     data.characteristics.lck.total = data.characteristics.lck.base + this._lckBonusCalc(actorData);
+
+    this.update({
+      "data.characteristics.str.total": data.characteristics.str.total,
+      "data.characteristics.end.total": data.characteristics.end.total,
+      "data.characteristics.agi.total": data.characteristics.agi.total,
+      "data.characteristics.int.total": data.characteristics.int.total,
+      "data.characteristics.wp.total": data.characteristics.wp.total,
+      "data.characteristics.prc.total": data.characteristics.prc.total,
+      "data.characteristics.prs.total": data.characteristics.prs.total,
+      "data.characteristics.lck.total": data.characteristics.lck.total,
+    });
 
 
     //Characteristic Bonuses
