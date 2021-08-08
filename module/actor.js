@@ -45,8 +45,6 @@ export class SimpleActor extends Actor {
     const data = actorData.data;
 
     //Add bonuses from items to Characteristics
-    console.log("%s|| Agility Base: %i", this.name, data.characteristics.agi.base);
-    console.log("%s|| Agility Total: %i", this.name, data.characteristics.agi.total);
     data.characteristics.str.total = data.characteristics.str.base + this._strBonusCalc(actorData);
     data.characteristics.end.total = data.characteristics.end.base + this._endBonusCalc(actorData);
     data.characteristics.agi.total = data.characteristics.agi.base + this._agiBonusCalc(actorData);
