@@ -56,17 +56,6 @@ export class SimpleActor extends Actor {
     data.characteristics.prs.total = data.characteristics.prs.base + this._prsBonusCalc(actorData);
     data.characteristics.lck.total = data.characteristics.lck.base + this._lckBonusCalc(actorData);
 
-    this.update({
-      "data.characteristics.str.total": data.characteristics.str.total,
-      "data.characteristics.end.total": data.characteristics.end.total,
-      "data.characteristics.agi.total": data.characteristics.agi.total,
-      "data.characteristics.int.total": data.characteristics.int.total,
-      "data.characteristics.wp.total": data.characteristics.wp.total,
-      "data.characteristics.prc.total": data.characteristics.prc.total,
-      "data.characteristics.prs.total": data.characteristics.prs.total,
-      "data.characteristics.lck.total": data.characteristics.lck.total,
-    });
-
 
     //Characteristic Bonuses
     var strBonus = Math.floor(data.characteristics.str.total / 10);
@@ -385,17 +374,6 @@ export class SimpleActor extends Actor {
     data.characteristics.prc.total = data.characteristics.prc.base + this._prcBonusCalc(actorData);
     data.characteristics.prs.total = data.characteristics.prs.base + this._prsBonusCalc(actorData);
     data.characteristics.lck.total = data.characteristics.lck.base + this._lckBonusCalc(actorData);
-
-    this.update({
-      "data.characteristics.str.total": data.characteristics.str.total,
-      "data.characteristics.end.total": data.characteristics.end.total,
-      "data.characteristics.agi.total": data.characteristics.agi.total,
-      "data.characteristics.int.total": data.characteristics.int.total,
-      "data.characteristics.wp.total": data.characteristics.wp.total,
-      "data.characteristics.prc.total": data.characteristics.prc.total,
-      "data.characteristics.prs.total": data.characteristics.prs.total,
-      "data.characteristics.lck.total": data.characteristics.lck.total,
-    });
 
 
     //Characteristic Bonuses
