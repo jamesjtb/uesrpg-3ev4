@@ -957,10 +957,6 @@
       type: element.id
     }];
     const created = await Item.create(itemData, {parent: actor});
-    console.log(created);
-    if (created.type === "skill"||created.type === "magicSkill"||created.type === "combatStyle") {
-      created.update({"data.baseCha": created.data.data.baseCha, "data.bonus": created.data.data.bonus});
-    }
     return created;
   }
 
