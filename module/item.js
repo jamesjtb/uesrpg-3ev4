@@ -11,16 +11,19 @@ export class SimpleItem extends Item {
     const itemData = this.data.data
 
     // Prepare data based on item type
-    if (this.type === "magicSkill"||this.type === "skill"||this.type === "combatStyle") {
-      if (this.isEmbedded) {
-        // Get the data of the actor that owns the item
-        const actor = this.actor;
-        const actorData = this.actor.data;
-        if (actor && actorData) {
-        this._prepareCombatStyleData(actorData, itemData);
+
+      if (this.data.data.hasOwnProperty("baseCha")) {
+        if (this.isEmbedded) {
+
+          //Get the Item's Actor Data
+          const actor = this.actor;
+          const actorData = this.actor.data;
+
+          if (actor && actorData) {
+            this._prepareCombatStyleData(actorData, itemData);
+          }
         }
       }
-    } 
   }
 
   /**
@@ -76,54 +79,15 @@ export class SimpleItem extends Item {
   }
 
     // Combat Style Skill Calculation
-    if (this.actor.data.data.wounded === true) {
-      if (data.baseCha === "str") {
-        data.value = this.actor.data.data.characteristics.str.total + this.actor.data.data.woundPenalty + data.bonus;
-      } else if (data.baseCha === "end") {
-        data.value = this.actor.data.data.characteristics.end.total + this.actor.data.data.woundPenalty + data.bonus;
-      } else if (data.baseCha === "agi") {
-        data.value = this.actor.data.data.characteristics.agi.total + this.actor.data.data.woundPenalty + data.bonus;
-      } else if (data.baseCha === "int") {
-        data.value = this.actor.data.data.characteristics.int.total + this.actor.data.data.woundPenalty + data.bonus;
-      } else if (data.baseCha === "wp") {
-        data.value = this.actor.data.data.characteristics.wp.total + this.actor.data.data.woundPenalty + data.bonus;
-      } else if (data.baseCha === "prc") {
-        data.value = this.actor.data.data.characteristics.prc.total + this.actor.data.data.woundPenalty + data.bonus;
-      } else if (data.baseCha === "prs") {
-        data.value = this.actor.data.data.characteristics.prs.total + this.actor.data.data.woundPenalty + data.bonus;
-      } else if (data.baseCha === "lck") {
-        data.value = this.actor.data.data.characteristics.lck.total + this.actor.data.data.woundPenalty + data.bonus;
-      }
+    const woundPenalty = Number(this.actor.data.data.woundPenalty);
+    const chaTotal = Number(this.actor.data.data.characteristics[data.baseCha].total + data.bonus);
 
+    if (this.actor.data.data.wounded) {
+      data.value = Number(woundPenalty + chaTotal);
     } else {
-      if (data.baseCha === "str") {
-        data.value = this.actor.data.data.characteristics.str.total + data.bonus;
-      } else if (data.baseCha === "end") {
-        data.value = this.actor.data.data.characteristics.end.total + data.bonus;
-      } else if (data.baseCha === "agi") {
-        data.value = this.actor.data.data.characteristics.agi.total + data.bonus;
-      } else if (data.baseCha === "int") {
-        data.value = this.actor.data.data.characteristics.int.total + data.bonus;
-      } else if (data.baseCha === "wp") {
-        data.value = this.actor.data.data.characteristics.wp.total + data.bonus;
-      } else if (data.baseCha === "prc") {
-        data.value = this.actor.data.data.characteristics.prc.total + data.bonus;
-      } else if (data.baseCha === "prs") {
-        data.value = this.actor.data.data.characteristics.prs.total + data.bonus;
-      } else if (data.baseCha === "lck") {
-        data.value = this.actor.data.data.characteristics.lck.total + data.bonus;
-      }
-      this.actor.update({
-        "data.characteristics.str.total": this.actor.data.data.characteristics.str.total,
-        "data.characteristics.end.total": this.actor.data.data.characteristics.end.total,
-        "data.characteristics.agi.total": this.actor.data.data.characteristics.agi.total,
-        "data.characteristics.int.total": this.actor.data.data.characteristics.int.total,
-        "data.characteristics.wp.total": this.actor.data.data.characteristics.wp.total,
-        "data.characteristics.prc.total": this.actor.data.data.characteristics.prc.total,
-        "data.characteristics.prs.total": this.actor.data.data.characteristics.prs.total,
-        "data.characteristics.lck.total": this.actor.data.data.characteristics.lck.total
-      });
+      data.value = Number(chaTotal);
     }
+
   }
 
   /**
