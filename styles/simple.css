@@ -1081,3 +1081,46 @@
 .worldbuilding .carryBonus:hover {
   color: rgba(241, 0, 0, 0.808);
 }
+.worldbuilding .journalEditor {
+  float: left;
+  width: 55%;
+  margin-right: 5px;
+  border: inset;
+  background-color:rgba(78, 78, 78, 0.068);
+}
+.worldbuilding .faction-list {
+  float: right;
+  flex: 0 0 24px;
+  padding: 0;
+  width: 44%;
+}
+.worldbuilding .faction-list li {
+  flex: 0 0 24px;
+  float: left;
+  list-style: outside none none;
+  width: 100%;
+}
+.worldbuilding .faction-list .item {
+  height: 30px;
+  line-height: 25px;
+  padding: 3px 0;
+  border-bottom: 1px solid #BBB;
+}
+.worldbuilding .faction-list label {
+  width: 10px;
+  text-align: center;
+}
+.worldbuilding .faction-list .item-name {
+  position: relative;
+  float: left;
+  margin-right: 0px;
+  margin-left: 0px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.worldbuilding .faction-list .item-controls {
+  flex: 0 0 36px;
+  margin-right: 0px;
+  margin-left: 0px;
+}
