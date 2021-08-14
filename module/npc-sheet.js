@@ -16,7 +16,8 @@ export class npcSheet extends ActorSheet {
         ".combat-list .item", 
         ".ability-list .item", 
         ".spell-list .item", 
-        ".talents-list .item"
+        ".talents-list .item",
+        ".faction-list .item"
       ], 
       dropSelector: null}]
     });
@@ -67,6 +68,7 @@ export class npcSheet extends ActorSheet {
         restoration: []
       };
       const ammunition = [];
+      const faction = [];
 
       //Iterate through items, allocating to containers
       //let totaWeight = 0;
@@ -115,6 +117,10 @@ export class npcSheet extends ActorSheet {
         else if (i.type === 'ammunition') {
           ammunition.push(i);
         }
+        //Append to faction
+        else if (i.type === "faction") {
+          faction.push(i);
+        }
       }
 
       //Assign and return
@@ -127,6 +133,7 @@ export class npcSheet extends ActorSheet {
       actorData.combatStyle = combatStyle;
       actorData.spell = spell;
       actorData.ammunition = ammunition;
+      actorData.faction = faction;
 
     }
 
