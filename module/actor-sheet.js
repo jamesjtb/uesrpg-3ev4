@@ -17,7 +17,8 @@
         ".combat-list .item", 
         ".ability-list .item", 
         ".spell-list .item",
-        ".talents-list .item"
+        ".talents-list .item",
+        ".faction-list .item"
       ], 
       dropSelector: null}]
     });
@@ -73,6 +74,7 @@
       const magicSkill = [];
       const ammunition = [];
       const language = [];
+      const faction = [];
 
       //Iterate through items, allocating to containers
       //let totaWeight = 0;
@@ -132,6 +134,10 @@
         else if (i.type === "language") {
           language.push(i);
         }
+        //Append to faction
+        else if (i.type === "faction") {
+          faction.push(i);
+        }
       }
 
       //Assign and return
@@ -147,6 +153,7 @@
       actorData.magicSkill = magicSkill;
       actorData.ammunition = ammunition;
       actorData.language = language;
+      actorData.faction = faction;
 
     }
 
