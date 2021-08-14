@@ -534,7 +534,8 @@
     "skill", 
     "magicSkill", 
     "ammunition",
-    "language"
+    "language",
+    "faction"
   ],
   "templates": {
     "characteristicArray": {
@@ -808,6 +809,20 @@
     "description": "",
     "readWrite": true,
     "speak": true
+  },
+  "faction": {
+    "description": "",
+    "rankTitle": "",
+    "location": "",
+    "size": "",
+    "ranks": {
+      "rank1": "",
+      "rank2": "",
+      "rank3": "",
+      "rank4": "",
+      "rank5": "",
+      "rank6": ""
+    }
   }
 }
 }
