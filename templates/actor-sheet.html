@@ -497,15 +497,30 @@
 
         {{!-- Journal Tab --}}
         <div class="tab journal" data-group="primary" data-tab="journal">
-            <div>
-                <table class="itemHeader">
-                    <tr>
-                        <td class="talentsLabel">Journal</td>
-                    </tr>
-                </table>
+            <div class="journalEditor">
+                <div>
+                    <h4 class="list-header-skills">
+                        <label>Journal</label>
+                    </h4>
+                </div>
+                {{editor content=data.notes target="data.notes" button=true owner=owner editable=this.options.editable}}
             </div>
             <div>
-                {{editor content=data.notes target="data.notes" button=true owner=owner editable=this.options.editable}}
+                <ol class="faction-list">
+                    <h4 class="list-header-skills">
+                        <button class="power-create" id="faction">+</button>
+                        <label>Factions</label>
+                    </h4>
+                    {{#each actor.data.faction as |item id|}}
+                        <li class="item flexrow" data-item-id="{{item._id}}">
+                            <img class="item-img" src="{{item.img}}" title="Send to Chat" width="24" height="24"/>
+                            <h4 class="item-name">{{item.name}}</h4>
+                            <div class="item-controls">
+                                <a class="item-control item-delete" title="Delete Item"><i class="fas fa-trash"></i></a>
+                            </div>
+                        </li>
+                    {{/each}}
+                </ol>
             </div>
         </div>
 
