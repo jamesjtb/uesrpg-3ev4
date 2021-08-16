@@ -323,7 +323,7 @@ export class merchantSheet extends ActorSheet {
     }
   }
     
-  _onIncreasePriceMod(event) {
+  async _onIncreasePriceMod(event) {
     event.preventDefault()
     const merchantItems = this.actor.items.filter(item => item.data.data.hasOwnProperty("modPrice"));
     this.actor.data.data.priceMod = Number(this.actor.data.data.priceMod + 5);
@@ -331,12 +331,12 @@ export class merchantSheet extends ActorSheet {
 
     for (let item of merchantItems) {
       item.data.data.modPrice = (item.data.data.price + (item.data.data.price * (this.actor.data.data.priceMod/100))).toFixed(0);
-        item.update({"data.modPrice" : item.data.data.modPrice});
+      await item.update({"data.modPrice" : item.data.data.modPrice});
     }
 
     }
 
-  _onDecreasePriceMod(event) {
+  async _onDecreasePriceMod(event) {
     event.preventDefault()
     const merchantItems = this.actor.items.filter(item => item.data.data.hasOwnProperty("modPrice"));
     this.actor.data.data.priceMod = Number(this.actor.data.data.priceMod - 5);
@@ -344,7 +344,7 @@ export class merchantSheet extends ActorSheet {
 
     for (let item of merchantItems) {
       item.data.data.modPrice = (item.data.data.price + (item.data.data.price * (this.actor.data.data.priceMod/100))).toFixed(0);
-        item.update({"data.modPrice" : item.data.data.modPrice});
+      await item.update({"data.modPrice" : item.data.data.modPrice});
     }
 
     }
