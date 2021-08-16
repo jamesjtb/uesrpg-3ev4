@@ -705,6 +705,11 @@
       "mysticism": "Mysticism",
       "necromancy": "Necromancy",
       "restoration": "Restoration"
+    },
+    "spellType": "",
+    "spellTypes": {
+      "conventional": "Conventional",
+      "unconventional": "Unconventional"
     }
   },
   "trait": {
