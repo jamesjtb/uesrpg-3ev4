@@ -23,11 +23,18 @@
                     </tr>
                     <tr>
                         <th>Damage</th>
-                        <th colspan="2">Form</th>
+                        <th>Form</th>
+                        <th>Type</th>
                     </tr>
                     <tr>
                         <td><input type="text" name="data.damage" value="{{data.damage}}" data-dtype="String"/></td>
-                        <td colspan="2"><input type="text" name="data.form" value="{{data.form}}" data-dtype="String"></td>
+                        <td><input type="text" name="data.form" value="{{data.form}}" data-dtype="String"></td>
+                        <td><select name="data.spellType" data-dtype="String">
+                            {{#select data.spellType}}
+                            {{#each data.spellTypes as | spellTypes key|}}
+                            <option value="{{key}}">{{spellTypes}}</option>
+                            {{/each}} {{/select}}
+                        </select></td>
                     </tr>
                 </table>
             </div>
