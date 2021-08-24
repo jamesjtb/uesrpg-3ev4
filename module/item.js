@@ -7,19 +7,16 @@ export class SimpleItem extends Item {
   async prepareData() {
     super.prepareData();
 
-    // Get the Item's data
+    // Get the Item's data & Actor's Data
     const itemData = this.data.data
+    const actorData = this.actor ? this.actor.data : {}
 
     // Prepare data based on item type
 
       if (this.data.data.hasOwnProperty("baseCha")) {
         if (this.isEmbedded) {
 
-          //Get the Item's Actor Data
-          const actor = this.actor;
-          const actorData = this.actor.data;
-
-          if (actor && actorData) {
+          if (actorData) {
             this._prepareCombatStyleData(actorData, itemData);
           }
         }
@@ -80,7 +77,11 @@ export class SimpleItem extends Item {
 
     // Combat Style Skill Calculation
     const woundPenalty = Number(this.actor.data.data.woundPenalty);
-    const chaTotal = Number(this.actor.data.data.characteristics[data.baseCha].total + data.bonus);
+
+    let chaTotal = 0;
+    if (data.baseCha !== undefined && data.baseCha !== "") {
+      chaTotal = Number(actorData.data.characteristics[data.baseCha].total + data.bonus);
+    }
 
     if (this.actor.data.data.wounded) {
       data.value = Number(woundPenalty + chaTotal);
