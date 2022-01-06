@@ -229,7 +229,8 @@
     const endBonusArray = [];
     const agiBonusArray = [];
     const intBonusArray = [];
-    const wpBonusArray = [];
+    // Willpower is set as wpC (instead of just 'wp' because the item value only contains 2 initial letters vs. 3 for all others... an inconsistency that is easier to resolve this way)
+    const wpCBonusArray = [];
     const prcBonusArray = [];
     const prsBonusArray = [];
     const lckBonusArray = [];
@@ -237,36 +238,27 @@
     const bonusItems = this.actor.items.filter(item => item.data.data.hasOwnProperty("characteristicBonus"));
 
     for (let item of bonusItems) {
-      if (item.data.data.characteristicBonus.strChaBonus !==0) {
-        let name = item.name;
-        strBonusArray.push(name);
-      } else if (item.data.data.characteristicBonus.endChaBonus !==0) {
-          let name = item.name;
-          endBonusArray.push(name);
-      } else if (item.data.data.characteristicBonus.agiChaBonus !==0) {
-          let name = item.name;
-          agiBonusArray.push(name);
-      } else if (item.data.data.characteristicBonus.intChaBonus !==0) {
-          let name = item.name;
-          intBonusArray.push(name);
-      } else if (item.data.data.characteristicBonus.wpChaBonus !==0) {
-          let name = item.name;
-          wpBonusArray.push(name);
-      } else if (item.data.data.characteristicBonus.prcChaBonus !==0) {
-          let name = item.name;
-          prcBonusArray.push(name);
-      } else if (item.data.data.characteristicBonus.prsChaBonus !==0) {
-          let name = item.name;
-          prsBonusArray.push(name);
-      } else if (item.data.data.characteristicBonus.lckChaBonus !==0) {
-          let name = item.name;
-          lckBonusArray.push(name);
+      for (let key in item.data.data.characteristicBonus) {
+          let name = item.name
+          let itemBonus = item.data.data.characteristicBonus[key]
+          if (itemBonus !== 0) {
+            let itemButton = `<button style="width: auto;" onclick="getItem(this.id, this.dataset.actor)" id="${item.id}" data-actor="${item.actor.id}">${name} ${itemBonus >= 0 ? `+${itemBonus}` : itemBonus}</button>`
+            let bonusName = eval([...key].splice(0, 3).join('') + 'BonusArray')
+            bonusName.push(itemButton)
+          }
       }
     }
 
     let d = new Dialog({
       title: "Set Base Characteristics",
       content: `<form>
+                  <script>
+                    function getItem(itemID, actorID) {
+                        let actor = game.actors.find(actor => actor.id === actorID)
+                        let item = actor.items.find(i => i.id === itemID)
+                        item.sheet.render(true)
+                      }
+                  </script>
                   <h2>Set the Character's Base Characteristics.</h2>
 
                   <div style="border: inset; margin-bottom: 10px; padding: 5px;">
@@ -314,42 +306,42 @@
 
                   <div style="border: inset; padding: 5px;">
                     <h2 style="font-size: small; font-weight: bold;">STR Modifiers</h2>
-                    <span style="font-size: small">${strBonusArray}</span>
+                    <span style="font-size: small">${strBonusArray.join('')}</span>
                   </div>
 
                   <div style="border: inset; padding: 5px;">
                     <h2 style="font-size: small; font-weight: bold;">END Modifiers</h2>
-                    <span style="font-size: small">${endBonusArray}</span>
+                    <span style="font-size: small">${endBonusArray.join('')}</span>
                   </div>
 
                   <div style="border: inset; padding: 5px;">
                     <h2 style="font-size: small; font-weight: bold;">AGI Modifiers</h2>
-                    <span style="font-size: small">${agiBonusArray}</span>
+                    <span style="font-size: small">${agiBonusArray.join('')}</span>
                   </div>
 
                   <div style="border: inset; padding: 5px;">
                     <h2 style="font-size: small; font-weight: bold;">INT Modifiers</h2>
-                    <span style="font-size: small">${intBonusArray}</span>
+                    <span style="font-size: small">${intBonusArray.join('')}</span>
                   </div>
 
                   <div style="border: inset; padding: 5px;">
                     <h2 style="font-size: small; font-weight: bold;">WP Modifiers</h2>
-                    <span style="font-size: small">${wpBonusArray}</span>
+                    <span style="font-size: small">${wpCBonusArray.join('')}</span>
                   </div>
 
                   <div style="border: inset; padding: 5px;">
                     <h2 style="font-size: small; font-weight: bold;">PRC Modifiers</h2>
-                    <span style="font-size: small">${prcBonusArray}</span>
+                    <span style="font-size: small">${prcBonusArray.join('')}</span>
                   </div>
 
                   <div style="border: inset; padding: 5px;">
                     <h2 style="font-size: small; font-weight: bold;">PRS Modifiers</h2>
-                    <span style="font-size: small">${prsBonusArray}</span>
+                    <span style="font-size: small">${prsBonusArray.join('')}</span>
                   </div>
 
                   <div style="border: inset; padding: 5px;">
                     <h2 style="font-size: small; font-weight: bold;">LCK Modifiers</h2>
-                    <span style="font-size: small">${lckBonusArray}</span>
+                    <span style="font-size: small">${lckBonusArray.join('')}</span>
                   </div>
 
                 </form>`,
