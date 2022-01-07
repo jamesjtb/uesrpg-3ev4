@@ -224,127 +224,145 @@
    */
   
   async _onSetBaseCharacteristics(event) {
-    event.preventDefault()
-    const strBonusArray = [];
-    const endBonusArray = [];
-    const agiBonusArray = [];
-    const intBonusArray = [];
-    // Willpower is set as wpC (instead of just 'wp' because the item value only contains 2 initial letters vs. 3 for all others... an inconsistency that is easier to resolve this way)
-    const wpCBonusArray = [];
-    const prcBonusArray = [];
-    const prsBonusArray = [];
-    const lckBonusArray = [];
+      event.preventDefault()
+      const strBonusArray = [];
+      const endBonusArray = [];
+      const agiBonusArray = [];
+      const intBonusArray = [];
+      // Willpower is set as wpC (instead of just 'wp' because the item value only contains 2 initial letters vs. 3 for all others... an inconsistency that is easier to resolve this way)
+      const wpCBonusArray = [];
+      const prcBonusArray = [];
+      const prsBonusArray = [];
+      const lckBonusArray = [];
 
-    const bonusItems = this.actor.items.filter(item => item.data.data.hasOwnProperty("characteristicBonus"));
+      const bonusItems = this.actor.items.filter(item => item.data.data.hasOwnProperty("characteristicBonus"));
 
-    for (let item of bonusItems) {
-      for (let key in item.data.data.characteristicBonus) {
-          let name = item.name
-          let itemBonus = item.data.data.characteristicBonus[key]
-          if (itemBonus !== 0) {
-            let itemButton = `<button style="width: auto;" onclick="getItem(this.id, this.dataset.actor)" id="${item.id}" data-actor="${item.actor.id}">${name} ${itemBonus >= 0 ? `+${itemBonus}` : itemBonus}</button>`
-            let bonusName = eval([...key].splice(0, 3).join('') + 'BonusArray')
-            bonusName.push(itemButton)
-          }
+      for (let item of bonusItems) {
+        for (let key in item.data.data.characteristicBonus) {
+            let itemBonus = item.data.data.characteristicBonus[key]
+            if (itemBonus !== 0) {
+              let itemButton = `<button style="width: auto;" onclick="getItem(this.id, this.dataset.actor)" id="${item.id}" data-actor="${item.actor.id}">${item.name} ${itemBonus >= 0 ? `+${itemBonus}` : itemBonus}</button>`
+              let bonusName = eval([...key].splice(0, 3).join('') + 'BonusArray')
+              bonusName.push(itemButton)
+            }
+        }
       }
-    }
 
-    let d = new Dialog({
-      title: "Set Base Characteristics",
-      content: `<form>
-                  <script>
-                    function getItem(itemID, actorID) {
-                        let actor = game.actors.find(actor => actor.id === actorID)
-                        let item = actor.items.find(i => i.id === itemID)
-                        item.sheet.render(true)
-                      }
-                  </script>
-                  <h2>Set the Character's Base Characteristics.</h2>
+      let d = new Dialog({
+        title: "Set Base Characteristics",
+        content: `<form>
+                    <script>
+                      function getItem(itemID, actorID) {
+                          console.log(actorID)
+                          let actor = game.actors.find(actor => actor.id === actorID)
+                          let tokenActor = game.scenes.find(scene => scene.active === true).tokens.find(token => token.data.actorId === actorID)
+                          console.log(tokenActor)
 
-                  <div style="border: inset; margin-bottom: 10px; padding: 5px;">
-                  <i>Use this menu to adjust characteristic values on the character 
-                     when first creating a character or when spending XP to increase 
-                     their characteristics.
-                  </i>
-                  </div>
+                          let actorBonusItems = actor.items.filter(item => item.data.data.hasOwnProperty('characteristicBonus'))
+                          let tokenBonusItems = tokenActor._actor.items.filter(item => item.data.data.hasOwnProperty('characteristicBonus'))
 
-                  <div style="margin-bottom: 10px;">
-                    <label><b>Points Total: </b></label>
-                    <label>
-                    ${this.actor.data.data.characteristics.str.base +
-                    this.actor.data.data.characteristics.end.base +
-                    this.actor.data.data.characteristics.agi.base +
-                    this.actor.data.data.characteristics.int.base +
-                    this.actor.data.data.characteristics.wp.base +
-                    this.actor.data.data.characteristics.prc.base +
-                    this.actor.data.data.characteristics.prs.base +
-                    this.actor.data.data.characteristics.lck.base}
-                    </label>
-                    <table style="table-layout: fixed; text-align: center;">
-                      <tr>
-                        <th>STR</th>
-                        <th>END</th>
-                        <th>AGI</th>
-                        <th>INT</th>
-                        <th>WP</th>
-                        <th>PRC</th>
-                        <th>PRS</th>
-                        <th>LCK</th>
-                      </tr>
-                      <tr>
-                        <td><input type="number" id="strInput" value="${this.actor.data.data.characteristics.str.base}"></td>
-                        <td><input type="number" id="endInput" value="${this.actor.data.data.characteristics.end.base}"></td>
-                        <td><input type="number" id="agiInput" value="${this.actor.data.data.characteristics.agi.base}"></td>
-                        <td><input type="number" id="intInput" value="${this.actor.data.data.characteristics.int.base}"></td>
-                        <td><input type="number" id="wpInput" value="${this.actor.data.data.characteristics.wp.base}"></td>
-                        <td><input type="number" id="prcInput" value="${this.actor.data.data.characteristics.prc.base}"></td>
-                        <td><input type="number" id="prsInput" value="${this.actor.data.data.characteristics.prs.base}"></td>
-                        <td><input type="number" id="lckInput" value="${this.actor.data.data.characteristics.lck.base}"></td>
-                      </tr>
-                    </table>
-                  </div>
+                          
 
-                  <div style="border: inset; padding: 5px;">
-                    <h2 style="font-size: small; font-weight: bold;">STR Modifiers</h2>
-                    <span style="font-size: small">${strBonusArray.join('')}</span>
-                  </div>
+                          // Need to find where token items are stored!!
 
-                  <div style="border: inset; padding: 5px;">
-                    <h2 style="font-size: small; font-weight: bold;">END Modifiers</h2>
-                    <span style="font-size: small">${endBonusArray.join('')}</span>
-                  </div>
 
-                  <div style="border: inset; padding: 5px;">
-                    <h2 style="font-size: small; font-weight: bold;">AGI Modifiers</h2>
-                    <span style="font-size: small">${agiBonusArray.join('')}</span>
-                  </div>
+                          if (actor.data.token.actorLink) {
+                            let item = actorBonusItems.find(i => i.id === itemID)
+                            item.sheet.render(true)
+                          }
+                          else {
+                            let item = tokenBonusItems.find(i => i.id === itemID)
+                            item.sheet.render(true)
+                          }
+                        }
+                    </script>
 
-                  <div style="border: inset; padding: 5px;">
-                    <h2 style="font-size: small; font-weight: bold;">INT Modifiers</h2>
-                    <span style="font-size: small">${intBonusArray.join('')}</span>
-                  </div>
+                    <h2>Set the Character's Base Characteristics.</h2>
 
-                  <div style="border: inset; padding: 5px;">
-                    <h2 style="font-size: small; font-weight: bold;">WP Modifiers</h2>
-                    <span style="font-size: small">${wpCBonusArray.join('')}</span>
-                  </div>
+                    <div style="border: inset; margin-bottom: 10px; padding: 5px;">
+                    <i>Use this menu to adjust characteristic values on the character 
+                      when first creating a character or when spending XP to increase 
+                      their characteristics.
+                    </i>
+                    </div>
 
-                  <div style="border: inset; padding: 5px;">
-                    <h2 style="font-size: small; font-weight: bold;">PRC Modifiers</h2>
-                    <span style="font-size: small">${prcBonusArray.join('')}</span>
-                  </div>
+                    <div style="margin-bottom: 10px;">
+                      <label><b>Points Total: </b></label>
+                      <label>
+                      ${this.actor.data.data.characteristics.str.base +
+                      this.actor.data.data.characteristics.end.base +
+                      this.actor.data.data.characteristics.agi.base +
+                      this.actor.data.data.characteristics.int.base +
+                      this.actor.data.data.characteristics.wp.base +
+                      this.actor.data.data.characteristics.prc.base +
+                      this.actor.data.data.characteristics.prs.base +
+                      this.actor.data.data.characteristics.lck.base}
+                      </label>
+                      <table style="table-layout: fixed; text-align: center;">
+                        <tr>
+                          <th>STR</th>
+                          <th>END</th>
+                          <th>AGI</th>
+                          <th>INT</th>
+                          <th>WP</th>
+                          <th>PRC</th>
+                          <th>PRS</th>
+                          <th>LCK</th>
+                        </tr>
+                        <tr>
+                          <td><input type="number" id="strInput" value="${this.actor.data.data.characteristics.str.base}"></td>
+                          <td><input type="number" id="endInput" value="${this.actor.data.data.characteristics.end.base}"></td>
+                          <td><input type="number" id="agiInput" value="${this.actor.data.data.characteristics.agi.base}"></td>
+                          <td><input type="number" id="intInput" value="${this.actor.data.data.characteristics.int.base}"></td>
+                          <td><input type="number" id="wpInput" value="${this.actor.data.data.characteristics.wp.base}"></td>
+                          <td><input type="number" id="prcInput" value="${this.actor.data.data.characteristics.prc.base}"></td>
+                          <td><input type="number" id="prsInput" value="${this.actor.data.data.characteristics.prs.base}"></td>
+                          <td><input type="number" id="lckInput" value="${this.actor.data.data.characteristics.lck.base}"></td>
+                        </tr>
+                      </table>
+                    </div>
 
-                  <div style="border: inset; padding: 5px;">
-                    <h2 style="font-size: small; font-weight: bold;">PRS Modifiers</h2>
-                    <span style="font-size: small">${prsBonusArray.join('')}</span>
-                  </div>
+                    <div style="border: inset; padding: 5px;">
+                      <h2 style="font-size: small; font-weight: bold;">STR Modifiers</h2>
+                      <span style="font-size: small">${strBonusArray.join('')}</span>
+                    </div>
 
-                  <div style="border: inset; padding: 5px;">
-                    <h2 style="font-size: small; font-weight: bold;">LCK Modifiers</h2>
-                    <span style="font-size: small">${lckBonusArray.join('')}</span>
-                  </div>
+                    <div style="border: inset; padding: 5px;">
+                      <h2 style="font-size: small; font-weight: bold;">END Modifiers</h2>
+                      <span style="font-size: small">${endBonusArray.join('')}</span>
+                    </div>
 
-                </form>`,
+                    <div style="border: inset; padding: 5px;">
+                      <h2 style="font-size: small; font-weight: bold;">AGI Modifiers</h2>
+                      <span style="font-size: small">${agiBonusArray.join('')}</span>
+                    </div>
+
+                    <div style="border: inset; padding: 5px;">
+                      <h2 style="font-size: small; font-weight: bold;">INT Modifiers</h2>
+                      <span style="font-size: small">${intBonusArray.join('')}</span>
+                    </div>
+
+                    <div style="border: inset; padding: 5px;">
+                      <h2 style="font-size: small; font-weight: bold;">WP Modifiers</h2>
+                      <span style="font-size: small">${wpCBonusArray.join('')}</span>
+                    </div>
+
+                    <div style="border: inset; padding: 5px;">
+                      <h2 style="font-size: small; font-weight: bold;">PRC Modifiers</h2>
+                      <span style="font-size: small">${prcBonusArray.join('')}</span>
+                    </div>
+
+                    <div style="border: inset; padding: 5px;">
+                      <h2 style="font-size: small; font-weight: bold;">PRS Modifiers</h2>
+                      <span style="font-size: small">${prsBonusArray.join('')}</span>
+                    </div>
+
+                    <div style="border: inset; padding: 5px;">
+                      <h2 style="font-size: small; font-weight: bold;">LCK Modifiers</h2>
+                      <span style="font-size: small">${lckBonusArray.join('')}</span>
+                    </div>
+
+                  </form>`,
       buttons: {
         one: {
           label: "Submit",
