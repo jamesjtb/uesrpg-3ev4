@@ -88,7 +88,7 @@ Hooks.once("init", async function() {
     content: `<form>
       <div class="dialogForm" style="padding: 5px">
 
-        <div style="text-align: center; border: inset; margin: 5px; padding: 5px; background-color: rgba(78, 78, 78, 0.137);">
+        <div style="text-align: center; margin: 5px; padding: 5px; background-color: rgba(78, 78, 78, 0.137);">
           <span style="margin-left: 10px; margin-right: 10px;">  
             ${patreonIcon.link("https://www.patreon.com/bePatron?u=30258550")}
           </span>
@@ -97,7 +97,7 @@ Hooks.once("init", async function() {
           </span>
         </div>
 
-        <div style="border: inset; margin: 5px; padding: 5px; background-color: rgba(78, 78, 78, 0.137);">
+        <div style="margin: 5px; padding: 5px; background-color: rgba(78, 78, 78, 0.137);">
             <h2 style="text-align: center;">Join the Community!</h2>
             <label>
               Hey adventurer! Thanks for taking the time to check out the UESRPG system on Foundry. UESRPG is 

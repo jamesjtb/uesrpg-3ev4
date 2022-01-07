@@ -304,7 +304,6 @@
   margin-top: 2px;
   text-align: center;
   background-color: rgba(219, 181, 77, 0.808);
-  border: outset;
 }
 .worldbuilding .combat_table_header2 {
   font-family: "cyrodiil";
@@ -418,7 +417,6 @@
   text-align: center;
   position: relative;
   border-radius: 50%;
-  border: groove;
 }
 .worldbuilding .combat-list .item-cat .itemEquip {
   flex: 0 0 24px;
@@ -643,7 +641,6 @@
   font-size: small;
   font-weight: bold;
   table-layout: fixed;
-  border: outset;
 }
 .worldbuilding .field-inputs-small td {
   font-weight: normal;
@@ -651,7 +648,6 @@
 .worldbuilding .vResistTable {
   font-size: small;
   table-layout: fixed;
-  border: outset;
   padding: 0px;
 }
 .worldbuilding .vResistTable .resistHeader {
@@ -841,7 +837,6 @@
   flex: 0 0 24px;
   background-color: rgba(78, 78, 78, 0.137);
   font-size: 18px;
-  border: outset;
 }
 .worldbuilding .list-header label {
   flex: 0 0 24px;
@@ -859,7 +854,6 @@
   line-height: 18px;
   float: right;
   text-align: center;
-  border: groove;
   margin-right: 5px;
   margin-left: 0px;
 }
@@ -868,7 +862,6 @@
   flex: 0 0 24px;
   background-color: rgba(78, 78, 78, 0.137);
   font-size: 18px;
-  border: outset;
 }
 .worldbuilding .list-header-skills label {
   flex: 0 0 24px;
@@ -886,7 +879,6 @@
   line-height: 18px;
   float: left;
   text-align: center;
-  border: groove;
   margin-right: 5px;
   margin-left: 0px;
 }
@@ -894,7 +886,6 @@
   text-align: center;
   float: left;
   width: 55%;
-  border: outset;
   padding: 5px;
   margin-left: 5px;
   margin-right: 5px;
@@ -923,7 +914,6 @@
   text-align: left;
   background-color: rgba(78, 78, 78, 0.137);
   font-size: 18px;
-  border: outset;
   font-family: "cyrodiil";
   src: url("../fonts/cyrodiil/cyrodiil.ttf");
 }
@@ -970,7 +960,6 @@
   position: relative;
   flex: 0 0 24px;
   float: left;
-  border: groove;
   text-align: center;
   height: 24px;
   width: 24px;
@@ -1041,7 +1030,6 @@
   padding: 0px;
   text-align: center;
   background-color: rgba(219, 181, 77, 0.808);
-  border: groove;
 }
 .worldbuilding .setBaseCharacteristicsNPC {
   background: none;
@@ -1051,7 +1039,6 @@
   margin: 0px;
   padding: 0px;
   text-align: center;
-  border: groove;
 }
 .worldbuilding .magicChargeInputs {
   flex: 0 0 24px;
@@ -1085,7 +1072,6 @@
   float: left;
   width: 55%;
   margin-right: 5px;
-  border: inset;
   background-color:rgba(78, 78, 78, 0.068);
 }
 .worldbuilding .faction-list {
