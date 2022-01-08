@@ -140,6 +140,32 @@
         }
       }
 
+      // Alphabetically sort all item lists
+      const itemCats = [gear, weapon, armor, power, trait, talent, combatStyle, spell, skill, magicSkill, ammunition, language, faction]
+      for (let category of itemCats) {
+        if (category.length > 1 && category != spell) {
+          category.sort((a,b) => {
+            let nameA = a.name.toLowerCase()
+            let nameB = b.name.toLowerCase()
+            if (nameA > nameB) {return 1}
+            else {return -1}
+          })
+        }
+        else if (category == spell) {
+          for (let school in category) {
+            let spellArray = category[school]
+            if (spellArray.length > 1) {
+              spellArray.sort((a,b) => {
+                let nameA = a.name.toLowerCase()
+                let nameB = b.name.toLowerCase()
+                if (nameA > nameB) {return 1}
+                else {return -1}
+              })
+            }
+          }
+        }
+      }
+
       //Assign and return
       actorData.gear = gear;
       actorData.weapon = weapon;
