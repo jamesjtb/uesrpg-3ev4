@@ -52,7 +52,7 @@
             <div>
             <table class="skill-table">
                 <tr>
-                    <th colspan="8"><button class="setBaseCharacteristicsNPC">Characteristics</button></th>
+                    <th colspan="8"><button type="button" class="setBaseCharacteristicsNPC">Characteristics</button></th>
                 </tr>
                 <tr>
                     <th><input type="button" class="characteristic-roll" name="STR" id="str" value="STR"></th>
@@ -166,7 +166,7 @@
             <div>
                 <ol class="faction-list">
                     <h4 class="list-header-skills">
-                        <button class="power-create" id="faction">+</button>
+                        <button type="button" class="power-create" id="faction">+</button>
                         <label>Factions</label>
                     </h4>
                     {{#each actor.data.faction as |item id|}}
@@ -232,12 +232,12 @@
                 </table>
             <ol class="combat-list">
                 <h4 class="list-header-skills">
-                    <button class="weapon-create" id="weapon">+</button>
+                    <button type="button" class="weapon-create" id="weapon">+</button>
                     <label>Weapons</label>
                 </h4>
                 {{#each actor.data.weapon as |item id|}}
                     <li class="item flexrow" data-item-id="{{item._id}}">
-                        <button class="damage-roll" data-roll="{{item.data.value}}"><i class="fas fa-dice-d20"></i></button>
+                        <button type="button" class="damage-roll" data-roll="{{item.data.value}}"><i class="fas fa-dice-d20"></i></button>
                         <img class="item-img" src="{{item.img}}" title="{{item.name}}" width="24" height="24"/>
                         <h4 class="item-name">{{item.name}}</h4>
                         <h4 class="item-cat">2H<input class="toggle2H" type="checkbox" {{checked item.data.weapon2H}} title="Toggle 2H Damage"></h4>
@@ -249,12 +249,12 @@
             </ol>
             <ol class="combat-list">
                 <h4 class="list-header-skills">
-                    <button class="ammo-create" id="ammunition">+</button>
+                    <button type="button" class="ammo-create" id="ammunition">+</button>
                     <label>Ammunition</label>
                 </h4>
                 {{#each actor.data.ammunition as |item id|}}
                     <li class="item flexrow" data-item-id="{{item._id}}">
-                        <button class="ammo-roll" title="Send Stats to Chat and Reduce Ammo Count by 1" data-roll="{{item.data.value}}"><i class="fas fa-dice-d20"></i></button>
+                        <button type="button" class="ammo-roll" title="Send Stats to Chat and Reduce Ammo Count by 1" data-roll="{{item.data.value}}"><i class="fas fa-dice-d20"></i></button>
                         <img class="item-img" src="{{item.img}}" title="{{item.name}}" width="24" height="24"/>
                         <h4 class="item-name">{{item.name}}</h4>
                         <h4 class="item-cat"><input class="ammo-field" type="number" value="{{item.data.quantity}}" title="Ammo Qty" disabled></h4>
@@ -271,12 +271,12 @@
         <ol class="combat-list">
             {{#each actor.data.armor as |armor equipped|}}
             <h4 class="list-header-skills">
-                <button class="armor-create" id="armor">+</button>
+                <button type="button" class="armor-create" id="armor">+</button>
                 <label>{{equipped}} Armor</label>
             </h4> <p></p>
             {{#each armor as |item id|}}
                 <li class="item flexrow" data-item-id="{{item._id}}">
-                    <button title="Send Stats to Chat" class="armor-roll" data-roll="{{item.data.value}}"><i class="fas fa-dice-d20"></i></button>
+                    <button type="button" title="Send Stats to Chat" class="armor-roll" data-roll="{{item.data.value}}"><i class="fas fa-dice-d20"></i></button>
                     <img class="item-img" src="{{item.img}}" title="{{item.name}}" width="24" height="24"/>
                     <h4 class="item-name">{{item.name}}</h4>
                     <h4 class="item-cat" title="{{item.data.magic_ar}}">{{item.data.armor}}AR<input class="itemEquip" type="checkbox" {{checked item.data.equipped}} title="Equip Armor"></h4>
@@ -318,7 +318,7 @@
                     <th colspan="2"><div class="resistHeader">Resistances</div></th>
                 </tr>
                 <tr>
-                    <td><button class="resistance-roll" name="Disease" id="diseaseR"> <span class="fas fa-bacteria"></span> Disease</button></td>
+                    <td><button type="button" class="resistance-roll" name="Disease" id="diseaseR"> <span class="fas fa-bacteria"></span> Disease</button></td>
                     <th><label type="number" name="data.resistance.diseaseR"></label>{{data.resistance.diseaseR}}%</th>
                 </tr>
                 <tr>
@@ -371,7 +371,7 @@
                     <th class="combat_table_header2">Magic Skill Roll</th>
                 </tr>
                 <tr>
-                    <th><button class="professions-roll" name="Magic" id="magic">Magic</button></th>
+                    <th><button type="button" class="professions-roll" name="Magic" id="magic">Magic</button></th>
                 </tr>
             </table>
             <ol class="spell-list">
@@ -385,7 +385,7 @@
                 </div>
                 {{#each spell as |item id|}}
                     <li class="item flexrow" data-item-id="{{item._id}}">
-                        <button class="magic-roll" data-roll="{{item.data.value}}"><i class="fas fa-dice-d20"></i></button>
+                        <button type="button" class="magic-roll" data-roll="{{item.data.value}}"><i class="fas fa-dice-d20"></i></button>
                         <img class="item-img" src="{{item.img}}" title="{{item.name}}" width="24" height="24"/>
                         <h4 class="item-name">{{item.name}}</h4>
                         <div class="item-controls">
@@ -429,7 +429,7 @@
                 </table>
                 <ol class="talents-list">
                     <h4 class="list-header-skills">
-                        <button class="trait-create" id="trait">+</button>
+                        <button type="button" class="trait-create" id="trait">+</button>
                         <label>Traits</label>
                     </h4>
                     {{#each actor.data.trait as |item id|}}
@@ -443,7 +443,7 @@
                     {{/each}}
                 </ol>
                 <h4 class="list-header-skills">
-                    <button class="power-create" id="power">+</button>
+                    <button type="button" class="power-create" id="power">+</button>
                     <label>Powers</label>
                 </h4>
                     <ol class="talents-list">
@@ -459,7 +459,7 @@
                     </ol>
                         <ol class="talents-list">
                             <h4 class="list-header-skills">
-                                <button class="talent-create" id="talent">+</button>
+                                <button type="button" class="talent-create" id="talent">+</button>
                                 <label>Talents</label>
                             </h4>
                             {{#each actor.data.talent as |item id|}}
@@ -519,7 +519,7 @@
                     <label>QTY</label>
                     <label>ENC</label>
                     <label>Item Name</label>
-                    <button class="gear-create" id="item">+</button>
+                    <button type="button" class="gear-create" id="item">+</button>
                 </h4>
                 {{#each actor.data.gear as |item id|}}
                     <li class="item flexrow" data-item-id="{{item._id}}">

@@ -75,68 +75,89 @@ Hooks.once("init", async function() {
     type: Boolean
   });
 
-  const startUpDialog = game.settings.get("uesrpg-d100", "startUpDialog");
-  let discordIcon = `<a class="fab fa-discord fa-2x"></a>`;
-  let patreonIcon = `<a class="fab fa-patreon fa-2x"></a>`;
-  let patreonLink = "Patreon";
-  let discordLink = "Discord Channel";
-  let contentModLink = "https://github.com/95Gman/UESRPG-revised";
+  const startUpFunction = () => {
+    const startUpDialog = game.settings.get("uesrpg-d100", "startUpDialog");
+    let discordIcon = `<i class="fab fa-discord fa-2x"></i>`;
+    let patreonIcon = `<i class="fab fa-patreon fa-2x"></i>`;
+    let gitLabIcon = `<i class="fab fa-gitlab fa-2x"></i>`;
+    let patreonLink = "Patreon";
+    let discordLink = "Discord Channel";
+    let gitLabLink = 'GitLab Repo'
+    let contentModLink = "https://github.com/95Gman/UESRPG-revised";
 
-  if (startUpDialog === false) {
-  let popup = new Dialog({
-    title: "Welcome to the UESRPG Foundry System!",
-    content: `<form>
-      <div class="dialogForm" style="padding: 5px">
+    let popup = new Dialog({
+      title: "Welcome to the UESRPG Foundry System!",
+      content: `<form>
+        <div class="dialogForm" style="padding: 5px">
 
-        <div style="text-align: center; margin: 5px; padding: 5px; background-color: rgba(78, 78, 78, 0.137);">
-          <span style="margin-left: 10px; margin-right: 10px;">  
-            ${patreonIcon.link("https://www.patreon.com/bePatron?u=30258550")}
-          </span>
-          <span style="margin-left: 10px; margin-right: 10px;"> 
-            ${discordIcon.link("https://discord.gg/pBRJwy3Ec5")}
-          </span>
+          <div style="text-align: center; margin: 5px; padding: 5px; background-color: rgba(78, 78, 78, 0.137);">
+            <span style="margin-left: 10px; margin-right: 10px;">  
+              ${patreonIcon.link("https://www.patreon.com/bePatron?u=30258550")}
+            </span>
+            <span style="margin-left: 10px; margin-right: 10px;"> 
+              ${discordIcon.link("https://discord.gg/pBRJwy3Ec5")}
+            </span>
+            <span style="margin-left: 10px; margin-right: 10px;">
+              ${gitLabIcon.link("https://gitlab.com/DogBoneZone/uesrpg-3e")}
+            </span>
+          </div>
+
+          <div style="margin: 5px; padding: 5px; background-color: rgba(78, 78, 78, 0.137);">
+              <h2 style="text-align: center;">Join the Community!</h2>
+              <label>
+                Hey adventurer! Thanks for taking the time to check out the UESRPG system on Foundry. UESRPG is 
+                an incredible game developed by a team of dedicated and talented designers. You can find out more about the game, 
+                download the free rulebooks, and interact with our lively community on the ${discordLink.link("https://discord.gg/pBRJwy3Ec5")}.
+              </label>
+
+              <p></p>
+
+              <label>
+                If you want to support further development of this system, please consider supporting me on ${patreonLink.link("https://www.patreon.com/bePatron?u=30258550")}. 
+                Thank you, and enjoy the UESRPG System!
+              </<label>
+
+              <p></p>
+
+            <h2 style="text-align: center;">Recommended Game Content</h2>
+              <label>
+                The following modules/content were created by some dedicated community members and are <b>highly recommended</b> 
+                as they provide hundreds of pre-built items, NPC's, and much more.
+              </label>
+              <ul>
+                <li>${contentModLink.link("https://github.com/95Gman/UESRPG-revised")}</li>
+              </ul>
+          </div>
+
+          <div style="margin: 5px; padding: 5px; background-color: rgba(78, 78, 78, 0.137);">
+            <h2 style="text-align: center;">v1.41 Changelog</h2>
+              <ul>
+                <li>Added new All-In-One Combat Macro to roll Combat Style + Weapon Damage Roll simultaneously</li>
+                <li>Added new Reset Action Points Macro that resets all Action Points to Max for any combatants in the current scene</li>
+                <li>Fixed Wound Calculation error in the All-In-One Spellcasting Macro</li>
+                <li>Removed border lines in many areas of the sheets to look more appropriate on Firefox browser</li>
+                <li>Added buttons to the Set Base Characteristics Menu to easily click into the items that are applying the characteristic bonus/penalty</li>
+                <li>All Item/Skill/Spell lists are now automatically sorted alphabetically to more easily find items in longer lists</li>
+                <li>Resolved issue where buttons would register a click when hitting the Enter key</li>
+                <li>Slightly increased the default size of character/NPC sheets to better fit content when using custom borders and themes</li>
+              </ul>
+          </div>
+
+          <div>
+            <i>You can disable this popup message in the System Settings and checking the box to not show this again.</i>
+          </div>
         </div>
+        </form>`,
+      buttons: {
+            one: {
+              label: "Close"
+            }
+          },
+      default: "one",
+      close: html => console.log()
+    });
+    popup.render(true);
+  }
 
-        <div style="margin: 5px; padding: 5px; background-color: rgba(78, 78, 78, 0.137);">
-            <h2 style="text-align: center;">Join the Community!</h2>
-            <label>
-              Hey adventurer! Thanks for taking the time to check out the UESRPG system on Foundry. UESRPG is 
-              an incredible game developed by a team of dedicated and talented designers. You can find out more about the game, 
-              download the free rulebooks, and interact with our lively community on the ${discordLink.link("https://discord.gg/pBRJwy3Ec5")}.
-            </label>
-
-            <p></p>
-
-            <label>
-              If you want to support further development of this system, please consider supporting me on ${patreonLink.link("https://www.patreon.com/bePatron?u=30258550")}. 
-              Thank you, and enjoy the UESRPG System!
-            </<label>
-
-            <p></p>
-
-          <h2 style="text-align: center;">Recommended Game Content</h2>
-            <label>
-              The following modules/content were created by some dedicated community members and are <b>highly recommended</b> 
-              as they provide hundreds of pre-built items, NPC's, and much more.
-            </label>
-            <ul>
-              <li>${contentModLink.link("https://github.com/95Gman/UESRPG-revised")}</li>
-            </ul>
-            
-
-        </div>
-
-          <i>You can disable this popup message in the System Settings and checking the box to not show this again.</i>
-      </div>
-      </form>`,
-    buttons: {
-          one: {
-            label: "Close"
-          }
-        },
-    default: "one",
-    close: html => console.log()
-  });
-  popup.render(true);
-}
+  if (game.settings.get('uesrpg-d100', 'startUpDialog') === false) {startUpFunction()}
 });

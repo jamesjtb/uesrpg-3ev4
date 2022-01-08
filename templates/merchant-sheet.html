@@ -7,17 +7,17 @@
         <div class="header-fields">
             <h1 class="charname"><input name="name" type="text" value="{{actor.name}}" placeholder="Name"/></h1>
             <div class="sliderContainer">
-                <button class="decreasePriceMod"><i class="fa fa-angle-double-left "></i></button>
+                <button type="button" class="decreasePriceMod"><i class="fa fa-angle-double-left "></i></button>
                 <label type="text"><b> Price Modifier: </b><span id="merchantPriceValue">{{data.priceMod}}</span>%</label>
-                <button class="increasePriceMod"><i class="fa fa-angle-double-right "></i></button>
+                <button type="button" class="increasePriceMod"><i class="fa fa-angle-double-right "></i></button>
                 <input class="merchantPriceSlider" type="range" step="5" name="data.priceMod" value="{{data.priceMod}}" min="-100" max="100" id="merchantSlider" disabled/>
                 <label class="wealthCalc" title="Click for Quick-Adjust"><i class="fas fa-coins"></i><b> Wealth</b></label>
                 <input type="number" name="data.wealth" value="{{data.wealth}}">
             </div>
             <div class="merchantSkills">
-                <button class="professions-roll" name="Social" id="social"><span class="fas fa-dice-d20"></span> Social {{data.professions.social}}%</button>
-                <button class="commerce-roll" name="Commerce" id="commerce"><span class="fas fa-dice-d20"></span> Commerce {{data.skills.commerce.bonus}}%</button>
-                <button class="professions-roll" name="Knowledge" id="knowledge"><span class="fas fa-dice-d20"></span> Knowledge {{data.professions.knowledge}}%</button>
+                <button type="button" class="professions-roll" name="Social" id="social"><span class="fas fa-dice-d20"></span> Social {{data.professions.social}}%</button>
+                <button type="button" class="commerce-roll" name="Commerce" id="commerce"><span class="fas fa-dice-d20"></span> Commerce {{data.skills.commerce.bonus}}%</button>
+                <button type="button" class="professions-roll" name="Knowledge" id="knowledge"><span class="fas fa-dice-d20"></span> Knowledge {{data.professions.knowledge}}%</button>
             </div>           
         </div>
     </header>
@@ -38,7 +38,7 @@
             <input class="storeName" type="text" name="data.storeName" value="{{data.storeName}}" placeholder="Store Name">
             <ol class="merchant-list">
                 <h4 class="merchant-list-header">
-                    <button class="weapon-create" id="weapon">+</button>
+                    <button type="button" class="weapon-create" id="weapon">+</button>
                     <label>Weapons</label>
                     <label class="rightFloat">Price</label>
                     <label class="rightFloat">Qty</label>
@@ -58,7 +58,7 @@
             </ol>
             <ol class="merchant-list">
                 <h4 class="merchant-list-header">
-                    <button class="ammo-create" id="ammunition">+</button>
+                    <button type="button" class="ammo-create" id="ammunition">+</button>
                     <label>Ammunition</label>
                     <label class="rightFloat">Price</label>
                     <label class="rightFloat">Qty</label>
@@ -78,7 +78,7 @@
             </ol>
             <ol class="merchant-list">
                 <h4 class="merchant-list-header">
-                    <button class="armor-create" id="armor">+</button>
+                    <button type="button" class="armor-create" id="armor">+</button>
                     <label>{{equipped}} Armor</label>
                     <label class="rightFloat">Price</label>
                     <label class="rightFloat">Qty</label>
@@ -100,7 +100,7 @@
             </ol>
             <ol class="merchant-list">
                 <h4 class="merchant-list-header">
-                    <button class="gear-create" id="item">+</button>
+                    <button type="button" class="gear-create" id="item">+</button>
                     <label>Items</label>
                     <label class="rightFloat">Price</label>
                     <label class="rightFloat">Qty</label>
@@ -125,7 +125,7 @@
             <div>
                 <table class="skill-table">
                     <tr>
-                        <th colspan="8"><button class="setBaseCharacteristicsNPC">Characteristics</button></th>
+                        <th colspan="8"><button type="button" class="setBaseCharacteristicsNPC">Characteristics</button></th>
                     </tr>
             <table class="skill-table">
                 <tr>
@@ -236,7 +236,7 @@
         <div class="tab talents" data-group="primary" data-tab="talents">
             <ol class="talents-list">
                 <h4 class="list-header-skills">
-                    <button class="trait-create" id="trait">+</button>
+                    <button type="button" class="trait-create" id="trait">+</button>
                     <label>Traits</label>
                 </h4>
                 {{#each actor.data.trait as |item id|}}
@@ -250,7 +250,7 @@
                 {{/each}}
             </ol>
             <h4 class="list-header-skills">
-                <button class="power-create" id="power">+</button>
+                <button type="button" class="power-create" id="power">+</button>
                 <label>Powers</label>
             </h4>
                 <ol class="talents-list">
@@ -266,7 +266,7 @@
                 </ol>
                     <ol class="talents-list">
                         <h4 class="list-header-skills">
-                            <button class="talent-create" id="talent">+</button>
+                            <button type="button" class="talent-create" id="talent">+</button>
                             <label>Talents</label>
                         </h4>
                         {{#each actor.data.talent as |item id|}}

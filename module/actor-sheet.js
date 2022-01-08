@@ -9,8 +9,8 @@
 	  return mergeObject(super.defaultOptions, {
   	  classes: ["worldbuilding", "sheet", "actor"],
   	  template: "systems/uesrpg-d100/templates/actor-sheet.html",
-      width: 600,
-      height: 600,
+      width: 620,
+      height: 650,
       tabs: [{navSelector: ".sheet-tabs", contentSelector: ".sheet-body", initial: "description"}],
       dragDrop: [{dragSelector: [
         ".item-list .item", 
@@ -279,18 +279,11 @@
         content: `<form>
                     <script>
                       function getItem(itemID, actorID) {
-                          console.log(actorID)
                           let actor = game.actors.find(actor => actor.id === actorID)
                           let tokenActor = game.scenes.find(scene => scene.active === true).tokens.find(token => token.data.actorId === actorID)
-                          console.log(tokenActor)
 
                           let actorBonusItems = actor.items.filter(item => item.data.data.hasOwnProperty('characteristicBonus'))
                           let tokenBonusItems = tokenActor._actor.items.filter(item => item.data.data.hasOwnProperty('characteristicBonus'))
-
-                          
-
-                          // Need to find where token items are stored!!
-
 
                           if (actor.data.token.actorLink) {
                             let item = actorBonusItems.find(i => i.id === itemID)
