@@ -9,17 +9,10 @@
 	  return mergeObject(super.defaultOptions, {
   	  classes: ["worldbuilding", "sheet", "actor"],
   	  template: "systems/uesrpg-d100/templates/actor-sheet.html",
-      width: 620,
+      width: 650,
       height: 650,
       tabs: [{navSelector: ".sheet-tabs", contentSelector: ".sheet-body", initial: "description"}],
-      dragDrop: [{dragSelector: [
-        ".item-list .item", 
-        ".combat-list .item", 
-        ".ability-list .item", 
-        ".spell-list .item",
-        ".talents-list .item",
-        ".faction-list .item"
-      ], 
+      dragDrop: [{dragSelector: [".item"], 
       dropSelector: null}]
     });
   }
