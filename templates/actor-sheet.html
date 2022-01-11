@@ -181,19 +181,14 @@
                 </div>
 
                 <div class="bioContainer">
+                    <h1>Biography</h1>
                     <div class="buttonStats">
-                        <button type="button">Lucky/Unlucky</button>
-                        <button type="button">Experience</button>
+                        <button type="button" id="luckyMenu">Lucky/Unlucky</button>
+                        <button type="button" id="xpMenu">Experience</button>
+                        <button type="button" id="raceMenu">Race: {{data.race}}</button>
+                        <button type="button" id="birthSignMenu">Birthsign: {{data.birthsign}}</button>
                     </div>
                     <div class="bioStats">
-                        <div>
-                            <label>Race</label>
-                            <input type="text" name="data.race" value="{{data.race}}">
-                        </div>
-                        <div>
-                            <label>Birthsign</label>
-                            <input type="text" name="data.birthsign" value="{{data.birthsign}}">
-                        </div>
                         <div>
                             <label>Age</label>
                             <input type="number" name="data.age" value="{{data.age}}">
@@ -207,11 +202,29 @@
                             <input type="number" name="data.weight" value="{{data.weight}}">
                         </div>
                     </div>
+                    <div class="languageContainer">
+                        <h1 class="headerWithButton">
+                            <button type="button" class="power-create" id="language">+</button>
+                            <label>Languages</label>
+                        </h1>
+                        <ol class="skillList">
+                            {{#each actor.data.language as |item id|}}
+                                <li class="item flexrow" data-item-id="{{item._id}}">
+                                    <div class="itemInfo">
+                                        <i class="fas fa-dice-d20 skill-roll"></i>
+                                        <img class="item-img" src="{{item.img}}" title="Send to Chat"/>
+                                        <div class="item-name">{{item.name}}</div>
+                                    </div>
+                                    <div class="item-controls">
+                                        <a class="item-control item-delete" title="Delete Item"><i class="fas fa-trash"></i></a>
+                                    </div>
+                                </li>
+                            {{/each}}
+                        </ol>
+                    </div>
                     <div class="bioPage">
                         <h2>Biography</h2>
-                        <div>
-                            {{editor content=data.data.bio target="data.data.bio" button=true owner=owner editable=editable}}
-                        </div>
+                        {{editor content=data.data.bio target="data.data.bio" button=true owner=owner editable=editable}}
                     </div>
                 </div>
             </div>

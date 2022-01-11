@@ -10,7 +10,7 @@
   	  classes: ["worldbuilding", "sheet", "actor"],
   	  template: "systems/uesrpg-d100/templates/actor-sheet.html",
       width: 650,
-      height: 650,
+      height: 720,
       tabs: [{navSelector: ".sheet-tabs", contentSelector: ".sheet-body", initial: "description"}],
       dragDrop: [{dragSelector: [".item"], 
       dropSelector: null}]
@@ -197,6 +197,8 @@
     html.find(".combat-list .item-img").click(await this._onTalentRoll.bind(this));
     html.find(".item-list .item-img").click(await this._onTalentRoll.bind(this));
     html.find(".itemTabInfo .supplyRoll").click(await this._onSupplyRoll.bind(this));
+    html.find("#luckyMenu").click(this._onLuckyMenu.bind(this));
+    html.find("#raceMenu").click(this._onRaceMenu.bind(this));
 
     //Update Item Attributes from Actor Sheet
     html.find(".toggle2H").click(await this._onToggle2H.bind(this));
@@ -1097,5 +1099,297 @@
     })
     d.render(true);
   }
+
+  _onLuckyMenu(event) {
+    event.preventDefault()
+
+    let d = new Dialog({
+      title: "Lucky & Unlucky Numbers",
+      content: `<form style="padding: 10px">
+                  <div style="background: rgba(85, 85, 85, 0.40); border: solid 1px; padding: 10px; font-style: italic;">
+                      Input your character's lucky and unlucky numbers and click submit to register them. You can change them at any point.
+                  </div>
+
+                  <div>
+                    <h2 style="text-align: center;">
+                      Lucky Numbers
+                    </h2>
+                    <div style="display: flex; justify-content: space-around; align-items: center; text-align: center;">
+                        <input class="luckyNum" id="ln1" type="number" value=${this.actor.data.data.lucky_numbers.ln1}>
+                        <input class="luckyNum" id="ln2" type="number" value=${this.actor.data.data.lucky_numbers.ln2}>
+                        <input class="luckyNum" id="ln3" type="number" value=${this.actor.data.data.lucky_numbers.ln3}>
+                        <input class="luckyNum" id="ln4" type="number" value=${this.actor.data.data.lucky_numbers.ln4}>
+                        <input class="luckyNum" id="ln5" type="number" value=${this.actor.data.data.lucky_numbers.ln5}>
+                    </div>
+                  </div>
+
+                  <div>
+                    <h2 style="text-align: center;">
+                      Unlucky Numbers
+                    </h2>
+                    <div style="display: flex; justify-content: space-around; align-items: center; text-align: center;">
+                        <input class="unluckyNum" id="ul1" type="number" value=${this.actor.data.data.unlucky_numbers.ul1}>
+                        <input class="unluckyNum" id="ul2" type="number" value=${this.actor.data.data.unlucky_numbers.ul2}>
+                        <input class="unluckyNum" id="ul3" type="number" value=${this.actor.data.data.unlucky_numbers.ul3}>
+                        <input class="unluckyNum" id="ul4" type="number" value=${this.actor.data.data.unlucky_numbers.ul4}>
+                        <input class="unluckyNum" id="ul5" type="number" value=${this.actor.data.data.unlucky_numbers.ul5}>
+                    </div>
+                  </div>
+                </form>`,
+      buttons: {
+        one: {
+          label: "Cancel",
+          callback: html => console.log("Cancelled")
+        },
+        two: {
+          label: "Submit",
+          callback: html => {
+            // Create input arrays
+            const luckyNums = [...document.querySelectorAll(".luckyNum")]
+            const unluckyNums = [...document.querySelectorAll(".unluckyNum")]
+
+            // Assign input values to appropriate actor fields
+            for (let num of luckyNums) {
+              this.actor.data.data.lucky_numbers[num.id] = Number(num.value)
+            }
+
+            for (let num of unluckyNums) {
+              this.actor.data.data.unlucky_numbers[num.id] = Number(num.value)
+            }
+
+          }
+        }
+      },
+      default: "two",
+      close: html => console.log()
+    })
+    d.render(true)
+  }
+
+  _onRaceMenu(event) {
+    event.preventDefault();
+    const imgPath = 'systems/uesrpg-d100/images'
+
+    const races = {
+      altmer: {
+        name: 'Altmer',
+        img: `${imgPath}/altmer.webp`,
+        baseline: {str: 20, end: 23, agi: 23, int: 30, wp: 28, prc: 25, prs: 25},
+        traits: [
+          'Disease Resistance (50%)',
+          'Power Well (20)',
+          'Weakness (Magic, 2)',
+          'Mental Strength: Ignores penalties to Willpower tests made to resist paralysis',
+          'During Character Creation, Altmer can pick one additional magic skill to begin trained at Novice for free'
+        ]
+      },
+
+      argonian: {
+        name: 'Argonian',
+        img: `${imgPath}/argonian.webp`,
+        baseline: {str: 25, end: 24, agi: 28, int: 27, wp: 24, prc: 25, prs: 22},
+        traits: [
+          'Disease Resistance (75%)',
+          'Immunity (Poison)',
+          'Amphibious: Can breathe water and ignores skill cap placed on Combat rolls by their Athletics skill',
+          'Inscrutable: -10 penalty on Persuade tests vs. Non-Argonians & others receive -10 penalty on Observe tests to determine an Argonians motives'
+        ]
+      },
+
+      bosmer: {
+        name: 'Bosmer',
+        img: `${imgPath}/bosmer.webp`,
+        baseline: {str: 21, end: 21, agi: 31, int: 25, wp: 23, prc: 26, prs: 24},
+        traits: [
+          'Disease Resistance (50%)',
+          'Resistance (Poison, 1)',
+          'Natural Archers: May add shortbows to any Combat Style (does not count towards weapon max)',
+          'Beast Tongue: Can speak with animals'
+        ]
+      },
+
+      breton: {
+        name: 'Breton',
+        img: `${imgPath}/breton.webp`,
+        baseline: {str: 23, end: 21, agi: 22, int: 28, wp: 30, prc: 25, prs: 25},
+        traits: [
+          'Resistance (Magic, 2)',
+          'Power Well (10)',
+          'During Character Creation, Breton characters may add one extra magic skill to begin at Novice rank for free'
+        ]
+      },
+
+      dunmer: {
+        name: 'Dunmer',
+        img: `${imgPath}/dunmer.webp`,
+        baseline: {str: 25, end: 24, agi: 29, int: 25, wp: 24, prc: 25, prs: 23},
+        traits: [
+          'Resistance (Fire, 3)',
+          'Ancestor Guardian: See Powers section of Core Rulebook',
+          'During Character Creation, Dunmer may begin with the Destruction skill trained to Novice rank for free'
+        ]
+      },
+
+      imperial: {
+        name: 'Imperial',
+        img: `${imgPath}/imperial.webp`,
+        baseline: {str: 26, end: 27, agi: 24, int: 24, wp: 24, prc: 25, prs: 25},
+        traits: [
+          'Star of the West: Increase Stamina Points max by 1',
+          'Voice of the Emperor: Can use Personality in place of Willpower for the purpose of tests and overloading spells',
+          'During Character Creation, may choose either Commerce, Persuade, or Deceive to begin at Novice rank for free'
+        ]
+      },
+
+      khajiit: {
+        name: 'Khajiit',
+        img: `${imgPath}/khajiit.webp`,
+        baseline: {str: 22, end: 22, agi: 29, int: 25, wp: 21, prc: 28, prs: 24},
+        traits: [
+          'Dark Sight: Can see normally even in areas with total darkness',
+          'Natural Weapons: (Claws - 1d4 Slashing)'
+        ]
+      },
+
+      nord: {
+        name: 'Nord',
+        img: `${imgPath}/nord.webp`,
+        baseline: {str: 30, end: 28, agi: 23, int: 21, wp: 24, prc: 25, prs: 23},
+        traits: [
+          'Tough: +10 bonus to Shock Tests',
+          'Resistance (Frost, 2)',
+          'Resistance (Shock, 1)',
+          'War Cry: See Powers section of Core Rulebook'
+        ]
+      },
+
+      orsimer: {
+        name: 'Orsimer',
+        img: `${imgPath}/orc.webp`,
+        baseline: {str: 28, end: 30, agi: 22, int: 23, wp: 26, prc: 24, prs: 22},
+        traits: [
+          'Resilient: Increase HP max by +3',
+          'Tough: Gain +10 to Shock Tests',
+          'Resistance (Magic, 1)',
+          'During Character Creation, may choose to begin with Profession (Smithing) at Novice rank for free'
+        ]
+      },
+
+      redguard: {
+        name: 'Redguard',
+        img: `${imgPath}/redguard.webp`,
+        baseline: {str: 27, end: 28, agi: 26, int: 22, wp: 23, prc: 25, prs: 24},
+        traits: [
+          'Disease Resistance (75%)',
+          'Resistance (Poison, 3)',
+          'Adrenaline Rush: See Powers section of Core Rulebook',
+          'During Character Creation, may choose to begin with a Combat Style skill at Novice rank for free'
+        ]
+      },
+
+    }
+
+    const raceCards = []
+    for (let i in races) {
+      const race = races[i]
+      const baseLineCells = []
+      const traits = []
+
+      // Loop through traits values and create list items
+      for (let i of race.traits) {
+          const trait = `<li>${i}</li>`
+          traits.push(trait)
+      }
+      
+
+      // Loop through baseline values and create table cells
+      for (let i in race.baseline) {
+        const base = race.baseline[i]
+        const tableCell = `<td>${base}</td>`
+        baseLineCells.push(tableCell)
+      }
+
+      const card = `<div style="display: flex; flex-direction: row; align-items: center; border: solid 1px; padding: 0 5px; width: 49%;">
+                        <div style="width: 100%;">
+                            <div style="text-align: center; position: relative; top: 0;">
+                                <input type="checkbox" class="raceSelect" id="${race.name}" style="position: relative; left: 0; top: 0;">
+                                <img src="${race.img}" alt="${race.name}" style="border: none;">
+                            </div>
+                            <div style="position: relative; top: 0;">
+                                <h2 style="text-align: center;">${race.name}</h2>
+                                <table style="text-align: center;">
+                                    <tr>
+                                      <th colspan="7">Characteristic Baseline</th>
+                                    </tr>
+                                    <tr>
+                                      <th>STR</th>
+                                      <th>END</th>
+                                      <th>AGI</th>
+                                      <th>INT</th>
+                                      <th>WP</th>
+                                      <th>PRC</th>
+                                      <th>PRS</th>
+                                    </tr>
+                                    <tr>
+                                      ${baseLineCells.join('')}
+                                    </tr>
+                              </table>
+                              <ul>
+                                  ${traits.join('')}
+                              </ul>
+                            </div>
+                        </div>
+                    </div>`
+      
+      raceCards.push(card)
+
+    }
+
+    let d = new Dialog({
+      title: "Race Menu",
+      content: `<form style="padding: 10px;">
+
+                  <div style="border: 1px solid; background: rgba(85, 85, 85, 0.40); font-style:italic; padding: 5px; text-align: center;">
+                    <div>
+                        Select a Race from the cards below or input your own custom race label below. Leave blank if you do NOT want to use a custom race.
+                    </div>
+                    <input type="text" id="customRace" style="width: 200px">
+                  </div>
+
+                  <div>
+                      <img src="systems/uesrpg-d100/images/Races_Oblivion.webp" title="Races of Elder Scrolls" style="border: none;">
+                  </div>
+
+                  <div style="display: flex; flex-direction: row; flex-wrap: wrap; justify-content: space-between; align-content: center; width: 100%;">
+                    ${raceCards.join('')}
+                  </div>
+
+                </form>`,
+      buttons: {
+        one: {
+          label: "Cancel",
+          callback: html => console.log("Cancelled")
+        },
+        two: {
+          label: "Submit",
+          callback: html => {
+              // Grab first Checked value
+              let raceName = [...document.querySelectorAll('.raceSelect')].filter(i => i.checked)[0].id
+              let selectedRace = races[raceName.toLowerCase()]
+              
+              this.actor.update({'data.race' : raceName})
+          }
+        }
+      },
+      default: "two",
+      close: html => console.log()
+    })
+
+    d.position.width = 800;
+    d.position.height = 800;
+    d.render(true)
+  }
+
+
 }
 
