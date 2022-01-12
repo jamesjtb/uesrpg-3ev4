@@ -44,6 +44,9 @@ export class SimpleActor extends Actor {
   _prepareCharacterData(actorData) {
     const data = actorData.data;
 
+    // Set Resource Bar Progress
+    this._resourceBarCalc(actorData)
+
     //Add bonuses from items to Characteristics
     data.characteristics.str.total = data.characteristics.str.base + this._strBonusCalc(actorData);
     data.characteristics.end.total = data.characteristics.end.base + this._endBonusCalc(actorData);
@@ -766,6 +769,33 @@ export class SimpleActor extends Actor {
       data.lucky_numbers.ln9 = 9;
       data.lucky_numbers.ln10 = 10;
     }
+
+  }
+
+  async _resourceBarCalc(actorData) {
+    const data = actorData.data
+    const actorID = actorData._id
+    let actorSheet = document.querySelector(`#actor-${actorID}`)
+
+
+    if (actorSheet && data) {
+        for (let bar of [...actorSheet.querySelectorAll('.currentBar')]) {
+          let resource = await data[bar.dataset.resource]
+
+          if (await resource.max !== 0) {
+              let resourceElement = actorSheet.querySelector(`#${bar.id}`)
+              let proportion = (100 * (resource.value / resource.max)).toFixed(0)
+
+              // if greater than 100 or lower than 20, set values to fit bars correctly
+              proportion < 100 ? proportion = proportion : proportion = 100
+              proportion < 20 ? proportion = 20 : proportion = proportion
+
+              console.log(resourceElement.id, proportion)
+              // THIS IS NOT APPLYING THE STYLES TO ALL THE ELEMENTS FOR SOME REASON!! Works when tokens are created, so must be a call within the token creation I can refer to
+              resourceElement.style.width = `${proportion}%`
+          }
+        }
+      }
 
   }
 

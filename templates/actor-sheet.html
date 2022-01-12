@@ -13,50 +13,50 @@
                 <div class="resourceBars">
                     <div id="hpResource">
                         <div class="resourceLabel">
-                            <button type="button" id="hpFunction">Health</button>
+                            <button type="button" data-resource="hp">Health</button>
                             <div class="resourceButton">
-                                <i id="hpIncrease" class="fas fa-plus fa-xs"></i>
-                                <i id="hpDecrease" class="fas fa-minus fa-xs"></i>
+                                <i data-action="increase" data-resource="hp" class="fas fa-plus fa-xs incrementResource"></i>
+                                <i data-action="decrease" data-resource="hp" class="fas fa-minus fa-xs incrementResource"></i>
                             </div>
                         </div>
                         <div class="maxBar">
-                            <div class="currentBar">{{data.hp.value}} / {{data.hp.max}}</div>
+                            <div id="hpBar" class="currentBar" data-resource="hp">{{data.hp.value}} / {{data.hp.max}}</div>
                         </div>
                     </div>
                     <div id="staminaResource">
                         <div class="resourceLabel">
-                            <button type="button" id="staminaFunction">Stamina</button>
+                            <button type="button" data-resource="stamina">Stamina</button>
                             <div class="resourceButton">
-                                <i id="staminaIncrease" class="fas fa-plus fa-xs"></i>
-                                <i id="staminaDecrease" class="fas fa-minus fa-xs"></i>
+                                <i data-action="increase" data-resource="stamina" class="fas fa-plus fa-xs incrementResource"></i>
+                                <i data-action="decrease" data-resource="stamina" class="fas fa-minus fa-xs incrementResource"></i>
                             </div>
                         </div>
                         <div class="maxBar">
-                            <div class="currentBar">{{data.stamina.value}} / {{data.stamina.max}}</div>
+                            <div id="staminaBar" class="currentBar" data-resource="stamina">{{data.stamina.value}} / {{data.stamina.max}}</div>
                         </div>
                     </div>
                     <div id="magickaResource">
                         <div class="resourceLabel">
-                            <button type="button" id="magickaFunction">Magicka</button>
+                            <button type="button" data-resource="magicka">Magicka</button>
                             <div class="resourceButton">
-                                <i id="magickaIncrease" class="fas fa-plus fa-xs"></i>
-                                <i id="magickaDecrease" class="fas fa-minus fa-xs"></i>
+                                <i data-action="increase" data-resource="magicka" class="fas fa-plus fa-xs incrementResource"></i>
+                                <i data-action="decrease" data-resource="magicka" class="fas fa-minus fa-xs incrementResource"></i>
                             </div>
                         </div>
                         <div class="maxBar">
-                            <div class="currentBar">{{data.magicka.value}} / {{data.magicka.max}}</div>
+                            <div id="magickaBar" class="currentBar" data-resource="magicka">{{data.magicka.value}} / {{data.magicka.max}}</div>
                         </div>
                     </div>
                     <div id="luckResource">
                         <div class="resourceLabel">
-                            <button type="button" id="luckFunction">Luck</button>
+                            <button type="button" data-resource="luck_points">Luck</button>
                             <div class="resourceButton">
-                                <i id="luckIncrease" class="fas fa-plus fa-xs"></i>
-                                <i id="luckDecrease" class="fas fa-minus fa-xs"></i>
+                                <i data-action="increase" data-resource="luck_points" class="fas fa-plus fa-xs incrementResource"></i>
+                                <i data-action="decrease" data-resource="luck_points" class="fas fa-minus fa-xs incrementResource"></i>
                             </div>
                         </div>
                         <div class="maxBar">
-                            <div class="currentBar">{{data.luck_points.value}} / {{data.luck_points.max}}</div>
+                            <div id="luck_pointsBar" class="currentBar" data-resource="luck_points">{{data.luck_points.value}} / {{data.luck_points.max}}</div>
                         </div>
                     </div>
                 </div>
@@ -86,7 +86,7 @@
                         <div class="characteristicBar">
                             <div class="barRibbon">
                                 <input type="checkbox" name="data.characteristics.str.favored" {{checked data.characteristics.str.favored}}>
-                                <button type="button" id="str">Strength</button>
+                                <button type="button" id="str" class="characteristic-roll">Strength</button>
                             </div>
                             <div class="characteristicValue setBaseCharacteristics">
                                 <div id="strCha">{{data.characteristics.str.total}}</div>
@@ -95,7 +95,7 @@
                         <div class="characteristicBar">
                             <div class="barRibbon">
                                 <input type="checkbox" name="data.characteristics.end.favored" {{checked data.characteristics.end.favored}}>
-                                <button type="button" id="end">Endurance</button>
+                                <button type="button" id="end" class="characteristic-roll">Endurance</button>
                             </div>
                             <div class="characteristicValue setBaseCharacteristics">
                                 <div id="endCha">{{data.characteristics.end.total}}</div>
@@ -104,7 +104,7 @@
                         <div class="characteristicBar">
                             <div class="barRibbon">
                                 <input type="checkbox" name="data.characteristics.agi.favored" {{checked data.characteristics.agi.favored}}>
-                                <button type="button" id="agi">Agility</button>
+                                <button type="button" id="agi" class="characteristic-roll">Agility</button>
                             </div>
                             <div class="characteristicValue setBaseCharacteristics">
                                 <div id="agiCha">{{data.characteristics.agi.total}}</div>
@@ -113,7 +113,7 @@
                         <div class="characteristicBar">
                             <div class="barRibbon">
                                 <input type="checkbox" name="data.characteristics.int.favored" {{checked data.characteristics.int.favored}}>
-                                <button type="button" id="int">Intelligence</button>
+                                <button type="button" id="int" class="characteristic-roll">Intelligence</button>
                             </div>
                             <div class="characteristicValue setBaseCharacteristics">
                                 <div id="intCha">{{data.characteristics.int.total}}</div>
@@ -122,7 +122,7 @@
                         <div class="characteristicBar">
                             <div class="barRibbon">
                                 <input type="checkbox" name="data.characteristics.wp.favored" {{checked data.characteristics.wp.favored}}>
-                                <button type="button" id="wp">Willpower</button>
+                                <button type="button" id="wp" class="characteristic-roll">Willpower</button>
                             </div>
                             <div class="characteristicValue setBaseCharacteristics">
                                 <div id="wpCha">{{data.characteristics.wp.total}}</div>
@@ -131,7 +131,7 @@
                         <div class="characteristicBar">
                             <div class="barRibbon">
                                 <input type="checkbox" name="data.characteristics.prc.favored" {{checked data.characteristics.prc.favored}}>
-                                <button type="button" id="prc">Perception</button>
+                                <button type="button" id="prc" class="characteristic-roll">Perception</button>
                             </div>
                             <div class="characteristicValue setBaseCharacteristics">
                                 <div id="prcCha">{{data.characteristics.prc.total}}</div>
@@ -140,7 +140,7 @@
                         <div class="characteristicBar">
                             <div class="barRibbon">
                                 <input type="checkbox" name="data.characteristics.prs.favored" {{checked data.characteristics.prs.favored}}>
-                                <button type="button" id="prs">Personality</button>
+                                <button type="button" id="prs" class="characteristic-roll">Personality</button>
                             </div>
                             <div class="characteristicValue setBaseCharacteristics">
                                 <div id="prsCha">{{data.characteristics.prs.total}}</div>
@@ -149,7 +149,7 @@
                         <div class="characteristicBar">
                             <div class="barRibbon">
                                 <input type="checkbox" name="data.characteristics.lck.favored" {{checked data.characteristics.lck.favored}}>
-                                <button type="button" id="lck">Luck</button>
+                                <button type="button" id="lck" class="characteristic-roll">Luck</button>
                             </div>
                             <div class="characteristicValue setBaseCharacteristics">
                                 <div id="lckCha">{{data.characteristics.lck.total}}</div>
@@ -184,9 +184,9 @@
                     <h1>Biography</h1>
                     <div class="buttonStats">
                         <button type="button" id="luckyMenu">Lucky/Unlucky</button>
-                        <button type="button" id="xpMenu">Experience</button>
+                        <button type="button" id="xpMenu">Exp: {{data.xp}}</button>
                         <button type="button" id="raceMenu">Race: {{data.race}}</button>
-                        <button type="button" id="birthSignMenu">Birthsign: {{data.birthsign}}</button>
+                        <button type="button" id="birthSignMenu">Sign: {{data.birthsign}}</button>
                     </div>
                     <div class="bioStats">
                         <div>
@@ -224,7 +224,9 @@
                     </div>
                     <div class="bioPage">
                         <h2>Biography</h2>
-                        {{editor content=data.data.bio target="data.data.bio" button=true owner=owner editable=editable}}
+                        <div class="contentContainer">
+                            {{editor content=data.data.bio target="data.data.bio" button=true owner=owner editable=editable}}
+                        </div>
                     </div>
                 </div>
             </div>

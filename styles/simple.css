@@ -108,7 +108,12 @@
   Editor Styles
 ------------------------------*/
 
-.editor, .editor-content {
+.worldbuilding .editor, .worldbuilding .editor-content {
+  height: 100%;
+  width: 100%;
+}
+
+.worldbuilding .contentContainer {
   height: 100%;
 }
 
@@ -166,14 +171,11 @@
   text-align: center;
   line-height: 25px;
   font-family: "cyrodiil";
-  width: 80%;
+  width: 100%;
   height: 25px;
   border: solid 1px;
+  border-radius: 20px;
   background: rgba(85, 85, 85, 0.61);
-}
-
-.worldbuilding .currentBar {
-  color: white;
 }
 
 .worldbuilding #hpResource, #staminaResource, #magickaResource, #luckResource {
@@ -183,20 +185,26 @@
   gap: 10px;
 }
 
+.worldbuilding .currentBar {
+  color: white;
+  border-radius: 20px;
+  height: 24px;
+}
+
 .worldbuilding #hpResource .currentBar {
-  background-color: darkred;
+  background-color: rgba(139, 0, 0, 0.85);
 }
 
 .worldbuilding #staminaResource .currentBar {
-  background-color: rgb(30, 128, 30);
+  background-color: rgba(30, 128, 30, 0.85);
 }
 
 .worldbuilding #magickaResource .currentBar {
-  background-color: rgb(34, 102, 190);
+  background-color: rgb(34, 102, 190, 0.85);
 }
 
 .worldbuilding #luckResource .currentBar {
-  background-color: rgb(89, 68, 180);
+  background-color: rgb(89, 68, 180, 0.85);
 }
 
 .worldbuilding .resourceButton {
@@ -204,12 +212,12 @@
   flex-direction: column;
   justify-content: center;
   align-items: space-between;
+  gap: 3px;
 }
 
 .worldbuilding .resourceButton i:hover {
   cursor: pointer;
   color: darkred;
-  transform: scale(2);
   transition: 0.5s;
 }
 
