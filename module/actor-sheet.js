@@ -191,11 +191,7 @@
     html.find(".damage-roll").click(this._onDamageRoll.bind(this));
     html.find(".armor-roll").click(await this._onArmorRoll.bind(this));
     html.find(".ammo-roll").click(await this._onAmmoRoll.bind(this));
-    html.find(".ability-list .item-img").click(await this._onTalentRoll.bind(this));
-    html.find(".talents-list .item-img").click(await this._onTalentRoll.bind(this));
-    html.find(".spell-list .item-img").click(await this._onTalentRoll.bind(this));
-    html.find(".combat-list .item-img").click(await this._onTalentRoll.bind(this));
-    html.find(".item-list .item-img").click(await this._onTalentRoll.bind(this));
+    html.find(".skillList .item-img").click(await this._onTalentRoll.bind(this));
     html.find(".itemTabInfo .supplyRoll").click(await this._onSupplyRoll.bind(this));
     html.find("#luckyMenu").click(this._onLuckyMenu.bind(this));
     html.find("#raceMenu").click(this._onRaceMenu.bind(this));
@@ -222,6 +218,8 @@
     html.find(".trait-create").click(await this._onItemCreate.bind(this));
     html.find(".power-create").click(await this._onItemCreate.bind(this));
     html.find(".talent-create").click(await this._onItemCreate.bind(this));
+
+    this._setResourceBars()
 
     // Everything below here is only needed if the sheet is editable
     if (!this.options.editable) return;
@@ -1400,11 +1398,14 @@
                   // Loop through and update actor base characteristics with race object baselines
                   for (let value in this.actor.data.data.characteristics) {
                     let baseChaPath = `data.characteristics.${value}.base`
-                    this.actor.update({[baseChaPath]: selectedRace.baseline[value]})
+                    let totalChaPath = `data.characteristics.${value}.total`
+                    this.actor.update({
+                      [baseChaPath]: selectedRace.baseline[value],
+                      [totalChaPath]: selectedRace.baseline[value] + this.actor.data.data.characteristics[value].bonus
+                    })
                   }
 
                 }
-              
                   // Update Actor with Race Label
                   this.actor.update({'data.race' : raceName})
               }
@@ -1758,6 +1759,29 @@
     })
 
     d.render(true)
+  }
+
+  _setResourceBars() {
+    event.preventDefault()
+    const data = this.actor.data.data
+
+    if (data) {
+        for (let bar of [...document.querySelectorAll('.currentBar')]) {
+          let resource = data[bar.dataset.resource]
+
+          if (resource.max !== 0) {
+              let resourceElement = document.querySelector(`#${bar.id}`)
+              let proportion = Number((100 * (resource.value / resource.max)).toFixed(0))
+
+              // if greater than 100 or lower than 20, set values to fit bars correctly
+              proportion < 100 ? proportion = proportion : proportion = 100
+              proportion < 20 ? proportion = 20 : proportion = proportion
+
+              // This is applying the styles correctly, but is reset via a function within Foundry itself. Adding await to resource.max lets the last two values pass correctly however...
+              resourceElement.style.width = `${proportion}%`
+          }
+        }
+      }
   }
 
 
