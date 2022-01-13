@@ -219,7 +219,9 @@
     html.find(".power-create").click(await this._onItemCreate.bind(this));
     html.find(".talent-create").click(await this._onItemCreate.bind(this));
 
+    // Checks for UI Elements on Sheets
     this._setResourceBars()
+    this._setWoundIcon()
 
     // Everything below here is only needed if the sheet is editable
     if (!this.options.editable) return;
@@ -1762,7 +1764,6 @@
   }
 
   _setResourceBars() {
-    event.preventDefault()
     const data = this.actor.data.data
 
     if (data) {
@@ -1784,6 +1785,10 @@
       }
   }
 
+  _setWoundIcon() {
+    let woundIcon = document.querySelector('.woundIcon')
+    this.actor.data.data.wounded ? woundIcon.style.visibility = 'visible' : woundIcon.style.visibility = 'hidden'
+  }
 
 }
 

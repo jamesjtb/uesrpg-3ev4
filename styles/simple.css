@@ -108,13 +108,15 @@
   Editor Styles
 ------------------------------*/
 
-.worldbuilding .editor, .worldbuilding .editor-content {
+.worldbuilding .contentContainer {
   height: 100%;
   width: 100%;
 }
 
-.worldbuilding .contentContainer {
-  height: 100%;
+.worldbuilding .editor, .worldbuilding .editor-content {
+  min-height: 200px;
+  max-height: 500px;
+  width: 100%;
 }
 
 
@@ -414,4 +416,69 @@
   justify-content: center;
   align-items: center;
   width: 100%;
+}
+
+/*---------------------------- 
+  Combat Tab
+------------------------------*/
+
+.worldbuilding .combatTabContainer {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.worldbuilding .combatSegment1 {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.worldbuilding .paperDollContainer {
+  position: relative
+}
+
+.worldbuilding .paperDollContainer .woundIcon {
+  visibility: hidden;
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+.worldbuilding #paperDoll {
+  border: none;
+  height: 250px;
+}
+
+.worldbuilding .statColumnContainer {
+  border: solid 1px;
+  padding: 5px;
+}
+
+.worldbuilding .resistances {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: space-between;
+}
+
+.worldbuilding .woundContainer {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.worldbuilding .woundCheckContainer {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+}
+
+.worldbuilding .woundContainer textarea {
+  max-width: 300px;
+  max-height: 200px;
 }
