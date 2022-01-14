@@ -257,6 +257,25 @@
                         <img id="paperDoll" src="{{data.paperDoll}}" alt="paperDoll">
                     </div>
                     <div class="statColumnContainer">
+                        <h2>Combat Stats</h2>
+                        <div class="combatItemHeader">
+                            <div class="combatStats box1">
+                                <div class="cellLabel">Action Points</div>
+                                <input type="number" value="{{data.action_points.value}}"> / <span>{{data.action_points.max}}</span>
+                            </div>
+                            <div class="combatStats box2">
+                                <div class="cellLabel">Wound</div>
+                                <div>{{data.wound_threshold.value}}</div>
+                            </div>
+                            <div class="combatStats box3">
+                                <div class="cellLabel">Initiative</div>
+                                <div>{{data.initiative.value}}</div>
+                            </div>
+                            <div class="combatStats box4">
+                                <div class="cellLabel">Speed</div>
+                                <div>{{data.speed.value}}</div>
+                            </div>
+                        </div>
                         <h2>Resistances</h2>
                         <div class="resistances">
                             <button id="diseaseR" class="resistance resistance-roll" title="Disease Resistance"><i class="fas fa-bacterium"></i> {{data.resistance.diseaseR}}%</button>
@@ -278,26 +297,8 @@
                             </div>
                         </div>
                     </div>
-                    <div class="combatItemContainer">
-                        <div class="combatItemHeader">
-                            <div class="combatStats">
-                                <div class="cellLabel">Action Points</div>
-                                <input type="number" value="{{data.action_points.value}}"> / <span>{{data.action_points.max}}</span>
-                            </div>
-                            <div class="combatStats">
-                                <div class="cellLabel">Wound</div>
-                                <div>{{data.wound_threshold.value}}</div>
-                            </div>
-                            <div class="combatStats">
-                                <div class="cellLabel">Initiative</div>
-                                <div>{{data.initiative.value}}</div>
-                            </div>
-                            <div class="combatStats">
-                                <div class="cellLabel">Speed</div>
-                                <div>{{data.speed.value}}</div>
-                            </div>
-                        </div>
 
+                    <div class="combatItemContainer">
                         <div class="combatListContainer">
                             <ol class="skillList">
                                 <h2 class="headerWithButton">
@@ -353,12 +354,34 @@
                                         <div class="item-controls">
                                             <div class="ammo-controls">
                                                 <div><button title="-1" class="ammo-minus" type="button">-</button></div>
-                                                <div>{{item.data.quantity}}</div>
+                                                <div class="ammoQty">{{item.data.quantity}}</div>
                                                 <div><button title="+1" class="ammo-plus" type="button">+</button></div>
                                             </div>
                                             <a class="item-control item-delete" title="Delete Item"><i class="fas fa-trash"></i></a>
                                         </div>
                                     </li>
+                                {{/each}}
+                            </ol>
+
+                            <ol class="skillList">
+                                {{#each actor.data.armor as |armor equipped|}}
+                                <h2 class="headerWithButton">
+                                    <button type="button" class="item-create" id="armor">+</button>
+                                    <label>{{equipped}} Armor</label>
+                                </h2>
+                                {{#each armor as |item id|}}
+                                    <li class="item flexrow" data-item-id="{{item._id}}">
+                                        <div class="itemInfo">
+                                            <img class="item-img" src="{{item.img}}" title="{{item.name}}"/>
+                                            <div class="item-name">{{item.name}}</div>
+                                        </div>
+                                        <div class="item-controls">
+                                            <div>{{item.data.armor}}AR / {{item.data.magic_ar}}</div>
+                                            <input class="itemEquip" type="checkbox" title="Equip Armor"{{checked item.data.equipped}}>
+                                            <a class="item-control item-delete" title="Delete Item"><i class="fas fa-trash"></i></a>
+                                        </div>
+                                    </li>
+                                {{/each}}
                                 {{/each}}
                             </ol>
 
@@ -396,61 +419,7 @@
                             </select></td>
                     </tr>
                 </table>
-                <ol class="combat-list">
-                    <h4 class="list-header-skills">
-                        <button type="button" class="combat-create" id="combatStyle">+</button>
-                        <label>Combat Styles</label>
-                    </h4>
-                    {{#each actor.data.combatStyle as |item id|}}
-                        <li class="item flexrow" data-item-id="{{item._id}}">
-                            <button type="button" class="combat-roll" data-roll="{{item.data.value}}"><i class="fas fa-dice-d20"></i></button>
-                            <img class="item-img" src="{{item.img}}" title="{{item.name}}" width="24" height="24"/>
-                            <h4 class="item-name">{{item.name}}</h4>
-                            <h4 class="item-cat">{{item.data.value}}%</h4>
-                            <div class="item-controls">
-                                <a class="item-control item-delete" title="Delete Item"><i class="fas fa-trash"></i></a>
-                            </div>
-                        </li>
-                    {{/each}}
-                </ol>
-                <ol class="combat-list">
-                    <h4 class="list-header-skills">
-                        <button type="button" class="weapon-create" id="weapon">+</button>
-                        <label>Weapons</label>
-                    </h4>
-                    {{#each actor.data.weapon as |item id|}}
-                        <li class="item flexrow" data-item-id="{{item._id}}">
-                            <button type="button" class="damage-roll" data-roll="{{item.data.value}}"><i class="fas fa-dice-d20"></i></button>
-                            <img class="item-img" src="{{item.img}}" title="{{item.name}}" width="24" height="24"/>
-                            <h4 class="item-name">{{item.name}}</h4>
-                            <h4 class="item-cat">2H<input class="toggle2H" type="checkbox" {{checked item.data.weapon2H}} title="Toggle 2H Damage"></h4>
-                            <div class="item-controls">
-                                <a class="item-control item-delete" title="Delete Item"><i class="fas fa-trash"></i></a>
-                            </div>
-                        </li>
-                    {{/each}}
-                </ol>
-                <ol class="combat-list">
-                    <h4 class="list-header-skills">
-                        <button type="button" class="ammo-create" id="ammunition">+</button>
-                        <label>Ammunition</label>
-                    </h4>
-                    {{#each actor.data.ammunition as |item id|}}
-                        <li class="item flexrow" data-item-id="{{item._id}}">
-                            <button type="button" class="ammo-roll" title="Send Stats to Chat and Reduce Ammo Count by 1" data-roll="{{item.data.value}}"><i class="fas fa-dice-d20"></i></button>
-                            <img class="item-img" src="{{item.img}}" title="{{item.name}}" width="24" height="24"/>
-                            <h4 class="item-name">{{item.name}}</h4>
-                            <h4 class="item-cat"><input class="ammo-field" type="number" value="{{item.data.quantity}}" title="Ammo Qty" disabled></h4>
-                            <h4 class="ammo-controls">
-                                <a><input title="-1" class="ammo-minus" type="button" value="-"></a>
-                                <a><input title="+1" class="ammo-plus" type="button" value="+"></a>
-                            </h4>
-                            <div class="item-controls">
-                                <a class="item-control item-delete" title="Delete Item"><i class="fas fa-trash"></i></a>
-                            </div>
-                        </li>
-                    {{/each}}
-                </ol>
+                
             <ol class="combat-list">
                 {{#each actor.data.armor as |armor equipped|}}
                 <h4 class="list-header-skills">

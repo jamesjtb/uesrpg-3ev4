@@ -50,6 +50,14 @@
 
 
 
+.dialog-buttons {
+  position: sticky;
+  bottom: 0;
+  background-color: rgb(223, 215, 215);
+}
+
+
+
 /*---------------------------- 
   Lists & Controls
 ------------------------------*/
@@ -124,6 +132,10 @@
   width: 20px;
   height: 20px;
   line-height: 18px;
+}
+
+.worldbuilding .ammoQty {
+  width: 30px;
 }
 
 /*---------------------------- 
@@ -537,7 +549,41 @@
 .worldbuilding .statColumnContainer {
   border: solid 1px;
   padding: 5px;
-  width: 25%;
+  width: 30%;
+}
+
+.worldbuilding .combatItemHeader {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+  text-align: center;
+}
+
+.worldbuilding .combatStats {
+  padding: 5px;
+  width: 50%;
+}
+
+.worldbuilding .cellLabel {
+  font-family: "cyrodiil";
+}
+
+.worldbuilding .combatItemHeader input {
+  height: 17px;
+  width: 10px;
+}
+
+.worldbuilding .box1 {
+  border-bottom: solid 1px;
+  border-right: solid 1px;
+}
+.worldbuilding .box2 {
+  border-bottom: solid 1px;
+}
+.worldbuilding .box3 {
+  border-right: solid 1px;
 }
 
 .worldbuilding .resistances {
@@ -582,28 +628,8 @@
   flex-direction: column;
   border: solid 1px;
   width: 50%;
-}
-
-.worldbuilding .combatItemContainer input {
-  width: 30px;
-  height: 17px;
-}
-
-.worldbuilding .combatItemHeader {
-  display: flex;
-  flex-direction: row;
-  justify-content: space-evenly;
-  align-items: center;
-  text-align: center;
-}
-
-.worldbuilding .combatStats {
-  border: solid 1px;
-  padding: 5px;
-}
-
-.worldbuilding .cellLabel {
-  font-family: "cyrodiil";
+  height: 435px;
+  overflow: auto;
 }
 
 /*---------------------------- 
@@ -615,6 +641,4 @@
   flex-direction: column;
   gap: 10px;
   padding: 5px 10px;
-  height: 220px;
-  overflow: auto;
 }
