@@ -23,8 +23,6 @@ export class SimpleActor extends Actor {
         items: collection.map(i => i.toObject())
       });
     }
-
-    this._resourceBarCalc(data)
   }
 
   prepareData() {

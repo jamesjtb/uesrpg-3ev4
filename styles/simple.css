@@ -24,7 +24,9 @@
 }
 
 .worldbuilding h1, .worldbuilding h2, button {
-  font-family: "cyrodiil"
+  font-family: "cyrodiil";
+  text-align: center;
+  width: 100%;
 }
 
 .worldbuilding button:hover {
@@ -34,9 +36,10 @@
 .worldbuilding .headerWithButton {
   display: flex;
   flex-direction: row;
-  justify-content: center;
+  justify-content: flex-start;
   align-items: center;
   width: 100%;
+  gap: 10px;
 }
 
 .worldbuilding .headerWithButton button {
@@ -53,14 +56,17 @@
 
 .worldbuilding .item-controls {
   display: flex;
-  align-items: baseline;
+  align-items: center;
   justify-content: flex-end;
   text-align: right;
   padding: 0;
   margin: 0;
+  width: 20%;
 }
 
-.worldbuilding .skill-roll:hover {
+.worldbuilding .skill-roll:hover,
+.worldbuilding .combat-roll:hover,
+.worldbuilding .damage-roll:hover {
   transform: scale(1.5);
   transition: 0.5s;
   cursor: pointer;
@@ -70,6 +76,7 @@
   display: flex;
   justify-content: flex-start;
   align-items: center;
+  width: 80%;
   gap: 5px;
 }
 
@@ -90,7 +97,7 @@
 
 .worldbuilding li .item-name {
   padding: 0 5px;
-  width: 120px;
+  min-width: 120px;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -102,6 +109,21 @@
 
 .worldbuilding .skill-roll {
   text-align: center;
+}
+
+.worldbuilding .ammo-controls {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  padding: 0 10px;
+}
+
+.worldbuilding .ammo-controls button {
+  width: 20px;
+  height: 20px;
+  line-height: 18px;
 }
 
 /*---------------------------- 
@@ -426,42 +448,111 @@
   display: flex;
   flex-direction: column;
   justify-content: center;
-  align-items: center;
+  align-items: flex-start;
 }
 
 .worldbuilding .combatSegment1 {
   display: flex;
   flex-direction: row;
-  justify-content: space-between;
-  align-items: center;
+  align-items: stretch;
+  border: solid 1px;
+  width: 100%;
 }
 
+/*---------------------------- 
+  Combat Tab - Paper Doll Container
+------------------------------*/
+
 .worldbuilding .paperDollContainer {
-  position: relative
+  position: relative;
+  width: 25%;
+  border: solid 1px;
 }
 
 .worldbuilding .paperDollContainer .woundIcon {
   visibility: hidden;
+}
+
+.worldbuilding .paperDollContainer .rightColumn {
+  position: absolute;
+  top: 0;
+  right: 0;
+  padding: 5px;
+  margin: 0;
+  height: 100%;
+}
+
+.worldbuilding .rightColumn .flexContainer {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.worldbuilding .paperDollContainer .leftColumn {
   position: absolute;
   top: 0;
   left: 0;
+  padding: 5px;
+  margin: 0;
+  height: 100%;
+}
+
+.worldbuilding .leftColumn .flexContainer {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: flex-start;
+}
+
+.worldbuilding .swapContainer button {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  width: 25px;
+  height: 25px;
+  line-height: 1;
+  padding: 0;
+  margin: 0;
+}
+
+.worldbuilding .swapPaperDoll i {
+  position: relative;
 }
 
 .worldbuilding #paperDoll {
+  position: absolute;
   border: none;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
   height: 250px;
 }
+
+/*---------------------------- 
+  Combat Tab - Stat Column Container
+------------------------------*/
 
 .worldbuilding .statColumnContainer {
   border: solid 1px;
   padding: 5px;
+  width: 25%;
 }
 
 .worldbuilding .resistances {
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.worldbuilding .resistances button {
+  width: 30%;
+  display: flex;
   justify-content: center;
-  align-items: space-between;
+  align-items: center;
 }
 
 .worldbuilding .woundContainer {
@@ -479,6 +570,51 @@
 }
 
 .worldbuilding .woundContainer textarea {
-  max-width: 300px;
-  max-height: 200px;
+  resize: none;
+}
+
+/*---------------------------- 
+  Combat Tab - Combat Resources Container
+------------------------------*/
+
+.worldbuilding .combatItemContainer {
+  display: flex;
+  flex-direction: column;
+  border: solid 1px;
+  width: 50%;
+}
+
+.worldbuilding .combatItemContainer input {
+  width: 30px;
+  height: 17px;
+}
+
+.worldbuilding .combatItemHeader {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-evenly;
+  align-items: center;
+  text-align: center;
+}
+
+.worldbuilding .combatStats {
+  border: solid 1px;
+  padding: 5px;
+}
+
+.worldbuilding .cellLabel {
+  font-family: "cyrodiil";
+}
+
+/*---------------------------- 
+  Combat Tab - List Container
+------------------------------*/
+
+.worldbuilding .combatListContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 5px 10px;
+  height: 220px;
+  overflow: auto;
 }

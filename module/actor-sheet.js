@@ -9,7 +9,7 @@
 	  return mergeObject(super.defaultOptions, {
   	  classes: ["worldbuilding", "sheet", "actor"],
   	  template: "systems/uesrpg-d100/templates/actor-sheet.html",
-      width: 650,
+      width: 680,
       height: 720,
       tabs: [{navSelector: ".sheet-tabs", contentSelector: ".sheet-body", initial: "description"}],
       dragDrop: [{dragSelector: [".item"], 
@@ -182,7 +182,7 @@
 	async activateListeners(html) {
     super.activateListeners(html);
 
-    // Rollable Buttons
+    // Rollable Buttons & Menus
     html.find(".characteristic-roll").click(await this._onClickCharacteristic.bind(this));
     html.find(".skill-roll").click(await this._onSkillRoll.bind(this));
     html.find(".combat-roll").click(await this._onCombatRoll.bind(this));
@@ -210,16 +210,10 @@
     html.find(".resourceLabel button").click(this._onResetResource.bind(this))
 
     //Item Create Buttons
-    html.find(".combat-create").click(await this._onItemCreate.bind(this));
-    html.find(".weapon-create").click(await this._onItemCreate.bind(this));
-    html.find(".ammo-create").click(await this._onItemCreate.bind(this));
-    html.find(".armor-create").click(await this._onItemCreate.bind(this));
-    html.find(".gear-create").click(await this._onItemCreate.bind(this));
-    html.find(".trait-create").click(await this._onItemCreate.bind(this));
-    html.find(".power-create").click(await this._onItemCreate.bind(this));
-    html.find(".talent-create").click(await this._onItemCreate.bind(this));
+    html.find(".item-create").click(await this._onItemCreate.bind(this));
 
-    // Checks for UI Elements on Sheets
+    // Checks for UI Elements on Sheets and Updates
+    html.find(".swapContainer button").click(this._setPaperDoll.bind(this))
     this._setResourceBars()
     this._setWoundIcon()
 
@@ -1788,6 +1782,16 @@
   _setWoundIcon() {
     let woundIcon = document.querySelector('.woundIcon')
     this.actor.data.data.wounded ? woundIcon.style.visibility = 'visible' : woundIcon.style.visibility = 'hidden'
+  }
+
+  _setPaperDoll(event) {
+    event.preventDefault()
+    if (this.actor.data.data.paperDoll === 'systems/uesrpg-d100/images/paperDoll_Male_Outline_White.png') {
+      this.actor.update({'data.paperDoll': 'systems/uesrpg-d100/images/paperDoll_Female_Outline_White.png'})
+    } 
+    else {
+      this.actor.update({'data.paperDoll': 'systems/uesrpg-d100/images/paperDoll_Male_Outline_White.png'})
+    }
   }
 
 }
