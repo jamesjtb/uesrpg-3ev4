@@ -217,6 +217,15 @@
     this._setResourceBars()
     this._setWoundIcon()
 
+    // Set saved scroll bar position if not default
+    if (localStorage.getItem('scrollPosition') !== 0) {
+      this._setScrollPosition()
+    }
+
+    document.querySelector(`#actor-${this.actor.id}`).addEventListener('click', () => {
+      this._saveScrollPosition()
+    })
+
     // Everything below here is only needed if the sheet is editable
     if (!this.options.editable) return;
 
@@ -241,7 +250,7 @@
    * @param event   The originating click event
    * @private
    */
-  
+
   async _onSetBaseCharacteristics(event) {
       event.preventDefault()
       const strBonusArray = [];
@@ -1772,7 +1781,7 @@
               proportion < 100 ? proportion = proportion : proportion = 100
               proportion < 20 ? proportion = 20 : proportion = proportion
 
-              // This is applying the styles correctly, but is reset via a function within Foundry itself. Adding await to resource.max lets the last two values pass correctly however...
+              // Apply the proportion to the width of the resource bar
               resourceElement.style.width = `${proportion}%`
           }
         }
@@ -1792,6 +1801,14 @@
     else {
       this.actor.update({'data.paperDoll': 'systems/uesrpg-d100/images/paperDoll_Male_Outline_White.png'})
     }
+  }
+
+  _saveScrollPosition(event) {
+    localStorage.setItem('scrollPosition', document.querySelector('.combatItemContainer').scrollTop)
+  }
+
+  _setScrollPosition() {
+    document.querySelector('.combatItemContainer').scrollTop = localStorage.getItem('scrollPosition')
   }
 
 }

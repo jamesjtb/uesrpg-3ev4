@@ -629,7 +629,7 @@
   border: solid 1px;
   width: 50%;
   height: 435px;
-  overflow: auto;
+  overflow: scroll;
 }
 
 /*---------------------------- 
