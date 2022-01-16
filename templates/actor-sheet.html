@@ -434,6 +434,7 @@
                                 {{#each spell as |item id|}}
                                     <li class="item flexrow collapsed" data-list-group="{{school}}" data-item-id="{{item._id}}">
                                         <div class="itemInfo">
+                                            <i class="fas fa-dice-d20 magic-roll"></i>
                                             <img class="item-img" src="{{item.img}}" title="{{item.name}}"/>
                                             <div class="item-name">{{item.name}}</div>
                                         </div>
@@ -442,8 +443,8 @@
                                         </div>
                                     </li>
                                 {{/each}}
-                            {{/each}}
-                        </div>
+                            </div>
+                        {{/each}}
                     </ol>
                 </div>
             </div>

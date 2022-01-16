@@ -218,6 +218,7 @@
     this._setResourceBars()
     this._setWoundIcon()
     this._spellCount()
+    this._setCollapseValues()
 
     // Set saved scroll bar position if not default
     if (localStorage.getItem('scrollPosition') !== 0) {
@@ -1837,14 +1838,40 @@
     const listMaster = collapsibleList.closest('ol')
 
     for (let listItem of [...listMaster.querySelectorAll('[data-list-group]')]) {
-      // Set collapsed status
-      sessionStorage.setItem(`collapsibleItems.${listItem.dataset.listGroup}`, [...listItem.classList].includes('collapsed'))
+      // Set session storage value of collapsed lists
+      // sessionStorage.setItem(`collapsibleItems.${listItem.dataset.listGroup}`, [...listItem.classList].includes('collapsed'))
 
+      // if (sessionStorage.getItem(`collapsibleItems.${listItem.dataset.listGroup}` === true)) {
+      //   listItem.classList.add('collapsed')
+      // }
+
+      // else {
+      //   listItem.classList.remove('collapsed')
+      // }
+
+      // Toggle collapsed status for specific school group
       if (listItem.dataset.listGroup === collapsibleList.dataset.collapseGroup) {
         listItem.classList.toggle('collapsed')
-        sessionStorage.setItem(`collapsibleItems.${listItem.dataset.listGroup}`, [...listItem.classList].includes('collapsed'))
+      }
+
+      // Reapply the status of collapsed lists to session storage
+      sessionStorage.setItem(`collapsibleItems.${listItem.dataset.listGroup}`, [...listItem.classList].includes('collapsed'))
+
+    }
+  }
+
+  _setCollapseValues() {
+    const listMaster = [...document.querySelectorAll('[data-collapse-group]')][0].closest('ol')
+
+    for (let listItem of [...listMaster.querySelectorAll('[data-list-group')]) {
+      if (sessionStorage.getItem(`collapsibleItems.${listItem.dataset.listGroup}`) === 'true') {
+        listItem.classList.add('collapsed')
+      }
+      else {
+        listItem.classList.remove('collapsed')
       }
     }
+
   }
 
 }

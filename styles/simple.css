@@ -100,7 +100,8 @@
 
 .worldbuilding .skill-roll:hover,
 .worldbuilding .combat-roll:hover,
-.worldbuilding .damage-roll:hover {
+.worldbuilding .damage-roll:hover,
+.worldbuilding .magic-roll:hover {
   transform: scale(1.5);
   transition: 0.5s;
   cursor: pointer;
@@ -499,7 +500,6 @@
   display: flex;
   flex-direction: row;
   align-items: stretch;
-  border: solid 1px;
   width: 100%;
 }
 
@@ -510,7 +510,7 @@
 .worldbuilding .paperDollContainer {
   position: relative;
   width: 25%;
-  border: solid 1px;
+  border-right: solid 1px;
 }
 
 .worldbuilding .paperDollContainer .woundIcon {
@@ -579,7 +579,6 @@
 ------------------------------*/
 
 .worldbuilding .statColumnContainer {
-  border: solid 1px;
   padding: 5px;
   width: 30%;
 }
@@ -658,7 +657,7 @@
 .worldbuilding .combatItemContainer {
   display: flex;
   flex-direction: column;
-  border: solid 1px;
+  border-left: solid 1px;
   width: 50%;
   height: 435px;
   overflow: scroll;
@@ -688,6 +687,8 @@
 
 .worldbuilding .magicSideBarContainer {
   width: 35%;
+  border-right: 1px solid;
+  padding: 10px;
 }
 
 .worldbuilding .magicTabContainer .spellList {
