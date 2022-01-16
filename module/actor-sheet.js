@@ -214,8 +214,10 @@
 
     // Checks for UI Elements on Sheets and Updates
     html.find(".swapContainer button").click(this._setPaperDoll.bind(this))
+    html.find('.collapseList').click(this._collapseList.bind(this))
     this._setResourceBars()
     this._setWoundIcon()
+    this._spellCount()
 
     // Set saved scroll bar position if not default
     if (localStorage.getItem('scrollPosition') !== 0) {
@@ -284,14 +286,13 @@
                           let actor = game.actors.find(actor => actor.id === actorID)
                           let tokenActor = game.scenes.find(scene => scene.active === true).tokens.find(token => token.data.actorId === actorID)
 
-                          let actorBonusItems = actor.items.filter(item => item.data.data.hasOwnProperty('characteristicBonus'))
-                          let tokenBonusItems = tokenActor._actor.items.filter(item => item.data.data.hasOwnProperty('characteristicBonus'))
-
                           if (actor.data.token.actorLink) {
+                            let actorBonusItems = actor.items.filter(item => item.data.data.hasOwnProperty('characteristicBonus'))
                             let item = actorBonusItems.find(i => i.id === itemID)
                             item.sheet.render(true)
                           }
                           else {
+                            let tokenBonusItems = tokenActor._actor.items.filter(item => item.data.data.hasOwnProperty('characteristicBonus'))
                             let item = tokenBonusItems.find(i => i.id === itemID)
                             item.sheet.render(true)
                           }
@@ -990,10 +991,22 @@
     event.preventDefault()
     const element = event.currentTarget
     const actor = this.actor
-    const itemData = [{
-      name: element.id,
-      type: element.id
-    }];
+    let itemData;
+
+    if (element.id == 'spell') {
+      itemData = [{
+        name: element.id,
+        type: 'spell',
+        'data.school': element.dataset.school
+      }]
+    }
+    else {
+      itemData = [{
+        name: element.id,
+        type: element.id
+      }]
+    }
+
     const created = await Item.create(itemData, {parent: actor});
     return created;
   }
@@ -1804,11 +1817,34 @@
   }
 
   _saveScrollPosition(event) {
-    localStorage.setItem('scrollPosition', document.querySelector('.combatItemContainer').scrollTop)
+    sessionStorage.setItem('scrollPosition', document.querySelector('.combatItemContainer').scrollTop)
   }
 
   _setScrollPosition() {
-    document.querySelector('.combatItemContainer').scrollTop = localStorage.getItem('scrollPosition')
+    document.querySelector('.combatItemContainer').scrollTop = sessionStorage.getItem('scrollPosition')
+  }
+
+  _spellCount() {
+    for (let element of [...document.querySelectorAll('[data-countLabel]')]) {
+      const spellList = this.actor.items.filter(item => item.type === 'spell' && item.data.data.school === element.dataset.school)
+      element.textContent = `${element.dataset.school.charAt(0).toUpperCase() + element.dataset.school.slice(1)} Spells (${spellList.length})`
+    }
+  }
+
+  _collapseList(event) {
+    event.preventDefault()
+    const collapsibleList = event.currentTarget.closest('.collapsible')
+    const listMaster = collapsibleList.closest('ol')
+
+    for (let listItem of [...listMaster.querySelectorAll('[data-list-group]')]) {
+      // Set collapsed status
+      sessionStorage.setItem(`collapsibleItems.${listItem.dataset.listGroup}`, [...listItem.classList].includes('collapsed'))
+
+      if (listItem.dataset.listGroup === collapsibleList.dataset.collapseGroup) {
+        listItem.classList.toggle('collapsed')
+        sessionStorage.setItem(`collapsibleItems.${listItem.dataset.listGroup}`, [...listItem.classList].includes('collapsed'))
+      }
+    }
   }
 
 }

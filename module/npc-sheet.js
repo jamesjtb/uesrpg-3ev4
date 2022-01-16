@@ -240,14 +240,13 @@ export class npcSheet extends ActorSheet {
                           let actor = game.actors.find(actor => actor.id === actorID)
                           let tokenActor = game.scenes.find(scene => scene.active === true).tokens.find(token => token.data.actorId === actorID)
 
-                          let actorBonusItems = actor.items.filter(item => item.data.data.hasOwnProperty('characteristicBonus'))
-                          let tokenBonusItems = tokenActor._actor.items.filter(item => item.data.data.hasOwnProperty('characteristicBonus'))
-
                           if (actor.data.token.actorLink) {
+                            let actorBonusItems = actor.items.filter(item => item.data.data.hasOwnProperty('characteristicBonus'))
                             let item = actorBonusItems.find(i => i.id === itemID)
                             item.sheet.render(true)
                           }
                           else {
+                            let tokenBonusItems = tokenActor._actor.items.filter(item => item.data.data.hasOwnProperty('characteristicBonus'))
                             let item = tokenBonusItems.find(i => i.id === itemID)
                             item.sheet.render(true)
                           }

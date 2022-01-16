@@ -67,7 +67,7 @@
         <nav class="sheet-tabs tabs" data-group="primary">
             <a class="item" data-tab="core">Core</a>
             <a class="item" data-tab="combat">Combat</a>
-            <a class="item" data-tab="spells">Magic</a>
+            <a class="item" data-tab="magic">Magic</a>
             <a class="item" data-tab="items">Equipment</a>
             <a class="item" data-tab="journal">Journal</a>
         </nav>
@@ -240,7 +240,7 @@
                         <div class="leftColumn">
                             <div class="flexContainer">
                                 <div>
-                                    <i class="fas fa-weight-hanging burdenIcon" title="ENC"> {{data.carry_rating.current}}/{{data.carry_rating.max}}</i>
+                                    <i class="fas fa-weight-hanging burdenIcon" title="ENC"> {{data.carry_rating.current}} / {{data.carry_rating.max}} ENC</i>
                                 </div>
                                 <div>
                                     <i class="fas fa-heart-broken woundIcon" title="Wound Penalty"> {{data.woundPenalty}}</i>
@@ -390,132 +390,68 @@
                 </div>
             </div>
         </div>
+
+        {{!-- Magic Tab --}}
+        <div class="tab magic" data-group="primary" data-tab="magic">
+            <div class="magicTabContainer">
+                <div class="magicSideBarContainer">
+                    <div class="magicSkillContainer">
+                        <h2 class="headerWithButton">
+                            <button type="button" class="item-create" id="magicSkill">+</button>
+                            <label>Magic Skills</label>
+                        </h2>
+                        <ol class="skillList">
+                            {{#each actor.data.magicSkill as |item id|}}
+                                <li class="item flexrow" data-item-id="{{item._id}}">
+                                    <div class="itemInfo">
+                                        <i class="fas fa-dice-d20 skill-roll"></i>
+                                        <img class="item-img" src="{{item.img}}" title="Send to Chat"/>
+                                        <div class="item-name">{{item.name}}</div>
+                                    </div>
+                                    <div class="item-controls">
+                                        <div class="item-value">{{item.data.value}}%</div>
+                                        <a class="item-control item-delete" title="Delete Item"><i class="fas fa-trash"></i></a>
+                                    </div>
+                                </li>
+                            {{/each}}
+                        </ol>
+                    </div>
+                </div>
+                <div class="spellList">
+                    <h2>Spell List</h2>
+                    <ol class="skillList twoColumnList">
+                        {{#each actor.data.spell as |spell school|}}
+                            <div class="listSegment">
+                                <h2 class="headerWithButton collapsible" data-collapse-group="{{school}}">
+                                    <div class="listButtons">
+                                        <button type="button" class="item-create" id="spell" data-school="{{school}}">+</button>
+                                        <button type="button" class="collapseList">
+                                            <i class="fas fa-chevron-down"></i>
+                                        </button>
+                                    </div>
+                                    <div data-school="{{school}}" data-countLabel="spellCount"></div>
+                                </h2>
+                                {{#each spell as |item id|}}
+                                    <li class="item flexrow collapsed" data-list-group="{{school}}" data-item-id="{{item._id}}">
+                                        <div class="itemInfo">
+                                            <img class="item-img" src="{{item.img}}" title="{{item.name}}"/>
+                                            <div class="item-name">{{item.name}}</div>
+                                        </div>
+                                        <div class="item-controls">
+                                            <a class="item-control item-delete" title="Delete Item"><i class="fas fa-trash"></i></a>
+                                        </div>
+                                    </li>
+                                {{/each}}
+                            {{/each}}
+                        </div>
+                    </ol>
+                </div>
+            </div>
+        </div>
+
     </section>
 
     <!-- {{!-- Sheet Header --}}
-        {{!-- Combat Tab --}}
-        <div class="tab combat" data-group="primary" data-tab="combat">
-            <div class="combat-sidebar">
-                <table class="combat_table_header">
-                    <tr>
-                        <th>Weapons & Armor</th>
-                    </tr>
-                </table>
-                <table>
-                    <tr>
-                        <th>Size</th>
-                        <td><select name="data.size" data-type="String">
-                            {{#select data.size}}
-                            {{#each data.size_cat as |size_cat key|}}
-                            <option value="{{key}}">{{size_cat}}</option> 
-                            {{/each}} {{/select}}
-                            </select></td>
-                        <th title="Select based on heaviest armor equipped">Armor Class</th>
-                        <td><select name="data.armor_class" data-type="String">
-                            {{#select data.armor_class}}
-                            {{#each data.armor_class_cat as |armor_class_cat key|}}
-                            <option value="{{key}}">{{armor_class_cat}}</option> 
-                            {{/each}} {{/select}}
-                            </select></td>
-                    </tr>
-                </table>
-                
-            <ol class="combat-list">
-                {{#each actor.data.armor as |armor equipped|}}
-                <h4 class="list-header-skills">
-                    <button type="button" class="armor-create" id="armor">+</button>
-                    <label>{{equipped}} Armor</label>
-                </h4> <p></p>
-                {{#each armor as |item id|}}
-                    <li class="item flexrow" data-item-id="{{item._id}}">
-                        <button type="button" title="Send Stats to Chat" class="armor-roll" data-roll="{{item.data.value}}"><i class="fas fa-dice-d20"></i></button>
-                        <img class="item-img" src="{{item.img}}" title="{{item.name}}" width="24" height="24"/>
-                        <h4 class="item-name">{{item.name}}</h4>
-                        <h4 class="item-cat" title="{{item.data.magic_ar}}">{{item.data.armor}}AR<input class="itemEquip" type="checkbox" {{checked item.data.equipped}} title="Equip Armor"></h4>
-                        <div class="item-controls">
-                            <a class="item-control item-delete" title="Delete Item"><i class="fas fa-trash"></i></a>
-                        </div>
-                    </li>
-                {{/each}}
-            {{/each}}
-        </ol>
-            </div>
-            <div class="combat-sidebar2">
-            <table class="combat_table_header">
-                <tr>
-                    <th>Stats</th>
-                </tr>
-            </table>
-            <table>
-                <tr class="ap-inputs">
-                    <th>Action Points</th>
-                    <td><input type="number" name="data.action_points.value" value="{{data.action_points.value}}" ></td>
-                    <td><input type="number" name="data.action_points.max" value="{{data.action_points.max}}" ></td>
-                </tr>
-            </table>
-            <table>
-                <tr>
-                    <th>Wound</th>
-                    <th>Speed</th>
-                    <th>Initiative</th>
-                </tr>
-                <tr class="ap-inputs">
-                    <td><label type="number" name="data.wound_threshold.value">{{data.wound_threshold.value}}</label></td>
-                    <td title= "Swim: {{data.speed.swimSpeed}} Fly: {{data.speed.flySpeed}}"><label type="text" name="data.speed.value">{{data.speed.value}}</label></td>
-                    <td><label type="number" name="data.initiative.value">{{data.initiative.value}}</label></td>
-                </tr>
-            </table>
-            <table class="vResistTable">
-                <tr>
-                    <th colspan="2"><div class="resistHeader">Resistances</div></th>
-                </tr>
-                <tr>
-                    <td><button type="button" class="resistance-roll" name="Disease" id="diseaseR"> <span class="fas fa-bacteria"></span> Disease</button></td>
-                    <th><label type="number" name="data.resistance.diseaseR"></label>{{data.resistance.diseaseR}}%</th>
-                </tr>
-                <tr>
-                    <td><span class="fa fa-fire"></span> Fire</td>
-                    <th><label type="number" name="data.resistance.fireR">{{data.resistance.fireR}}</label></th>
-                </tr>
-                <tr>
-                    <td><span class="fas fa-snowflake"></span> Frost</td>
-                    <th><label type="number" name="data.resistance.frostR">{{data.resistance.frostR}}</label></th>
-                </tr>
-                <tr>
-                    <td><span class="fa fa-bolt"></span> Shock</td>
-                    <th><label type="number" name="data.resistance.shockR">{{data.resistance.shockR}}</label></th>
-                </tr>
-                <tr>
-                    <td><span class="fas fa-skull-crossbones"></span> Poison</td>
-                    <th><label type="number" name="data.resistance.poisonR"></label>{{data.resistance.poisonR}}</th>
-                </tr>
-                <tr>
-                    <td><span class="fas fa-hand-sparkles"></span> Magic</td>
-                    <th><label type="number" name="data.resistance.magicR"></label>{{data.resistance.magicR}}</th>
-                </tr>
-                <tr>
-                    <td><span class="fa fa-fist-raised"></span> Toughness</td>
-                    <th><label type="number" name="data.resistance.natToughness"></label>{{data.resistance.natToughness}}</th>
-                </tr>
-                <tr>
-                    <td><span class="fab fa-wolf-pack-battalion"></span> Silver</td>
-                    <th><label type="number" name="data.resistance.silverR"></label>{{data.resistance.silverR}}</th>
-                </tr>
-                <tr>
-                    <td><span class="fas fa-sun"></span> Sunlight</td>
-                    <th><label type="number" name="data.resistance.sunlightR"></label>{{data.resistance.sunlightR}}</th>
-                </tr>
-                <tr title="Check to toggle wounded penalties to initiative and skill rolls">
-                    <td><span>Wounded</span></td>
-                    <th><input class="woundCheckBox" type="checkbox" name="data.wounded" {{checked data.wounded}}></th>
-                </tr>
-                <tr>
-                    <td colspan="2"><textarea name="data.woundNotes">{{data.woundNotes}}</textarea>
-                </tr>
-            </table>
-        </div>
-    </div>
-
         {{!-- Spells Tab --}}
         <div class="tab spells" data-group="primary" data-tab="spells">
             <ol class="ability-list">
