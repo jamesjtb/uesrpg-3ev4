@@ -203,7 +203,7 @@
     html.find(".ammo-plus").click(await this._onPlusAmmo.bind(this));
     html.find(".ammo-minus").click(await this._onMinusAmmo.bind(this));
     html.find(".itemEquip").click(await this._onItemEquip.bind(this));
-    html.find(".itemTabInfo .wealthCalc").click(await this._onWealthCalc.bind(this));
+    html.find(".wealthCalc").click(await this._onWealthCalc.bind(this));
     html.find(".setBaseCharacteristics").click(await this._onSetBaseCharacteristics.bind(this));
     html.find(".carryBonus").click(await this._onCarryBonus.bind(this));
     html.find(".incrementResource").click(this._onIncrementResource.bind(this))
@@ -233,6 +233,13 @@
     if (!this.options.editable) return;
 
     // Update Inventory Item
+    html.find('.cardImageContainer .item-img').click( async (ev) => {
+      const li = ev.currentTarget.closest(".item");
+      const item = this.actor.items.get(li.dataset.itemId);
+      item.sheet.render(true);
+      await item.update({"data.value" : item.data.data.value})
+    })
+
     html.find('.item-name').click( async (ev) => {
       const li = ev.currentTarget.closest(".item");
       const item = this.actor.items.get(li.dataset.itemId);
@@ -1818,11 +1825,13 @@
   }
 
   _saveScrollPosition(event) {
-    sessionStorage.setItem('scrollPosition', document.querySelector('.combatItemContainer').scrollTop)
+    sessionStorage.setItem('scrollPosition.combatItemContainer', document.querySelector('.combatItemContainer').scrollTop)
+    sessionStorage.setItem('scrollPosition.attributeList', document.querySelector('.attributeList').scrollTop)
   }
 
   _setScrollPosition() {
-    document.querySelector('.combatItemContainer').scrollTop = sessionStorage.getItem('scrollPosition')
+    document.querySelector('.combatItemContainer').scrollTop = sessionStorage.getItem('scrollPosition.combatItemContainer')
+    document.querySelector('.attributeList').scrollTop = sessionStorage.getItem('scrollPosition.attributeList')
   }
 
   _spellCount() {
@@ -1838,16 +1847,6 @@
     const listMaster = collapsibleList.closest('ol')
 
     for (let listItem of [...listMaster.querySelectorAll('[data-list-group]')]) {
-      // Set session storage value of collapsed lists
-      // sessionStorage.setItem(`collapsibleItems.${listItem.dataset.listGroup}`, [...listItem.classList].includes('collapsed'))
-
-      // if (sessionStorage.getItem(`collapsibleItems.${listItem.dataset.listGroup}` === true)) {
-      //   listItem.classList.add('collapsed')
-      // }
-
-      // else {
-      //   listItem.classList.remove('collapsed')
-      // }
 
       // Toggle collapsed status for specific school group
       if (listItem.dataset.listGroup === collapsibleList.dataset.collapseGroup) {

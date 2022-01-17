@@ -133,6 +133,7 @@
 .worldbuilding li .item-name {
   padding: 0 5px;
   min-width: 120px;
+  max-width: 180px;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -182,6 +183,79 @@
   overflow: hidden;
   max-height: 0;
 }
+
+.worldbuilding .attributeList {
+  height: 235px;
+  overflow: scroll;
+}
+
+/*---------------------------- 
+  Lists & Controls - Card Lists
+------------------------------*/
+
+.worldbuilding .cardList .card {
+  border: 1px solid;
+  border-radius: 10px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 75px;
+  height: 150px;
+}
+
+.worldbuilding .cardList .card:hover {
+  transition: 0.5s;
+  transform: scale(1.1);
+}
+
+.worldbuilding .cardList .cardListFlexContainer {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  flex-wrap: wrap;
+  gap: 5px;
+  width: 100%;
+}
+
+.worldbuilding .cardList .itemCard {
+  display: flex;
+  flex-direction: column;
+  justify-content: top;
+  align-items: center;
+  text-align: center;
+  background-image: linear-gradient(#BBD2C5, #D4D3DD);
+  border-radius: 10px;
+  border: none;
+  width: 100%;
+}
+
+.worldbuilding .itemCard .cardImageContainer {
+  overflow: hidden;
+  position: relative;
+}
+
+.worldbuilding .cardImageContainer .item-controls {
+  position: absolute;
+  top: 0;
+  right: 0;
+  padding: 5px;
+}
+
+.worldbuilding .itemCard .item-name {
+  min-width: unset;
+  width: 75px;
+  font-size: small;
+  white-space: normal;
+}
+
+.worldbuilding .itemCard img {
+  height: 75px;
+  width: 75px;
+  border: none;
+  border-radius: 10px;
+}
+
 
 /*---------------------------- 
   Editor Styles
@@ -349,8 +423,15 @@
   flex-direction: column;
   justify-content: top;
   align-items: center;
-  border: solid 1px;
   padding: 5px 10px;
+}
+
+.worldbuilding .characteristicSideBar {
+  border-right: 1px solid;
+}
+
+.worldbuilding .skillContainer {
+  border-right: 1px solid;
 }
 
 .worldbuilding .languageContainer {
@@ -504,13 +585,24 @@
 }
 
 /*---------------------------- 
-  Combat Tab - Paper Doll Container
+  Combat Tab - Stacked Content Container
 ------------------------------*/
+
+.worldbuilding .stackedContentContainer {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+  width: 25%;
+  height: 435px;
+  border-right: solid 1px;
+}
 
 .worldbuilding .paperDollContainer {
   position: relative;
-  width: 25%;
-  border-right: solid 1px;
+  width: 100%;
+  height: 200px;
+  border-bottom: solid 1px;
 }
 
 .worldbuilding .paperDollContainer .woundIcon {
@@ -523,7 +615,6 @@
   right: 0;
   padding: 5px;
   margin: 0;
-  height: 100%;
 }
 
 .worldbuilding .rightColumn .flexContainer {
@@ -539,7 +630,6 @@
   left: 0;
   padding: 5px;
   margin: 0;
-  height: 100%;
 }
 
 .worldbuilding .leftColumn .flexContainer {
@@ -571,7 +661,7 @@
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  height: 250px;
+  height: 150px;
 }
 
 /*---------------------------- 
@@ -580,7 +670,7 @@
 
 .worldbuilding .statColumnContainer {
   padding: 5px;
-  width: 30%;
+  width: 25%;
 }
 
 .worldbuilding .combatItemHeader {
@@ -694,3 +784,71 @@
 .worldbuilding .magicTabContainer .spellList {
   width: 65%;
 }
+
+/*---------------------------- 
+  Equipment Tab
+------------------------------*/
+
+.worldbuilding .equipmentTabHeader {
+  display: flex;
+  flex-direction: row;
+  align-items: top;
+  justify-content: center;
+  width: 100%;
+  border-bottom: solid 1px;
+  padding: 0 0 10px 0;
+}
+
+.worldbuilding .wealthContainer {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  border-right: solid 1px;
+  padding: 0 10px;
+  gap: 10px;
+}
+
+.worldbuilding .encContainer {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  padding: 0 10px;
+  gap: 10px;
+}
+
+.worldbuilding .wealthInfo,
+.worldbuilding .encInfo {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.worldbuilding .wealthContainer img,
+.worldbuilding .encContainer img {
+  border-radius: 10px;
+  height: 70px;
+  width: 70px;
+}
+
+.worldbuilding .encInfo .encLabel {
+  font-size: large;
+}
+
+.worldbuilding .wealthInfo input {
+  text-align: center;
+  font-size: large;
+  border-radius: 10px;
+  height: 25px;
+  width: 75px;
+}
+
+.worldbuilding .wealthCalc:hover,
+.worldbuilding .carryBonus {
+  cursor: pointer;
+}
+
+/*---------------------------- 
+  Equipment Tab - List Table
+------------------------------*/
+

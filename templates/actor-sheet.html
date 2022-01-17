@@ -68,7 +68,7 @@
             <a class="item" data-tab="core">Core</a>
             <a class="item" data-tab="combat">Combat</a>
             <a class="item" data-tab="magic">Magic</a>
-            <a class="item" data-tab="items">Equipment</a>
+            <a class="item" data-tab="equipment">Equipment</a>
             <a class="item" data-tab="journal">Journal</a>
         </nav>
 
@@ -236,31 +236,96 @@
         <div class="tab combat" data-group="primary" data-tab="combat">
             <div class="combatTabContainer">
                 <div class="combatSegment1">
-                    <div class="paperDollContainer">
-                        <div class="leftColumn">
-                            <div class="flexContainer">
-                                <div>
-                                    <i class="fas fa-weight-hanging burdenIcon" title="ENC"> {{data.carry_rating.current}} / {{data.carry_rating.max}} ENC</i>
-                                </div>
-                                <div>
-                                    <i class="fas fa-heart-broken woundIcon" title="Wound Penalty"> {{data.woundPenalty}}</i>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="rightColumn">
-                            <div class="flexContainer">
-                                <div class="swapContainer" title="Swap Body Image">
-                                    <button type="button"><i class="fas fa-random"></i></button>
+                    <div class="stackedContentContainer">
+                        <div class="paperDollContainer">
+                            <div class="leftColumn">
+                                <div class="flexContainer">
+                                    <div>
+                                        <i class="fas fa-weight-hanging burdenIcon" title="ENC"> {{data.carry_rating.current}} / {{data.carry_rating.max}} ENC</i>
+                                    </div>
+                                    <div>
+                                        <i class="fas fa-heart-broken woundIcon" title="Wound Penalty"> {{data.woundPenalty}}</i>
+                                    </div>
                                 </div>
                             </div>
+                            <div class="rightColumn">
+                                <div class="flexContainer">
+                                    <div class="swapContainer" title="Swap Body Image">
+                                        <button type="button"><i class="fas fa-random"></i></button>
+                                    </div>
+                                </div>
+                            </div>
+                            <img id="paperDoll" src="{{data.paperDoll}}" alt="paperDoll">
                         </div>
-                        <img id="paperDoll" src="{{data.paperDoll}}" alt="paperDoll">
+                        <div class="attributeList">
+                            <div class="talentContainer">
+                                <h2 class="headerWithButton">
+                                    <button type="button" class="item-create" id="trait">+</button>
+                                    <label>Traits</label>
+                                </h2>
+                                <ol class="skillList">
+                                    {{#each actor.data.trait as |item id|}}
+                                        <li class="item flexrow" data-item-id="{{item._id}}">
+                                            <div class="itemInfo">
+                                                <img class="item-img" src="{{item.img}}" title="Send to Chat"/>
+                                                <div class="item-name">{{item.name}}</div>
+                                            </div>
+                                            <div class="item-controls">
+                                                <a class="item-control item-delete" title="Delete Item"><i class="fas fa-trash"></i></a>
+                                            </div>
+                                        </li>
+                                    {{/each}}
+                                </ol>
+                            </div>
+
+                            <div class="talentContainer">
+                                <h2 class="headerWithButton">
+                                    <button type="button" class="item-create" id="talent">+</button>
+                                    <label>Talents</label>
+                                </h2>
+                                <ol class="skillList">
+                                    {{#each actor.data.talent as |item id|}}
+                                        <li class="item flexrow" data-item-id="{{item._id}}">
+                                            <div class="itemInfo">
+                                                <img class="item-img" src="{{item.img}}" title="Send to Chat"/>
+                                                <div class="item-name">{{item.name}}</div>
+                                            </div>
+                                            <div class="item-controls">
+                                                <a class="item-control item-delete" title="Delete Item"><i class="fas fa-trash"></i></a>
+                                            </div>
+                                        </li>
+                                    {{/each}}
+                                </ol>
+                            </div>
+
+                            <div class="talentContainer">
+                                <h2 class="headerWithButton">
+                                    <button type="button" class="item-create" id="power">+</button>
+                                    <label>Powers</label>
+                                </h2>
+                                <ol class="skillList">
+                                    {{#each actor.data.power as |item id|}}
+                                        <li class="item flexrow" data-item-id="{{item._id}}">
+                                            <div class="itemInfo">
+                                                <img class="item-img" src="{{item.img}}" title="Send to Chat"/>
+                                                <div class="item-name">{{item.name}}</div>
+                                            </div>
+                                            <div class="item-controls">
+                                                <a class="item-control item-delete" title="Delete Item"><i class="fas fa-trash"></i></a>
+                                            </div>
+                                        </li>
+                                    {{/each}}
+                                </ol>
+                            </div>
+
+
+                        </div>
                     </div>
                     <div class="statColumnContainer">
                         <h2>Combat Stats</h2>
                         <div class="combatItemHeader">
                             <div class="combatStats box1">
-                                <div class="cellLabel">Action Points</div>
+                                <div class="cellLabel">Action P.</div>
                                 <input type="number" value="{{data.action_points.value}}"> / <span>{{data.action_points.max}}</span>
                             </div>
                             <div class="combatStats box2">
@@ -418,6 +483,46 @@
                     </div>
                 </div>
                 <div class="spellList">
+                    <ol class="cardList">
+                        {{#each actor.data.spell as |spell school|}}
+                        <div class="listSegment">
+                            <h2 class="headerWithButton collapsible" data-collapse-group="{{school}}">
+                                <div class="listButtons">
+                                    <button type="button" class="item-create" id="spell" data-school="{{school}}">+</button>
+                                    <button type="button" class="collapseList">
+                                        <i class="fas fa-chevron-down"></i>
+                                    </button>
+                                </div>
+                                <div data-school="{{school}}" data-countLabel="spellCount"></div>
+                            </h2>
+                            <div class="cardListFlexContainer">
+                                {{#each spell as |item id|}}
+                                <li class="item flexrow collapsed card" data-list-group="{{school}}" data-item-id="{{item._id}}">
+                                    <div class="itemCard">
+                                        <div class="cardImageContainer">
+                                            <div class="item-controls">
+                                                <a class="item-control item-delete" title="Delete Item"><i class="fas fa-trash"></i></a>
+                                            </div>
+                                            <img class="item-img" src="{{item.img}}" title="{{item.name}}"/>
+                                        </div>
+                                        <div class="cardInfo">
+                                            <div class="item-name">{{item.name}}</div>
+                                            <div>
+                                                <i class="fas fa-dice-d20 magic-roll"></i>
+                                                {{item.data.damage}}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </li>
+                                {{/each}}
+                            </div>
+                        </div>
+                        {{/each}}
+                    </ol>
+                </div>
+
+                <!-- This is the "Regular" spell list for future reference -->
+                <!-- <div class="spellList">
                     <h2>Spell List</h2>
                     <ol class="skillList twoColumnList">
                         {{#each actor.data.spell as |spell school|}}
@@ -446,6 +551,54 @@
                             </div>
                         {{/each}}
                     </ol>
+                </div> -->
+
+
+            </div>
+        </div>
+
+        {{!-- Equipment Tab --}}
+        <div class="tab equipment" data-group="primary" data-tab="equipment">
+            <div class="equipmentTabContainer">
+                <div class="equipmentTabHeader">
+                    <div class="wealthContainer">
+                        <div class="wealthInfo">
+                            <h2>Wealth</h2>
+                            <input type="number" name="data.wealth" value="{{data.wealth}}">
+                        </div>
+                        <img class="wealthCalc" src="icons/commodities/currency/coins-plain-stack-gold-yellow.webp" alt="wealth" title="Quick Add/Subtract">
+                    </div>
+                    <div class="encContainer">
+                        <img class="carryBonus" src="icons/tools/hand/scale-balances-merchant-brown.webp" alt="scaleENC" title="Set Carry Bonus">
+                        <div class="encInfo">
+                            <h2>Encumbrance</h2>
+                            <div class="encLabel">{{data.carry_rating.current}} / {{data.carry_rating.max}} ENC</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="itemListContainer">
+                    <h2 class="headerWithButton">
+                        <button type="button" class="item-create" id="item">+</button>
+                        <label>Equipment</label>
+                    </h2>
+                    <ol class="skillList">
+                        {{#each actor.data.gear as |item id|}}
+                            <li class="item flexrow" data-item-id="{{item._id}}">
+                                <div class="itemInfo">
+                                    <img class="item-img" src="{{item.img}}" title="Send to Chat"/>
+                                    <div class="item-name">{{item.name}}</div>
+                                </div>
+                                <div class="item-controls">
+                                    <div class="ammo-controls">
+                                        <div><button title="-1" class="ammo-minus" type="button">-</button></div>
+                                        <div class="ammoQty">{{item.data.quantity}}</div>
+                                        <div><button title="+1" class="ammo-plus" type="button">+</button></div>
+                                    </div>
+                                    <a class="item-control item-delete" title="Delete Item"><i class="fas fa-trash"></i></a>
+                                </div>
+                            </li>
+                        {{/each}}
+                    </ol>
                 </div>
             </div>
         </div>
@@ -453,123 +606,6 @@
     </section>
 
     <!-- {{!-- Sheet Header --}}
-        {{!-- Spells Tab --}}
-        <div class="tab spells" data-group="primary" data-tab="spells">
-            <ol class="ability-list">
-                <h4 class="list-header-skills">
-                    <button type="button" class="power-create" id="magicSkill">+</button>
-                    <label>Magic Skills</label>
-                </h4>
-                {{#each actor.data.magicSkill as |item id|}}
-                    <li class="item flexrow" data-item-id="{{item._id}}">
-                        <button type="button" class="skill-roll" data-roll="{{item.data.value}}"><i class="fas fa-dice-d20"></i></button>
-                        <img class="item-img" src="{{item.img}}" title="Send to Chat" width="24" height="24"/>
-                        <h4 class="item-name">{{item.name}}</h4>
-                        <h4 class="item-cat">{{item.data.value}}%</h4>
-                        <div class="item-controls">
-                            <a class="item-control item-delete" title="Delete Item"><i class="fas fa-trash"></i></a>
-                        </div>
-                    </li>
-                {{/each}}
-            </ol>
-            <ol class="spell-list">
-                {{#each actor.data.spell as |spell school|}}
-                <div>
-                    <table class="itemHeader">
-                        <tr>
-                            <td class="talentsLabel" title="Drag Spells from Compendium">{{school}} spells</th>
-                        </tr>
-                    </table>
-                </div>
-                {{#each spell as |item id|}}
-                    <li class="item flexrow" data-item-id="{{item._id}}">
-                        <button type="button" class="magic-roll" data-roll="{{item.data.value}}"><i class="fas fa-dice-d20"></i></button>
-                        <img class="item-img" src="{{item.img}}" title="{{item.name}}" width="24" height="24"/>
-                        <h4 class="item-name">{{item.name}}</h4>
-                        <div class="item-controls">
-                            <a class="item-control item-delete" title="Delete Item"><i class="fas fa-trash"></i></a>
-                        </div>
-                    </li>
-                {{/each}}
-            {{/each}}
-        </ol>
-        </div>
-
-        {{!-- Talents Tab --}}
-        <div class="tab talents" data-group="primary" data-tab="talents">
-            <table class="field-inputs-small">
-                <tr>
-                    <th colspan="9"><span>Resistances & Weaknesses</span></th>
-                </tr>
-                <tr>
-                    <th>Disease</th>
-                    <th>Fire</th>
-                    <th>Frost</th>
-                    <th>Shock</th>
-                    <th>Poison</th>
-                    <th>Magic</th>
-                    <th>Tough</th>
-                    <th>Silver</th>
-                    <th>Sunlight</th>
-                </tr>
-                <tr>
-                    <td title="Disease Resistance"><span class="fas fa-bacteria"></span> {{data.resistance.diseaseR}}%</td>
-                    <td title="Fire Resistance"><span class="fas fa-fire"></span> {{data.resistance.fireR}}</td>
-                    <td title="Frost Resistance"><span class="fas fa-snowflake"></span> {{data.resistance.frostR}}</td>
-                    <td title="Shock Resistance"><span class="fas fa-bolt"></span> {{data.resistance.shockR}}</td>
-                    <td title="Poison Resistance"><span class="fas fa-skull-crossbones"></span> {{data.resistance.poisonR}}</td>
-                    <td title="Magic Resistance"><span class="fas fa-hand-sparkles"></span> {{data.resistance.magicR}}</td>
-                    <td title="Natural Toughness"><span class="fas fa-fist-raised"></span> {{data.resistance.natToughness}}</td>
-                    <td title="Silver Resistance"><span class="fab fa-wolf-pack-battalion"></span> {{data.resistance.silverR}}</td>
-                    <td title="Sunlight Resistance"><span class="fas fa-sun"></span> {{data.resistance.sunlightR}}</td>
-                </tr>
-            </table>
-                <ol class="talents-list">
-                    <h4 class="list-header-skills">
-                        <button type="button" class="trait-create" id="trait">+</button>
-                        <label>Traits</label>
-                    </h4>
-                    {{#each actor.data.trait as |item id|}}
-                        <li class="item flexrow" data-item-id="{{item._id}}">
-                            <img class="item-img" src="{{item.img}}" title="Send to Chat" width="24" height="24"/>
-                            <h4 class="item-name">{{item.name}}</h4>
-                            <div class="item-controls">
-                                <a class="item-control item-delete" title="Delete Item"><i class="fas fa-trash"></i></a>
-                            </div>
-                        </li>
-                    {{/each}}
-                </ol>
-                    <ol class="talents-list">
-                        <h4 class="list-header-skills">
-                            <button type="button" class="power-create" id="power">+</button>
-                            <label>Powers</label>
-                        </h4>
-                        {{#each actor.data.power as |item id|}}
-                            <li class="item flexrow" data-item-id="{{item._id}}">
-                                <img class="item-img" src="{{item.img}}" title="Send to Chat" width="24" height="24"/>
-                                <h4 class="item-name">{{item.name}}</h4>
-                                <div class="item-controls">
-                                    <a class="item-control item-delete" title="Delete Item"><i class="fas fa-trash"></i></a>
-                                </div>
-                            </li>
-                        {{/each}}
-                    </ol>
-                        <ol class="talents-list">
-                            <h4 class="list-header-skills">
-                                <button type="button" class="talent-create" id="talent">+</button>
-                                <label>Talents</label>
-                            </h4>
-                            {{#each actor.data.talent as |item id|}}
-                                <li class="item flexrow" data-item-id="{{item._id}}">
-                                    <img class="item-img" src="{{item.img}}" title="Send to Chat" width="24" height="24"/>
-                                    <h4 class="item-name">{{item.name}}</h4>
-                                    <div class="item-controls">
-                                        <a class="item-control item-delete" title="Delete Item"><i class="fas fa-trash"></i></a>
-                                    </div>
-                                </li>
-                            {{/each}}
-                        </ol> 
-            <div>
                 <table class="itemHeader">
                     <tr>
                         <td class="talentsLabel">Special Abilities</td>
