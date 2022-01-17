@@ -81,7 +81,7 @@
         <div class="tab core" data-group="primary" data-tab="core">
             <div class="coreTabContainer">
                 <div class="characteristicSideBar">
-                    <h1>Characteristics</h1>
+                    <h2>Characteristics</h2>
                     <div class="characteristicFields">
                         <div class="characteristicBar">
                             <div class="barRibbon">
@@ -159,10 +159,10 @@
                 </div>
 
                 <div class="skillContainer">
-                    <h1 class="headerWithButton">
+                    <h2 class="headerWithButton">
                         <button type="button" class="item-create" id="skill">+</button>
                         <label>Skills</label>
-                    </h1>
+                    </h2>
                     <ol class="skillList">
                         {{#each actor.data.skill as |item id|}}
                             <li class="item flexrow" data-item-id="{{item._id}}">
@@ -181,7 +181,7 @@
                 </div>
 
                 <div class="bioContainer">
-                    <h1>Biography</h1>
+                    <h2>Biography</h2>
                     <div class="buttonStats">
                         <button type="button" id="luckyMenu">Lucky/Unlucky</button>
                         <button type="button" id="xpMenu">Exp: {{data.xp}}</button>
@@ -203,15 +203,14 @@
                         </div>
                     </div>
                     <div class="languageContainer">
-                        <h1 class="headerWithButton">
+                        <h2 class="headerWithButton">
                             <button type="button" class="item-create" id="language">+</button>
                             <label>Languages</label>
-                        </h1>
+                        </h2>
                         <ol class="skillList">
                             {{#each actor.data.language as |item id|}}
                                 <li class="item flexrow" data-item-id="{{item._id}}">
                                     <div class="itemInfo">
-                                        <i class="fas fa-dice-d20 skill-roll"></i>
                                         <img class="item-img" src="{{item.img}}" title="Send to Chat"/>
                                         <div class="item-name">{{item.name}}</div>
                                     </div>
@@ -237,7 +236,7 @@
             <div class="combatTabContainer">
                 <div class="combatSegment1">
                     <div class="stackedContentContainer">
-                        <div class="paperDollContainer">
+                        <div class="paperDollContainer" style="background-image: url(systems/uesrpg-d100/images/bloodSplatter2.webp)">
                             <div class="leftColumn">
                                 <div class="flexContainer">
                                     <div>
@@ -397,7 +396,8 @@
                                             <div class="item-name">{{item.name}}</div>
                                         </div>
                                         <div class="item-controls">
-                                            <div class="item-cat">2H<input class="toggle2H" type="checkbox" {{checked item.data.weapon2H}} title="Toggle 2H Damage"></div>
+                                                <div>2H</div>
+                                                <input class="toggle2H" type="checkbox" {{checked item.data.weapon2H}} title="Toggle 2H Damage">
                                             <a class="item-control item-delete" title="Delete Item"><i class="fas fa-trash"></i></a>
                                         </div>
                                     </li>
@@ -441,7 +441,7 @@
                                             <div class="item-name">{{item.name}}</div>
                                         </div>
                                         <div class="item-controls">
-                                            <div>{{item.data.armor}}AR / {{item.data.magic_ar}}</div>
+                                            <div>{{item.data.armor}} AR / {{item.data.magic_ar}}</div>
                                             <input class="itemEquip" type="checkbox" title="Equip Armor"{{checked item.data.equipped}}>
                                             <a class="item-control item-delete" title="Delete Item"><i class="fas fa-trash"></i></a>
                                         </div>
@@ -566,16 +566,21 @@
                             <h2>Wealth</h2>
                             <input type="number" name="data.wealth" value="{{data.wealth}}">
                         </div>
-                        <img class="wealthCalc" src="icons/commodities/currency/coins-plain-stack-gold-yellow.webp" alt="wealth" title="Quick Add/Subtract">
+                        <button type="button">
+                            <img class="wealthCalc" src="icons/commodities/currency/coins-plain-stack-gold-yellow.webp" alt="wealth" title="Quick Add/Subtract">
+                        </button>
                     </div>
                     <div class="encContainer">
-                        <img class="carryBonus" src="icons/tools/hand/scale-balances-merchant-brown.webp" alt="scaleENC" title="Set Carry Bonus">
+                        <button>
+                            <img class="carryBonus" src="icons/tools/hand/scale-balances-merchant-brown.webp" alt="scaleENC" title="Set Carry Bonus">
+                        </button>
                         <div class="encInfo">
                             <h2>Encumbrance</h2>
                             <div class="encLabel">{{data.carry_rating.current}} / {{data.carry_rating.max}} ENC</div>
                         </div>
                     </div>
                 </div>
+
                 <div class="itemListContainer">
                     <h2 class="headerWithButton">
                         <button type="button" class="item-create" id="item">+</button>

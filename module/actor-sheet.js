@@ -217,6 +217,7 @@
     html.find('.collapseList').click(this._collapseList.bind(this))
     this._setResourceBars()
     this._setWoundIcon()
+    this._setWoundBackground()
     this._spellCount()
     this._setCollapseValues()
 
@@ -1209,6 +1210,13 @@
           'Weakness (Magic, 2)',
           'Mental Strength: Ignores penalties to Willpower tests made to resist paralysis',
           'During Character Creation, Altmer can pick one additional magic skill to begin trained at Novice for free'
+        ],
+        items: [
+          {name: 'Disease Resistance (50%) (Racial)', img: 'systems/uesrpg-d100/images/Icons/diseaseResistance.webp', type: 'trait', dataPath: 'data.diseaseR', value: 50, desc: "This character has a chance to resist disease."},
+          {name: 'Power Well (20) (Racial)', img: 'systems/uesrpg-d100/images/Icons/powerWell.webp', type: 'trait', dataPath: 'data.mpBonus', value: 20, desc: "This character has extra reserves of magicka available."},
+          {name: 'Weakness (Magic, 2) (Racial)', img: 'icons/magic/defensive/shield-barrier-blue.webp', type: 'trait', dataPath: 'data.magicR', value: -2},
+          {name: 'Mental Strength (Racial)', img: 'systems/uesrpg-d100/images/Icons/Skill_203.webp', type: 'trait', desc: 'Altmer ignore penalties to Willpower made to resist paralysis.'}
+
         ]
       },
 
@@ -1221,6 +1229,12 @@
           'Immunity (Poison)',
           'Amphibious: Can breathe water and ignores skill cap placed on Combat rolls by their Athletics skill',
           'Inscrutable: -10 penalty on Persuade tests vs. Non-Argonians & others receive -10 penalty on Observe tests to determine an Argonians motives'
+        ],
+        items: [
+          {name: 'Disease Resistance (75%) (Racial)', img: 'systems/uesrpg-d100/images/Icons/diseaseResistance.webp', type: 'trait', dataPath: 'data.diseaseR', value: 75, desc: "This character has a chance to resist disease."},
+          {name: 'Immunity (Poison) (Racial)', img: 'systems/uesrpg-d100/images/Icons/poison.webp', type: 'trait', dataPath: 'data.poisonR', value: 200, desc: "This character does not take damage from Poison effects."},
+          {name: 'Amphibious (Racial)', img: 'systems/uesrpg-d100/images/Icons/amphibious.webp', type: 'trait', desc: 'Can breathe water and ignores skill-cap placed on Combat rolls by their Athletics Skill when fighting in water.'},
+          {name: 'Inscrutable (Racial)', img: 'systems/uesrpg-d100/images/Icons/Assassinskill_31.webp', type: 'trait', desc: 'Argonians receive a -10 penalty to Persuade tests made to interact with non-Argonians. However, Observe tests made to try to distingush their motives are made with -10 penalty.'}
         ]
       },
 
@@ -1233,6 +1247,12 @@
           'Resistance (Poison, 1)',
           'Natural Archers: May add shortbows to any Combat Style (does not count towards weapon max)',
           'Beast Tongue: Can speak with animals'
+        ],
+        items: [
+          {name: 'Disease Resistance (50%) (Racial)', img: 'systems/uesrpg-d100/images/Icons/diseaseResistance.webp', type: 'trait', dataPath: 'data.diseaseR', value: 50, desc: "This character has a chance to resist disease."},
+          {name: 'Resistance (Poison, 1) (Racial)', img: 'systems/uesrpg-d100/images/Icons/poison.webp', type: 'trait', dataPath: 'data.poisonR', value: 1, desc: "This character reduces any incoming Poison damage by 1 and receives +10 bonus to resist non-damaging Poison effects."},
+          {name: 'Natural Archer (Racial)', img: 'systems/uesrpg-d100/images/Icons/Archerskill_04.webp', type: 'trait', desc: "Bosmer add shortbows to any combat style they use. This does not count towards that combat style's maximum trained weapon count."},
+          {name: 'Beast Tongue (Racial)', img: 'systems/uesrpg-d100/images/Icons/beastAbility.webp', type: 'power', desc: "Bosmer can speak to and understand the speech of animals. How exactly this functions is left to the GM's discretion, though it is recommended to call for a Perception test when the Bosmer encounters an unfamiliar creature to determine if they can speak to it."}
         ]
       },
 
@@ -1244,6 +1264,10 @@
           'Resistance (Magic, 2)',
           'Power Well (10)',
           'During Character Creation, Breton characters may add one extra magic skill to begin at Novice rank for free'
+        ],
+        items: [
+          {name: 'Resistance (Magic, 2) (Racial)', img: 'icons/magic/defensive/shield-barrier-blue.webp', type: 'trait', dataPath: 'data.magicR', value: 2, desc: "This character reduces incoming Magic damage by 2 and receives +20 bonus to resist any non-damaging magic effects"},
+          {name: 'Power Well (10) (Racial)', img: 'systems/uesrpg-d100/images/Icons/powerWell.webp', type: 'trait', dataPath: 'data.mpBonus', value: 10, desc: "This character has extra reserves of magicka available to them."}
         ]
       },
 
@@ -1255,6 +1279,10 @@
           'Resistance (Fire, 3)',
           'Ancestor Guardian: See Powers section of Core Rulebook',
           'During Character Creation, Dunmer may begin with the Destruction skill trained to Novice rank for free'
+        ],
+        items: [
+          {name: 'Resistance (Fire, 3) (Racial)', img: 'icons/magic/defensive/shield-barrier-glowing-triangle-red.webp', type: 'trait', dataPath: 'data.fireR', value: 3, desc: "This character reduces any incoming fire damage by 3 and receives +30 bonus to resist non-damaging fire effects"},
+          {name: 'Ancestor Guardian (Racial)', img: 'systems/uesrpg-d100/images/Icons/ancestorGuardian.webp', type: 'power', desc: 'The Dunmer can, once per Long Rest, cast Sanctuary (3) on themselves that lasts for 3 rounds as a Free Action that costs no magicka and requires no test. Additionally, the Dunmer can perform a ritual that costs 10 drakes worth of incense and powders during a Long Rest to consult with an ancestor, asking up to 1d4+1 questions. The ancestor replies with a voice only the Dunmer can hear or sends imagery or signs to be interpreted.'}
         ]
       },
 
@@ -1266,6 +1294,10 @@
           'Star of the West: Increase Stamina Points max by 1',
           'Voice of the Emperor: Can use Personality in place of Willpower for the purpose of tests and overloading spells',
           'During Character Creation, may choose either Commerce, Persuade, or Deceive to begin at Novice rank for free'
+        ],
+        items: [
+          {name: 'Star of the West (Racial)', img: 'icons/environment/settlement/gazebo.webp', type: 'trait', desc: 'Imperials increase their Stamina Point max by 1', dataPath: 'data.spBonus', value: 1},
+          {name: 'Voice of the Emperor (Racial)', img: 'icons/skills/social/diplomacy-peace-alliance.webp', type: 'trait', desc: "Imperaials can replace their spellcasting capability with their natural personality. They can use Personality in place of Willpower for the purpose of tests and overloading spells. This does alter the skills' governed attributes for the purpose of favored attributes when spending XP on skills, but does not alter them when spending XP on talents."}
         ]
       },
 
@@ -1276,6 +1308,10 @@
         traits: [
           'Dark Sight: Can see normally even in areas with total darkness',
           'Natural Weapons: (Claws - 1d4 Slashing)'
+        ],
+        items: [
+          {name: 'Dark Sight (Racial)', img: 'systems/uesrpg-d100/images/Icons/darkSight.webp', type: 'trait', desc: 'A Khajiit can see normally even in areas with total darkness and never takes penalties for acting in areas with dim or no lighting.'},
+          {name: 'Claws', img: 'systems/uesrpg-d100/images/Icons/claw_strike.webp', type: 'weapon', dataPath: 'data.damage', value: '1d4', dataPath2: 'data.qualities', qualities: 'Slashing'}
         ]
       },
 
@@ -1288,6 +1324,12 @@
           'Resistance (Frost, 2)',
           'Resistance (Shock, 1)',
           'War Cry: See Powers section of Core Rulebook'
+        ],
+        items: [
+          {name: 'Tough (Racial)', img: 'systems/uesrpg-d100/images/Icons/unarmedProwess.webp', type: 'trait', dataPath: 'data.wound_threshold', value: 1, desc: "A Nord has their Wound Threshold increased by 1. (If using newer rules, gain +10 bonus to Shock Tests instead)"},
+          {name: 'Resistance (Frost, 2) (Racial)', img: 'icons/magic/water/snowflake-ice-blue.webp', type: 'trait', dataPath: 'data.frostR', value: 2, desc: 'The character reduces all incoming frost damage by 2 and gains +20 bonus to resist non-damaging frost/cold effects.'},
+          {name: 'Resistance (Shock, 1) (Racial)', img: 'icons/magic/lightning/bolt-blue.webp', type: 'trait', dataPath: 'data.shockR', value: 1, desc: 'The character reduces all incoming shock damage by 1 and gains +10 bonus to resist non-damaging shock effects.'},
+          {name: 'War Cry (Racial)', img: 'systems/uesrpg-d100/images/Icons/godOfWar.webp', type: 'power', desc: "Nords are able to call on a very simple form of the Thu'um and harness it to frighten their enemies. As an action, they can issue a mighty war cry that forces all enemies who hear it to make a Panic (+30) test. If a character passes, they are immune to this effect for the remainder of the encounter. Can only be used once per Long Rest."}
         ]
       },
 
@@ -1300,6 +1342,11 @@
           'Tough: Gain +10 to Shock Tests',
           'Resistance (Magic, 1)',
           'During Character Creation, may choose to begin with Profession (Smithing) at Novice rank for free'
+        ], 
+        items: [
+          {name: 'Resilient (3) (Racial)', img: 'systems/uesrpg-d100/images/Icons/Warriorskill_44.webp', type: 'trait', dataPath: 'data.hpBonus', value: 3, desc: "Increase the character's HP maximum by 3"},
+          {name: 'Tough (Racial)', img: 'systems/uesrpg-d100/images/Icons/Warriorskill_44.webp', type: 'trait', dataPath: 'data.wound_threshold', value: 1, desc: "A Nord has their Wound Threshold increased by 1. (If using newer rules, gain +10 bonus to Shock Tests instead)"},
+          {name: 'Resistance (Magic, 1) (Racial)', img: 'icons/magic/defensive/shield-barrier-blue.webp', type: 'trait', datPath: 'data.magicR', value: 1, desc: "This character reduces all incoming Magic damage by 1 and gains +10 bonus to tests made to resist non-damaging magic effects."}
         ]
       },
 
@@ -1312,9 +1359,13 @@
           'Resistance (Poison, 3)',
           'Adrenaline Rush: See Powers section of Core Rulebook',
           'During Character Creation, may choose to begin with a Combat Style skill at Novice rank for free'
+        ],
+        items: [
+          {name: 'Disease Resistance (75%) (Racial)', img: 'systems/uesrpg-d100/images/Icons/diseaseResistance.webp', type: 'trait', dataPath: 'data.diseaseR', value: 75, desc: "Characters with this trait have a chance to resist disease."},
+          {name: 'Resistance (Poison, 3) (Racial)', img: 'systems/uesrpg-d100/images/Icons/poison.webp', type: 'trait', dataPath: 'data.poisonR', value: 3, desc: "This character reduces all incoming Poison damage by 3 and gains +30 bonus to resist non-damaging Poison effects."},
+          {name: "Adrenaline Rush (Racial)", img: 'systems/uesrpg-d100/images/Icons/champion.webp', type: 'power', desc: "Redguards may choose to gain 1 Stamina Point at any time. If the character is fatigued when this power is used then then remove a level of fatigue instead. This Stamina Point persists for only that encounter and may only be used once per Long Rest."}
         ]
       },
-
     }
 
     const raceCards = []
@@ -1400,7 +1451,7 @@
         },
         two: {
           label: "Submit",
-          callback: html => {
+          callback: async (html) => {
               // Check for a selection, or show error instead
               let raceSelection = [...document.querySelectorAll('.raceSelect')].filter(i => i.checked)
               let customRaceLabel = document.querySelector('#customRace').value
@@ -1429,6 +1480,24 @@
                       [baseChaPath]: selectedRace.baseline[value],
                       [totalChaPath]: selectedRace.baseline[value] + this.actor.data.data.characteristics[value].bonus
                     })
+                  }
+
+                  // Loop through and add Racial items to the actor sheet
+                  for (let item of selectedRace.items) {
+                    const itemData = {
+                      name: item.name,
+                      type: item.type,
+                      img: item.img,
+                      'data.description': item.desc,
+                      [item.dataPath]: item.value,
+                      [item.dataPath2]: item.qualities
+                    }
+
+                    // Create the item
+                    let created = await Item.create(itemData, {parent: this.actor})
+                    if (item.type === 'weapon') {
+                      created.sheet.render(true)
+                    }
                   }
 
                 }
@@ -1812,6 +1881,15 @@
   _setWoundIcon() {
     let woundIcon = document.querySelector('.woundIcon')
     this.actor.data.data.wounded ? woundIcon.style.visibility = 'visible' : woundIcon.style.visibility = 'hidden'
+  }
+
+  _setWoundBackground() {
+    if (this.actor.data.data.wounded) {
+      document.querySelector('.paperDollContainer').classList.add('wounded')
+    }
+    else {
+      document.querySelector('.paperDollContainer').classList.remove('wounded')
+    }
   }
 
   _setPaperDoll(event) {
