@@ -216,7 +216,7 @@ button {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  width: 75px;
+  width: 80px;
   height: 150px;
 }
 
@@ -266,8 +266,8 @@ button {
 }
 
 .worldbuilding .itemCard img {
-  height: 75px;
-  width: 75px;
+  height: 80px;
+  width: 80px;
   border: none;
   border-radius: 10px;
 }

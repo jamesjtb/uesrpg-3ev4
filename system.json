@@ -51,6 +51,13 @@
       "system": "uesrpg-d100",
       "path": "./packs/standard-skills.db",
       "entity": "Item"
+    },
+    {
+      "name": "signs",
+      "label": "Birth Signs",
+      "system": "uesrpg-d100",
+      "path": "./packs/signs.db",
+      "entity": "Item"
     }
   ],
   "languages": [],

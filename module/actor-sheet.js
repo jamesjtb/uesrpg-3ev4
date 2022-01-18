@@ -1530,7 +1530,9 @@
         traits: [
           'Power Well (25)',
           'Star-Cursed Apprentice: Gain Power Well (50) instead, and also gain Weakness(Magic, 3)'
-        ]
+        ],
+        items: ['The Apprentice'],
+        starCursed: ['The Star-Cursed Apprentice']
       },
       atronach: {
         name: 'Atronach',
@@ -1543,7 +1545,9 @@
           'Spell Absorption (5)',
           'Stunted Magicka: Cannot naturally regenerate Magicka',
           'Star-Cursed Atronach: As above, but gain Power Well (75) instead and -5 to either Agility OR Endurance'
-        ]
+        ],
+        items: ['The Atronach', 'Spell Absorption (5)', 'Stunted Magicka'],
+        starCursed: ['The Star-Cursed Atronach', 'Spell Absorption (5)', 'Stunted Magicka']
       },
       lady: {
         name: 'Lady',
@@ -1553,7 +1557,9 @@
         traits: [
           '+5 Personality',
           'Star Cursed Lady: As above, but also gain +5 Endurance and -5 Strength'
-        ]
+        ],
+        items: ['The Lady'],
+        starCursed: ['The Star-Cursed Lady']
       },
       lord: {
         name: 'Lord',
@@ -1563,7 +1569,9 @@
         traits: [
           "Healing Rate is doubled",
           "Star-Cursed Lord: As above, but also gain +5 Endurance and Weakness (Fire, 2)"
-        ]
+        ],
+        items: ['The Lord'],
+        starCursed: ['The Star-Cursed Lord']
       },
       lover: {
         name: 'Lover',
@@ -1572,7 +1580,9 @@
         traits: [
           "+5 Agility",
           "Star-Cursed Lover: As above, but also gain +5 Personality and -5 Willpower OR Strength"
-        ]
+        ],
+        items: ['The Lover'],
+        items: ['The Star-Cursed Lover']
       },
       mage: {
         name: 'Mage',
@@ -1583,7 +1593,9 @@
         traits: [
           'Power Well (10)',
           'Star-Cursed Mage: Gain Power Well (25) instead and one of the following (your choice) receives -5 (Perception, Strength, or Personality)'
-        ]
+        ],
+        items: ['The Mage'],
+        starCursed: ['The Star-Cursed Mage']
       },
       ritual: {
         name: 'Ritual',
@@ -1591,15 +1603,15 @@
         description: `The Ritual is one of the Mage’s Charges and its Season is Morning Star. Those born under this sign have 
                       a variety of abilities depending on the aspects of the moons and the Divines.`,
         traits: [
-          "At the start of each day, select a Power (Blessed Touch, Blessed Word, or Mara's Gift) to gain until the start of the next day, where you can choose again.",
-          'Blessed Touch',
-          'Blessed Word',
-          "Mara's Gift",
+          "At the start of each day, select a Power to gain until the start of the next day, where you can choose again.",
+          "Blessed Touch OR Blessed Word OR Mara's Gift",
           'Star-Cursed Ritual: Gain all three powers permanently but receive -5 Luck'
-        ]
+        ],
+        items: ['The Ritual', 'Blessed Touch', 'Blessed Word', "Mara's Gift"],
+        starCursed: ['The Star-Cursed Ritual', 'Blessed Touch', 'Blessed Word', "Mara's Gift"]
       },
       // serpent: {
-      //   name: 'Serpent',
+      //   name: 'The Serpent',
       //   img: `${imgPath}/sign-serpent.webp}`,
       //   description: 'Placeholder Description',
       //   traits: [
@@ -1613,7 +1625,9 @@
         traits: [
           "Moonshadow: See Powers section of Core Rulebook",
           "Star-Cursed Shadow: As Above, but also gain +5 Perception and -5 Personality OR Strength"
-        ]
+        ],
+        items: ['The Shadow', 'Moonshadow'],
+        starCursed: ['The Star-Cursed Shadow', 'Moonshadow']
       },
       steed: {
         name: 'Steed',
@@ -1623,18 +1637,22 @@
         traits: [
           "+2 Speed",
           "Star-Cursed Steed: As above, but also gain +5 Agility and -5 Willpower OR Perception"
-        ]
+        ],
+        items: ['The Steed'],
+        starCursed: ['The Star-Cursed Steed']
       },
       thief: {
         name: 'Thief',
         img: `${imgPath}/sign-thief.webp`,
         description: `The Thief is the last Guardian Constellation, and her Season is the darkest month of Evening Star. Her Charges are the Lover, 
                       the Shadow, and the Tower. Those born under the sign of the Thief are not typically thieves, though they take risks more often 
-                      and only rarely come to harm. They will run out of luck eventually, however, and rarely live as long as those born under other signs.`,
+                      and only rarely come to harm.`,
         traits: [
           "Roll an extra Lucky Number that cannot be lost, regardless of Luck Score",
           "Star-Cursed Thief: As above, but replace their rolled Luck Score with 50, gain the Akiviri Danger Sense Power, and the Running Out of Luck trait."
-        ]
+        ],
+        items: ['The Thief'],
+        starCursed: ['The Star-Cursed Thief', 'Akiviri Danger Sense', 'Running Out of Luck']
       },
       tower: {
         name: 'Tower',
@@ -1645,7 +1663,9 @@
           "Treasure Seeker: See Powers section in the Core Rulebook",
           "+5 Perception",
           "Star-Cursed Tower: As above, but also gain +5 Agility and -5 Willpower OR Strength"
-        ]
+        ],
+        items: ['The Tower', 'Treasure Seeker'],
+        starCursed: ['The Star-Cursed Tower', 'Treasure Seeker']
       },
       warrior: {
         name: 'Warrior',
@@ -1657,7 +1677,9 @@
         traits: [
           'Increase Stamina Point Maximum by +1',
           'Star-Cursed Warrior: As above but also +5 Strength and -5 Willpower'
-        ]
+        ],
+        items: ['The Warrior'],
+        starCursed: ['The Star-Cursed Warrior']
       },
     }
 
@@ -1674,11 +1696,25 @@
 
       const card = `<div style="display: flex; flex-direction: column; justify-content: flex-start; align-items: center; width: 49%; height: 510px; border: 1px solid; padding: 5px;">
                         <div>
-                            <img src="${signObject.img}" alt="${sign.name}" width="200" height="200">
-                            <input type="checkbox" id="${signObject.name}" class="signSelect">
+                            <img src="${signObject.img}" alt="${sign.name}" width="175" height="175">
                         </div>
                         <h2 style="text-align: center;">${signObject.name}</h2>
-                        <div>
+                        <div style="display: flex; flex-direction: row; justify-content: space-between; align-items: center; border-bottom: 1px solid; border-top: 1px solid; width: 100%;">
+
+                              <div style="display: flex; flex-direction: row; align-items: center;">
+                                <input type="checkbox" id="${signObject.name}" class="signSelect">
+                                <div>${signObject.name}</div>
+                              </div>
+
+                              <div>OR</div>
+
+                              <div style="display: flex; flex-direction: row; align-items: center;">
+                                  <div>Star-Cursed</div>
+                                  <input type="checkbox" id="${signObject.name}" class="signSelect cursedSelect">
+                              </div>
+
+                        </div>
+                        <div style="padding: 10px 0 0 0;">
                             ${signObject.description}
                         </div>
                         <div>
@@ -1717,9 +1753,10 @@
         },
         two: {
           label: "Submit",
-          callback: html => {
+          callback: async (html) => {
               // Check for a selection, or show error instead
               let signSelection = [...document.querySelectorAll('.signSelect')].filter(i => i.checked)
+              let starCursedSelection = [...document.querySelectorAll('.cursedSelect')].filter(i => i.checked)
               let customSignLabel = document.querySelector('#customSign').value
 
               if (signSelection.length < 1 && customSignLabel === '') {
@@ -1731,6 +1768,24 @@
                 if (customSignLabel === '') {
                     const signObject = signs[signSelection[0].id.toLowerCase()]
                     this.actor.update({'data.birthsign': signObject.name})
+
+                    // Loop through selected Sign Object  and add items from compendium
+                    const signCompendium = await game.packs.get('uesrpg-d100.signs').getDocuments()
+
+                    if (starCursedSelection.length > 0) {
+                      for (let item of signObject.starCursed) {
+                        let docItem = signCompendium.find(i => i.name === item)
+                        Item.create(docItem.toObject(), {parent: this.actor})
+                      }
+
+                    }
+                    else if (signSelection.length > 0) {
+                      for (let item of signObject.items) {
+                        let docItem = signCompendium.find(i => i.name === item)
+                        Item.create(docItem.toObject(), {parent: this.actor})
+                      }
+                    }
+
                 }
 
                 else {
