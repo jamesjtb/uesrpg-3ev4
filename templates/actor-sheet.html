@@ -510,7 +510,7 @@
                                     <tr class="item active" data-item-id="{{item._id}}" data-spell-school="{{item.data.school}}">
                                         <td>
                                             <div class="tableItemNameCell">
-                                                <i class="fas fa-dice-d20 skill-roll"></i>
+                                                <i class="fas fa-dice-d20 magic-roll"></i>
                                                 <img class="item-img" src="{{item.img}}" title="Send to Chat"/>
                                                 <div class="item-name">{{item.name}}</div>
                                             </div>
@@ -525,156 +525,66 @@
                         </table>
                     </div>
                 </div>
-
-                <!-- <div class="spellList">
-                    <div>
-                        <ol>
-                            <h2 class="headerWithButton">
-                                <button type="button" class="item-create" id="spell">+</button>
-                                <label>Spells</label>
-                            </h2>
-                            {{#each actor.data.spell as |item id|}}
-                                <li class="item flexrow" data-item-id="{{item._id}}">
-                                    <div class="itemInfo">
-                                        <i class="fas fa-dice-d20 skill-roll"></i>
-                                        <img class="item-img" src="{{item.img}}" title="Send to Chat"/>
-                                        <div class="item-name">{{item.name}}</div>
-                                    </div>
-                                    <div class="item-controls">
-                                        <div class="item-value">{{item.data.damage}}</div>
-                                        <a class="item-control item-delete" title="Delete Item"><i class="fas fa-trash"></i></a>
-                                    </div>
-                                </li>
-                            {{/each}}
-                        </ol>
-                    </div>
-                </div> -->
-
-
-
-
-                <!-- <div class="spellList">
-                    <ol class="cardList">
-                        {{#each actor.data.spell as |spell school|}}
-                        <div class="listSegment">
-                            <h2 class="headerWithButton collapsible" data-collapse-group="{{school}}">
-                                <div class="listButtons">
-                                    <button type="button" class="item-create" id="spell" data-school="{{school}}">+</button>
-                                    <button type="button" class="collapseList">
-                                        <i class="fas fa-chevron-down"></i>
-                                    </button>
-                                </div>
-                                <div data-school="{{school}}" data-countLabel="spellCount"></div>
-                            </h2>
-                            <div class="cardListFlexContainer">
-                                {{#each spell as |item id|}}
-                                <li class="item flexrow collapsed card" data-list-group="{{school}}" data-item-id="{{item._id}}">
-                                    <div class="itemCard">
-                                        <div class="cardImageContainer">
-                                            <div class="item-controls">
-                                                <a class="item-control item-delete" title="Delete Item"><i class="fas fa-trash"></i></a>
-                                            </div>
-                                            <img class="item-img" src="{{item.img}}" title="{{item.name}}"/>
-                                        </div>
-                                        <div class="cardInfo">
-                                            <div class="item-name">{{item.name}}</div>
-                                            <div>
-                                                <i class="fas fa-dice-d20 magic-roll"></i>
-                                                {{item.data.damage}}
-                                            </div>
-                                        </div>
-                                    </div>
-                                </li>
-                                {{/each}}
-                            </div>
-                        </div>
-                        {{/each}}
-                    </ol>
-                </div> -->
-
-                <!-- This is the "Regular" spell list for future reference -->
-                <!-- <div class="spellList">
-                    <h2>Spell List</h2>
-                    <ol class="skillList twoColumnList">
-                        {{#each actor.data.spell as |spell school|}}
-                            <div class="listSegment">
-                                <h2 class="headerWithButton collapsible" data-collapse-group="{{school}}">
-                                    <div class="listButtons">
-                                        <button type="button" class="item-create" id="spell" data-school="{{school}}">+</button>
-                                        <button type="button" class="collapseList">
-                                            <i class="fas fa-chevron-down"></i>
-                                        </button>
-                                    </div>
-                                    <div data-school="{{school}}" data-countLabel="spellCount"></div>
-                                </h2>
-                                {{#each spell as |item id|}}
-                                    <li class="item flexrow collapsed" data-list-group="{{school}}" data-item-id="{{item._id}}">
-                                        <div class="itemInfo">
-                                            <i class="fas fa-dice-d20 magic-roll"></i>
-                                            <img class="item-img" src="{{item.img}}" title="{{item.name}}"/>
-                                            <div class="item-name">{{item.name}}</div>
-                                        </div>
-                                        <div class="item-controls">
-                                            <a class="item-control item-delete" title="Delete Item"><i class="fas fa-trash"></i></a>
-                                        </div>
-                                    </li>
-                                {{/each}}
-                            </div>
-                        {{/each}}
-                    </ol>
-                </div> -->
-
-
             </div>
         </div>
 
         {{!-- Equipment Tab --}}
         <div class="tab equipment" data-group="primary" data-tab="equipment">
             <div class="equipmentTabContainer">
-                <div class="equipmentTabHeader">
-                    <div class="wealthContainer">
-                        <div class="wealthInfo">
-                            <h2>Wealth</h2>
-                            <input type="number" name="data.wealth" value="{{data.wealth}}">
-                        </div>
-                        <button type="button">
-                            <img class="wealthCalc" src="icons/commodities/currency/coins-plain-stack-gold-yellow.webp" alt="wealth" title="Quick Add/Subtract">
-                        </button>
-                    </div>
-                    <div class="encContainer">
-                        <button>
-                            <img class="carryBonus" src="icons/tools/hand/scale-balances-merchant-brown.webp" alt="scaleENC" title="Set Carry Bonus">
-                        </button>
-                        <div class="encInfo">
-                            <h2>Encumbrance</h2>
-                            <div class="encLabel">{{data.carry_rating.current}} / {{data.carry_rating.max}} ENC</div>
-                        </div>
-                    </div>
-                </div>
-
                 <div class="itemListContainer">
-                    <h2 class="headerWithButton">
-                        <button type="button" class="item-create" id="item">+</button>
-                        <label>Equipment</label>
-                    </h2>
-                    <ol class="skillList">
-                        {{#each actor.data.gear as |item id|}}
-                            <li class="item flexrow" data-item-id="{{item._id}}">
-                                <div class="itemInfo">
-                                    <img class="item-img" src="{{item.img}}" title="Send to Chat"/>
-                                    <div class="item-name">{{item.name}}</div>
+                    <div class="tableListHeader">
+                        <h2>
+                            <div class="leftInfo">
+                                <button type="button" class="item-create" id="item">+</button>
+                                <label>Equipment</label>
+                            </div>
+                            <div class="rightInfo">
+                                <div class="wealthContainer">
+                                    <button type="button">
+                                        <img class="wealthCalc" src="icons/commodities/currency/coins-plain-stack-gold-yellow.webp" alt="wealth" title="Quick Add/Subtract">
+                                    </button>
+                                    <input type="number" name="data.wealth" value="{{data.wealth}}">
                                 </div>
-                                <div class="item-controls">
-                                    <div class="ammo-controls">
-                                        <div><button title="-1" class="ammo-minus" type="button">-</button></div>
-                                        <div class="ammoQty">{{item.data.quantity}}</div>
-                                        <div><button title="+1" class="ammo-plus" type="button">+</button></div>
-                                    </div>
-                                    <a class="item-control item-delete" title="Delete Item"><i class="fas fa-trash"></i></a>
+                                <div class="encContainer">
+                                    <button>
+                                        <img class="carryBonus" src="icons/tools/hand/scale-balances-merchant-brown.webp" alt="scaleENC" title="Set Carry Bonus">
+                                    </button>
+                                    <div class="encLabel">{{data.carry_rating.current}} / {{data.carry_rating.max}} ENC</div>
                                 </div>
-                            </li>
-                        {{/each}}
-                    </ol>
+                            </div>
+                        </h2>
+                    </div>
+                    <div class="equipmentList">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Name</th>
+                                    <th>ENC</th>
+                                    <th>Price</th>
+                                    <th>QTY</th>
+                                    <th><i class="fas fa-trash"></i></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {{#each actor.data.gear as |item id|}}
+                                    <tr class="item active" data-item-id="{{item._id}}" data-spell-school="{{item.data.school}}">
+                                        <td>
+                                            <div class="tableItemNameCell">
+                                                <img class="item-img" src="{{item.img}}" title="Send to Chat"/>
+                                                <div class="item-name">{{item.name}}</div>
+                                            </div>
+                                        </td>
+                                        <td>{{item.data.enc}}</td>
+                                        <td>{{item.data.price}}</td>
+                                        <td>{{item.data.quantity}}</td>
+                                        <td>
+                                            <a class="item-control item-delete" title="Delete Item"><i class="fas fa-trash"></i></a>
+                                        </td>
+                                    </tr>
+                                {{/each}}
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
             </div>
         </div>
