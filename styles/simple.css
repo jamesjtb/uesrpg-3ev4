@@ -67,15 +67,6 @@ button {
   line-height: 20px;
 }
 
-.worldbuilding .collapseList {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  line-height: 25px;
-  padding: 0;
-  margin: 0;
-}
-
 .dialog-buttons {
   position: sticky;
   bottom: 0;
@@ -84,6 +75,10 @@ button {
 
 .dialogForm {
   padding: 10px 0;
+}
+
+.chat-message {
+  background: url("../images/parchment4.jpg") repeat;
 }
 
 .worldbuilding h2 {
@@ -159,7 +154,8 @@ button {
   background-color: rgba(224, 217, 217, 0.473);
 }
 
-.worldbuilding ol .item:hover {
+.worldbuilding ol .item:hover,
+.worldbuilding table .item:hover {
   cursor: pointer;
   font-weight: bold;
   background: rgba(85, 85, 85, 0.61);
@@ -212,13 +208,6 @@ button {
   padding: 0 10px;
 }
 
-.worldbuilding .collapsed {
-  opacity: 0;
-  display: none;
-  overflow: hidden;
-  max-height: 0;
-}
-
 .worldbuilding .attributeList {
   height: 235px;
   width: 100%;
@@ -226,7 +215,23 @@ button {
 }
 
 .worldbuilding table {
-  text-align: center;
+  text-align: left;
+}
+
+.worldbuilding .tableListHeader h2 {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  background: rgba(161, 149, 149, 0.486);
+}
+
+.worldbuilding .tableListHeader .leftInfo {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 10px;
 }
 
 .worldbuilding .magicChargeInputs button {
@@ -827,8 +832,28 @@ button {
   padding: 10px;
 }
 
-.worldbuilding .magicTabContainer .spellList {
+.worldbuilding .magicTabContainer .spellListContainer {
   width: 65%;
+}
+
+.worldbuilding .spellList .tableItemNameCell {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 10px;
+}
+
+.worldbuilding .spellList img {
+  height: 24px;
+  width: 24px;
+}
+
+.worldbuilding .spellList tbody tr {
+  display: none;
+}
+
+.worldbuilding .spellList tbody .active {
+  display: table-row;
 }
 
 /*---------------------------- 

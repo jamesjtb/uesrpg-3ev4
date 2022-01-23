@@ -483,7 +483,77 @@
                         </ol>
                     </div>
                 </div>
-                <div class="spellList">
+
+                <div class="spellListContainer">
+                    <div class="tableListHeader">
+                        <h2>
+                            <div class="leftInfo">
+                                <button type="button" class="item-create" id="spell">+</button>
+                                <label>Spells</label>
+                            </div>
+                            <select id="spellFilter">
+                                <option>All</option>
+                            </select>
+                        </h2>
+                    </div>
+                    <div class="spellList">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Name</th>
+                                    <th>School</th>
+                                    <th><i class="fas fa-trash"></i></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {{#each actor.data.spell as |item id|}}
+                                    <tr class="item active" data-item-id="{{item._id}}" data-spell-school="{{item.data.school}}">
+                                        <td>
+                                            <div class="tableItemNameCell">
+                                                <i class="fas fa-dice-d20 skill-roll"></i>
+                                                <img class="item-img" src="{{item.img}}" title="Send to Chat"/>
+                                                <div class="item-name">{{item.name}}</div>
+                                            </div>
+                                        </td>
+                                        <td>{{item.data.school}}</td>
+                                        <td>
+                                            <a class="item-control item-delete" title="Delete Item"><i class="fas fa-trash"></i></a>
+                                        </td>
+                                    </tr>
+                                {{/each}}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- <div class="spellList">
+                    <div>
+                        <ol>
+                            <h2 class="headerWithButton">
+                                <button type="button" class="item-create" id="spell">+</button>
+                                <label>Spells</label>
+                            </h2>
+                            {{#each actor.data.spell as |item id|}}
+                                <li class="item flexrow" data-item-id="{{item._id}}">
+                                    <div class="itemInfo">
+                                        <i class="fas fa-dice-d20 skill-roll"></i>
+                                        <img class="item-img" src="{{item.img}}" title="Send to Chat"/>
+                                        <div class="item-name">{{item.name}}</div>
+                                    </div>
+                                    <div class="item-controls">
+                                        <div class="item-value">{{item.data.damage}}</div>
+                                        <a class="item-control item-delete" title="Delete Item"><i class="fas fa-trash"></i></a>
+                                    </div>
+                                </li>
+                            {{/each}}
+                        </ol>
+                    </div>
+                </div> -->
+
+
+
+
+                <!-- <div class="spellList">
                     <ol class="cardList">
                         {{#each actor.data.spell as |spell school|}}
                         <div class="listSegment">
@@ -520,7 +590,7 @@
                         </div>
                         {{/each}}
                     </ol>
-                </div>
+                </div> -->
 
                 <!-- This is the "Regular" spell list for future reference -->
                 <!-- <div class="spellList">

@@ -54,15 +54,7 @@
     const trait = [];
     const talent = [];
     const combatStyle = [];
-    const spell = {
-      alteration: [],
-      conjuration: [],
-      destruction: [],
-      illusion: [],
-      mysticism: [],
-      necromancy: [],
-      restoration: []
-    };
+    const spell = [];
     const skill = [];
     const magicSkill = [];
     const ammunition = [];
@@ -108,9 +100,7 @@
       }
       //Append to spell
       else if (i.type === 'spell') {
-        if (i.data.school !== undefined) {
-          spell[i.data.school].push(i);
-        }
+        spell.push(i)
       }
       //Append to skill
       else if (i.type === 'skill') {
@@ -145,16 +135,13 @@
         })
       }
       else if (category == spell) {
-        for (let school in category) {
-          let spellArray = category[school]
-          if (spellArray.length > 1) {
-            spellArray.sort((a,b) => {
-              let nameA = a.name.toLowerCase()
-              let nameB = b.name.toLowerCase()
-              if (nameA > nameB) {return 1}
-              else {return -1}
-            })
-          }
+        if (category.length > 1) {
+          category.sort((a, b) => {
+            let nameA = a.data.school
+            let nameB = b.data.school
+            if (nameA > nameB) {return 1}
+            else {return -1}
+          })
         }
       }
     }
@@ -208,18 +195,17 @@
     html.find(".carryBonus").click(await this._onCarryBonus.bind(this));
     html.find(".incrementResource").click(this._onIncrementResource.bind(this))
     html.find(".resourceLabel button").click(this._onResetResource.bind(this))
+    html.find("#spellFilter").click(this._filterSpells.bind(this))
 
     //Item Create Buttons
     html.find(".item-create").click(await this._onItemCreate.bind(this));
 
     // Checks for UI Elements on Sheets and Updates
     html.find(".swapContainer button").click(this._setPaperDoll.bind(this))
-    html.find('.collapseList').click(this._collapseList.bind(this))
+    this._createSpellFilterOptions()
     this._setResourceBars()
     this._setWoundIcon()
     this._setWoundBackground()
-    this._spellCount()
-    this._setCollapseValues()
 
     // Set saved scroll bar position if not default
     if (localStorage.getItem('scrollPosition') !== 0) {
@@ -234,13 +220,6 @@
     if (!this.options.editable) return;
 
     // Update Inventory Item
-    html.find('.cardImageContainer .item-img').click( async (ev) => {
-      const li = ev.currentTarget.closest(".item");
-      const item = this.actor.items.get(li.dataset.itemId);
-      item.sheet.render(true);
-      await item.update({"data.value" : item.data.data.value})
-    })
-
     html.find('.item-name').click( async (ev) => {
       const li = ev.currentTarget.closest(".item");
       const item = this.actor.items.get(li.dataset.itemId);
@@ -1940,7 +1919,6 @@
     let woundIcon = document.querySelector('.woundIcon')
     this.actor.data.data.wounded ? woundIcon.style.visibility = 'visible' : woundIcon.style.visibility = 'hidden'
   }
-
   _setWoundBackground() {
     if (this.actor.data.data.wounded) {
       document.querySelector('.paperDollContainer').classList.add('wounded')
@@ -1970,43 +1948,32 @@
     document.querySelector('.attributeList').scrollTop = sessionStorage.getItem('scrollPosition.attributeList')
   }
 
-  _spellCount() {
-    for (let element of [...document.querySelectorAll('[data-countLabel]')]) {
-      const spellList = this.actor.items.filter(item => item.type === 'spell' && item.data.data.school === element.dataset.school)
-      element.textContent = `${element.dataset.school.charAt(0).toUpperCase() + element.dataset.school.slice(1)} Spells (${spellList.length})`
-    }
-  }
-
-  _collapseList(event) {
-    event.preventDefault()
-    const collapsibleList = event.currentTarget.closest('.collapsible')
-    const listMaster = collapsibleList.closest('ol')
-
-    for (let listItem of [...listMaster.querySelectorAll('[data-list-group]')]) {
-
-      // Toggle collapsed status for specific school group
-      if (listItem.dataset.listGroup === collapsibleList.dataset.collapseGroup) {
-        listItem.classList.toggle('collapsed')
-      }
-
-      // Reapply the status of collapsed lists to session storage
-      sessionStorage.setItem(`collapsibleItems.${listItem.dataset.listGroup}`, [...listItem.classList].includes('collapsed'))
-
-    }
-  }
-
-  _setCollapseValues() {
-    const listMaster = [...document.querySelectorAll('[data-collapse-group]')][0].closest('ol')
-
-    for (let listItem of [...listMaster.querySelectorAll('[data-list-group')]) {
-      if (sessionStorage.getItem(`collapsibleItems.${listItem.dataset.listGroup}`) === 'true') {
-        listItem.classList.add('collapsed')
-      }
+  _createSpellFilterOptions() {
+    for (let spell of this.actor.items.filter(item => item.type === 'spell')) {
+      if ([...document.querySelectorAll('#spellFilter option')].some(i => i.innerHTML === spell.data.data.school)) {continue}
       else {
-        listItem.classList.remove('collapsed')
+        let option = document.createElement('option')
+        option.innerHTML = spell.data.data.school
+        document.querySelector('#spellFilter').append(option)
       }
     }
+  }
 
+  _filterSpells(event) {
+    event.preventDefault()
+    let filterBy = event.currentTarget.value
+    
+    for (let spellItem of [...document.querySelectorAll(".spellList tbody .item")]) {
+      switch (filterBy) {
+        case 'All':
+          spellItem.classList.add('active')
+          break
+          
+        case `${filterBy}`:
+          filterBy == spellItem.dataset.spellSchool ? spellItem.classList.add('active') : spellItem.classList.remove('active')
+          break
+      }
+    }
   }
 
 }
