@@ -12,18 +12,23 @@
   Global Styles
 ------------------------------*/
 
-.worldbuilding {
+.window-header {
+  background: url("../images/black.png") repeat;
   font-family: "cyrodiil";
+}
+
+.window-app .window-content,
+.worldbuilding .window-content {
+  background: url("../images/parchment4.jpg") repeat;
+  border-left: rgb(0, 0, 0) 5px solid;
+  border-right: rgb(0, 0, 0) 5px solid;
+  border-bottom: rgb(0, 0, 0) 5px solid;
+  box-shadow: 5px 5px 30px 5px;
+  padding: 0 5px 5px 5px;
 }
 
 .window-title {
   font-size: large;
-}
-
-.worldbuilding .window-content {
-  background: url("../images/parchment6.jpg") repeat;
-  padding: 0 5px 5px 5px;
-  border-image: url("../images/black.png");
 }
 
 .worldbuilding h1, 
@@ -32,6 +37,10 @@ button {
   font-family: "cyrodiil";
   text-align: center;
   width: 100%;
+}
+
+.worldbuilding nav {
+  font-family: "cyrodiil";
 }
 
 .worldbuilding button:hover {
@@ -70,18 +79,29 @@ button {
 .dialog-buttons {
   position: sticky;
   bottom: 0;
-  background-color: rgb(223, 215, 215);
+  background: url("../images/parchment4.jpg") repeat;
+}
+
+.dialogForm {
+  padding: 10px 0;
 }
 
 .worldbuilding h2 {
-  background: rgba(99, 85, 85, 0.486);
+  background: rgba(161, 149, 149, 0.486);
   margin: 0 0 5px 0;
 }
 
 
 /*---------------------------- 
-  Lists & Controls
+  Lists & Controls & Tables
 ------------------------------*/
+.worldbuilding .sheet-tabs {
+  font-family: "cyrodiil";
+}
+
+.worldbuilding .sheet-tabs .item:hover {
+  text-decoration: underline;
+}
 
 .worldbuilding .skillList {
   margin: 0;
@@ -205,6 +225,15 @@ button {
   overflow: scroll;
 }
 
+.worldbuilding table {
+  text-align: center;
+}
+
+.worldbuilding .magicChargeInputs button {
+  height: 30px;
+  width: 30px;
+}
+
 /*---------------------------- 
   Lists & Controls - Card Lists
 ------------------------------*/
@@ -286,6 +315,7 @@ button {
   min-height: 200px;
   max-height: 500px;
   width: 100%;
+  padding: 0 5px;
 }
 
 
@@ -297,7 +327,7 @@ button {
   position: sticky;
   top: 0;
   z-index: 2;
-  background: url("../images/parchment6.jpg") repeat;
+  background: url("../images/parchment4.jpg") repeat;
   padding: 5px 0;
 
 }
@@ -313,8 +343,8 @@ button {
 }
 
 .worldbuilding .profile-img {
-  height: 175px;
-  width: 175px;
+  height: 175px !important;
+  width: 175px !important;
   border: none;
 }
 
@@ -870,5 +900,26 @@ button {
 .worldbuilding .wealthCalc:hover,
 .worldbuilding .carryBonus {
   cursor: pointer;
+}
+
+/*---------------------------- 
+  Journal Tab
+------------------------------*/
+
+.worldbuilding .journalTabContainer {
+  display: flex;
+  flex-direction: row;
+  gap: 5px;
+}
+
+.worldbuilding .journalContainer {
+  width: 65%;
+  height: 100%;
+  border-right: solid 1px;
+}
+
+.worldbuilding .factionContainer {
+  width: 35%;
+  height: 100%;
 }
 

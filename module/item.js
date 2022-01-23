@@ -80,7 +80,7 @@ export class SimpleItem extends Item {
 
     let chaTotal = 0;
     if (data.baseCha !== undefined && data.baseCha !== "") {
-      chaTotal = Number(actorData.data.characteristics[data.baseCha].total + data.bonus);
+      chaTotal = Number(actorData.data.characteristics[data.baseCha].total + data.bonus + data.miscValue);
     }
 
     if (this.actor.data.data.wounded) {

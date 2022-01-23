@@ -140,9 +140,9 @@ export class SimpleActor extends Actor {
       data.resistance.natToughness = 5;
       data.wound_threshold.value = data.wound_threshold.value + 5;
       data.action_points.max = data.action_points.max - 1;
-      data.skills.survival.tn = data.skills.survival.tn + 30;
-      data.skills.navigate.tn = data.skills.navigate.tn + 30;
-      data.skills.observe.tn = data.skills.observe.tn + 30;
+      actorData.items.find(i => i.name === 'Survival').data.data.miscValue = 30;
+      actorData.items.find(i => i.name === 'Navigate').data.data.miscValue = 30;
+      actorData.items.find(i => i.name === 'Observe').data.data.miscValue = 30;
     } else if (this._wereBatForm(actorData) === true) {
         data.resistance.silverR = data.resistance.silverR - 5;
         data.resistance.diseaseR = data.resistance.diseaseR + 200;
@@ -154,22 +154,22 @@ export class SimpleActor extends Actor {
         data.resistance.natToughness = 5;
         data.wound_threshold.value = data.wound_threshold.value + 3;
         data.action_points.max = data.action_points.max - 1;
-        data.skills.survival.tn = data.skills.survival.tn + 30;
-        data.skills.navigate.tn = data.skills.navigate.tn + 30;
-        data.skills.observe.tn = data.skills.observe.tn + 30;
+        actorData.items.find(i => i.name === 'Survival').data.data.miscValue = 30;
+      actorData.items.find(i => i.name === 'Navigate').data.data.miscValue = 30;
+      actorData.items.find(i => i.name === 'Observe').data.data.miscValue = 30;
     } else if (this._wereBoarForm(actorData) === true) {
         data.resistance.silverR = data.resistance.silverR - 5;
         data.resistance.diseaseR = data.resistance.diseaseR + 200;
         data.hp.max = data.hp.max + 5;
         data.speed.base = data.speed.base + 9;
-      data.speed.value = this._speedCalc(actorData);
+        data.speed.value = this._speedCalc(actorData);
         data.speed.swimSpeed = (data.speed.value/2).toFixed(0);
         data.resistance.natToughness = 7;
         data.wound_threshold.value = data.wound_threshold.value + 5;
         data.action_points.max = data.action_points.max - 1;
-        data.skills.survival.tn = data.skills.survival.tn + 30;
-        data.skills.navigate.tn = data.skills.navigate.tn + 30;
-        data.skills.observe.tn = data.skills.observe.tn + 30;
+        actorData.items.find(i => i.name === 'Survival').data.data.miscValue = 30;
+        actorData.items.find(i => i.name === 'Navigate').data.data.miscValue = 30;
+        actorData.items.find(i => i.name === 'Observe').data.data.miscValue = 30;
     } else if (this._wereBearForm(actorData) === true) {
         data.resistance.silverR = data.resistance.silverR - 5;
         data.resistance.diseaseR = data.resistance.diseaseR + 200;
@@ -181,9 +181,9 @@ export class SimpleActor extends Actor {
         data.resistance.natToughness = 5;
         data.wound_threshold.value = data.wound_threshold.value + 5;
         data.action_points.max = data.action_points.max - 1;
-        data.skills.survival.tn = data.skills.survival.tn + 30;
-        data.skills.navigate.tn = data.skills.navigate.tn + 30;
-        data.skills.observe.tn = data.skills.observe.tn + 30;
+        actorData.items.find(i => i.name === 'Survival').data.data.miscValue = 30;
+        actorData.items.find(i => i.name === 'Navigate').data.data.miscValue = 30;
+        actorData.items.find(i => i.name === 'Observe').data.data.miscValue = 30;
     } else if (this._wereCrocodileForm(actorData) === true) {
         data.resistance.silverR = data.resistance.silverR - 5;
         data.resistance.diseaseR = data.resistance.diseaseR + 200;
@@ -194,9 +194,9 @@ export class SimpleActor extends Actor {
         data.resistance.natToughness = 5;
         data.wound_threshold.value = data.wound_threshold.value + 5;
         data.action_points.max = data.action_points.max - 1;
-        data.skills.survival.tn = data.skills.survival.tn + 30;
-        data.skills.navigate.tn = data.skills.navigate.tn + 30;
-        data.skills.observe.tn = data.skills.observe.tn + 30;
+        actorData.items.find(i => i.name === 'Survival').data.data.miscValue = 30;
+        actorData.items.find(i => i.name === 'Navigate').data.data.miscValue = 30;
+        actorData.items.find(i => i.name === 'Observe').data.data.miscValue = 30;
     } else if (this._wereVultureForm(actorData) === true) {
         data.resistance.silverR = data.resistance.silverR - 5;
         data.resistance.diseaseR = data.resistance.diseaseR + 200;
@@ -208,9 +208,9 @@ export class SimpleActor extends Actor {
         data.resistance.natToughness = 5;
         data.wound_threshold.value = data.wound_threshold.value + 3;
         data.action_points.max = data.action_points.max - 1;
-        data.skills.survival.tn = data.skills.survival.tn + 30;
-        data.skills.navigate.tn = data.skills.navigate.tn + 30;
-        data.skills.observe.tn = data.skills.observe.tn + 30;
+        actorData.items.find(i => i.name === 'Survival').data.data.miscValue = 30;
+        actorData.items.find(i => i.name === 'Navigate').data.data.miscValue = 30;
+        actorData.items.find(i => i.name === 'Observe').data.data.miscValue = 30;
     } else if (this._vampireLordForm(actorData) === true) {
         data.resistance.fireR = data.resistance.fireR - 1;
         data.resistance.sunlightR = data.resistance.sunlightR - 1;

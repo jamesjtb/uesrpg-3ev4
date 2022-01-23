@@ -609,102 +609,36 @@
             </div>
         </div>
 
-    </section>
-
-    <!-- {{!-- Sheet Header --}}
-                <table class="itemHeader">
-                    <tr>
-                        <td class="talentsLabel">Special Abilities</td>
-                    </tr>
-                </table>
-                {{editor content=data.talents target="data.talents" button=true owner=owner editable=this.options.editable}}
-            </div>
-        </div>
-
         {{!-- Journal Tab --}}
         <div class="tab journal" data-group="primary" data-tab="journal">
-            <div class="journalEditor">
-                <div>
-                    <h4 class="list-header-skills">
-                        <label>Journal</label>
-                    </h4>
+            <div class="journalTabContainer">
+                <div class="journalContainer">
+                    <h2>Journal</h2>
+                    <div>
+                        {{editor content=data.notes target="data.notes" button=true owner=owner editable=this.options.editable}}
+                    </div>
                 </div>
-                {{editor content=data.notes target="data.notes" button=true owner=owner editable=this.options.editable}}
-            </div>
-            <div>
-                <ol class="faction-list">
-                    <h4 class="list-header-skills">
-                        <button type="button" class="power-create" id="faction">+</button>
+                <div class="factionContainer">
+                    <h2 class="headerWithButton">
+                        <button type="button" class="item-create" id="faction">+</button>
                         <label>Factions</label>
-                    </h4>
-                    {{#each actor.data.faction as |item id|}}
-                        <li class="item flexrow" data-item-id="{{item._id}}">
-                            <img class="item-img" src="{{item.img}}" title="Send to Chat" width="24" height="24"/>
-                            <h4 class="item-name">{{item.name}}</h4>
-                            <div class="item-controls">
-                                <a class="item-control item-delete" title="Delete Item"><i class="fas fa-trash"></i></a>
-                            </div>
-                        </li>
-                    {{/each}}
-                </ol>
+                    </h2>
+                    <ol class="skillList">
+                        {{#each actor.data.faction as |item id|}}
+                            <li class="item flexrow" data-item-id="{{item._id}}">
+                                <div class="itemInfo">
+                                    <img class="item-img" src="{{item.img}}" title="Send to Chat"/>
+                                    <div class="item-name">{{item.name}}</div>
+                                </div>
+                                <div class="item-controls">
+                                    <a class="item-control item-delete" title="Delete Item"><i class="fas fa-trash"></i></a>
+                                </div>
+                            </li>
+                        {{/each}}
+                    </ol>
+                </div>
             </div>
         </div>
-
-        {{!-- Owned Items Tab --}}
-        <div class="tab items" data-group="primary" data-tab="items">
-            <div class="itemTabInfo">
-                <div>
-                    <span class="wealthCalc" title="Add/Subtract from Wealth">
-                        <label class="itemTabInfoLabel"><a class="fas fa-coins"></a> Wealth</label>
-                    </span>
-                    <input type="number" name="data.wealth" value="{{data.wealth}}">
-                </div>
-                <div>
-                    <span class="supplyRoll" title="Roll Supply Dice">
-                        <label class="itemTabInfoLabel"><a class="fas fa-campground"></a> Supply</label>
-                    </span>
-                    <select name="data.supply" >
-                        {{#select actor.data.supply}}
-                        {{#each actor.data.supply_cat as |supply_cat key|}}
-                        <option value="{{key}}">{{supply_cat}}</option>
-                        {{/each}} {{/select}}
-                    </select>
-                </div>
-                <div>
-                    <span class="carryBonus" title="Edit Carry Bonus">
-                        <label class="itemTabInfoLabel"><a class="fas fa-weight-hanging"></a> Carry Rating</label>
-                    </span>
-                    <label class="itemTabInfoValue">{{data.carry_rating.max}} ENC</label>
-                </div>
-                <div>
-                    <label class="itemTabInfoLabel"><a class="fas fa-weight-hanging"></a> Current Load</label>
-                    <label class="itemTabInfoValue" id="currentENC">{{data.current_enc}} ENC</label>
-                </div>
-            </div>
-            <ol class="item-list">
-                <h4 class="list-header">
-                    <label>Qty</label>
-                    <label>Enc</label>
-                    <label>Item Name</label>
-                    <button type="button" class="gear-create" id="item">+</button>
-                </h4>
-                {{#each actor.data.gear as |item id|}}
-                    <li class="item flexrow" data-item-id="{{item._id}}">
-                        <div class="item-list-resource">
-                            <label name="data.quantity" type="number" title="QTY">{{data.quantity}}</label>
-                        </div>
-                        <div class="item-list-resource">
-                            <label type="number" name="data.enc" title="ENC">{{data.enc}}</label>
-                        </div>
-                        <img class="item-img" src="{{item.img}}" title="{{item.name}}" width="24" height="24"/>
-                        <h4 class="item-name">{{item.name}}</h4>
-                        <div class="item-controls">
-                            <a class="item-control item-delete" title="Delete Item"><i class="fas fa-trash"></i></a>
-                        </div>
-                    </li>
-                {{/each}}
-            </ol>
-        </div> 
-    </section> -->
+    </section>
 </form>
 

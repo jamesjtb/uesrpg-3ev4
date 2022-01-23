@@ -1066,7 +1066,10 @@
       title: "Add/Subtract Wealth",
       content: `<form>
                 <div class="dialogForm">
-                <label><i class="fas fa-coins"></i><b> Add/Subtract: </b></label><input placeholder="ex. -20, +10" id="playerInput" value="0" style=" text-align: center; width: 50%; border-style: groove; float: right;" type="text"></input></div>
+                  <div style="display: flex; flex-direction: row; justify-content: space-between; align-items: center;">
+                    <label><i class="fas fa-coins"></i><b> Add/Subtract: </b></label>
+                    <input placeholder="ex. -20, +10" id="playerInput" value="0" style=" text-align: center; width: 50%; border-style: groove; float: right;" type="text"></input></div>
+                  </div>
                 </form>`,
       buttons: {
         one: {
@@ -1098,15 +1101,15 @@
       title: "Carry Rating Bonus",
       content: `<form>
                   <div class="dialogForm">
-                  <div style="margin: 5px;">
-                    <label><b>Current Carry Rating Bonus: </b></label>
-                    <label style=" text-align: center; float: right; width: 50%;">${this.actor.data.data.carry_rating.bonus}</label>
-                  </div>
+                    <div style="margin: 5px; display: flex; flex-direction: row; justify-content: space-between; align-items: center;">
+                      <label><b>Current Carry Rating Bonus: </b></label>
+                      <label style=" text-align: center; float: right; width: 50%;">${this.actor.data.data.carry_rating.bonus}</label>
+                    </div>
 
-                  <div style="margin: 5px;">
-                  <label><b> Set Carry Weight Bonus:</b></label>
-                  <input placeholder="10, -10, etc." id="playerInput" value="0" style=" text-align: center; width: 50%; border-style: groove; float: right;" type="text"></input></div>
-                  </div>
+                    <div style="margin: 5px; display: flex; flex-direction: row; justify-content: space-between; align-items: center;">
+                      <label><b> Set Carry Weight Bonus:</b></label>
+                      <input placeholder="10, -10, etc." id="playerInput" value="0" style=" text-align: center; width: 50%; border-style: groove; float: right;" type="text"></input></div>
+                    </div>
 
                 </form>`,
       buttons: {
