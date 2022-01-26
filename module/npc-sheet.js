@@ -635,9 +635,12 @@ export class npcSheet extends ActorSheet {
 
                 }
 
-                 roll.toMessage({
-                  user: game.user.id,
-                  speaker: ChatMessage.getSpeaker(),
+                ChatMessage.create({
+                  async:false, 
+                  type: CONST.CHAT_MESSAGE_TYPES.ROLL, 
+                  user: game.user.id, 
+                  speaker: ChatMessage.getSpeaker(), 
+                  roll: roll,
                   content: contentString
                 })
           }
