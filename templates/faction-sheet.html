@@ -6,19 +6,23 @@
             <h1 class="charname"><input name="name" type="text" value="{{item.name}}" placeholder="Name"/></h1>
             <div class="item-resource">
                 <table>
-                    <tr>
-                        <th>Rank/Title</th>
-                        <th>HQ Location</th>
-                    </tr>
-                    <tr>
-                        <td><select name="data.rankTitle" data-type="String">
-                            {{#select data.rankTitle}}
-                            {{#each data.ranks as |ranks key|}}
-                            <option value="{{key}}">{{ranks}}</option> 
-                            {{/each}} {{/select}}
-                        </select></td>
-                        <td><input type="text" name="data.location" value="{{data.location}}"></td>
-                    </tr>
+                    <thead>
+                        <tr>
+                            <th>Rank/Title</th>
+                            <th>Location</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><select name="data.rankTitle" data-type="String">
+                                {{#select data.rankTitle}}
+                                {{#each data.ranks as |ranks key|}}
+                                <option value="{{key}}">{{ranks}}</option> 
+                                {{/each}} {{/select}}
+                            </select></td>
+                            <td><input type="text" name="data.location" value="{{data.location}}"></td>
+                        </tr>
+                    </tbody>
                 </table>
             </div>
         </div>

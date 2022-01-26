@@ -12,7 +12,11 @@
       width: 680,
       height: 720,
       tabs: [{navSelector: ".sheet-tabs", contentSelector: ".sheet-body", initial: "description"}],
-      dragDrop: [{dragSelector: [".item"], 
+      dragDrop: [{dragSelector: [
+        ".skillList .item",
+        ".equipmentList .item",
+        ".spellList .item"
+      ], 
       dropSelector: null}]
     });
   }

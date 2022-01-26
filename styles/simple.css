@@ -87,7 +87,15 @@ button {
 }
 
 .chat-message {
-  background: url("../images/parchment4.jpg") repeat;
+  background: url("../images/parchment4.jpg") repeat !important;
+}
+
+.chat-message h2 {
+  font-family: "cyrodiil";
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: flex-start;
 }
 
 .worldbuilding h2 {
@@ -136,6 +144,13 @@ button {
   width: 20%;
 }
 
+.worldbuilding .item-controls .profession {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 5px;
+}
+
 .worldbuilding .skill-roll:hover,
 .worldbuilding .combat-roll:hover,
 .worldbuilding .damage-roll:hover,
@@ -170,7 +185,8 @@ button {
   background: rgba(85, 85, 85, 0.61);
 }
 
-.worldbuilding li .item-name {
+.worldbuilding li .item-name,
+.worldbuilding li .skill-name {
   padding: 0 5px;
   min-width: 120px;
   max-width: 180px;
@@ -218,13 +234,23 @@ button {
 }
 
 .worldbuilding .attributeList {
-  height: 235px;
+  padding: 0 5px;
   width: 100%;
-  overflow: scroll;
 }
 
 .worldbuilding table {
-  text-align: left;
+  text-align: center;
+}
+
+.worldbuilding table thead {
+  background: rgba(161, 149, 149, 0.486);
+}
+
+.worldbuilding table th {
+  font-weight: normal;
+  color: black;
+  font-family: "cyrodiil";
+  text-shadow: none;
 }
 
 .worldbuilding .tableListHeader h2 {
@@ -256,9 +282,19 @@ button {
   margin: 0;
 }
 
+.worldbuilding .magicChargeInputs {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+}
+
 .worldbuilding .magicChargeInputs button {
-  height: 30px;
-  width: 30px;
+  height: 24px;
+  width: 24px;
+  line-height: 10px;
+  padding: 0;
+  margin: 0;
 }
 
 /*---------------------------- 
@@ -343,6 +379,14 @@ button {
   max-height: 500px;
   width: 100%;
   padding: 0 5px;
+}
+
+.editor .editor-content h1,
+.editor .editor-content h2,
+.editor .editor-content h3 {
+  font-family: "cyrodiil";
+  background: none;
+  text-align: left;
 }
 
 
@@ -499,10 +543,12 @@ button {
 
 .worldbuilding .characteristicSideBar {
   border-right: 1px solid;
+  padding: 5px 5px;
 }
 
 .worldbuilding .skillContainer {
   border-right: 1px solid;
+  gap: 5px;
 }
 
 .worldbuilding .languageContainer {
@@ -644,33 +690,32 @@ button {
   align-items: flex-start;
 }
 
-.worldbuilding .combatSegment1 {
+.worldbuilding .combatSegment1,
+.worldbuilding .combatSegment2 {
   display: flex;
   flex-direction: row;
   align-items: stretch;
   width: 100%;
 }
 
-/*---------------------------- 
-  Combat Tab - Stacked Content Container
-------------------------------*/
-
-.worldbuilding .stackedContentContainer {
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-start;
-  align-items: center;
-  width: 25%;
-  height: 435px;
-  border-right: solid 1px;
+.worldbuilding .combatSegment1 {
+  border-bottom: 1px solid;
 }
+
+.worldbuilding .combatSegment2 {
+  justify-content: space-between;
+}
+
+/*---------------------------- 
+  Combat Tab - Paper Doll Container
+------------------------------*/
 
 .worldbuilding .paperDollContainer {
   position: relative;
-  width: 100%;
+  width: 50%;
   height: 200px;
-  border-bottom: solid 1px;
   background-size: 0 0;
+  border-right: 1px solid;
 }
 
 .worldbuilding .wounded {
@@ -689,6 +734,7 @@ button {
   right: 0;
   padding: 5px;
   margin: 0;
+  z-index: +1;
 }
 
 .worldbuilding .rightColumn .flexContainer {
@@ -704,6 +750,7 @@ button {
   left: 0;
   padding: 5px;
   margin: 0;
+  z-index: +1;
 }
 
 .worldbuilding .leftColumn .flexContainer {
@@ -738,46 +785,57 @@ button {
   height: 150px;
 }
 
-/*---------------------------- 
-  Combat Tab - Stat Column Container
-------------------------------*/
-
-.worldbuilding .statColumnContainer {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-  padding: 5px;
-  width: 25%;
+.worldbuilding #paperDoll:hover {
+  cursor: pointer;
 }
 
-.worldbuilding .combatItemHeader {
+/*---------------------------- 
+  Combat Tab - Combat Stats Container
+------------------------------*/
+
+.worldbuilding .combatResources {
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
-  justify-content: space-between;
   align-items: center;
   text-align: center;
 }
 
-.worldbuilding .combatStats {
+.worldbuilding .combatResource {
   padding: 5px;
   width: 50%;
+}
+
+.worldbuilding .combatResources .box1 {
+  border-bottom: 1px solid;
+  border-right: 1px solid;
+}
+
+.worldbuilding .combatResources .box2 {
+  border-bottom: 1px solid;
+}
+
+.worldbuilding .combatResources .box3 {
+  border-right: 1px solid;
+}
+
+.worldbuilding .combatResource input {
+  width: 50%;
+  height: 17px;
+}
+
+.worldbuilding .combatReferenceContainer {
+  display: flex;
+  flex-direction: row;
+}
+
+.worldbuilding .combatStatsContainer {
+  border-right: 1px solid;
 }
 
 .worldbuilding .combatItemHeader input {
   height: 17px;
   width: 10px;
-}
-
-.worldbuilding .box1 {
-  border-bottom: solid 1px;
-  border-right: solid 1px;
-}
-.worldbuilding .box2 {
-  border-bottom: solid 1px;
-}
-.worldbuilding .box3 {
-  border-right: solid 1px;
 }
 
 .worldbuilding .resistances {
@@ -800,6 +858,7 @@ button {
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  padding: 5px 0 0 0;
 }
 
 .worldbuilding .woundCheckContainer {
@@ -810,6 +869,7 @@ button {
 }
 
 .worldbuilding .woundContainer textarea {
+  width: 90%;
   resize: none;
 }
 
@@ -820,10 +880,8 @@ button {
 .worldbuilding .combatItemContainer {
   display: flex;
   flex-direction: column;
-  border-left: solid 1px;
-  width: 50%;
+  width: 100%;
   height: 435px;
-  overflow: scroll;
 }
 
 /*---------------------------- 
@@ -834,7 +892,8 @@ button {
   display: flex;
   flex-direction: column;
   gap: 10px;
-  padding: 5px 10px;
+  width: 100%;
+  padding: 0 5px;
 }
 
 /*---------------------------- 
@@ -858,8 +917,7 @@ button {
   width: 65%;
 }
 
-.worldbuilding .spellList .tableItemNameCell,
-.worldbuilding .equipmentList .tableItemNameCell {
+.worldbuilding .tableItemNameCell {
   display: flex;
   flex-direction: row;
   align-items: center;
@@ -933,6 +991,7 @@ button {
   display: flex;
   flex-direction: row;
   gap: 5px;
+  height: 100%;
 }
 
 .worldbuilding .journalContainer {

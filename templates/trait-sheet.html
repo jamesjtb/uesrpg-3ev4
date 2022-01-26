@@ -6,34 +6,42 @@
             <h1 class="charname"><input name="name" type="text" value="{{item.name}}" placeholder="Name"/></h1>
             <div class="item-resource">
                 <table>
-                    <tr>
-                        <th>HP+</th>
-                        <th>MP+</th>
-                        <th>SP+</th>
-                        <th>LP+</th>
-                        <th>WT+</th>
-                    </tr>
-                    <tr>
-                        <td><input type="text" name="data.hpBonus" value="{{data.hpBonus}}" data-dtype="Number"/></td>
-                        <td><input type="text" name="data.mpBonus" value="{{data.mpBonus}}" data-dtype="Number"></td>
-                        <td><input type="text" name="data.spBonus" value="{{data.spBonus}}" data-dtype="Number"></td>
-                        <td><input type="text" name="data.lpBonus" value="{{data.lpBonus}}" data-dtype="Number"></td>
-                        <td><input type="text" name="data.wtBonus" value="{{data.wtBonus}}" data-dtype="Number"></td>
-                    </tr>
-                    <tr>
-                        <th>Init.+</th>
-                        <th>Speed+</th>
-                        <th>Fly+</th>
-                        <th>Swim+</th>
-                        <th>CrP</th>
-                    </tr>
-                    <tr>
-                        <td><input type="text" name="data.iniBonus" value="{{data.iniBonus}}" data-dtype="Number"></td>
-                        <td><input type="text" name="data.speedBonus" value="{{data.speedBonus}}" data-dtype="Number"></td>
-                        <td><input type="text" name="data.flyBonus" value="{{data.flyBonus}}" data-dtype="Number"></td>
-                        <td><input type="text" name="data.swimBonus" value="{{data.swimBonus}}" data-dtype="Number"></td>
-                        <td><input type="text" name="data.crpCost" value="{{data.crpCost}}" data-dtype="Number"></td>
-                    </tr>
+                    <thead>
+                        <tr>
+                            <th>HP+</th>
+                            <th>MP+</th>
+                            <th>SP+</th>
+                            <th>LP+</th>
+                            <th>WT+</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><input type="text" name="data.hpBonus" value="{{data.hpBonus}}" data-dtype="Number"/></td>
+                            <td><input type="text" name="data.mpBonus" value="{{data.mpBonus}}" data-dtype="Number"></td>
+                            <td><input type="text" name="data.spBonus" value="{{data.spBonus}}" data-dtype="Number"></td>
+                            <td><input type="text" name="data.lpBonus" value="{{data.lpBonus}}" data-dtype="Number"></td>
+                            <td><input type="text" name="data.wtBonus" value="{{data.wtBonus}}" data-dtype="Number"></td>
+                        </tr>
+                    </tbody>
+                    <thead>
+                        <tr>
+                            <th>Init.+</th>
+                            <th>Speed+</th>
+                            <th>Fly+</th>
+                            <th>Swim+</th>
+                            <th>CrP</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><input type="text" name="data.iniBonus" value="{{data.iniBonus}}" data-dtype="Number"></td>
+                            <td><input type="text" name="data.speedBonus" value="{{data.speedBonus}}" data-dtype="Number"></td>
+                            <td><input type="text" name="data.flyBonus" value="{{data.flyBonus}}" data-dtype="Number"></td>
+                            <td><input type="text" name="data.swimBonus" value="{{data.swimBonus}}" data-dtype="Number"></td>
+                            <td><input type="text" name="data.crpCost" value="{{data.crpCost}}" data-dtype="Number"></td>
+                        </tr>
+                    </tbody>
                 </table>
             </div>
         </div>
@@ -57,83 +65,92 @@
         {{!-- Attributes Tab --}}
         <div class="tab" data-group="primary" data-tab="attributes">
             <table class="field-inputs-small">
-                <tr>
-                    <th colspan="9">Resistances & Bonuses</th>
-                </tr>
-                <tr>
-                    <th>Disease %</th>
-                    <th>Fire</th>
-                    <th>Frost</th>
-                    <th>Shock</th>
-                    <th>Poison</th>
-                    <th>Magic</th>
-                    <th>Tough</th>
-                    <th>Silver</th>
-                    <th>Sunlight</th>
-                </tr>
-                <tr>
-                    <td><input type="text" name="data.diseaseR" value="{{data.diseaseR}}" data-dtype="Number"></td>
-                    <td><input type="text" name="data.fireR" value="{{data.fireR}}" data-dtype="Number"></td>
-                    <td><input type="text" name="data.frostR" value="{{data.frostR}}" data-dtype="Number"></td>
-                    <td><input type="text" name="data.shockR" value="{{data.shockR}}" data-dtype="Number"></td>
-                    <td><input type="text" name="data.poisonR" value="{{data.poisonR}}" data-dtype="Number"></td>
-                    <td><input type="text" name="data.magicR" value="{{data.magicR}}" data-dtype="Number"></td>
-                    <td><input type="text" name="data.natToughnessR" value="{{data.natToughnessR}}" data-dtype="Number"></td>
-                    <td><input type="text" name="data.silverR" value="{{data.silverR}}" data-dtype="Number"></td>
-                    <td><input type="text" name="data.sunlightR" value="{{data.sunlightR}}" data-dtype="Number"></td>
-                </tr>
+                <thead>
+                    <tr>
+                        <th>Disease %</th>
+                        <th>Fire</th>
+                        <th>Frost</th>
+                        <th>Shock</th>
+                        <th>Poison</th>
+                        <th>Magic</th>
+                        <th>Tough</th>
+                        <th>Silver</th>
+                        <th>Sunlight</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><input type="text" name="data.diseaseR" value="{{data.diseaseR}}" data-dtype="Number"></td>
+                        <td><input type="text" name="data.fireR" value="{{data.fireR}}" data-dtype="Number"></td>
+                        <td><input type="text" name="data.frostR" value="{{data.frostR}}" data-dtype="Number"></td>
+                        <td><input type="text" name="data.shockR" value="{{data.shockR}}" data-dtype="Number"></td>
+                        <td><input type="text" name="data.poisonR" value="{{data.poisonR}}" data-dtype="Number"></td>
+                        <td><input type="text" name="data.magicR" value="{{data.magicR}}" data-dtype="Number"></td>
+                        <td><input type="text" name="data.natToughnessR" value="{{data.natToughnessR}}" data-dtype="Number"></td>
+                        <td><input type="text" name="data.silverR" value="{{data.silverR}}" data-dtype="Number"></td>
+                        <td><input type="text" name="data.sunlightR" value="{{data.sunlightR}}" data-dtype="Number"></td>
+                    </tr>
+                </tbody>
             </table>
             <table class="field-inputs-small">
-                <tr>
-                    <th>STR+</th>
-                    <th>END+</th>
-                    <th>AGI+</th>
-                    <th>INT+</th>
-                    <th>WP+</th>
-                    <th>PRC+</th>
-                    <th>PRS+</th>
-                    <th>LCK+</th>
-                </tr>
-                <tr>
-                    <td><input type="number" name="data.characteristicBonus.strChaBonus" value="{{data.characteristicBonus.strChaBonus}}"></td>
-                    <td><input type="number" name="data.characteristicBonus.endChaBonus" value="{{data.characteristicBonus.endChaBonus}}"></td>
-                    <td><input type="number" name="data.characteristicBonus.agiChaBonus" value="{{data.characteristicBonus.agiChaBonus}}"></td>
-                    <td><input type="number" name="data.characteristicBonus.intChaBonus" value="{{data.characteristicBonus.intChaBonus}}"></td>
-                    <td><input type="number" name="data.characteristicBonus.wpChaBonus" value="{{data.characteristicBonus.wpChaBonus}}"></td>
-                    <td><input type="number" name="data.characteristicBonus.prcChaBonus" value="{{data.characteristicBonus.prcChaBonus}}"></td>
-                    <td><input type="number" name="data.characteristicBonus.prsChaBonus" value="{{data.characteristicBonus.prsChaBonus}}"></td>
-                    <td><input type="number" name="data.characteristicBonus.lckChaBonus" value="{{data.characteristicBonus.lckChaBonus}}"></td>
-                </tr>
+                <thead>
+                    <tr>
+                        <th>STR+</th>
+                        <th>END+</th>
+                        <th>AGI+</th>
+                        <th>INT+</th>
+                        <th>WP+</th>
+                        <th>PRC+</th>
+                        <th>PRS+</th>
+                        <th>LCK+</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><input type="number" name="data.characteristicBonus.strChaBonus" value="{{data.characteristicBonus.strChaBonus}}"></td>
+                        <td><input type="number" name="data.characteristicBonus.endChaBonus" value="{{data.characteristicBonus.endChaBonus}}"></td>
+                        <td><input type="number" name="data.characteristicBonus.agiChaBonus" value="{{data.characteristicBonus.agiChaBonus}}"></td>
+                        <td><input type="number" name="data.characteristicBonus.intChaBonus" value="{{data.characteristicBonus.intChaBonus}}"></td>
+                        <td><input type="number" name="data.characteristicBonus.wpChaBonus" value="{{data.characteristicBonus.wpChaBonus}}"></td>
+                        <td><input type="number" name="data.characteristicBonus.prcChaBonus" value="{{data.characteristicBonus.prcChaBonus}}"></td>
+                        <td><input type="number" name="data.characteristicBonus.prsChaBonus" value="{{data.characteristicBonus.prsChaBonus}}"></td>
+                        <td><input type="number" name="data.characteristicBonus.lckChaBonus" value="{{data.characteristicBonus.lckChaBonus}}"></td>
+                    </tr>
+                </tbody>
             </table>
             <table class="field-inputs-small">
-                <tr>
-                    <th>Attribute</th>
-                    <th>Toggle</th>
-                </tr>
-                <tr>
-                    <th>1/2 Fatigue Penalty</th>
-                    <td><input type="checkbox" name="data.halfFatiguePenalty" {{checked data.halfFatiguePenalty}}></td>
-                </tr>
-                <tr>
-                    <th>1/2 Speed</th>
-                    <td><input type="checkbox" name="data.halfSpeed" {{checked data.halfSpeed}}></td>
-                </tr>
-                <tr>
-                    <th>Add 1/2 Speed</th>
-                    <td><input type="checkbox" name="data.addHalfSpeed" {{checked data.addHalfSpeed}}></td>
-                </tr>
-                <tr>
-                    <th>1/2 Wound Penalty</th>
-                    <td><input type="checkbox" name="data.halfWoundPenalty" {{checked data.halfWoundPenalty}}></td>
-                </tr>
-                <tr>
-                    <th>Wounded Penalty to -30</th>
-                    <td><input type="checkbox" name="data.painIntolerant" {{checked data.painIntolerant}}></td>
-                </tr>
-                <tr>
-                    <th>Define as Mechanical</th>
-                    <td><input type="checkbox" name="data.mechanical" {{checked data.mechanical}}></td>
-                </tr>
+                <thead>
+                    <tr>
+                        <th>Attribute</th>
+                        <th>Toggle</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>1/2 Fatigue Penalty</td>
+                        <td><input type="checkbox" name="data.halfFatiguePenalty" {{checked data.halfFatiguePenalty}}></td>
+                    </tr>
+                    <tr>
+                        <td>1/2 Speed</td>
+                        <td><input type="checkbox" name="data.halfSpeed" {{checked data.halfSpeed}}></td>
+                    </tr>
+                    <tr>
+                        <td>Add 1/2 Speed</td>
+                        <td><input type="checkbox" name="data.addHalfSpeed" {{checked data.addHalfSpeed}}></td>
+                    </tr>
+                    <tr>
+                        <td>1/2 Wound Penalty</td>
+                        <td><input type="checkbox" name="data.halfWoundPenalty" {{checked data.halfWoundPenalty}}></td>
+                    </tr>
+                    <tr>
+                        <td>Wounded Penalty to -30</td>
+                        <td><input type="checkbox" name="data.painIntolerant" {{checked data.painIntolerant}}></td>
+                    </tr>
+                    <tr>
+                        <td>Define as Mechanical</td>
+                        <td><input type="checkbox" name="data.mechanical" {{checked data.mechanical}}></td>
+                    </tr>
+                </tbody>
             </table>
     </section>
 </form>

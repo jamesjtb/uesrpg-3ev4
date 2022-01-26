@@ -6,34 +6,42 @@
             <h1 class="charname"><input name="name" type="text" value="{{item.name}}" placeholder="Name"/></h1>
             <div class="item-resource">
                 <table>
-                    <tr>
-                        <th>Rank</th>
-                        <th>Characteristic</th>
-                        <th>Target Number</th>
-                    </tr>
-                    <tr>
-                        <td><select name="data.rank" data-type="String">
-                            {{#select data.rank}}
-                            {{#each data.skillRanks as |skillRanks key|}}
-                            <option value="{{key}}">{{skillRanks}}</option> 
-                            {{/each}} {{/select}}
-                        </select></td>
-                        <td><select name="data.baseCha" data-type="String">
-                            {{#select data.baseCha}}
-                            {{#each data.characteristics as |characteristics key|}}
-                            <option value="{{key}}">{{characteristics}}</option> 
-                            {{/each}} {{/select}}
-                        </select></td>
-                        <td><input type="number" name="data.value" value="{{data.value}}" disabled></td>
-                    </tr>
-                    <tr>
-                        <th>Bonus</th>
-                        <th colspan="2">Trained Weapons/Armor</th>
-                    </tr>
-                    <tr>
-                        <td><input type="number" name="data.bonus" value="{{data.bonus}}" disabled></td>
-                        <td colspan="2"><input type="text" name="data.trainedItems" value="{{data.trainedItems}}" data-dtype="String"></td>
-                    </tr>
+                    <thead>
+                        <tr>
+                            <th>Rank</th>
+                            <th>Characteristic</th>
+                            <th>Target Number</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><select name="data.rank" data-type="String">
+                                {{#select data.rank}}
+                                {{#each data.skillRanks as |skillRanks key|}}
+                                <option value="{{key}}">{{skillRanks}}</option> 
+                                {{/each}} {{/select}}
+                            </select></td>
+                            <td><select name="data.baseCha" data-type="String">
+                                {{#select data.baseCha}}
+                                {{#each data.characteristics as |characteristics key|}}
+                                <option value="{{key}}">{{characteristics}}</option> 
+                                {{/each}} {{/select}}
+                            </select></td>
+                            <td><input type="number" name="data.value" value="{{data.value}}" disabled></td>
+                        </tr>
+                    </tbody>
+                    <thead>
+                        <tr>
+                            <th>Bonus</th>
+                            <th colspan="2">Trained Weapons/Armor</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><input type="number" name="data.bonus" value="{{data.bonus}}" disabled></td>
+                            <td colspan="2"><input type="text" name="data.trainedItems" value="{{data.trainedItems}}" data-dtype="String"></td>
+                        </tr>
+                    </tbody>
                 </table>
             </div>
         </div>

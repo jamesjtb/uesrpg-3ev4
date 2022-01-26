@@ -6,36 +6,44 @@
             <h1 class="charname"><input name="name" type="text" value="{{item.name}}" placeholder="Name"/></h1>
             <div class="item-resource">
                 <table>
-                    <tr>
-                        <th>Rank</th>
-                        <th>Characteristics</th>
-                        <th>Select</th>
-                    </tr>
-                    <tr>
-                        <td><select name="data.rank" data-type="String">
-                            {{#select data.rank}}
-                            {{#each data.skillRanks as |skillRanks key|}}
-                            <option value="{{key}}">{{skillRanks}}</option> 
-                            {{/each}} {{/select}}
-                        </select></td>
-                        <td><input type="text" name="data.governingCha" value="{{data.governingCha}}"></td>
-                        <td><select name="data.baseCha" data-type="String">
-                            {{#select data.baseCha}}
-                            {{#each data.characteristics as |characteristics key|}}
-                            <option value="{{key}}">{{characteristics}}</option> 
-                            {{/each}} {{/select}}
-                        </select></td>
-                    </tr>
-                    <tr>
-                        <th>Bonus</th>
-                        <th>Target Num.</th>
-                        <th colspan="2">Specialization</th>
-                    </tr>
-                    <tr>
-                        <td><input type="text" name="data.bonus" value="{{data.bonus}}" data-dtype="Number" disabled></td>
-                        <td><input type="text" name="data.value" value="{{data.value}}" data-dtype="Number" disabled></td>
-                        <td colspan="2"><input type="text" name="data.trainedItems" value="{{data.trainedItems}}" data-dtype="String"></td>
-                    </tr>
+                    <thead>
+                        <tr>
+                            <th>Rank</th>
+                            <th>Characteristics</th>
+                            <th>Select</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><select name="data.rank" data-type="String">
+                                {{#select data.rank}}
+                                {{#each data.skillRanks as |skillRanks key|}}
+                                <option value="{{key}}">{{skillRanks}}</option> 
+                                {{/each}} {{/select}}
+                            </select></td>
+                            <td><input type="text" name="data.governingCha" value="{{data.governingCha}}"></td>
+                            <td><select name="data.baseCha" data-type="String">
+                                {{#select data.baseCha}}
+                                {{#each data.characteristics as |characteristics key|}}
+                                <option value="{{key}}">{{characteristics}}</option> 
+                                {{/each}} {{/select}}
+                            </select></td>
+                        </tr>
+                    </tbody>
+                    <thead>
+                        <tr>
+                            <th>Bonus</th>
+                            <th>Target Num.</th>
+                            <th colspan="2">Specialization</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><input type="text" name="data.bonus" value="{{data.bonus}}" data-dtype="Number" disabled></td>
+                            <td><input type="text" name="data.value" value="{{data.value}}" data-dtype="Number" disabled></td>
+                            <td colspan="2"><input type="text" name="data.trainedItems" value="{{data.trainedItems}}" data-dtype="String"></td>
+                        </tr>
+                    </tbody>
                 </table>
             </div>
         </div>

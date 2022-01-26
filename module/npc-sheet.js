@@ -8,16 +8,13 @@ export class npcSheet extends ActorSheet {
 	static get defaultOptions() {
 	  return mergeObject(super.defaultOptions, {
       classes: ["worldbuilding", "sheet", "actor", "npc"],
-      width: 620,
-      height: 650,
-      tabs: [{navSelector: ".sheet-tabs2", contentSelector: ".sheet-body", initial: "core"}],
+      width: 680,
+      height: 720,
+      tabs: [{navSelector: ".sheet-tabs", contentSelector: ".sheet-body", initial: "core"}],
       dragDrop: [{dragSelector: [
-        ".item-list .item", 
-        ".combat-list .item", 
-        ".ability-list .item", 
-        ".spell-list .item", 
-        ".talents-list .item",
-        ".faction-list .item"
+        ".equipmentList .item", 
+        ".spellList .item",
+        ".skillList .item" 
       ], 
       dropSelector: null}]
     });
@@ -46,7 +43,7 @@ export class npcSheet extends ActorSheet {
   
     _prepareCharacterItems(sheetData) {
       const actorData = sheetData.actor.data;
-
+  
       //Initialize containers
       const gear = [];
       const weapon = [];
@@ -58,18 +55,13 @@ export class npcSheet extends ActorSheet {
       const trait = [];
       const talent = [];
       const combatStyle = [];
-      const spell = {
-        alteration: [],
-        conjuration: [],
-        destruction: [],
-        illusion: [],
-        mysticism: [],
-        necromancy: [],
-        restoration: []
-      };
+      const spell = [];
+      const skill = [];
+      const magicSkill = [];
       const ammunition = [];
+      const language = [];
       const faction = [];
-
+  
       //Iterate through items, allocating to containers
       //let totaWeight = 0;
       for (let i of sheetData.items) {
@@ -109,20 +101,52 @@ export class npcSheet extends ActorSheet {
         }
         //Append to spell
         else if (i.type === 'spell') {
-          if (i.data.school !== undefined) {
-            spell[i.data.school].push(i);
-          }
+          spell.push(i)
+        }
+        //Append to skill
+        else if (i.type === 'skill') {
+            skill.push(i);
+        }
+        //Append to magicSkill
+        else if (i.type === 'magicSkill') {
+          magicSkill.push(i);
         }
         //Append to ammunition
         else if (i.type === 'ammunition') {
           ammunition.push(i);
+        }
+        else if (i.type === "language") {
+          language.push(i);
         }
         //Append to faction
         else if (i.type === "faction") {
           faction.push(i);
         }
       }
-
+  
+      // Alphabetically sort all item lists
+      const itemCats = [gear, weapon, armor, power, trait, talent, combatStyle, spell, skill, magicSkill, ammunition, language, faction]
+      for (let category of itemCats) {
+        if (category.length > 1 && category != spell) {
+          category.sort((a,b) => {
+            let nameA = a.name.toLowerCase()
+            let nameB = b.name.toLowerCase()
+            if (nameA > nameB) {return 1}
+            else {return -1}
+          })
+        }
+        else if (category == spell) {
+          if (category.length > 1) {
+            category.sort((a, b) => {
+              let nameA = a.data.school
+              let nameB = b.data.school
+              if (nameA > nameB) {return 1}
+              else {return -1}
+            })
+          }
+        }
+      }
+  
       //Assign and return
       actorData.gear = gear;
       actorData.weapon = weapon;
@@ -132,9 +156,12 @@ export class npcSheet extends ActorSheet {
       actorData.talent = talent;
       actorData.combatStyle = combatStyle;
       actorData.spell = spell;
+      actorData.skill = skill;
+      actorData.magicSkill = magicSkill;
       actorData.ammunition = ammunition;
+      actorData.language = language;
       actorData.faction = faction;
-
+  
     }
 
     get template() {
@@ -153,7 +180,7 @@ export class npcSheet extends ActorSheet {
     html.find(".characteristic-roll").click(await this._onClickCharacteristic.bind(this));
     html.find(".professions-roll").click(await this._onProfessionsRoll.bind(this));
     html.find(".damage-roll").click(await this._onDamageRoll.bind(this));
-    html.find(".unconventional-roll").click(await this._onUnconventionalRoll.bind(this));
+    // html.find(".unconventional-roll").click(await this._onUnconventionalRoll.bind(this));
     html.find(".magic-roll").click(await this._onSpellRoll.bind(this));
     html.find(".resistance-roll").click(await this._onResistanceRoll.bind(this));
     html.find(".armor-roll").click(await this._onArmorRoll.bind(this));
@@ -170,17 +197,22 @@ export class npcSheet extends ActorSheet {
     html.find(".ammo-minus").click(await this._onMinusAmmo.bind(this));
     html.find(".itemEquip").click(await this._onItemEquip.bind(this));
     html.find(".itemTabInfo .wealthCalc").click(await this._onWealthCalc.bind(this));
-    html.find(".setBaseCharacteristicsNPC").click(await this._onSetBaseCharacteristics.bind(this));
+    html.find(".setBaseCharacteristics").click(await this._onSetBaseCharacteristics.bind(this));
     html.find(".carryBonus").click(await this._onCarryBonus.bind(this));
+    html.find(".wealthCalc").click(await this._onWealthCalc.bind(this));
+    html.find(".incrementResource").click(this._onIncrementResource.bind(this))
+    html.find(".resourceLabel button").click(this._onResetResource.bind(this))
+    html.find(".swapContainer button").click(this._setPaperDoll.bind(this))
+    html.find("#spellFilter").click(this._filterSpells.bind(this))
+
+    // Checks UI Elements for update
+    this._createSpellFilterOptions()
+    this._setResourceBars()
+    this._setWoundIcon()
+    this._setWoundBackground()
 
     //Item Create Buttons
-    html.find(".weapon-create").click(await this._onItemCreate.bind(this));
-    html.find(".ammo-create").click(await this._onItemCreate.bind(this));
-    html.find(".armor-create").click(await this._onItemCreate.bind(this));
-    html.find(".gear-create").click(await this._onItemCreate.bind(this));
-    html.find(".trait-create").click(await this._onItemCreate.bind(this));
-    html.find(".power-create").click(await this._onItemCreate.bind(this));
-    html.find(".talent-create").click(await this._onItemCreate.bind(this));
+    html.find(".item-create").click(await this._onItemCreate.bind(this));
 
     // Everything below here is only needed if the sheet is editable
     if (!this.options.editable) return;
@@ -554,7 +586,7 @@ export class npcSheet extends ActorSheet {
       title: "Apply Roll Modifier",
       content: `<form>
                   <div class="dialogForm">
-                  <label><b>${element.name} Modifier: </b></label><input placeholder="ex. -20, +10" id="playerInput" value="0" style=" text-align: center; width: 50%; border-style: groove; float: right;" type="text"></input></div>
+                  <label><b>${element.getAttribute('name')} Modifier: </b></label><input placeholder="ex. -20, +10" id="playerInput" value="0" style=" text-align: center; width: 50%; border-style: groove; float: right;" type="text"></input></div>
                 </form>`,
       buttons: {
         one: {
@@ -566,42 +598,43 @@ export class npcSheet extends ActorSheet {
             let roll = new Roll("1d100");
             roll.roll();
 
-            if (roll.total == this.actor.data.data.lucky_numbers.ln1 || 
-              roll.total == this.actor.data.data.lucky_numbers.ln2 || 
-              roll.total == this.actor.data.data.lucky_numbers.ln3 || 
-              roll.total == this.actor.data.data.lucky_numbers.ln4 || 
-              roll.total == this.actor.data.data.lucky_numbers.ln5 ||
-              roll.total == this.actor.data.data.lucky_numbers.ln6 ||
-              roll.total == this.actor.data.data.lucky_numbers.ln7 ||
-              roll.total == this.actor.data.data.lucky_numbers.ln8 ||
-              roll.total == this.actor.data.data.lucky_numbers.ln9 ||
-              roll.total == this.actor.data.data.lucky_numbers.ln10)
+            if (roll.result == this.actor.data.data.lucky_numbers.ln1 || 
+              roll.result == this.actor.data.data.lucky_numbers.ln2 || 
+              roll.result == this.actor.data.data.lucky_numbers.ln3 || 
+              roll.result == this.actor.data.data.lucky_numbers.ln4 || 
+              roll.result == this.actor.data.data.lucky_numbers.ln5 ||
+              roll.result == this.actor.data.data.lucky_numbers.ln6 ||
+              roll.result == this.actor.data.data.lucky_numbers.ln7 ||
+              roll.result == this.actor.data.data.lucky_numbers.ln8 ||
+              roll.result == this.actor.data.data.lucky_numbers.ln9 ||
+              roll.result == this.actor.data.data.lucky_numbers.ln10)
               {
-              contentString = `<h2 style='font-size: large'>${element.name}</h2>
-              <p></p><b>Target Number: [[${this.actor.data.data.professionsWound[element.id]} + ${playerInput}]]</b> <p></p>
+              contentString = `<h2 style='font-size: large'>${element.getAttribute('name')}</h2>
+              <p></p><b>Target Number: [[${this.actor.data.data.professionsWound[element.getAttribute('id')]} + ${playerInput}]]</b> <p></p>
               <b>Result: [[${roll.result}]]</b><p></p>
               <span style='color:green; font-size:120%;'> <b>LUCKY NUMBER!</b></span>`
 
               }
-              else if (roll.total == this.actor.data.data.unlucky_numbers.ul1 || 
-                roll.total == this.actor.data.data.unlucky_numbers.ul2 || 
-                roll.total == this.actor.data.data.unlucky_numbers.ul3 || 
-                roll.total == this.actor.data.data.unlucky_numbers.ul4 || 
-                roll.total == this.actor.data.data.unlucky_numbers.ul5 ||
-                roll.total == this.actor.data.data.unlucky_numbers.ul6) 
+              else if (roll.result == this.actor.data.data.unlucky_numbers.ul1 || 
+                roll.result == this.actor.data.data.unlucky_numbers.ul2 || 
+                roll.result == this.actor.data.data.unlucky_numbers.ul3 || 
+                roll.result == this.actor.data.data.unlucky_numbers.ul4 || 
+                roll.result == this.actor.data.data.unlucky_numbers.ul5 ||
+                roll.result == this.actor.data.data.unlucky_numbers.ul6) 
                 {
-                  contentString = `<h2 style='font-size: large'>${element.name}</h2>
-                  <p></p><b>Target Number: [[${this.actor.data.data.professionsWound[element.id]} + ${playerInput}]]</b> <p></p>
+                  contentString = `<h2 style='font-size: large'>${element.getAttribute('name')}</h2>
+                  <p></p><b>Target Number: [[${this.actor.data.data.professionsWound[element.getAttribute('id')]} + ${playerInput}]]</b> <p></p>
                   <b>Result: [[${roll.result}]]</b><p></p>
                   <span style='color:rgb(168, 5, 5); font-size:120%;'> <b>UNLUCKY NUMBER!</b></span>`
 
                 } else {
-                  contentString = `<h2 style='font-size: large'>${element.name}</h2>
-                  <p></p><b>Target Number: [[${this.actor.data.data.professionsWound[element.id]} + ${playerInput}]]</b> <p></p>
+                  contentString = `<h2 style='font-size: large'>${element.getAttribute('name')}</h2>
+                  <p></p><b>Target Number: [[${this.actor.data.data.professionsWound[element.getAttribute('id')]} + ${playerInput}]]</b> <p></p>
                   <b>Result: [[${roll.result}]]</b><p></p>
-                  <b>${roll.total<=(this.actor.data.data.professionsWound[element.id] + playerInput) ? " <span style='color:green; font-size: 120%;'> <b>SUCCESS!</b></span>" : " <span style='color:rgb(168, 5, 5); font-size: 120%;'> <b>FAILURE!</b></span>"}`
+                  <b>${roll.result<=(this.actor.data.data.professionsWound[element.getAttribute('id')] + playerInput) ? " <span style='color:green; font-size: 120%;'> <b>SUCCESS!</b></span>" : " <span style='color:rgb(168, 5, 5); font-size: 120%;'> <b>FAILURE!</b></span>"}`
 
                 }
+
                  roll.toMessage({
                   user: game.user.id,
                   speaker: ChatMessage.getSpeaker(),
@@ -618,79 +651,6 @@ export class npcSheet extends ActorSheet {
         close: html => console.log()
         });
         d.render(true);
-  }
-
-   _onUnconventionalRoll(event) {
-    event.preventDefault()
-    const element = event.currentTarget
-
-    let d = new Dialog({
-      title: "Apply Roll Modifier",
-      content: `<form>
-                  <div class="dialogForm">
-                  <label><b>${element.name} Modifier: </b></label><input placeholder="ex. -20, +10" id="playerInput" value="0" style=" text-align: center; width: 50%; border-style: groove; float: right;" type="text"></input></div>
-                </form>`,
-      buttons: {
-        one: {
-          label: "Roll!",
-          callback: html => {
-            const playerInput = parseInt(html.find('[id="playerInput"]').val());
-
-          let contentString = "";
-          let roll = new Roll("1d100");
-          roll.roll();
-
-          if (roll.total == this.actor.data.data.lucky_numbers.ln1 || 
-            roll.total == this.actor.data.data.lucky_numbers.ln2 || 
-            roll.total == this.actor.data.data.lucky_numbers.ln3 || 
-            roll.total == this.actor.data.data.lucky_numbers.ln4 || 
-            roll.total == this.actor.data.data.lucky_numbers.ln5 ||
-            roll.total == this.actor.data.data.lucky_numbers.ln6 ||
-            roll.total == this.actor.data.data.lucky_numbers.ln7 ||
-            roll.total == this.actor.data.data.lucky_numbers.ln8 ||
-            roll.total == this.actor.data.data.lucky_numbers.ln9 ||
-            roll.total == this.actor.data.data.lucky_numbers.ln10)
-            {
-              contentString = `<h2 style='font-size: large'>${element.name}</h2>
-              <p></p><b>Target Number: [[${this.actor.data.data.skills[element.id].bonus} + ${playerInput}]]</b> <p></p>
-              <b>Result: [[${roll.result}]]</b><p></p>
-              <span style='color:green; font-size:120%;'> <b>LUCKY NUMBER!</b></span>`
-
-            } else if (roll.total == this.actor.data.data.unlucky_numbers.ul1 || 
-              roll.total == this.actor.data.data.unlucky_numbers.ul2 || 
-              roll.total == this.actor.data.data.unlucky_numbers.ul3 || 
-              roll.total == this.actor.data.data.unlucky_numbers.ul4 || 
-              roll.total == this.actor.data.data.unlucky_numbers.ul5 ||
-              roll.total == this.actor.data.data.unlucky_numbers.ul6) 
-              {
-                contentString = `<h2 style='font-size: large'>${element.name}</h2>
-                <p></p><b>Target Number: [[${this.actor.data.data.skills[element.id].bonus} + ${playerInput}]]</b> <p></p>
-                <b>Result: [[${roll.result}]]</b><p></p>
-                <span style='color:rgb(168, 5, 5); font-size:120%;'> <b>UNLUCKY NUMBER!</b></span>`
-
-              } else {
-                contentString = `<h2 style='font-size: large'>${element.name}</h2>
-                <p></p><b>Target Number: [[${this.actor.data.data.skills[element.id].bonus} + ${playerInput}]]</b> <p></p>
-                <b>Result: [[${roll.result}]]</b><p></p>
-                <b>${roll.total<=(this.actor.data.data.skills[element.id].bonus + playerInput) ? " <span style='color:green; font-size: 120%;'> <b>SUCCESS!</b></span>" : " <span style='color:rgb(168, 5, 5); font-size: 120%;'> <b>FAILURE!</b></span>"}`
-
-              }
-               roll.toMessage({
-                user: game.user.id,
-                speaker: ChatMessage.getSpeaker(),
-                content: contentString
-              })
-        }
-      },
-      two: {
-        label: "Cancel",
-        callback: html => console.log("Cancelled")
-      }
-      },
-      default: "one",
-      close: html => console.log()
-      });
-      d.render(true);
   }
 
   async _onDamageRoll(event) {
@@ -1149,6 +1109,108 @@ export class npcSheet extends ActorSheet {
       close: html => console.log()
     })
     d.render(true);
+  }
+
+  _setResourceBars() {
+    const data = this.actor.data.data
+
+    if (data) {
+        for (let bar of [...document.querySelectorAll('.currentBar')]) {
+          let resource = data[bar.dataset.resource]
+
+          if (resource.max !== 0) {
+              let resourceElement = document.querySelector(`#${bar.id}`)
+              let proportion = Number((100 * (resource.value / resource.max)).toFixed(0))
+
+              // if greater than 100 or lower than 20, set values to fit bars correctly
+              proportion < 100 ? proportion = proportion : proportion = 100
+              proportion < 20 ? proportion = 20 : proportion = proportion
+
+              // Apply the proportion to the width of the resource bar
+              resourceElement.style.width = `${proportion}%`
+          }
+        }
+      }
+  }
+
+  _onIncrementResource(event) {
+    event.preventDefault()
+    const resource = this.actor.data.data[event.currentTarget.dataset.resource]
+    const action = event.currentTarget.dataset.action
+    let dataPath = `data.${event.currentTarget.dataset.resource}.value`
+    
+    // Update and increment resource
+    action == 'increase' ? this.actor.update({[dataPath]: resource.value + 1}) : this.actor.update({[dataPath]: resource.value - 1})
+  }
+
+  _onResetResource(event) {
+    event.preventDefault()
+    const resourceLabel = event.currentTarget.dataset.resource
+    const resource = this.actor.data.data[resourceLabel]
+    let dataPath = `data.${resourceLabel}.value`
+
+    this.actor.update({[dataPath]: resource.value = resource.max})
+  }
+
+  _setWoundIcon() {
+    let woundIcon = document.querySelector('.woundIcon')
+    this.actor.data.data.wounded ? woundIcon.style.visibility = 'visible' : woundIcon.style.visibility = 'hidden'
+  }
+  _setWoundBackground() {
+    if (this.actor.data.data.wounded) {
+      document.querySelector('.paperDollContainer').classList.add('wounded')
+    }
+    else {
+      document.querySelector('.paperDollContainer').classList.remove('wounded')
+    }
+  }
+
+  _setPaperDoll(event) {
+    event.preventDefault()
+    if (this.actor.data.data.paperDoll === 'systems/uesrpg-d100/images/paperDoll_Male_Outline_White.png') {
+      this.actor.update({'data.paperDoll': 'systems/uesrpg-d100/images/paperDoll_Female_Outline_White.png'})
+    } 
+    else {
+      this.actor.update({'data.paperDoll': 'systems/uesrpg-d100/images/paperDoll_Male_Outline_White.png'})
+    }
+  }
+
+  _saveScrollPosition(event) {
+    sessionStorage.setItem('scrollPosition.combatItemContainer', document.querySelector('.combatItemContainer').scrollTop)
+    sessionStorage.setItem('scrollPosition.attributeList', document.querySelector('.attributeList').scrollTop)
+  }
+
+  _setScrollPosition() {
+    document.querySelector('.combatItemContainer').scrollTop = sessionStorage.getItem('scrollPosition.combatItemContainer')
+    document.querySelector('.attributeList').scrollTop = sessionStorage.getItem('scrollPosition.attributeList')
+  }
+
+  _createSpellFilterOptions() {
+    for (let spell of this.actor.items.filter(item => item.type === 'spell')) {
+      if ([...document.querySelectorAll('#spellFilter option')].some(i => i.innerHTML === spell.data.data.school)) {continue}
+      else {
+        let option = document.createElement('option')
+        option.innerHTML = spell.data.data.school
+        document.querySelector('#spellFilter').append(option)
+      }
+    }
+  }
+
+  _filterSpells(event) {
+    event.preventDefault()
+    let filterBy = event.currentTarget.value
+    
+    for (let spellItem of [...document.querySelectorAll(".spellList tbody .item")]) {
+      switch (filterBy) {
+        case 'All':
+          spellItem.classList.add('active')
+          break
+          
+        case `${filterBy}`:
+          filterBy == spellItem.dataset.spellSchool ? spellItem.classList.add('active') : spellItem.classList.remove('active')
+          break
+      }
+    }
   }
 
 }

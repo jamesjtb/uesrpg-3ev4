@@ -250,6 +250,7 @@
     "woundPenalty": 0,
     "woundNotes": "",
     "bio": "",
+    "paperDoll": "systems/uesrpg-d100/images/paperDoll_Male_Outline_White.png",
     "soul_energy": "",
     "journal": "",
     "notes": "",
@@ -369,7 +370,11 @@
       "stealth": 0,
       "knowledge": 0,
       "social": 0,
-      "physical": 0
+      "physical": 0,
+      "commerce": 0,
+      "profession1": 0,
+      "profession2": 0,
+      "profession3": 0
     },
     "professionsWound": {
       "combat": 0,
@@ -379,7 +384,11 @@
       "stealth": 0,
       "knowledge": 0,
       "social": 0,
-      "physical": 0
+      "physical": 0,
+      "commerce": 0,
+      "profession1": 0,
+      "profession2": 0,
+      "profession3": 0
     },
     "hp": {
       "base": 0,

@@ -6,36 +6,44 @@
             <h1 class="charname"><input name="name" type="text" value="{{item.name}}" placeholder="Name"/></h1>
             <div class="item-resource">
                 <table>
-                    <tr>
-                        <th>Spell Level</th>
-                        <th>MP Cost</th>
-                        <th>School</th>
-                    </tr>
-                    <tr>
-                        <td><input type="text" name="data.level" value="{{data.level}}" data-dtype="Number"/></td>
-                        <td><input type="text" name="data.cost" value="{{data.cost}}" data-dtype="Number"></td>
-                        <td><select name="data.school" data-dtype="String">
-                            {{#select data.school}}
-                            {{#each data.school_cat as | school_cat key|}}
-                            <option value="{{key}}">{{school_cat}}</option>
-                            {{/each}} {{/select}}
-                        </select></td>
-                    </tr>
-                    <tr>
-                        <th>Damage</th>
-                        <th>Form</th>
-                        <th>Type</th>
-                    </tr>
-                    <tr>
-                        <td><input type="text" name="data.damage" value="{{data.damage}}" data-dtype="String"/></td>
-                        <td><input type="text" name="data.form" value="{{data.form}}" data-dtype="String"></td>
-                        <td><select name="data.spellType" data-dtype="String">
-                            {{#select data.spellType}}
-                            {{#each data.spellTypes as | spellTypes key|}}
-                            <option value="{{key}}">{{spellTypes}}</option>
-                            {{/each}} {{/select}}
-                        </select></td>
-                    </tr>
+                    <thead>
+                        <tr>
+                            <th>Spell Level</th>
+                            <th>MP Cost</th>
+                            <th>School</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><input type="text" name="data.level" value="{{data.level}}" data-dtype="Number"/></td>
+                            <td><input type="text" name="data.cost" value="{{data.cost}}" data-dtype="Number"></td>
+                            <td><select name="data.school" data-dtype="String">
+                                {{#select data.school}}
+                                {{#each data.school_cat as | school_cat key|}}
+                                <option value="{{key}}">{{school_cat}}</option>
+                                {{/each}} {{/select}}
+                            </select></td>
+                        </tr>
+                    </tbody>
+                    <thead>
+                        <tr>
+                            <th>Damage</th>
+                            <th>Form</th>
+                            <th>Type</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><input type="text" name="data.damage" value="{{data.damage}}" data-dtype="String"/></td>
+                            <td><input type="text" name="data.form" value="{{data.form}}" data-dtype="String"></td>
+                            <td><select name="data.spellType" data-dtype="String">
+                                {{#select data.spellType}}
+                                {{#each data.spellTypes as | spellTypes key|}}
+                                <option value="{{key}}">{{spellTypes}}</option>
+                                {{/each}} {{/select}}
+                            </select></td>
+                        </tr>
+                    </tbody>
                 </table>
             </div>
         </div>
@@ -59,14 +67,18 @@
         {{!-- Attributes Tab --}}
         <div class="tab" data-group="primary" data-tab="attributes">
             <table class="field-inputs-small">
-                <tr>
-                    <th>Attribute</th>
-                    <th colspan="2">Input</th>
-                </tr>
-                <tr>
-                    <th>Spell Attributes</th>
-                    <td colspan="2">{{editor content=data.attributes target="data.attributes" button=true owner=owner editable=editable}}</td>
-                </tr>
+                <thead>
+                    <tr>
+                        <th>Attribute</th>
+                        <th colspan="2">Input</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <th>Spell Attributes</th>
+                        <td colspan="2">{{editor content=data.attributes target="data.attributes" button=true owner=owner editable=editable}}</td>
+                    </tr>
+                </tbody>
             </table>
 
     </section>

@@ -556,6 +556,14 @@ export class SimpleActor extends Actor {
       woundPen = -20;
     }
 
+    // Set Skill professions to regular professions (This is a fucking mess, but it's the way it's done for now...)
+    for (let prof in data.professions) {
+      if (prof === 'profession1'||prof === 'profession2'||prof === 'profession3'||prof === 'commerce') {
+        data.professions[prof] === 0 ? data.professions[prof] = data.skills[prof].tn : data.professions[prof] = 0
+      }
+    }
+
+
     if (data.wounded === true) {
       if (this._halfWoundPenalty(actorData) === true) {
         for (var skill in data.professionsWound) {
@@ -571,7 +579,7 @@ export class SimpleActor extends Actor {
       } else if (data.wounded === false) {
         if (this._halfWoundPenalty(actorData) === false) {
           for (var skill in data.professionsWound) {
-            data.professionsWound[skill] = data.professions[skill];
+           data.professionsWound[skill] = data.professions[skill];
           }
         } else if (this._halfWoundPenalty(actorData) === false) {
           for (var skill in data.professionsWound) {
