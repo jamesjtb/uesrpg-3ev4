@@ -303,28 +303,6 @@
                                     <td><input type="text" name="data.soul_energy" value="{{data.soul_energy}}"></td>
                                 </tr>
                             </tbody>
-                            <thead>
-                                <tr>
-                                    <th>Size Category</th>
-                                    <th>Armor Class</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td><select name="data.size" data-type="String">
-                                        {{#select actor.data.size}}
-                                        {{#each actor.data.size_cat as |size_cat key|}}
-                                        <option value="{{key}}">{{size_cat}}</option> 
-                                        {{/each}} {{/select}}
-                                    </select></td>
-                                    <td><select name="data.armor_class" data-type="String">
-                                        {{#select actor.data.armor_class}}
-                                        {{#each actor.data.armor_class_cat as |armor_class_cat key|}}
-                                        <option value="{{key}}">{{armor_class_cat}}</option> 
-                                        {{/each}} {{/select}}
-                                    </select></td>
-                                </tr>
-                            </tbody>
                         </table>              
                     </div>
                     <div class="bioPage">
@@ -364,7 +342,32 @@
                     </div>
                     <div class="combatReferenceContainer">
                         <div class="combatStatsContainer">
-                            <h2>Combat Stats</h2>
+                            <div class="smallDropDown">
+                                <table>
+                                    <thead>
+                                        <tr>
+                                            <th>Size Category</th>
+                                            <th>Armor Class</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td><select name="data.size" data-type="String">
+                                                {{#select actor.data.size}}
+                                                {{#each actor.data.size_cat as |size_cat key|}}
+                                                <option value="{{key}}">{{size_cat}}</option> 
+                                                {{/each}} {{/select}}
+                                            </select></td>
+                                            <td><select name="data.armor_class" data-type="String">
+                                                {{#select actor.data.armor_class}}
+                                                {{#each actor.data.armor_class_cat as |armor_class_cat key|}}
+                                                <option value="{{key}}">{{armor_class_cat}}</option> 
+                                                {{/each}} {{/select}}
+                                            </select></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
                             <div class="combatResources">
                                 <div class="combatResource box1">
                                     <table>

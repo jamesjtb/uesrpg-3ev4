@@ -19,7 +19,7 @@
 
 .window-app .window-content,
 .worldbuilding .window-content {
-  background: url("../images/parchment4.jpg") repeat;
+  background: url("../images/parchment5.jpg") repeat;
   border-left: rgb(0, 0, 0) 5px solid;
   border-right: rgb(0, 0, 0) 5px solid;
   border-bottom: rgb(0, 0, 0) 5px solid;
@@ -79,7 +79,7 @@ button {
 .dialog-buttons {
   position: sticky;
   bottom: 0;
-  background: url("../images/parchment4.jpg") repeat;
+  background: url("../images/parchment5.jpg") repeat;
 }
 
 .dialogForm {
@@ -87,7 +87,7 @@ button {
 }
 
 .chat-message {
-  background: url("../images/parchment4.jpg") repeat !important;
+  background: url("../images/parchment5.jpg") repeat !important;
 }
 
 .chat-message h2 {
@@ -240,6 +240,8 @@ button {
 
 .worldbuilding table {
   text-align: center;
+  padding: 0;
+  margin: 0;
 }
 
 .worldbuilding table thead {
@@ -398,9 +400,8 @@ button {
   position: sticky;
   top: 0;
   z-index: 2;
-  background: url("../images/parchment4.jpg") repeat;
+  background: url("../images/parchment5.jpg") repeat;
   padding: 5px 0;
-
 }
 
 .worldbuilding .headerContainer {

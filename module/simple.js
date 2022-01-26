@@ -161,4 +161,5 @@ Hooks.once("init", async function() {
   }
 
   if (game.settings.get('uesrpg-d100', 'startUpDialog') === false) {startUpFunction()}
+
 });
