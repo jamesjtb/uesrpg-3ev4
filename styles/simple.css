@@ -805,7 +805,6 @@ button {
   width: 50%;
   height: 200px;
   background-size: 0 0;
-  border-right: 1px solid;
 }
 
 .worldbuilding .wounded {
@@ -943,6 +942,22 @@ button {
   align-items: center;
 }
 
+.worldbuilding .resistance {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 5px;
+}
+
+.worldbuilding .resistance label {
+  width: 20px;
+}
+
+.worldbuilding .resistance i {
+  width: 20px;
+}
+
 .worldbuilding .woundContainer {
   display: flex;
   flex-direction: column;
@@ -972,6 +987,19 @@ button {
   flex-direction: column;
   width: 100%;
   height: 435px;
+}
+
+.worldbuilding .equippedItemContainer {
+  width: 100%;
+  border-left: 1px solid;
+}
+
+.worldbuilding .equippedItemContainer .armorName {
+  text-align: left;
+  width: 60%;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
 }
 
 /*---------------------------- 

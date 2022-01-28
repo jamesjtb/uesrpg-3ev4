@@ -200,6 +200,7 @@
     html.find(".incrementResource").click(this._onIncrementResource.bind(this))
     html.find(".resourceLabel button").click(this._onResetResource.bind(this))
     html.find("#spellFilter").click(this._filterSpells.bind(this))
+    html.find('#selectWornArmor').click(this._selectWornArmor.bind(this))
 
     //Item Create Buttons
     html.find(".item-create").click(await this._onItemCreate.bind(this));
@@ -211,6 +212,7 @@
     this._setResourceBars()
     this._setWoundIcon()
     this._setWoundBackground()
+    this._setEquippedArmor()
 
     // Set saved scroll bar position if not default
     if (localStorage.getItem('scrollPosition') !== 0) {
@@ -1164,8 +1166,8 @@
               label: "Submit",
               callback: html => {
                 // Create input arrays
-                const luckyNums = [...document.querySelectorAll(".luckyNum")]
-                const unluckyNums = [...document.querySelectorAll(".unluckyNum")]
+                const luckyNums = [...this.form.querySelectorAll(".luckyNum")]
+                const unluckyNums = [...this.form.querySelectorAll(".unluckyNum")]
 
                 // Assign input values to appropriate actor fields
                 for (let num of luckyNums) {
@@ -1227,8 +1229,8 @@
             label: "Submit",
             callback: html => {
               // Create input arrays
-              const luckyNums = [...document.querySelectorAll(".luckyNum")]
-              const unluckyNums = [...document.querySelectorAll(".unluckyNum")]
+              const luckyNums = [...this.form.querySelectorAll(".luckyNum")]
+              const unluckyNums = [...this.form.querySelectorAll(".unluckyNum")]
 
               // Assign input values to appropriate actor fields
               for (let num of luckyNums) {
@@ -1507,8 +1509,8 @@
           label: "Submit",
           callback: async (html) => {
               // Check for a selection, or show error instead
-              let raceSelection = [...document.querySelectorAll('.raceSelect')].filter(i => i.checked)
-              let customRaceLabel = document.querySelector('#customRace').value
+              let raceSelection = [...this.form.querySelectorAll('.raceSelect')].filter(i => i.checked)
+              let customRaceLabel = this.form.querySelector('#customRace').value
 
               if (raceSelection.length < 1 && customRaceLabel === '') {
                 ui.notifications.error("Please select a race or input a custom race label")
@@ -1809,9 +1811,9 @@
           label: "Submit",
           callback: async (html) => {
               // Check for a selection, or show error instead
-              let signSelection = [...document.querySelectorAll('.signSelect')].filter(i => i.checked)
-              let starCursedSelection = [...document.querySelectorAll('.cursedSelect')].filter(i => i.checked)
-              let customSignLabel = document.querySelector('#customSign').value
+              let signSelection = [...this.form.querySelectorAll('.signSelect')].filter(i => i.checked)
+              let starCursedSelection = [...this.form.querySelectorAll('.cursedSelect')].filter(i => i.checked)
+              let customSignLabel = this.form.querySelector('#customSign').value
 
               if (signSelection.length < 1 && customSignLabel === '') {
                 ui.notifications.error("Please select a race or input a custom race label")
@@ -1950,8 +1952,8 @@
           label: "Submit",
           callback: html => {
               // Grab Input Values
-              const currentXP = document.querySelector("#xp").value
-              const totalXP = document.querySelector("#xpTotal").value
+              const currentXP = this.form.querySelector("#xp").value
+              const totalXP = this.form.querySelector("#xpTotal").value
               
               // Update XP Values on Actor
               this.actor.update({'data.xp': currentXP, 'data.xpTotal': totalXP})
@@ -1969,11 +1971,11 @@
     const data = this.actor.data.data
 
     if (data) {
-        for (let bar of [...document.querySelectorAll('.currentBar')]) {
+        for (let bar of [...this.form.querySelectorAll('.currentBar')]) {
           let resource = data[bar.dataset.resource]
 
           if (resource.max !== 0) {
-              let resourceElement = document.querySelector(`#${bar.id}`)
+              let resourceElement = this.form.querySelector(`#${bar.id}`)
               let proportion = Number((100 * (resource.value / resource.max)).toFixed(0))
 
               // if greater than 100 or lower than 20, set values to fit bars correctly
@@ -1988,16 +1990,16 @@
   }
 
   _setWoundIcon() {
-    let woundIcon = document.querySelector('.woundIcon')
+    let woundIcon = this.form.querySelector('.woundIcon')
     this.actor.data.data.wounded ? woundIcon.style.visibility = 'visible' : woundIcon.style.visibility = 'hidden'
   }
 
   _setWoundBackground() {
     if (this.actor.data.data.wounded) {
-      document.querySelector('.paperDollContainer').classList.add('wounded')
+      this.form.querySelector('.paperDollContainer').classList.add('wounded')
     }
     else {
-      document.querySelector('.paperDollContainer').classList.remove('wounded')
+      this.form.querySelector('.paperDollContainer').classList.remove('wounded')
     }
   }
 
@@ -2012,22 +2014,22 @@
   }
 
   _saveScrollPosition(event) {
-    sessionStorage.setItem('scrollPosition.combatItemContainer', document.querySelector('.combatItemContainer').scrollTop)
-    sessionStorage.setItem('scrollPosition.attributeList', document.querySelector('.attributeList').scrollTop)
+    sessionStorage.setItem('scrollPosition.combatItemContainer', this.form.querySelector('.combatItemContainer').scrollTop)
+    sessionStorage.setItem('scrollPosition.attributeList', this.form.querySelector('.attributeList').scrollTop)
   }
 
   _setScrollPosition() {
-    document.querySelector('.combatItemContainer').scrollTop = sessionStorage.getItem('scrollPosition.combatItemContainer')
-    document.querySelector('.attributeList').scrollTop = sessionStorage.getItem('scrollPosition.attributeList')
+    this.form.querySelector('.combatItemContainer').scrollTop = sessionStorage.getItem('scrollPosition.combatItemContainer')
+    this.form.querySelector('.attributeList').scrollTop = sessionStorage.getItem('scrollPosition.attributeList')
   }
 
   _createSpellFilterOptions() {
     for (let spell of this.actor.items.filter(item => item.type === 'spell')) {
-      if ([...document.querySelectorAll('#spellFilter option')].some(i => i.innerHTML === spell.data.data.school)) {continue}
+      if ([...this.form.querySelectorAll('#spellFilter option')].some(i => i.innerHTML === spell.data.data.school)) {continue}
       else {
         let option = document.createElement('option')
         option.innerHTML = spell.data.data.school
-        document.querySelector('#spellFilter').append(option)
+        this.form.querySelector('#spellFilter').append(option)
       }
     }
   }
@@ -2036,7 +2038,7 @@
     event.preventDefault()
     let filterBy = event.currentTarget.value
     
-    for (let spellItem of [...document.querySelectorAll(".spellList tbody .item")]) {
+    for (let spellItem of [...this.form.querySelectorAll(".spellList tbody .item")]) {
       switch (filterBy) {
         case 'All':
           spellItem.classList.add('active')
@@ -2055,8 +2057,8 @@
       let filterBy = sessionStorage.getItem('savedSpellFilter')
 
       if (filterBy !== null||filterBy !== undefined) {
-        document.querySelector('#spellFilter').value = filterBy
-        for (let spellItem of [...document.querySelectorAll('.spellList tbody .item')]) {
+        this.form.querySelector('#spellFilter').value = filterBy
+        for (let spellItem of [...this.form.querySelectorAll('.spellList tbody .item')]) {
           switch (filterBy) {
             case 'All':
               spellItem.classList.add('active')
@@ -2068,6 +2070,98 @@
           }
         }
       }
+  }
+
+  _setEquippedArmor() {
+    for (let armor of this.actor.items.filter(item => item.type === 'armor' && item.data.data.equipped)) {
+      let tableEntry = document.createElement('tr')
+      tableEntry.innerHTML = `<tr>
+                                  <td class="item armorName" data-item-id="${armor.id}">
+                                      <div class="item-name" style="display: flex; flex-direction: row; align-items: center; gap: 5px;">
+                                        <img class="item-img" src="${armor.img}">
+                                        ${armor.name}
+                                      </div>
+                                  </td>
+                                  <td>${armor.data.data.armor}</td>
+                                  <td>${armor.data.data.magic_ar}</td>\
+                                  <td>${armor.data.data.blockRating}</td>
+                              </tr>`
+      this.form.querySelector('#equippedItemTableBody').append(tableEntry)
+    }
+  }
+
+  _selectWornArmor(event) {
+    event.preventDefault()
+    let armorList = this.actor.items.filter(armor => armor.type === 'armor')
+
+    let armorEntries = []
+    for (let armor of armorList) {
+      let tableEntry = `<tr>
+                            <td data-item-id="${armor.data._id}">
+                                <div style="display: flex; flex-direction: row; align-items: center; gap: 5px;">
+                                  <img class="item-img" src="${armor.img}" height="24" width="24">
+                                  ${armor.name}
+                                </div>
+                            </td>
+                            <td style="text-align: center;">
+                                <input type="checkbox" class="armorSelect" data-item-id="${armor.data._id}">
+                            </td>
+                        </tr>`
+
+      armorEntries.push(tableEntry)
+    }
+
+    let d = new Dialog({
+      title: "Armor List",
+      content: `<div>
+                    <div>
+                        <h2>Armor List</h2>
+                        <label>Selecting nothing will unequip all armor</label>
+                    </div>
+
+                    <div>
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Armor</th>
+                                    <th>Equipped</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                ${armorEntries.join('')}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>`,
+
+      buttons: {
+        one: {
+          label: "Cancel",
+          callback: html => console.log('Cancelled')
+        },
+        two: {
+          label: "Submit",
+          callback: async html => {
+                let selectedArmor = [...document.querySelectorAll('.armorSelect')].filter(armor => armor.checked)
+
+                // Unequip all existing armors
+                for (let armor of this.actor.items.filter(item => item.type === 'armor')) {
+                  await armor.update({'data.equipped': false})
+                }
+
+                // Equip all selected armors
+                for (let armor of selectedArmor) {
+                  let thisArmor = this.actor.items.filter(item => item.id == armor.dataset.itemId)[0]
+                  await thisArmor.update({'data.equipped': true})
+                }
+          }
+        }
+      },
+      default: "two",
+      close: html => console.log()
+    })
+
+    d.render(true)
   }
 
 }

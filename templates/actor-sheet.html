@@ -219,6 +219,15 @@
                                 <div>
                                     <i class="fas fa-heart-broken woundIcon" title="Wound Penalty"> {{data.woundPenalty}}</i>
                                 </div>
+                                <div type="button" id="diseaseR" class="resistance" title="Disease Resistance"><i class="fas fa-bacterium"></i> <label>{{data.resistance.diseaseR}}%</label></div>
+                                <div type="button" id="fireR" class="resistance" title="Fire Resistance"><i class="fas fa-fire"></i> <label>{{data.resistance.fireR}}</label></div>
+                                <div type="button" id="frostR" class="resistance" title="Frost Resistance"><i class="fas fa-snowflake"></i> <label>{{data.resistance.frostR}}</label></div>
+                                <div type="button" id="shockR" class="resistance" title="Shock Resistance"><i class="fas fa-bolt"></i> <label>{{data.resistance.shockR}}</label></div>
+                                <div type="button" id="poisonR" class="resistance" title="Poison Resistance"><i class="fas fa-skull-crossbones"></i> <label>{{data.resistance.poisonR}}</label></div>
+                                <div type="button" id="magicR" class="resistance" title="Magic Resistance"><i class="fas fa-hand-sparkles"></i> <label>{{data.resistance.magicR}}</label></div>
+                                <div type="button" id="natToughness" class="resistance" title="Natural Toughness"><i class="fa fa-fist-raised"></i> <label>{{data.resistance.natToughness}}</label></div>
+                                <div type="button" id="silverR" class="resistance" title="Silver Resistance"><i class="fab fa-wolf-pack-battalion"></i> <label>{{data.resistance.silverR}}</label></div>
+                                <div type="button" id="sunlightR" class="resistance" title="Sunlight Resistance"><i class="fas fa-sun"></i> <label>{{data.resistance.sunlightR}}</label></div>
                             </div>
                         </div>
                         <div class="rightColumn">
@@ -226,12 +235,36 @@
                                 <div class="swapContainer" title="Swap Body Image">
                                     <button type="button"><i class="fas fa-random"></i></button>
                                 </div>
+                                <button title="Resistances"><i class="fas fa-fist-raised"></i></button>
                                 <input title="Wounded" class="woundCheckBox" type="checkbox" name="data.wounded" {{checked data.wounded}}>
                             </div>
                         </div>
                         <img id="paperDoll" src="{{data.paperDoll}}" alt="paperDoll" data-edit="data.paperDoll">
                     </div>
-                    <div class="combatReferenceContainer">
+
+
+
+                    <div class="equippedItemContainer">
+                        <div>
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>
+                                            <button type="button" id="selectWornArmor">Armor</button>
+                                        </th>
+                                        <th>AR</th>
+                                        <th>MR</th>
+                                        <th>BR</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="equippedItemTableBody"></tbody>
+                            </table>
+                        </div>
+                    </div>
+
+
+
+                    <!-- <div class="combatReferenceContainer">
                         <div class="combatStatsContainer">
                             <div class="smallDropDown">
                                 <table>
@@ -339,8 +372,9 @@
                                 <textarea name="data.woundNotes">{{data.woundNotes}}</textarea>
                             </div>
                         </div>
-                    </div>
+                    </div> -->
                 </div>
+
                 <div class="combatSegment2">
                     <div class="combatItemContainer">
                         <div class="combatListContainer">
