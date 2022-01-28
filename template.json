@@ -633,6 +633,7 @@
     "magic_ar": 0,
     "enchant_level": 0,
     "excludeENC": false,
+    "consumable": false,
     "qualities": "",
     "charge": {
       "value": 0,

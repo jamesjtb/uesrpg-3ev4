@@ -180,7 +180,6 @@ export class npcSheet extends ActorSheet {
     html.find(".characteristic-roll").click(await this._onClickCharacteristic.bind(this));
     html.find(".professions-roll").click(await this._onProfessionsRoll.bind(this));
     html.find(".damage-roll").click(await this._onDamageRoll.bind(this));
-    // html.find(".unconventional-roll").click(await this._onUnconventionalRoll.bind(this));
     html.find(".magic-roll").click(await this._onSpellRoll.bind(this));
     html.find(".resistance-roll").click(await this._onResistanceRoll.bind(this));
     html.find(".armor-roll").click(await this._onArmorRoll.bind(this));
@@ -207,6 +206,7 @@ export class npcSheet extends ActorSheet {
 
     // Checks UI Elements for update
     this._createSpellFilterOptions()
+    this._setDefaultSpellFilter()
     this._setResourceBars()
     this._setWoundIcon()
     this._setWoundBackground()
@@ -1207,13 +1207,34 @@ export class npcSheet extends ActorSheet {
       switch (filterBy) {
         case 'All':
           spellItem.classList.add('active')
+          sessionStorage.setItem('savedSpellFilter', filterBy)
           break
           
         case `${filterBy}`:
           filterBy == spellItem.dataset.spellSchool ? spellItem.classList.add('active') : spellItem.classList.remove('active')
+          sessionStorage.setItem('savedSpellFilter', filterBy)
           break
       }
     }
+  }
+
+  _setDefaultSpellFilter() {
+      let filterBy = sessionStorage.getItem('savedSpellFilter')
+
+      if (filterBy !== null||filterBy !== undefined) {
+        document.querySelector('#spellFilter').value = filterBy
+        for (let spellItem of [...document.querySelectorAll('.spellList tbody .item')]) {
+          switch (filterBy) {
+            case 'All':
+              spellItem.classList.add('active')
+              break
+
+            case `${filterBy}`:
+              filterBy == spellItem.dataset.spellSchool ? spellItem.classList.add('active') : spellItem.classList.remove('active')
+              break
+          }
+        }
+      }
   }
 
 }

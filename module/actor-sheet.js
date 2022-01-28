@@ -207,6 +207,7 @@
     // Checks for UI Elements on Sheets and Updates
     html.find(".swapContainer button").click(this._setPaperDoll.bind(this))
     this._createSpellFilterOptions()
+    this._setDefaultSpellFilter()
     this._setResourceBars()
     this._setWoundIcon()
     this._setWoundBackground()
@@ -1117,67 +1118,134 @@
 
   _onLuckyMenu(event) {
     event.preventDefault()
+    let d
 
-    let d = new Dialog({
-      title: "Lucky & Unlucky Numbers",
-      content: `<form style="padding: 10px">
-                  <div style="background: rgba(85, 85, 85, 0.40); border: solid 1px; padding: 10px; font-style: italic;">
-                      Input your character's lucky and unlucky numbers and click submit to register them. You can change them at any point.
-                  </div>
+    if (this.actor.items.filter(item => item.type === 'trait' && (item.name === 'The Thief'||item.name === 'The Star-Cursed Thief')).length > 0) { 
+        d = new Dialog({
+          title: "Lucky & Unlucky Numbers",
+          content: `<form style="padding: 10px">
+                      <div style="background: rgba(85, 85, 85, 0.40); border: solid 1px; padding: 10px; font-style: italic;">
+                          Input your character's lucky and unlucky numbers and click submit to register them. You can change them at any point.
+                      </div>
 
-                  <div>
-                    <h2 style="text-align: center;">
-                      Lucky Numbers
-                    </h2>
-                    <div style="display: flex; justify-content: space-around; align-items: center; text-align: center;">
-                        <input class="luckyNum" id="ln1" type="number" value=${this.actor.data.data.lucky_numbers.ln1}>
-                        <input class="luckyNum" id="ln2" type="number" value=${this.actor.data.data.lucky_numbers.ln2}>
-                        <input class="luckyNum" id="ln3" type="number" value=${this.actor.data.data.lucky_numbers.ln3}>
-                        <input class="luckyNum" id="ln4" type="number" value=${this.actor.data.data.lucky_numbers.ln4}>
-                        <input class="luckyNum" id="ln5" type="number" value=${this.actor.data.data.lucky_numbers.ln5}>
-                    </div>
-                  </div>
+                      <div>
+                        <h2 style="text-align: center;">
+                          Lucky Numbers
+                        </h2>
+                        <div style="display: flex; justify-content: space-around; align-items: center; text-align: center;">
+                            <input class="luckyNum" id="ln1" type="number" value=${this.actor.data.data.lucky_numbers.ln1}>
+                            <input class="luckyNum" id="ln2" type="number" value=${this.actor.data.data.lucky_numbers.ln2}>
+                            <input class="luckyNum" id="ln3" type="number" value=${this.actor.data.data.lucky_numbers.ln3}>
+                            <input class="luckyNum" id="ln4" type="number" value=${this.actor.data.data.lucky_numbers.ln4}>
+                            <input class="luckyNum" id="ln5" type="number" value=${this.actor.data.data.lucky_numbers.ln5}>
+                            <input class="luckyNum thiefNum" id="ln6" type="number" value=${this.actor.data.data.lucky_numbers.ln6}>
+                        </div>
+                      </div>
 
-                  <div>
-                    <h2 style="text-align: center;">
-                      Unlucky Numbers
-                    </h2>
-                    <div style="display: flex; justify-content: space-around; align-items: center; text-align: center;">
-                        <input class="unluckyNum" id="ul1" type="number" value=${this.actor.data.data.unlucky_numbers.ul1}>
-                        <input class="unluckyNum" id="ul2" type="number" value=${this.actor.data.data.unlucky_numbers.ul2}>
-                        <input class="unluckyNum" id="ul3" type="number" value=${this.actor.data.data.unlucky_numbers.ul3}>
-                        <input class="unluckyNum" id="ul4" type="number" value=${this.actor.data.data.unlucky_numbers.ul4}>
-                        <input class="unluckyNum" id="ul5" type="number" value=${this.actor.data.data.unlucky_numbers.ul5}>
-                    </div>
-                  </div>
-                </form>`,
-      buttons: {
-        one: {
-          label: "Cancel",
-          callback: html => console.log("Cancelled")
-        },
-        two: {
-          label: "Submit",
-          callback: html => {
-            // Create input arrays
-            const luckyNums = [...document.querySelectorAll(".luckyNum")]
-            const unluckyNums = [...document.querySelectorAll(".unluckyNum")]
+                      <div>
+                        <h2 style="text-align: center;">
+                          Unlucky Numbers
+                        </h2>
+                        <div style="display: flex; justify-content: space-around; align-items: center; text-align: center;">
+                            <input class="unluckyNum" id="ul1" type="number" value=${this.actor.data.data.unlucky_numbers.ul1}>
+                            <input class="unluckyNum" id="ul2" type="number" value=${this.actor.data.data.unlucky_numbers.ul2}>
+                            <input class="unluckyNum" id="ul3" type="number" value=${this.actor.data.data.unlucky_numbers.ul3}>
+                            <input class="unluckyNum" id="ul4" type="number" value=${this.actor.data.data.unlucky_numbers.ul4}>
+                            <input class="unluckyNum" id="ul5" type="number" value=${this.actor.data.data.unlucky_numbers.ul5}>
+                        </div>
+                      </div>
+                    </form>`,
+          buttons: {
+            one: {
+              label: "Cancel",
+              callback: html => console.log("Cancelled")
+            },
+            two: {
+              label: "Submit",
+              callback: html => {
+                // Create input arrays
+                const luckyNums = [...document.querySelectorAll(".luckyNum")]
+                const unluckyNums = [...document.querySelectorAll(".unluckyNum")]
 
-            // Assign input values to appropriate actor fields
-            for (let num of luckyNums) {
-              this.actor.data.data.lucky_numbers[num.id] = Number(num.value)
+                // Assign input values to appropriate actor fields
+                for (let num of luckyNums) {
+                  this.actor.data.data.lucky_numbers[num.id] = Number(num.value)
+                }
+
+                for (let num of unluckyNums) {
+                  this.actor.data.data.unlucky_numbers[num.id] = Number(num.value)
+                }
+
+              }
             }
+          },
+          default: "two",
+          close: html => console.log()
+        })
+    }
 
-            for (let num of unluckyNums) {
-              this.actor.data.data.unlucky_numbers[num.id] = Number(num.value)
+    else {
+      d = new Dialog({
+        title: "Lucky & Unlucky Numbers",
+        content: `<form style="padding: 10px">
+                    <div style="background: rgba(85, 85, 85, 0.40); border: solid 1px; padding: 10px; font-style: italic;">
+                        Input your character's lucky and unlucky numbers and click submit to register them. You can change them at any point.
+                    </div>
+
+                    <div>
+                      <h2 style="text-align: center;">
+                        Lucky Numbers
+                      </h2>
+                      <div style="display: flex; justify-content: space-around; align-items: center; text-align: center;">
+                          <input class="luckyNum" id="ln1" type="number" value=${this.actor.data.data.lucky_numbers.ln1}>
+                          <input class="luckyNum" id="ln2" type="number" value=${this.actor.data.data.lucky_numbers.ln2}>
+                          <input class="luckyNum" id="ln3" type="number" value=${this.actor.data.data.lucky_numbers.ln3}>
+                          <input class="luckyNum" id="ln4" type="number" value=${this.actor.data.data.lucky_numbers.ln4}>
+                          <input class="luckyNum" id="ln5" type="number" value=${this.actor.data.data.lucky_numbers.ln5}>
+                      </div>
+                    </div>
+
+                    <div>
+                      <h2 style="text-align: center;">
+                        Unlucky Numbers
+                      </h2>
+                      <div style="display: flex; justify-content: space-around; align-items: center; text-align: center;">
+                          <input class="unluckyNum" id="ul1" type="number" value=${this.actor.data.data.unlucky_numbers.ul1}>
+                          <input class="unluckyNum" id="ul2" type="number" value=${this.actor.data.data.unlucky_numbers.ul2}>
+                          <input class="unluckyNum" id="ul3" type="number" value=${this.actor.data.data.unlucky_numbers.ul3}>
+                          <input class="unluckyNum" id="ul4" type="number" value=${this.actor.data.data.unlucky_numbers.ul4}>
+                          <input class="unluckyNum" id="ul5" type="number" value=${this.actor.data.data.unlucky_numbers.ul5}>
+                      </div>
+                    </div>
+                  </form>`,
+        buttons: {
+          one: {
+            label: "Cancel",
+            callback: html => console.log("Cancelled")
+          },
+          two: {
+            label: "Submit",
+            callback: html => {
+              // Create input arrays
+              const luckyNums = [...document.querySelectorAll(".luckyNum")]
+              const unluckyNums = [...document.querySelectorAll(".unluckyNum")]
+
+              // Assign input values to appropriate actor fields
+              for (let num of luckyNums) {
+                this.actor.data.data.lucky_numbers[num.id] = Number(num.value)
+              }
+
+              for (let num of unluckyNums) {
+                this.actor.data.data.unlucky_numbers[num.id] = Number(num.value)
+              }
+
             }
-
           }
-        }
-      },
-      default: "two",
-      close: html => console.log()
-    })
+        },
+        default: "two",
+        close: html => console.log()
+      })
+    }
     d.render(true)
   }
 
@@ -1568,7 +1636,7 @@
           "Star-Cursed Lover: As above, but also gain +5 Personality and -5 Willpower OR Strength"
         ],
         items: ['The Lover'],
-        items: ['The Star-Cursed Lover']
+        starCursed: ['The Star-Cursed Lover']
       },
       mage: {
         name: 'Mage',
@@ -1638,7 +1706,7 @@
           "Star-Cursed Thief: As above, but replace their rolled Luck Score with 50, gain the Akiviri Danger Sense Power, and the Running Out of Luck trait."
         ],
         items: ['The Thief'],
-        starCursed: ['The Star-Cursed Thief', 'Akiviri Danger Sense', 'Running Out of Luck']
+        starCursed: ['The Star-Cursed Thief', 'Akaviri Danger-Sense', 'Running Out of Luck']
       },
       tower: {
         name: 'Tower',
@@ -1923,6 +1991,7 @@
     let woundIcon = document.querySelector('.woundIcon')
     this.actor.data.data.wounded ? woundIcon.style.visibility = 'visible' : woundIcon.style.visibility = 'hidden'
   }
+
   _setWoundBackground() {
     if (this.actor.data.data.wounded) {
       document.querySelector('.paperDollContainer').classList.add('wounded')
@@ -1971,13 +2040,34 @@
       switch (filterBy) {
         case 'All':
           spellItem.classList.add('active')
+          sessionStorage.setItem('savedSpellFilter', filterBy)
           break
           
         case `${filterBy}`:
           filterBy == spellItem.dataset.spellSchool ? spellItem.classList.add('active') : spellItem.classList.remove('active')
+          sessionStorage.setItem('savedSpellFilter', filterBy)
           break
       }
     }
+  }
+
+  _setDefaultSpellFilter() {
+      let filterBy = sessionStorage.getItem('savedSpellFilter')
+
+      if (filterBy !== null||filterBy !== undefined) {
+        document.querySelector('#spellFilter').value = filterBy
+        for (let spellItem of [...document.querySelectorAll('.spellList tbody .item')]) {
+          switch (filterBy) {
+            case 'All':
+              spellItem.classList.add('active')
+              break
+
+            case `${filterBy}`:
+              filterBy == spellItem.dataset.spellSchool ? spellItem.classList.add('active') : spellItem.classList.remove('active')
+              break
+          }
+        }
+      }
   }
 
 }

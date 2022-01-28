@@ -577,15 +577,9 @@ export class SimpleActor extends Actor {
         data.initiative.value = data.initiative.base + woundIni;
         }
       } else if (data.wounded === false) {
-        if (this._halfWoundPenalty(actorData) === false) {
           for (var skill in data.professionsWound) {
            data.professionsWound[skill] = data.professions[skill];
-          }
-        } else if (this._halfWoundPenalty(actorData) === false) {
-          for (var skill in data.professionsWound) {
-            data.professionsWound[skill] = data.professions[skill];
-          }
-          }
+        }
       }
 
     //Fatigue Penalties

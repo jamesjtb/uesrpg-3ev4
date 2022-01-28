@@ -1,6 +1,111 @@
 <form class="{{cssClass}}" autocomplete="off">
 
-    {{!-- Sheet Header --}}
+    <div class="stickyHeader">
+        <div class="headerContainer">
+            <div>
+                <img class="profile-img" src="{{actor.img}}" data-edit="img" title="{{actor.name}}">
+            </div>
+            <div class="headerInfoFlexBox">
+                <div>
+                    <h1 class="charname"><input type="text" name="name" value="{{actor.name}}" placeholder="Name"></h1>
+                </div>
+                <div class="resourceBars">
+                    <div id="hpResource">
+                        <div class="resourceLabel">
+                            <button type="button" data-resource="hp">Health</button>
+                            <div class="resourceButton">
+                                <i data-action="increase" data-resource="hp" class="fas fa-plus fa-xs incrementResource"></i>
+                                <i data-action="decrease" data-resource="hp" class="fas fa-minus fa-xs incrementResource"></i>
+                            </div>
+                        </div>
+                        <div class="maxBar" data-resource="hp">
+                            <div id="hpBar" class="currentBar" data-resource="hp"></div>
+                        </div>
+                    </div>
+                    <div id="staminaResource">
+                        <div class="resourceLabel">
+                            <button type="button" data-resource="stamina">Stamina</button>
+                            <div class="resourceButton">
+                                <i data-action="increase" data-resource="stamina" class="fas fa-plus fa-xs incrementResource"></i>
+                                <i data-action="decrease" data-resource="stamina" class="fas fa-minus fa-xs incrementResource"></i>
+                            </div>
+                        </div>
+                        <div class="maxBar" data-resource="stamina">
+                            <div id="staminaBar" class="currentBar" data-resource="stamina"></div>
+                        </div>
+                    </div>
+                    <div id="magickaResource">
+                        <div class="resourceLabel">
+                            <button type="button" data-resource="magicka">Magicka</button>
+                            <div class="resourceButton">
+                                <i data-action="increase" data-resource="magicka" class="fas fa-plus fa-xs incrementResource"></i>
+                                <i data-action="decrease" data-resource="magicka" class="fas fa-minus fa-xs incrementResource"></i>
+                            </div>
+                        </div>
+                        <div class="maxBar" data-resource="magicka">
+                            <div id="magickaBar" class="currentBar" data-resource="magicka"></div>
+                        </div>
+                    </div>
+                    <div id="luckResource">
+                        <div class="resourceLabel">
+                            <button type="button" data-resource="luck_points">Luck</button>
+                            <div class="resourceButton">
+                                <i data-action="increase" data-resource="luck_points" class="fas fa-plus fa-xs incrementResource"></i>
+                                <i data-action="decrease" data-resource="luck_points" class="fas fa-minus fa-xs incrementResource"></i>
+                            </div>
+                        </div>
+                        <div class="maxBar" data-resource="luck_points">
+                            <div id="luck_pointsBar" class="currentBar" data-resource="luck_points"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        {{!-- Sheet Tab Navigation --}}
+        <nav class="sheet-tabs tabs" data-group="primary">
+            <a class="item" data-tab="core">Core</a>
+        </nav>
+    </div>
+
+    {{!-- Sheet Body --}}
+    <section class="sheet-body">
+
+        {{!-- Core Tab --}}
+        <div class="tab core" data-group="primary" data-tab="core">
+            <div class="bioTabContainer">
+                <div class="buttonStats">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Race/Species</th>
+                                <th>Age</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><input type="text" name="data.race" value="{{data.race}}" ></td>
+                                <td><input type="text" name="data.age" value="{{data.age}}"></td>
+                            </tr>
+                        </tbody>
+                    </table>              
+                </div>
+                <div class="bioPage">
+                    <h2>Biography</h2>
+                    <div class="contentContainer">
+                        {{editor content=data.data.bio target="data.data.bio" button=true owner=owner editable=editable}}
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </section>
+
+    
+
+
+
+    <!-- {{!-- Sheet Header --}}
     <div class="stickyHeader">
     <header class="sheet-header">
         <img class="profile-img" src="{{actor.img}}" data-edit="img" title="{{actor.name}}" height="100" width="100"/>
@@ -49,6 +154,6 @@
             </div>
         </div>
 
-    </section>
+    </section> -->
 </form>
 

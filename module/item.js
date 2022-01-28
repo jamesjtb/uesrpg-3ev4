@@ -21,6 +21,10 @@ export class SimpleItem extends Item {
           }
         }
       }
+
+      if (this.data.data.hasOwnProperty('modPrice') && this.isEmbedded && actorData) {
+        this._prepareMerchantItem(actorData, itemData)
+      }
   }
 
   /**
@@ -89,6 +93,12 @@ export class SimpleItem extends Item {
       data.value = Number(chaTotal);
     }
 
+  }
+
+  _prepareMerchantItem(actorData, itemData) {
+    const data = itemData
+
+    data.modPrice = (data.price + (data.price * (this.actor.data.data.priceMod/100))).toFixed(0);
   }
 
   /**

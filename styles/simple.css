@@ -244,6 +244,11 @@ button {
   margin: 0;
 }
 
+.worldbuilding table img {
+  height: 24px;
+  width: 24px;
+}
+
 .worldbuilding table thead {
   background: rgba(161, 149, 149, 0.486);
 }
@@ -422,6 +427,90 @@ button {
 
 .worldbuilding .headerContainer input {
   border: none;
+}
+
+.worldbuilding .merchantResources {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: space-around;
+  gap: 5px;
+}
+
+.worldbuilding .merchantResources .container1,
+.worldbuilding .merchantResources .container2 {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+.worldbuilding .merchantResources .container2 input {
+  width: 60px;
+}
+
+.worldbuilding .merchantSkills {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+}
+
+.worldbuilding .sliderControls {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 10px;
+  width: 25%;
+}
+
+.worldbuilding .storeName {
+  width: 75%;
+  font-family: "cyrodiil";
+  font-size: xx-large;
+}
+
+.worldbuilding .storeName input {
+  height: 50px;
+}
+
+.worldbuilding .wealthContainer button {
+  width: 35px;
+  height: 35px;
+  padding: 0;
+  margin: 0;
+}
+
+.worldbuilding .sliderControls button {
+  width: 24px;
+  height: 24px;
+  line-height: 15px;
+  text-align: center;
+  padding: 0;
+  margin: 0;
+}
+
+.worldbuilding #merchantPriceValue {
+  padding: 5px;
+}
+
+.worldbuilding .priceModifierContainer {
+  position: relative;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  font-family: "cyrodiil";
+  font-size: xx-large;
+  gap: 10px;
+  padding: 5px;
+}
+
+.worldbuilding .priceModifierControls {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
 }
 
 .worldbuilding .resourceBars {
@@ -931,11 +1020,13 @@ button {
   width: 24px;
 }
 
-.worldbuilding .spellList tbody tr {
+.worldbuilding .spellList tbody tr,
+.worldbuilding #merchantItemList .item {
   display: none;
 }
 
-.worldbuilding .spellList tbody .active {
+.worldbuilding .spellList tbody .active,
+.worldbuilding #merchantItemList .active {
   display: table-row;
 }
 
@@ -1006,3 +1097,16 @@ button {
   height: 100%;
 }
 
+/*---------------------------- 
+  Merchant Sheet
+------------------------------*/
+.worldbuilding .abilitiesContainer {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.worldbuilding .abilityContainer {
+  width: 33%;
+}
