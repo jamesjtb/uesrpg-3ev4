@@ -780,12 +780,18 @@ button {
   align-items: flex-start;
 }
 
+.worldbuilding .combatSegment0,
 .worldbuilding .combatSegment1,
 .worldbuilding .combatSegment2 {
   display: flex;
   flex-direction: row;
   align-items: stretch;
   width: 100%;
+  height: 100%;
+}
+
+.worldbuilding .combatSegment0 {
+  justify-content: 
 }
 
 .worldbuilding .combatSegment1 {
@@ -849,6 +855,10 @@ button {
   align-items: flex-start;
 }
 
+.worldbuilding .leftColumn .collapsed {
+  display: none;
+}
+
 .worldbuilding .swapContainer button {
   display: flex;
   justify-content: center;
@@ -882,35 +892,12 @@ button {
   Combat Tab - Combat Stats Container
 ------------------------------*/
 
-.worldbuilding .combatResources {
-  display: flex;
-  flex-direction: row;
-  flex-wrap: wrap;
-  align-items: center;
-  text-align: center;
+.worldbuilding .combatResource .fieldLabel {
+  min-width: 45px;
 }
 
-.worldbuilding .combatResource {
-  padding: 5px;
-  width: 50%;
-}
-
-.worldbuilding .combatResources .box1 {
-  border-bottom: 1px solid;
-  border-right: 1px solid;
-}
-
-.worldbuilding .combatResources .box2 {
-  border-bottom: 1px solid;
-}
-
-.worldbuilding .combatResources .box3 {
-  border-right: 1px solid;
-}
-
-.worldbuilding .combatResource input {
-  width: 50%;
-  height: 17px;
+.worldbuilding .combatResource .fieldLabelLarge {
+  min-width: 75px;
 }
 
 .worldbuilding .combatReferenceContainer {
@@ -920,26 +907,6 @@ button {
 
 .worldbuilding .combatStatsContainer {
   border-right: 1px solid;
-}
-
-.worldbuilding .combatItemHeader input {
-  height: 17px;
-  width: 10px;
-}
-
-.worldbuilding .resistances {
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-  align-items: center;
-  flex-wrap: wrap;
-}
-
-.worldbuilding .resistances button {
-  width: 30%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
 }
 
 .worldbuilding .resistance {

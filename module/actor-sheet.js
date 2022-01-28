@@ -50,10 +50,7 @@
     //Initialize containers
     const gear = [];
     const weapon = [];
-    const armor = {
-      Equipped: [],
-      Unequipped: []
-    };
+    const armor = [];
     const power = [];
     const trait = [];
     const talent = [];
@@ -80,12 +77,8 @@
       }
       //Append to armor
       else if (i.type === 'armor') {
-        if (i.data.equipped === true) {
-        armor.Equipped.push(i);
-        } else {
-          armor.Unequipped.push(i);
-        }
-      }
+        armor.push(i);
+    }
       //Append to power
       else if (i.type === 'power') {
         power.push(i);
@@ -201,6 +194,7 @@
     html.find(".resourceLabel button").click(this._onResetResource.bind(this))
     html.find("#spellFilter").click(this._filterSpells.bind(this))
     html.find('#selectWornArmor').click(this._selectWornArmor.bind(this))
+    html.find('#resistanceToggle').click(this._toggleResistanceColumn.bind(this))
 
     //Item Create Buttons
     html.find(".item-create").click(await this._onItemCreate.bind(this));
@@ -2162,6 +2156,14 @@
     })
 
     d.render(true)
+  }
+
+  _toggleResistanceColumn(event) {
+    event.preventDefault()
+
+    let leftColumn = this.form.querySelector('.leftColumn .flexContainer')
+    if ([...leftColumn.classList].some(string => string === 'collapsed')) {leftColumn.classList.remove('collapsed')}
+    else {leftColumn.classList.add('collapsed')}
   }
 
 }

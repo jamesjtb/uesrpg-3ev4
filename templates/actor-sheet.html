@@ -209,25 +209,72 @@
         {{!-- Combat Tab --}}
         <div class="tab combat" data-group="primary" data-tab="combat">
             <div class="combatTabContainer">
+                <div class="combatSegment0">
+                    <div class="combatResource">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Size Category</th>
+                                    <th>Armor Class</th>
+                                    <th colspan="3">Action Points</th>
+                                    <th>Wound Thr.</th>
+                                    <th>Initiative</th>
+                                    <th>Walk</th>
+                                    <th>Swim</th>
+                                    <th>Fly</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><select name="data.size" data-type="String">
+                                        {{#select actor.data.size}}
+                                        {{#each actor.data.size_cat as |size_cat key|}}
+                                        <option value="{{key}}">{{size_cat}}</option> 
+                                        {{/each}} {{/select}}
+                                    </select></td>
+                                    <td><select name="data.armor_class" data-type="String">
+                                        {{#select actor.data.armor_class}}
+                                        {{#each actor.data.armor_class_cat as |armor_class_cat key|}}
+                                        <option value="{{key}}">{{armor_class_cat}}</option> 
+                                        {{/each}} {{/select}}
+                                    </select></td>
+
+                                    <td><input class="actionPoints" type="number" value="{{data.action_points.value}}"></td>
+                                    <td>/</td>
+                                    <td><input class="actionPoints" type="number" value="{{data.action_points.max}}"></td>
+
+                                    <td><div class="fieldLabelLarge">{{data.wound_threshold.value}}</div></td>
+
+                                    <td><div class="fieldLabel">{{data.initiative.value}}</div></td>
+
+                                    <td><div class="fieldLabel">{{data.speed.value}}</div></td>
+                                    <td><div class="fieldLabel">{{data.speed.swimSpeed}}</div></td>
+                                    <td><div class="fieldLabel">{{data.speed.flySpeed}}</div></td>
+
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
                 <div class="combatSegment1">
                     <div class="paperDollContainer" style="background-image: url(systems/uesrpg-d100/images/bloodSplatter2.webp)">
                         <div class="leftColumn">
                             <div class="flexContainer">
                                 <div>
-                                    <i class="fas fa-weight-hanging burdenIcon" title="ENC"> {{data.carry_rating.current}} / {{data.carry_rating.max}} ENC</i>
+                                    <i class="fas fa-weight-hanging burdenIcon" title="ENC"> {{data.carry_rating.current}} / {{data.carry_rating.max}}</i>
                                 </div>
                                 <div>
                                     <i class="fas fa-heart-broken woundIcon" title="Wound Penalty"> {{data.woundPenalty}}</i>
                                 </div>
-                                <div type="button" id="diseaseR" class="resistance" title="Disease Resistance"><i class="fas fa-bacterium"></i> <label>{{data.resistance.diseaseR}}%</label></div>
-                                <div type="button" id="fireR" class="resistance" title="Fire Resistance"><i class="fas fa-fire"></i> <label>{{data.resistance.fireR}}</label></div>
-                                <div type="button" id="frostR" class="resistance" title="Frost Resistance"><i class="fas fa-snowflake"></i> <label>{{data.resistance.frostR}}</label></div>
-                                <div type="button" id="shockR" class="resistance" title="Shock Resistance"><i class="fas fa-bolt"></i> <label>{{data.resistance.shockR}}</label></div>
-                                <div type="button" id="poisonR" class="resistance" title="Poison Resistance"><i class="fas fa-skull-crossbones"></i> <label>{{data.resistance.poisonR}}</label></div>
-                                <div type="button" id="magicR" class="resistance" title="Magic Resistance"><i class="fas fa-hand-sparkles"></i> <label>{{data.resistance.magicR}}</label></div>
-                                <div type="button" id="natToughness" class="resistance" title="Natural Toughness"><i class="fa fa-fist-raised"></i> <label>{{data.resistance.natToughness}}</label></div>
-                                <div type="button" id="silverR" class="resistance" title="Silver Resistance"><i class="fab fa-wolf-pack-battalion"></i> <label>{{data.resistance.silverR}}</label></div>
-                                <div type="button" id="sunlightR" class="resistance" title="Sunlight Resistance"><i class="fas fa-sun"></i> <label>{{data.resistance.sunlightR}}</label></div>
+                                <div id="diseaseR" class="resistance" title="Disease Resistance"><i class="fas fa-bacterium"></i> <label>{{data.resistance.diseaseR}}%</label></div>
+                                <div id="fireR" class="resistance" title="Fire Resistance"><i class="fas fa-fire"></i> <label>{{data.resistance.fireR}}</label></div>
+                                <div id="frostR" class="resistance" title="Frost Resistance"><i class="fas fa-snowflake"></i> <label>{{data.resistance.frostR}}</label></div>
+                                <div id="shockR" class="resistance" title="Shock Resistance"><i class="fas fa-bolt"></i> <label>{{data.resistance.shockR}}</label></div>
+                                <div id="poisonR" class="resistance" title="Poison Resistance"><i class="fas fa-skull-crossbones"></i> <label>{{data.resistance.poisonR}}</label></div>
+                                <div id="magicR" class="resistance" title="Magic Resistance"><i class="fas fa-hand-sparkles"></i> <label>{{data.resistance.magicR}}</label></div>
+                                <div id="natToughness" class="resistance" title="Natural Toughness"><i class="fa fa-fist-raised"></i> <label>{{data.resistance.natToughness}}</label></div>
+                                <div id="silverR" class="resistance" title="Silver Resistance"><i class="fab fa-wolf-pack-battalion"></i> <label>{{data.resistance.silverR}}</label></div>
+                                <div id="sunlightR" class="resistance" title="Sunlight Resistance"><i class="fas fa-sun"></i> <label>{{data.resistance.sunlightR}}</label></div>
                             </div>
                         </div>
                         <div class="rightColumn">
@@ -235,15 +282,12 @@
                                 <div class="swapContainer" title="Swap Body Image">
                                     <button type="button"><i class="fas fa-random"></i></button>
                                 </div>
-                                <button title="Resistances"><i class="fas fa-fist-raised"></i></button>
+                                <button id="resistanceToggle" title="Resistances"><i class="fas fa-fist-raised"></i></button>
                                 <input title="Wounded" class="woundCheckBox" type="checkbox" name="data.wounded" {{checked data.wounded}}>
                             </div>
                         </div>
                         <img id="paperDoll" src="{{data.paperDoll}}" alt="paperDoll" data-edit="data.paperDoll">
                     </div>
-
-
-
                     <div class="equippedItemContainer">
                         <div>
                             <table>
@@ -261,118 +305,6 @@
                             </table>
                         </div>
                     </div>
-
-
-
-                    <!-- <div class="combatReferenceContainer">
-                        <div class="combatStatsContainer">
-                            <div class="smallDropDown">
-                                <table>
-                                    <thead>
-                                        <tr>
-                                            <th>Size Category</th>
-                                            <th>Armor Class</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <tr>
-                                            <td><select name="data.size" data-type="String">
-                                                {{#select actor.data.size}}
-                                                {{#each actor.data.size_cat as |size_cat key|}}
-                                                <option value="{{key}}">{{size_cat}}</option> 
-                                                {{/each}} {{/select}}
-                                            </select></td>
-                                            <td><select name="data.armor_class" data-type="String">
-                                                {{#select actor.data.armor_class}}
-                                                {{#each actor.data.armor_class_cat as |armor_class_cat key|}}
-                                                <option value="{{key}}">{{armor_class_cat}}</option> 
-                                                {{/each}} {{/select}}
-                                            </select></td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            </div>
-                            <div class="combatResources">
-                                <div class="combatResource box1">
-                                    <table>
-                                        <thead>
-                                            <tr>
-                                                <th colspan="3">Action Points</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            <tr>
-                                                <td> <input type="number" value="{{data.action_points.value}}"></td>
-                                                <td>/</td>
-                                                <td> <input type="number" value="{{data.action_points.max}}"></td>
-                                            </tr>
-                                        </tbody>
-                                    </table>
-                                </div>
-                                <div class="combatResource box2">
-                                    <table>
-                                        <thead>
-                                            <tr>
-                                                <th>Wound Thr.</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            <tr>
-                                                <td>{{data.wound_threshold.value}}</td>
-                                            </tr>
-                                        </tbody>
-                                    </table>
-                                </div>
-                                <div class="combatResource box3">
-                                    <table>
-                                        <thead>
-                                            <tr>
-                                                <th>Initiative</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            <tr>
-                                                <td>{{data.initiative.value}}</td>
-                                            </tr>
-                                        </tbody>
-                                    </table>
-                                </div>
-                                <div class="combatResource">
-                                    <table>
-                                        <thead>
-                                            <tr>
-                                                <th>Walk</th>
-                                                <th>Swim</th>
-                                                <th>Fly</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            <td>{{data.speed.value}}</td>
-                                            <td>{{data.speed.swimSpeed}}</td>
-                                            <td>{{data.speed.flySpeed}}</td>
-                                        </tbody>
-                                    </table>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="resistanceContainer">
-                            <h2>Resistances</h2>
-                            <div class="resistances">
-                                <button type="button" id="diseaseR" class="resistance resistance-roll" title="Disease Resistance"><i class="fas fa-bacterium"></i> {{data.resistance.diseaseR}}%</button>
-                                <button type="button" id="fireR" class="resistance" title="Fire Resistance"><i class="fas fa-fire"></i> {{data.resistance.fireR}}</button>
-                                <button type="button" id="frostR" class="resistance" title="Frost Resistance"><i class="fas fa-snowflake"></i> {{data.resistance.frostR}}</button>
-                                <button type="button" id="shockR" class="resistance" title="Shock Resistance"><i class="fas fa-bolt"></i> {{data.resistance.shockR}}</button>
-                                <button type="button" id="poisonR" class="resistance" title="Poison Resistance"><i class="fas fa-skull-crossbones"></i> {{data.resistance.poisonR}}</button>
-                                <button type="button" id="magicR" class="resistance" title="Magic Resistance"><i class="fas fa-hand-sparkles"></i> {{data.resistance.magicR}}</button>
-                                <button type="button" id="natToughness" class="resistance" title="Natural Toughness"><i class="fa fa-fist-raised"></i> {{data.resistance.natToughness}}</button>
-                                <button type="button" id="silverR" class="resistance" title="Silver Resistance"><i class="fab fa-wolf-pack-battalion"></i> {{data.resistance.silverR}}</button>
-                                <button type="button" id="sunlightR" class="resistance" title="Sunlight Resistance"><i class="fas fa-sun"></i> {{data.resistance.sunlightR}}</button>
-                            </div>
-                            <div class="woundContainer">
-                                <textarea name="data.woundNotes">{{data.woundNotes}}</textarea>
-                            </div>
-                        </div>
-                    </div> -->
                 </div>
 
                 <div class="combatSegment2">
@@ -443,12 +375,11 @@
                             </ol>
 
                             <ol class="skillList">
-                                {{#each actor.data.armor as |armor equipped|}}
                                 <h2 class="headerWithButton">
                                     <button type="button" class="item-create" id="armor">+</button>
-                                    <label>{{equipped}} Armor</label>
+                                    <label>Armor</label>
                                 </h2>
-                                {{#each armor as |item id|}}
+                                {{#each actor.data.armor as |item id|}}
                                     <li class="item flexrow" data-item-id="{{item._id}}">
                                         <div class="itemInfo">
                                             <img class="item-img" src="{{item.img}}" title="{{item.name}}"/>
@@ -460,7 +391,6 @@
                                             <a class="item-control item-delete" title="Delete Item"><i class="fas fa-trash"></i></a>
                                         </div>
                                     </li>
-                                {{/each}}
                                 {{/each}}
                             </ol>
                         </div>
