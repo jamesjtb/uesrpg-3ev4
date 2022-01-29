@@ -207,6 +207,7 @@
     this._setWoundIcon()
     this._setWoundBackground()
     this._setEquippedArmor()
+    this._setResistanceColumnToggle()
 
     // Set saved scroll bar position if not default
     if (localStorage.getItem('scrollPosition') !== 0) {
@@ -2160,10 +2161,33 @@
 
   _toggleResistanceColumn(event) {
     event.preventDefault()
-
     let leftColumn = this.form.querySelector('.leftColumn .flexContainer')
-    if ([...leftColumn.classList].some(string => string === 'collapsed')) {leftColumn.classList.remove('collapsed')}
-    else {leftColumn.classList.add('collapsed')}
+
+    if ([...leftColumn.classList].some(string => string === 'collapsed')) {
+      leftColumn.classList.remove('collapsed')
+      sessionStorage.setItem('columnCollapsed', 'false')
+    }
+    else {
+      leftColumn.classList.add('collapsed')
+      sessionStorage.setItem('columnCollapsed', 'true')
+    }
+  }
+
+  _setResistanceColumnToggle() {
+    let leftColumn = this.form.querySelector('.leftColumn .flexContainer')
+    let columnCollapsed = sessionStorage.getItem('columnCollapsed')
+
+    switch (columnCollapsed) {
+      case 'true': 
+        leftColumn.classList.add('collapsed')
+        break
+
+      case 'false': 
+        leftColumn.classList.remove('collapsed')
+        break
+    }
+
+
   }
 
 }
