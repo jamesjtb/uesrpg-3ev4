@@ -47,10 +47,7 @@ export class npcSheet extends ActorSheet {
       //Initialize containers
       const gear = [];
       const weapon = [];
-      const armor = {
-        Equipped: [],
-        Unequipped: []
-      };
+      const armor = [];
       const power = [];
       const trait = [];
       const talent = [];
@@ -77,12 +74,8 @@ export class npcSheet extends ActorSheet {
         }
         //Append to armor
         else if (i.type === 'armor') {
-          if (i.data.equipped === true) {
-          armor.Equipped.push(i);
-          } else {
-            armor.Unequipped.push(i);
-          }
-        }
+          armor.push(i);
+      }
         //Append to power
         else if (i.type === 'power') {
           power.push(i);
@@ -192,8 +185,8 @@ export class npcSheet extends ActorSheet {
 
     //Update Item Attributes from Actor Sheet
     html.find(".toggle2H").click(await this._onToggle2H.bind(this));
-    html.find(".ammo-plus").click(await this._onPlusAmmo.bind(this));
-    html.find(".ammo-minus").click(await this._onMinusAmmo.bind(this));
+    html.find(".plusQty").click(await this._onPlusQty.bind(this));
+    html.find(".minusQty").contextmenu(await this._onMinusQty.bind(this));
     html.find(".itemEquip").click(await this._onItemEquip.bind(this));
     html.find(".itemTabInfo .wealthCalc").click(await this._onWealthCalc.bind(this));
     html.find(".setBaseCharacteristics").click(await this._onSetBaseCharacteristics.bind(this));
@@ -203,6 +196,10 @@ export class npcSheet extends ActorSheet {
     html.find(".resourceLabel button").click(this._onResetResource.bind(this))
     html.find(".swapContainer button").click(this._setPaperDoll.bind(this))
     html.find("#spellFilter").click(this._filterSpells.bind(this))
+    html.find('#selectWornArmor').click(this._selectWornArmor.bind(this))
+    html.find('#resistanceToggle').click(this._toggleResistanceColumn.bind(this))
+    html.find('.selectWeapon').contextmenu(this._selectWeaponMenu.bind(this))
+    html.find('.selectWeapon').click(this._onWeaponShortcut.bind(this))
 
     // Checks UI Elements for update
     this._createSpellFilterOptions()
@@ -210,6 +207,9 @@ export class npcSheet extends ActorSheet {
     this._setResourceBars()
     this._setWoundIcon()
     this._setWoundBackground()
+    this._setEquippedArmor()
+    this._setResistanceColumnToggle()
+    this._refreshWeaponShortcuts()
 
     //Item Create Buttons
     html.find(".item-create").click(await this._onItemCreate.bind(this));
@@ -330,132 +330,132 @@ export class npcSheet extends ActorSheet {
                       </table>
                     </div>
 
-                    <div style="border: inset; padding: 5px;">
-                      <h2 style="font-size: small; font-weight: bold;">STR Modifiers</h2>
+                    <div class="modifierBox">
+                      <h2>STR Modifiers</h2>
                       <span style="font-size: small">${strBonusArray.join('')}</span>
                     </div>
 
-                    <div style="border: inset; padding: 5px;">
-                      <h2 style="font-size: small; font-weight: bold;">END Modifiers</h2>
+                    <div class="modifierBox">
+                      <h2>END Modifiers</h2>
                       <span style="font-size: small">${endBonusArray.join('')}</span>
                     </div>
 
-                    <div style="border: inset; padding: 5px;">
-                      <h2 style="font-size: small; font-weight: bold;">AGI Modifiers</h2>
+                    <div class="modifierBox">
+                      <h2>AGI Modifiers</h2>
                       <span style="font-size: small">${agiBonusArray.join('')}</span>
                     </div>
 
-                    <div style="border: inset; padding: 5px;">
-                      <h2 style="font-size: small; font-weight: bold;">INT Modifiers</h2>
+                    <div class="modifierBox">
+                      <h2>INT Modifiers</h2>
                       <span style="font-size: small">${intBonusArray.join('')}</span>
                     </div>
 
-                    <div style="border: inset; padding: 5px;">
-                      <h2 style="font-size: small; font-weight: bold;">WP Modifiers</h2>
+                    <div class="modifierBox">
+                      <h2>WP Modifiers</h2>
                       <span style="font-size: small">${wpCBonusArray.join('')}</span>
                     </div>
 
-                    <div style="border: inset; padding: 5px;">
-                      <h2 style="font-size: small; font-weight: bold;">PRC Modifiers</h2>
+                    <div class="modifierBox">
+                      <h2>PRC Modifiers</h2>
                       <span style="font-size: small">${prcBonusArray.join('')}</span>
                     </div>
 
-                    <div style="border: inset; padding: 5px;">
-                      <h2 style="font-size: small; font-weight: bold;">PRS Modifiers</h2>
+                    <div class="modifierBox">
+                      <h2>PRS Modifiers</h2>
                       <span style="font-size: small">${prsBonusArray.join('')}</span>
                     </div>
 
-                    <div style="border: inset; padding: 5px;">
-                      <h2 style="font-size: small; font-weight: bold;">LCK Modifiers</h2>
+                    <div class="modifierBox">
+                      <h2>LCK Modifiers</h2>
                       <span style="font-size: small">${lckBonusArray.join('')}</span>
                     </div>
 
                   </form>`,
-        buttons: {
-          one: {
-            label: "Submit",
-            callback: async (html) => {
-              const strInput = parseInt(html.find('[id="strInput"]').val());
-              const endInput = parseInt(html.find('[id="endInput"]').val());
-              const agiInput = parseInt(html.find('[id="agiInput"]').val());
-              const intInput = parseInt(html.find('[id="intInput"]').val());
-              const wpInput = parseInt(html.find('[id="wpInput"]').val());
-              const prcInput = parseInt(html.find('[id="prcInput"]').val());
-              const prsInput = parseInt(html.find('[id="prsInput"]').val());
-              const lckInput = parseInt(html.find('[id="lckInput"]').val());
+      buttons: {
+        one: {
+          label: "Submit",
+          callback: async (html) => {
+            const strInput = parseInt(html.find('[id="strInput"]').val());
+            const endInput = parseInt(html.find('[id="endInput"]').val());
+            const agiInput = parseInt(html.find('[id="agiInput"]').val());
+            const intInput = parseInt(html.find('[id="intInput"]').val());
+            const wpInput = parseInt(html.find('[id="wpInput"]').val());
+            const prcInput = parseInt(html.find('[id="prcInput"]').val());
+            const prsInput = parseInt(html.find('[id="prsInput"]').val());
+            const lckInput = parseInt(html.find('[id="lckInput"]').val());
 
-              //Shortcut for characteristics
-              const chaPath = this.actor.data.data.characteristics;
+            //Shortcut for characteristics
+            const chaPath = this.actor.data.data.characteristics;
 
-              //Assign values to characteristics
-              chaPath.str.base = strInput;
-              chaPath.str.total = strInput + chaPath.str.bonus;
-              await this.actor.update({
-                "data.characteristics.str.base" : strInput,
-                "data.characteristics.str.total": chaPath.str.total
-              });
+            //Assign values to characteristics
+            chaPath.str.base = strInput;
+            chaPath.str.total = strInput + chaPath.str.bonus;
+            await this.actor.update({
+              "data.characteristics.str.base" : strInput,
+              "data.characteristics.str.total": chaPath.str.total
+            });
 
-              chaPath.end.base = endInput;
-              chaPath.end.total = endInput + chaPath.end.bonus;
-              await this.actor.update({
-                "data.characteristics.end.base" : endInput,
-                "data.characteristics.end.total": chaPath.end.total
-              });
+            chaPath.end.base = endInput;
+            chaPath.end.total = endInput + chaPath.end.bonus;
+            await this.actor.update({
+              "data.characteristics.end.base" : endInput,
+              "data.characteristics.end.total": chaPath.end.total
+            });
 
-              chaPath.agi.base = agiInput;
-              chaPath.agi.total = agiInput + chaPath.agi.bonus;
-              await this.actor.update({
-                "data.characteristics.agi.base" : agiInput,
-                "data.characteristics.agi.total": chaPath.agi.total
-              });
+            chaPath.agi.base = agiInput;
+            chaPath.agi.total = agiInput + chaPath.agi.bonus;
+            await this.actor.update({
+              "data.characteristics.agi.base" : agiInput,
+              "data.characteristics.agi.total": chaPath.agi.total
+            });
 
-              chaPath.int.base = intInput;
-              chaPath.int.total = intInput + chaPath.int.bonus;
-              await this.actor.update({
-                "data.characteristics.int.base" : intInput,
-                "data.characteristics.int.total": chaPath.int.total
-              });
+            chaPath.int.base = intInput;
+            chaPath.int.total = intInput + chaPath.int.bonus;
+            await this.actor.update({
+              "data.characteristics.int.base" : intInput,
+              "data.characteristics.int.total": chaPath.int.total
+            });
 
-              chaPath.wp.base = wpInput;
-              chaPath.wp.total = wpInput + chaPath.wp.bonus;
-              await this.actor.update({
-                "data.characteristics.wp.base" : wpInput,
-                "data.characteristics.wp.total": chaPath.wp.total
-              });
+            chaPath.wp.base = wpInput;
+            chaPath.wp.total = wpInput + chaPath.wp.bonus;
+            await this.actor.update({
+              "data.characteristics.wp.base" : wpInput,
+              "data.characteristics.wp.total": chaPath.wp.total
+            });
 
-              chaPath.prc.base = prcInput;
-              chaPath.prc.total = prcInput + chaPath.prc.bonus;
-              await this.actor.update({
-                "data.characteristics.prc.base" : prcInput,
-                "data.characteristics.prc.total": chaPath.prc.total
-              });
+            chaPath.prc.base = prcInput;
+            chaPath.prc.total = prcInput + chaPath.prc.bonus;
+            await this.actor.update({
+              "data.characteristics.prc.base" : prcInput,
+              "data.characteristics.prc.total": chaPath.prc.total
+            });
 
-              chaPath.prs.base = prsInput;
-              chaPath.prs.total = prsInput + chaPath.prs.bonus;
-              await this.actor.update({
-                "data.characteristics.prs.base" : prsInput,
-                "data.characteristics.prs.total": chaPath.prs.total
-              });
+            chaPath.prs.base = prsInput;
+            chaPath.prs.total = prsInput + chaPath.prs.bonus;
+            await this.actor.update({
+              "data.characteristics.prs.base" : prsInput,
+              "data.characteristics.prs.total": chaPath.prs.total
+            });
 
-              chaPath.lck.base = lckInput;
-              chaPath.lck.total = lckInput + chaPath.lck.bonus;
-              await this.actor.update({
-                "data.characteristics.lck.base" : lckInput,
-                "data.characteristics.lck.total": chaPath.lck.total
-              });
+            chaPath.lck.base = lckInput;
+            chaPath.lck.total = lckInput + chaPath.lck.bonus;
+            await this.actor.update({
+              "data.characteristics.lck.base" : lckInput,
+              "data.characteristics.lck.total": chaPath.lck.total
+            });
 
-            }
-          },
-          two: {
-            label: "Cancel",
-            callback: async (html) => console.log("Cancelled")
           }
         },
-        default: "one",
-        close: async (html) => console.log()
-      })
-      d.render(true);
-    }
+        two: {
+          label: "Cancel",
+          callback: async (html) => console.log("Cancelled")
+        }
+      },
+      default: "one",
+      close: async (html) => console.log()
+    })
+    d.render(true);
+  }
   
 
   async _onClickCharacteristic(event) {
@@ -755,49 +755,228 @@ export class npcSheet extends ActorSheet {
         }
   }
 
-   _onSpellRoll(event) {
-      event.preventDefault()
-      let button = $(event.currentTarget);
-      const li = button.parents(".item");
-      const item = this.actor.getEmbeddedDocument("Item", li.data("itemId"));
-      
-      let hit_loc = ""
-      
-      let roll = new Roll(item.data.data.damage);
-      roll.roll({async:false});
-      let hit = new Roll("1d10");
-      hit.roll({async:false});
-      
-      if (hit.total <= 5) {
-        hit_loc = "Body"
-      } else if (hit.total == 6) {
-        hit_loc = "Right Leg"
-      } else if (hit.total == 7) {
-        hit_loc = "Left Leg"
-      } else if (hit.total == 8) {
-         hit_loc = "Right Arm"
-       } else if (hit.total == 9) {
-        hit_loc = "Left Arm"
-       } else if (hit.total == 10) {
-        hit_loc = "Head"
-      }
-    
-      const content = `<h2 style='font-size: large'><img src="${item.img}" height=20 width=20 style='margin-right: 5px;'</img>${item.name}</h2>
-       <p></p>
-       <b>Damage: [[${roll.result}]]</b> ${roll._formula}<b>
-      <p></p>
-      Hit Location: [[${hit.total}]]</b> ${hit_loc}<b>
-       <p></p>
-       MP Cost: [[${item.data.data.cost}]]
-      <p></p>
-       Attributes:</b> ${item.data.data.attributes}`
-      
-       roll.toMessage({
-         async:false, 
-         type: CONST.CHAT_MESSAGE_TYPES.ROLL, 
-         user: game.user.id, 
-         speaker: ChatMessage.getSpeaker(), 
-         content: content});
+  _onSpellRoll(event) {
+    //Search for Talents that affect Spellcasting Costs
+    const spellToCast = this.actor.items.find(spell => spell.id === event.currentTarget.closest('.item').dataset.itemId)
+    const hasCreative = this.actor.items.find(i => i.type === "talent" && i.name === "Creative") ? true : false;
+    const hasForceOfWill = this.actor.items.find(i => i.type === "talent" && i.name === "Force of Will") ? true : false;
+    const hasMethodical = this.actor.items.find(i => i.type === "talent" && i.name === "Methodical") ? true : false;
+    const hasOvercharge = this.actor.items.find(i => i.type === "talent" && i.name === "Overcharge") ? true : false;
+    const hasMagickaCycling = this.actor.items.find(i => i.type === "talent" && i.name === "Magicka Cycling") ? true : false;
+
+    //Add options in Dialog based on Talents and Traits
+    let overchargeOption = ""
+    let magickaCyclingOption = ""
+
+    if (hasOvercharge){
+        overchargeOption = `<tr>
+                                <td><input type="checkbox" id="Overcharge"/></td>
+                                <td><strong>Overcharge</strong></td>
+                                <td>Roll damage twice and use the highest value (spell cost is doubled)</td>
+                            </tr>`
+    }
+
+    if (hasMagickaCycling){
+        magickaCyclingOption = `<tr>
+                                    <td><input type="checkbox" id="MagickaCycling"/></td>
+                                    <td><strong>Magicka Cycling</strong></td>
+                                    <td>Double Restraint Value, but backfires on failure</td>
+                                </tr>`
+    }
+
+      const m = new Dialog({
+        title: "Cast Spell",
+        content: `<form>
+                    <div>
+
+                        <div>
+                            <h2 style="text-align: center;">${spellToCast.name}</h2>
+                            <div style="padding: 10px; margin-top: 10px; background: rgba(161, 149, 149, 0.486); border: black 1px;">
+                                Select one of the options below OR skip this to cast the spell without any modifications.
+                            </div>
+                        </div>
+
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Select</th>
+                                    <th style="min-width: 120px;">Option</th>
+                                    <th>Effect</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><input type="checkbox" id="Restraint"/></td>
+                                    <td><strong>Spell Restraint</strong></td>
+                                    <td>Reduces cost of spell by WP Bonus</td>
+                                </tr>
+                                <tr>
+                                    <td><input type="checkbox" id="Overload"/></td>
+                                    <td><strong>Overload</strong></td>
+                                    <td>Additional effects if not Restrained</td>
+                                </tr>
+                                ${magickaCyclingOption}
+                                ${overchargeOption}
+                            </tbody>
+                        </table>
+
+                    </div>
+                  </form>`,
+        buttons: {
+            one: {
+                label: "Cast Spell",
+                callback: html => {
+                    let spellRestraint = 0;
+                    let stackCostMod = 0;
+
+                    //Assign Tags for Chat Output
+                    const isRestrained = html.find(`[id="Restraint"]`)[0].checked;
+                    const isOverloaded = html.find(`[id="Overload"]`)[0].checked;
+                    let isMagickaCycled = "";
+                    let isOvercharged = "";
+
+                    if (hasMagickaCycling){
+                        isMagickaCycled = html.find(`[id="MagickaCycling"]`)[0].checked;
+                    }
+
+                    if (hasOvercharge){
+                        isOvercharged = html.find(`[id="Overcharge"]`)[0].checked;
+                    }
+
+                    const tags = [];
+
+
+                    //Functions for Spell Modifiers
+                    if (isRestrained){
+                        let restraint = `<span style="border: none; border-radius: 30px; background-color: rgba(29, 97, 187, 0.80); color: white; text-align: center; font-size: xx-small; padding: 5px;">Restraint</span>`;
+                        tags.push(restraint);
+
+                        //Determine cost mod based on talents and other modifiers
+                        if (hasCreative && spellToCast.data.data.spellType === "unconventional"){
+                            stackCostMod = stackCostMod - 1;
+                        } 
+
+                        if (hasMethodical && spellToCast.data.data.spellType === "conventional"){
+                            stackCostMod = stackCostMod - 1;
+                        }
+                        
+                        if(hasForceOfWill){
+                            stackCostMod = stackCostMod - 1;
+                        }
+
+                        spellRestraint = 0 - Math.floor(this.actor.data.data.characteristics.wp.total/10);
+                    }
+
+                    if (isOverloaded){
+                        let overload = `<span style="border: none; border-radius: 30px; background-color: rgba(161, 2, 2, 0.80); color: white; text-align: center; font-size: xx-small; padding: 5px;">Overload</span>`;
+                        tags.push(overload);
+                    }
+
+                    if (isMagickaCycled){
+                        let cycled = `<span style="border: none; border-radius: 30px; background-color: rgba(126, 40, 224, 0.80); color: white; text-align: center; font-size: xx-small; padding: 5px;">Magicka Cycle</span>`;
+                        tags.push(cycled);
+                        spellRestraint = 0 - (2 * Math.floor(this.actor.data.data.characteristics.wp.total/10));
+                    }
+
+
+                    //If spell has damage value it outputs to Chat, otherwise no damage will be shown in Chat Output
+                    const damageRoll = new Roll(spellToCast.data.data.damage);
+                    let damageEntry = "";
+
+                    if (spellToCast.data.data.damage != '' && spellToCast.data.data.damage != 0){
+                        damageRoll.roll();
+                        damageEntry = `<tr>
+                                            <td style="font-weight: bold;">Damage</td>
+                                            <td style="font-weight: bold; text-align: center;">[[${damageRoll.result}]]</td>
+                                            <td style="text-align: center;">${damageRoll.formula}</td>
+                                        </tr>`
+                    }
+
+                    console.log(damageEntry)
+
+                    const hitLocRoll = new Roll("1d10");
+                    hitLocRoll.roll();
+                    let hitLoc = "";
+
+                    if (hitLocRoll.result <= 5) {
+                        hitLoc = "Body"
+                      } else if (hitLocRoll.result == 6) {
+                        hitLoc = "Right Leg"
+                      } else if (hitLocRoll.result == 7) {
+                        hitLoc = "Left Leg"
+                      } else if (hitLocRoll.result == 8) {
+                        hitLoc = "Right Arm"
+                      } else if (hitLocRoll.result == 9) {
+                        hitLoc = "Left Arm"
+                      } else if (hitLocRoll.result == 10) {
+                        hitLoc = "Head"
+                      }
+
+                    let displayCost = 0;
+                    let actualCost = spellToCast.data.data.cost + spellRestraint + stackCostMod;
+
+                    //Double Cost of Spell if Overcharge Talent is used
+                    if (isOvercharged){
+                        actualCost = actualCost * 2;
+                        let overcharge = `<span style="border: none; border-radius: 30px; background-color: rgba(219, 135, 0, 0.8); color: white; text-align: center; font-size: xx-small; padding: 5px;">Overcharge</span>`;
+                        tags.push(overcharge);
+                    }
+
+                    if (actualCost < 1){
+                        displayCost = 1;
+                    } else {
+                        displayCost = actualCost;
+                    }
+
+                    let contentString = `<h2 style="font-size: large; margin-top: 5px;"><img style="float: left; height: 24px; width: 24px; margin: 0 5px 5px 5px; border: none;" src=${spellToCast.img}></im>${spellToCast.name}</h2>
+                                            <table>
+                                                <thead style="background: rgba(161, 149, 149, 0.486);">
+                                                    <tr>
+                                                        <th style="min-width: 80px; text-align: center;">Name</th>
+                                                        <th style="min-width: 80px; text-align: center;">Result</th>
+                                                        <th style="min-width: 80px; text-align: center;">Detail</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    ${damageEntry}
+                                                    <tr>
+                                                        <td style="font-weight: bold;">Hit Location</td>
+                                                        <td style="font-weight: bold; text-align: center;">[[${hitLocRoll.result}]]</td>
+                                                        <td style="text-align: center;">${hitLoc}</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td style="font-weight: bold;">Spell Cost</td>
+                                                        <td style="font-weight: bold; text-align: center;">[[${displayCost}]]</td>
+                                                        <td title="Cost/Restraint Modifier/Other" style="text-align: center;">${spellToCast.data.data.cost} / ${spellRestraint} / ${stackCostMod}</td>
+                                                    </tr>
+                                                    <tr style="border-top: double 1px;">
+                                                        <td style="font-weight: bold;">Attributes</td>
+                                                        <td colspan="2">${spellToCast.data.data.attributes}</td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>`
+
+                    ChatMessage.create({
+                        user: game.user.id,
+                        speaker: ChatMessage.getSpeaker(),
+                        type: CONST.CHAT_MESSAGE_TYPES.ROLL,
+                        flavor: tags.join(""),
+                        content: contentString,
+                        roll: damageRoll
+                    })
+                }
+            },
+            two: {
+                label: "Cancel",
+                callback: html => console.log("Cancelled")
+            }
+        },
+        default: "one",
+        close: html => console.log()
+      });
+
+    m.position.width = 450;
+    m.render(true);
   }
       
    _onCombatRoll(event) {
@@ -975,7 +1154,7 @@ export class npcSheet extends ActorSheet {
      item.update({"data.weapon2H" : item.data.data.weapon2H})
   }
 
-   _onPlusAmmo(event) {
+   _onPlusQty(event) {
     event.preventDefault()
     let toggle = $(event.currentTarget);
     const li = toggle.parents(".item");
@@ -986,25 +1165,24 @@ export class npcSheet extends ActorSheet {
      item.update({"data.quantity" : item.data.data.quantity})
   }
 
-   _onMinusAmmo(event) {
+  async _onMinusQty(event) {
     event.preventDefault()
     let toggle = $(event.currentTarget);
     const li = toggle.parents(".item");
     const item = this.actor.getEmbeddedDocument("Item", li.data("itemId"));
 
     item.data.data.quantity = item.data.data.quantity - 1;
-    if (item.data.data.quantity < 0){
+    if (item.data.data.quantity <= 0){
       item.data.data.quantity = 0;
-      ui.notifications.info("Out of Ammunition!");
+      ui.notifications.info(`You have used your last ${item.name}!`);
     }
 
-     item.update({"data.quantity" : item.data.data.quantity})
+    await item.update({"data.quantity" : item.data.data.quantity})
   }
 
-   _onItemEquip(event) {
-    event.preventDefault()
+  async _onItemEquip(event) {
     let toggle = $(event.currentTarget);
-    const li = toggle.parents(".item");
+    const li = toggle.closest(".item");
     const item = this.actor.getEmbeddedDocument("Item", li.data("itemId"));
 
     if (item.data.data.equipped === false) {
@@ -1012,7 +1190,7 @@ export class npcSheet extends ActorSheet {
     } else if (item.data.data.equipped === true) {
       item.data.data.equipped = false;
     }
-     item.update({"data.equipped" : item.data.data.equipped})
+    await item.update({"data.equipped" : item.data.data.equipped})
   }
 
    _onItemCreate(event) {
@@ -1235,6 +1413,361 @@ export class npcSheet extends ActorSheet {
           }
         }
       }
+  }
+
+  _setEquippedArmor() {
+    for (let armor of this.actor.items.filter(item => item.data.data.equipped)) {
+      let tableEntry = document.createElement('tr')
+      tableEntry.classList.add('item')
+      tableEntry.dataset.itemId = armor.id
+      tableEntry.innerHTML = `
+                              <td><input type="checkbox" class="itemEquip" ${armor.data.data.equipped ? 'checked' : ''}></td>
+                              <td class="armorName" data-item-id="${armor.id}">
+                                  <div class="item-name" style="display: flex; flex-direction: row; align-items: center; gap: 5px;">
+                                    <img class="item-img" src="${armor.img}">
+                                    ${armor.name}
+                                  </div>
+                              </td>
+                              <td>${armor.data.data.armor}</td>
+                              <td>${armor.data.data.magic_ar}</td>\
+                              <td>${armor.data.data.blockRating}</td>
+                              `
+      tableEntry.querySelector('.itemEquip').addEventListener('click', (event) => {this._onItemEquip(event)})
+      this.form.querySelector('#equippedItemTableBody').append(tableEntry)
+    }
+  }
+
+  _selectWornArmor(event) {
+    event.preventDefault()
+    let armorList = this.actor.items.filter(armor => armor.type === 'armor'||armor.data.data.wearable)
+
+    let armorEntries = []
+    for (let armor of armorList) {
+      let tableEntry = `<tr>
+                            <td data-item-id="${armor.data._id}">
+                                <div style="display: flex; flex-direction: row; align-items: center; gap: 5px;">
+                                  <img class="item-img" src="${armor.img}" height="24" width="24">
+                                  ${armor.name}
+                                </div>
+                            </td>
+                            <td style="text-align: center;">${armor.data.data.armor}</td>
+                            <td style="text-align: center;">${armor.data.data.magic_ar}</td>
+                            <td style="text-align: center;">${armor.data.data.blockRating}</td>
+                            <td style="text-align: center;">
+                                <input type="checkbox" class="armorSelect" data-item-id="${armor.data._id}" ${armor.data.data.equipped ? 'checked' : ''}>
+                            </td>
+                        </tr>`
+
+      armorEntries.push(tableEntry)
+    }
+
+    let d = new Dialog({
+      title: "Armor List",
+      content: `<div>
+                    <div style="padding: 5px 0;">
+                        <label>Selecting nothing will unequip all armor</label>
+                    </div>
+
+                    <div>
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Armor</th>
+                                    <th>AR</th>
+                                    <th>MR</th>
+                                    <th>BR</th>
+                                    <th>Equipped</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                ${armorEntries.join('')}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>`,
+
+      buttons: {
+        one: {
+          label: "Cancel",
+          callback: html => console.log('Cancelled')
+        },
+        two: {
+          label: "Submit",
+          callback: async html => {
+                let selectedArmor = [...document.querySelectorAll('.armorSelect')].filter(armor => armor.checked)
+
+                // Unequip all existing armors
+                for (let armor of this.actor.items.filter(item => item.type === 'armor')) {
+                  await armor.update({'data.equipped': false})
+                }
+
+                for (let wearable of this.actor.items.filter(item => item.data.data.wearable)) {
+                  await wearable.update({'data.equipped': false})
+                }
+
+                // Equip all selected armors
+                for (let armor of selectedArmor) {
+                  let thisArmor = this.actor.items.filter(item => item.id == armor.dataset.itemId)[0]
+                  await thisArmor.update({'data.equipped': true})
+                }
+          }
+        }
+      },
+      default: "two",
+      close: html => console.log()
+    })
+    
+    d.position.width = 500
+    d.render(true)
+  }
+
+  _toggleResistanceColumn(event) {
+    event.preventDefault()
+    let leftColumn = this.form.querySelector('.leftColumn')
+
+    if ([...leftColumn.classList].some(string => string === 'collapsed')) {
+      leftColumn.classList.remove('collapsed')
+      sessionStorage.setItem('columnCollapsed', 'false')
+    }
+    else {
+      leftColumn.classList.add('collapsed')
+      sessionStorage.setItem('columnCollapsed', 'true')
+    }
+  }
+
+  _setResistanceColumnToggle() {
+    let leftColumn = this.form.querySelector('.leftColumn')
+    let columnCollapsed = sessionStorage.getItem('columnCollapsed')
+
+    switch (columnCollapsed) {
+      case 'true': 
+        leftColumn.classList.add('collapsed')
+        break
+
+      case 'false': 
+        leftColumn.classList.remove('collapsed')
+        break
+    }
+  }
+
+  _selectWeaponMenu(event) {
+    event.preventDefault()
+    let element = event.currentTarget
+    let weaponEntries = []
+    let slot = [...element.classList].some(string => string === 'primaryWeapon') ? "primaryWeapon" : 'secondaryWeapon'
+
+    for (let weapon of this.actor.items.filter(item => item.type === 'weapon')) {
+        let checked = weapon.id === this.actor.data.data.equippedWeapons[slot].id ? 'checked' : ''
+        let entry = `<tr class="item flex-row" data-item-id="${weapon.id}">
+                          <td style="min-width: 50px;"><input type="checkbox" class="selectedWeapon" data-weapon-id="${weapon.id}" ${checked}></td>
+                          <td>
+                              <div style="display: flex; flex-direction: row; align-items: center; justify-content: flex-start; gap: 5px; text-align: left;">
+                                  <img class="item-img" src="${weapon.img}" height=24 width=24>
+                                  <div class="item-name">${weapon.name}</div>
+                              </div>
+                          </td>
+                          <td style="min-width: 50px;">${weapon.data.data.reach}</td>
+                          <td style="min-width: 50px;">${weapon.data.data.damage}</td>
+                          <td style="min-width: 50px;">${weapon.data.data.damage2}</td>
+                          <td>${weapon.data.data.qualities}</td>
+                      </tr>`
+        weaponEntries.push(entry)
+    }
+
+    let d = new Dialog({
+      title: `Select ${[...element.classList].some(string => string === 'primaryWeapon') ? 'Primary' : 'Secondary'} Weapon`,
+      content: `<div>
+                    <div>
+                        <h2>Select a weapon to bind to this button</h2>
+                    </div>
+
+                    <div>
+                        <table style="text-align: center;">
+                            <thead>
+                                <tr>
+                                    <th>Select</th>
+                                    <th style="text-align: left;">Weapon</th>
+                                    <th>Reach</th>
+                                    <th>Damage</th>
+                                    <th>2H</th>
+                                    <th>Qualities</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                ${weaponEntries.join('')}
+                            </tbody>
+                        </table>
+                    </div>
+
+                </div>`,
+      buttons: {
+        one: {
+          label: 'Cancel',
+          callback: html => console.log('Cancelled')
+        },
+        two: {
+          label: 'Submit',
+          callback: html => {
+              const checkedBox = [...document.querySelectorAll('.selectedWeapon')].filter(item => item.checked)[0]
+              const selectedWeapon = this.actor.getEmbeddedDocument('Item', checkedBox.dataset.weaponId)
+              switch ([...element.classList].some(i => i === 'primaryWeapon')) {
+                case true: 
+                    this.actor.update({
+                      'data.equippedWeapons.primaryWeapon.name': selectedWeapon.name,
+                      'data.equippedWeapons.primaryWeapon.img': selectedWeapon.img,
+                      'data.equippedWeapons.primaryWeapon.id': selectedWeapon.id
+                    })
+                    break
+
+                case false: 
+                    this.actor.update({
+                      'data.equippedWeapons.secondaryWeapon.name': selectedWeapon.name,
+                      'data.equippedWeapons.secondaryWeapon.img': selectedWeapon.img,
+                      'data.equippedWeapons.secondaryWeapon.id': selectedWeapon.id
+                    })
+                    break
+              }
+          }
+        }
+      },
+      default: 'two',
+      close: html => console.log()
+    })
+
+    d.position.width = 500;
+    d.render(true)
+  }
+
+  _onWeaponShortcut(event) {
+    event.preventDefault()
+    let element = event.currentTarget
+    let shortcutWeapon
+    switch ([...element.classList].some(i => i === 'primaryWeapon')) {
+      case true: 
+          shortcutWeapon = this.actor.getEmbeddedDocument('Item', this.actor.data.data.equippedWeapons.primaryWeapon.id)
+          break
+
+      case false: 
+          shortcutWeapon = this.actor.getEmbeddedDocument('Item', this.actor.data.data.equippedWeapons.secondaryWeapon.id)
+          break
+    }
+
+    let hit_loc = ""
+    let hit = new Roll("1d10")
+    hit.roll({async: false})
+
+    switch (hit.result) {
+      case "1":
+        hit_loc = "Body"
+        break
+
+      case "2":
+        hit_loc = "Body"
+        break
+
+      case "3":
+        hit_loc = "Body"
+        break
+
+      case "4":
+        hit_loc = "Body"
+        break
+
+      case "5":
+        hit_loc = "Body"
+        break
+
+      case "6":
+        hit_loc = "Right Leg"
+        break
+
+      case "7":
+        hit_loc = "Left Leg"
+        break
+      
+      case "8":
+        hit_loc = "Right Arm"
+        break
+
+      case "9":
+        hit_loc = "Left Arm"
+        break
+
+      case "10":
+        hit_loc = "Head"
+        break
+    }
+
+    let damageString
+    shortcutWeapon.data.data.weapon2H ? damageString = shortcutWeapon.data.data.damage2 : damageString = shortcutWeapon.data.data.damage
+    let weaponRoll = new Roll(damageString)
+    weaponRoll.roll({async: false})
+    
+    // Superior Weapon Roll
+    let maxRoll = 0
+
+    if (shortcutWeapon.data.data.superior) {
+      let superiorRoll = new Roll(damageString)
+      superiorRoll.roll({async: false})
+      maxRoll = weaponRoll.result > superiorRoll.result ? weaponRoll.result : superiorRoll.result
+    }
+
+    else {maxRoll = weaponRoll.result}
+
+    let contentString = `<div>
+                              <h2>
+                                  <img src="${shortcutWeapon.img}">
+                                  <div>${shortcutWeapon.name}</div>
+                              </h2>
+
+                              <table>
+                                  <thead>
+                                      <tr>
+                                          <th>Damage</th>
+                                          <th>Result</th>
+                                          <th>Detail</th>
+                                      </tr>
+                                  </thead>
+                                  <tbody>
+                                      <tr>
+                                          <td class="tableAttribute">Damage</td>
+                                          <td>[[${maxRoll}]]</td>
+                                          <td>${damageString}</td>
+                                      </tr>
+                                      <tr>
+                                          <td class="tableAttribute">Hit Location</td>
+                                          <td>${hit_loc}</td>
+                                          <td>[[${hit.result}]]</td>
+                                      </tr>
+                                      <tr>
+                                          <td class="tableAttribute">Qualities</td>
+                                          <td>${shortcutWeapon.data.data.qualities}</td>
+                                      </tr>
+                                  </tbody>
+                              </table>
+                          <div>`
+
+    ChatMessage.create({
+      type: CONST.CHAT_MESSAGE_TYPES.ROLL,
+      user: game.user.id,
+      speaker: ChatMessage.getSpeaker(),
+      content: contentString,
+      roll: weaponRoll
+    })
+  }
+
+  _refreshWeaponShortcuts() {
+    this.actor.update({
+      'data.equippedWeapons.primaryWeapon.name': this.actor.data.data.equippedWeapons.primaryWeapon.name,
+      'data.equippedWeapons.primaryWeapon.img': this.actor.data.data.equippedWeapons.primaryWeapon.img,
+      'data.equippedWeapons.primaryWeapon.id': this.actor.data.data.equippedWeapons.primaryWeapon.id
+    })
+
+    this.actor.update({
+      'data.equippedWeapons.secondaryWeapon.name': this.actor.data.data.equippedWeapons.secondaryWeapon.name,
+      'data.equippedWeapons.secondaryWeapon.img': this.actor.data.data.equippedWeapons.secondaryWeapon.img,
+      'data.equippedWeapons.secondaryWeapon.id': this.actor.data.data.equippedWeapons.secondaryWeapon.id
+    })
   }
 
 }

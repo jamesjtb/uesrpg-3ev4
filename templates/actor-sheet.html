@@ -80,50 +80,48 @@
         <div class="tab core" data-group="primary" data-tab="core">
             <div class="coreTabContainer">
                 <div class="characteristicSideBar">
-                    <button type="button" class="setBaseCharacteristics">
-                        Characteristics
-                    </button>
                     <table>
+                        <thead>
+                            <tr>
+                                <th colspan="2">
+                                    <button type="button" class="setBaseCharacteristics">
+                                        Characteristics
+                                    </button>
+                                </th>
+                            </tr>
+                        </thead>
                         <tbody>
                             <tr>
                                 <td><input type="checkbox" name="data.characteristics.str.favored" {{checked data.characteristics.str.favored}}></td>
-                                <td><button type="button" id="str" name="Strength" class="characteristic-roll">Strength</button></td>
-                                <td><div id="strCha">{{data.characteristics.str.total}}</div></td>
+                                <td><button type="button" id="str" name="Strength" class="characteristic-roll">Strength: {{data.characteristics.str.total}}</button></td>
                             </tr>
                             <tr>
                                 <td><input type="checkbox" name="data.characteristics.end.favored" {{checked data.characteristics.end.favored}}></td>
-                                <td><button type="button" id="end" name="Endurance" class="characteristic-roll">Endurance</button></td>
-                                <td><div id="strCha">{{data.characteristics.end.total}}</div></td>
+                                <td><button type="button" id="end" name="Endurance" class="characteristic-roll">Endurance: {{data.characteristics.end.total}}</button></td>
                             </tr>
                             <tr>
                                 <td><input type="checkbox" name="data.characteristics.agi.favored" {{checked data.characteristics.agi.favored}}></td>
-                                <td><button type="button" id="agi" name="Agility" class="characteristic-roll">Agility</button></td>
-                                <td><div id="strCha">{{data.characteristics.agi.total}}</div></td>
+                                <td><button type="button" id="agi" name="Agility" class="characteristic-roll">Agility: {{data.characteristics.agi.total}}</button></td>
                             </tr>
                             <tr>
                                 <td><input type="checkbox" name="data.characteristics.int.favored" {{checked data.characteristics.int.favored}}></td>
-                                <td><button type="button" id="int" name="Intelligence" class="characteristic-roll">Intelligence</button></td>
-                                <td><div id="strCha">{{data.characteristics.int.total}}</div></td>
+                                <td><button type="button" id="int" name="Intelligence" class="characteristic-roll">Intelligence: {{data.characteristics.int.total}}</button></td>
                             </tr>
                             <tr>
                                 <td><input type="checkbox" name="data.characteristics.wp.favored" {{checked data.characteristics.wp.favored}}></td>
-                                <td><button type="button" id="wp" name="Willpower" class="characteristic-roll">Willpower</button></td>
-                                <td><div id="strCha">{{data.characteristics.wp.total}}</div></td>
+                                <td><button type="button" id="wp" name="Willpower" class="characteristic-roll">Willpower: {{data.characteristics.wp.total}}</button></td>
                             </tr>
                             <tr>
                                 <td><input type="checkbox" name="data.characteristics.prc.favored" {{checked data.characteristics.prc.favored}}></td>
-                                <td><button type="button" id="prc" name="Perception" class="characteristic-roll">Perception</button></td>
-                                <td><div id="strCha">{{data.characteristics.prc.total}}</div></td>
+                                <td><button type="button" id="prc" name="Perception" class="characteristic-roll">Perception: {{data.characteristics.prc.total}}</button></td>
                             </tr>
                             <tr>
                                 <td><input type="checkbox" name="data.characteristics.prs.favored" {{checked data.characteristics.prs.favored}}></td>
-                                <td><button type="button" id="prs" name="Personality" class="characteristic-roll">Personality</button></td>
-                                <td><div id="strCha">{{data.characteristics.prs.total}}</div></td>
+                                <td><button type="button" id="prs" name="Personality" class="characteristic-roll">Personality: {{data.characteristics.prs.total}}</button></td>
                             </tr>
                             <tr>
                                 <td><input type="checkbox" name="data.characteristics.lck.favored" {{checked data.characteristics.lck.favored}}></td>
-                                <td><button type="button" id="lck" name="Luck" class="characteristic-roll">Luck</button></td>
-                                <td><div id="strCha">{{data.characteristics.lck.total}}</div></td>
+                                <td><button type="button" id="lck" name="Luck" class="characteristic-roll">Luck: {{data.characteristics.lck.total}}</button></td>
                             </tr>
                         </tbody>
                     </table>
@@ -266,15 +264,15 @@
                                 <div>
                                     <i class="fas fa-heart-broken woundIcon" title="Wound Penalty"> {{data.woundPenalty}}</i>
                                 </div>
-                                <div id="diseaseR" class="resistance" title="Disease Resistance"><i class="fas fa-bacterium"></i> <label>{{data.resistance.diseaseR}}%</label></div>
-                                <div id="fireR" class="resistance" title="Fire Resistance"><i class="fas fa-fire"></i> <label>{{data.resistance.fireR}}</label></div>
-                                <div id="frostR" class="resistance" title="Frost Resistance"><i class="fas fa-snowflake"></i> <label>{{data.resistance.frostR}}</label></div>
-                                <div id="shockR" class="resistance" title="Shock Resistance"><i class="fas fa-bolt"></i> <label>{{data.resistance.shockR}}</label></div>
-                                <div id="poisonR" class="resistance" title="Poison Resistance"><i class="fas fa-skull-crossbones"></i> <label>{{data.resistance.poisonR}}</label></div>
-                                <div id="magicR" class="resistance" title="Magic Resistance"><i class="fas fa-hand-sparkles"></i> <label>{{data.resistance.magicR}}</label></div>
-                                <div id="natToughness" class="resistance" title="Natural Toughness"><i class="fa fa-fist-raised"></i> <label>{{data.resistance.natToughness}}</label></div>
-                                <div id="silverR" class="resistance" title="Silver Resistance"><i class="fab fa-wolf-pack-battalion"></i> <label>{{data.resistance.silverR}}</label></div>
-                                <div id="sunlightR" class="resistance" title="Sunlight Resistance"><i class="fas fa-sun"></i> <label>{{data.resistance.sunlightR}}</label></div>
+                                <button type="button" id="diseaseR" class="resistance resistance-roll" title="Disease Resistance"><i class="fas fa-bacterium"></i> <label>{{data.resistance.diseaseR}}%</label></button>
+                                <button id="fireR" class="resistance" title="Fire Resistance"><i class="fas fa-fire"></i> <label>{{data.resistance.fireR}}</label></button>
+                                <button id="frostR" class="resistance" title="Frost Resistance"><i class="fas fa-snowflake"></i> <label>{{data.resistance.frostR}}</label></button>
+                                <button id="shockR" class="resistance" title="Shock Resistance"><i class="fas fa-bolt"></i> <label>{{data.resistance.shockR}}</label></button>
+                                <button id="poisonR" class="resistance" title="Poison Resistance"><i class="fas fa-skull-crossbones"></i> <label>{{data.resistance.poisonR}}</label></button>
+                                <button id="magicR" class="resistance" title="Magic Resistance"><i class="fas fa-hand-sparkles"></i> <label>{{data.resistance.magicR}}</label></button>
+                                <button id="natToughness" class="resistance" title="Natural Toughness"><i class="fa fa-fist-raised"></i> <label>{{data.resistance.natToughness}}</label></button>
+                                <button id="silverR" class="resistance" title="Silver Resistance"><i class="fab fa-wolf-pack-battalion"></i> <label>{{data.resistance.silverR}}</label></button>
+                                <button id="sunlightR" class="resistance" title="Sunlight Resistance"><i class="fas fa-sun"></i> <label>{{data.resistance.sunlightR}}</label></button>
                             </div>
                         </div>
                         <div class="rightColumn">
@@ -286,6 +284,16 @@
                                 <input title="Wounded" class="woundCheckBox" type="checkbox" name="data.wounded" {{checked data.wounded}}>
                             </div>
                         </div>
+                        <div class="equippedWeaponsContainer">
+                            <div class="flexContainer">
+                                <div class="primaryWeapon selectWeapon" title="Right-click to set weapon, click to roll damage">
+                                    <img class="equippedWeaponImg" src="{{data.equippedWeapons.primaryWeapon.img}}">
+                                </div>
+                                <div class="secondaryWeapon selectWeapon" title="Right-click to set weapon, click to roll damage">
+                                    <img class="equippedWeaponImg" src="{{data.equippedWeapons.secondaryWeapon.img}}">
+                                </div>
+                            </div>
+                        </div>
                         <img id="paperDoll" src="{{data.paperDoll}}" alt="paperDoll" data-edit="data.paperDoll">
                     </div>
                     <div class="equippedItemContainer">
@@ -293,6 +301,7 @@
                             <table>
                                 <thead>
                                     <tr>
+                                        <th>Worn</th>
                                         <th>
                                             <button type="button" id="selectWornArmor">Armor</button>
                                         </th>
@@ -363,10 +372,10 @@
                                             <div class="item-name">{{item.name}}</div>
                                         </div>
                                         <div class="item-controls">
-                                            <div class="ammo-controls">
-                                                <div><button title="-1" class="ammo-minus" type="button">-</button></div>
-                                                <div class="ammoQty">{{item.data.quantity}}</div>
-                                                <div><button title="+1" class="ammo-plus" type="button">+</button></div>
+                                            <div class="qty-controls">
+                                                <button class="minusQty plusQty" title="Click to increase, right click to decrease">
+                                                    <div>{{item.data.quantity}}</div>
+                                                </button>
                                             </div>
                                             <a class="item-control item-delete" title="Delete Item"><i class="fas fa-trash"></i></a>
                                         </div>
@@ -386,8 +395,6 @@
                                             <div class="item-name">{{item.name}}</div>
                                         </div>
                                         <div class="item-controls">
-                                            <div>{{item.data.armor}} AR / {{item.data.magic_ar}}</div>
-                                            <input class="itemEquip" type="checkbox" title="Equip Armor"{{checked item.data.equipped}}>
                                             <a class="item-control item-delete" title="Delete Item"><i class="fas fa-trash"></i></a>
                                         </div>
                                     </li>
@@ -579,7 +586,13 @@
                                         </td>
                                         <td>{{item.data.enc}}</td>
                                         <td>{{item.data.price}}</td>
-                                        <td>{{item.data.quantity}}</td>
+                                        <td>
+                                            <div class="qty-controls">
+                                                <button class="minusQty plusQty" title="Click to increase, right click to decrease">
+                                                    <div>{{item.data.quantity}}</div>
+                                                </button>
+                                            </div>
+                                        </td>
                                         <td>
                                             <a class="item-control item-delete" title="Delete Item"><i class="fas fa-trash"></i></a>
                                         </td>

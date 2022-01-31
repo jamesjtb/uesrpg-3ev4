@@ -556,6 +556,8 @@ export class SimpleActor extends Actor {
       woundPen = -20;
     }
 
+    data.woundPenalty = woundPen
+
     // Set Skill professions to regular professions (This is a fucking mess, but it's the way it's done for now...)
     for (let prof in data.professions) {
       if (prof === 'profession1'||prof === 'profession2'||prof === 'profession3'||prof === 'commerce') {

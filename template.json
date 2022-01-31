@@ -1,7 +1,24 @@
 {
 "Actor": {
   "types": ["character", "npc"],
+  "templates": {
+    "equippedWeapons": {
+      "equippedWeapons": {
+        "primaryWeapon": {
+          "name": "",
+          "img": "icons/skills/melee/unarmed-punch-fist.webp",
+          "id": ""
+        },
+        "secondaryWeapon": {
+          "name": "",
+          "img": "icons/svg/sword.svg",
+          "id": ""
+        }
+      }
+    }
+  },
   "character": {
+    "templates": ["equippedWeapons"],
     "race": "",
     "birthsign": "",
     "age": "",
@@ -240,6 +257,7 @@
     }
   },
   "npc": {
+    "templates": ["equippedWeapons"],
     "race": "",
     "birthsign": "",
     "age": "",
@@ -625,16 +643,18 @@
     "totalENC": 0,
     "reach": "",
     "damage": "",
-    "carried": false,
+    "equipped": false,
     "hands": 0,
     "price": 0,
     "modPrice": 0,
     "armor": 0,
     "magic_ar": 0,
+    "blockRating": 0,
     "enchant_level": 0,
     "excludeENC": false,
     "consumable": false,
     "qualities": "",
+    "wearable": false,
     "charge": {
       "value": 0,
       "max": 0

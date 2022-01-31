@@ -31,6 +31,17 @@
   font-size: large;
 }
 
+table thead {
+  font-family: "cyrodiil";
+  color: black;
+  background: rgba(161, 149, 149, 0.486);
+}
+
+table th {
+  font-weight: normal;
+  text-shadow: none;
+}
+
 .worldbuilding .charname {
   text-align: left;
 }
@@ -40,9 +51,7 @@
   text-align: center;
 }
 
-.worldbuilding h1, 
-.worldbuilding h2, 
-button {
+h1, h2, button {
   font-family: "cyrodiil";
   text-align: center;
   width: 100%;
@@ -96,6 +105,28 @@ button {
   flex-direction: row;
   align-items: center;
   justify-content: flex-start;
+  gap: 5px;
+}
+
+.chat-message h2 img {
+  height: 24px;
+  width: 24px;
+}
+
+.chat-message .inline-result,
+.chat-message .tableAttribute {
+  font-weight: bold;
+}
+
+.modifierBox {
+  padding: 5px;
+  margin-bottom: 5px;
+  background: rgba(172, 172, 172, 0.486);
+  border: solid 1px;
+}
+
+.modifierBox h2 {
+  font-size: large;
 }
 
 .worldbuilding h2 {
@@ -203,7 +234,7 @@ button {
   text-align: center;
 }
 
-.worldbuilding .ammo-controls {
+.worldbuilding .qty-controls {
   display: flex;
   flex-direction: row;
   justify-content: center;
@@ -212,14 +243,12 @@ button {
   padding: 0 10px;
 }
 
-.worldbuilding .ammo-controls button {
-  width: 20px;
-  height: 20px;
+.worldbuilding .qty-controls button {
+  padding: 0;
+  margin: 0;
+  min-width: 24px;
+  height: 24px;
   line-height: 18px;
-}
-
-.worldbuilding .ammoQty {
-  width: 30px;
 }
 
 .worldbuilding .listSegment {
@@ -251,6 +280,7 @@ button {
 
 .worldbuilding table thead {
   background: rgba(161, 149, 149, 0.486);
+  font-family: "cyrodiil";
 }
 
 .worldbuilding table th {
@@ -792,6 +822,7 @@ button {
 
 .worldbuilding .combatSegment1 {
   border-bottom: 1px solid;
+  height: 210px;
 }
 
 .worldbuilding .combatSegment2 {
@@ -805,7 +836,6 @@ button {
 .worldbuilding .paperDollContainer {
   position: relative;
   width: 50%;
-  height: 200px;
   background-size: 0 0;
 }
 
@@ -842,6 +872,9 @@ button {
   padding: 5px;
   margin: 0;
   z-index: +1;
+  background: hsla(0, 0%, 80%, 0.5);
+  backdrop-filter: blur(2px);
+  border-right: solid 1px;
 }
 
 .worldbuilding .leftColumn .flexContainer {
@@ -851,7 +884,27 @@ button {
   align-items: flex-start;
 }
 
-.worldbuilding .leftColumn .collapsed {
+.worldbuilding .leftColumn .flexContainer button {
+  padding: 0;
+  margin: 0;
+  height: 18px;
+}
+
+.worldbuilding .equippedWeaponsContainer {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+}
+
+.worldbuilding .equippedWeaponsContainer .flexContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 5px;
+  gap: 5px;
+}
+
+.worldbuilding .paperDollContainer .collapsed {
   display: none;
 }
 
@@ -884,6 +937,26 @@ button {
   cursor: pointer;
 }
 
+.worldbuilding .selectWeapon,
+.worldbuilding .npcCombat {
+  position: relative;
+  height: 30px;
+  width: 30px;
+}
+
+.worldbuilding .selectWeapon:hover,
+.worldbuilding .npcCombat:hover {
+  cursor: pointer;
+  transition: 0.5s;
+  transform: scale(0.9);
+}
+
+.worldbuilding .equippedWeaponImg {
+  position: absolute;
+  height: 30px;
+  width: 30px;
+}
+
 /*---------------------------- 
   Combat Tab - Combat Stats Container
 ------------------------------*/
@@ -903,6 +976,10 @@ button {
 
 .worldbuilding .combatStatsContainer {
   border-right: 1px solid;
+}
+
+.worldbuilding .resistance-roll {
+  cursor: pointer;
 }
 
 .worldbuilding .resistance {
@@ -955,6 +1032,7 @@ button {
 .worldbuilding .equippedItemContainer {
   width: 100%;
   border-left: 1px solid;
+  overflow-y: scroll;
 }
 
 .worldbuilding .equippedItemContainer .armorName {
