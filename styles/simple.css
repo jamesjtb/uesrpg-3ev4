@@ -811,6 +811,7 @@ h1, h2, button {
   display: flex;
   flex-direction: row;
   gap: 5px;
+  height: 282px;
 }
 
 .worldbuilding .combatSegment .equippedItemsContainer {
@@ -927,6 +928,14 @@ h1, h2, button {
 .worldbuilding .wounded {
   background-image: url('../images/bloodSplatter2.webp');
   background-size: cover;
+}
+
+.worldbuilding .combatStats .resistanceContainer {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  align-items: center;
+  padding: 5px;
 }
 
 /*---------------------------- 

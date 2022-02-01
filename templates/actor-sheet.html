@@ -209,6 +209,18 @@
             <div class="combatTabContainer">
 
                 <div class="combatSegment">
+                    <div class="paperDollContainer">
+                        <div class="woundedInputContainer">
+                            <input title="Wounded" class="woundCheckBox" type="checkbox" name="data.wounded" {{checked data.wounded}}>
+                        </div>
+                        <div class="leftColumn">
+                            <div class="flexContainer">
+                                <i class="fas fa-weight-hanging burdenIcon" title="ENC"> {{data.carry_rating.current}} / {{data.carry_rating.max}}</i>
+                                <i class="fas fa-heart-broken woundIcon" title="Wound Penalty"> {{data.woundPenalty}}</i>
+                            </div>
+                        </div>
+                        <img id="paperDoll" src="{{data.paperDoll}}" data-edit="data.paperDoll">
+                    </div>
                     <div class="equippedItemsContainer">
                         <button type="button" title="Head" class="equippedGridBox" data-equip-location="head" style="background: url({{data.equippedArmor.head.img}}); background-size: contain;"></button>
                         <button type="button" title="Neck" class="equippedGridBox" data-equip-location="neck" style="background: url({{data.equippedArmor.neck.img}}); background-size: contain;"></button>
@@ -224,18 +236,6 @@
                         <button type="button" title="Primary Weapon" class="equippedGridBox" data-equip-location="primaryWeapon" style="background: url({{data.equippedWeapons.primaryWeapon.img}}); background-size: contain;"></button>
                         <button type="button" title="Secondary Weapon" class="equippedGridBox" data-equip-location="secondaryWeapon" style="background: url({{data.equippedWeapons.secondaryWeapon.img}}); background-size: contain;"></button>
                     </div>
-                    <div class="paperDollContainer">
-                        <div class="woundedInputContainer">
-                            <input title="Wounded" class="woundCheckBox" type="checkbox" name="data.wounded" {{checked data.wounded}}>
-                        </div>
-                        <div class="leftColumn">
-                            <div class="flexContainer">
-                                <i class="fas fa-weight-hanging burdenIcon" title="ENC"> {{data.carry_rating.current}} / {{data.carry_rating.max}}</i>
-                                <i class="fas fa-heart-broken woundIcon" title="Wound Penalty"> {{data.woundPenalty}}</i>
-                            </div>
-                        </div>
-                        <img id="paperDoll" src="{{data.paperDoll}}" data-edit="data.paperDoll">
-                    </div>
                     <div class="combatNavContainer">
                         <div class="combatNavBar">
                             <nav>
@@ -246,61 +246,49 @@
                         </div>
                         <div class="combatNav navMain active">
                             <div class="flexContainer">
-                                <!-- <div class="leftSidebar">
-                                    <table>
-                                        <tbody>
-                                            <tr>
-                                                <td>Action Points</td>
-                                                <td>
-                                                    <input type="number" name="data.action_points.value" value="{{data.action_points.value}}">
-                                                    <input type="number" name="data.action_points.max" value="{{data.action_points.max}}">
-                                                </td>
-                                            </tr>
-                                        </tbody>
-                                    </table>
-                                    <div class="resistanceColumn">
+                                <div class="combatStats">
+                                    <div class="resistanceContainer">
                                         <button type="button" id="diseaseR" class="resistance resistance-roll" title="Disease Resistance">
                                             <i class="fas fa-bacterium"></i>
-                                            <label>{{data.resistance.diseaseR}}%</label>
-                                        </button>
-                                        <button type="button" id="fireR" class="resistance" title="Fire Resistance">
+                                            <div>{{data.resistance.diseaseR}}%</div
+                                        ></button>
+                                        <button id="fireR" class="resistance" title="Fire Resistance">
                                             <i class="fas fa-fire"></i>
-                                            <label>{{data.resistance.fireR}}</label>
+                                            <div>{{data.resistance.fireR}}</div>
                                         </button>
-                                        <button type="button" id="frostR" class="resistance" title="Frost Resistance">
+                                        <button id="frostR" class="resistance" title="Frost Resistance">
                                             <i class="fas fa-snowflake"></i>
-                                            <label>{{data.resistance.frostR}}</label>
+                                            <div>{{data.resistance.frostR}}</div>
                                         </button>
-                                        <button type="button" id="shockR" class="resistance" title="Shock Resistance">
+                                        <button id="shockR" class="resistance" title="Shock Resistance">
                                             <i class="fas fa-bolt"></i>
-                                            <label>{{data.resistance.shockR}}</label>
+                                            <div>{{data.resistance.shockR}}</div>
                                         </button>
-                                        <button type="button" id="poisonR" class="resistance" title="Poison Resistance">
+                                        <button id="poisonR" class="resistance" title="Poison Resistance">
                                             <i class="fas fa-skull-crossbones"></i>
-                                            <label>{{data.resistance.poisonR}}</label>
+                                            <div>{{data.resistance.poisonR}}</div>
                                         </button>
-                                        <button type="button" id="magicR" class="resistance" title="Magic Resistance">
+                                        <button id="magicR" class="resistance" title="Magic Resistance">
                                             <i class="fas fa-hand-sparkles"></i>
-                                            <label>{{data.resistance.magicR}}</label>
+                                            <div>{{data.resistance.magicR}}</div>
                                         </button>
-                                        <button type="button" id="natToughness" class="resistance" title="Natural Toughness">
+                                        <button id="natToughness" class="resistance" title="Natural Toughness">
                                             <i class="fa fa-fist-raised"></i>
-                                            <label>{{data.resistance.natToughness}}</label>
+                                            <div>{{data.resistance.natToughness}}</div>
                                         </button>
-                                        <button type="button" id="silverR" class="resistance" title="Silver Resistance">
+                                        <button id="silverR" class="resistance" title="Silver Resistance">
                                             <i class="fab fa-wolf-pack-battalion"></i>
-                                            <label>{{data.resistance.silverR}}</label>
+                                            <div>{{data.resistance.silverR}}</div>
                                         </button>
-                                        <button type="button" id="sunlightR" class="resistance" title="Sunlight Resistance">
+                                        <button id="sunlightR" class="resistance" title="Sunlight Resistance">
                                             <i class="fas fa-sun"></i>
-                                            <label>{{data.resistance.sunlightR}}</label>
+                                            <div>{{data.resistance.sunlightR}}</div>
                                         </button>
                                     </div>
-                                </div> -->
-                                <div class="combatStats">
                                     <table>
                                         <thead>
                                             <tr>
+                                                <th><i class="fas fa-dice-d20"></i></th>
                                                 <th>Combat Style</th>
                                                 <th>Rank</th>
                                                 <th>Target</th>
@@ -310,6 +298,7 @@
                                         <tbody>
                                             {{#each actor.data.combatStyle as |item id|}}
                                             <tr class="item" data-item-id="{{item._id}}">
+                                                <td><i class="fas fa-dice-d20 combat-roll"></i></td>
                                                 <td>
                                                     <div class="itemInfo">
                                                         <img src="{{item.img}}" class="item-img">
@@ -317,7 +306,7 @@
                                                     </div>
                                                 </td>
                                                 <td>{{item.data.rank}}</td>
-                                                <td>{{item.data.value}}</td>
+                                                <td>{{item.data.value}}%</td>
                                                 <td><a class="item-control item-delete" title="Delete Item"><i class="fas fa-trash"></i></a></td>
                                             </tr>
                                             {{/each}}
@@ -334,264 +323,6 @@
                         </div>
                     </div>
                 </div>
-
-                <!-- <div class="combatSegment0">
-                    <div class="combatResource">
-                        <table>
-                            <thead>
-                                <tr>
-                                    <th>Size Category</th>
-                                    <th>Armor Class</th>
-                                    <th colspan="3">Action Points</th>
-                                    <th>Wound</th>
-                                    <th>Initiative</th>
-                                    <th>Walk</th>
-                                    <th>Swim</th>
-                                    <th>Fly</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td><select name="data.size" data-type="String">
-                                        {{#select actor.data.size}}
-                                        {{#each actor.data.size_cat as |size_cat key|}}
-                                        <option value="{{key}}">{{size_cat}}</option> 
-                                        {{/each}} {{/select}}
-                                    </select></td>
-                                    <td><select name="data.armor_class" data-type="String">
-                                        {{#select actor.data.armor_class}}
-                                        {{#each actor.data.armor_class_cat as |armor_class_cat key|}}
-                                        <option value="{{key}}">{{armor_class_cat}}</option> 
-                                        {{/each}} {{/select}}
-                                    </select></td>
-
-                                    <td><input class="actionPoints" type="number" value="{{data.action_points.value}}"></td>
-                                    <td>/</td>
-                                    <td><input class="actionPoints" type="number" value="{{data.action_points.max}}"></td>
-
-                                    <td><div class="fieldLabelLarge">{{data.wound_threshold.value}}</div></td>
-
-                                    <td><div class="fieldLabel">{{data.initiative.value}}</div></td>
-
-                                    <td><div class="fieldLabel">{{data.speed.value}}</div></td>
-                                    <td><div class="fieldLabel">{{data.speed.swimSpeed}}</div></td>
-                                    <td><div class="fieldLabel">{{data.speed.flySpeed}}</div></td>
-
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-                <div class="combatSegment1">
-                    <div class="paperDollContainer" style="background-image: url(systems/uesrpg-d100/images/bloodSplatter2.webp)">
-                        <div class="leftColumn">
-                            <div class="flexContainer">
-                                <div>
-                                    <i class="fas fa-weight-hanging burdenIcon" title="ENC"> {{data.carry_rating.current}} / {{data.carry_rating.max}}</i>
-                                </div>
-                                <div>
-                                    <i class="fas fa-heart-broken woundIcon" title="Wound Penalty"> {{data.woundPenalty}}</i>
-                                </div>
-                                <button type="button" id="diseaseR" class="resistance resistance-roll" title="Disease Resistance"><i class="fas fa-bacterium"></i> <label>{{data.resistance.diseaseR}}%</label></button>
-                                <button id="fireR" class="resistance" title="Fire Resistance"><i class="fas fa-fire"></i> <label>{{data.resistance.fireR}}</label></button>
-                                <button id="frostR" class="resistance" title="Frost Resistance"><i class="fas fa-snowflake"></i> <label>{{data.resistance.frostR}}</label></button>
-                                <button id="shockR" class="resistance" title="Shock Resistance"><i class="fas fa-bolt"></i> <label>{{data.resistance.shockR}}</label></button>
-                                <button id="poisonR" class="resistance" title="Poison Resistance"><i class="fas fa-skull-crossbones"></i> <label>{{data.resistance.poisonR}}</label></button>
-                                <button id="magicR" class="resistance" title="Magic Resistance"><i class="fas fa-hand-sparkles"></i> <label>{{data.resistance.magicR}}</label></button>
-                                <button id="natToughness" class="resistance" title="Natural Toughness"><i class="fa fa-fist-raised"></i> <label>{{data.resistance.natToughness}}</label></button>
-                                <button id="silverR" class="resistance" title="Silver Resistance"><i class="fab fa-wolf-pack-battalion"></i> <label>{{data.resistance.silverR}}</label></button>
-                                <button id="sunlightR" class="resistance" title="Sunlight Resistance"><i class="fas fa-sun"></i> <label>{{data.resistance.sunlightR}}</label></button>
-                            </div>
-                        </div>
-                        <div class="rightColumn">
-                            <div class="flexContainer">
-                                <div class="swapContainer" title="Swap Body Image">
-                                    <button type="button"><i class="fas fa-random"></i></button>
-                                </div>
-                                <button id="resistanceToggle" title="Resistances"><i class="fas fa-fist-raised"></i></button>
-                                <input title="Wounded" class="woundCheckBox" type="checkbox" name="data.wounded" {{checked data.wounded}}>
-                            </div>
-                        </div>
-                        <div class="equippedWeaponsContainer">
-                            <div class="flexContainer">
-                                <div class="primaryWeapon selectWeapon" title="Right-click to set weapon, click to roll damage">
-                                    <img class="equippedWeaponImg" src="{{data.equippedWeapons.primaryWeapon.img}}">
-                                </div>
-                                <div class="secondaryWeapon selectWeapon" title="Right-click to set weapon, click to roll damage">
-                                    <img class="equippedWeaponImg" src="{{data.equippedWeapons.secondaryWeapon.img}}">
-                                </div>
-                            </div>
-                        </div>
-                        <img id="paperDoll" src="{{data.paperDoll}}" alt="paperDoll" data-edit="data.paperDoll">
-                    </div>
-                    <div class="equippedItemContainer">
-                        <div>
-                            <table>
-                                <thead>
-                                    <tr>
-                                        <th>Worn</th>
-                                        <th>
-                                            <button type="button" id="selectWornArmor">Armor</button>
-                                        </th>
-                                        <th>AR</th>
-                                        <th>MR</th>
-                                        <th>BR</th>
-                                    </tr>
-                                </thead>
-                                <tbody id="equippedItemTableBody"></tbody>
-                            </table>
-                        </div>
-                    </div>
-                </div>
-                <div class="combatSegment2">
-                    <div class="combatItemContainer">
-                        <div class="combatListContainer">
-                            <ol class="skillList">
-                                <h2 class="headerWithButton">
-                                    <button type="button" class="item-create" id="combatStyle">+</button>
-                                    <label>Combat Styles</label>
-                                </h2>
-                                {{#each actor.data.combatStyle as |item id|}}
-                                    <li class="item flexrow" data-item-id="{{item._id}}">
-                                        <div class="itemInfo">
-                                            <i class="fas fa-dice-d20 combat-roll"></i>
-                                            <img class="item-img" src="{{item.img}}" title="Send to Chat"/>
-                                            <div class="item-name">{{item.name}}</div>
-                                        </div>
-                                        <div class="item-controls">
-                                            <div class="item-value">{{item.data.value}}%</div>
-                                            <a class="item-control item-delete" title="Delete Item"><i class="fas fa-trash"></i></a>
-                                        </div>
-                                    </li>
-                                {{/each}}
-                            </ol>
-                            <ol class="skillList">
-                                <h2 class="headerWithButton">
-                                    <button type="button" class="item-create" id="weapon">+</button>
-                                    <label>Weapons</label>
-                                </h2>
-                                {{#each actor.data.weapon as |item id|}}
-                                    <li class="item flexrow" data-item-id="{{item._id}}">
-                                        <div class="itemInfo">
-                                            <i class="fas fa-dice-d20 damage-roll"></i>
-                                            <img class="item-img" src="{{item.img}}" title="Send to Chat"/>
-                                            <div class="item-name">{{item.name}}</div>
-                                        </div>
-                                        <div class="item-controls">
-                                                <div>2H</div>
-                                                <input class="toggle2H" type="checkbox" {{checked item.data.weapon2H}} title="Toggle 2H Damage">
-                                            <a class="item-control item-delete" title="Delete Item"><i class="fas fa-trash"></i></a>
-                                        </div>
-                                    </li>
-                                {{/each}}
-                            </ol>
-
-                            <ol class="skillList">
-                                <h2 class="headerWithButton">
-                                    <button type="button" class="item-create" id="ammunition">+</button>
-                                    <label>Ammunition</label>
-                                </h2>
-                                {{#each actor.data.ammunition as |item id|}}
-                                    <li class="item flexrow" data-item-id="{{item._id}}">
-                                        <div class="itemInfo">
-                                            <i class="fas fa-dice-d20 ammo-roll"></i>
-                                            <img class="item-img" src="{{item.img}}" title="Send to Chat"/>
-                                            <div class="item-name">{{item.name}}</div>
-                                        </div>
-                                        <div class="item-controls">
-                                            <div class="qty-controls">
-                                                <button class="minusQty plusQty" title="Click to increase, right click to decrease">
-                                                    <div>{{item.data.quantity}}</div>
-                                                </button>
-                                            </div>
-                                            <a class="item-control item-delete" title="Delete Item"><i class="fas fa-trash"></i></a>
-                                        </div>
-                                    </li>
-                                {{/each}}
-                            </ol>
-
-                            <ol class="skillList">
-                                <h2 class="headerWithButton">
-                                    <button type="button" class="item-create" id="armor">+</button>
-                                    <label>Armor</label>
-                                </h2>
-                                {{#each actor.data.armor as |item id|}}
-                                    <li class="item flexrow" data-item-id="{{item._id}}">
-                                        <div class="itemInfo">
-                                            <img class="item-img" src="{{item.img}}" title="{{item.name}}"/>
-                                            <div class="item-name">{{item.name}}</div>
-                                        </div>
-                                        <div class="item-controls">
-                                            <a class="item-control item-delete" title="Delete Item"><i class="fas fa-trash"></i></a>
-                                        </div>
-                                    </li>
-                                {{/each}}
-                            </ol>
-                        </div>
-                    </div>
-                    <div class="attributeList">
-                        <div class="talentContainer">
-                            <h2 class="headerWithButton">
-                                <button type="button" class="item-create" id="trait">+</button>
-                                <label>Traits</label>
-                            </h2>
-                            <ol class="skillList">
-                                {{#each actor.data.trait as |item id|}}
-                                    <li class="item flexrow" data-item-id="{{item._id}}">
-                                        <div class="itemInfo">
-                                            <img class="item-img" src="{{item.img}}" title="Send to Chat"/>
-                                            <div class="item-name">{{item.name}}</div>
-                                        </div>
-                                        <div class="item-controls">
-                                            <a class="item-control item-delete" title="Delete Item"><i class="fas fa-trash"></i></a>
-                                        </div>
-                                    </li>
-                                {{/each}}
-                            </ol>
-                        </div>
-
-                        <div class="talentContainer">
-                            <h2 class="headerWithButton">
-                                <button type="button" class="item-create" id="talent">+</button>
-                                <label>Talents</label>
-                            </h2>
-                            <ol class="skillList">
-                                {{#each actor.data.talent as |item id|}}
-                                    <li class="item flexrow" data-item-id="{{item._id}}">
-                                        <div class="itemInfo">
-                                            <img class="item-img" src="{{item.img}}" title="Send to Chat"/>
-                                            <div class="item-name">{{item.name}}</div>
-                                        </div>
-                                        <div class="item-controls">
-                                            <a class="item-control item-delete" title="Delete Item"><i class="fas fa-trash"></i></a>
-                                        </div>
-                                    </li>
-                                {{/each}}
-                            </ol>
-                        </div>
-
-                        <div class="talentContainer">
-                            <h2 class="headerWithButton">
-                                <button type="button" class="item-create" id="power">+</button>
-                                <label>Powers</label>
-                            </h2>
-                            <ol class="skillList">
-                                {{#each actor.data.power as |item id|}}
-                                    <li class="item flexrow" data-item-id="{{item._id}}">
-                                        <div class="itemInfo">
-                                            <img class="item-img" src="{{item.img}}" title="Send to Chat"/>
-                                            <div class="item-name">{{item.name}}</div>
-                                        </div>
-                                        <div class="item-controls">
-                                            <a class="item-control item-delete" title="Delete Item"><i class="fas fa-trash"></i></a>
-                                        </div>
-                                    </li>
-                                {{/each}}
-                            </ol>
-                        </div>
-                    </div>
-                </div> -->
-
 
             </div>
         </div>
