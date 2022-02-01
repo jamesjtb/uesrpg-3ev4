@@ -207,7 +207,135 @@
         {{!-- Combat Tab --}}
         <div class="tab combat" data-group="primary" data-tab="combat">
             <div class="combatTabContainer">
-                <div class="combatSegment0">
+
+                <div class="combatSegment">
+                    <div class="equippedItemsContainer">
+                        <button type="button" title="Head" class="equippedGridBox" data-equip-location="head" style="background: url({{data.equippedArmor.head.img}}); background-size: contain;"></button>
+                        <button type="button" title="Neck" class="equippedGridBox" data-equip-location="neck" style="background: url({{data.equippedArmor.neck.img}}); background-size: contain;"></button>
+                        <button type="button" title="Chest" class="equippedGridBox"data-equip-location="chest" style="background: url({{data.equippedArmor.chest.img}}); background-size: contain;"></button>
+                        <div class="ringsContainer">
+                            <button type="button" title="Ring 1" class="ringGridBox" style="background: url({{data.equippedArmor.ring1.img}}); background-size: cover;"></button>
+                            <button type="button" title="Ring 2" class="ringGridBox" style="background: url({{data.equippedArmor.ring2.img}}); background-size: cover;"></button>
+                        </div>
+                        <button type="button" title="Left Arm" class="equippedGridBox" data-equip-location="leftArm" style="background: url({{data.equippedArmor.leftArm.img}}); background-size: contain;"></button>
+                        <button type="button" title="Right Arm" class="equippedGridBox" data-equip-location="rightArm" style="background: url({{data.equippedArmor.rightArm.img}}); background-size: contain;"></button>
+                        <button type="button" title="Left Leg" class="equippedGridBox" data-equip-location="leftLeg" style="background: url({{data.equippedArmor.leftLeg.img}}); background-size: contain;"></button>
+                        <button type="button" title="Right Leg" class="equippedGridBox" data-equip-location="rightLeg" style="background: url({{data.equippedArmor.rightLeg.img}}); background-size: contain;"></button>
+                        <button type="button" title="Primary Weapon" class="equippedGridBox" data-equip-location="primaryWeapon" style="background: url({{data.equippedWeapons.primaryWeapon.img}}); background-size: contain;"></button>
+                        <button type="button" title="Secondary Weapon" class="equippedGridBox" data-equip-location="secondaryWeapon" style="background: url({{data.equippedWeapons.secondaryWeapon.img}}); background-size: contain;"></button>
+                    </div>
+                    <div class="paperDollContainer">
+                        <div class="woundedInputContainer">
+                            <input title="Wounded" class="woundCheckBox" type="checkbox" name="data.wounded" {{checked data.wounded}}>
+                        </div>
+                        <div class="leftColumn">
+                            <div class="flexContainer">
+                                <i class="fas fa-weight-hanging burdenIcon" title="ENC"> {{data.carry_rating.current}} / {{data.carry_rating.max}}</i>
+                                <i class="fas fa-heart-broken woundIcon" title="Wound Penalty"> {{data.woundPenalty}}</i>
+                            </div>
+                        </div>
+                        <img id="paperDoll" src="{{data.paperDoll}}" data-edit="data.paperDoll">
+                    </div>
+                    <div class="combatNavContainer">
+                        <div class="combatNavBar">
+                            <nav>
+                                <a>Combat</a>
+                                <a>Items</a>
+                                <a>Abilities</a>
+                            </nav>
+                        </div>
+                        <div class="combatNav navMain active">
+                            <div class="flexContainer">
+                                <!-- <div class="leftSidebar">
+                                    <table>
+                                        <tbody>
+                                            <tr>
+                                                <td>Action Points</td>
+                                                <td>
+                                                    <input type="number" name="data.action_points.value" value="{{data.action_points.value}}">
+                                                    <input type="number" name="data.action_points.max" value="{{data.action_points.max}}">
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                    <div class="resistanceColumn">
+                                        <button type="button" id="diseaseR" class="resistance resistance-roll" title="Disease Resistance">
+                                            <i class="fas fa-bacterium"></i>
+                                            <label>{{data.resistance.diseaseR}}%</label>
+                                        </button>
+                                        <button type="button" id="fireR" class="resistance" title="Fire Resistance">
+                                            <i class="fas fa-fire"></i>
+                                            <label>{{data.resistance.fireR}}</label>
+                                        </button>
+                                        <button type="button" id="frostR" class="resistance" title="Frost Resistance">
+                                            <i class="fas fa-snowflake"></i>
+                                            <label>{{data.resistance.frostR}}</label>
+                                        </button>
+                                        <button type="button" id="shockR" class="resistance" title="Shock Resistance">
+                                            <i class="fas fa-bolt"></i>
+                                            <label>{{data.resistance.shockR}}</label>
+                                        </button>
+                                        <button type="button" id="poisonR" class="resistance" title="Poison Resistance">
+                                            <i class="fas fa-skull-crossbones"></i>
+                                            <label>{{data.resistance.poisonR}}</label>
+                                        </button>
+                                        <button type="button" id="magicR" class="resistance" title="Magic Resistance">
+                                            <i class="fas fa-hand-sparkles"></i>
+                                            <label>{{data.resistance.magicR}}</label>
+                                        </button>
+                                        <button type="button" id="natToughness" class="resistance" title="Natural Toughness">
+                                            <i class="fa fa-fist-raised"></i>
+                                            <label>{{data.resistance.natToughness}}</label>
+                                        </button>
+                                        <button type="button" id="silverR" class="resistance" title="Silver Resistance">
+                                            <i class="fab fa-wolf-pack-battalion"></i>
+                                            <label>{{data.resistance.silverR}}</label>
+                                        </button>
+                                        <button type="button" id="sunlightR" class="resistance" title="Sunlight Resistance">
+                                            <i class="fas fa-sun"></i>
+                                            <label>{{data.resistance.sunlightR}}</label>
+                                        </button>
+                                    </div>
+                                </div> -->
+                                <div class="combatStats">
+                                    <table>
+                                        <thead>
+                                            <tr>
+                                                <th>Combat Style</th>
+                                                <th>Rank</th>
+                                                <th>Target</th>
+                                                <th><i class="fas fa-trash"></i></th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {{#each actor.data.combatStyle as |item id|}}
+                                            <tr class="item" data-item-id="{{item._id}}">
+                                                <td>
+                                                    <div class="itemInfo">
+                                                        <img src="{{item.img}}" class="item-img">
+                                                        <div class="item-name">{{item.name}}</div>
+                                                    </div>
+                                                </td>
+                                                <td>{{item.data.rank}}</td>
+                                                <td>{{item.data.value}}</td>
+                                                <td><a class="item-control item-delete" title="Delete Item"><i class="fas fa-trash"></i></a></td>
+                                            </tr>
+                                            {{/each}}
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="combatNav navItems">
+
+                        </div>
+                        <div class="combatNav navAbilities">
+
+                        </div>
+                    </div>
+                </div>
+
+                <!-- <div class="combatSegment0">
                     <div class="combatResource">
                         <table>
                             <thead>
@@ -315,7 +443,6 @@
                         </div>
                     </div>
                 </div>
-
                 <div class="combatSegment2">
                     <div class="combatItemContainer">
                         <div class="combatListContainer">
@@ -463,7 +590,9 @@
                             </ol>
                         </div>
                     </div>
-                </div>
+                </div> -->
+
+
             </div>
         </div>
 

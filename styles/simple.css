@@ -191,7 +191,7 @@ h1, h2, button {
   cursor: pointer;
 }
 
-.worldbuilding li .itemInfo {
+.worldbuilding .itemInfo {
   display: flex;
   justify-content: flex-start;
   align-items: center;
@@ -804,255 +804,129 @@ h1, h2, button {
 ------------------------------*/
 
 .worldbuilding .combatTabContainer {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: flex-start;
+  position: relative;
 }
 
-.worldbuilding .combatSegment0,
-.worldbuilding .combatSegment1,
-.worldbuilding .combatSegment2 {
+.worldbuilding .combatSegment {
   display: flex;
   flex-direction: row;
-  align-items: stretch;
-  width: 100%;
-  height: 100%;
-}
-
-.worldbuilding .combatSegment1 {
-  border-bottom: 1px solid;
-  height: 210px;
-}
-
-.worldbuilding .combatSegment2 {
-  justify-content: space-between;
-}
-
-/*---------------------------- 
-  Combat Tab - Paper Doll Container
-------------------------------*/
-
-.worldbuilding .paperDollContainer {
-  position: relative;
-  width: 50%;
-  background-size: 0 0;
-}
-
-.worldbuilding .wounded {
-  background-repeat: no-repeat;
-  background-size: contain;
-  background-position: center;
-}
-
-.worldbuilding .paperDollContainer .woundIcon {
-  visibility: hidden;
-}
-
-.worldbuilding .paperDollContainer .rightColumn {
-  position: absolute;
-  top: 0;
-  right: 0;
-  padding: 5px;
-  margin: 0;
-  z-index: +1;
-}
-
-.worldbuilding .rightColumn .flexContainer {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-}
-
-.worldbuilding .paperDollContainer .leftColumn {
-  position: absolute;
-  top: 0;
-  left: 0;
-  padding: 5px;
-  margin: 0;
-  z-index: +1;
-  background: hsla(0, 0%, 80%, 0.5);
-  backdrop-filter: blur(2px);
-  border-right: solid 1px;
-}
-
-.worldbuilding .leftColumn .flexContainer {
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-start;
-  align-items: flex-start;
-}
-
-.worldbuilding .leftColumn .flexContainer button {
-  padding: 0;
-  margin: 0;
-  height: 18px;
-}
-
-.worldbuilding .equippedWeaponsContainer {
-  position: absolute;
-  bottom: 0;
-  right: 0;
-}
-
-.worldbuilding .equippedWeaponsContainer .flexContainer {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  padding: 5px;
   gap: 5px;
 }
 
-.worldbuilding .paperDollContainer .collapsed {
-  display: none;
-}
-
-.worldbuilding .swapContainer button {
+.worldbuilding .combatSegment .equippedItemsContainer {
   display: flex;
-  justify-content: center;
+  flex-direction: row;
+  flex-wrap: wrap;
   align-items: center;
-  text-align: center;
-  width: 25px;
-  height: 25px;
-  line-height: 1;
-  padding: 0;
-  margin: 0;
+  justify-content: center;
+  border: solid 1px;
+  padding: 5px 0;
+  gap: 5px;
+  width: 20%;
 }
 
-.worldbuilding .swapPaperDoll i {
+.worldbuilding .equippedItemsContainer .equippedGridBox {
+  height: 50px;
+  width: 50px;
+  border: solid 1px;
+}
+
+.worldbuilding .equippedItemsContainer .ringsContainer {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: nowrap;
+  height: 50px;
+  width: 50px;
+  gap: 5px;
+}
+
+.worldbuilding .ringsContainer .ringGridBox {
+  border: solid 1px;
+  height: 50px;
+  width: 20px;
+  background-size: cover;
+}
+
+.worldbuilding .ringGridBox:hover,
+.worldbuilding .equippedGridBox:hover {
+  transition: 0.5s;
+  transform: scale(0.9);
+}
+
+.worldbuilding .paperDollContainer {
+  border: none;
   position: relative;
+  width: 20%;
 }
 
 .worldbuilding #paperDoll {
-  position: absolute;
+  max-height: 250px;
   border: none;
-  top: 50%;
+  position: absolute;
   left: 50%;
-  transform: translate(-50%, -50%);
-  height: 150px;
+  top: 50%;
+  transform: translate(-50%, -50%)
 }
 
 .worldbuilding #paperDoll:hover {
   cursor: pointer;
 }
 
-.worldbuilding .selectWeapon,
-.worldbuilding .npcCombat {
-  position: relative;
-  height: 30px;
-  width: 30px;
-}
-
-.worldbuilding .selectWeapon:hover,
-.worldbuilding .npcCombat:hover {
-  cursor: pointer;
-  transition: 0.5s;
-  transform: scale(0.9);
-}
-
-.worldbuilding .equippedWeaponImg {
+.worldbuilding .paperDollContainer .leftColumn {
   position: absolute;
-  height: 30px;
-  width: 30px;
+  top: 0;
+  left: 0;
 }
 
-/*---------------------------- 
-  Combat Tab - Combat Stats Container
-------------------------------*/
-
-.worldbuilding .combatResource .fieldLabel {
-  min-width: 45px;
-}
-
-.worldbuilding .combatResource .fieldLabelLarge {
-  min-width: 75px;
-}
-
-.worldbuilding .combatReferenceContainer {
+.worldbuilding .leftColumn .flexContainer {
   display: flex;
-  flex-direction: row;
-}
-
-.worldbuilding .combatStatsContainer {
-  border-right: 1px solid;
-}
-
-.worldbuilding .resistance-roll {
-  cursor: pointer;
-}
-
-.worldbuilding .resistance {
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  justify-content: flex-start;
+  flex-direction: column;
   gap: 5px;
 }
 
-.worldbuilding .resistance label {
-  width: 20px;
+.worldbuilding .combatNavContainer {
+  position: relative;
+  border: solid 1px;
+  width: 60%;
+  height: 100%;
+  overflow-y: scroll;
+  padding: 0;
+  margin: 0;
 }
 
-.worldbuilding .resistance i {
-  width: 20px;
+.worldbuilding .combatNav {
+  display: none;
 }
 
-.worldbuilding .woundContainer {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  padding: 5px 0 0 0;
-}
-
-.worldbuilding .woundCheckContainer {
+.worldbuilding .combatNav .flexContainer {
   display: flex;
   flex-direction: row;
-  justify-content: center;
-  align-items: center;
+  gap: 5px;
 }
 
-.worldbuilding .woundContainer textarea {
-  width: 90%;
-  resize: none;
-}
-
-/*---------------------------- 
-  Combat Tab - Combat Resources Container
-------------------------------*/
-
-.worldbuilding .combatItemContainer {
-  display: flex;
-  flex-direction: column;
+.worldbuilding .combatNav .flexContainer .combatStats {
   width: 100%;
-  height: 435px;
 }
 
-.worldbuilding .equippedItemContainer {
-  width: 100%;
-  border-left: 1px solid;
-  overflow-y: scroll;
+.worldbuilding .combatNavContainer .active {
+  display: block;
 }
 
-.worldbuilding .equippedItemContainer .armorName {
-  text-align: left;
-  width: 60%;
-  white-space: nowrap;
-  text-overflow: ellipsis;
-  overflow: hidden;
+.worldbuilding .woundedInputContainer {
+  position: relative;
 }
 
-/*---------------------------- 
-  Combat Tab - List Container
-------------------------------*/
+.worldbuilding .woundedInputContainer input {
+  position: absolute;
+  top: 0;
+  right: 0;
+}
 
-.worldbuilding .combatListContainer {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-  width: 100%;
-  padding: 0 5px;
+.worldbuilding .wounded {
+  background-image: url('../images/bloodSplatter2.webp');
+  background-size: cover;
 }
 
 /*---------------------------- 

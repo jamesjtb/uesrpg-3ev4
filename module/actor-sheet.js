@@ -212,15 +212,6 @@
     this._setResistanceColumnToggle()
     this._refreshWeaponShortcuts()
 
-    // Set saved scroll bar position if not default
-    if (localStorage.getItem('scrollPosition') !== 0) {
-      this._setScrollPosition()
-    }
-
-    this.form.addEventListener('click', () => {
-      this._saveScrollPosition()
-    })
-
     // Everything below here is only needed if the sheet is editable
     if (!this.options.editable) return;
 
