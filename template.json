@@ -2,7 +2,7 @@
 "Actor": {
   "types": ["character", "npc"],
   "templates": {
-    "equippedItems": {
+    "equippedWeapons": {
       "equippedWeapons": {
         "primaryWeapon": {
           "name": "",
@@ -14,58 +14,11 @@
           "img": "icons/svg/sword.svg",
           "id": ""
         }
-      },
-      "equippedArmor": {
-        "head": {
-          "name": "",
-          "img": "icons/equipment/head/helm-barbute-brown-tan.webp",
-          "id": ""
-        },
-        "chest": {
-          "name": "",
-          "img": "icons/equipment/chest/breastplate-leather-brown-belted.webp",
-          "id": ""
-        },
-        "leftArm": {
-          "name": "",
-          "img": "icons/equipment/hand/glove-frayed-cloth-grey.webp",
-          "id": ""
-        },
-        "rightArm": {
-          "name": "",
-          "img": "icons/equipment/hand/glove-frayed-cloth-grey.webp",
-          "id": ""
-        },
-        "leftLeg": {
-          "name": "",
-          "img": "icons/equipment/feet/boots-galosh-white.webp",
-          "id": ""
-        },
-        "rightLeg": {
-          "name": "",
-          "img": "icons/equipment/feet/boots-galosh-white.webp",
-          "id": ""
-        },
-        "neck": {
-          "name": "",
-          "img": "icons/equipment/neck/choker-chain-thin-gold.webp",
-          "id": ""
-        },
-        "ring1": {
-          "name": "",
-          "img": "icons/equipment/finger/ring-faceted-white.webp",
-          "id": ""
-        },
-        "ring2": {
-          "name": "",
-          "img": "icons/equipment/finger/ring-faceted-white.webp",
-          "id": ""
-        }
       }
     }
   },
   "character": {
-    "templates": ["equippedItems"],
+    "templates": ["equippedWeapons"],
     "race": "",
     "birthsign": "",
     "age": "",
@@ -304,7 +257,7 @@
     }
   },
   "npc": {
-    "templates": ["equippedItems"],
+    "templates": ["equippedWeapons"],
     "race": "",
     "birthsign": "",
     "age": "",

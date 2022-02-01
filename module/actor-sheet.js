@@ -212,6 +212,15 @@
     this._setResistanceColumnToggle()
     this._refreshWeaponShortcuts()
 
+    // Set saved scroll bar position if not default
+    if (localStorage.getItem('scrollPosition') !== 0) {
+      this._setScrollPosition()
+    }
+
+    this.form.addEventListener('click', () => {
+      this._saveScrollPosition()
+    })
+
     // Everything below here is only needed if the sheet is editable
     if (!this.options.editable) return;
 
@@ -2606,10 +2615,20 @@
                               </table>
                           <div>`
 
+
+    // tags for flavor on chat message
+    let tags = [];
+
+    if (shortcutWeapon.data.data.superior){
+        let tagEntry = `<span style="border: none; border-radius: 30px; background-color: rgba(29, 97, 187, 0.80); color: white; text-align: center; font-size: xx-small; padding: 5px;" title="Damage was rolled twice and output was highest of the two">Superior</span>`;
+        tags.push(tagEntry);
+    }
+
     ChatMessage.create({
       type: CONST.CHAT_MESSAGE_TYPES.ROLL,
       user: game.user.id,
       speaker: ChatMessage.getSpeaker(),
+      flavor: tags.join(''),
       content: contentString,
       roll: weaponRoll
     })
