@@ -264,7 +264,7 @@
                                 <div>
                                     <i class="fas fa-heart-broken woundIcon" title="Wound Penalty"> {{data.woundPenalty}}</i>
                                 </div>
-                                <button type="button" id="diseaseR" class="resistance resistance-roll" title="Disease Resistance"><i class="fas fa-bacterium"></i> <label>{{data.resistance.diseaseR}}%</label></button>
+                                <button type="button" id="diseaseR" name="Disease" class="resistance resistance-roll" title="Disease Resistance"><i class="fas fa-bacterium"></i> <label>{{data.resistance.diseaseR}}%</label></button>
                                 <button id="fireR" class="resistance" title="Fire Resistance"><i class="fas fa-fire"></i> <label>{{data.resistance.fireR}}</label></button>
                                 <button id="frostR" class="resistance" title="Frost Resistance"><i class="fas fa-snowflake"></i> <label>{{data.resistance.frostR}}</label></button>
                                 <button id="shockR" class="resistance" title="Shock Resistance"><i class="fas fa-bolt"></i> <label>{{data.resistance.shockR}}</label></button>
@@ -286,11 +286,40 @@
                         </div>
                         <div class="equippedWeaponsContainer">
                             <div class="flexContainer">
-                                <div class="primaryWeapon selectWeapon" title="Right-click to set weapon, click to roll damage">
+                                <div class="primaryWeapon selectWeapon" title="{{data.equippedWeapons.primaryWeapon.name}}">
                                     <img class="equippedWeaponImg" src="{{data.equippedWeapons.primaryWeapon.img}}">
                                 </div>
-                                <div class="secondaryWeapon selectWeapon" title="Right-click to set weapon, click to roll damage">
+                                <div class="secondaryWeapon selectWeapon" title="{{data.equippedWeapons.secondaryWeapon.name}}">
                                     <img class="equippedWeaponImg" src="{{data.equippedWeapons.secondaryWeapon.img}}">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="leftButtonColumn">
+                            <div class="flexContainer">
+                                <div class="favorites-roll topHotBar" data-hotkey="1" title="{{data.favorites.1.name}}" style="background: url({{data.favorites.1.img}}) no-repeat; background-size: contain;">
+                                    <div class="buttonValueFlexContainer">
+                                        <div class="favoriteHotKey">{{data.professionsWound.combat}}</div>
+                                    </div>
+                                </div>
+                                <div class="favorites-roll topHotBar" data-hotkey="2" title="{{data.favorites.2.name}}" style="background: url({{data.favorites.2.img}}) no-repeat; background-size: contain;">
+                                    <div class="buttonValueFlexContainer">
+                                        <div class="favoriteHotKey">{{data.professionsWound.evade}}</div>
+                                    </div>
+                                </div>
+                                <div class="favorites-roll topHotBar" data-hotkey="3" title="{{data.favorites.3.name}}" style="background: url({{data.favorites.3.img}}) no-repeat; background-size: contain;">
+                                    <div class="buttonValueFlexContainer">
+                                        <div class="favoriteHotKey">{{data.professionsWound.magic}}</div>
+                                    </div>
+                                </div>
+                                <div class="favorites-roll topHotBar" data-hotkey="4" title="{{data.favorites.4.name}}" style="background: url({{data.favorites.4.img}}) no-repeat; background-size: contain;">
+                                    <div class="buttonValueFlexContainer">
+                                        <div class="favoriteHotKey">{{data.professionsWound.physical}}</div>
+                                    </div>
+                                </div>
+                                <div class="favorites-roll topHotBar" data-hotkey="5" title="{{data.favorites.5.name}}" style="background: url({{data.favorites.5.img}}) no-repeat; background-size: contain;">
+                                    <div class="buttonValueFlexContainer">
+                                        <div class="favoriteHotKey">{{data.professionsWound.stealth}}</div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -511,6 +540,7 @@
                             <thead>
                                 <tr>
                                     <th>Name</th>
+                                    <th>MP Cost</th>
                                     <th>School</th>
                                     <th><i class="fas fa-trash"></i></th>
                                 </tr>
@@ -525,6 +555,7 @@
                                                 <div class="item-name">{{item.name}}</div>
                                             </div>
                                         </td>
+                                        <td>{{item.data.cost}}</td>
                                         <td>{{item.data.school}}</td>
                                         <td>
                                             <a class="item-control item-delete" title="Delete Item"><i class="fas fa-trash"></i></a>
@@ -569,9 +600,9 @@
                             <thead>
                                 <tr>
                                     <th>Name</th>
+                                    <th>Qty</th>
                                     <th>ENC</th>
                                     <th>Price</th>
-                                    <th>QTY</th>
                                     <th><i class="fas fa-trash"></i></th>
                                 </tr>
                             </thead>
@@ -584,8 +615,6 @@
                                                 <div class="item-name">{{item.name}}</div>
                                             </div>
                                         </td>
-                                        <td>{{item.data.enc}}</td>
-                                        <td>{{item.data.price}}</td>
                                         <td>
                                             <div class="qty-controls">
                                                 <button class="minusQty plusQty" title="Click to increase, right click to decrease">
@@ -593,6 +622,8 @@
                                                 </button>
                                             </div>
                                         </td>
+                                        <td>{{item.data.enc}}</td>
+                                        <td>{{item.data.price}}</td>
                                         <td>
                                             <a class="item-control item-delete" title="Delete Item"><i class="fas fa-trash"></i></a>
                                         </td>

@@ -185,8 +185,8 @@ export class merchantSheet extends ActorSheet {
 
     //Update Item Attributes from Actor Sheet
     html.find(".toggle2H").click(await this._onToggle2H.bind(this));
-    html.find(".ammo-plus").click(await this._onPlusAmmo.bind(this));
-    html.find(".ammo-minus").click(await this._onMinusAmmo.bind(this));
+    html.find(".plusQty").click(await this._onPlusQty.bind(this));
+    html.find(".minusQty").contextmenu(await this._onMinusQty.bind(this));
     html.find(".itemEquip").click(await this._onItemEquip.bind(this));
     html.find(".wealthCalc").click(await this._onWealthCalc.bind(this));
     html.find(".setBaseCharacteristicsNPC").click(await this._onSetBaseCharacteristics.bind(this));
@@ -1178,7 +1178,7 @@ export class merchantSheet extends ActorSheet {
      item.update({"data.weapon2H" : item.data.data.weapon2H})
   }
 
-   _onPlusAmmo(event) {
+  _onPlusQty(event) {
     event.preventDefault()
     let toggle = $(event.currentTarget);
     const li = toggle.parents(".item");
@@ -1189,19 +1189,19 @@ export class merchantSheet extends ActorSheet {
      item.update({"data.quantity" : item.data.data.quantity})
   }
 
-   _onMinusAmmo(event) {
+  async _onMinusQty(event) {
     event.preventDefault()
     let toggle = $(event.currentTarget);
     const li = toggle.parents(".item");
     const item = this.actor.getEmbeddedDocument("Item", li.data("itemId"));
 
     item.data.data.quantity = item.data.data.quantity - 1;
-    if (item.data.data.quantity < 0){
+    if (item.data.data.quantity <= 0){
       item.data.data.quantity = 0;
-      ui.notifications.info("Out of Ammunition!");
+      ui.notifications.info(`You have used your last ${item.name}!`);
     }
 
-     item.update({"data.quantity" : item.data.data.quantity})
+    await item.update({"data.quantity" : item.data.data.quantity})
   }
 
    _onItemEquip(event) {

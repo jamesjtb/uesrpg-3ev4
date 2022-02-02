@@ -48,13 +48,14 @@
                             <th>Type</th>
                             <th>ENC</th>
                             <th>QTY</th>
-                            <th>Price</th>
+                            <th><i class="fas fa-trash"></i></th>
                         </tr>
                     </thead>
                     <tbody id="merchantItemList">
                         <div class="tableListHeader">
                             <h2>
                                 <div class="leftInfo">
+                                    <button type="button" class="item-create" id="createSelect">+</button>
                                     <label>Items</label>
                                 </div>
                                 <select id="itemFilter">
@@ -64,7 +65,14 @@
                         </div>
                         {{#each actor.data.merchantItem as |item id|}}
                         <tr class="item active" data-item-id="{{item._id}}" data-item-type="{{item.type}}">
-                            <td><a class="buyButton" title="Buy Item"><i class="fas fa-coins"></i></a></td>
+                            <td>
+                                <div class="buyFlexContainer">
+                                    <a class="buyButton" title="Buy Item for {{item.data.modPrice}}">
+                                        <i class="fas fa-coins"></i>
+                                    </a>
+                                    <div>{{item.data.modPrice}}</div>
+                                </div>
+                            </td>
                             <td>
                                 <div class="tableItemNameCell">
                                     <img class="item-img" src="{{item.img}}" title="Send to Chat"/>
@@ -74,7 +82,6 @@
                             <td>{{item.type}}</td>
                             <td>{{item.data.enc}}</td>
                             <td>{{item.data.quantity}}</td>
-                            <td>{{item.data.modPrice}}</td>
                         </tr>
                         {{/each}}
                     </tbody>

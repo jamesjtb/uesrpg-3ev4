@@ -434,7 +434,7 @@ h1, h2, button {
 .worldbuilding .stickyHeader {
   position: sticky;
   top: 0;
-  z-index: 2;
+  z-index: 3;
   background: url("../images/parchment5.jpg") repeat;
   padding: 5px 0;
 }
@@ -822,7 +822,7 @@ h1, h2, button {
 
 .worldbuilding .combatSegment1 {
   border-bottom: 1px solid;
-  height: 210px;
+  height: 220px;
 }
 
 .worldbuilding .combatSegment2 {
@@ -835,7 +835,7 @@ h1, h2, button {
 
 .worldbuilding .paperDollContainer {
   position: relative;
-  width: 50%;
+  width: 35%;
   background-size: 0 0;
 }
 
@@ -867,14 +867,15 @@ h1, h2, button {
 
 .worldbuilding .paperDollContainer .leftColumn {
   position: absolute;
-  top: 0;
+  bottom: 0;
   left: 0;
   padding: 5px;
   margin: 0;
-  z-index: +1;
+  z-index: +2;
   background: hsla(0, 0%, 80%, 0.5);
   backdrop-filter: blur(2px);
   border-right: solid 1px;
+  height: 100%;
 }
 
 .worldbuilding .leftColumn .flexContainer {
@@ -894,11 +895,31 @@ h1, h2, button {
   position: absolute;
   bottom: 0;
   right: 0;
+  background: hsla(0, 3%, 58%, 0.719);
+  border-radius: 5px;
 }
 
 .worldbuilding .equippedWeaponsContainer .flexContainer {
   display: flex;
   flex-direction: column;
+  align-items: center;
+  padding: 5px;
+  gap: 5px;
+}
+
+.worldbuilding .leftButtonColumn {
+  position: absolute;
+  left: 0;
+  top: 0;
+  z-index: +1;
+  background: hsla(0, 3%, 58%, 0.719);
+  border-radius: 5px;
+}
+
+.worldbuilding .leftButtonColumn .flexContainer {
+  display: flex;
+  flex-wrap: nowrap;
+  flex-direction: row;
   align-items: center;
   padding: 5px;
   gap: 5px;
@@ -927,8 +948,8 @@ h1, h2, button {
 .worldbuilding #paperDoll {
   position: absolute;
   border: none;
-  top: 50%;
-  left: 50%;
+  top: 55%;
+  left: 45%;
   transform: translate(-50%, -50%);
   height: 150px;
 }
@@ -938,14 +959,31 @@ h1, h2, button {
 }
 
 .worldbuilding .selectWeapon,
-.worldbuilding .npcCombat {
+.worldbuilding .topHotBar {
   position: relative;
   height: 30px;
   width: 30px;
 }
 
+.worldbuilding .topHotBar .buttonValueFlexContainer {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  color: white;
+  text-shadow: 2px 2px black;
+  height: 100%;
+  width: 100%;
+
+}
+
+.worldbuilding .topHotBar .buttonValueFlexContainer:hover {
+  transition: 0.2s;
+  background: none;
+}
+
 .worldbuilding .selectWeapon:hover,
-.worldbuilding .npcCombat:hover {
+.worldbuilding .topHotBar:hover {
   cursor: pointer;
   transition: 0.5s;
   transform: scale(0.9);
@@ -1030,9 +1068,17 @@ h1, h2, button {
 }
 
 .worldbuilding .equippedItemContainer {
-  width: 100%;
+  width: 65%;
   border-left: 1px solid;
   overflow-y: scroll;
+  z-index: +1;
+}
+
+.worldbuilding .equippedItemContainer thead {
+  position: sticky;
+  top: 0;
+  z-index: +1;
+  background: rgb(187, 173, 173);
 }
 
 .worldbuilding .equippedItemContainer th,
@@ -1190,4 +1236,12 @@ h1, h2, button {
 
 .worldbuilding .abilityContainer {
   width: 33%;
+}
+
+.worldbuilding .item .buyFlexContainer {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 5px;
 }

@@ -173,16 +173,16 @@
     html.find(".magic-roll").click(await this._onSpellRoll.bind(this));
     html.find(".resistance-roll").click(this._onResistanceRoll.bind(this));
     html.find(".damage-roll").click(this._onDamageRoll.bind(this));
-    html.find(".armor-roll").click(await this._onArmorRoll.bind(this));
     html.find(".ammo-roll").click(await this._onAmmoRoll.bind(this));
     html.find(".skillList .item-img").click(await this._onTalentRoll.bind(this));
-    html.find(".itemTabInfo .supplyRoll").click(await this._onSupplyRoll.bind(this));
     html.find("#luckyMenu").click(this._onLuckyMenu.bind(this));
     html.find("#raceMenu").click(this._onRaceMenu.bind(this));
     html.find('#birthSignMenu').click(this._onBirthSignMenu.bind(this));
     html.find('#xpMenu').click(this._onXPMenu.bind(this));
     html.find('.selectWeapon').contextmenu(this._selectWeaponMenu.bind(this))
     html.find('.selectWeapon').click(this._onWeaponShortcut.bind(this))
+    html.find('.favorites-roll').contextmenu(this._selectFavoritesMenu.bind(this))
+    html.find('.favorites-roll').click(this._onFavoritesHotKey.bind(this))
 
     //Update Item Attributes from Actor Sheet
     html.find(".toggle2H").click(await this._onToggle2H.bind(this));
@@ -607,25 +607,25 @@
             roll.roll({async:false});
 
           if (roll.total === luck1 || roll.total === luck2 || roll.total === luck3 || roll.total === luck4 || roll.total === luck5) {
-            contentString = `<h2 style='font-size: large'><img src="${item.img}" height=20 width=20 style='margin-right: 5px;'</img>${item.name}</h2>
+            contentString = `<h2><img src="${item.img}"</img>${item.name}</h2>
             <p></p><b>Target Number: [[${item.data.data.value} + ${playerInput}]]</b> <p></p>
             <b>Result: [[${roll.result}]]</b><p></p>
             <span style='color:green; font-size:120%;'> <b>LUCKY NUMBER!</b></span>`
 
           } else if (roll.total == luck6 || roll.total === luck7 || roll.total === luck8 || roll.total === luck9 || roll.total === luck10) {
-            contentString = `<h2 style='font-size: large'><img src="${item.img}" height=20 width=20 style='margin-right: 5px;'</img>${item.name}</h2>
+            contentString = `<h2><img src="${item.img}"</img>${item.name}</h2>
             <p></p><b>Target Number: [[${item.data.data.value} + ${playerInput}]]</b> <p></p>
             <b>Result: [[${roll.result}]]</b><p></p>
             <span style='color:rgb(168, 5, 5); font-size:120%;'> <b>UNLUCKY NUMBER!</b></span>`
 
           } else if (this.actor.data.data.wounded === true) {
-            contentString = `<h2 style='font-size: large'><img src="${item.img}" height=20 width=20 style='margin-right: 5px;'</img>${item.name}</h2>
+            contentString = `<h2><img src="${item.img}"</img>${item.name}</h2>
             <p></p><b>Target Number: [[${item.data.data.value} + ${playerInput} + ${this.actor.data.data.woundPenalty}]]</b> <p></p>
             <b>Result: [[${roll.result}]]</b><p></p>
             <b>${roll.total<=(item.data.data.value + playerInput + this.actor.data.data.woundPenalty) ? " <span style='color:green; font-size: 120%;'> <b>SUCCESS!</b></span>" : " <span style='color: rgb(168, 5, 5); font-size: 120%;'> <b>FAILURE!</b></span>"}`
 
           } else {
-            contentString = `<h2 style='font-size: large'><img src="${item.img}" height=20 width=20 style='margin-right: 5px;'</img>${item.name}</h2>
+            contentString = `<h2><img src="${item.img}"</img>${item.name}</h2>
             <p></p><b>Target Number: [[${item.data.data.value} + ${playerInput}]]</b> <p></p>
             <b>Result: [[${roll.result}]]</b><p></p>
             <b>${roll.total<=(item.data.data.value + playerInput) ? " <span style='color:green; font-size: 120%;'> <b>SUCCESS!</b></span>" : " <span style='color: rgb(168, 5, 5); font-size: 120%;'> <b>FAILURE!</b></span>"}`
@@ -678,14 +678,28 @@
                                 </tr>`
     }
 
+    // If Description exists, put into the dialog for reference
+    let spellDescriptionDiv = ''
+    if (spellToCast.data.data.description != '' && spellToCast.data.data.description != undefined) {
+      spellDescriptionDiv = `<div style="padding: 10px;">
+                                  ${spellToCast.data.data.description}
+                              </div>`
+    }
+
       const m = new Dialog({
         title: "Cast Spell",
         content: `<form>
                     <div>
 
                         <div>
-                            <h2 style="text-align: center;">${spellToCast.name}</h2>
-                            <div style="padding: 10px; margin-top: 10px; background: rgba(161, 149, 149, 0.486); border: black 1px;">
+                            <h2 style="text-align: center; display: flex; flex-direction: row; align-items: center; justify-content: center; gap: 5px; font-size: xx-large;">
+                                <img src="${spellToCast.img}" class="item-img" height=35 width=35>
+                                <div>${spellToCast.name}</div>
+                            </h2>
+
+                            ${spellDescriptionDiv}
+
+                            <div style="padding: 10px; margin-top: 10px; background: rgba(161, 149, 149, 0.486); border: black 1px; font-style: italic;">
                                 Select one of the options below OR skip this to cast the spell without any modifications.
                             </div>
                         </div>
@@ -822,7 +836,7 @@
                         displayCost = actualCost;
                     }
 
-                    let contentString = `<h2 style="font-size: large; margin-top: 5px;"><img style="float: left; height: 24px; width: 24px; margin: 0 5px 5px 5px; border: none;" src=${spellToCast.img}></im>${spellToCast.name}</h2>
+                    let contentString = `<h2><img src=${spellToCast.img}></im>${spellToCast.name}</h2>
                                             <table>
                                                 <thead style="background: rgba(161, 149, 149, 0.486);">
                                                     <tr>
@@ -896,25 +910,25 @@
           let contentString = "";
           
           if (roll.total == this.actor.data.data.lucky_numbers.ln1 || roll.total == this.actor.data.data.lucky_numbers.ln2 || roll.total == this.actor.data.data.lucky_numbers.ln3 || roll.total == this.actor.data.data.lucky_numbers.ln4 || roll.total == this.actor.data.data.lucky_numbers.ln5) {
-            contentString = `<h2 style='font-size: large'><img src="${item.img}" height=20 width=20 style='margin-right: 5px;'</img>${item.name}</h2>
+            contentString = `<h2><img src="${item.img}"</img>${item.name}</h2>
             <p></p><b>Target Number: [[${item.data.data.value} + ${playerInput}]]</b> <p></p>
             <b>Result: [[${roll.result}]]</b><p></p>
             <span style='color:green; font-size:120%;'> <b>LUCKY NUMBER!</b></span>`
 
           } else if (roll.total == this.actor.data.data.unlucky_numbers.ul1 || roll.total == this.actor.data.data.unlucky_numbers.ul2 || roll.total == this.actor.data.data.unlucky_numbers.ul3 || roll.total == this.actor.data.data.unlucky_numbers.ul4 || roll.total == this.actor.data.data.unlucky_numbers.ul5) {
-            contentString = `<h2 style='font-size: large'><img src="${item.img}" height=20 width=20 style='margin-right: 5px;'</img>${item.name}</h2>
+            contentString = `<h2><img src="${item.img}"</img>${item.name}</h2>
             <p></p><b>Target Number: [[${item.data.data.value} + ${playerInput}]]</b> <p></p>
             <b>Result: [[${roll.result}]]</b><p></p>
             <span style='color:rgb(168, 5, 5); font-size:120%;'> <b>UNLUCKY NUMBER!</b></span>`
 
           } else if (this.actor.data.data.wounded === true) {
-            contentString = `<h2 style='font-size: large'><img src="${item.img}" height=20 width=20 style='margin-right: 5px;'</img>${item.name}</h2>
+            contentString = `<h2><img src="${item.img}"</img>${item.name}</h2>
             <p></p><b>Target Number: [[${item.data.data.value} + ${playerInput} + ${this.actor.data.data.woundPenalty}]]</b> <p></p>
             <b>Result: [[${roll.result}]]</b><p></p>
             <b>${roll.total<=(item.data.data.value + playerInput + this.actor.data.data.woundPenalty) ? " <span style='color:green; font-size: 120%;'> <b>SUCCESS!</b></span>" : " <span style='color: rgb(168, 5, 5); font-size: 120%;'> <b>FAILURE!</b></span>"}`
 
           } else {
-            contentString = `<h2 style='font-size: large'><img src="${item.img}" height=20 width=20 style='margin-right: 5px;'</img>${item.name}</h2>
+            contentString = `<h2><img src="${item.img}"</img>${item.name}</h2>
             <p></p><b>Target Number: [[${item.data.data.value} + ${playerInput}]]</b> <p></p>
             <b>Result: [[${roll.result}]]</b><p></p>
             <b>${roll.total<=(item.data.data.value + playerInput) ? " <span style='color:green; font-size: 120%;'> <b>SUCCESS!</b></span>" : " <span style='color: rgb(168, 5, 5); font-size: 120%;'> <b>FAILURE!</b></span>"}`
@@ -959,19 +973,19 @@
           let contentString = "";
 
           if (roll.total == this.actor.data.data.lucky_numbers.ln1 || roll.total == this.actor.data.data.lucky_numbers.ln2 || roll.total == this.actor.data.data.lucky_numbers.ln3 || roll.total == this.actor.data.data.lucky_numbers.ln4 || roll.total == this.actor.data.data.lucky_numbers.ln5) {
-            contentString = `<h2 style='font-size: large;'>${element.name} Resistance</h2>
+            contentString = `<h2>${element.name} Resistance</h2>
             <p></p><b>Target Number: [[${this.actor.data.data.resistance[element.id]} + ${playerInput}]]</b> <p></p>
             <b>Result: [[${roll.result}]]</b><p></p>
             <span style='color:green; font-size:120%;'> <b>LUCKY NUMBER!</b></span>`
 
           } else if (roll.total == this.actor.data.data.unlucky_numbers.ul1 || roll.total == this.actor.data.data.unlucky_numbers.ul2 || roll.total == this.actor.data.data.unlucky_numbers.ul3 || roll.total == this.actor.data.data.unlucky_numbers.ul4 || roll.total == this.actor.data.data.unlucky_numbers.ul5) {
-            contentString = `<h2 style='font-size: large;'>${element.name} Resistance</h2>
+            contentString = `<h2>${element.name} Resistance</h2>
             <p></p><b>Target Number: [[${this.actor.data.data.resistance[element.id]} + ${playerInput}]]</b> <p></p>
             <b>Result: [[${roll.result}]]</b><p></p>
             <span style='color:rgb(168, 5, 5); font-size:120%;'> <b>UNLUCKY NUMBER!</b></span>`
 
           } else {
-            contentString = `<h2 style='font-size: large;'>${element.name} Resistance</h2>
+            contentString = `<h2>${element.name} Resistance</h2>
             <p></p><b>Target Number: [[${this.actor.data.data.resistance[element.id]} + ${playerInput}]]</b> <p></p>
             <b>Result: [[${roll.result}]]</b><p></p>
             <b>${roll.total<=(this.actor.data.data.resistance[element.id] + playerInput) ? " <span style='color:green; font-size: 120%;'> <b>SUCCESS!</b></span>" : " <span style='color: rgb(168, 5, 5); font-size: 120%;'> <b>FAILURE!</b></span>"}`
@@ -1035,7 +1049,7 @@
 
     if (item.data.data.weapon2H === true) {
       if (item.data.data.superior === true) {
-        contentString = `<h2 style='font-size: large'><img src="${item.img}" height=20 width=20 style='margin-right: 5px;'</img>${item.name}</h2>
+        contentString = `<h2><img src="${item.img}"</img>${item.name}</h2>
           <p></p>
           <b>Damage:</b> <b> [[${roll2H.result}]] [[${supRoll2H.result}]]</b> ${roll2H._formula}<p></p>
           <b>Hit Location:</b> <b> [[${hit.total}]] </b> ${hit_loc}<p></p>
@@ -1049,7 +1063,7 @@
           })
 
       } else {
-        contentString = `<h2 style='font-size: large'><img src="${item.img}" height=20 width=20 style='margin-right: 5px;'</img>${item.name}</h2>
+        contentString = `<h2><img src="${item.img}"</img>${item.name}</h2>
             <p></p>
             <b>Damage:</b> <b> [[${roll2H.result}]]</b> ${roll2H._formula}<p></p>
             <b>Hit Location:</b> <b> [[${hit.total}]] </b> ${hit_loc}<p></p>
@@ -1065,7 +1079,7 @@
 
     } else {
         if (item.data.data.superior === true) {
-          contentString = `<h2 style='font-size: large'><img src="${item.img}" height=20 width=20 style='margin-right: 5px;'</img>${item.name}</h2>
+          contentString = `<h2><img src="${item.img}"</img>${item.name}</h2>
             <p></p>
             <b>Damage:</b> <b> [[${roll.result}]] [[${supRoll.result}]]</b> ${roll._formula}<p></p>
             <b>Hit Location:</b> <b> [[${hit.total}]] </b> ${hit_loc}<p></p>
@@ -1079,7 +1093,7 @@
             })
 
       } else {
-        contentString = `<h2 style='font-size: large'><img src="${item.img}" height=20 width=20 style='margin-right: 5px;'</img>${item.name}</h2>
+        contentString = `<h2><img src="${item.img}"</img>${item.name}</h2>
             <p></p>
             <b>Damage:</b> <b> [[${roll.result}]]</b> ${roll._formula}<p></p>
             <b>Hit Location:</b> <b> [[${hit.total}]] </b> ${hit_loc}<p></p>
@@ -1094,21 +1108,6 @@
           }
         }
   }
-  
-  async _onArmorRoll(event) {
-    event.preventDefault()
-    let button = $(event.currentTarget);
-    const li = button.parents(".item");
-    const item = this.actor.items.get(li.data("itemId"));
-
-    const content = `<h2 style='font-size: large;'><img src="${item.img}" height=20 width=20 style='margin-right: 5px;'</img>${item.name}</h2><p>
-      <b>AR:</b> ${item.data.data.armor}<p>
-      <b>Magic AR:</b> ${item.data.data.magic_ar}<p>
-      <b>Qualities</b> ${item.data.data.qualities}`
-      await ChatMessage.create({user: game.user.id, 
-        speaker: ChatMessage.getSpeaker(), 
-        content: content});
-  }
 
   async _onAmmoRoll(event) {
     event.preventDefault()
@@ -1116,7 +1115,7 @@
     const li = button.parents(".item");
     const item = this.actor.getEmbeddedDocument("Item", li.data("itemId"));
 
-    const contentString = `<h2 style='font-size: large;'><img src="${item.img}" height=20 width=20 style='margin-right: 5px;'</img>${item.name}</h2><p>
+    const contentString = `<h2><img src="${item.img}"</img>${item.name}</h2>
       <b>Damage Bonus:</b> ${item.data.data.damage}<p>
       <b>Qualities</b> ${item.data.data.qualities}`
 
@@ -1219,7 +1218,7 @@
     const li = button.parents(".item");
     const item = this.actor.getEmbeddedDocument("Item", li.data("itemId"));
 
-    let contentString = `<h2 style='font-size: large'><img src="${item.img}" height=20 width=20 style='margin-right: 5px;'</img>${item.name}</h2><p>
+    let contentString = `<h2><img src="${item.img}"</img>${item.name}</h2>
     <i><b>${item.type}</b></i><p>
       <i>${item.data.data.description}</i>`
 
@@ -1227,28 +1226,6 @@
       user: game.user.id,
       speaker: ChatMessage.getSpeaker(),
       content: contentString
-    })
-  }
-
-  async _onSupplyRoll(event) {
-    event.preventDefault()
-    const supplyDice = this.actor.data.data.supply;
-
-    let supplyRoll = new Roll(supplyDice);
-    supplyRoll.roll({async:false});
-
-    ChatMessage.create({
-      user: game.user.id,
-      speaker: ChatMessage.getSpeaker(),
-      type: CONST.CHAT_MESSAGE_TYPES.ROLL,
-      roll: supplyRoll,
-      content: `<h2 style='font-size: large'>Supply Dice Roll</h2>
-                <i>Reduce your Supply Dice Tier if you roll a 1.</i>
-                <p></p>
-                <label><b>Result: </b></label> <b>[[${supplyRoll.result}]]</b> ${supplyRoll._formula}
-                <p></p>
-                <b>${supplyRoll.result == 1 ? "<span><i>Your supplies begin to diminish.</i></span>" 
-                : "<span><i>Your supplies remain intact.</i></span>"}</b>`
     })
   }
 
@@ -2449,6 +2426,10 @@
                         <h2>Select a weapon to bind to this button</h2>
                     </div>
 
+                    <div style="padding: 10px; margin-top: 10px; background: rgba(161, 149, 149, 0.486); border: black 1px; font-style: italic;">
+                          To clear/reset the hotkey to no bindings, de-select any weapons and hit the submit button.
+                    </div>
+
                     <div>
                         <table style="text-align: center;">
                             <thead>
@@ -2477,23 +2458,42 @@
           label: 'Submit',
           callback: html => {
               const checkedBox = [...document.querySelectorAll('.selectedWeapon')].filter(item => item.checked)[0]
-              const selectedWeapon = this.actor.getEmbeddedDocument('Item', checkedBox.dataset.weaponId)
-              switch ([...element.classList].some(i => i === 'primaryWeapon')) {
-                case true: 
-                    this.actor.update({
-                      'data.equippedWeapons.primaryWeapon.name': selectedWeapon.name,
-                      'data.equippedWeapons.primaryWeapon.img': selectedWeapon.img,
-                      'data.equippedWeapons.primaryWeapon.id': selectedWeapon.id
-                    })
-                    break
 
-                case false: 
-                    this.actor.update({
-                      'data.equippedWeapons.secondaryWeapon.name': selectedWeapon.name,
-                      'data.equippedWeapons.secondaryWeapon.img': selectedWeapon.img,
-                      'data.equippedWeapons.secondaryWeapon.id': selectedWeapon.id
-                    })
-                    break
+              if (checkedBox === null || checkedBox === undefined) {
+                ui.notifications.info("Cleared weapon hotkey")
+                this.actor.update({
+                  'data.equippedWeapons.primaryWeapon.name': "None: Right click to bind weapon",
+                  'data.equippedWeapons.primaryWeapon.img': 'icons/svg/sword.svg',
+                  'data.equippedWeapons.primaryWeapon.id': ""
+                })
+
+                this.actor.update({
+                  'data.equippedWeapons.secondaryWeapon.name': "None: Right click to bind weapon",
+                  'data.equippedWeapons.secondaryWeapon.img': 'icons/svg/sword.svg',
+                  'data.equippedWeapons.secondaryWeapon.id': ""
+                })
+              }
+
+              else {
+                const selectedWeapon = this.actor.getEmbeddedDocument('Item', checkedBox.dataset.weaponId)
+
+                switch ([...element.classList].some(i => i === 'primaryWeapon')) {
+                  case true: 
+                      this.actor.update({
+                        'data.equippedWeapons.primaryWeapon.name': selectedWeapon.name,
+                        'data.equippedWeapons.primaryWeapon.img': selectedWeapon.img,
+                        'data.equippedWeapons.primaryWeapon.id': selectedWeapon.id
+                      })
+                      break
+
+                  case false: 
+                      this.actor.update({
+                        'data.equippedWeapons.secondaryWeapon.name': selectedWeapon.name,
+                        'data.equippedWeapons.secondaryWeapon.img': selectedWeapon.img,
+                        'data.equippedWeapons.secondaryWeapon.id': selectedWeapon.id
+                      })
+                      break
+                }
               }
           }
         }
@@ -2518,6 +2518,10 @@
       case false: 
           shortcutWeapon = this.actor.getEmbeddedDocument('Item', this.actor.data.data.equippedWeapons.secondaryWeapon.id)
           break
+    }
+
+    if (shortcutWeapon === null || shortcutWeapon === undefined) {
+      return ui.notifications.info("No weapon bound to this hotkey. Right click the hotkey to bind a weapon.")
     }
 
     let hit_loc = ""
@@ -2646,6 +2650,161 @@
       'data.equippedWeapons.secondaryWeapon.img': this.actor.data.data.equippedWeapons.secondaryWeapon.img,
       'data.equippedWeapons.secondaryWeapon.id': this.actor.data.data.equippedWeapons.secondaryWeapon.id
     })
+  }
+
+  _selectFavoritesMenu(event) {
+    event.preventDefault()
+    let element = event.currentTarget
+    let hotkeyNum = element.dataset.hotkey
+    let itemArray = this.actor.items.filter(item => item.type === 'combatStyle'||item.type === 'spell'||item.type === 'skill'||item.type === 'magicSkill')
+    itemArray.sort((a,b) => {
+      let typeA = a.type
+      let typeB = b.type
+      if (typeA > typeB) {return 1}
+      else {return -1}
+    })
+    let tableEntries = []
+
+    for (let item of itemArray) {
+      let tableEntry = `<tr>
+                            <td data-item-id="${item.id}">
+                                <div style="display: flex; flex-direction: row; align-items: center; gap: 5px;">
+                                  <img class="item-img" src="${item.img}" height="24" width="24">
+                                  ${item.name}
+                                </div>
+                            </td>
+                            <td>${item.type}</td>
+                            <td style="text-align: center;">
+                                <input type="checkbox" class="hotkeySelect" data-item-id="${item.id}" ${item.data.data.equipped ? 'checked' : ''}>
+                            </td>
+                        </tr>`
+
+      tableEntries.push(tableEntry)
+    }
+
+    let d = new Dialog({
+      title: "Set Favorites Hotkey",
+      content: `<div>
+                    <h2>Set Hotkey Item</h2>
+
+                    <div style="padding: 10px; margin-top: 10px; background: rgba(161, 149, 149, 0.486); border: black 1px; font-style: italic;">
+                          Select an item to bind to hotkey ${element.dataset.hotkey} for quick access to frequently used skills, combat styles, or spells.
+                    </div>
+
+                    <table>
+                        <thead>
+                            <tr>
+                                <td>Name</td>
+                                <td>Item Type</td>
+                                <td style="text-align: center;">Select</td>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            ${tableEntries.join('')}
+                        </tbody>
+                    </table>
+                </div>`,
+
+      buttons: {
+        one: {
+          label: "Cancel",
+          callback: html => console.log("Cancelled")
+        },
+        two: {
+          label: "Submit",
+          callback: html => {
+              const checkedBox = [...document.querySelectorAll('.hotkeySelect')].filter(item => item.checked)[0]
+              let dataPathName = `data.favorites.${hotkeyNum}.name`
+              let dataPathImg = `data.favorites.${hotkeyNum}.img`
+              let dataPathId = `data.favorites.${hotkeyNum}.id`
+
+              if (checkedBox === null || checkedBox === undefined) {
+                ui.notifications.info("Cleared weapon hotkey")
+                this.actor.update({
+                  [dataPathName]: "",
+                  [dataPathImg]: "",
+                  [dataPathId]: ""
+                })
+              }
+
+              else {
+                const selectedItem = this.actor.getEmbeddedDocument('Item', checkedBox.dataset.itemId)
+                this.actor.update({
+                  [dataPathName]: selectedItem.name,
+                  [dataPathImg]: selectedItem.img,
+                  [dataPathId]: selectedItem.id
+                })
+              }
+          }
+        }
+      },
+      default: "one",
+      close: html => console.log()
+    })
+    d.position.height = 500;
+    d.render(true)
+  }
+
+  _onFavoritesHotKey(event) {
+    event.preventDefault()
+    let element = event.currentTarget
+    let hotkeyNum = element.dataset.hotkey
+
+    let shortcutItem = this.actor.getEmbeddedDocument('Item', this.actor.data.data.favorites[hotkeyNum].id)
+
+    if (shortcutItem === null || shortcutItem === undefined) {
+      return ui.notifications.info("No item bound to this hotkey. Right click the hotkey to bind an item.")
+    }
+
+    else {
+      switch (shortcutItem.type) {
+        case 'combatStyle':
+        case 'magicSkill':
+        case 'skill':
+          let roll = new Roll('1d100')
+          roll.roll()
+          let lnArray = Object.entries(this.actor.data.data.lucky_numbers)
+          let ulArray = Object.entries(this.actor.data.data.unlucky_numbers)
+
+          let lucky = false
+          let unlucky = false
+
+          for (let num of lnArray) {
+            console.log(num[1])
+            if (num[1] == roll.result) {lucky = true}
+          }
+
+          for (let num of ulArray) {
+            console.log(num[1])
+            if (num[1] == roll.result) {unlucky = true}
+          }
+
+
+          // Create content based on lucky/unlucky rolls
+          if (lucky) {
+
+          }
+          else if (unlucky) {
+
+          }
+          else {
+
+          }
+
+          let tags = []
+          let contentString = ``
+
+          ChatMessage.create({
+            user: game.user.id,
+            speaker: ChatMessage.getSpeaker(),
+            type: CONST.CHAT_MESSAGE_TYPES.ROLL,
+            flavor: tags.join(""),
+            content: contentString,
+            roll: roll
+        })
+
+      }
+    }
   }
 }
 

@@ -5,20 +5,49 @@
     "equippedWeapons": {
       "equippedWeapons": {
         "primaryWeapon": {
-          "name": "",
+          "name": "None: Right click to bind weapon",
           "img": "icons/skills/melee/unarmed-punch-fist.webp",
           "id": ""
         },
         "secondaryWeapon": {
+          "name": "None: Right click to bind weapon",
+          "img": "icons/skills/melee/unarmed-punch-fist.webp",
+          "id": ""
+        }
+      }
+    },
+    "favorites": {
+      "favorites": {
+        "1": {
           "name": "",
-          "img": "icons/svg/sword.svg",
+          "img": "",
+          "id": ""
+        },
+        "2": {
+          "name": "",
+          "img": "",
+          "id": ""
+        },
+        "3": {
+          "name": "",
+          "img": "",
+          "id": ""
+        },
+        "4": {
+          "name": "",
+          "img": "",
+          "id": ""
+        },
+        "5": {
+          "name": "",
+          "img": "",
           "id": ""
         }
       }
     }
   },
   "character": {
-    "templates": ["equippedWeapons"],
+    "templates": ["equippedWeapons", "favorites"],
     "race": "",
     "birthsign": "",
     "age": "",
@@ -257,7 +286,7 @@
     }
   },
   "npc": {
-    "templates": ["equippedWeapons"],
+    "templates": ["equippedWeapons", "favorites"],
     "race": "",
     "birthsign": "",
     "age": "",

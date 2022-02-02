@@ -373,7 +373,7 @@
                                 <div>
                                     <i class="fas fa-heart-broken woundIcon" title="Wound Penalty"> {{data.woundPenalty}}</i>
                                 </div>
-                                <button type="button" id="diseaseR" class="resistance resistance-roll" title="Disease Resistance"><i class="fas fa-bacterium"></i> <label>{{data.resistance.diseaseR}}%</label></button>
+                                <button type="button" id="diseaseR" name="Disease" class="resistance resistance-roll" title="Disease Resistance"><i class="fas fa-bacterium"></i> <label>{{data.resistance.diseaseR}}%</label></button>
                                 <button id="fireR" class="resistance" title="Fire Resistance"><i class="fas fa-fire"></i> <label>{{data.resistance.fireR}}</label></button>
                                 <button id="frostR" class="resistance" title="Frost Resistance"><i class="fas fa-snowflake"></i> <label>{{data.resistance.frostR}}</label></button>
                                 <button id="shockR" class="resistance" title="Shock Resistance"><i class="fas fa-bolt"></i> <label>{{data.resistance.shockR}}</label></button>
@@ -395,14 +395,40 @@
                         </div>
                         <div class="equippedWeaponsContainer">
                             <div class="flexContainer">
-                                <div class="professions-roll npcCombat" name ="Combat" title="Roll Combat" id="combat">
-                                    <img class="equippedWeaponImg" src="icons/skills/melee/weapons-crossed-swords-yellow.webp">
-                                </div>
-                                <div class="primaryWeapon selectWeapon" title="Right-click to set weapon, click to roll damage">
+                                <div class="primaryWeapon selectWeapon" title="{{data.equippedWeapons.primaryWeapon.name}}">
                                     <img class="equippedWeaponImg" src="{{data.equippedWeapons.primaryWeapon.img}}">
                                 </div>
-                                <div class="secondaryWeapon selectWeapon" title="Right-click to set weapon, click to roll damage">
+                                <div class="secondaryWeapon selectWeapon" title="{{data.equippedWeapons.secondaryWeapon.name}}">
                                     <img class="equippedWeaponImg" src="{{data.equippedWeapons.secondaryWeapon.img}}">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="leftButtonColumn">
+                            <div class="flexContainer">
+                                <div class="professions-roll topHotBar" name ="Combat" title="Roll Combat" id="combat" style="background: url(icons/skills/melee/weapons-crossed-swords-yellow.webp) no-repeat; background-size: contain;">
+                                    <div class="buttonValueFlexContainer">
+                                        <div>{{data.professionsWound.combat}}</div>
+                                    </div>
+                                </div>
+                                <div class="professions-roll topHotBar" name ="Evade" title="Roll Evade" id="evade" style="background: url(icons/skills/movement/arrow-upward-yellow.webp) no-repeat; background-size: contain;">
+                                    <div class="buttonValueFlexContainer">
+                                        <div>{{data.professionsWound.evade}}</div>
+                                    </div>
+                                </div>
+                                <div class="professions-roll topHotBar" name ="Magic" title="Roll Magic" id="magic" style="background: url(icons/sundries/books/book-open-purple.webp) no-repeat; background-size: contain;">
+                                    <div class="buttonValueFlexContainer">
+                                        <div>{{data.professionsWound.magic}}</div>
+                                    </div>
+                                </div>
+                                <div class="professions-roll topHotBar" name ="Physical" title="Roll Physical" id="physical" style="background: url(icons/skills/melee/unarmed-punch-fist.webp) no-repeat; background-size: contain;">
+                                    <div class="buttonValueFlexContainer">
+                                        <div>{{data.professionsWound.physical}}</div>
+                                    </div>
+                                </div>
+                                <div class="professions-roll topHotBar" name ="Stealth" title="Roll Stealth" id="stealth" style="background: url(systems/uesrpg-d100/images/Icons/invisible.webp) no-repeat; background-size: contain;">
+                                    <div class="buttonValueFlexContainer">
+                                        <div>{{data.professionsWound.stealth}}</div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -430,66 +456,6 @@
                 <div class="combatSegment2">
                     <div class="combatItemContainer">
                         <div class="combatListContainer">
-                            <ol class="skillList">
-                                <h2 class="headerWithButton">
-                                    <label>Combat Professions</label>
-                                </h2>
-                                <li class="item flexrow" data-item-id="{{item._id}}">
-                                    <div class="itemInfo">
-                                        <i class="fas fa-dice-d20 professions-roll" name="Combat" id="combat"></i>
-                                        <img class="item-img" src="icons/skills/melee/weapons-crossed-swords-yellow.webp" title="Send to Chat"/>
-                                        <div class="skill-name">Combat</div>
-                                    </div>
-                                    <div class="item-controls">
-                                        <div class="item-value profession">{{data.professions.combat}}%</div>
-                                    </div>
-                                </li>
-                                <li class="item flexrow" data-item-id="{{item._id}}">
-                                    <div class="itemInfo">
-                                        <i class="fas fa-dice-d20 professions-roll" name="Evade" id="evade"></i>
-                                        <img class="item-img" src="icons/skills/movement/arrow-upward-yellow.webp" title="Send to Chat"/>
-                                        <div class="skill-name">Evade</div>
-                                    </div>
-                                    <div class="item-controls">
-                                        <div class="item-value profession">{{data.professions.evade}}%</div>
-                                    </div>
-                                </li>
-                                <li class="item flexrow" data-item-id="{{item._id}}">
-                                    <div class="itemInfo">
-                                        <i class="fas fa-dice-d20 professions-roll" name="Magic" id="magic"></i>
-                                        <img class="item-img" src="icons/sundries/books/book-open-purple.webp" title="Send to Chat"/>
-                                        <div class="skill-name">Magic</div>
-                                    </div>
-                                    <div class="item-controls">
-                                        <div class="item-value profession">{{data.professions.magic}}%</div>
-                                    </div>
-                                </li>
-                                <li class="item flexrow" data-item-id="{{item._id}}">
-                                    <div class="itemInfo">
-                                        <i class="fas fa-dice-d20 professions-roll" name="Physical" id="physical"></i>
-                                        <img class="item-img" src="icons/skills/melee/unarmed-punch-fist.webp" title="Send to Chat"/>
-                                        <div class="skill-name">Physical</div>
-                                    </div>
-                                    <div class="item-controls">
-                                        <div class="item-value profession">{{data.professions.physical}}%</div>
-                                    </div>
-                                </li>
-                                <li class="item flexrow" data-item-id="{{item._id}}">
-                                    <div class="itemInfo">
-                                        <i class="fas fa-dice-d20 professions-roll" name="Stealth" id="stealth"></i>
-                                        <img class="item-img" src="systems/uesrpg-d100/images/Icons/invisible.webp" title="Send to Chat"/>
-                                        <div class="skill-name">Stealth</div>
-                                    </div>
-                                    <div class="item-controls">
-                                        <div class="item-value profession">{{data.professions.stealth}}%</div>
-                                    </div>
-                                </li>
-
-
-
-
-
-                            </ol>
                             <ol class="skillList">
                                 <h2 class="headerWithButton">
                                     <button type="button" class="item-create" id="weapon">+</button>
@@ -702,6 +668,7 @@
                             <thead>
                                 <tr>
                                     <th>Name</th>
+                                    <th>MP Cost</th>
                                     <th>School</th>
                                     <th><i class="fas fa-trash"></i></th>
                                 </tr>
@@ -716,6 +683,7 @@
                                                 <div class="item-name">{{item.name}}</div>
                                             </div>
                                         </td>
+                                        <td>{{item.data.cost}}</td>
                                         <td>{{item.data.school}}</td>
                                         <td>
                                             <a class="item-control item-delete" title="Delete Item"><i class="fas fa-trash"></i></a>
@@ -760,9 +728,9 @@
                             <thead>
                                 <tr>
                                     <th>Name</th>
+                                    <th>Qty</th>
                                     <th>ENC</th>
                                     <th>Price</th>
-                                    <th>QTY</th>
                                     <th><i class="fas fa-trash"></i></th>
                                 </tr>
                             </thead>
@@ -775,8 +743,6 @@
                                                 <div class="item-name">{{item.name}}</div>
                                             </div>
                                         </td>
-                                        <td>{{item.data.enc}}</td>
-                                        <td>{{item.data.price}}</td>
                                         <td>
                                             <div class="qty-controls">
                                                 <button class="minusQty plusQty" title="Click to increase, right click to decrease">
@@ -784,6 +750,8 @@
                                                 </button>
                                             </div>
                                         </td>
+                                        <td>{{item.data.enc}}</td>
+                                        <td>{{item.data.price}}</td>
                                         <td>
                                             <a class="item-control item-delete" title="Delete Item"><i class="fas fa-trash"></i></a>
                                         </td>

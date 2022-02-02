@@ -14,7 +14,7 @@ export class npcSheet extends ActorSheet {
       dragDrop: [{dragSelector: [
         ".equipmentList .item", 
         ".spellList .item",
-        ".skillList .item" 
+        ".skillList .item"
       ], 
       dropSelector: null}]
     });
@@ -175,7 +175,6 @@ export class npcSheet extends ActorSheet {
     html.find(".damage-roll").click(await this._onDamageRoll.bind(this));
     html.find(".magic-roll").click(await this._onSpellRoll.bind(this));
     html.find(".resistance-roll").click(await this._onResistanceRoll.bind(this));
-    html.find(".armor-roll").click(await this._onArmorRoll.bind(this));
     html.find(".ammo-roll").click(await this._onAmmoRoll.bind(this));
     html.find(".ability-list .item-img").click(await this._onTalentRoll.bind(this));
     html.find(".talents-list .item-img").click(await this._onTalentRoll.bind(this));
@@ -609,7 +608,7 @@ export class npcSheet extends ActorSheet {
               roll.result == this.actor.data.data.lucky_numbers.ln9 ||
               roll.result == this.actor.data.data.lucky_numbers.ln10)
               {
-              contentString = `<h2 style='font-size: large'>${element.getAttribute('name')}</h2>
+              contentString = `<h2>${element.getAttribute('name')}</h2>
               <p></p><b>Target Number: [[${this.actor.data.data.professionsWound[element.getAttribute('id')]} + ${playerInput}]]</b> <p></p>
               <b>Result: [[${roll.result}]]</b><p></p>
               <span style='color:green; font-size:120%;'> <b>LUCKY NUMBER!</b></span>`
@@ -622,13 +621,13 @@ export class npcSheet extends ActorSheet {
                 roll.result == this.actor.data.data.unlucky_numbers.ul5 ||
                 roll.result == this.actor.data.data.unlucky_numbers.ul6) 
                 {
-                  contentString = `<h2 style='font-size: large'>${element.getAttribute('name')}</h2>
+                  contentString = `<h2>${element.getAttribute('name')}</h2>
                   <p></p><b>Target Number: [[${this.actor.data.data.professionsWound[element.getAttribute('id')]} + ${playerInput}]]</b> <p></p>
                   <b>Result: [[${roll.result}]]</b><p></p>
                   <span style='color:rgb(168, 5, 5); font-size:120%;'> <b>UNLUCKY NUMBER!</b></span>`
 
                 } else {
-                  contentString = `<h2 style='font-size: large'>${element.getAttribute('name')}</h2>
+                  contentString = `<h2>${element.getAttribute('name')}</h2>
                   <p></p><b>Target Number: [[${this.actor.data.data.professionsWound[element.getAttribute('id')]} + ${playerInput}]]</b> <p></p>
                   <b>Result: [[${roll.result}]]</b><p></p>
                   <b>${roll.result<=(this.actor.data.data.professionsWound[element.getAttribute('id')] + playerInput) ? " <span style='color:green; font-size: 120%;'> <b>SUCCESS!</b></span>" : " <span style='color:rgb(168, 5, 5); font-size: 120%;'> <b>FAILURE!</b></span>"}`
@@ -695,7 +694,7 @@ export class npcSheet extends ActorSheet {
 
     if (item.data.data.weapon2H === true) {
       if (item.data.data.superior === true) {
-        contentString = `<h2 style='font-size: large'><img src="${item.img}" height=20 width=20 style='margin-right: 5px;'</img>${item.name}</h2>
+        contentString = `<h2><img src="${item.img}"</img>${item.name}</h2>
           <p></p>
           <b>Damage:</b> <b> [[${roll2H.result}]] [[${supRoll2H.result}]]</b> ${roll2H._formula}<p></p>
           <b>Hit Location:</b> <b> [[${hit.total}]] </b> ${hit_loc}<p></p>
@@ -709,7 +708,7 @@ export class npcSheet extends ActorSheet {
           })
 
       } else {
-        contentString = `<h2 style='font-size: large'><img src="${item.img}" height=20 width=20 style='margin-right: 5px;'</img>${item.name}</h2>
+        contentString = `<h2><img src="${item.img}"</img>${item.name}</h2>
             <p></p>
             <b>Damage:</b> <b> [[${roll2H.result}]]</b> ${roll2H._formula}<p></p>
             <b>Hit Location:</b> <b> [[${hit.total}]] </b> ${hit_loc}<p></p>
@@ -725,7 +724,7 @@ export class npcSheet extends ActorSheet {
 
     } else {
         if (item.data.data.superior === true) {
-          contentString = `<h2 style='font-size: large'><img src="${item.img}" height=20 width=20 style='margin-right: 5px;'</img>${item.name}</h2>
+          contentString = `<h2><img src="${item.img}"</img>${item.name}</h2>
             <p></p>
             <b>Damage:</b> <b> [[${roll.result}]] [[${supRoll.result}]]</b> ${roll._formula}<p></p>
             <b>Hit Location:</b> <b> [[${hit.total}]] </b> ${hit_loc}<p></p>
@@ -739,7 +738,7 @@ export class npcSheet extends ActorSheet {
             })
 
       } else {
-        contentString = `<h2 style='font-size: large'><img src="${item.img}" height=20 width=20 style='margin-right: 5px;'</img>${item.name}</h2>
+        contentString = `<h2><img src="${item.img}"</img>${item.name}</h2>
             <p></p>
             <b>Damage:</b> <b> [[${roll.result}]]</b> ${roll._formula}<p></p>
             <b>Hit Location:</b> <b> [[${hit.total}]] </b> ${hit_loc}<p></p>
@@ -784,14 +783,28 @@ export class npcSheet extends ActorSheet {
                                 </tr>`
     }
 
+    // If Description exists, put into the dialog for reference
+    let spellDescriptionDiv = ''
+    if (spellToCast.data.data.description != '' && spellToCast.data.data.description != undefined) {
+      spellDescriptionDiv = `<div style="padding: 10px;">
+                                  ${spellToCast.data.data.description}
+                              </div>`
+    }
+
       const m = new Dialog({
         title: "Cast Spell",
         content: `<form>
                     <div>
 
                         <div>
-                            <h2 style="text-align: center;">${spellToCast.name}</h2>
-                            <div style="padding: 10px; margin-top: 10px; background: rgba(161, 149, 149, 0.486); border: black 1px;">
+                            <h2 style="text-align: center; display: flex; flex-direction: row; align-items: center; justify-content: center; gap: 5px; font-size: xx-large;">
+                                <img src="${spellToCast.img}" class="item-img" height=35 width=35>
+                                <div>${spellToCast.name}</div>
+                            </h2>
+
+                            ${spellDescriptionDiv}
+
+                            <div style="padding: 10px; margin-top: 10px; background: rgba(161, 149, 149, 0.486); border: black 1px; font-style: italic;">
                                 Select one of the options below OR skip this to cast the spell without any modifications.
                             </div>
                         </div>
@@ -928,7 +941,7 @@ export class npcSheet extends ActorSheet {
                         displayCost = actualCost;
                     }
 
-                    let contentString = `<h2 style="font-size: large; margin-top: 5px;"><img style="float: left; height: 24px; width: 24px; margin: 0 5px 5px 5px; border: none;" src=${spellToCast.img}></im>${spellToCast.name}</h2>
+                    let contentString = `<h2><img src=${spellToCast.img}></im>${spellToCast.name}</h2>
                                             <table>
                                                 <thead style="background: rgba(161, 149, 149, 0.486);">
                                                     <tr>
@@ -978,66 +991,6 @@ export class npcSheet extends ActorSheet {
     m.position.width = 450;
     m.render(true);
   }
-      
-   _onCombatRoll(event) {
-  event.preventDefault()
-  let button = $(event.currentTarget);
-  const li = button.parents(".item");
-  const item = this.actor.getEmbeddedDocument("Item", li.data("itemId"));
-      
-  let d = new Dialog({
-    title: "Apply Roll Modifier",
-    content: `<form>
-                <div class="dialogForm">
-                <label><b>${item.name} Modifier: </b></label><input placeholder="ex. -20, +10" id="playerInput" value="0" style=" text-align: center; width: 50%; border-style: groove; float: right;" type="text"></input></div>
-                  </form>`,
-        buttons: {
-          one: {
-            label: "Roll!",
-            callback: html => {
-              const playerInput = parseInt(html.find('[id="playerInput"]').val());
-      
-            let contentString = "";
-            let roll = new Roll("1d100");
-            roll.roll({async:false});
-      
-                if (roll.total == this.actor.data.data.lucky_numbers.ln1 || roll.total == this.actor.data.data.lucky_numbers.ln2 || roll.total == this.actor.data.data.lucky_numbers.ln3 || roll.total == this.actor.data.data.lucky_numbers.ln4 || roll.total == this.actor.data.data.lucky_numbers.ln5) {
-                  contentString = `<h2 style='font-size: large'><img src="${item.img}" height=20 width=20 style='margin-right: 5px;'</img>${item.name}</h2>
-                  <p></p><b>Target Number: [[${item.data.data.value} + ${playerInput}]]</b> <p></p>
-                  <b>Result: [[${roll.result}]]</b><p></p>
-                  <span style='color:green; font-size:120%;'> <b>LUCKY NUMBER!</b></span>`
-      
-                } else if (roll.total == this.actor.data.data.unlucky_numbers.ul1 || roll.total == this.actor.data.data.unlucky_numbers.ul2 || roll.total == this.actor.data.data.unlucky_numbers.ul3 || roll.total == this.actor.data.data.unlucky_numbers.ul4 || roll.total == this.actor.data.data.unlucky_numbers.ul5) {
-                  contentString = `<h2 style='font-size: large'><img src="${item.img}" height=20 width=20 style='margin-right: 5px;'</img>${item.name}</h2>
-                  <p></p><b>Target Number: [[${item.data.data.value} + ${playerInput}]]</b> <p></p>
-                  <b>Result: [[${roll.result}]]</b><p></p>
-                  <span style='color:rgb(168, 5, 5); font-size:120%;'> <b>UNLUCKY NUMBER!</b></span>`
-      
-                } else {
-                  contentString = `<h2 style='font-size: large'><img src="${item.img}" height=20 width=20 style='margin-right: 5px;'</img>${item.name}</h2>
-                  <p></p><b>Target Number: [[${item.data.data.value} + ${playerInput}]]</b> <p></p>
-                  <b>Result: [[${roll.result}]]</b><p></p>
-                  <b>${roll.total<=(item.data.data.value + playerInput) ? " <span style='color:green; font-size: 120%;'> <b>SUCCESS!</b></span>" : " <span style='color: rgb(168, 5, 5); font-size: 120%;'> <b>FAILURE!</b></span>"}`
-                }
-                 roll.toMessage({
-                  async: false,
-                  type: CONST.CHAT_MESSAGE_TYPES.ROLL,
-                  user: game.user.id, 
-                  speaker: ChatMessage.getSpeaker(),
-                  content: contentString
-                })
-              }
-            },
-            two: {
-              label: "Cancel",
-              callback: html => console.log("Cancelled")
-            }
-            },
-            default: "one",
-            close: html => console.log()
-            });
-            d.render(true);
-  }
 
    _onResistanceRoll(event) {
     event.preventDefault()
@@ -1060,19 +1013,19 @@ export class npcSheet extends ActorSheet {
           roll.roll({async:false});
 
           if (roll.total == this.actor.data.data.lucky_numbers.ln1 || roll.total == this.actor.data.data.lucky_numbers.ln2 || roll.total == this.actor.data.data.lucky_numbers.ln3 || roll.total == this.actor.data.data.lucky_numbers.ln4 || roll.total == this.actor.data.data.lucky_numbers.ln5) {
-            contentString = `<h2 style='font-size: large;'${element.name} Resistance</h2>
+            contentString = `<h2>${element.name} Resistance</h2>
             <p></p><b>Target Number: [[${this.actor.data.data.resistance[element.id]} + ${playerInput}]]</b> <p></p>
             <b>Result: [[${roll.result}]]</b><p></p>
             <span style='color:green; font-size:120%;'> <b>LUCKY NUMBER!</b></span>`
 
           } else if (roll.total == this.actor.data.data.unlucky_numbers.ul1 || roll.total == this.actor.data.data.unlucky_numbers.ul2 || roll.total == this.actor.data.data.unlucky_numbers.ul3 || roll.total == this.actor.data.data.unlucky_numbers.ul4 || roll.total == this.actor.data.data.unlucky_numbers.ul5) {
-            contentString = `<h4>${element.name} Resistance</h4>
+            contentString = `<h2>${element.name} Resistance</h2>
             <p></p><b>Target Number: [[${this.actor.data.data.resistance[element.id]} + ${playerInput}]]</b> <p></p>
             <b>Result: [[${roll.result}]]</b><p></p>
             <span style='color:rgb(168, 5, 5); font-size:120%;'> <b>UNLUCKY NUMBER!</b></span>`
 
           } else {
-            contentString = `<h4>${element.name} Resistance</h4>
+            contentString = `<h2>${element.name} Resistance</h2>
             <p></p><b>Target Number: [[${this.actor.data.data.resistance[element.id]} + ${playerInput}]]</b> <p></p>
             <b>Result: [[${roll.result}]]</b><p></p>
             <b>${roll.total<=(this.actor.data.data.resistance[element.id] + playerInput) ? " <span style='color:green; font-size: 120%;'> <b>SUCCESS!</b></span>" : " <span style='color: rgb(168, 5, 5); font-size: 120%;'> <b>FAILURE!</b></span>"}`
@@ -1096,22 +1049,6 @@ export class npcSheet extends ActorSheet {
       });
       d.render(true);
 
-  }
-
-   _onArmorRoll(event) {
-    event.preventDefault()
-    let button = $(event.currentTarget);
-    const li = button.parents(".item");
-    const item = this.actor.getEmbeddedDocument("Item", li.data("itemId"));
-
-    const content = `<h2 style='font-size: large;'>${item.name}</h2><p>
-      <b>AR:</b> ${item.data.data.armor}<p>
-      <b>Magic AR:</b> ${item.data.data.magic_ar}<p>
-      <b>Qualities</b> ${item.data.data.qualities}`
-      ChatMessage.create(
-        {user: game.user.id, 
-          speaker: ChatMessage.getSpeaker(), 
-          content: content});
   }
 
   _onAmmoRoll(event) {
@@ -1337,6 +1274,7 @@ export class npcSheet extends ActorSheet {
     let woundIcon = document.querySelector('.woundIcon')
     this.actor.data.data.wounded ? woundIcon.style.visibility = 'visible' : woundIcon.style.visibility = 'hidden'
   }
+
   _setWoundBackground() {
     if (this.actor.data.data.wounded) {
       document.querySelector('.paperDollContainer').classList.add('wounded')
@@ -1581,6 +1519,10 @@ export class npcSheet extends ActorSheet {
                         <h2>Select a weapon to bind to this button</h2>
                     </div>
 
+                    <div style="padding: 10px; margin-top: 10px; background: rgba(161, 149, 149, 0.486); border: black 1px; font-style: italic;">
+                          To clear/reset the hotkey to no bindings, de-select any weapons and hit the submit button.
+                    </div>
+
                     <div>
                         <table style="text-align: center;">
                             <thead>
@@ -1609,23 +1551,42 @@ export class npcSheet extends ActorSheet {
           label: 'Submit',
           callback: html => {
               const checkedBox = [...document.querySelectorAll('.selectedWeapon')].filter(item => item.checked)[0]
-              const selectedWeapon = this.actor.getEmbeddedDocument('Item', checkedBox.dataset.weaponId)
-              switch ([...element.classList].some(i => i === 'primaryWeapon')) {
-                case true: 
-                    this.actor.update({
-                      'data.equippedWeapons.primaryWeapon.name': selectedWeapon.name,
-                      'data.equippedWeapons.primaryWeapon.img': selectedWeapon.img,
-                      'data.equippedWeapons.primaryWeapon.id': selectedWeapon.id
-                    })
-                    break
 
-                case false: 
-                    this.actor.update({
-                      'data.equippedWeapons.secondaryWeapon.name': selectedWeapon.name,
-                      'data.equippedWeapons.secondaryWeapon.img': selectedWeapon.img,
-                      'data.equippedWeapons.secondaryWeapon.id': selectedWeapon.id
-                    })
-                    break
+              if (checkedBox === null || checkedBox === undefined) {
+                ui.notifications.info("Cleared weapon hotkey")
+                this.actor.update({
+                  'data.equippedWeapons.primaryWeapon.name': "None: Right click to bind weapon",
+                  'data.equippedWeapons.primaryWeapon.img': 'icons/svg/sword.svg',
+                  'data.equippedWeapons.primaryWeapon.id': ""
+                })
+
+                this.actor.update({
+                  'data.equippedWeapons.secondaryWeapon.name': "None: Right click to bind weapon",
+                  'data.equippedWeapons.secondaryWeapon.img': 'icons/svg/sword.svg',
+                  'data.equippedWeapons.secondaryWeapon.id': ""
+                })
+              }
+
+              else {
+                const selectedWeapon = this.actor.getEmbeddedDocument('Item', checkedBox.dataset.weaponId)
+
+                switch ([...element.classList].some(i => i === 'primaryWeapon')) {
+                  case true: 
+                      this.actor.update({
+                        'data.equippedWeapons.primaryWeapon.name': selectedWeapon.name,
+                        'data.equippedWeapons.primaryWeapon.img': selectedWeapon.img,
+                        'data.equippedWeapons.primaryWeapon.id': selectedWeapon.id
+                      })
+                      break
+
+                  case false: 
+                      this.actor.update({
+                        'data.equippedWeapons.secondaryWeapon.name': selectedWeapon.name,
+                        'data.equippedWeapons.secondaryWeapon.img': selectedWeapon.img,
+                        'data.equippedWeapons.secondaryWeapon.id': selectedWeapon.id
+                      })
+                      break
+                }
               }
           }
         }
@@ -1650,6 +1611,10 @@ export class npcSheet extends ActorSheet {
       case false: 
           shortcutWeapon = this.actor.getEmbeddedDocument('Item', this.actor.data.data.equippedWeapons.secondaryWeapon.id)
           break
+    }
+
+    if (shortcutWeapon === null || shortcutWeapon === undefined) {
+      return ui.notifications.info("No weapon bound to this hotkey. Right click the hotkey to bind a weapon.")
     }
 
     let hit_loc = ""
@@ -1747,10 +1712,20 @@ export class npcSheet extends ActorSheet {
                               </table>
                           <div>`
 
+
+    // tags for flavor on chat message
+    let tags = [];
+
+    if (shortcutWeapon.data.data.superior){
+        let tagEntry = `<span style="border: none; border-radius: 30px; background-color: rgba(29, 97, 187, 0.80); color: white; text-align: center; font-size: xx-small; padding: 5px;" title="Damage was rolled twice and output was highest of the two">Superior</span>`;
+        tags.push(tagEntry);
+    }
+
     ChatMessage.create({
       type: CONST.CHAT_MESSAGE_TYPES.ROLL,
       user: game.user.id,
       speaker: ChatMessage.getSpeaker(),
+      flavor: tags.join(''),
       content: contentString,
       roll: weaponRoll
     })
