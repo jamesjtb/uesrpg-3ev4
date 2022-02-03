@@ -118,6 +118,14 @@ h1, h2, button {
   font-weight: bold;
 }
 
+.chat-message .tableCenterText {
+  text-align: center;
+}
+
+.chat-message .tableAttribute {
+  width: 30%;
+}
+
 .modifierBox {
   padding: 5px;
   margin-bottom: 5px;
@@ -934,11 +942,7 @@ h1, h2, button {
   justify-content: center;
   align-items: center;
   text-align: center;
-  width: 25px;
-  height: 25px;
-  line-height: 1;
-  padding: 0;
-  margin: 0;
+  width: 100%;
 }
 
 .worldbuilding .swapPaperDoll i {

@@ -19,29 +19,34 @@
     "favorites": {
       "favorites": {
         "1": {
-          "name": "",
-          "img": "",
-          "id": ""
+          "name": "Hotkey 1",
+          "img": "icons/svg/combat.svg",
+          "id": "",
+          "value": 0
         },
         "2": {
-          "name": "",
-          "img": "",
-          "id": ""
+          "name": "Hotkey 2",
+          "img": "icons/svg/combat.svg",
+          "id": "",
+          "value": 0
         },
         "3": {
-          "name": "",
-          "img": "",
-          "id": ""
+          "name": "Hotkey 3",
+          "img": "icons/svg/combat.svg",
+          "id": "",
+          "value": 0
         },
         "4": {
-          "name": "",
-          "img": "",
-          "id": ""
+          "name": "Hotkey 4",
+          "img": "icons/svg/combat.svg",
+          "id": "",
+          "value": 0
         },
         "5": {
-          "name": "",
-          "img": "",
-          "id": ""
+          "name": "Hotkey 5",
+          "img": "icons/svg/combat.svg",
+          "id": "",
+          "value": 0
         }
       }
     }
@@ -751,7 +756,7 @@
   },
   "spell": {
     "description": "",
-    "damage": "",
+    "damage": 0,
     "level": 0,
     "cost": 0,
     "spell_str": "",

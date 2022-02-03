@@ -75,6 +75,15 @@ Hooks.once("init", async function() {
     type: Boolean
   });
 
+  game.settings.register("uesrpg-d100", "automateMagicka", {
+    name: "Automate Magicka Cost",
+    hint: "Automatically deduct the cost of a spell after cost calculation from the token/character's current magicka.",
+    scope: "world",
+    config: true,
+    default: false,
+    type: Boolean
+  });
+
   const startUpFunction = () => {
     const startUpDialog = game.settings.get("uesrpg-d100", "startUpDialog");
     let discordIcon = `<i class="fab fa-discord fa-2x"></i>`;
@@ -161,6 +170,7 @@ Hooks.once("init", async function() {
                       <li>New Magic Spell Filter: Spells are now able to be filtered by School category (Alteration, Destruction, etc.). Helps with those massive spell lists on mage characters!</li>
                       <li>New Spellcasting menu when you click to cast a spell. Lets you select Overload, Restraint, and a few others if you have the appropriate talents.</li>
                       <li>If a spell does not have a damage value (or is set to 0), the output will not show up in the chat result (requested for non-damaging spells)</li>
+                      <li>New System Setting to automatically deduct calculated spell costs after modifiers (Restraint, Overload, Overcharge, Magicka Cycling, etc.) from the caster's current Magicka.</li>
                   </ul>
 
                 <h3>Item Changes</h3>

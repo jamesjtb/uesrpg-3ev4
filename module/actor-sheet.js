@@ -651,7 +651,16 @@
 
   _onSpellRoll(event) {
     //Search for Talents that affect Spellcasting Costs
-    const spellToCast = this.actor.items.find(spell => spell.id === event.currentTarget.closest('.item').dataset.itemId)
+    let spellToCast
+
+    if (event.currentTarget.closest('.item') != null || event.currentTarget.closest('.item') != undefined) {
+      spellToCast = this.actor.items.find(spell => spell.id === event.currentTarget.closest('.item').dataset.itemId)
+    }
+    else {
+      spellToCast = this.actor.getEmbeddedDocument('Item', this.actor.data.data.favorites[event.currentTarget.dataset.hotkey].id)
+    }
+
+    // const spellToCast = this.actor.items.find(spell => spell.id === event.currentTarget.closest('.item').dataset.itemId)
     const hasCreative = this.actor.items.find(i => i.type === "talent" && i.name === "Creative") ? true : false;
     const hasForceOfWill = this.actor.items.find(i => i.type === "talent" && i.name === "Force of Will") ? true : false;
     const hasMethodical = this.actor.items.find(i => i.type === "talent" && i.name === "Methodical") ? true : false;
@@ -733,7 +742,7 @@
         buttons: {
             one: {
                 label: "Cast Spell",
-                callback: html => {
+                callback: async (html) => {
                     let spellRestraint = 0;
                     let stackCostMod = 0;
 
@@ -792,7 +801,7 @@
                     let damageEntry = "";
 
                     if (spellToCast.data.data.damage != '' && spellToCast.data.data.damage != 0){
-                        damageRoll.roll();
+                        damageRoll.roll({async: false});
                         damageEntry = `<tr>
                                             <td style="font-weight: bold;">Damage</td>
                                             <td style="font-weight: bold; text-align: center;">[[${damageRoll.result}]]</td>
@@ -800,10 +809,8 @@
                                         </tr>`
                     }
 
-                    console.log(damageEntry)
-
                     const hitLocRoll = new Roll("1d10");
-                    hitLocRoll.roll();
+                    hitLocRoll.roll({async: false});
                     let hitLoc = "";
 
                     if (hitLocRoll.result <= 5) {
@@ -836,6 +843,13 @@
                         displayCost = actualCost;
                     }
 
+                    // Stop The Function if the user does not have enough Magicka to Cast the Spell
+                    if (game.settings.get("uesrpg-d100", "automateMagicka")) {
+                      if (displayCost > this.actor.data.data.magicka.value) {
+                        return ui.notifications.info(`You do not have enough Magicka to cast this spell: Cost: ${spellToCast.data.data.cost} || Restraint: ${spellRestraint} || Other: ${stackCostMod}`)
+                      }
+                    }
+
                     let contentString = `<h2><img src=${spellToCast.img}></im>${spellToCast.name}</h2>
                                             <table>
                                                 <thead style="background: rgba(161, 149, 149, 0.486);">
@@ -863,15 +877,17 @@
                                                     </tr>
                                                 </tbody>
                                             </table>`
-
-                    ChatMessage.create({
+                                            
+                    damageRoll.toMessage({
                         user: game.user.id,
                         speaker: ChatMessage.getSpeaker(),
                         type: CONST.CHAT_MESSAGE_TYPES.ROLL,
                         flavor: tags.join(""),
-                        content: contentString,
-                        roll: damageRoll
+                        content: contentString
                     })
+
+                    // If Automate Magicka Setting is on, reduce the character's magicka by the calculated output cost
+                    if (game.settings.get("uesrpg-d100", "automateMagicka")) {this.actor.update({'data.magicka.value': this.actor.data.data.magicka.value - displayCost})}
                 }
             },
             two: {
@@ -2596,24 +2612,24 @@
                                   <thead>
                                       <tr>
                                           <th>Damage</th>
-                                          <th>Result</th>
-                                          <th>Detail</th>
+                                          <th class="tableCenterText">Result</th>
+                                          <th class="tableCenterText">Detail</th>
                                       </tr>
                                   </thead>
                                   <tbody>
                                       <tr>
                                           <td class="tableAttribute">Damage</td>
-                                          <td>[[${maxRoll}]]</td>
-                                          <td>${damageString}</td>
+                                          <td class="tableCenterText">[[${maxRoll}]]</td>
+                                          <td class="tableCenterText">${damageString}</td>
                                       </tr>
                                       <tr>
                                           <td class="tableAttribute">Hit Location</td>
-                                          <td>${hit_loc}</td>
-                                          <td>[[${hit.result}]]</td>
+                                          <td class="tableCenterText">${hit_loc}</td>
+                                          <td class="tableCenterText">[[${hit.result}]]</td>
                                       </tr>
                                       <tr>
                                           <td class="tableAttribute">Qualities</td>
-                                          <td>${shortcutWeapon.data.data.qualities}</td>
+                                          <td class="tableCenterText" colspan="2">${shortcutWeapon.data.data.qualities}</td>
                                       </tr>
                                   </tbody>
                               </table>
@@ -2657,12 +2673,14 @@
     let element = event.currentTarget
     let hotkeyNum = element.dataset.hotkey
     let itemArray = this.actor.items.filter(item => item.type === 'combatStyle'||item.type === 'spell'||item.type === 'skill'||item.type === 'magicSkill')
+
     itemArray.sort((a,b) => {
-      let typeA = a.type
-      let typeB = b.type
-      if (typeA > typeB) {return 1}
+      let nameA = a.name
+      let nameB = b.name
+      if (nameA > nameB) {return 1}
       else {return -1}
     })
+
     let tableEntries = []
 
     for (let item of itemArray) {
@@ -2721,8 +2739,8 @@
               if (checkedBox === null || checkedBox === undefined) {
                 ui.notifications.info("Cleared weapon hotkey")
                 this.actor.update({
-                  [dataPathName]: "",
-                  [dataPathImg]: "",
+                  [dataPathName]: `Hotkey ${hotkeyNum}`,
+                  [dataPathImg]: "icons/svg/combat.svg",
                   [dataPathId]: ""
                 })
               }
@@ -2757,12 +2775,15 @@
     }
 
     else {
+      let contentString
+      let tags = []
+
       switch (shortcutItem.type) {
         case 'combatStyle':
         case 'magicSkill':
         case 'skill':
           let roll = new Roll('1d100')
-          roll.roll()
+          roll.roll({async: false})
           let lnArray = Object.entries(this.actor.data.data.lucky_numbers)
           let ulArray = Object.entries(this.actor.data.data.unlucky_numbers)
 
@@ -2770,29 +2791,59 @@
           let unlucky = false
 
           for (let num of lnArray) {
-            console.log(num[1])
-            if (num[1] == roll.result) {lucky = true}
+            if (num[1] == roll.result) {
+              lucky = true
+              break
+            }
           }
 
           for (let num of ulArray) {
-            console.log(num[1])
-            if (num[1] == roll.result) {unlucky = true}
+            if (num[1] == roll.result) {
+              unlucky = true
+              break
+            }
           }
 
 
           // Create content based on lucky/unlucky rolls
           if (lucky) {
+            contentString = `<div style="display: flex; flex-direction: column; gap: 5px;">
+                                  <h2>
+                                      <img src="${shortcutItem.img}">
+                                      <div>${shortcutItem.name}</div>
+                                  </h2>
 
+                                  <div class="tableAttribute">Target Number: [[${shortcutItem.data.data.value}]]</div>
+                                  <div class="tableAttribute">Result: [[${roll.result}]]</div>
+                                  <div><span style='color:green; font-size:120%;'> <b>LUCKY NUMBER!</b></span></div>
+                              </div>`
           }
           else if (unlucky) {
+            console.log('Unlucky Number')
+            contentString = `<div style="display: flex; flex-direction: column; gap: 5px;">
+                                  <h2>
+                                      <img src="${shortcutItem.img}">
+                                      <div>${shortcutItem.name}</div>
+                                  </h2>
 
+                                  <div class="tableAttribute">Target Number: [[${shortcutItem.data.data.value}]]</div>
+                                  <div class="tableAttribute">Result: [[${roll.result}]]</div>
+                                  <div><span style='color:rgb(168, 5, 5); font-size:120%;'> <b>UNLUCKY NUMBER!</b></span></div>
+                              </div>`
           }
           else {
+            contentString = `<div style="display: flex; flex-direction: column; gap: 5px;">
+                                  <h2>
+                                      <img src="${shortcutItem.img}">
+                                      <div>${shortcutItem.name}</div>
+                                  </h2>
+
+                                  <div class="tableAttribute">Target Number: [[${shortcutItem.data.data.value}]]</div>
+                                  <div class="tableAttribute">Result: [[${roll.result}]]</div>
+                                  <div>${roll.result <= shortcutItem.data.data.value ? " <span style='color:green; font-size: 120%;'> <b>SUCCESS!</b></span>" : " <span style='color:rgb(168, 5, 5); font-size: 120%;'> <b>FAILURE!</b></span>"}</div>
+                              </div>`
 
           }
-
-          let tags = []
-          let contentString = ``
 
           ChatMessage.create({
             user: game.user.id,
@@ -2802,7 +2853,11 @@
             content: contentString,
             roll: roll
         })
+        break
 
+        case 'spell': 
+          this._onSpellRoll(event)
+          break
       }
     }
   }

@@ -595,7 +595,7 @@ export class npcSheet extends ActorSheet {
 
             let contentString = "";
             let roll = new Roll("1d100");
-            roll.roll();
+            roll.roll({async: false});
 
             if (roll.result == this.actor.data.data.lucky_numbers.ln1 || 
               roll.result == this.actor.data.data.lucky_numbers.ln2 || 
@@ -756,7 +756,16 @@ export class npcSheet extends ActorSheet {
 
   _onSpellRoll(event) {
     //Search for Talents that affect Spellcasting Costs
-    const spellToCast = this.actor.items.find(spell => spell.id === event.currentTarget.closest('.item').dataset.itemId)
+    let spellToCast
+
+    if (event.currentTarget.closest('.item') != null || event.currentTarget.closest('.item') != undefined) {
+      spellToCast = this.actor.items.find(spell => spell.id === event.currentTarget.closest('.item').dataset.itemId)
+    }
+    else {
+      spellToCast = this.actor.getEmbeddedDocument('Item', this.actor.data.data.favorites[event.currentTarget.dataset.hotkey].id)
+    }
+
+    // const spellToCast = this.actor.items.find(spell => spell.id === event.currentTarget.closest('.item').dataset.itemId)
     const hasCreative = this.actor.items.find(i => i.type === "talent" && i.name === "Creative") ? true : false;
     const hasForceOfWill = this.actor.items.find(i => i.type === "talent" && i.name === "Force of Will") ? true : false;
     const hasMethodical = this.actor.items.find(i => i.type === "talent" && i.name === "Methodical") ? true : false;
@@ -838,7 +847,7 @@ export class npcSheet extends ActorSheet {
         buttons: {
             one: {
                 label: "Cast Spell",
-                callback: html => {
+                callback: async (html) => {
                     let spellRestraint = 0;
                     let stackCostMod = 0;
 
@@ -897,7 +906,7 @@ export class npcSheet extends ActorSheet {
                     let damageEntry = "";
 
                     if (spellToCast.data.data.damage != '' && spellToCast.data.data.damage != 0){
-                        damageRoll.roll();
+                        damageRoll.roll({async: false});
                         damageEntry = `<tr>
                                             <td style="font-weight: bold;">Damage</td>
                                             <td style="font-weight: bold; text-align: center;">[[${damageRoll.result}]]</td>
@@ -905,10 +914,8 @@ export class npcSheet extends ActorSheet {
                                         </tr>`
                     }
 
-                    console.log(damageEntry)
-
                     const hitLocRoll = new Roll("1d10");
-                    hitLocRoll.roll();
+                    hitLocRoll.roll({async: false});
                     let hitLoc = "";
 
                     if (hitLocRoll.result <= 5) {
@@ -941,6 +948,13 @@ export class npcSheet extends ActorSheet {
                         displayCost = actualCost;
                     }
 
+                    // Stop The Function if the user does not have enough Magicka to Cast the Spell
+                    if (game.settings.get("uesrpg-d100", "automateMagicka")) {
+                      if (displayCost > this.actor.data.data.magicka.value) {
+                        return ui.notifications.info(`You do not have enough Magicka to cast this spell: Cost: ${spellToCast.data.data.cost} || Restraint: ${spellRestraint} || Other: ${stackCostMod}`)
+                      }
+                    }
+
                     let contentString = `<h2><img src=${spellToCast.img}></im>${spellToCast.name}</h2>
                                             <table>
                                                 <thead style="background: rgba(161, 149, 149, 0.486);">
@@ -968,15 +982,17 @@ export class npcSheet extends ActorSheet {
                                                     </tr>
                                                 </tbody>
                                             </table>`
-
-                    ChatMessage.create({
+                                            
+                    damageRoll.toMessage({
                         user: game.user.id,
                         speaker: ChatMessage.getSpeaker(),
                         type: CONST.CHAT_MESSAGE_TYPES.ROLL,
                         flavor: tags.join(""),
-                        content: contentString,
-                        roll: damageRoll
+                        content: contentString
                     })
+
+                    // If Automate Magicka Setting is on, reduce the character's magicka by the calculated output cost
+                    if (game.settings.get("uesrpg-d100", "automateMagicka")) {this.actor.update({'data.magicka.value': this.actor.data.data.magicka.value - displayCost})}
                 }
             },
             two: {
@@ -1689,24 +1705,24 @@ export class npcSheet extends ActorSheet {
                                   <thead>
                                       <tr>
                                           <th>Damage</th>
-                                          <th>Result</th>
-                                          <th>Detail</th>
+                                          <th class="tableCenterText">Result</th>
+                                          <th class="tableCenterText">Detail</th>
                                       </tr>
                                   </thead>
                                   <tbody>
                                       <tr>
                                           <td class="tableAttribute">Damage</td>
-                                          <td>[[${maxRoll}]]</td>
-                                          <td>${damageString}</td>
+                                          <td class="tableCenterText">[[${maxRoll}]]</td>
+                                          <td class="tableCenterText">${damageString}</td>
                                       </tr>
                                       <tr>
                                           <td class="tableAttribute">Hit Location</td>
-                                          <td>${hit_loc}</td>
-                                          <td>[[${hit.result}]]</td>
+                                          <td class="tableCenterText">${hit_loc}</td>
+                                          <td class="tableCenterText">[[${hit.result}]]</td>
                                       </tr>
                                       <tr>
                                           <td class="tableAttribute">Qualities</td>
-                                          <td>${shortcutWeapon.data.data.qualities}</td>
+                                          <td class="tableCenterText" colspan="2">${shortcutWeapon.data.data.qualities}</td>
                                       </tr>
                                   </tbody>
                               </table>
