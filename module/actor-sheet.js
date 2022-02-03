@@ -211,6 +211,7 @@
     this._setEquippedArmor()
     this._setResistanceColumnToggle()
     this._refreshWeaponShortcuts()
+    this._createInnerValuesForHotKeys()
 
     // Set saved scroll bar position if not default
     if (localStorage.getItem('scrollPosition') !== 0) {
@@ -585,6 +586,7 @@
     const luck3 = this.actor.data.data.lucky_numbers.ln3;
     const luck4 = this.actor.data.data.lucky_numbers.ln4;
     const luck5 = this.actor.data.data.lucky_numbers.ln5;
+    const luckExtra = this.actor.data.data.lucky_numbers.ln6;
     const luck6 = this.actor.data.data.unlucky_numbers.ul1;
     const luck7 = this.actor.data.data.unlucky_numbers.ul2;
     const luck8 = this.actor.data.data.unlucky_numbers.ul3;
@@ -606,7 +608,7 @@
             let roll = new Roll("1d100");
             roll.roll({async:false});
 
-          if (roll.total === luck1 || roll.total === luck2 || roll.total === luck3 || roll.total === luck4 || roll.total === luck5) {
+          if (roll.total === luck1 || roll.total === luck2 || roll.total === luck3 || roll.total === luck4 || roll.total === luck5 || roll.total === luckExtra) {
             contentString = `<h2><img src="${item.img}"</img>${item.name}</h2>
             <p></p><b>Target Number: [[${item.data.data.value} + ${playerInput}]]</b> <p></p>
             <b>Result: [[${roll.result}]]</b><p></p>
@@ -705,6 +707,23 @@
                                 <img src="${spellToCast.img}" class="item-img" height=35 width=35>
                                 <div>${spellToCast.name}</div>
                             </h2>
+
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>Magicka Cost</th>
+                                        <th>Spell Restraint Base</th>
+                                        <th>Spell Level</th>
+                                    </tr>
+                                </thead>
+                                <tbody style="text-align: center;">
+                                    <tr>
+                                        <td>${spellToCast.data.data.cost}</td>
+                                        <td>${Math.floor(this.actor.data.data.characteristics.wp.total/10)}</td>
+                                        <td>${spellToCast.data.data.level}</td>
+                                    </tr>
+                                </tbody>
+                            </table>
 
                             ${spellDescriptionDiv}
 
@@ -2735,13 +2754,15 @@
               let dataPathName = `data.favorites.${hotkeyNum}.name`
               let dataPathImg = `data.favorites.${hotkeyNum}.img`
               let dataPathId = `data.favorites.${hotkeyNum}.id`
+              let dataPathValue = `data.favorites.${hotkeyNum}.value`
 
               if (checkedBox === null || checkedBox === undefined) {
                 ui.notifications.info("Cleared weapon hotkey")
                 this.actor.update({
                   [dataPathName]: `Hotkey ${hotkeyNum}`,
                   [dataPathImg]: "icons/svg/combat.svg",
-                  [dataPathId]: ""
+                  [dataPathId]: "",
+                  [dataPathValue]: ""
                 })
               }
 
@@ -2750,7 +2771,8 @@
                 this.actor.update({
                   [dataPathName]: selectedItem.name,
                   [dataPathImg]: selectedItem.img,
-                  [dataPathId]: selectedItem.id
+                  [dataPathId]: selectedItem.id,
+                  [dataPathValue]: selectedItem.data.data.value
                 })
               }
           }
@@ -2782,8 +2804,11 @@
         case 'combatStyle':
         case 'magicSkill':
         case 'skill':
+          let woundPenalty = this.actor.data.data.wounded ? this.actor.data.data.woundPenalty : 0
           let roll = new Roll('1d100')
           roll.roll({async: false})
+
+          // Create Array from Lucky/Unlucky Numbers
           let lnArray = Object.entries(this.actor.data.data.lucky_numbers)
           let ulArray = Object.entries(this.actor.data.data.unlucky_numbers)
 
@@ -2813,8 +2838,8 @@
                                       <div>${shortcutItem.name}</div>
                                   </h2>
 
-                                  <div class="tableAttribute">Target Number: [[${shortcutItem.data.data.value}]]</div>
-                                  <div class="tableAttribute">Result: [[${roll.result}]]</div>
+                                  <div style="font-weight: bold;">Target Number: [[${shortcutItem.data.data.value + woundPenalty}]]</div>
+                                  <div style="font-weight: bold;">Result: [[${roll.result}]]</div>
                                   <div><span style='color:green; font-size:120%;'> <b>LUCKY NUMBER!</b></span></div>
                               </div>`
           }
@@ -2826,8 +2851,8 @@
                                       <div>${shortcutItem.name}</div>
                                   </h2>
 
-                                  <div class="tableAttribute">Target Number: [[${shortcutItem.data.data.value}]]</div>
-                                  <div class="tableAttribute">Result: [[${roll.result}]]</div>
+                                  <div style="font-weight: bold;">Target Number: [[${shortcutItem.data.data.value + woundPenalty}]]</div>
+                                  <div style="font-weight: bold;">Result: [[${roll.result}]]</div>
                                   <div><span style='color:rgb(168, 5, 5); font-size:120%;'> <b>UNLUCKY NUMBER!</b></span></div>
                               </div>`
           }
@@ -2838,8 +2863,8 @@
                                       <div>${shortcutItem.name}</div>
                                   </h2>
 
-                                  <div class="tableAttribute">Target Number: [[${shortcutItem.data.data.value}]]</div>
-                                  <div class="tableAttribute">Result: [[${roll.result}]]</div>
+                                  <div style="font-weight: bold;">Target Number: [[${shortcutItem.data.data.value + woundPenalty}]]</div>
+                                  <div style="font-weight: bold;">Result: [[${roll.result}]]</div>
                                   <div>${roll.result <= shortcutItem.data.data.value ? " <span style='color:green; font-size: 120%;'> <b>SUCCESS!</b></span>" : " <span style='color:rgb(168, 5, 5); font-size: 120%;'> <b>FAILURE!</b></span>"}</div>
                               </div>`
 
@@ -2857,6 +2882,27 @@
 
         case 'spell': 
           this._onSpellRoll(event)
+          break
+      }
+    }
+  }
+
+  _createInnerValuesForHotKeys() {
+    for (let element of [...this.form.querySelectorAll('.favoriteHotKey')]) {
+      let hotkey = element.closest('[data-hotkey]').dataset.hotkey
+      let hotkeyItem = this.actor.getEmbeddedDocument('Item', this.actor.data.data.favorites[hotkey].id)
+
+      if (hotkeyItem === undefined) {continue}
+      
+      switch (hotkeyItem.type) {
+        case 'skill':
+        case 'magicSkill':
+        case 'combatStyle': 
+          element.innerHTML = hotkeyItem.data.data.value
+          break
+
+        case 'spell':
+          element.innerHTML = ""
           break
       }
     }

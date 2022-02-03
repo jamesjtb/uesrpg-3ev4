@@ -811,6 +811,23 @@ export class npcSheet extends ActorSheet {
                                 <div>${spellToCast.name}</div>
                             </h2>
 
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>Magicka Cost</th>
+                                        <th>Spell Restraint Base</th>
+                                        <th>Spell Level</th>
+                                    </tr>
+                                </thead>
+                                <tbody style="text-align: center;">
+                                    <tr>
+                                        <td>${spellToCast.data.data.cost}</td>
+                                        <td>${Math.floor(this.actor.data.data.characteristics.wp.total/10)}</td>
+                                        <td>${spellToCast.data.data.level}</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+
                             ${spellDescriptionDiv}
 
                             <div style="padding: 10px; margin-top: 10px; background: rgba(161, 149, 149, 0.486); border: black 1px; font-style: italic;">
