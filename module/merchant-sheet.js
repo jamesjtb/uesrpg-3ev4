@@ -8,9 +8,9 @@ export class merchantSheet extends ActorSheet {
 	static get defaultOptions() {
 	  return mergeObject(super.defaultOptions, {
       classes: ["worldbuilding", "sheet", "actor", "npc"],
-      width: 600,
-      height: 600,
-      tabs: [{navSelector: ".sheet-tabs2", contentSelector: ".sheet-body", initial: "merchant"}],
+      width: 680,
+      height: 720,
+      tabs: [{navSelector: ".sheet-tabs", contentSelector: ".sheet-body", initial: "merchant"}],
       dragDrop: [{dragSelector: [
         ".item-list .item", 
         ".combat-list .item", 
@@ -46,29 +46,19 @@ export class merchantSheet extends ActorSheet {
   
     _prepareCharacterItems(sheetData) {
       const actorData = sheetData.actor.data;
-
+  
       //Initialize containers
-      const gear = [];
-      const weapon = [];
-      const armor = {
-        Equipped: [],
-        Unequipped: []
-      };
+      const merchantItem = [];
       const power = [];
       const trait = [];
       const talent = [];
       const combatStyle = [];
-      const spell = {
-        alteration: [],
-        conjuration: [],
-        destruction: [],
-        illusion: [],
-        mysticism: [],
-        necromancy: [],
-        restoration: []
-      };
-      const ammunition = [];
-
+      const spell = [];
+      const skill = [];
+      const magicSkill = [];
+      const language = [];
+      const faction = [];
+  
       //Iterate through items, allocating to containers
       //let totaWeight = 0;
       for (let i of sheetData.items) {
@@ -76,20 +66,16 @@ export class merchantSheet extends ActorSheet {
         i.img = i.img || DEFAULT_TOKEN;
         //Append to item
         if (i.type === 'item') {
-          gear.push(i);
+          merchantItem.push(i);
         }
         //Append to weapons
         else if (i.type === 'weapon') {
-            weapon.push(i);
+            merchantItem.push(i);
         }
         //Append to armor
         else if (i.type === 'armor') {
-          if (i.data.equipped === true) {
-          armor.Equipped.push(i);
-          } else {
-            armor.Unequipped.push(i);
-          }
-        }
+          merchantItem.push(i);
+      }
         //Append to power
         else if (i.type === 'power') {
           power.push(i);
@@ -108,27 +94,64 @@ export class merchantSheet extends ActorSheet {
         }
         //Append to spell
         else if (i.type === 'spell') {
-          if (i.data.school !== undefined) {
-            spell[i.data.school].push(i);
-          }
+          spell.push(i)
+        }
+        //Append to skill
+        else if (i.type === 'skill') {
+            skill.push(i);
+        }
+        //Append to magicSkill
+        else if (i.type === 'magicSkill') {
+          magicSkill.push(i);
         }
         //Append to ammunition
         else if (i.type === 'ammunition') {
-          ammunition.push(i);
+          merchantItem.push(i);
+        }
+        else if (i.type === "language") {
+          language.push(i);
+        }
+        //Append to faction
+        else if (i.type === "faction") {
+          faction.push(i);
         }
       }
-
+  
+      // Alphabetically sort all item lists
+      const itemCats = [merchantItem, power, trait, talent, combatStyle, spell, skill, magicSkill, language, faction]
+      for (let category of itemCats) {
+        if (category.length > 1 && category != spell) {
+          category.sort((a,b) => {
+            let nameA = a.name.toLowerCase()
+            let nameB = b.name.toLowerCase()
+            if (nameA > nameB) {return 1}
+            else {return -1}
+          })
+        }
+        else if (category == spell) {
+          if (category.length > 1) {
+            category.sort((a, b) => {
+              let nameA = a.data.school
+              let nameB = b.data.school
+              if (nameA > nameB) {return 1}
+              else {return -1}
+            })
+          }
+        }
+      }
+  
       //Assign and return
-      actorData.gear = gear;
-      actorData.weapon = weapon;
-      actorData.armor = armor;
+      actorData.merchantItem = merchantItem;
       actorData.power = power;
       actorData.trait = trait;
       actorData.talent = talent;
       actorData.combatStyle = combatStyle;
       actorData.spell = spell;
-      actorData.ammunition = ammunition;
-
+      actorData.skill = skill;
+      actorData.magicSkill = magicSkill;
+      actorData.language = language;
+      actorData.faction = faction;
+  
     }
 
     get template() {
@@ -148,7 +171,7 @@ export class merchantSheet extends ActorSheet {
     html.find(".professions-roll").click(await this._onProfessionsRoll.bind(this));
     html.find(".damage-roll").click(await this._onDamageRoll.bind(this));
     html.find(".unconventional-roll").click(await this._onUnconventionalRoll.bind(this));
-    html.find(".commerce-roll").click(await this._onUnconventionalRoll.bind(this));
+    // html.find(".commerce-roll").click(await this._onUnconventionalRoll.bind(this));
     html.find(".magic-roll").click(await this._onSpellRoll.bind(this));
     html.find(".resistance-roll").click(await this._onResistanceRoll.bind(this));
     html.find(".armor-roll").click(await this._onArmorRoll.bind(this));
@@ -162,33 +185,25 @@ export class merchantSheet extends ActorSheet {
 
     //Update Item Attributes from Actor Sheet
     html.find(".toggle2H").click(await this._onToggle2H.bind(this));
-    html.find(".ammo-plus").click(await this._onPlusAmmo.bind(this));
-    html.find(".ammo-minus").click(await this._onMinusAmmo.bind(this));
+    html.find(".plusQty").click(await this._onPlusQty.bind(this));
+    html.find(".minusQty").contextmenu(await this._onMinusQty.bind(this));
     html.find(".itemEquip").click(await this._onItemEquip.bind(this));
     html.find(".wealthCalc").click(await this._onWealthCalc.bind(this));
     html.find(".setBaseCharacteristicsNPC").click(await this._onSetBaseCharacteristics.bind(this));
 
     //Item Create Buttons
-    html.find(".weapon-create").click(await this._onItemCreate.bind(this));
-    html.find(".ammo-create").click(await this._onItemCreate.bind(this));
-    html.find(".armor-create").click(await this._onItemCreate.bind(this));
-    html.find(".gear-create").click(await this._onItemCreate.bind(this));
-    html.find(".trait-create").click(await this._onItemCreate.bind(this));
-    html.find(".power-create").click(await this._onItemCreate.bind(this));
-    html.find(".talent-create").click(await this._onItemCreate.bind(this));
+    html.find('.item-create').click(this._onItemCreate.bind(this))
 
     //Merchant Buttons
     html.find(".increasePriceMod").click(await this._onIncreasePriceMod.bind(this));
     html.find(".decreasePriceMod").click(await this._onDecreasePriceMod.bind(this));
     html.find(".buyButton").click(await this._onBuyItem.bind(this));
+    html.find("#itemFilter").click(this._filterItems.bind(this));
 
-    //Slider Inputs
-    const slider = document.getElementById("merchantSlider");
-    const sliderValue = document.getElementById("merchantPriceValue");
-    sliderValue.innerHTML = Number(slider.value);
-    slider.oninput = function() {
-      sliderValue.innerHTML = Number(slider.value);
-    } //updates slider value when slider is... "slidden?"
+    // Constants
+    this._updateModPrice()
+    this._createItemFilterOptions()
+    this._setDefaultItemFilter()
 
     // Everything below here is only needed if the sheet is editable
     if (!this.options.editable) return;
@@ -214,6 +229,13 @@ export class merchantSheet extends ActorSheet {
    * @param {Event} event   The originating click event
    * @private
    */
+
+  _updateModPrice() {
+    for (let item of this.actor.items.filter(item => item.hasOwnProperty('modPrice'))) {
+      item.data.data.modPrice = (item.data.data.price + (item.data.data.price * (this.actor.data.data.priceMod/100))).toFixed(0);
+      item.update({"data.modPrice" : item.data.data.modPrice, "data.price": item.data.data.price});
+    }
+  }
 
   async _onBuyItem(event) {
     event.preventDefault()
@@ -686,7 +708,7 @@ export class merchantSheet extends ActorSheet {
   d.render(true);
   }
 
-   _onProfessionsRoll(event) {
+  _onProfessionsRoll(event) {
     event.preventDefault()
     const element = event.currentTarget
 
@@ -694,7 +716,7 @@ export class merchantSheet extends ActorSheet {
       title: "Apply Roll Modifier",
       content: `<form>
                   <div class="dialogForm">
-                  <label><b>${element.name} Modifier: </b></label><input placeholder="ex. -20, +10" id="playerInput" value="0" style=" text-align: center; width: 50%; border-style: groove; float: right;" type="text"></input></div>
+                  <label><b>${element.getAttribute('name')} Modifier: </b></label><input placeholder="ex. -20, +10" id="playerInput" value="0" style=" text-align: center; width: 50%; border-style: groove; float: right;" type="text"></input></div>
                 </form>`,
       buttons: {
         one: {
@@ -706,45 +728,49 @@ export class merchantSheet extends ActorSheet {
             let roll = new Roll("1d100");
             roll.roll();
 
-            if (roll.total == this.actor.data.data.lucky_numbers.ln1 || 
-              roll.total == this.actor.data.data.lucky_numbers.ln2 || 
-              roll.total == this.actor.data.data.lucky_numbers.ln3 || 
-              roll.total == this.actor.data.data.lucky_numbers.ln4 || 
-              roll.total == this.actor.data.data.lucky_numbers.ln5 ||
-              roll.total == this.actor.data.data.lucky_numbers.ln6 ||
-              roll.total == this.actor.data.data.lucky_numbers.ln7 ||
-              roll.total == this.actor.data.data.lucky_numbers.ln8 ||
-              roll.total == this.actor.data.data.lucky_numbers.ln9 ||
-              roll.total == this.actor.data.data.lucky_numbers.ln10)
+            if (roll.result == this.actor.data.data.lucky_numbers.ln1 || 
+              roll.result == this.actor.data.data.lucky_numbers.ln2 || 
+              roll.result == this.actor.data.data.lucky_numbers.ln3 || 
+              roll.result == this.actor.data.data.lucky_numbers.ln4 || 
+              roll.result == this.actor.data.data.lucky_numbers.ln5 ||
+              roll.result == this.actor.data.data.lucky_numbers.ln6 ||
+              roll.result == this.actor.data.data.lucky_numbers.ln7 ||
+              roll.result == this.actor.data.data.lucky_numbers.ln8 ||
+              roll.result == this.actor.data.data.lucky_numbers.ln9 ||
+              roll.result == this.actor.data.data.lucky_numbers.ln10)
               {
-              contentString = `<h2 style='font-size: large'>${element.name}</h2>
-              <p></p><b>Target Number: [[${this.actor.data.data.professionsWound[element.id]} + ${playerInput}]]</b> <p></p>
+              contentString = `<h2 style='font-size: large'>${element.getAttribute('name')}</h2>
+              <p></p><b>Target Number: [[${this.actor.data.data.professionsWound[element.getAttribute('id')]} + ${playerInput}]]</b> <p></p>
               <b>Result: [[${roll.result}]]</b><p></p>
               <span style='color:green; font-size:120%;'> <b>LUCKY NUMBER!</b></span>`
 
               }
-              else if (roll.total == this.actor.data.data.unlucky_numbers.ul1 || 
-                roll.total == this.actor.data.data.unlucky_numbers.ul2 || 
-                roll.total == this.actor.data.data.unlucky_numbers.ul3 || 
-                roll.total == this.actor.data.data.unlucky_numbers.ul4 || 
-                roll.total == this.actor.data.data.unlucky_numbers.ul5 ||
-                roll.total == this.actor.data.data.unlucky_numbers.ul6) 
+              else if (roll.result == this.actor.data.data.unlucky_numbers.ul1 || 
+                roll.result == this.actor.data.data.unlucky_numbers.ul2 || 
+                roll.result == this.actor.data.data.unlucky_numbers.ul3 || 
+                roll.result == this.actor.data.data.unlucky_numbers.ul4 || 
+                roll.result == this.actor.data.data.unlucky_numbers.ul5 ||
+                roll.result == this.actor.data.data.unlucky_numbers.ul6) 
                 {
-                  contentString = `<h2 style='font-size: large'>${element.name}</h2>
-                  <p></p><b>Target Number: [[${this.actor.data.data.professionsWound[element.id]} + ${playerInput}]]</b> <p></p>
+                  contentString = `<h2 style='font-size: large'>${element.getAttribute('name')}</h2>
+                  <p></p><b>Target Number: [[${this.actor.data.data.professionsWound[element.getAttribute('id')]} + ${playerInput}]]</b> <p></p>
                   <b>Result: [[${roll.result}]]</b><p></p>
                   <span style='color:rgb(168, 5, 5); font-size:120%;'> <b>UNLUCKY NUMBER!</b></span>`
 
                 } else {
-                  contentString = `<h2 style='font-size: large'>${element.name}</h2>
-                  <p></p><b>Target Number: [[${this.actor.data.data.professionsWound[element.id]} + ${playerInput}]]</b> <p></p>
+                  contentString = `<h2 style='font-size: large'>${element.getAttribute('name')}</h2>
+                  <p></p><b>Target Number: [[${this.actor.data.data.professionsWound[element.getAttribute('id')]} + ${playerInput}]]</b> <p></p>
                   <b>Result: [[${roll.result}]]</b><p></p>
-                  <b>${roll.total<=(this.actor.data.data.professionsWound[element.id] + playerInput) ? " <span style='color:green; font-size: 120%;'> <b>SUCCESS!</b></span>" : " <span style='color:rgb(168, 5, 5); font-size: 120%;'> <b>FAILURE!</b></span>"}`
+                  <b>${roll.result<=(this.actor.data.data.professionsWound[element.getAttribute('id')] + playerInput) ? " <span style='color:green; font-size: 120%;'> <b>SUCCESS!</b></span>" : " <span style='color:rgb(168, 5, 5); font-size: 120%;'> <b>FAILURE!</b></span>"}`
 
                 }
-                 roll.toMessage({
-                  user: game.user.id,
-                  speaker: ChatMessage.getSpeaker(),
+
+                ChatMessage.create({
+                  async:false, 
+                  type: CONST.CHAT_MESSAGE_TYPES.ROLL, 
+                  user: game.user.id, 
+                  speaker: ChatMessage.getSpeaker(), 
+                  roll: roll,
                   content: contentString
                 })
           }
@@ -815,7 +841,7 @@ export class merchantSheet extends ActorSheet {
                 <b>${roll.total<=(this.actor.data.data.skills[element.id].bonus + playerInput) ? " <span style='color:green; font-size: 120%;'> <b>SUCCESS!</b></span>" : " <span style='color:rgb(168, 5, 5); font-size: 120%;'> <b>FAILURE!</b></span>"}`
 
               }
-               roll.toMessage({
+               ChatMessage.create({
                 user: game.user.id,
                 speaker: ChatMessage.getSpeaker(),
                 content: contentString
@@ -1152,7 +1178,7 @@ export class merchantSheet extends ActorSheet {
      item.update({"data.weapon2H" : item.data.data.weapon2H})
   }
 
-   _onPlusAmmo(event) {
+  _onPlusQty(event) {
     event.preventDefault()
     let toggle = $(event.currentTarget);
     const li = toggle.parents(".item");
@@ -1163,19 +1189,19 @@ export class merchantSheet extends ActorSheet {
      item.update({"data.quantity" : item.data.data.quantity})
   }
 
-   _onMinusAmmo(event) {
+  async _onMinusQty(event) {
     event.preventDefault()
     let toggle = $(event.currentTarget);
     const li = toggle.parents(".item");
     const item = this.actor.getEmbeddedDocument("Item", li.data("itemId"));
 
     item.data.data.quantity = item.data.data.quantity - 1;
-    if (item.data.data.quantity < 0){
+    if (item.data.data.quantity <= 0){
       item.data.data.quantity = 0;
-      ui.notifications.info("Out of Ammunition!");
+      ui.notifications.info(`You have used your last ${item.name}!`);
     }
 
-     item.update({"data.quantity" : item.data.data.quantity})
+    await item.update({"data.quantity" : item.data.data.quantity})
   }
 
    _onItemEquip(event) {
@@ -1195,11 +1221,63 @@ export class merchantSheet extends ActorSheet {
    _onItemCreate(event) {
     event.preventDefault()
     const element = event.currentTarget
+    let itemData
 
-    const itemData = [{
-      name: element.id,
-      type: element.id,
-    }]
+    if (element.id === 'createSelect') {
+      let d = new Dialog({
+        title: "Create Item",
+        content: `<div style="padding: 10px 0;">
+                      <h2>Select an Item Type</h2>
+                      <label>Create an item on this sheet</label>
+                  </div>`,
+
+        buttons: {
+          one: {
+            label: "Item",
+            callback: html => {
+                const itemData = [{name: 'item', type: 'item'}]
+                this.actor.createEmbeddedDocuments("Item", itemData);
+            }
+          },
+          two: {
+            label: "Ammunition",
+            callback: html => {
+                const itemData = [{name: 'ammunition', type: 'ammunition'}]
+                this.actor.createEmbeddedDocuments("Item", itemData);
+            }
+          },
+          three: {
+            label: "Armor",
+            callback: html => {
+                const itemData = [{name: 'armor', type: 'armor'}]
+                this.actor.createEmbeddedDocuments("Item", itemData);
+            }
+          },
+          four: {
+            label: "Weapon",
+            callback: html => {
+              const itemData = [{name: 'weapon', type: 'weapon'}]
+              this.actor.createEmbeddedDocuments("Item", itemData);
+            }
+          },
+          five: {
+            label: "Cancel",
+            callback: html => console.log('Cancelled')
+          }
+        },
+        default: "one",
+        close: html => console.log()
+      })
+
+      d.render(true)
+    }
+
+    else {
+      itemData = [{
+        name: element.id,
+        type: element.id,
+      }]
+    }
 
      this.actor.createEmbeddedDocuments("Item", itemData);
   }
@@ -1251,6 +1329,55 @@ export class merchantSheet extends ActorSheet {
       close: html => console.log()
     })
     d.render(true);
+  }
+
+  _createItemFilterOptions() {
+    for (let merchantItem of this.actor.items.filter(item => item.type === 'ammunition'||item.type === 'weapon'||item.type === 'armor'||item.type === 'item')) {
+      if ([...document.querySelectorAll('#itemFilter option')].some(i => i.innerHTML === merchantItem.type)) {continue}
+      else {
+        let option = document.createElement('option')
+        option.innerHTML = merchantItem.type
+        document.querySelector('#itemFilter').append(option)
+      }
+    }
+  }
+
+  _filterItems(event) {
+    event.preventDefault()
+    let filterBy = event.currentTarget.value
+    
+    for (let merchantItem of [...document.querySelectorAll("#merchantItemList .item")]) {
+      switch (filterBy) {
+        case 'All':
+          merchantItem.classList.add('active')
+          sessionStorage.setItem('savedMerchantItemFilter', filterBy)
+          break
+          
+        case `${filterBy}`:
+          filterBy == merchantItem.dataset.itemType ? merchantItem.classList.add('active') : merchantItem.classList.remove('active')
+          sessionStorage.setItem('savedMerchantItemFilter', filterBy)
+          break
+      }
+    }
+  }
+
+  _setDefaultItemFilter() {
+      let filterBy = sessionStorage.getItem('savedMerchantItemFilter')
+
+      if (filterBy !== null||filterBy !== undefined) {
+        document.querySelector('#itemFilter').value = filterBy
+        for (let merchantItem of [...document.querySelectorAll('#merchantItemList .item')]) {
+          switch (filterBy) {
+            case 'All':
+              merchantItem.classList.add('active')
+              break
+
+            case `${filterBy}`:
+              filterBy == merchantItem.dataset.itemType ? merchantItem.classList.add('active') : merchantItem.classList.remove('active')
+              break
+          }
+        }
+      }
   }
 
 }

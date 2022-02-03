@@ -126,7 +126,7 @@ export class SimpleActor extends Actor {
     data.luck_points.max = lckBonus + data.luck_points.bonus;
 
     data.carry_rating.max = Math.floor((4 * strBonus) + (2 * endBonus)) + data.carry_rating.bonus;
-    data.current_enc = (this._calculateENC(actorData) - this._armorWeight(actorData) - this._excludeENC(actorData)).toFixed(1);
+    data.carry_rating.current = (this._calculateENC(actorData) - this._armorWeight(actorData) - this._excludeENC(actorData)).toFixed(1);
 
     //Form Shift Calcs
     if (this._wereWolfForm(actorData) === true) {
@@ -140,9 +140,9 @@ export class SimpleActor extends Actor {
       data.resistance.natToughness = 5;
       data.wound_threshold.value = data.wound_threshold.value + 5;
       data.action_points.max = data.action_points.max - 1;
-      data.skills.survival.tn = data.skills.survival.tn + 30;
-      data.skills.navigate.tn = data.skills.navigate.tn + 30;
-      data.skills.observe.tn = data.skills.observe.tn + 30;
+      actorData.items.find(i => i.name === 'Survival').data.data.miscValue = 30;
+      actorData.items.find(i => i.name === 'Navigate').data.data.miscValue = 30;
+      actorData.items.find(i => i.name === 'Observe').data.data.miscValue = 30;
     } else if (this._wereBatForm(actorData) === true) {
         data.resistance.silverR = data.resistance.silverR - 5;
         data.resistance.diseaseR = data.resistance.diseaseR + 200;
@@ -154,22 +154,22 @@ export class SimpleActor extends Actor {
         data.resistance.natToughness = 5;
         data.wound_threshold.value = data.wound_threshold.value + 3;
         data.action_points.max = data.action_points.max - 1;
-        data.skills.survival.tn = data.skills.survival.tn + 30;
-        data.skills.navigate.tn = data.skills.navigate.tn + 30;
-        data.skills.observe.tn = data.skills.observe.tn + 30;
+        actorData.items.find(i => i.name === 'Survival').data.data.miscValue = 30;
+      actorData.items.find(i => i.name === 'Navigate').data.data.miscValue = 30;
+      actorData.items.find(i => i.name === 'Observe').data.data.miscValue = 30;
     } else if (this._wereBoarForm(actorData) === true) {
         data.resistance.silverR = data.resistance.silverR - 5;
         data.resistance.diseaseR = data.resistance.diseaseR + 200;
         data.hp.max = data.hp.max + 5;
         data.speed.base = data.speed.base + 9;
-      data.speed.value = this._speedCalc(actorData);
+        data.speed.value = this._speedCalc(actorData);
         data.speed.swimSpeed = (data.speed.value/2).toFixed(0);
         data.resistance.natToughness = 7;
         data.wound_threshold.value = data.wound_threshold.value + 5;
         data.action_points.max = data.action_points.max - 1;
-        data.skills.survival.tn = data.skills.survival.tn + 30;
-        data.skills.navigate.tn = data.skills.navigate.tn + 30;
-        data.skills.observe.tn = data.skills.observe.tn + 30;
+        actorData.items.find(i => i.name === 'Survival').data.data.miscValue = 30;
+        actorData.items.find(i => i.name === 'Navigate').data.data.miscValue = 30;
+        actorData.items.find(i => i.name === 'Observe').data.data.miscValue = 30;
     } else if (this._wereBearForm(actorData) === true) {
         data.resistance.silverR = data.resistance.silverR - 5;
         data.resistance.diseaseR = data.resistance.diseaseR + 200;
@@ -181,9 +181,9 @@ export class SimpleActor extends Actor {
         data.resistance.natToughness = 5;
         data.wound_threshold.value = data.wound_threshold.value + 5;
         data.action_points.max = data.action_points.max - 1;
-        data.skills.survival.tn = data.skills.survival.tn + 30;
-        data.skills.navigate.tn = data.skills.navigate.tn + 30;
-        data.skills.observe.tn = data.skills.observe.tn + 30;
+        actorData.items.find(i => i.name === 'Survival').data.data.miscValue = 30;
+        actorData.items.find(i => i.name === 'Navigate').data.data.miscValue = 30;
+        actorData.items.find(i => i.name === 'Observe').data.data.miscValue = 30;
     } else if (this._wereCrocodileForm(actorData) === true) {
         data.resistance.silverR = data.resistance.silverR - 5;
         data.resistance.diseaseR = data.resistance.diseaseR + 200;
@@ -194,9 +194,9 @@ export class SimpleActor extends Actor {
         data.resistance.natToughness = 5;
         data.wound_threshold.value = data.wound_threshold.value + 5;
         data.action_points.max = data.action_points.max - 1;
-        data.skills.survival.tn = data.skills.survival.tn + 30;
-        data.skills.navigate.tn = data.skills.navigate.tn + 30;
-        data.skills.observe.tn = data.skills.observe.tn + 30;
+        actorData.items.find(i => i.name === 'Survival').data.data.miscValue = 30;
+        actorData.items.find(i => i.name === 'Navigate').data.data.miscValue = 30;
+        actorData.items.find(i => i.name === 'Observe').data.data.miscValue = 30;
     } else if (this._wereVultureForm(actorData) === true) {
         data.resistance.silverR = data.resistance.silverR - 5;
         data.resistance.diseaseR = data.resistance.diseaseR + 200;
@@ -208,9 +208,9 @@ export class SimpleActor extends Actor {
         data.resistance.natToughness = 5;
         data.wound_threshold.value = data.wound_threshold.value + 3;
         data.action_points.max = data.action_points.max - 1;
-        data.skills.survival.tn = data.skills.survival.tn + 30;
-        data.skills.navigate.tn = data.skills.navigate.tn + 30;
-        data.skills.observe.tn = data.skills.observe.tn + 30;
+        actorData.items.find(i => i.name === 'Survival').data.data.miscValue = 30;
+        actorData.items.find(i => i.name === 'Navigate').data.data.miscValue = 30;
+        actorData.items.find(i => i.name === 'Observe').data.data.miscValue = 30;
     } else if (this._vampireLordForm(actorData) === true) {
         data.resistance.fireR = data.resistance.fireR - 1;
         data.resistance.sunlightR = data.resistance.sunlightR - 1;
@@ -224,13 +224,13 @@ export class SimpleActor extends Actor {
     data.speed.value = this._addHalfSpeed(actorData);
 
     //ENC Burden Calculations
-    if (data.current_enc > data.carry_rating.max * 3) {
+    if (data.carry_rating.current > data.carry_rating.max * 3) {
       data.speed.value = 0;
       data.stamina.max = data.stamina.max - 5;
-    } else if (data.current_enc > data.carry_rating.max * 2) {
+    } else if (data.carry_rating.current > data.carry_rating.max * 2) {
       data.speed.value = Math.floor(data.speed.base / 2);
       data.stamina.max = data.stamina.max - 3;
-    } else if (data.current_enc > data.carry_rating.max) {
+    } else if (data.carry_rating.current > data.carry_rating.max) {
       data.speed.value = data.speed.value - 1;
       data.stamina.max = data.stamina.max - 1;
     }
@@ -437,7 +437,7 @@ export class SimpleActor extends Actor {
     data.luck_points.max = lckBonus + data.luck_points.bonus;
 
     data.carry_rating.max = Math.floor((4 * strBonus) + (2 * endBonus)) + data.carry_rating.bonus;
-    data.current_enc = (this._calculateENC(actorData) - this._armorWeight(actorData) - this._excludeENC(actorData)).toFixed(1);
+    data.carry_rating.current = (this._calculateENC(actorData) - this._armorWeight(actorData) - this._excludeENC(actorData)).toFixed(1);
 
     //Form Shift Calcs
     if (this._wereWolfForm(actorData) === true) {
@@ -518,13 +518,13 @@ export class SimpleActor extends Actor {
     data.speed.value = this._addHalfSpeed(actorData);
 
     //ENC Burden Calculations
-    if (data.current_enc > data.carry_rating.max * 3) {
+    if (data.carry_rating.current > data.carry_rating.max * 3) {
       data.speed.base = 0;
       data.stamina.max = data.stamina.max - 5;
-    } else if (data.current_enc > data.carry_rating.max * 2) {
+    } else if (data.carry_rating.current > data.carry_rating.max * 2) {
       data.speed.base = Math.floor(data.speed.base / 2);
       data.stamina.max = data.stamina.max - 3;
-    } else if (data.current_enc > data.carry_rating.max) {
+    } else if (data.carry_rating.current > data.carry_rating.max) {
       data.speed.base = data.speed.base - 1;
       data.stamina.max = data.stamina.max - 1;
     }
@@ -556,6 +556,16 @@ export class SimpleActor extends Actor {
       woundPen = -20;
     }
 
+    data.woundPenalty = woundPen
+
+    // Set Skill professions to regular professions (This is a fucking mess, but it's the way it's done for now...)
+    for (let prof in data.professions) {
+      if (prof === 'profession1'||prof === 'profession2'||prof === 'profession3'||prof === 'commerce') {
+        data.professions[prof] === 0 ? data.professions[prof] = data.skills[prof].tn : data.professions[prof] = 0
+      }
+    }
+
+
     if (data.wounded === true) {
       if (this._halfWoundPenalty(actorData) === true) {
         for (var skill in data.professionsWound) {
@@ -569,15 +579,9 @@ export class SimpleActor extends Actor {
         data.initiative.value = data.initiative.base + woundIni;
         }
       } else if (data.wounded === false) {
-        if (this._halfWoundPenalty(actorData) === false) {
           for (var skill in data.professionsWound) {
-            data.professionsWound[skill] = data.professions[skill];
-          }
-        } else if (this._halfWoundPenalty(actorData) === false) {
-          for (var skill in data.professionsWound) {
-            data.professionsWound[skill] = data.professions[skill];
-          }
-          }
+           data.professionsWound[skill] = data.professions[skill];
+        }
       }
 
     //Fatigue Penalties

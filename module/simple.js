@@ -75,6 +75,15 @@ Hooks.once("init", async function() {
     type: Boolean
   });
 
+  game.settings.register("uesrpg-d100", "automateMagicka", {
+    name: "Automate Magicka Cost",
+    hint: "Automatically deduct the cost of a spell after cost calculation from the token/character's current magicka.",
+    scope: "world",
+    config: true,
+    default: false,
+    type: Boolean
+  });
+
   const startUpFunction = () => {
     const startUpDialog = game.settings.get("uesrpg-d100", "startUpDialog");
     let discordIcon = `<i class="fab fa-discord fa-2x"></i>`;
@@ -87,7 +96,7 @@ Hooks.once("init", async function() {
 
     let popup = new Dialog({
       title: "Welcome to the UESRPG Foundry System!",
-      content: `<form>
+      content: `<form style="height: 100%;>
         <div class="dialogForm" style="padding: 5px">
 
           <div style="text-align: center; margin: 5px; padding: 5px; background-color: rgba(78, 78, 78, 0.137);">
@@ -129,21 +138,49 @@ Hooks.once("init", async function() {
               </ul>
           </div>
 
-          <div style="margin: 5px; padding: 5px; background-color: rgba(78, 78, 78, 0.137);">
-            <h2 style="text-align: center;">v1.41 Changelog</h2>
-              <ul>
-                <li>Added new All-In-One Combat Macro to roll Combat Style + Weapon Damage Roll simultaneously</li>
-                <li>Added new Reset Action Points Macro that resets all Action Points to Max for any combatants in the current scene</li>
-                <li>Fixed Wound Calculation error in the All-In-One Spellcasting Macro</li>
-                <li>Removed border lines in many areas of the sheets to look more appropriate on Firefox browser</li>
-                <li>Added buttons to the Set Base Characteristics Menu to easily click into the items that are applying the characteristic bonus/penalty</li>
-                <li>All Item/Skill/Spell lists are now automatically sorted alphabetically to more easily find items in longer lists</li>
-                <li>Resolved issue where buttons would register a click when hitting the Enter key</li>
-                <li>Slightly increased the default size of character/NPC sheets to better fit content when using custom borders and themes</li>
-              </ul>
+          <div style="overflow-y: scroll; height: 300px; margin: 5px; padding: 5px; background-color: rgba(78, 78, 78, 0.137);">
+            <h2 style="text-align: center;">v1.44 Changelog</h2>
+
+                <h3>General Changes</h3>
+                  <ul>
+                      <li>Redesign of the entire character, merchant, and NPC sheets to be easier to use and in general more practical.</li>
+                      <li>Character Birthsign Selection Menu: Select a birthsign (or input a custom label to circumvent automation) and it will automatically create the appropriate 
+                          talents, powers, and traits according to your selection.
+                      </li>
+                      <li>Character Race Selection Menu: Select from 10 of the default races (likely more will be added, as well as additional stat block options in later releases)
+                          and have their stat blocks automatically applied to the character's characteristics! Also has an option for custom races with no automation.
+                      </li>
+                      <li>Lucky/Unlucky Numbers Selection Menu: Input your lucky/unlucky numbers into the menu, which also includes automation support for The Thief birthsign, which grants
+                          an additional lucky number.
+                      </li>
+                      <li>XP Tracker Menu: Track and input your XP and easily see your progress toward the next Campaign Rank level</li>
+                  </ul>
+
+                <h3>Combat Changes</h3>
+                  <ul>
+                      <li>New blood splatter effect over the combat avatar when the wounded checkbox is ticked.</li>
+                      <li>Select a custom body avatar or use the default avatars. It is recommended you use a transparent file, otherwise the wounded effects might not be visible.</li>
+                      <li>New Equip Armor Menu: Equip armor and other items using the Armor button on the combat tab. Allows you to easily see your load-out and details in one place.</li>
+                      <li>New Primary/Secondary Weapon Hotkeys: Right click the hotkeys next to your combat avatar to select from your weapon list and assign the weapon for quick access.</li>
+                      <li>New Toggle for hiding Resistance Column. Useful if you want to clear up the UI a bit.</li>
+                  </ul>
+
+                <h3>Magic Changes</h3>
+                  <ul>
+                      <li>New Magic Spell Filter: Spells are now able to be filtered by School category (Alteration, Destruction, etc.). Helps with those massive spell lists on mage characters!</li>
+                      <li>New Spellcasting menu when you click to cast a spell. Lets you select Overload, Restraint, and a few others if you have the appropriate talents.</li>
+                      <li>If a spell does not have a damage value (or is set to 0), the output will not show up in the chat result (requested for non-damaging spells)</li>
+                      <li>New System Setting to automatically deduct calculated spell costs after modifiers (Restraint, Overload, Overcharge, Magicka Cycling, etc.) from the caster's current Magicka.</li>
+                  </ul>
+
+                <h3>Item Changes</h3>
+                  <ul>
+                      <li>New Equipment Tab Design: Alphabetically sorted to better organize long item lists, plus new qty increment function. Right click to decrease, click to increase.</li>
+                      <li>Items now have a "wearable" property. When tagged, it allows you to Equip it via the Equip Armor menu on the Combat tab. Great for use with rings, amulets, jewelry, and clothing.</li>
+                  </ul>
           </div>
 
-          <div>
+          <div style="padding: 5px;">
             <i>You can disable this popup message in the System Settings and checking the box to not show this again.</i>
           </div>
         </div>
@@ -156,8 +193,10 @@ Hooks.once("init", async function() {
       default: "one",
       close: html => console.log()
     });
+    popup.position.width = 650;
     popup.render(true);
   }
 
   if (game.settings.get('uesrpg-d100', 'startUpDialog') === false) {startUpFunction()}
+
 });

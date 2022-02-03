@@ -6,14 +6,18 @@
             <h1 class="charname"><input name="name" type="text" value="{{item.name}}" placeholder="Name"/></h1>
             <div class="item-resource">
                 <table>
-                    <tr>
-                       <th>Read/Write</th>
-                       <th>Speak</th>
-                    </tr>
-                    <tr>
-                        <td><input type="checkbox" name="data.readWrite" {{checked data.readWrite}}/></td>
-                        <td><input type="checkbox" name="data.speak" {{checked data.speak}}/></td>
-                    </tr>
+                    <thead>
+                        <tr>
+                            <th>Read/Write</th>
+                            <th>Speak</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><input type="checkbox" name="data.readWrite" {{checked data.readWrite}}/></td>
+                            <td><input type="checkbox" name="data.speak" {{checked data.speak}}/></td>
+                        </tr>
+                    </tbody>
                 </table>
             </div>
         </div>

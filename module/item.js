@@ -13,14 +13,11 @@ export class SimpleItem extends Item {
 
     // Prepare data based on item type
 
-      if (this.data.data.hasOwnProperty("baseCha")) {
-        if (this.isEmbedded) {
-
-          if (actorData) {
-            this._prepareCombatStyleData(actorData, itemData);
-          }
-        }
-      }
+    if (this.isEmbedded && actorData) {
+      if (this.data.data.hasOwnProperty('baseCha')) {this._prepareCombatStyleData(actorData, itemData)}
+      if (this.data.data.hasOwnProperty('modPrice')) {this._prepareMerchantItem(actorData, itemData)}
+      if (this.data.data.hasOwnProperty('damaged')) {this._prepareArmorItem(actorData, itemData)}
+    }
   }
 
   /**
@@ -80,7 +77,7 @@ export class SimpleItem extends Item {
 
     let chaTotal = 0;
     if (data.baseCha !== undefined && data.baseCha !== "") {
-      chaTotal = Number(actorData.data.characteristics[data.baseCha].total + data.bonus);
+      chaTotal = Number(actorData.data.characteristics[data.baseCha].total + data.bonus + data.miscValue);
     }
 
     if (this.actor.data.data.wounded) {
@@ -89,6 +86,15 @@ export class SimpleItem extends Item {
       data.value = Number(chaTotal);
     }
 
+  }
+
+  _prepareMerchantItem(actorData, itemData) {
+    const data = itemData
+    data.modPrice = (data.price + (data.price * (this.actor.data.data.priceMod/100))).toFixed(0);
+  }
+
+  _prepareArmorItem(actorData, itemData) {
+      
   }
 
   /**
