@@ -9,7 +9,7 @@
 	  return mergeObject(super.defaultOptions, {
   	  classes: ["worldbuilding", "sheet", "actor"],
   	  template: "systems/uesrpg-d100/templates/actor-sheet.html",
-      width: 680,
+      width: 700,
       height: 720,
       tabs: [{navSelector: ".sheet-tabs", contentSelector: ".sheet-body", initial: "description"}],
       dragDrop: [{dragSelector: [
@@ -1045,103 +1045,121 @@
 
   }
 
-  async _onDamageRoll(event) {
+  _onDamageRoll(event) {
     event.preventDefault()
-    const button = event.currentTarget;
-    const li = button.closest(".item");
-    const item = this.actor.items.get(li?.dataset.itemId);
-    const d1 = this.actor.items.get(li?.dataset.itemId).data.data.damage;
-    const d2 = this.actor.items.get(li?.dataset.itemId).data.data.damage2;
+    let itemElement = event.currentTarget.closest('.item')
+    let shortcutWeapon = this.actor.getEmbeddedDocument("Item", itemElement.dataset.itemId)
 
-    let hit_loc = "";
+    let hit_loc = ""
+    let hit = new Roll("1d10")
+    hit.roll({async: false})
 
-    let hit = new Roll("1d10");
-    hit.roll({async:false});
+    switch (hit.result) {
+      case "1":
+        hit_loc = "Body"
+        break
 
-    if (hit.total <= 5) {
-      hit_loc = "Body"
-    } else if (hit.total == 6) {
-      hit_loc = "Right Leg"
-    } else if (hit.total == 7) {
-      hit_loc = "Left Leg"
-    } else if (hit.total == 8) {
-      hit_loc = "Right Arm"
-    } else if (hit.total == 9) {
-      hit_loc = "Left Arm"
-    } else if (hit.total == 10) {
-      hit_loc = "Head"
+      case "2":
+        hit_loc = "Body"
+        break
+
+      case "3":
+        hit_loc = "Body"
+        break
+
+      case "4":
+        hit_loc = "Body"
+        break
+
+      case "5":
+        hit_loc = "Body"
+        break
+
+      case "6":
+        hit_loc = "Right Leg"
+        break
+
+      case "7":
+        hit_loc = "Left Leg"
+        break
+      
+      case "8":
+        hit_loc = "Right Arm"
+        break
+
+      case "9":
+        hit_loc = "Left Arm"
+        break
+
+      case "10":
+        hit_loc = "Head"
+        break
     }
 
-    let roll = new Roll(d1);
-    let supRoll = new Roll(d1);
-    let roll2H = new Roll(d2);
-    let supRoll2H = new Roll(d2);
-    let contentString = "";
-    roll.roll({async:false});
-    supRoll.roll({async:false});
-    roll2H.roll({async:false});
-    supRoll2H.roll({async:false});
+    let damageString
+    shortcutWeapon.data.data.weapon2H ? damageString = shortcutWeapon.data.data.damage2 : damageString = shortcutWeapon.data.data.damage
+    let weaponRoll = new Roll(damageString)
+    weaponRoll.roll({async: false})
+    
+    // Superior Weapon Roll
+    let supRollTag = ``
+    let superiorRoll = new Roll(damageString)
+    superiorRoll.roll({async: false})
 
-    if (item.data.data.weapon2H === true) {
-      if (item.data.data.superior === true) {
-        contentString = `<h2><img src="${item.img}"</img>${item.name}</h2>
-          <p></p>
-          <b>Damage:</b> <b> [[${roll2H.result}]] [[${supRoll2H.result}]]</b> ${roll2H._formula}<p></p>
-          <b>Hit Location:</b> <b> [[${hit.total}]] </b> ${hit_loc}<p></p>
-          <b>Qualities:</b> ${item.data.data.qualities}`
-          ChatMessage.create({
-            type: CONST.CHAT_MESSAGE_TYPES.ROLL,
-            user: game.user.id,
-            speaker: ChatMessage.getSpeaker(),
-            content: contentString,
-            roll: supRoll2H, roll2H
-          })
+    if (shortcutWeapon.data.data.superior) {
+      supRollTag = `[[${superiorRoll.result}]]`
+    }
 
-      } else {
-        contentString = `<h2><img src="${item.img}"</img>${item.name}</h2>
-            <p></p>
-            <b>Damage:</b> <b> [[${roll2H.result}]]</b> ${roll2H._formula}<p></p>
-            <b>Hit Location:</b> <b> [[${hit.total}]] </b> ${hit_loc}<p></p>
-            <b>Qualities:</b> ${item.data.data.qualities}`
-            ChatMessage.create({
-              type: CONST.CHAT_MESSAGE_TYPES.ROLL,
-              user: game.user.id,
-              speaker: ChatMessage.getSpeaker(),
-              content: contentString,
-              roll: roll2H
-            })
-        }
+    let contentString = `<div>
+                              <h2>
+                                  <img src="${shortcutWeapon.img}">
+                                  <div>${shortcutWeapon.name}</div>
+                              </h2>
 
-    } else {
-        if (item.data.data.superior === true) {
-          contentString = `<h2><img src="${item.img}"</img>${item.name}</h2>
-            <p></p>
-            <b>Damage:</b> <b> [[${roll.result}]] [[${supRoll.result}]]</b> ${roll._formula}<p></p>
-            <b>Hit Location:</b> <b> [[${hit.total}]] </b> ${hit_loc}<p></p>
-            <b>Qualities:</b> ${item.data.data.qualities}`
-            ChatMessage.create({
-              type: CONST.CHAT_MESSAGE_TYPES.ROLL,
-              user: game.user.id,
-              speaker: ChatMessage.getSpeaker(),
-              content: contentString,
-              roll: roll, supRoll
-            })
+                              <table>
+                                  <thead>
+                                      <tr>
+                                          <th>Damage</th>
+                                          <th class="tableCenterText">Result</th>
+                                          <th class="tableCenterText">Detail</th>
+                                      </tr>
+                                  </thead>
+                                  <tbody>
+                                      <tr>
+                                          <td class="tableAttribute">Damage</td>
+                                          <td class="tableCenterText">[[${weaponRoll.result}]] ${supRollTag}</td>
+                                          <td class="tableCenterText">${damageString}</td>
+                                      </tr>
+                                      <tr>
+                                          <td class="tableAttribute">Hit Location</td>
+                                          <td class="tableCenterText">${hit_loc}</td>
+                                          <td class="tableCenterText">[[${hit.result}]]</td>
+                                      </tr>
+                                      <tr>
+                                          <td class="tableAttribute">Qualities</td>
+                                          <td class="tableCenterText" colspan="2">${shortcutWeapon.data.data.qualities}</td>
+                                      </tr>
+                                  </tbody>
+                              </table>
+                          <div>`
 
-      } else {
-        contentString = `<h2><img src="${item.img}"</img>${item.name}</h2>
-            <p></p>
-            <b>Damage:</b> <b> [[${roll.result}]]</b> ${roll._formula}<p></p>
-            <b>Hit Location:</b> <b> [[${hit.total}]] </b> ${hit_loc}<p></p>
-            <b>Qualities:</b> ${item.data.data.qualities}`
-            ChatMessage.create({
-              type: CONST.CHAT_MESSAGE_TYPES.ROLL,
-              user: game.user.id,
-              speaker: ChatMessage.getSpeaker(),
-              content: contentString,
-              roll: roll
-            })
-          }
-        }
+
+    // tags for flavor on chat message
+    let tags = [];
+
+    if (shortcutWeapon.data.data.superior){
+        let tagEntry = `<span style="border: none; border-radius: 30px; background-color: rgba(29, 97, 187, 0.80); color: white; text-align: center; font-size: xx-small; padding: 5px;" title="Damage was rolled twice and output was highest of the two">Superior</span>`;
+        tags.push(tagEntry);
+    }
+
+    ChatMessage.create({
+      type: CONST.CHAT_MESSAGE_TYPES.ROLL,
+      user: game.user.id,
+      speaker: ChatMessage.getSpeaker(),
+      flavor: tags.join(''),
+      content: contentString,
+      roll: weaponRoll
+    })
   }
 
   async _onAmmoRoll(event) {
@@ -1668,7 +1686,7 @@
       }
 
       const card = `<div style="display: flex; flex-direction: row; align-items: center; border: solid 1px; padding: 0 5px; width: 49%;">
-                        <div style="width: 100%;">
+                        <div style="width: 100%; height: 100%;">
                             <div style="text-align: center; position: relative; top: 0;">
                                 <input type="checkbox" class="raceSelect" id="${race.name}" style="position: relative; left: 0; top: 0;">
                                 <img src="${race.img}" alt="${race.name}" height="150" width="100" style="border: none;">
@@ -1676,21 +1694,25 @@
                             <div style="position: relative; top: 0;">
                                 <h2 style="text-align: center;">${race.name}</h2>
                                 <table style="text-align: center;">
-                                    <tr>
-                                      <th colspan="7">Characteristic Baseline</th>
-                                    </tr>
-                                    <tr>
-                                      <th>STR</th>
-                                      <th>END</th>
-                                      <th>AGI</th>
-                                      <th>INT</th>
-                                      <th>WP</th>
-                                      <th>PRC</th>
-                                      <th>PRS</th>
-                                    </tr>
-                                    <tr>
-                                      ${baseLineCells.join('')}
-                                    </tr>
+                                    <thead>
+                                        <tr>
+                                          <th colspan="7">Characteristic Baseline</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                          <th>STR</th>
+                                          <th>END</th>
+                                          <th>AGI</th>
+                                          <th>INT</th>
+                                          <th>WP</th>
+                                          <th>PRC</th>
+                                          <th>PRS</th>
+                                        </tr>
+                                        <tr>
+                                          ${baseLineCells.join('')}
+                                        </tr>
+                                    </tbody>
                               </table>
                               <ul>
                                   ${traits.join('')}
@@ -1718,8 +1740,10 @@
                       <img src="systems/uesrpg-d100/images/Races_Oblivion.webp" title="Races of Elder Scrolls" style="border: none;">
                   </div>
 
-                  <div style="display: flex; flex-direction: row; flex-wrap: wrap; justify-content: space-between; align-content: center; width: 100%;">
-                    ${raceCards.join('')}
+                  <div style="height: 500px; overflow-y: scroll;">
+                      <div style="display: flex; flex-direction: row; flex-wrap: wrap; justify-content: space-between; align-content: center; width: 100%;">
+                        ${raceCards.join('')}
+                      </div>
                   </div>
 
                 </form>`,
@@ -1791,7 +1815,7 @@
     })
 
     d.position.width = 600;
-    d.position.height = 800;
+    // d.position.height = 750;
     d.render(true)
   }
 
@@ -2009,7 +2033,7 @@
 
     let d = new Dialog({
       title: "Birthsign Menu",
-      content: `<form>
+      content: `<form style="padding: 10px 0;">
                     <div>
 
                         <div style="border: 1px solid; background: rgba(85, 85, 85, 0.40); font-style:italic; padding: 5px; text-align: center;">
@@ -2019,8 +2043,10 @@
                             </div>
                         </div>
 
-                        <div style="display: flex; flex-direction: row; flex-wrap: wrap; justify-content: space-around; align-items: center; width: 100%;">
-                            ${signCards.join('')}
+                        <div style="height: 500px; overflow-y: scroll;">
+                            <div style="display: flex; flex-direction: row; flex-wrap: wrap; justify-content: space-between; align-items: center; width: 100%;">
+                                ${signCards.join('')}
+                            </div>
                         </div>
 
                     </div>
@@ -2080,7 +2106,6 @@
     })
 
     d.position.width = 600;
-    d.position.height = 800;
     d.render(true)
   }
 
@@ -2133,18 +2158,20 @@
       content: `<form>
                     <div style="display: flex; flex-direction: column;">
 
-                        <div style="display: flex; flex-direction: row; justify-content: space-around; align-items: top; background: rgba(85, 85, 85, 0.40); padding: 10px; text-align: center; border: 1px solid;">
-                            <div style="width: 33.33%">
-                                <div>Current XP</div>
-                                <input type="number" id="xp" value="${this.actor.data.data.xp}">
-                            </div>
-                            <div style="width: 33.33%">
-                                <div>Total XP</div>
-                                <input type="number" id="xpTotal" value="${this.actor.data.data.xpTotal}">
-                            </div>
-                            <div style="width: 33.33%">
-                                <div>Campaign Rank</div>
-                                <div style="padding: 5px 0;">${this.actor.data.data.campaignRank}</div>
+                        <div style="padding: 10px;">
+                            <div style="display: flex; flex-direction: row; justify-content: space-around; background: rgba(85, 85, 85, 0.40); padding: 10px; text-align: center; border: 1px solid;">
+                                <div style="width: 33.33%">
+                                    <div>Current XP</div>
+                                    <input type="number" id="xp" value="${this.actor.data.data.xp}">
+                                </div>
+                                <div style="width: 33.33%">
+                                    <div>Total XP</div>
+                                    <input type="number" id="xpTotal" value="${this.actor.data.data.xpTotal}">
+                                </div>
+                                <div style="width: 33.33%">
+                                    <div>Campaign Rank</div>
+                                    <div style="padding: 5px 0;">${this.actor.data.data.campaignRank}</div>
+                                </div>
                             </div>
                         </div>
 
@@ -2611,15 +2638,13 @@
     weaponRoll.roll({async: false})
     
     // Superior Weapon Roll
-    let maxRoll = 0
+    let supRollTag = ``
+    let superiorRoll = new Roll(damageString)
+    superiorRoll.roll({async: false})
 
     if (shortcutWeapon.data.data.superior) {
-      let superiorRoll = new Roll(damageString)
-      superiorRoll.roll({async: false})
-      maxRoll = weaponRoll.result > superiorRoll.result ? weaponRoll.result : superiorRoll.result
+      supRollTag = `[[${superiorRoll.result}]]`
     }
-
-    else {maxRoll = weaponRoll.result}
 
     let contentString = `<div>
                               <h2>
@@ -2638,7 +2663,7 @@
                                   <tbody>
                                       <tr>
                                           <td class="tableAttribute">Damage</td>
-                                          <td class="tableCenterText">[[${maxRoll}]]</td>
+                                          <td class="tableCenterText">[[${weaponRoll.result}]] ${supRollTag}</td>
                                           <td class="tableCenterText">${damageString}</td>
                                       </tr>
                                       <tr>

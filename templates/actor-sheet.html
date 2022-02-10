@@ -20,7 +20,9 @@
                             </div>
                         </div>
                         <div class="maxBar" data-resource="hp">
-                            <div id="hpBar" class="currentBar" data-resource="hp">{{data.hp.value}} / {{data.hp.max}}</div>
+                            <div id="hpBar" class="currentBar" data-resource="hp">
+                                <input type="number" name="data.hp.value" value="{{data.hp.value}}"> / <label>{{data.hp.max}}</label>
+                            </div>
                         </div>
                     </div>
                     <div id="staminaResource">
@@ -32,7 +34,9 @@
                             </div>
                         </div>
                         <div class="maxBar" data-resource="stamina">
-                            <div id="staminaBar" class="currentBar" data-resource="stamina">{{data.stamina.value}} / {{data.stamina.max}}</div>
+                            <div id="staminaBar" class="currentBar" data-resource="stamina">
+                                <input type="number" name="data.stamina.value" value="{{data.stamina.value}}"> / <label>{{data.stamina.max}}</label>
+                            </div>
                         </div>
                     </div>
                     <div id="magickaResource">
@@ -44,7 +48,9 @@
                             </div>
                         </div>
                         <div class="maxBar" data-resource="magicka">
-                            <div id="magickaBar" class="currentBar" data-resource="magicka">{{data.magicka.value}} / {{data.magicka.max}}</div>
+                            <div id="magickaBar" class="currentBar" data-resource="magicka">
+                                <input type="number" name="data.magicka.value" value="{{data.magicka.value}}"> / <label>{{data.magicka.max}}</label>
+                            </div>
                         </div>
                     </div>
                     <div id="luckResource">
@@ -56,7 +62,9 @@
                             </div>
                         </div>
                         <div class="maxBar" data-resource="luck_points">
-                            <div id="luck_pointsBar" class="currentBar" data-resource="luck_points">{{data.luck_points.value}} / {{data.luck_points.max}}</div>
+                            <div id="luck_pointsBar" class="currentBar" data-resource="luck_points">
+                                <input type="number" name="data.luck_points.value" value="{{data.luck_points.value}}"> / <label>{{data.luck_points.max}}</label>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -134,7 +142,7 @@
                     </h2>
                     <ol class="skillList">
                         {{#each actor.data.skill as |item id|}}
-                            <li class="item flexrow" data-item-id="{{item._id}}">
+                            <li class="item" data-item-id="{{item._id}}">
                                 <div class="itemInfo">
                                     <i class="fas fa-dice-d20 skill-roll"></i>
                                     <img class="item-img" src="{{item.img}}" title="Send to Chat"/>
@@ -182,7 +190,7 @@
                         </h2>
                         <ol class="skillList">
                             {{#each actor.data.language as |item id|}}
-                                <li class="item flexrow" data-item-id="{{item._id}}">
+                                <li class="item" data-item-id="{{item._id}}">
                                     <div class="itemInfo">
                                         <img class="item-img" src="{{item.img}}" title="Send to Chat"/>
                                         <div class="item-name">{{item.name}}</div>
@@ -197,7 +205,7 @@
                     <div class="bioPage">
                         <h2>Biography</h2>
                         <div class="contentContainer">
-                            {{editor content=data.data.bio target="data.data.bio" button=true owner=owner editable=editable}}
+                            {{editor content=data.bio target="data.bio" button=true owner=owner editable=editable}}
                         </div>
                     </div>
                 </div>
@@ -354,7 +362,7 @@
                                     <label>Combat Styles</label>
                                 </h2>
                                 {{#each actor.data.combatStyle as |item id|}}
-                                    <li class="item flexrow" data-item-id="{{item._id}}">
+                                    <li class="item" data-item-id="{{item._id}}">
                                         <div class="itemInfo">
                                             <i class="fas fa-dice-d20 combat-roll"></i>
                                             <img class="item-img" src="{{item.img}}" title="Send to Chat"/>
@@ -373,7 +381,7 @@
                                     <label>Weapons</label>
                                 </h2>
                                 {{#each actor.data.weapon as |item id|}}
-                                    <li class="item flexrow" data-item-id="{{item._id}}">
+                                    <li class="item" data-item-id="{{item._id}}">
                                         <div class="itemInfo">
                                             <i class="fas fa-dice-d20 damage-roll"></i>
                                             <img class="item-img" src="{{item.img}}" title="Send to Chat"/>
@@ -394,7 +402,7 @@
                                     <label>Ammunition</label>
                                 </h2>
                                 {{#each actor.data.ammunition as |item id|}}
-                                    <li class="item flexrow" data-item-id="{{item._id}}">
+                                    <li class="item" data-item-id="{{item._id}}">
                                         <div class="itemInfo">
                                             <i class="fas fa-dice-d20 ammo-roll"></i>
                                             <img class="item-img" src="{{item.img}}" title="Send to Chat"/>
@@ -418,7 +426,7 @@
                                     <label>Armor</label>
                                 </h2>
                                 {{#each actor.data.armor as |item id|}}
-                                    <li class="item flexrow" data-item-id="{{item._id}}">
+                                    <li class="item" data-item-id="{{item._id}}">
                                         <div class="itemInfo">
                                             <img class="item-img" src="{{item.img}}" title="{{item.name}}"/>
                                             <div class="item-name">{{item.name}}</div>
@@ -439,7 +447,7 @@
                             </h2>
                             <ol class="skillList">
                                 {{#each actor.data.trait as |item id|}}
-                                    <li class="item flexrow" data-item-id="{{item._id}}">
+                                    <li class="item" data-item-id="{{item._id}}">
                                         <div class="itemInfo">
                                             <img class="item-img" src="{{item.img}}" title="Send to Chat"/>
                                             <div class="item-name">{{item.name}}</div>
@@ -459,7 +467,7 @@
                             </h2>
                             <ol class="skillList">
                                 {{#each actor.data.talent as |item id|}}
-                                    <li class="item flexrow" data-item-id="{{item._id}}">
+                                    <li class="item" data-item-id="{{item._id}}">
                                         <div class="itemInfo">
                                             <img class="item-img" src="{{item.img}}" title="Send to Chat"/>
                                             <div class="item-name">{{item.name}}</div>
@@ -479,7 +487,7 @@
                             </h2>
                             <ol class="skillList">
                                 {{#each actor.data.power as |item id|}}
-                                    <li class="item flexrow" data-item-id="{{item._id}}">
+                                    <li class="item" data-item-id="{{item._id}}">
                                         <div class="itemInfo">
                                             <img class="item-img" src="{{item.img}}" title="Send to Chat"/>
                                             <div class="item-name">{{item.name}}</div>
@@ -507,7 +515,7 @@
                         </h2>
                         <ol class="skillList">
                             {{#each actor.data.magicSkill as |item id|}}
-                                <li class="item flexrow" data-item-id="{{item._id}}">
+                                <li class="item" data-item-id="{{item._id}}">
                                     <div class="itemInfo">
                                         <i class="fas fa-dice-d20 skill-roll"></i>
                                         <img class="item-img" src="{{item.img}}" title="Send to Chat"/>
@@ -652,7 +660,7 @@
                     </h2>
                     <ol class="skillList">
                         {{#each actor.data.faction as |item id|}}
-                            <li class="item flexrow" data-item-id="{{item._id}}">
+                            <li class="item" data-item-id="{{item._id}}">
                                 <div class="itemInfo">
                                     <img class="item-img" src="{{item.img}}" title="Send to Chat"/>
                                     <div class="item-name">{{item.name}}</div>

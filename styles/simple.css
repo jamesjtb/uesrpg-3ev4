@@ -51,7 +51,7 @@ table th {
   text-align: center;
 }
 
-h1, h2, button {
+h1, h2 {
   font-family: "cyrodiil";
   text-align: center;
   width: 100%;
@@ -85,18 +85,8 @@ h1, h2, button {
   line-height: 20px;
 }
 
-.dialog-buttons {
-  position: sticky;
-  bottom: 0;
-  background: url("../images/parchment5.jpg") repeat;
-}
-
 .dialogForm {
   padding: 10px 0;
-}
-
-.chat-message {
-  background: url("../images/parchment5.jpg") repeat !important;
 }
 
 .chat-message h2 {
@@ -190,6 +180,10 @@ h1, h2, button {
   gap: 5px;
 }
 
+.worldbuilding .profession input {
+  width: 40px;
+}
+
 .worldbuilding .skill-roll:hover,
 .worldbuilding .combat-roll:hover,
 .worldbuilding .damage-roll:hover,
@@ -227,11 +221,11 @@ h1, h2, button {
 .worldbuilding li .item-name,
 .worldbuilding li .skill-name {
   padding: 0 5px;
-  min-width: 120px;
-  max-width: 180px;
-  white-space: nowrap;
   overflow: hidden;
-  text-overflow: ellipsis;
+}
+
+.worldbuilding .skill-name input {
+  width: 80%;
 }
 
 .worldbuilding li .item-value {
@@ -342,6 +336,14 @@ h1, h2, button {
   margin: 0;
 }
 
+.worldbuilding .field-inputs-small .editor-content {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
 /*---------------------------- 
   Lists & Controls - Card Lists
 ------------------------------*/
@@ -421,9 +423,10 @@ h1, h2, button {
 
 .worldbuilding .editor, .worldbuilding .editor-content {
   min-height: 200px;
-  max-height: 500px;
+  /* max-height: 400px; */
   width: 100%;
   padding: 0 5px;
+  overflow-y: scroll;
 }
 
 .editor .editor-content h1,
@@ -444,7 +447,11 @@ h1, h2, button {
   top: 0;
   z-index: 3;
   background: url("../images/parchment5.jpg") repeat;
-  padding: 5px 0;
+  padding: 5px 0 0 0;
+}
+
+.worldbuilding .sheet-header {
+  padding: 0 0 5px 0;
 }
 
 .worldbuilding .headerContainer {
@@ -591,6 +598,16 @@ h1, h2, button {
   color: white;
   border-radius: 20px;
   height: 24px;
+  font-family: "cyrodiil";
+  font-weight: bold;
+}
+
+.worldbuilding .currentBar input {
+  width: 30px;
+  height: 20px;
+  color: white;
+  font-weight: bold;
+  text-align: right;
 }
 
 .worldbuilding #hpResource .currentBar {
@@ -641,6 +658,10 @@ h1, h2, button {
   text-decoration: underline;
 }
 
+.worldbuilding .tab {
+  padding: 5px 0 0 0;
+}
+
 
 
 /*---------------------------- 
@@ -666,12 +687,12 @@ h1, h2, button {
   flex-direction: column;
   justify-content: top;
   align-items: center;
-  padding: 5px 10px;
+  padding: 0 5px;
 }
 
 .worldbuilding .characteristicSideBar {
   border-right: 1px solid;
-  padding: 5px 5px;
+  padding: 0 5px;
 }
 
 .worldbuilding .skillContainer {
@@ -826,6 +847,7 @@ h1, h2, button {
   align-items: stretch;
   width: 100%;
   height: 100%;
+  margin: 0 0 5px 0;
 }
 
 .worldbuilding .combatSegment1 {
@@ -845,6 +867,7 @@ h1, h2, button {
   position: relative;
   width: 35%;
   background-size: 0 0;
+  border-top: 1px solid;
 }
 
 .worldbuilding .wounded {
@@ -1105,6 +1128,22 @@ h1, h2, button {
   text-overflow: ellipsis;
 }
 
+.worldbuilding .armorButtonHeader {
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  text-align: center;
+  justify-content: center;
+}
+
+.worldbuilding .armorButtonHeader button {
+  margin: 0;
+  padding: 0;
+  width: 70%;
+}
+
 /*---------------------------- 
   Combat Tab - List Container
 ------------------------------*/
@@ -1131,7 +1170,7 @@ h1, h2, button {
 .worldbuilding .magicSideBarContainer {
   width: 35%;
   border-right: 1px solid;
-  padding: 10px;
+  padding: 0 5px 0 5px;
 }
 
 .worldbuilding .magicTabContainer .spellListContainer {
@@ -1170,7 +1209,7 @@ h1, h2, button {
   display: flex;
   flex-direction: row;
   align-items: center;
-  padding: 0 10px;
+  justify-content: flex-start;
   gap: 10px;
   font-size: initial;
 }

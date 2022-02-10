@@ -8,7 +8,7 @@ export class npcSheet extends ActorSheet {
 	static get defaultOptions() {
 	  return mergeObject(super.defaultOptions, {
       classes: ["worldbuilding", "sheet", "actor", "npc"],
-      width: 680,
+      width: 700,
       height: 720,
       tabs: [{navSelector: ".sheet-tabs", contentSelector: ".sheet-body", initial: "core"}],
       dragDrop: [{dragSelector: [
@@ -655,103 +655,121 @@ export class npcSheet extends ActorSheet {
         d.render(true);
   }
 
-  async _onDamageRoll(event) {
+  _onDamageRoll(event) {
     event.preventDefault()
-    const button = event.currentTarget;
-    const li = button.closest(".item");
-    const item = this.actor.items.get(li?.dataset.itemId);
-    const d1 = this.actor.items.get(li?.dataset.itemId).data.data.damage;
-    const d2 = this.actor.items.get(li?.dataset.itemId).data.data.damage2;
+    let itemElement = event.currentTarget.closest('.item')
+    let shortcutWeapon = this.actor.getEmbeddedDocument("Item", itemElement.dataset.itemId)
 
-    let hit_loc = "";
+    let hit_loc = ""
+    let hit = new Roll("1d10")
+    hit.roll({async: false})
 
-    let hit = new Roll("1d10");
-    hit.roll({async:false});
+    switch (hit.result) {
+      case "1":
+        hit_loc = "Body"
+        break
 
-    if (hit.total <= 5) {
-      hit_loc = "Body"
-    } else if (hit.total == 6) {
-      hit_loc = "Right Leg"
-    } else if (hit.total == 7) {
-      hit_loc = "Left Leg"
-    } else if (hit.total == 8) {
-      hit_loc = "Right Arm"
-    } else if (hit.total == 9) {
-      hit_loc = "Left Arm"
-    } else if (hit.total == 10) {
-      hit_loc = "Head"
+      case "2":
+        hit_loc = "Body"
+        break
+
+      case "3":
+        hit_loc = "Body"
+        break
+
+      case "4":
+        hit_loc = "Body"
+        break
+
+      case "5":
+        hit_loc = "Body"
+        break
+
+      case "6":
+        hit_loc = "Right Leg"
+        break
+
+      case "7":
+        hit_loc = "Left Leg"
+        break
+      
+      case "8":
+        hit_loc = "Right Arm"
+        break
+
+      case "9":
+        hit_loc = "Left Arm"
+        break
+
+      case "10":
+        hit_loc = "Head"
+        break
     }
 
-    let roll = new Roll(d1);
-    let supRoll = new Roll(d1);
-    let roll2H = new Roll(d2);
-    let supRoll2H = new Roll(d2);
-    let contentString = "";
-    roll.roll({async:false});
-    supRoll.roll({async:false});
-    roll2H.roll({async:false});
-    supRoll2H.roll({async:false});
+    let damageString
+    shortcutWeapon.data.data.weapon2H ? damageString = shortcutWeapon.data.data.damage2 : damageString = shortcutWeapon.data.data.damage
+    let weaponRoll = new Roll(damageString)
+    weaponRoll.roll({async: false})
+    
+    // Superior Weapon Roll
+    let supRollTag = ``
+    let superiorRoll = new Roll(damageString)
+    superiorRoll.roll({async: false})
 
-    if (item.data.data.weapon2H === true) {
-      if (item.data.data.superior === true) {
-        contentString = `<h2><img src="${item.img}"</img>${item.name}</h2>
-          <p></p>
-          <b>Damage:</b> <b> [[${roll2H.result}]] [[${supRoll2H.result}]]</b> ${roll2H._formula}<p></p>
-          <b>Hit Location:</b> <b> [[${hit.total}]] </b> ${hit_loc}<p></p>
-          <b>Qualities:</b> ${item.data.data.qualities}`
-          ChatMessage.create({
-            type: CONST.CHAT_MESSAGE_TYPES.ROLL,
-            user: game.user.id,
-            speaker: ChatMessage.getSpeaker(),
-            content: contentString,
-            roll: supRoll2H, roll2H
-          })
+    if (shortcutWeapon.data.data.superior) {
+      supRollTag = `[[${superiorRoll.result}]]`
+    }
 
-      } else {
-        contentString = `<h2><img src="${item.img}"</img>${item.name}</h2>
-            <p></p>
-            <b>Damage:</b> <b> [[${roll2H.result}]]</b> ${roll2H._formula}<p></p>
-            <b>Hit Location:</b> <b> [[${hit.total}]] </b> ${hit_loc}<p></p>
-            <b>Qualities:</b> ${item.data.data.qualities}`
-            ChatMessage.create({
-              type: CONST.CHAT_MESSAGE_TYPES.ROLL,
-              user: game.user.id,
-              speaker: ChatMessage.getSpeaker(),
-              content: contentString,
-              roll: roll2H
-            })
-        }
+    let contentString = `<div>
+                              <h2>
+                                  <img src="${shortcutWeapon.img}">
+                                  <div>${shortcutWeapon.name}</div>
+                              </h2>
 
-    } else {
-        if (item.data.data.superior === true) {
-          contentString = `<h2><img src="${item.img}"</img>${item.name}</h2>
-            <p></p>
-            <b>Damage:</b> <b> [[${roll.result}]] [[${supRoll.result}]]</b> ${roll._formula}<p></p>
-            <b>Hit Location:</b> <b> [[${hit.total}]] </b> ${hit_loc}<p></p>
-            <b>Qualities:</b> ${item.data.data.qualities}`
-            ChatMessage.create({
-              type: CONST.CHAT_MESSAGE_TYPES.ROLL,
-              user: game.user.id,
-              speaker: ChatMessage.getSpeaker(),
-              content: contentString,
-              roll: roll, supRoll
-            })
+                              <table>
+                                  <thead>
+                                      <tr>
+                                          <th>Damage</th>
+                                          <th class="tableCenterText">Result</th>
+                                          <th class="tableCenterText">Detail</th>
+                                      </tr>
+                                  </thead>
+                                  <tbody>
+                                      <tr>
+                                          <td class="tableAttribute">Damage</td>
+                                          <td class="tableCenterText">[[${weaponRoll.result}]] ${supRollTag}</td>
+                                          <td class="tableCenterText">${damageString}</td>
+                                      </tr>
+                                      <tr>
+                                          <td class="tableAttribute">Hit Location</td>
+                                          <td class="tableCenterText">${hit_loc}</td>
+                                          <td class="tableCenterText">[[${hit.result}]]</td>
+                                      </tr>
+                                      <tr>
+                                          <td class="tableAttribute">Qualities</td>
+                                          <td class="tableCenterText" colspan="2">${shortcutWeapon.data.data.qualities}</td>
+                                      </tr>
+                                  </tbody>
+                              </table>
+                          <div>`
 
-      } else {
-        contentString = `<h2><img src="${item.img}"</img>${item.name}</h2>
-            <p></p>
-            <b>Damage:</b> <b> [[${roll.result}]]</b> ${roll._formula}<p></p>
-            <b>Hit Location:</b> <b> [[${hit.total}]] </b> ${hit_loc}<p></p>
-            <b>Qualities:</b> ${item.data.data.qualities}`
-            ChatMessage.create({
-              type: CONST.CHAT_MESSAGE_TYPES.ROLL,
-              user: game.user.id,
-              speaker: ChatMessage.getSpeaker(),
-              content: contentString,
-              roll: roll
-            })
-          }
-        }
+
+    // tags for flavor on chat message
+    let tags = [];
+
+    if (shortcutWeapon.data.data.superior){
+        let tagEntry = `<span style="border: none; border-radius: 30px; background-color: rgba(29, 97, 187, 0.80); color: white; text-align: center; font-size: xx-small; padding: 5px;" title="Damage was rolled twice and output was highest of the two">Superior</span>`;
+        tags.push(tagEntry);
+    }
+
+    ChatMessage.create({
+      type: CONST.CHAT_MESSAGE_TYPES.ROLL,
+      user: game.user.id,
+      speaker: ChatMessage.getSpeaker(),
+      flavor: tags.join(''),
+      content: contentString,
+      roll: weaponRoll
+    })
   }
 
   _onSpellRoll(event) {
@@ -1702,15 +1720,13 @@ export class npcSheet extends ActorSheet {
     weaponRoll.roll({async: false})
     
     // Superior Weapon Roll
-    let maxRoll = 0
+    let supRollTag = ``
+    let superiorRoll = new Roll(damageString)
+    superiorRoll.roll({async: false})
 
     if (shortcutWeapon.data.data.superior) {
-      let superiorRoll = new Roll(damageString)
-      superiorRoll.roll({async: false})
-      maxRoll = weaponRoll.result > superiorRoll.result ? weaponRoll.result : superiorRoll.result
+      supRollTag = `[[${superiorRoll.result}]]`
     }
-
-    else {maxRoll = weaponRoll.result}
 
     let contentString = `<div>
                               <h2>
@@ -1729,7 +1745,7 @@ export class npcSheet extends ActorSheet {
                                   <tbody>
                                       <tr>
                                           <td class="tableAttribute">Damage</td>
-                                          <td class="tableCenterText">[[${maxRoll}]]</td>
+                                          <td class="tableCenterText">[[${weaponRoll.result}]] ${supRollTag}</td>
                                           <td class="tableCenterText">${damageString}</td>
                                       </tr>
                                       <tr>

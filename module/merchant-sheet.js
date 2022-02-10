@@ -8,7 +8,7 @@ export class merchantSheet extends ActorSheet {
 	static get defaultOptions() {
 	  return mergeObject(super.defaultOptions, {
       classes: ["worldbuilding", "sheet", "actor", "npc"],
-      width: 680,
+      width: 700,
       height: 720,
       tabs: [{navSelector: ".sheet-tabs", contentSelector: ".sheet-body", initial: "merchant"}],
       dragDrop: [{dragSelector: [

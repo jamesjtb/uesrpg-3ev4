@@ -9,7 +9,7 @@ export class SimpleItemSheet extends ItemSheet {
 	  return mergeObject(super.defaultOptions, {
       classes: ["worldbuilding", "sheet", "item"],
 			width: 520,
-			height: 480,
+			height: 520,
       tabs: [{navSelector: ".sheet-tabs3", contentSelector: ".sheet-body-items", initial: "description"}]
 		});
   }
