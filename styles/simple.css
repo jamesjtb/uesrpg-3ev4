@@ -143,6 +143,30 @@
   gap: 5px;
 }
 
+.worldbuilding table td {
+  text-align: center;
+}
+
+.worldbuilding .tableItemNameCell {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 5px;
+}
+
+.worldbuilding .spellList table tr {
+  display: none;
+}
+
+.worldbuilding .spellList table .active {
+  display: table-row;
+}
+
+.worldbuilding table button {
+  height: 24px;
+  line-height: 14px;
+}
+
 
 /*---------------------------- 
   Actor Sheets - Fixed Section
@@ -336,4 +360,56 @@
 
 .worldbuilding .bioPage {
   border-bottom: 1px solid;
+}
+
+/*---------------------------- 
+  Actor Sheets - Combat Tab
+------------------------------*/
+
+
+/*---------------------------- 
+  Actor Sheets - Magic Tab
+------------------------------*/
+
+
+/*---------------------------- 
+  Actor Sheets - Equipment Tab
+------------------------------*/
+
+.worldbuilding .equipmentTabContainer {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  gap: 20px;
+}
+
+.worldbuilding .equipment-info-container {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+.worldbuilding .equipment-info-container img {
+  height: 35px;
+  width: 35px;
+}
+
+.worldbuilding .itemListContainer {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  gap: 20px;
+}
+
+.worldbuilding .itemListContainer .equipmentList h2 {
+  position: relative;
+}
+
+.worldbuilding .itemListContainer .equipmentList h2 button {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 24px;
+  height: 24px;
+  line-height: 14px;
 }
