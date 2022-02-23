@@ -141,6 +141,70 @@
                             {{editor content=data.bio target="data.bio" button=true owner=owner editable=editable}}
                         </div>
                     </div>
+
+                    <div class="skillContainer">
+                        <h2 class="headerWithButton">
+                            <button type="button" class="item-create" id="skill">+</button>
+                            <label>Skills</label>
+                        </h2>
+                        <ul class="skillList">
+                            {{#each actor.data.skill as |item id|}}
+                                <li class="item" data-item-id="{{item._id}}">
+                                    <div class="itemInfo">
+                                        <i class="fas fa-dice-d20 skill-roll"></i>
+                                        <img class="item-img" src="{{item.img}}" title="Send to Chat"/>
+                                        <div class="item-name">{{item.name}}</div>
+                                    </div>
+                                    <div class="item-controls">
+                                        <div class="item-value">{{item.data.value}}%</div>
+                                        <a class="item-control item-delete" title="Delete Item"><i class="fas fa-trash"></i></a>
+                                    </div>
+                                </li>
+                            {{/each}}
+                        </ul>
+                    </div>
+
+                    <div class="two-column-flex-container">
+                        <div class="languageContainer">
+                            <h2 class="headerWithButton">
+                                <button type="button" class="item-create" id="language">+</button>
+                                <label>Languages</label>
+                            </h2>
+                            <ol class="single-column-list">
+                                {{#each actor.data.language as |item id|}}
+                                    <li class="item" data-item-id="{{item._id}}">
+                                        <div class="itemInfo">
+                                            <img class="item-img" src="{{item.img}}" title="Send to Chat"/>
+                                            <div class="item-name">{{item.name}}</div>
+                                        </div>
+                                        <div class="item-controls">
+                                            <a class="item-control item-delete" title="Delete Item"><i class="fas fa-trash"></i></a>
+                                        </div>
+                                    </li>
+                                {{/each}}
+                            </ol>
+                        </div>
+                        <div class="factionContainer">
+                            <h2 class="headerWithButton">
+                                <button type="button" class="item-create" id="faction">+</button>
+                                <label>Factions</label>
+                            </h2>
+                            <ol class="single-column-list">
+                                {{#each actor.data.faction as |item id|}}
+                                    <li class="item" data-item-id="{{item._id}}">
+                                        <div class="itemInfo">
+                                            <img class="item-img" src="{{item.img}}" title="Send to Chat"/>
+                                            <div class="item-name">{{item.name}}</div>
+                                        </div>
+                                        <div class="item-controls">
+                                            <a class="item-control item-delete" title="Delete Item"><i class="fas fa-trash"></i></a>
+                                        </div>
+                                    </li>
+                                {{/each}}
+                            </ol>
+                        </div>
+                    </div>
+
                 </div>
             </div>
 
