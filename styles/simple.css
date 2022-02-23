@@ -31,1260 +31,222 @@
   font-size: large;
 }
 
-table thead {
-  font-family: "cyrodiil";
-  color: black;
-  background: rgba(161, 149, 149, 0.486);
-}
-
-table th {
-  font-weight: normal;
-  text-shadow: none;
-}
-
-.worldbuilding .charname {
-  text-align: left;
-}
-
-.worldbuilding .item-resource table input,
-.worldbuilding .item-resource table th {
-  text-align: center;
-}
-
-h1, h2 {
+.worldbuilding h1, h2 {
   font-family: "cyrodiil";
   text-align: center;
-  width: 100%;
-}
-
-.worldbuilding nav {
-  font-family: "cyrodiil";
 }
 
 .worldbuilding button:hover {
   cursor: pointer;
 }
 
-.worldbuilding .headerWithButton {
-  display: flex;
-  flex-direction: row;
-  justify-content: flex-start;
-  align-items: center;
-  width: 100%;
-  gap: 10px;
-}
-
-.worldbuilding .listButtons {
-  display: flex;
-  flex-direction: row;
-}
-
-.worldbuilding .headerWithButton button {
-  width: 25px;
-  height: 25px;
-  line-height: 20px;
-}
-
-.dialogForm {
-  padding: 10px 0;
-}
-
-.chat-message h2 {
-  font-family: "cyrodiil";
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  justify-content: flex-start;
-  gap: 5px;
-}
-
-.chat-message h2 img {
-  height: 24px;
-  width: 24px;
-}
-
-.chat-message .inline-result,
-.chat-message .tableAttribute {
+.worldbuilding nav {
   font-weight: bold;
 }
 
-.chat-message .tableCenterText {
-  text-align: center;
-}
-
-.chat-message .tableAttribute {
-  width: 30%;
-}
-
-.modifierBox {
-  padding: 5px;
-  margin-bottom: 5px;
-  background: rgba(172, 172, 172, 0.486);
-  border: solid 1px;
-}
-
-.modifierBox h2 {
-  font-size: large;
-}
-
-.worldbuilding h2 {
-  background: rgba(161, 149, 149, 0.486);
-  margin: 0 0 5px 0;
-}
-
-
 /*---------------------------- 
-  Lists & Controls & Tables
-------------------------------*/
-.worldbuilding .sheet-tabs {
-  font-family: "cyrodiil";
-}
-
-.worldbuilding .sheet-tabs .item:hover {
-  text-decoration: underline;
-}
-
-.worldbuilding .skillList {
-  margin: 0;
-  padding: 0;
-  width: 100%;
-}
-
-.worldbuilding ol {
-  padding: 0;
-}
-
-.worldbuilding .skillList li {
-  display: flex;
-  flex-direction: row;
-  justify-content: flex-start;
-  align-items: center;
-  margin: 0;
-  width: 100%;
-}
-
-.worldbuilding .item-controls {
-  display: flex;
-  align-items: center;
-  justify-content: flex-end;
-  text-align: right;
-  padding: 0;
-  margin: 0;
-  width: 20%;
-}
-
-.worldbuilding .item-controls .profession {
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  gap: 5px;
-}
-
-.worldbuilding .profession input {
-  width: 40px;
-}
-
-.worldbuilding .skill-roll:hover,
-.worldbuilding .combat-roll:hover,
-.worldbuilding .damage-roll:hover,
-.worldbuilding .magic-roll:hover {
-  transform: scale(1.5);
-  transition: 0.5s;
-  cursor: pointer;
-}
-
-.worldbuilding li .itemInfo {
-  display: flex;
-  justify-content: flex-start;
-  align-items: center;
-  width: 80%;
-  gap: 5px;
-}
-
-.worldbuilding li img {
-  height: 24px;
-  width: 24px;
-}
-
-.worldbuilding ol .item {
-  border-bottom: solid 1px rgba(128, 128, 128, 0.507);
-  background-color: rgba(224, 217, 217, 0.473);
-}
-
-.worldbuilding ol .item:hover,
-.worldbuilding table .item:hover {
-  cursor: pointer;
-  font-weight: bold;
-  background: rgba(85, 85, 85, 0.61);
-}
-
-.worldbuilding li .item-name,
-.worldbuilding li .skill-name {
-  padding: 0 5px;
-  overflow: hidden;
-}
-
-.worldbuilding .skill-name input {
-  width: 80%;
-}
-
-.worldbuilding li .item-value {
-  padding: 0 5px;
-}
-
-.worldbuilding .skill-roll {
-  text-align: center;
-}
-
-.worldbuilding .qty-controls {
-  display: flex;
-  flex-direction: row;
-  justify-content: center;
-  align-items: center;
-  text-align: center;
-  padding: 0 10px;
-}
-
-.worldbuilding .qty-controls button {
-  padding: 0;
-  margin: 0;
-  min-width: 24px;
-  height: 24px;
-  line-height: 18px;
-}
-
-.worldbuilding .listSegment {
-  padding: 0 0 10px 0;
-}
-
-.worldbuilding .twoColumnList li {
-  float: left;
-  list-style: outside none none;
-  width: 50%;
-  padding: 0 10px;
-}
-
-.worldbuilding .attributeList {
-  padding: 0 5px;
-  width: 100%;
-}
-
-.worldbuilding table {
-  text-align: center;
-  padding: 0;
-  margin: 0;
-}
-
-.worldbuilding table img {
-  height: 24px;
-  width: 24px;
-}
-
-.worldbuilding table thead {
-  background: rgba(161, 149, 149, 0.486);
-  font-family: "cyrodiil";
-}
-
-.worldbuilding table th {
-  font-weight: normal;
-  color: black;
-  font-family: "cyrodiil";
-  text-shadow: none;
-}
-
-.worldbuilding .tableListHeader h2 {
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  justify-content: space-between;
-  background: rgba(161, 149, 149, 0.486);
-}
-
-.worldbuilding .tableListHeader .leftInfo {
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  justify-content: flex-start;
-  gap: 10px;
-}
-
-.worldbuilding .tableListHeader .rightInfo {
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-}
-
-.worldbuilding .tableListHeader .rightInfo button {
-  height: 40px;
-  width: 40px;
-  padding: 0;
-  margin: 0;
-}
-
-.worldbuilding .magicChargeInputs {
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  justify-content: space-between;
-}
-
-.worldbuilding .magicChargeInputs button {
-  height: 24px;
-  width: 24px;
-  line-height: 10px;
-  padding: 0;
-  margin: 0;
-}
-
-.worldbuilding .field-inputs-small .editor-content {
-  display: flex;
-  flex-direction: row;
-  justify-content: center;
-  align-items: center;
-  flex-wrap: wrap;
-}
-
-/*---------------------------- 
-  Lists & Controls - Card Lists
+  TinyMCE Editor
 ------------------------------*/
 
-.worldbuilding .cardList .card {
-  border: 1px solid;
-  border-radius: 10px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  width: 80px;
-  height: 150px;
+.worldbuilding .editor {
+  min-height: 100px;
 }
 
-.worldbuilding .cardList .card:hover {
-  transition: 0.5s;
-  transform: scale(1.1);
-}
-
-.worldbuilding .cardList .cardListFlexContainer {
-  display: flex;
-  flex-direction: row;
-  justify-content: flex-start;
-  flex-wrap: wrap;
-  gap: 5px;
-  width: 100%;
-}
-
-.worldbuilding .cardList .itemCard {
-  display: flex;
-  flex-direction: column;
-  justify-content: top;
-  align-items: center;
-  text-align: center;
-  background: rgba(224, 217, 217, 0.473);
-  border-radius: 10px;
-  border: none;
-  width: 100%;
-}
-
-.worldbuilding .itemCard .cardImageContainer {
-  overflow: hidden;
-  position: relative;
-}
-
-.worldbuilding .cardImageContainer .item-controls {
-  position: absolute;
-  top: 0;
-  right: 0;
-  padding: 5px;
-}
-
-.worldbuilding .itemCard .item-name {
-  min-width: unset;
-  width: 75px;
-  font-size: small;
-  white-space: normal;
-}
-
-.worldbuilding .itemCard img {
-  height: 80px;
-  width: 80px;
-  border: none;
-  border-radius: 10px;
-}
-
-
-/*---------------------------- 
-  Editor Styles
-------------------------------*/
-
-.worldbuilding .contentContainer {
-  height: 100%;
-  width: 100%;
-}
-
-.worldbuilding .editor, .worldbuilding .editor-content {
+.worldbuilding .editor-content {
   min-height: 200px;
-  /* max-height: 400px; */
-  width: 100%;
-  padding: 0 5px;
-  overflow-y: scroll;
-}
-
-.editor .editor-content h1,
-.editor .editor-content h2,
-.editor .editor-content h3 {
-  font-family: "cyrodiil";
-  background: none;
-  text-align: left;
 }
 
 
 /*---------------------------- 
-  Sheet Header
+  Actor Sheets
 ------------------------------*/
 
-.worldbuilding .stickyHeader {
-  position: sticky;
-  top: 0;
-  z-index: 3;
-  background: url("../images/parchment5.jpg") repeat;
-  padding: 5px 0 0 0;
-}
-
-.worldbuilding .sheet-header {
-  padding: 0 0 5px 0;
-}
-
-.worldbuilding .headerContainer {
+.worldbuilding .sheet-section-container {
   display: flex;
-  justify-content: space-around;
-  align-items: center;
+  flex-direction: row;
+  width: 100%;
+  height: 100%;
 }
 
-.worldbuilding .headerInfoFlexBox {
-  width: 70%;
+.worldbuilding img {
+  border: none;
+}
+
+
+/*---------------------------- 
+  Actor Sheets - Fixed Section
+------------------------------*/
+
+.worldbuilding .sheet-fixed-container {
+  display: flex;
+  flex-direction: column;
+  width: 250px;
+  min-width: 250px;
+  padding: 0 5px 0 0;
+  border-right: solid 1px;
+}
+
+.worldbuilding .profile-img-container {
+  position: relative;
+  width: 100%;
+  height: 200px;
+  padding: 10px;
 }
 
 .worldbuilding .profile-img {
-  height: 175px !important;
-  width: 175px !important;
-  border: none;
+  position: absolute;
+  padding: 10px;
+  top: 0;
+  left: 25px;
+  width: 200px;
+  height: 200px;
 }
 
-.worldbuilding .headerContainer input {
-  border: none;
-}
-
-.worldbuilding .merchantResources {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: space-around;
-  gap: 5px;
-}
-
-.worldbuilding .merchantResources .container1,
-.worldbuilding .merchantResources .container2 {
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-}
-
-.worldbuilding .merchantResources .container2 input {
-  width: 60px;
-}
-
-.worldbuilding .merchantSkills {
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  justify-content: space-between;
-  width: 100%;
-}
-
-.worldbuilding .sliderControls {
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  justify-content: flex-start;
-  gap: 10px;
-  width: 25%;
-}
-
-.worldbuilding .storeName {
-  width: 75%;
-  font-family: "cyrodiil";
-  font-size: xx-large;
-}
-
-.worldbuilding .storeName input {
-  height: 50px;
-}
-
-.worldbuilding .wealthContainer button {
-  width: 35px;
-  height: 35px;
-  padding: 0;
-  margin: 0;
-}
-
-.worldbuilding .sliderControls button {
-  width: 24px;
-  height: 24px;
-  line-height: 15px;
-  text-align: center;
-  padding: 0;
-  margin: 0;
-}
-
-.worldbuilding #merchantPriceValue {
-  padding: 5px;
-}
-
-.worldbuilding .priceModifierContainer {
-  position: relative;
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  font-family: "cyrodiil";
-  font-size: xx-large;
-  gap: 10px;
-  padding: 5px;
-}
-
-.worldbuilding .priceModifierControls {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-}
+/*---------------------------- 
+  Actor Sheets - Resource Bars
+------------------------------*/
 
 .worldbuilding .resourceBars {
   display: flex;
   flex-direction: column;
-  justify-content: center;
-  align-items: space-around;
-  gap: 5px;
+  width: 100%;
+  align-items: flex-start;
+  padding: 0 0 5px 0;
+  border-bottom: 1px solid;
+}
+
+.worldbuilding #hpResource,
+.worldbuilding #staminaResource,
+.worldbuilding #magickaResource,
+.worldbuilding #luckResource {
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+  flex-wrap: nowrap;
+  align-items: center;
 }
 
 .worldbuilding .resourceLabel {
   display: flex;
   flex-direction: row;
-  justify-content: space-between;
   align-items: center;
-  gap: 5px;
+  min-width: 100px;
 }
 
 .worldbuilding .maxBar {
-  text-align: center;
-  line-height: 25px;
+  position: relative;
+  border: 1px solid;
+  border-radius: 5px;
   width: 100%;
-  height: 25px;
-  border: solid 1px;
-  border-radius: 20px;
-  background: rgba(85, 85, 85, 0.61);
-}
-
-.worldbuilding #hpResource, #staminaResource, #magickaResource, #luckResource {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: 10px;
-}
-
-.worldbuilding .currentBar {
-  transition-property: width;
-  transition: 0.5s;
-  width: initial;
-  color: white;
-  border-radius: 20px;
-  height: 24px;
   font-family: "cyrodiil";
   font-weight: bold;
 }
 
+.worldbuilding .currentBar {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  width: 100%;
+}
+
 .worldbuilding .currentBar input {
   width: 30px;
-  height: 20px;
   color: white;
-  font-weight: bold;
-  text-align: right;
-}
-
-.worldbuilding #hpResource .currentBar {
-  background-color: rgba(139, 0, 0, 0.85);
-}
-
-.worldbuilding #staminaResource .currentBar {
-  background-color: rgba(30, 128, 30, 0.85);
-}
-
-.worldbuilding #magickaResource .currentBar {
-  background-color: rgb(34, 102, 190, 0.85);
-}
-
-.worldbuilding #luckResource .currentBar {
-  background-color: rgb(89, 68, 180, 0.85);
-}
-
-.worldbuilding .resourceButton {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: space-between;
-  gap: 3px;
-}
-
-.worldbuilding .resourceButton i:hover {
-  cursor: pointer;
-  color: darkred;
-  transition: 0.5s;
-}
-
-.worldbuilding .resourceLabel button {
-  width: 100px;
-  height: 25px;
-  line-height: 20px;
-}
-
-/*---------------------------- 
-  Navigation Bar
-------------------------------*/
-.worldbuilding nav {
-  font-size: x-large;
-  background: rgba(99, 85, 85, 0.486);
-}
-
-.worldbuilding nav .active {
-  text-decoration: underline;
-}
-
-.worldbuilding .tab {
-  padding: 5px 0 0 0;
-}
-
-
-
-/*---------------------------- 
-  Core Tab
-------------------------------*/
-
-.worldbuilding .coreTabContainer {
-  display: flex;
-  justify-content: stretch;
-  align-items: top;
-}
-
-.worldbuilding .coreTabContainer h1 {
-  font-size: x-large;
+  border: none;
   text-align: center;
-  width: 100%;
+  font-weight: bold;
 }
 
-.worldbuilding .characteristicSideBar, 
-.worldbuilding .skillContainer, 
-.worldbuilding .bioContainer {
-  display: flex;
-  flex-direction: column;
-  justify-content: top;
-  align-items: center;
-  padding: 0 5px;
+.worldbuilding #hpBar {
+  color: white;
+  background-color: darkred;
 }
 
-.worldbuilding .characteristicSideBar {
-  border-right: 1px solid;
-  padding: 0 5px;
+.worldbuilding #staminaBar {
+  color: white;
+  background-color: green;
 }
 
-.worldbuilding .skillContainer {
-  border-right: 1px solid;
-  gap: 5px;
+.worldbuilding #magickaBar {
+  color: white;
+  background-color: rgb(30, 130, 223);
 }
 
-.worldbuilding .languageContainer {
-  width: 100%;
+.worldbuilding #luck_pointsBar {
+  color: white;
+  background-color: purple;
 }
 
 /*---------------------------- 
-  Characteristic Sidebar
+  Actor Sheets - Characteristics
 ------------------------------*/
 
-.worldbuilding .characteristicSideBar {
-  width: 25%;
+.worldbuilding .characteristicSideBar .small-table-cell {
+  width: 30px;
 }
 
-.worldbuilding .characteristicFields {
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-start;
-  align-items: flex-start;
-}
-
-.worldbuilding .characteristicBar {
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-  align-items: center;
+.worldbuilding .characteristicSideBar .button-cell {
   width: 150px;
-  padding: 5px 0;
 }
 
-.worldbuilding .barRibbon {
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.worldbuilding .barRibbon button {
-  width: 80px;
-}
-
-.worldbuilding .characteristicValue {
-  width: 40px;
-  height: 40px;
+.worldbuilding .characteristicSideBar {
   text-align: center;
-  border-radius: 50%;
-  border: solid 1px;
 }
 
-.worldbuilding .characteristicValue:hover {
-  transform: scale(1.2);
-  transition: 0.5s;
-  background: white;
-  cursor: pointer;
-}
-
-.worldbuilding #strCha,
-.worldbuilding #endCha,
-.worldbuilding #agiCha,
-.worldbuilding #intCha,
-.worldbuilding #wpCha,
-.worldbuilding #prcCha,
-.worldbuilding #prsCha,
-.worldbuilding #lckCha {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  text-align: center;
-  font-weight: bold;
+.worldbuilding .characteristicSideBar .styled-font {
+  font-family: "cyrodiil";
   font-size: large;
-  height: 100%;
+  font-weight: bold;
 }
+
+.worldbuilding .characteristicSideBar table {
+  margin: 0;
+}
+
+.worldbuilding .characteristicSideBar h2 {
+  margin: 0 0 5px 0;
+  position: relative;
+}
+
+.worldbuilding .characteristicSideBar h2 button {
+  position: absolute;
+  left: 0;
+  top: 1px;
+  width: 35px;
+  height: 26px;
+  line-height: 14px;
+}
+
 
 /*---------------------------- 
-  Skill Container
+  Actor Sheets - Body Section
 ------------------------------*/
-.worldbuilding .skillContainer {
-  width: 35%;
-}
 
-/*---------------------------- 
-  Bio Vertical Flex Group
-------------------------------*/
-.worldbuilding .bioContainer {
-  width: 40%;
-}
-
-.worldbuilding .buttonStats {
-  display: flex;
-  flex-direction: row;
-  justify-content: center;
-  align-items: center;
-  width: 100%;
-  flex-wrap: wrap;
-  padding: 0;
-}
-
-.worldbuilding .buttonStats button {
-  width: 49%;
-}
-
-.worldbuilding .bioStats {
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-  align-items: center;
-  width: 100%;
-}
-
-.worldbuilding .bioStats div {
+.worldbuilding .sheet-body {
   display: flex;
   flex-direction: column;
-  justify-content: center;
-  align-items: center;
   width: 100%;
   padding: 5px;
-  gap: 5px;
-  text-align: center;
+}
+
+.worldbuilding .tabContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  width: 100%;
+}
+
+/*---------------------------- 
+  Actor Sheets - Core Tab
+------------------------------*/
+
+.worldbuilding .bioPage .contentContainer {
+  height: 200px;
+  overflow: scroll;
 }
 
 .worldbuilding .bioPage {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  width: 100%;
-  padding: 10px 0 0 0;
-}
-
-/*---------------------------- 
-  Combat Tab
-------------------------------*/
-
-.worldbuilding .combatTabContainer {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: flex-start;
-}
-
-.worldbuilding .combatSegment0,
-.worldbuilding .combatSegment1,
-.worldbuilding .combatSegment2 {
-  display: flex;
-  flex-direction: row;
-  align-items: stretch;
-  width: 100%;
-  height: 100%;
-  margin: 0 0 5px 0;
-}
-
-.worldbuilding .combatSegment1 {
   border-bottom: 1px solid;
-  height: 220px;
-}
-
-.worldbuilding .combatSegment2 {
-  justify-content: space-between;
-}
-
-/*---------------------------- 
-  Combat Tab - Paper Doll Container
-------------------------------*/
-
-.worldbuilding .paperDollContainer {
-  position: relative;
-  width: 35%;
-  background-size: 0 0;
-  border-top: 1px solid;
-}
-
-.worldbuilding .wounded {
-  background-repeat: no-repeat;
-  background-size: contain;
-  background-position: center;
-}
-
-.worldbuilding .paperDollContainer .woundIcon {
-  visibility: hidden;
-}
-
-.worldbuilding .paperDollContainer .rightColumn {
-  position: absolute;
-  top: 0;
-  right: 0;
-  padding: 5px;
-  margin: 0;
-  z-index: +1;
-}
-
-.worldbuilding .rightColumn .flexContainer {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-}
-
-.worldbuilding .paperDollContainer .leftColumn {
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  padding: 5px;
-  margin: 0;
-  z-index: +2;
-  background: hsla(0, 0%, 80%, 0.5);
-  backdrop-filter: blur(2px);
-  border-right: solid 1px;
-  height: 100%;
-}
-
-.worldbuilding .leftColumn .flexContainer {
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-start;
-  align-items: flex-start;
-}
-
-.worldbuilding .leftColumn .flexContainer button {
-  padding: 0;
-  margin: 0;
-  height: 18px;
-}
-
-.worldbuilding .equippedWeaponsContainer {
-  position: absolute;
-  bottom: 0;
-  right: 0;
-  background: hsla(0, 3%, 58%, 0.719);
-  border-radius: 5px;
-}
-
-.worldbuilding .equippedWeaponsContainer .flexContainer {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  padding: 5px;
-  gap: 5px;
-}
-
-.worldbuilding .leftButtonColumn {
-  position: absolute;
-  left: 0;
-  top: 0;
-  z-index: +1;
-  background: hsla(0, 3%, 58%, 0.719);
-  border-radius: 5px;
-}
-
-.worldbuilding .leftButtonColumn .flexContainer {
-  display: flex;
-  flex-wrap: nowrap;
-  flex-direction: row;
-  align-items: center;
-  padding: 5px;
-  gap: 5px;
-}
-
-.worldbuilding .paperDollContainer .collapsed {
-  display: none;
-}
-
-.worldbuilding .swapContainer button {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  text-align: center;
-  width: 100%;
-}
-
-.worldbuilding .swapPaperDoll i {
-  position: relative;
-}
-
-.worldbuilding #paperDoll {
-  position: absolute;
-  border: none;
-  top: 55%;
-  left: 45%;
-  transform: translate(-50%, -50%);
-  height: 150px;
-}
-
-.worldbuilding #paperDoll:hover {
-  cursor: pointer;
-}
-
-.worldbuilding .selectWeapon,
-.worldbuilding .topHotBar {
-  position: relative;
-  height: 30px;
-  width: 30px;
-}
-
-.worldbuilding .topHotBar .buttonValueFlexContainer {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  text-align: center;
-  color: white;
-  text-shadow: 2px 2px black;
-  height: 100%;
-  width: 100%;
-
-}
-
-.worldbuilding .topHotBar .buttonValueFlexContainer:hover {
-  transition: 0.2s;
-  background: none;
-}
-
-.worldbuilding .selectWeapon:hover,
-.worldbuilding .topHotBar:hover {
-  cursor: pointer;
-  transition: 0.5s;
-  transform: scale(0.9);
-}
-
-.worldbuilding .equippedWeaponImg {
-  position: absolute;
-  height: 30px;
-  width: 30px;
-}
-
-/*---------------------------- 
-  Combat Tab - Combat Stats Container
-------------------------------*/
-
-.worldbuilding .combatResource .fieldLabel {
-  min-width: 45px;
-}
-
-.worldbuilding .combatResource .fieldLabelLarge {
-  min-width: 75px;
-}
-
-.worldbuilding .combatReferenceContainer {
-  display: flex;
-  flex-direction: row;
-}
-
-.worldbuilding .combatStatsContainer {
-  border-right: 1px solid;
-}
-
-.worldbuilding .resistance-roll {
-  cursor: pointer;
-}
-
-.worldbuilding .resistance {
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  justify-content: flex-start;
-  gap: 5px;
-}
-
-.worldbuilding .resistance label {
-  width: 20px;
-}
-
-.worldbuilding .resistance i {
-  width: 20px;
-}
-
-.worldbuilding .woundContainer {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  padding: 5px 0 0 0;
-}
-
-.worldbuilding .woundCheckContainer {
-  display: flex;
-  flex-direction: row;
-  justify-content: center;
-  align-items: center;
-}
-
-.worldbuilding .woundContainer textarea {
-  width: 90%;
-  resize: none;
-}
-
-/*---------------------------- 
-  Combat Tab - Combat Resources Container
-------------------------------*/
-
-.worldbuilding .combatItemContainer {
-  display: flex;
-  flex-direction: column;
-  width: 100%;
-  height: 435px;
-}
-
-.worldbuilding .equippedItemContainer {
-  width: 65%;
-  border-left: 1px solid;
-  overflow-y: scroll;
-  z-index: +1;
-}
-
-.worldbuilding .equippedItemContainer thead {
-  position: sticky;
-  top: 0;
-  z-index: +1;
-  background: rgb(187, 173, 173);
-}
-
-.worldbuilding .equippedItemContainer th,
-.worldbuilding .equippedItemContainer td {
-  padding: 0 5px;
-}
-
-.worldbuilding .equippedItemContainer .armorName {
-  width: 200px;
-  text-align: left;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-.worldbuilding .equippedItemContainer .armorName .item-name {
-  width: 200px;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-.worldbuilding .armorButtonHeader {
-  margin: 0;
-  padding: 0;
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  text-align: center;
-  justify-content: center;
-}
-
-.worldbuilding .armorButtonHeader button {
-  margin: 0;
-  padding: 0;
-  width: 70%;
-}
-
-/*---------------------------- 
-  Combat Tab - List Container
-------------------------------*/
-
-.worldbuilding .combatListContainer {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-  width: 100%;
-  padding: 0 5px;
-}
-
-/*---------------------------- 
-  Magic Tab
-------------------------------*/
-
-.worldbuilding .magicTabContainer {
-  display: flex;
-  flex-direction: row;
-  align-items: top;
-  gap: 10px;
-}
-
-.worldbuilding .magicSideBarContainer {
-  width: 35%;
-  border-right: 1px solid;
-  padding: 0 5px 0 5px;
-}
-
-.worldbuilding .magicTabContainer .spellListContainer {
-  width: 65%;
-}
-
-.worldbuilding .tableItemNameCell {
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  gap: 10px;
-}
-
-.worldbuilding .spellList img,
-.worldbuilding .equipmentList img {
-  height: 24px;
-  width: 24px;
-}
-
-.worldbuilding .spellList tbody tr,
-.worldbuilding #merchantItemList .item {
-  display: none;
-}
-
-.worldbuilding .spellList tbody .active,
-.worldbuilding #merchantItemList .active {
-  display: table-row;
-}
-
-/*---------------------------- 
-  Equipment Tab
-------------------------------*/
-
-.worldbuilding .wealthContainer,
-.worldbuilding .encContainer {
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  justify-content: flex-start;
-  gap: 10px;
-  font-size: initial;
-}
-
-.worldbuilding .wealthInfo,
-.worldbuilding .encInfo {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-}
-
-.worldbuilding .wealthContainer img,
-.worldbuilding .encContainer img {
-  height: 35px;
-  width: 35px;
-}
-
-.worldbuilding .encInfo .encLabel {
-  font-size: large;
-}
-
-.worldbuilding .wealthInfo input {
-  text-align: center;
-  font-size: large;
-  border-radius: 10px;
-  height: 25px;
-  width: 75px;
-}
-
-.worldbuilding .wealthCalc:hover,
-.worldbuilding .carryBonus {
-  cursor: pointer;
-}
-
-/*---------------------------- 
-  Journal Tab
-------------------------------*/
-
-.worldbuilding .journalTabContainer {
-  display: flex;
-  flex-direction: row;
-  gap: 5px;
-  height: 100%;
-}
-
-.worldbuilding .journalContainer {
-  width: 65%;
-  height: 100%;
-  border-right: solid 1px;
-}
-
-.worldbuilding .factionContainer {
-  width: 35%;
-  height: 100%;
-}
-
-/*---------------------------- 
-  Merchant Sheet
-------------------------------*/
-.worldbuilding .abilitiesContainer {
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-  gap: 10px;
-}
-
-.worldbuilding .abilityContainer {
-  width: 33%;
-}
-
-.worldbuilding .item .buyFlexContainer {
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  justify-content: flex-start;
-  gap: 5px;
 }

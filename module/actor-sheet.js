@@ -9,8 +9,8 @@
 	  return mergeObject(super.defaultOptions, {
   	  classes: ["worldbuilding", "sheet", "actor"],
   	  template: "systems/uesrpg-d100/templates/actor-sheet.html",
-      width: 700,
-      height: 720,
+      width: 750,
+      height: 850,
       tabs: [{navSelector: ".sheet-tabs", contentSelector: ".sheet-body", initial: "description"}],
       dragDrop: [{dragSelector: [
         ".skillList .item",
@@ -2230,7 +2230,7 @@
 
               // if greater than 100 or lower than 20, set values to fit bars correctly
               proportion < 100 ? proportion = proportion : proportion = 100
-              proportion < 20 ? proportion = 20 : proportion = proportion
+              proportion < 50 ? proportion = 50 : proportion = proportion
 
               // Apply the proportion to the width of the resource bar
               resourceElement.style.width = `${proportion}%`

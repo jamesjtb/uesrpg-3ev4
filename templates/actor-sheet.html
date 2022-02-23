@@ -1,6 +1,234 @@
 <form class="{{cssClass}}" autocomplete="off">
 
-    {{!-- Sheet Header --}}
+    {{!-- Character Sheet Sections --}}
+    <div class="sheet-section-container">
+
+        <div class="sheet-fixed-container">
+            <div class="character-profile-container">
+                <div class="profile-img-container">
+                    <img class="profile-img" src="{{actor.img}}" data-edit="img" title="{{actor.name}}">
+                </div>
+                <nav class="sheet-tabs tabs" data-group="primary">
+                    <a class="item" data-tab="core">Core</a>
+                    <a class="item" data-tab="combat">Combat</a>
+                    <a class="item" data-tab="magic">Magic</a>
+                    <a class="item" data-tab="equipment">Equipment</a>
+                </nav>
+            </div>
+            <div class="fixed-data-container">
+                <div>
+                    <h1 class="charname"><input type="text" name="name" value="{{actor.name}}" placeholder="Name"></h1>
+                </div>
+                <div class="resourceBars">
+                    <div id="hpResource">
+                        <div class="resourceLabel">
+                            <button type="button" data-resource="hp">Health</button>
+                            <div class="resourceButton">
+                                <i data-action="increase" data-resource="hp" class="fas fa-plus fa-xs incrementResource"></i>
+                                <i data-action="decrease" data-resource="hp" class="fas fa-minus fa-xs incrementResource"></i>
+                            </div>
+                        </div>
+                        <div class="maxBar" data-resource="hp">
+                            <div id="hpBar" class="currentBar" data-resource="hp">
+                                <input type="number" name="data.hp.value" value="{{data.hp.value}}"> / <label>{{data.hp.max}}</label>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="staminaResource">
+                        <div class="resourceLabel">
+                            <button type="button" data-resource="stamina">Stamina</button>
+                            <div class="resourceButton">
+                                <i data-action="increase" data-resource="stamina" class="fas fa-plus fa-xs incrementResource"></i>
+                                <i data-action="decrease" data-resource="stamina" class="fas fa-minus fa-xs incrementResource"></i>
+                            </div>
+                        </div>
+                        <div class="maxBar" data-resource="stamina">
+                            <div id="staminaBar" class="currentBar" data-resource="stamina">
+                                <input type="number" name="data.stamina.value" value="{{data.stamina.value}}"> / <label>{{data.stamina.max}}</label>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="magickaResource">
+                        <div class="resourceLabel">
+                            <button type="button" data-resource="magicka">Magicka</button>
+                            <div class="resourceButton">
+                                <i data-action="increase" data-resource="magicka" class="fas fa-plus fa-xs incrementResource"></i>
+                                <i data-action="decrease" data-resource="magicka" class="fas fa-minus fa-xs incrementResource"></i>
+                            </div>
+                        </div>
+                        <div class="maxBar" data-resource="magicka">
+                            <div id="magickaBar" class="currentBar" data-resource="magicka">
+                                <input type="number" name="data.magicka.value" value="{{data.magicka.value}}"> / <label>{{data.magicka.max}}</label>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="luckResource">
+                        <div class="resourceLabel">
+                            <button type="button" data-resource="luck_points">Luck</button>
+                            <div class="resourceButton">
+                                <i data-action="increase" data-resource="luck_points" class="fas fa-plus fa-xs incrementResource"></i>
+                                <i data-action="decrease" data-resource="luck_points" class="fas fa-minus fa-xs incrementResource"></i>
+                            </div>
+                        </div>
+                        <div class="maxBar" data-resource="luck_points">
+                            <div id="luck_pointsBar" class="currentBar" data-resource="luck_points">
+                                <input type="number" name="data.luck_points.value" value="{{data.luck_points.value}}"> / <label>{{data.luck_points.max}}</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="characteristicSideBar">
+                    <h2>
+                        <button type="button" class="setBaseCharacteristics">Set</button>
+                        <div>Characteristics</div>
+                    </h2>
+                    <table>
+                        <tbody>
+                            <tr>
+                                <td class="small-table-cell"><input type="checkbox" name="data.characteristics.str.favored" {{checked data.characteristics.str.favored}}></td>
+                                <td class="button-cell"><button type="button" id="str" name="Strength" class="characteristic-roll">Strength</button></td>
+                                <td class="styled-font">{{data.characteristics.str.total}}</td>
+                            </tr>
+                            <tr>
+                                <td class="small-table-cell"><input type="checkbox" name="data.characteristics.end.favored" {{checked data.characteristics.end.favored}}></td>
+                                <td class="button-cell"><button type="button" id="end" name="Endurance" class="characteristic-roll">Endurance</button></td>
+                                <td class="styled-font">{{data.characteristics.end.total}}</td>
+                            </tr>
+                            <tr>
+                                <td class="small-table-cell"><input type="checkbox" name="data.characteristics.agi.favored" {{checked data.characteristics.agi.favored}}></td>
+                                <td class="button-cell"><button type="button" id="agi" name="Agility" class="characteristic-roll">Agility</button></td>
+                                <td class="styled-font">{{data.characteristics.agi.total}}</td>
+                            </tr>
+                            <tr>
+                                <td class="small-table-cell"><input type="checkbox" name="data.characteristics.int.favored" {{checked data.characteristics.int.favored}}></td>
+                                <td class="button-cell"><button type="button" id="int" name="Intelligence" class="characteristic-roll">Intelligence</button></td>
+                                <td class="styled-font">{{data.characteristics.int.total}}</td>
+                            </tr>
+                            <tr>
+                                <td class="small-table-cell"><input type="checkbox" name="data.characteristics.wp.favored" {{checked data.characteristics.wp.favored}}></td>
+                                <td class="button-cell"><button type="button" id="wp" name="Willpower" class="characteristic-roll">Willpower</button></td>
+                                <td class="styled-font">{{data.characteristics.wp.total}}</td>
+                            </tr>
+                            <tr>
+                                <td class="small-table-cell"><input type="checkbox" name="data.characteristics.prc.favored" {{checked data.characteristics.prc.favored}}></td>
+                                <td class="button-cell"><button type="button" id="prc" name="Perception" class="characteristic-roll">Perception</button></td>
+                                <td class="styled-font">{{data.characteristics.prc.total}}</td>
+                            </tr>
+                            <tr>
+                                <td class="small-table-cell"><input type="checkbox" name="data.characteristics.prs.favored" {{checked data.characteristics.prs.favored}}></td>
+                                <td class="button-cell"><button type="button" id="prs" name="Personality" class="characteristic-roll">Personality</button></td>
+                                <td class="styled-font">{{data.characteristics.prs.total}}</td>
+                            </tr>
+                            <tr>
+                                <td class="small-table-cell"><input type="checkbox" name="data.characteristics.lck.favored" {{checked data.characteristics.lck.favored}}></td>
+                                <td class="button-cell"><button type="button" id="lck" name="Luck" class="characteristic-roll">Luck</button></td>
+                                <td class="styled-font">{{data.characteristics.lck.total}}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+            </div>
+        </div>
+
+        <section class="sheet-body">
+            <div class="tab core" data-group="primary" data-tab="core">
+                <div class="tabContainer">
+                    <div class="bioPage">
+                        <h2>Biography</h2>
+                        <div class="contentContainer">
+                            {{editor content=data.bio target="data.bio" button=true owner=owner editable=editable}}
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="tab combat" data-group="primary" data-tab="combat">
+                This is the Combat Tab
+            </div>
+
+            <div class="tab magic" data-group="primary" data-tab="magic">
+                <div class="magicTabContainer">
+                    <div class="magicSideBarContainer">
+                        <div class="magicSkillContainer">
+                            <h2 class="headerWithButton">
+                                <button type="button" class="item-create" id="magicSkill">+</button>
+                                <label>Magic Skills</label>
+                            </h2>
+                            <ol class="skillList">
+                                {{#each actor.data.magicSkill as |item id|}}
+                                    <li class="item" data-item-id="{{item._id}}">
+                                        <div class="itemInfo">
+                                            <i class="fas fa-dice-d20 skill-roll"></i>
+                                            <img class="item-img" src="{{item.img}}" title="Send to Chat"/>
+                                            <div class="item-name">{{item.name}}</div>
+                                        </div>
+                                        <div class="item-controls">
+                                            <div class="item-value">{{item.data.value}}%</div>
+                                            <a class="item-control item-delete" title="Delete Item"><i class="fas fa-trash"></i></a>
+                                        </div>
+                                    </li>
+                                {{/each}}
+                            </ol>
+                        </div>
+                    </div>
+    
+                    <div class="spellListContainer">
+                        <div class="tableListHeader">
+                            <h2>
+                                <div class="leftInfo">
+                                    <button type="button" class="item-create" id="spell">+</button>
+                                    <label>Spells</label>
+                                </div>
+                                <select id="spellFilter">
+                                    <option>All</option>
+                                </select>
+                            </h2>
+                        </div>
+                        <div class="spellList">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>Name</th>
+                                        <th>MP Cost</th>
+                                        <th>School</th>
+                                        <th><i class="fas fa-trash"></i></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {{#each actor.data.spell as |item id|}}
+                                        <tr class="item active" data-item-id="{{item._id}}" data-spell-school="{{item.data.school}}">
+                                            <td>
+                                                <div class="tableItemNameCell">
+                                                    <i class="fas fa-dice-d20 magic-roll"></i>
+                                                    <img class="item-img" src="{{item.img}}" title="Send to Chat"/>
+                                                    <div class="item-name">{{item.name}}</div>
+                                                </div>
+                                            </td>
+                                            <td>{{item.data.cost}}</td>
+                                            <td>{{item.data.school}}</td>
+                                            <td>
+                                                <a class="item-control item-delete" title="Delete Item"><i class="fas fa-trash"></i></a>
+                                            </td>
+                                        </tr>
+                                    {{/each}}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="tab equipment" data-group="primary" data-tab="equipment">
+                This is the Equipment Tab
+            </div>
+
+        </section>
+
+    </div>
+
+    <!-- {{!-- Sheet Header --}}
     <div class="stickyHeader">
         <div class="headerContainer">
             <div>
@@ -674,6 +902,6 @@
                 </div>
             </div>
         </div>
-    </section>
+    </section> -->
 </form>
 
