@@ -12,13 +12,13 @@
                     <a class="item" data-tab="core">Core</a>
                     <a class="item" data-tab="combat">Combat</a>
                     <a class="item" data-tab="magic">Magic</a>
-                    <a class="item" data-tab="equipment">Equipment</a>
+                    <a class="item" data-tab="equipment">Items</a>
                 </nav>
-            </div>
-            <div class="fixed-data-container">
                 <div>
                     <h1 class="charname"><input type="text" name="name" value="{{actor.name}}" placeholder="Name"></h1>
                 </div>
+            </div>
+            <div class="fixed-data-container">
                 <div class="resourceBars">
                     <div id="hpResource">
                         <div class="resourceLabel">
@@ -78,7 +78,98 @@
                     </div>
                 </div>
 
-                <div class="characteristicSideBar">
+                <div class="characteristics-container">
+                    <h2>
+                        <button type="button" class="setBaseCharacteristics">Set</button>
+                        <div>Characteristics</div>
+                    </h2>
+                    <div class="characteristic-entry-container">
+                        <div class="characteristic">
+                            <input type="checkbox" name="data.characteristics.str.favored" {{checked data.characteristics.str.favored}}>
+                            <div id="str" name="Strength" class="characteristic-roll styled-font rollable">Strength</div>
+                            <div class="right-align-content">
+                                <div class="relative-container">
+                                    <div class="styled-font">{{data.characteristics.str.total}}</div>
+                                    <img class="small-circle-border" src="systems/uesrpg-d100/images/elements/circle1.png">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="characteristic">
+                            <input type="checkbox" name="data.characteristics.end.favored" {{checked data.characteristics.end.favored}}>
+                            <div id="end" name="Endurance" class="characteristic-roll styled-font rollable">Endurance</div>
+                            <div class="right-align-content">
+                                <div class="relative-container">
+                                    <div class="styled-font">{{data.characteristics.end.total}}</div>
+                                    <img class="small-circle-border" src="systems/uesrpg-d100/images/elements/circle1.png">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="characteristic">
+                            <input type="checkbox" name="data.characteristics.agi.favored" {{checked data.characteristics.agi.favored}}>
+                            <div id="agi" name="Agility" class="characteristic-roll styled-font rollable">Agility</div>
+                            <div class="right-align-content">
+                                <div class="relative-container">
+                                    <div class="styled-font">{{data.characteristics.agi.total}}</div>
+                                    <img class="small-circle-border" src="systems/uesrpg-d100/images/elements/circle1.png">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="characteristic">
+                            <input type="checkbox" name="data.characteristics.int.favored" {{checked data.characteristics.int.favored}}>
+                            <div id="int" name="Intelligence" class="characteristic-roll styled-font rollable">Intelligence</div>
+                            <div class="right-align-content">
+                                <div class="relative-container">
+                                    <div class="styled-font">{{data.characteristics.int.total}}</div>
+                                    <img class="small-circle-border" src="systems/uesrpg-d100/images/elements/circle1.png">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="characteristic">
+                            <input type="checkbox" name="data.characteristics.wp.favored" {{checked data.characteristics.wp.favored}}>
+                            <div id="wp" name="Willpower" class="characteristic-roll styled-font rollable">Willpower</div>
+                            <div class="right-align-content">
+                                <div class="relative-container">
+                                    <div class="styled-font">{{data.characteristics.wp.total}}</div>
+                                    <img class="small-circle-border" src="systems/uesrpg-d100/images/elements/circle1.png">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="characteristic">
+                            <input type="checkbox" name="data.characteristics.prc.favored" {{checked data.characteristics.prc.favored}}>
+                            <div id="prc" name="Perception" class="characteristic-roll styled-font rollable">Perception</div>
+                            <div class="right-align-content">
+                                <div class="relative-container">
+                                    <div class="styled-font">{{data.characteristics.prc.total}}</div>
+                                    <img class="small-circle-border" src="systems/uesrpg-d100/images/elements/circle1.png">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="characteristic">
+                            <input type="checkbox" name="data.characteristics.prs.favored" {{checked data.characteristics.prs.favored}}>
+                            <div id="prs" name="Personality" class="characteristic-roll styled-font rollable">Personality</div>
+                            <div class="right-align-content">
+                                <div class="relative-container">
+                                    <div class="styled-font">{{data.characteristics.prs.total}}</div>
+                                    <img class="small-circle-border" src="systems/uesrpg-d100/images/elements/circle1.png">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="characteristic">
+                            <input type="checkbox" name="data.characteristics.lck.favored" {{checked data.characteristics.lck.favored}}>
+                            <div id="lck" name="Luck" class="characteristic-roll styled-font rollable">Luck</div>
+                            <div class="right-align-content">
+                                <div class="relative-container">
+                                    <div class="styled-font">{{data.characteristics.lck.total}}</div>
+                                    <img class="small-circle-border" src="systems/uesrpg-d100/images/elements/circle1.png">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+
+                <!-- <div class="characteristicSideBar">
                     <h2>
                         <button type="button" class="setBaseCharacteristics">Set</button>
                         <div>Characteristics</div>
@@ -127,7 +218,11 @@
                             </tr>
                         </tbody>
                     </table>
-                </div>
+                </div> -->
+
+
+
+
 
             </div>
         </div>
@@ -135,10 +230,13 @@
         <section class="sheet-body">
             <div class="tab core" data-group="primary" data-tab="core">
                 <div class="tabContainer">
-                    <div class="bioPage">
-                        <h2>Biography</h2>
-                        <div class="contentContainer">
-                            {{editor content=data.bio target="data.bio" button=true owner=owner editable=editable}}
+
+                    <div class="about-buttons">
+                        <div class="buttonStats">
+                            <button type="button" id="luckyMenu">Lucky/Unlucky</button>
+                            <button type="button" id="xpMenu">Exp: {{data.xp}}</button>
+                            <button type="button" id="raceMenu">Race: {{data.race}}</button>
+                            <button type="button" id="birthSignMenu">Sign: {{data.birthsign}}</button>
                         </div>
                     </div>
 
@@ -205,46 +303,97 @@
                         </div>
                     </div>
 
+                    <div class="bioPage">
+                        <h2>Biography</h2>
+                        <div class="contentContainer">
+                            {{editor content=data.bio target="data.bio" button=true owner=owner editable=editable}}
+                        </div>
+                    </div>
+
                 </div>
             </div>
 
             <div class="tab combat" data-group="primary" data-tab="combat">
-                This is the Combat Tab
+                <div class="combatTabContainer">
+                    <div class="combatSegment0">
+                        <div class="combatResource">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>Size Category</th>
+                                        <th>Armor Class</th>
+                                        <th colspan="3">Action Points</th>
+                                        <th>Wound</th>
+                                        <th>Initiative</th>
+                                        <th>Walk</th>
+                                        <th>Swim</th>
+                                        <th>Fly</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td><select name="data.size" data-type="String">
+                                            {{#select actor.data.size}}
+                                            {{#each actor.data.size_cat as |size_cat key|}}
+                                            <option value="{{key}}">{{size_cat}}</option> 
+                                            {{/each}} {{/select}}
+                                        </select></td>
+                                        <td><select name="data.armor_class" data-type="String">
+                                            {{#select actor.data.armor_class}}
+                                            {{#each actor.data.armor_class_cat as |armor_class_cat key|}}
+                                            <option value="{{key}}">{{armor_class_cat}}</option> 
+                                            {{/each}} {{/select}}
+                                        </select></td>
+    
+                                        <td><input class="actionPoints" type="number" value="{{data.action_points.value}}"></td>
+                                        <td>/</td>
+                                        <td><input class="actionPoints" type="number" value="{{data.action_points.max}}"></td>
+    
+                                        <td><div class="fieldLabelLarge">{{data.wound_threshold.value}}</div></td>
+    
+                                        <td><div class="fieldLabel">{{data.initiative.value}}</div></td>
+    
+                                        <td><div class="fieldLabel">{{data.speed.value}}</div></td>
+                                        <td><div class="fieldLabel">{{data.speed.swimSpeed}}</div></td>
+                                        <td><div class="fieldLabel">{{data.speed.flySpeed}}</div></td>
+    
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
             </div>
 
             <div class="tab magic" data-group="primary" data-tab="magic">
                 <div class="magicTabContainer">
-                    <div class="magicSideBarContainer">
-                        <div class="magicSkillContainer">
-                            <h2 class="headerWithButton">
-                                <button type="button" class="item-create" id="magicSkill">+</button>
-                                <label>Magic Skills</label>
-                            </h2>
-                            <ol class="skillList">
-                                {{#each actor.data.magicSkill as |item id|}}
-                                    <li class="item" data-item-id="{{item._id}}">
-                                        <div class="itemInfo">
-                                            <i class="fas fa-dice-d20 skill-roll"></i>
-                                            <img class="item-img" src="{{item.img}}" title="Send to Chat"/>
-                                            <div class="item-name">{{item.name}}</div>
-                                        </div>
-                                        <div class="item-controls">
-                                            <div class="item-value">{{item.data.value}}%</div>
-                                            <a class="item-control item-delete" title="Delete Item"><i class="fas fa-trash"></i></a>
-                                        </div>
-                                    </li>
-                                {{/each}}
-                            </ol>
-                        </div>
+                    <div class="magicSkillContainer">
+                        <h2 class="headerWithButton">
+                            <button type="button" class="item-create" id="magicSkill">+</button>
+                            <label>Magic Skills</label>
+                        </h2>
+                        <ol class="skillList">
+                            {{#each actor.data.magicSkill as |item id|}}
+                                <li class="item" data-item-id="{{item._id}}">
+                                    <div class="itemInfo">
+                                        <i class="fas fa-dice-d20 skill-roll"></i>
+                                        <img class="item-img" src="{{item.img}}" title="Send to Chat"/>
+                                        <div class="item-name">{{item.name}}</div>
+                                    </div>
+                                    <div class="item-controls">
+                                        <div class="item-value">{{item.data.value}}%</div>
+                                        <a class="item-control item-delete" title="Delete Item"><i class="fas fa-trash"></i></a>
+                                    </div>
+                                </li>
+                            {{/each}}
+                        </ol>
                     </div>
     
                     <div class="spellListContainer">
                         <div class="tableListHeader">
                             <h2>
-                                <div class="leftInfo">
-                                    <button type="button" class="item-create" id="spell">+</button>
-                                    <label>Spells</label>
-                                </div>
+                                <button type="button" class="item-create" id="spell">+</button>
+                                <div>Spells</div>
                                 <select id="spellFilter">
                                     <option>All</option>
                                 </select>
@@ -290,38 +439,16 @@
                         <div class="tableListHeader">
                             <div class="equipment-info-container">
                                 <div class="wealthContainer">
-                                    <button type="button">
-                                        <img class="wealthCalc" src="icons/commodities/currency/coins-plain-stack-gold-yellow.webp" alt="wealth" title="Quick Add/Subtract">
-                                    </button>
+                                    <h2>Wealth</h2>
                                     <input type="number" name="data.wealth" value="{{data.wealth}}">
+                                    <button type="button" class="wealthCalc">Add/Subtract</button>
                                 </div>
                                 <div class="encContainer">
-                                    <button>
-                                        <img class="carryBonus" src="icons/tools/hand/scale-balances-merchant-brown.webp" alt="scaleENC" title="Set Carry Bonus">
-                                    </button>
+                                    <h2>Encumbrance</h2>
                                     <div class="encLabel">{{data.carry_rating.current}} / {{data.carry_rating.max}} ENC</div>
+                                    <button type="button" class="carryBonus">Set Carry Bonus</button>
                                 </div>
                             </div>
-                            <!-- <h2>
-                                <div class="leftInfo">
-                                    <button type="button" class="item-create" id="item">+</button>
-                                    <label>Equipment</label>
-                                </div>
-                                <div class="rightInfo">
-                                    <div class="wealthContainer">
-                                        <button type="button">
-                                            <img class="wealthCalc" src="icons/commodities/currency/coins-plain-stack-gold-yellow.webp" alt="wealth" title="Quick Add/Subtract">
-                                        </button>
-                                        <input type="number" name="data.wealth" value="{{data.wealth}}">
-                                    </div>
-                                    <div class="encContainer">
-                                        <button>
-                                            <img class="carryBonus" src="icons/tools/hand/scale-balances-merchant-brown.webp" alt="scaleENC" title="Set Carry Bonus">
-                                        </button>
-                                        <div class="encLabel">{{data.carry_rating.current}} / {{data.carry_rating.max}} ENC</div>
-                                    </div>
-                                </div>
-                            </h2> -->
                         </div>
                         <div class="equipmentList">
                             <h2>

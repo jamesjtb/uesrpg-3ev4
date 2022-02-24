@@ -475,7 +475,7 @@
       title: "Apply Roll Modifier",
       content: `<form>
                   <div class="dialogForm">
-                  <label><b>${element.name} Modifier: </b></label><input placeholder="ex. -20, +10" id="playerInput" value="0" style=" text-align: center; width: 50%; border-style: groove; float: right;" type="text"></input></div>
+                  <label><b>${element.getAttribute('name')} Modifier: </b></label><input placeholder="ex. -20, +10" id="playerInput" value="0" style=" text-align: center; width: 50%; border-style: groove; float: right;" type="text"></input></div>
                 </form>`,
       buttons: {
         one: {
@@ -496,7 +496,7 @@
 
             // Check for Lucky Number
             if (luckyNumsArray.some(num => num === roll.result)) {
-                  contentString = `<h2>${element.name}</h2>
+                  contentString = `<h2>${element.getAttribute('name')}</h2>
                                     <table>
                                         <thead>
                                             <tr>
@@ -517,7 +517,7 @@
             }
             // Check for Unlucky Number
             else if (unluckyNumsArray.some(num => num === roll.result)) {
-              contentString = `<h2>${element.name}</h2>
+              contentString = `<h2>${element.getAttribute('name')}</h2>
                                 <table>
                                     <thead>
                                         <tr>
@@ -537,7 +537,7 @@
                                 </table>`
             }
             // Perform for normal result
-            else {contentString = `<h2>${element.name}</h2>
+            else {contentString = `<h2>${element.getAttribute('name')}</h2>
                                     <table>
                                         <thead>
                                             <tr>
