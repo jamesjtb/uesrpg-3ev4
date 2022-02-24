@@ -263,53 +263,161 @@
 
             <div class="tab combat" data-group="primary" data-tab="combat">
                 <div class="combatTabContainer">
-                    <div class="combatSegment0">
-                        <div class="combatResource">
-                            <table>
-                                <thead>
-                                    <tr>
-                                        <th>Size Category</th>
-                                        <th>Armor Class</th>
-                                        <th colspan="3">Action Points</th>
-                                        <th>Wound</th>
-                                        <th>Initiative</th>
-                                        <th>Walk</th>
-                                        <th>Swim</th>
-                                        <th>Fly</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr>
-                                        <td><select name="data.size" data-type="String">
-                                            {{#select actor.data.size}}
-                                            {{#each actor.data.size_cat as |size_cat key|}}
-                                            <option value="{{key}}">{{size_cat}}</option> 
-                                            {{/each}} {{/select}}
-                                        </select></td>
-                                        <td><select name="data.armor_class" data-type="String">
-                                            {{#select actor.data.armor_class}}
-                                            {{#each actor.data.armor_class_cat as |armor_class_cat key|}}
-                                            <option value="{{key}}">{{armor_class_cat}}</option> 
-                                            {{/each}} {{/select}}
-                                        </select></td>
-    
-                                        <td><input class="actionPoints" type="number" value="{{data.action_points.value}}"></td>
-                                        <td>/</td>
-                                        <td><input class="actionPoints" type="number" value="{{data.action_points.max}}"></td>
-    
-                                        <td><div class="fieldLabelLarge">{{data.wound_threshold.value}}</div></td>
-    
-                                        <td><div class="fieldLabel">{{data.initiative.value}}</div></td>
-    
-                                        <td><div class="fieldLabel">{{data.speed.value}}</div></td>
-                                        <td><div class="fieldLabel">{{data.speed.swimSpeed}}</div></td>
-                                        <td><div class="fieldLabel">{{data.speed.flySpeed}}</div></td>
-    
-                                    </tr>
-                                </tbody>
-                            </table>
+                    <div class="combat-stats-container">
+                        <div class="combat-stat">
+                            <div class="stat-value-label">{{data.wound_threshold.value}}</div>
+                            <div class="flex-container">
+                                <div class="small-text-label">Wound</div>
+                            </div>
+                        </div>
+                        <div class="combat-stat">
+                            <div class="stat-value-label">{{data.initiative.value}}</div>
+                            <div class="flex-container">
+                                <div class="small-text-label">Initiative</div>
+                            </div>
+                        </div>
+                        <div class="combat-stat">
+                            <div class="stat-value-label">{{data.speed.value}}</div>
+                            <div class="flex-container">
+                                <div class="small-text-label">Speed</div>
+                            </div>
+                        </div>
+                        <div class="combat-stat">
+                            <div class="stat-value-label">{{data.speed.swimSpeed}}</div>
+                            <div class="flex-container">
+                                <div class="small-text-label">Swim</div>
+                            </div>
+                        </div>
+                        <div class="combat-stat">
+                            <div class="stat-value-label">{{data.speed.flySpeed}}</div>
+                            <div class="flex-container">
+                                <div class="small-text-label">Fly</div>
+                            </div>
+                        </div>
+                        <div class="combat-stat">
+                            <div class="stat-value-label">
+                                <div class="flex-container-input">
+                                    <input type="number" name="data.action_points.value" value="{{data.action_points.value}}">
+                                    /
+                                    <input type="number" name="data.action_points.max" value="{{data.action_points.max}}">
+                                </div>
+                            </div>
+                            <div class="flex-container">
+                                <div class="small-text-label">AP</div>
+                            </div>
                         </div>
                     </div>
+
+
+                    <div class="equipped-items-container">
+                        <div class="equippedItemContainer">
+                            <div>
+                                <table>
+                                    <thead>
+                                        <tr>
+                                            <th>Worn</th>
+                                            <th class="armorButtonHeader" id="selectWornArmor">Armor</th>
+                                            <th>AR</th>
+                                            <th>MR</th>
+                                            <th>BR</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="equippedItemTableBody"></tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+
+
+
+                    <div class="three-column-flex-container">
+                        <div class="trait-container">
+                            <h2 class="headerWithButton">
+                                <button type="button" class="item-create" id="trait">+</button>
+                                <label>Traits</label>
+                            </h2>
+                            <ol class="single-column-list">
+                                {{#each actor.data.trait as |item id|}}
+                                    <li class="item" data-item-id="{{item._id}}">
+                                        <div class="itemInfo">
+                                            <img class="item-img" src="{{item.img}}" title="Send to Chat"/>
+                                            <div class="item-name">{{item.name}}</div>
+                                        </div>
+                                        <div class="item-controls">
+                                            <a class="item-control item-delete" title="Delete Item"><i class="fas fa-trash"></i></a>
+                                        </div>
+                                    </li>
+                                {{/each}}
+                            </ol>
+                        </div>
+                        <div class="talent-container">
+                            <h2 class="headerWithButton">
+                                <button type="button" class="item-create" id="talent">+</button>
+                                <label>Talents</label>
+                            </h2>
+                            <ol class="single-column-list">
+                                {{#each actor.data.talent as |item id|}}
+                                    <li class="item" data-item-id="{{item._id}}">
+                                        <div class="itemInfo">
+                                            <img class="item-img" src="{{item.img}}" title="Send to Chat"/>
+                                            <div class="item-name">{{item.name}}</div>
+                                        </div>
+                                        <div class="item-controls">
+                                            <a class="item-control item-delete" title="Delete Item"><i class="fas fa-trash"></i></a>
+                                        </div>
+                                    </li>
+                                {{/each}}
+                            </ol>
+                        </div>
+                        <div class="power-container">
+                            <h2 class="headerWithButton">
+                                <button type="button" class="item-create" id="power">+</button>
+                                <label>Powers</label>
+                            </h2>
+                            <ol class="single-column-list">
+                                {{#each actor.data.power as |item id|}}
+                                    <li class="item" data-item-id="{{item._id}}">
+                                        <div class="itemInfo">
+                                            <img class="item-img" src="{{item.img}}" title="Send to Chat"/>
+                                            <div class="item-name">{{item.name}}</div>
+                                        </div>
+                                        <div class="item-controls">
+                                            <a class="item-control item-delete" title="Delete Item"><i class="fas fa-trash"></i></a>
+                                        </div>
+                                    </li>
+                                {{/each}}
+                            </ol>
+                        </div>
+                    </div>
+
+                    <div class="two-column-flex-container">
+                        <table class="combat-style-table">
+                            <thead>
+                                <tr>
+                                    <th>Name</th>
+                                    <th>%</th>
+                                    <th><i class="fas fa-trash"></i></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {{#each actor.data.combatStyle as |item id|}}
+                                    <tr>
+                                        <td>{{item.name}}</td>
+                                        <td>{{item.data.value}}%</td>
+                                        <td><a class="item-control item-delete" title="Delete Item"><i class="fas fa-trash"></i></a></td>
+                                    </tr>
+                                {{/each}}
+                            </tbody>
+                        </table>
+
+                        <table class="armor-table">
+
+                        </table>
+                    </div>
+
+
+
+
                     <input title="Wounded" class="woundCheckBox" type="checkbox" name="data.wounded" {{checked data.wounded}}>
                 </div>
             </div>

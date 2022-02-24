@@ -68,10 +68,6 @@
   color: darkred;
 }
 
-/* .worldbuilding .characteristic-roll {
-  color: rgb(4, 70, 1);
-} */
-
 /*---------------------------- 
   TinyMCE Editor
 ------------------------------*/
@@ -191,7 +187,7 @@
   gap: 5px;
 }
 
-.worldbuilding .spellList table tr {
+.worldbuilding .spellList table .item {
   display: none;
 }
 
@@ -485,6 +481,81 @@
 /*---------------------------- 
   Actor Sheets - Combat Tab
 ------------------------------*/
+.worldbuilding .combat-stats-container {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.worldbuilding .combat-stats-container .combat-stat {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  border: 2px solid;
+  height: 40px;
+  width: 50px;
+  background: rgba(180, 180, 180, 0.562);
+}
+
+.worldbuilding .combat-stat .flex-container {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  height: 50%;
+}
+
+.worldbuilding .combat-stat .stat-value-label {
+  font-family: "cyrodiil";
+  font-size: 18px;
+  color: darkred;
+  height: 50%;
+}
+
+.worldbuilding .combat-stat .small-text-label {
+  text-align: center;
+  font-size: 10px;
+}
+
+.worldbuilding .combat-stat .flex-container-input {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+}
+
+.worldbuilding .combat-stat .flex-container-input input {
+  text-align: center;
+  color: darkred;
+  border: none;
+  height: 18px;
+}
+
+.worldbuilding #selectWornArmor:hover {
+  cursor: pointer;
+  color: darkred;
+  font-weight: bold;
+}
+
+.worldbuilding .three-column-flex-container {
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+  gap: 20px;
+}
+
+.worldbuilding .trait-container,
+.worldbuilding .talent-container,
+.worldbuilding .power-container {
+  width: 33%;
+}
+
+.worldbuilding .combat-style-table,
+.worldbuilding .armor-table {
+  width: 50%;
+}
 
 
 /*---------------------------- 
