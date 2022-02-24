@@ -25,7 +25,6 @@
   border-right: rgb(0, 0, 0) 5px solid;
   border-bottom: rgb(0, 0, 0) 5px solid;
   box-shadow: 5px 5px 30px 5px;
-  padding: 0;
 }
 
 .window-title {
@@ -228,7 +227,7 @@
 
 .worldbuilding .profile-img-container {
   position: relative;
-  height: 200px;
+  height: 180px;
   width: 100%;
 }
 
@@ -237,8 +236,9 @@
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  width: 150px;
-  height: 150px;
+  width: 180px;
+  height: 180px;
+  border: 2px solid black;
 }
 
 /*---------------------------- 
@@ -338,7 +338,7 @@
   justify-content: flex-start;
   border-bottom: 1px solid rgba(128, 128, 128, 0.719);
   background-color: rgba(194, 194, 194, 0.308);
-  height: 35px;
+  height: 40px;
 }
 
 .worldbuilding .characteristic input {
@@ -359,20 +359,22 @@
   position: absolute;
   height: 30px;
   width: 30px;
-  top: 3px;
-  right: 5px;
+  top: 4px;
+  right: 7px;
+  padding: 2px;
   text-align: center;
   line-height: 30px;
-  background-color: white;
+  background-color: rgba(255, 255, 255, 0.5);
   border-radius: 50%;
 }
 
 .worldbuilding .characteristic .right-align-content img {
-  height: 30px;
-  width: 30px;
+  height: 35px;
+  width: 35px;
   top: 3px;
   right: 5px;
   position: absolute;
+  padding: 2px;
 }
 
 .worldbuilding .styled-font {
