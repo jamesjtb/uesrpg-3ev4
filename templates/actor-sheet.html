@@ -7,6 +7,12 @@
             <div class="character-profile-container">
                 <div class="profile-img-container">
                     <img class="profile-img" src="{{actor.img}}" data-edit="img" title="{{actor.name}}">
+                    <div class="status-column">
+                        <div class="vertical-flex-container">
+                            <img id="wound-icon" src="icons/skills/wounds/blood-drip-droplet-red.webp" title="Wounded {{data.woundPenalty}}">
+                            <img id="enc-icon" src="icons/commodities/stone/boulder-black.webp" title="Overencumbered">
+                        </div>
+                    </div>
                 </div>
                 <nav class="sheet-tabs tabs" data-group="primary">
                     <a class="item" data-tab="core">Core</a>
@@ -166,64 +172,6 @@
                         </div>
                     </div>
                 </div>
-
-
-
-                <!-- <div class="characteristicSideBar">
-                    <h2>
-                        <button type="button" class="setBaseCharacteristics">Set</button>
-                        <div>Characteristics</div>
-                    </h2>
-                    <table>
-                        <tbody>
-                            <tr>
-                                <td class="small-table-cell"><input type="checkbox" name="data.characteristics.str.favored" {{checked data.characteristics.str.favored}}></td>
-                                <td class="button-cell"><button type="button" id="str" name="Strength" class="characteristic-roll">Strength</button></td>
-                                <td class="styled-font">{{data.characteristics.str.total}}</td>
-                            </tr>
-                            <tr>
-                                <td class="small-table-cell"><input type="checkbox" name="data.characteristics.end.favored" {{checked data.characteristics.end.favored}}></td>
-                                <td class="button-cell"><button type="button" id="end" name="Endurance" class="characteristic-roll">Endurance</button></td>
-                                <td class="styled-font">{{data.characteristics.end.total}}</td>
-                            </tr>
-                            <tr>
-                                <td class="small-table-cell"><input type="checkbox" name="data.characteristics.agi.favored" {{checked data.characteristics.agi.favored}}></td>
-                                <td class="button-cell"><button type="button" id="agi" name="Agility" class="characteristic-roll">Agility</button></td>
-                                <td class="styled-font">{{data.characteristics.agi.total}}</td>
-                            </tr>
-                            <tr>
-                                <td class="small-table-cell"><input type="checkbox" name="data.characteristics.int.favored" {{checked data.characteristics.int.favored}}></td>
-                                <td class="button-cell"><button type="button" id="int" name="Intelligence" class="characteristic-roll">Intelligence</button></td>
-                                <td class="styled-font">{{data.characteristics.int.total}}</td>
-                            </tr>
-                            <tr>
-                                <td class="small-table-cell"><input type="checkbox" name="data.characteristics.wp.favored" {{checked data.characteristics.wp.favored}}></td>
-                                <td class="button-cell"><button type="button" id="wp" name="Willpower" class="characteristic-roll">Willpower</button></td>
-                                <td class="styled-font">{{data.characteristics.wp.total}}</td>
-                            </tr>
-                            <tr>
-                                <td class="small-table-cell"><input type="checkbox" name="data.characteristics.prc.favored" {{checked data.characteristics.prc.favored}}></td>
-                                <td class="button-cell"><button type="button" id="prc" name="Perception" class="characteristic-roll">Perception</button></td>
-                                <td class="styled-font">{{data.characteristics.prc.total}}</td>
-                            </tr>
-                            <tr>
-                                <td class="small-table-cell"><input type="checkbox" name="data.characteristics.prs.favored" {{checked data.characteristics.prs.favored}}></td>
-                                <td class="button-cell"><button type="button" id="prs" name="Personality" class="characteristic-roll">Personality</button></td>
-                                <td class="styled-font">{{data.characteristics.prs.total}}</td>
-                            </tr>
-                            <tr>
-                                <td class="small-table-cell"><input type="checkbox" name="data.characteristics.lck.favored" {{checked data.characteristics.lck.favored}}></td>
-                                <td class="button-cell"><button type="button" id="lck" name="Luck" class="characteristic-roll">Luck</button></td>
-                                <td class="styled-font">{{data.characteristics.lck.total}}</td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div> -->
-
-
-
-
-
             </div>
         </div>
 
@@ -362,6 +310,7 @@
                             </table>
                         </div>
                     </div>
+                    <input title="Wounded" class="woundCheckBox" type="checkbox" name="data.wounded" {{checked data.wounded}}>
                 </div>
             </div>
 

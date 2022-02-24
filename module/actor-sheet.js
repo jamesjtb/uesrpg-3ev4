@@ -212,6 +212,7 @@
     this._setResistanceColumnToggle()
     this._refreshWeaponShortcuts()
     this._createInnerValuesForHotKeys()
+    this._createStatusTags()
 
     // Set saved scroll bar position if not default
     // if (localStorage.getItem('scrollPosition') !== 0) {
@@ -2931,6 +2932,11 @@
           break
       }
     }
+  }
+
+  _createStatusTags() {
+    this.actor.data.data.wounded ? this.form.querySelector('#wound-icon').classList.add('active') : this.form.querySelector('#wound-icon').classList.remove('active')
+    this.actor.data.data.carry_rating.current > this.actor.data.data.carry_rating.max ? this.form.querySelector('#enc-icon').classList.add('active') : this.form.querySelector('#enc-icon').classList.remove('active')
   }
 }
 

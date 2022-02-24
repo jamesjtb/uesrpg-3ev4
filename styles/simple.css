@@ -241,6 +241,33 @@
   border: 2px solid black;
 }
 
+.worldbuilding .charname input {
+  border: none;
+}
+
+.worldbuilding .status-column {
+  position: absolute;
+  left: 0;
+  top: 0;
+}
+
+.worldbuilding .vertical-flex-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 5px;
+}
+
+.worldbuilding .vertical-flex-container img {
+  display: none;
+  height: 24px;
+  width: 24px;
+}
+
+.worldbuilding .vertical-flex-container .active {
+  display: block;
+}
+
 /*---------------------------- 
   Actor Sheets - Resource Bars
 ------------------------------*/
