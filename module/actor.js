@@ -22,6 +22,8 @@ export class SimpleActor extends Actor {
       this.data.update({
         items: collection.map(i => i.toObject())
       });
+
+      this.data.update({'data.size': 'standard'})
     }
   }
 

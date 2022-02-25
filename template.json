@@ -738,6 +738,7 @@
     "reach": "",
     "damage": 0,
     "damage2": 0,
+    "damage3": 0,
     "weapon2H": false,
     "carried": false,
     "excludeENC": false,

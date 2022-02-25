@@ -3,6 +3,12 @@
  * @extends {Item}
  */
 export class SimpleItem extends Item {
+  async _preCreate(data, options, user) {
+    await super._preCreate(data, options, user);
+    if (data.type === "combatStyle") {
+      this.data.update({'data.rank': 'untrained'})
+    }
+  }
 
   async prepareData() {
     super.prepareData();
@@ -17,6 +23,7 @@ export class SimpleItem extends Item {
       if (this.data.data.hasOwnProperty('baseCha')) {this._prepareCombatStyleData(actorData, itemData)}
       if (this.data.data.hasOwnProperty('modPrice')) {this._prepareMerchantItem(actorData, itemData)}
       if (this.data.data.hasOwnProperty('damaged')) {this._prepareArmorItem(actorData, itemData)}
+      if (this.data.type === 'weapon') {this._prepareWeaponItem(actorData, itemData)}
     }
   }
 
@@ -95,6 +102,10 @@ export class SimpleItem extends Item {
 
   _prepareArmorItem(actorData, itemData) {
       
+  }
+
+  _prepareWeaponItem(actorData, itemData) {
+    itemData.weapon2H ? itemData.damage3 = itemData.damage2 : itemData.damage3 = itemData.damage
   }
 
   /**

@@ -263,72 +263,244 @@
 
             <div class="tab combat" data-group="primary" data-tab="combat">
                 <div class="combatTabContainer">
-                    <div class="combat-stats-container">
-                        <div class="combat-stat">
-                            <div class="stat-value-label">{{data.wound_threshold.value}}</div>
-                            <div class="flex-container">
-                                <div class="small-text-label">Wound</div>
-                            </div>
-                        </div>
-                        <div class="combat-stat">
-                            <div class="stat-value-label">{{data.initiative.value}}</div>
-                            <div class="flex-container">
-                                <div class="small-text-label">Initiative</div>
-                            </div>
-                        </div>
-                        <div class="combat-stat">
-                            <div class="stat-value-label">{{data.speed.value}}</div>
-                            <div class="flex-container">
-                                <div class="small-text-label">Speed</div>
-                            </div>
-                        </div>
-                        <div class="combat-stat">
-                            <div class="stat-value-label">{{data.speed.swimSpeed}}</div>
-                            <div class="flex-container">
-                                <div class="small-text-label">Swim</div>
-                            </div>
-                        </div>
-                        <div class="combat-stat">
-                            <div class="stat-value-label">{{data.speed.flySpeed}}</div>
-                            <div class="flex-container">
-                                <div class="small-text-label">Fly</div>
-                            </div>
-                        </div>
-                        <div class="combat-stat">
-                            <div class="stat-value-label">
-                                <div class="flex-container-input">
-                                    <input type="number" name="data.action_points.value" value="{{data.action_points.value}}">
-                                    /
-                                    <input type="number" name="data.action_points.max" value="{{data.action_points.max}}">
+                    <div class="combat-tab-primary-header">
+                        <div class="combat-stats-container">
+                            <div class="combat-stat">
+                                <div class="stat-value-label">{{data.speed.value}}</div>
+                                <div class="flex-container">
+                                    <div class="small-text-label">Speed</div>
                                 </div>
                             </div>
-                            <div class="flex-container">
-                                <div class="small-text-label">AP</div>
+                            <div class="combat-stat">
+                                <div class="stat-value-label">
+                                    <div class="flex-container-input">
+                                        <input type="number" name="data.action_points.value" value="{{data.action_points.value}}">
+                                        /
+                                        <input type="number" name="data.action_points.max" value="{{data.action_points.max}}">
+                                    </div>
+                                </div>
+                                <div class="flex-container">
+                                    <div class="small-text-label">AP</div>
+                                </div>
+                            </div>
+                            <div class="combat-stat">
+                                <div class="stat-value-label">{{data.speed.swimSpeed}}</div>
+                                <div class="flex-container">
+                                    <div class="small-text-label">Swim</div>
+                                </div>
+                            </div>
+                            <div class="combat-stat">
+                                <div class="stat-value-label">{{data.wound_threshold.value}}</div>
+                                <div class="flex-container">
+                                    <div class="small-text-label">Wound</div>
+                                </div>
+                            </div>
+                            <div class="combat-stat">
+                                <div class="stat-value-label">{{data.speed.flySpeed}}</div>
+                                <div class="flex-container">
+                                    <div class="small-text-label">Fly</div>
+                                </div>
+                            </div>
+                            <div class="combat-stat">
+                                <div class="stat-value-label">{{data.initiative.value}}</div>
+                                <div class="flex-container">
+                                    <div class="small-text-label">Initiative</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="resistance-container">
+                            <h2>Resistances</h2>
+                            <div class="resistance-grid">
+                                <div class="flex-container">
+                                    <div>Fire</div>
+                                    <div class="styled-font-red center-align">{{data.resistance.fireR}}</div>
+                                </div>
+                                <div class="flex-container">
+                                    <div>Frost</div>
+                                    <div class="styled-font-red center-align">{{data.resistance.frostR}}</div>
+                                </div>
+                                <div class="flex-container">
+                                    <div>Shock</div>
+                                    <div class="styled-font-red center-align">{{data.resistance.shockR}}</div>
+                                </div>
+                                <div class="flex-container">
+                                    <div>Magic</div>
+                                    <div class="styled-font-red center-align">{{data.resistance.magicR}}</div>
+                                </div>
+                                <div class="flex-container">
+                                    <div>Poison</div>
+                                    <div class="styled-font-red center-align">{{data.resistance.poisonR}}</div>
+                                </div>
+                                <div class="flex-container">
+                                    <div>Silver</div>
+                                    <div class="styled-font-red center-align">{{data.resistance.silverR}}</div>
+                                </div>
+                                <div class="flex-container">
+                                    <div>Sunlight</div>
+                                    <div class="styled-font-red center-align">{{data.resistance.sunlightR}}</div>
+                                </div>
+                                <div class="flex-container">
+                                    <div>Toughness</div>
+                                    <div class="styled-font-red center-align">{{data.resistance.natToughness}}</div>
+                                </div>
+                                <div class="flex-container">
+                                    <div>Disease</div>
+                                    <div class="styled-font-red center-align">{{data.resistance.diseaseR}}%</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="status-controls-container">
+                            <h2>Status</h2>
+                            <div class="status-grid-container">
+                                <div class="flex-container">
+                                    <div>Wounded</div>
+                                    <input title="Wounded" class="woundCheckBox" type="checkbox" name="data.wounded" {{checked data.wounded}}>
+                                </div>
+                                <div class="flex-container">
+                                    <div>Size</div>
+                                    <select name="data.size" data-type="String">
+                                        {{#select actor.data.size}}
+                                        {{#each actor.data.size_cat as |size_cat key|}}
+                                        <option value="{{key}}">{{size_cat}}</option> 
+                                        {{/each}} {{/select}}
+                                    </select>
+                                </div>
+                                <div class="flex-container">
+                                    <div>AC</div>
+                                    <select name="data.armor_class" data-type="String">
+                                        {{#select actor.data.armor_class}}
+                                        {{#each actor.data.armor_class_cat as |armor_class_cat key|}}
+                                        <option value="{{key}}">{{armor_class_cat}}</option> 
+                                        {{/each}} {{/select}}
+                                    </select>
+                                </div>
                             </div>
                         </div>
                     </div>
 
+                    <div class="combat-item-container">
+                        <table class="combat-style-table">
+                            <thead>
+                                <tr>
+                                    <th class="item-name-cell item-create" id="combatStyle">+ Combat Style</th>
+                                    <th>%</th>
+                                    <th>Rank</th>
+                                    <th class="right-align-cell"><i class="fas fa-trash"></i></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {{#each actor.data.combatStyle as |item id|}}
+                                    <tr class="item" data-item-id="{{item._id}}">
+                                        <td class="item-name-cell">
+                                            <div class="flex-container">
+                                                <i class="fas fa-dice-d20 combat-roll"></i>
+                                                <img class="item-img" src="{{item.img}}">
+                                                <div class="item-name">{{item.name}}</div>
+                                            </div>
+                                        </td>
+                                        <td>{{item.data.value}}%</td>
+                                        <td>
+                                            <select class="rank-select" id="{{item._id}}" name="rank-select" value="{{item.data.rank}}">
+                                                <option value="untrained">Untrained</option>
+                                                <option value="novice">Novice</option>
+                                                <option value="apprentice">Apprentice</option>
+                                                <option value="journeyman">Journeyman</option>
+                                                <option value="adept">Adept</option>
+                                                <option value="expert">Expert</option>
+                                                <option value="master">Master</option>
+                                            </select>
+                                        </td>
+                                        <td class="right-align-cell"><a class="item-control item-delete" title="Delete Item"><i class="fas fa-trash"></i></a></td>
+                                    </tr>
+                                {{/each}}
+                            </tbody>
+                        </table>
 
-                    <div class="equipped-items-container">
-                        <div class="equippedItemContainer">
-                            <div>
-                                <table>
-                                    <thead>
-                                        <tr>
-                                            <th>Worn</th>
-                                            <th class="armorButtonHeader" id="selectWornArmor">Armor</th>
-                                            <th>AR</th>
-                                            <th>MR</th>
-                                            <th>BR</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody id="equippedItemTableBody"></tbody>
-                                </table>
-                            </div>
-                        </div>
+                        <table class="weapon-table">
+                            <thead>
+                                <tr>
+                                    <th class="item-name-cell item-create" id="weapon">+ Weapon</th>
+                                    <th>Damage</th>
+                                    <th>Reach</th>
+                                    <th>2H</th>
+                                    <th class="right-align-cell"><i class="fas fa-trash"></i></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {{#each actor.data.weapon as |item id|}}
+                                    <tr class="item" data-item-id="{{item._id}}">
+                                        <td class="item-name-cell">
+                                            <div class="flex-container">
+                                                <i class="fas fa-dice-d20 damage-roll"></i>
+                                                <img class="item-img" src="{{item.img}}">
+                                                <div class="item-name">{{item.name}}</div>
+                                            </div>
+                                        </td>
+                                        <td class="damage-entry">{{item.data.damage3}}</td>
+                                        <td>{{item.data.reach}}</td>
+                                        <td><input class="toggle2H" type="checkbox" {{checked item.data.weapon2H}} title="Toggle 2H Damage"></td>
+                                        <td class="right-align-cell"><a class="item-control item-delete" title="Delete Item"><i class="fas fa-trash"></i></a></td>
+                                    </tr>
+                                {{/each}}
+                            </tbody>
+                        </table>
+
+                        <table class="ammunition-table">
+                            <thead>
+                                <tr>
+                                    <th class="item-name-cell item-create" id="ammunition">+ Ammunition</th>
+                                    <th>Bonus</th>
+                                    <th>Qty</th>
+                                    <th class="right-align-cell"><i class="fas fa-trash"></i></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {{#each actor.data.ammunition as |item id|}}
+                                    <tr class="item" data-item-id="{{item._id}}">
+                                        <td class="item-name-cell">
+                                            <div class="flex-container">
+                                                <i class="fas fa-dice-d20 ammo-roll"></i>
+                                                <img class="item-img" src="{{item.img}}">
+                                                <div class="item-name">{{item.name}}</div>
+                                            </div>
+                                        </td>
+                                        <td>{{item.data.damage}}</td>
+                                        <td><button class="minusQty plusQty" title="Click to Increase, right-click to decrease">{{item.data.quantity}}</button></td>
+                                        <td class="right-align-cell"><a class="item-control item-delete" title="Delete Item"><i class="fas fa-trash"></i></a></td>
+                                    </tr>
+                                {{/each}}
+                            </tbody>
+                        </table>
+
+                        <table class="armor-table">
+                            <thead>
+                                <tr>
+                                    <th class="item-name-cell item-create" id="armor">+ Armor</th>
+                                    <th>AR</th>
+                                    <th>MR</th>
+                                    <th>BR</th>
+                                    <th class="right-align-cell"><i class="fas fa-trash"></i></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {{#each actor.data.armor as |item id|}}
+                                    <tr class="item" data-item-id="{{item._id}}">
+                                        <td class="item-name-cell">
+                                            <div class="flex-container">
+                                                <input type="checkbox" class="itemEquip" {{checked data.equipped}}>
+                                                <img class="item-img" src="{{item.img}}">
+                                                <div class="item-name">{{item.name}}</div>
+                                            </div>
+                                        </td>
+                                        <td>{{item.data.armor}}</td>
+                                        <td>{{item.data.magic_ar}}</td>
+                                        <td>{{item.data.blockRating}}</td>
+                                        <td class="right-align-cell"><a class="item-control item-delete" title="Delete Item"><i class="fas fa-trash"></i></a></td>
+                                    </tr>
+                                {{/each}}
+                            </tbody>
+                        </table>
                     </div>
-
-
 
                     <div class="three-column-flex-container">
                         <div class="trait-container">
@@ -389,36 +561,6 @@
                             </ol>
                         </div>
                     </div>
-
-                    <div class="two-column-flex-container">
-                        <table class="combat-style-table">
-                            <thead>
-                                <tr>
-                                    <th>Name</th>
-                                    <th>%</th>
-                                    <th><i class="fas fa-trash"></i></th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {{#each actor.data.combatStyle as |item id|}}
-                                    <tr>
-                                        <td>{{item.name}}</td>
-                                        <td>{{item.data.value}}%</td>
-                                        <td><a class="item-control item-delete" title="Delete Item"><i class="fas fa-trash"></i></a></td>
-                                    </tr>
-                                {{/each}}
-                            </tbody>
-                        </table>
-
-                        <table class="armor-table">
-
-                        </table>
-                    </div>
-
-
-
-
-                    <input title="Wounded" class="woundCheckBox" type="checkbox" name="data.wounded" {{checked data.wounded}}>
                 </div>
             </div>
 
@@ -447,22 +589,17 @@
                     </div>
     
                     <div class="spellListContainer">
-                        <div class="tableListHeader">
-                            <h2>
-                                <button type="button" class="item-create" id="spell">+</button>
-                                <div>Spells</div>
-                                <select id="spellFilter">
-                                    <option>All</option>
-                                </select>
-                            </h2>
-                        </div>
                         <div class="spellList">
                             <table>
                                 <thead>
                                     <tr>
-                                        <th>Name</th>
+                                        <th class="item-create item-name-cell" id="spell">+ Spell</th>
                                         <th>MP Cost</th>
-                                        <th>School</th>
+                                        <th>
+                                            <select id="spellFilter">
+                                                <option>All</option>
+                                            </select>
+                                        </th>
                                         <th><i class="fas fa-trash"></i></th>
                                     </tr>
                                 </thead>

@@ -9,8 +9,8 @@
 	  return mergeObject(super.defaultOptions, {
   	  classes: ["worldbuilding", "sheet", "actor"],
   	  template: "systems/uesrpg-d100/templates/actor-sheet.html",
-      width: 750,
-      height: 850,
+      width: 780,
+      height: 860,
       tabs: [{navSelector: ".sheet-tabs", contentSelector: ".sheet-body", initial: "description"}],
       dragDrop: [{dragSelector: [
         ".skillList .item",
@@ -183,6 +183,7 @@
     html.find('.selectWeapon').click(this._onWeaponShortcut.bind(this))
     html.find('.favorites-roll').contextmenu(this._selectFavoritesMenu.bind(this))
     html.find('.favorites-roll').click(this._onFavoritesHotKey.bind(this))
+    html.find('.rank-select').click(this._selectCombatRank.bind(this))
 
     //Update Item Attributes from Actor Sheet
     html.find(".toggle2H").click(await this._onToggle2H.bind(this));
@@ -208,11 +209,12 @@
     this._setResourceBars()
     // this._setWoundIcon()
     // this._setWoundBackground()
-    this._setEquippedArmor()
+    // this._setEquippedArmor()
     this._setResistanceColumnToggle()
     this._refreshWeaponShortcuts()
     this._createInnerValuesForHotKeys()
     this._createStatusTags()
+    this._setDefaultCombatRank()
 
     // Set saved scroll bar position if not default
     // if (localStorage.getItem('scrollPosition') !== 0) {
@@ -1196,11 +1198,10 @@
     const item = this.actor.getEmbeddedDocument("Item", li.data("itemId"));
 
     if (item.data.data.weapon2H === false) {
-      item.data.data.weapon2H = true;
+      item.update({"data.weapon2H" : true})
     } else if (item.data.data.weapon2H === true) {
-      item.data.data.weapon2H = false;
+      item.update({"data.weapon2H" : false})
     }
-    await item.update({"data.weapon2H" : item.data.data.weapon2H})
   }
 
   async _onPlusQty(event) {
@@ -1235,11 +1236,10 @@
     const item = this.actor.getEmbeddedDocument("Item", li.data("itemId"));
 
     if (item.data.data.equipped === false) {
-      item.data.data.equipped = true;
+      item.update({"data.equipped" : true})
     } else if (item.data.data.equipped === true) {
-      item.data.data.equipped = false;
+      item.update({"data.equipped" : false})
     }
-    await item.update({"data.equipped" : item.data.data.equipped})
   }
 
   async _onItemCreate(event) {
@@ -1263,6 +1263,7 @@
     }
 
     const created = await Item.create(itemData, {parent: actor});
+    created[0].sheet.render(true)
     return created;
   }
 
@@ -2937,6 +2938,24 @@
   _createStatusTags() {
     this.actor.data.data.wounded ? this.form.querySelector('#wound-icon').classList.add('active') : this.form.querySelector('#wound-icon').classList.remove('active')
     this.actor.data.data.carry_rating.current > this.actor.data.data.carry_rating.max ? this.form.querySelector('#enc-icon').classList.add('active') : this.form.querySelector('#enc-icon').classList.remove('active')
+  }
+
+  _selectCombatRank(event) {
+    event.preventDefault()
+    let element = event.currentTarget
+
+    let combatStyle = this.actor.getEmbeddedDocument('Item', element.id)
+    combatStyle.update({'data.rank': element.value})
+    element.querySelector(`[value="${element.value}"]`).selected = true
+
+  }
+
+  _setDefaultCombatRank() {
+    for (let rankElement of [...this.form.querySelectorAll('.rank-select')]) {
+      let item = this.actor.getEmbeddedDocument('Item', rankElement.id)
+      let option = rankElement.querySelector(`[value="${item.data.data.rank}"]`)
+      option.selected = true
+    }
   }
 }
 

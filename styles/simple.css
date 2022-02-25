@@ -68,6 +68,35 @@
   color: darkred;
 }
 
+.worldbuilding table thead {
+  background: rgba(0, 0, 0, 0.705);
+}
+
+.worldbuilding select {
+  height: 18px;
+  border: none;
+}
+
+.worldbuilding select:hover,
+.worldbuilding .resourceButton i:hover {
+  cursor: pointer;
+}
+
+.worldbuilding .item-create:hover {
+  transition: 0.5s;
+  cursor: pointer;
+  color: black;
+  text-shadow: none;
+  background-color: rgba(214, 214, 214, 0.651);
+}
+
+.worldbuilding .item .flex-container {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 5px;
+}
+
 /*---------------------------- 
   TinyMCE Editor
 ------------------------------*/
@@ -125,7 +154,7 @@
   display: grid;
   grid-auto-flow: row;
   grid-template-columns: 1fr 1fr;
-  column-gap: 20px;
+  column-gap: 10px;
   list-style: outside none none;
   margin: 0;
   padding: 0;
@@ -176,6 +205,24 @@
   gap: 5px;
 }
 
+.worldbuilding table .right-align-cell {
+  padding: 0 5px 0 0;
+  text-align: right;
+}
+
+.worldbuilding .right-align {
+  text-align: right;
+}
+
+.worldbuilding .center-align {
+  text-align: center;
+}
+
+.worldbuilding .item input {
+  height: 12px;
+  width: 12px;
+}
+
 .worldbuilding table td {
   text-align: center;
 }
@@ -195,7 +242,8 @@
   display: table-row;
 }
 
-.worldbuilding .equipmentList button {
+.worldbuilding .equipmentList button,
+.worldbuilding .ammunition-table button {
   height: 24px;
   line-height: 14px;
 }
@@ -369,6 +417,10 @@
   width: 16px;
 }
 
+.worldbuilding .characteristic input:hover {
+  cursor: pointer;
+}
+
 .worldbuilding .characteristic .right-align-content {
   width: 100%;
   height: 100%;
@@ -400,6 +452,10 @@
   padding: 2px;
 }
 
+.worldbuilding .styled-font-default {
+  font-family: "cyrodiil";
+}
+
 .worldbuilding .styled-font {
   font-family: "cyrodiil";
   font-size: 18px;
@@ -409,6 +465,12 @@
   font-family: "cyrodiil";
   font-size: 18px;
   font-weight: bold;
+}
+
+.worldbuilding .styled-font-red {
+  font-family: "cyrodiil";
+  color: darkred;
+  font-size: 16px;
 }
 
 .worldbuilding .characteristics-container h2 {
@@ -433,7 +495,7 @@
   display: flex;
   flex-direction: row;
   width: 100%;
-  gap: 20px;
+  gap: 10px;
 }
 
 .worldbuilding .languageContainer,
@@ -481,11 +543,24 @@
 /*---------------------------- 
   Actor Sheets - Combat Tab
 ------------------------------*/
-.worldbuilding .combat-stats-container {
+.worldbuilding .combatTabContainer {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  gap: 10px;
+}
+
+.worldbuilding .combat-tab-primary-header {
   display: flex;
   flex-direction: row;
-  align-items: center;
-  justify-content: space-between;
+  width: 100%;
+  gap: 10px;
+}
+
+.worldbuilding .combat-stats-container {
+  display: grid;
+  grid-template-columns: 60px 60px;
+  gap: 5px;
 }
 
 .worldbuilding .combat-stats-container .combat-stat {
@@ -493,8 +568,7 @@
   flex-direction: column;
   align-items: center;
   border: 2px solid;
-  height: 40px;
-  width: 50px;
+  height: 45px;
   background: rgba(180, 180, 180, 0.562);
 }
 
@@ -543,7 +617,7 @@
   display: flex;
   flex-direction: row;
   width: 100%;
-  gap: 20px;
+  gap: 10px;
 }
 
 .worldbuilding .trait-container,
@@ -552,9 +626,61 @@
   width: 33%;
 }
 
-.worldbuilding .combat-style-table,
-.worldbuilding .armor-table {
-  width: 50%;
+.worldbuilding table .item-name-cell {
+  width: 60%;
+  text-align: left;
+  padding: 0 0 0 5px;
+}
+
+.worldbuilding .resistance-container,
+.worldbuilding .status-controls-container {
+  border: 2px solid;
+  padding: 0 5px;
+  background: rgba(180, 180, 180, 0.562);
+  width: 100%;
+}
+
+.worldbuilding .resistance-container {
+  min-width: 190px;
+}
+
+.worldbuilding .resistance-container .flex-container,
+.worldbuilding .status-controls-container .flex-container {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid rgba(128, 128, 128, 0.719);
+}
+
+.worldbuilding .resistance-grid {
+  display: grid;
+  grid-auto-flow: row;
+  grid-template-columns: 50% 50%;
+  column-gap: 5px;
+  padding: 0 5px 0 0;
+  align-items: center;
+}
+
+.worldbuilding .status-grid-container {
+  display: grid;
+  grid-auto-flow: row;
+  align-items: center;
+}
+
+.worldbuilding .woundCheckBox {
+  height: 16px;
+  width: 16px;
+}
+
+.worldbuilding .woundCheckBox:hover {
+  cursor: pointer;
+}
+
+.worldbuilding .itemEquip {
+  padding: 0;
+  margin: 0;
+  width: 14px;
 }
 
 
@@ -587,6 +713,15 @@
   top: 0;
 }
 
+.worldbuilding #spellFilter {
+  text-align: center;
+  color: white;
+  text-shadow: black;
+}
+
+.worldbuilding #spellFilter option {
+  background: black;
+}
 
 /*---------------------------- 
   Actor Sheets - Equipment Tab
