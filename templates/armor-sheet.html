@@ -1,5 +1,187 @@
 <form class="{{cssClass}}" autocomplete="off">
+
     <div class="stickyHeader">
+        <header class="sheet-header">
+            <div class="header-fields">
+                <h1 class="charname flex-container">
+                    <img class="profile-img" src="{{item.img}}" data-edit="img" title="{{item.name}}"/>
+                    <input name="name" type="text" value="{{item.name}}" placeholder="Name"/>
+                </h1>
+                <div class="item-resource-container">
+                    <div class="item-resource-row">
+                        <div class="item-resource">
+                            <div class="stat-value-label">
+                                <input type="number" name="data.quantity" value="{{data.quantity}}"/>
+                            </div>
+                            <div class="flex-container">
+                                <div class="small-text-label">Quantity</div>
+                            </div>
+                        </div>
+                        <div class="item-resource">
+                            <div class="stat-value-label">
+                                <input type="number" name="data.enc" value="{{data.enc}}"/>
+                            </div>
+                            <div class="flex-container">
+                                <div class="small-text-label">ENC</div>
+                            </div>
+                        </div>
+                        <div class="item-resource">
+                            <div class="stat-value-label">
+                                <input type="number" name="data.price" value="{{data.price}}"/>
+                            </div>
+                            <div class="flex-container">
+                                <div class="small-text-label">Price</div>
+                            </div>
+                        </div>
+                        <div class="item-resource">
+                            <div class="stat-value-label">
+                                <input type="number" name="data.enchant_level" value="{{data.enchant_level}}"/>
+                            </div>
+                            <div class="flex-container">
+                                <div class="small-text-label">Enchant Lv.</div>
+                            </div>
+                        </div>
+                        <div class="item-resource set-size-container">
+                            <div class="stat-value-label">
+                                <input class="checkbox" type="checkbox" name="data.equipped" {{checked data.equipped}}>
+                            </div>
+                            <div class="flex-container">
+                                <div class="small-text-label">Equipped</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="item-resource-row">
+                        <div class="item-resource">
+                            <div class="stat-value-label">
+                                <input type="number" name="data.armor" value="{{data.armor}}"/>
+                            </div>
+                            <div class="flex-container">
+                                <div class="small-text-label">Armor</div>
+                            </div>
+                        </div>
+                        <div class="item-resource">
+                            <div class="stat-value-label">
+                                <input type="text" name="data.magic_ar" value="{{data.magic_ar}}"/>
+                            </div>
+                            <div class="flex-container">
+                                <div class="small-text-label">Magic AR</div>
+                            </div>
+                        </div>
+                        <div class="item-resource">
+                            <div class="stat-value-label">
+                                <input type="text" name="data.blockRating" value="{{data.blockRating}}"/>
+                            </div>
+                            <div class="flex-container">
+                                <div class="small-text-label">Block</div>
+                            </div>
+                        </div>
+                        <div class="item-resource set-size-container">
+                            <div class="stat-value-label">
+                                {{data.charge.value}} / {{data.charge.max}}
+                            </div>
+                            <div class="flex-container">
+                                <i class="fas fa-angle-down fa-xs chargeMinus"></i>
+                                <div class="small-text-label">Charge</div>
+                                <i class="fas fa-angle-up fa-xs chargePlus"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </header>
+    
+        {{!-- Sheet Tab Navigation --}}
+        <nav class="sheet-tabs tabs" data-group="primary">
+            <a class="item" data-tab="description">Description</a>
+            <a class="item" data-tab="attributes">Attributes</a>
+        </nav>
+        </div>
+    
+        {{!-- Sheet Body --}}
+        <section class="sheet-body">
+    
+            {{!-- Description Tab --}}
+            <div class="tab" data-group="primary" data-tab="description">
+                {{editor content=data.description target="data.description" button=true owner=owner editable=editable}}
+            </div>
+    
+            {{!-- Attributes Tab --}}
+            <div class="tab" data-group="primary" data-tab="attributes">
+                <div class="attribute-tab-container">
+                    <div class="attribute-container">
+                        <div class="item-selection-container">
+                            <h2>Attributes</h2>
+                            <div class="selection-container">
+                                <div class="grid-container">
+                                    <div>Ignore ENC</div>
+                                    <div class="right-align-content">
+                                        <input class="checkbox" type="checkbox" name="data.excludeENC" {{checked data.excludeENC}}>
+                                    </div>
+                                </div>
+                                <div class="grid-container">
+                                    <div>Max Magic Charge</div>
+                                    <div class="right-align-content">
+                                        <input type="number" name="data.charge.max" value="{{data.charge.max}}">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="item-resistance-container">
+                            <h2>Resistances</h2>
+                            <div class="modifier-container">
+                                <div class="grid-container">
+                                    <div>Disease</div>
+                                    <div><input type="number" name="data.diseaseR" value="{{data.diseaseR}}"></div>
+                                </div>
+                                <div class="grid-container">
+                                    <div>Fire</div>
+                                    <div><input type="number" name="data.fireR" value="{{data.fireR}}"></div>
+                                </div>
+                                <div class="grid-container">
+                                    <div>Frost</div>
+                                    <div><input type="number" name="data.frostR" value="{{data.frostR}}"></div>
+                                </div>
+                                <div class="grid-container">
+                                    <div>Shock</div>
+                                    <div><input type="number" name="data.shockR" value="{{data.shockR}}"></div>
+                                </div>
+                                <div class="grid-container">
+                                    <div>Poison</div>
+                                    <div><input type="number" name="data.poisonR" value="{{data.poisonR}}"></div>
+                                </div>
+                                <div class="grid-container">
+                                    <div>Magic</div>
+                                    <div><input type="number" name="data.magicR" value="{{data.magicR}}"></div>
+                                </div>
+                                <div class="grid-container">
+                                    <div>Toughness</div>
+                                    <div><input type="number" name="data.natToughnessR" value="{{data.natToughnessR}}"></div>
+                                </div>
+                                <div class="grid-container">
+                                    <div>Silver</div>
+                                    <div><input type="number" name="data.silverR" value="{{data.silverR}}"></div>
+                                </div>
+                                <div class="grid-container">
+                                    <div>Sunlight</div>
+                                    <div><input type="number" name="data.sunlightR" value="{{data.sunlightR}}"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="quality-container">
+                        <div class="flex-container">
+                            <h2>Qualities</h2>
+                            <div>{{editor content=data.qualities target="data.qualities" button=true owner=owner editable=editable}}</div>
+                        </div>
+                    </div>
+                </div>
+        </section>
+
+
+
+
+
+    <!-- <div class="stickyHeader">
     <header class="sheet-header">
         <img class="profile-img" src="{{item.img}}" data-edit="img" title="{{item.name}}"/>
         <div class="header-fields">
@@ -145,5 +327,5 @@
                 </tbody>
             </table>
         </div>
-    </section>
+    </section> -->
 </form>

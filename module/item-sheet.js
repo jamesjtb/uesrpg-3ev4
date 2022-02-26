@@ -10,7 +10,7 @@ export class SimpleItemSheet extends ItemSheet {
       classes: ["worldbuilding", "sheet", "item"],
 			width: 520,
 			height: 520,
-      tabs: [{navSelector: ".sheet-tabs3", contentSelector: ".sheet-body-items", initial: "description"}]
+      tabs: [{navSelector: ".sheet-tabs", contentSelector: ".sheet-body", initial: "description"}]
 		});
   }
 
