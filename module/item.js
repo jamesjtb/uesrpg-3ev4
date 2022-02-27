@@ -5,8 +5,11 @@
 export class SimpleItem extends Item {
   async _preCreate(data, options, user) {
     await super._preCreate(data, options, user);
-    if (data.type === "combatStyle") {
-      this.data.update({'data.rank': 'untrained'})
+    switch (data.type) {
+      case 'combatStyle':
+      case 'skill':
+      case 'magicSkill':
+        this.data.update({'data.rank': 'untrained'})
     }
   }
 
@@ -80,7 +83,8 @@ export class SimpleItem extends Item {
   }
 
     // Combat Style Skill Calculation
-    const woundPenalty = Number(this.actor.data.data.woundPenalty);
+    const woundPenalty = Number(this.actor.data.data.woundPenalty)
+    const fatiguePenalty = Number(this.actor.data.data.fatigue.penalty)
 
     let chaTotal = 0;
     if (data.baseCha !== undefined && data.baseCha !== "" && data.baseCha !== "none") {
@@ -88,9 +92,9 @@ export class SimpleItem extends Item {
     }
 
     if (this.actor.data.data.wounded) {
-      data.value = Number(woundPenalty + chaTotal);
+      data.value = Number(woundPenalty + fatiguePenalty + chaTotal)
     } else {
-      data.value = Number(chaTotal);
+      data.value = Number(fatiguePenalty + chaTotal)
     }
 
   }

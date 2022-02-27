@@ -295,13 +295,17 @@ export class SimpleActor extends Actor {
     }
 
     //Fatigue Penalties
-    if (data.stamina.value < 0) {
-      data.fatigue.level = (data.stamina.value * -1)
-      data.fatigue.penalty = this._calcFatiguePenalty(actorData)
-    }
-    else {
-      data.fatigue.level = 0
-      data.fatigue.penalty = 0
+    data.fatigue.level = data.stamina.value <= 0 ? ((data.stamina.value -1) * -1) + data.fatigue.bonus : 0 + data.fatigue.bonus
+
+    switch (data.fatigue.level > 0) {
+      case true:
+        data.fatigue.penalty = this._calcFatiguePenalty(actorData)
+        break
+
+      case false:
+        data.fatigue.level = 0
+        data.fatigue.penalty = 0
+        break
     }
 
   } 

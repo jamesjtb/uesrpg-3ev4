@@ -192,6 +192,7 @@
     html.find(".incrementResource").click(this._onIncrementResource.bind(this))
     html.find(".resourceLabel button").click(this._onResetResource.bind(this))
     html.find("#spellFilter").click(this._filterSpells.bind(this))
+    html.find('.incrementFatigue').click(this._incrementFatigue.bind(this))
 
     //Item Create Buttons
     html.find(".item-create").click(await this._onItemCreate.bind(this));
@@ -594,25 +595,25 @@
 
           if (roll.total === luck1 || roll.total === luck2 || roll.total === luck3 || roll.total === luck4 || roll.total === luck5 || roll.total === luckExtra) {
             contentString = `<h2><img src="${item.img}"</img>${item.name}</h2>
-            <p></p><b>Target Number: [[${item.data.data.value} + ${playerInput}]]</b> <p></p>
+            <p></p><b>Target Number: [[${item.data.data.value} + ${playerInput} + ${this.actor.data.data.fatigue.penalty}]]</b> <p></p>
             <b>Result: [[${roll.result}]]</b><p></p>
             <span style='color:green; font-size:120%;'> <b>LUCKY NUMBER!</b></span>`
 
           } else if (roll.total == luck6 || roll.total === luck7 || roll.total === luck8 || roll.total === luck9 || roll.total === luck10) {
             contentString = `<h2><img src="${item.img}"</img>${item.name}</h2>
-            <p></p><b>Target Number: [[${item.data.data.value} + ${playerInput}]]</b> <p></p>
+            <p></p><b>Target Number: [[${item.data.data.value} + ${playerInput} + ${this.actor.data.data.fatigue.penalty}]]</b> <p></p>
             <b>Result: [[${roll.result}]]</b><p></p>
             <span style='color:rgb(168, 5, 5); font-size:120%;'> <b>UNLUCKY NUMBER!</b></span>`
 
           } else if (this.actor.data.data.wounded === true) {
             contentString = `<h2><img src="${item.img}"</img>${item.name}</h2>
-            <p></p><b>Target Number: [[${item.data.data.value} + ${playerInput} + ${this.actor.data.data.woundPenalty}]]</b> <p></p>
+            <p></p><b>Target Number: [[${item.data.data.value} + ${playerInput} + ${this.actor.data.data.woundPenalty} + ${this.actor.data.data.fatigue.penalty}]]</b> <p></p>
             <b>Result: [[${roll.result}]]</b><p></p>
             <b>${roll.total<=(item.data.data.value + playerInput + this.actor.data.data.woundPenalty) ? " <span style='color:green; font-size: 120%;'> <b>SUCCESS!</b></span>" : " <span style='color: rgb(168, 5, 5); font-size: 120%;'> <b>FAILURE!</b></span>"}`
 
           } else {
             contentString = `<h2><img src="${item.img}"</img>${item.name}</h2>
-            <p></p><b>Target Number: [[${item.data.data.value} + ${playerInput}]]</b> <p></p>
+            <p></p><b>Target Number: [[${item.data.data.value} + ${playerInput} + ${this.actor.data.data.fatigue.penalty}]]</b> <p></p>
             <b>Result: [[${roll.result}]]</b><p></p>
             <b>${roll.total<=(item.data.data.value + playerInput) ? " <span style='color:green; font-size: 120%;'> <b>SUCCESS!</b></span>" : " <span style='color: rgb(168, 5, 5); font-size: 120%;'> <b>FAILURE!</b></span>"}`
           }
@@ -930,25 +931,25 @@
           
           if (roll.total == this.actor.data.data.lucky_numbers.ln1 || roll.total == this.actor.data.data.lucky_numbers.ln2 || roll.total == this.actor.data.data.lucky_numbers.ln3 || roll.total == this.actor.data.data.lucky_numbers.ln4 || roll.total == this.actor.data.data.lucky_numbers.ln5) {
             contentString = `<h2><img src="${item.img}"</img>${item.name}</h2>
-            <p></p><b>Target Number: [[${item.data.data.value} + ${playerInput}]]</b> <p></p>
+            <p></p><b>Target Number: [[${item.data.data.value} + ${playerInput} + ${this.actor.data.data.fatigue.penalty}]]</b> <p></p>
             <b>Result: [[${roll.result}]]</b><p></p>
             <span style='color:green; font-size:120%;'> <b>LUCKY NUMBER!</b></span>`
 
           } else if (roll.total == this.actor.data.data.unlucky_numbers.ul1 || roll.total == this.actor.data.data.unlucky_numbers.ul2 || roll.total == this.actor.data.data.unlucky_numbers.ul3 || roll.total == this.actor.data.data.unlucky_numbers.ul4 || roll.total == this.actor.data.data.unlucky_numbers.ul5) {
             contentString = `<h2><img src="${item.img}"</img>${item.name}</h2>
-            <p></p><b>Target Number: [[${item.data.data.value} + ${playerInput}]]</b> <p></p>
+            <p></p><b>Target Number: [[${item.data.data.value} + ${playerInput} + ${this.actor.data.data.fatigue.penalty}]]</b> <p></p>
             <b>Result: [[${roll.result}]]</b><p></p>
             <span style='color:rgb(168, 5, 5); font-size:120%;'> <b>UNLUCKY NUMBER!</b></span>`
 
           } else if (this.actor.data.data.wounded === true) {
             contentString = `<h2><img src="${item.img}"</img>${item.name}</h2>
-            <p></p><b>Target Number: [[${item.data.data.value} + ${playerInput} + ${this.actor.data.data.woundPenalty}]]</b> <p></p>
+            <p></p><b>Target Number: [[${item.data.data.value} + ${playerInput} + ${this.actor.data.data.woundPenalty} + ${this.actor.data.data.fatigue.penalty}]]</b> <p></p>
             <b>Result: [[${roll.result}]]</b><p></p>
             <b>${roll.total<=(item.data.data.value + playerInput + this.actor.data.data.woundPenalty) ? " <span style='color:green; font-size: 120%;'> <b>SUCCESS!</b></span>" : " <span style='color: rgb(168, 5, 5); font-size: 120%;'> <b>FAILURE!</b></span>"}`
 
           } else {
             contentString = `<h2><img src="${item.img}"</img>${item.name}</h2>
-            <p></p><b>Target Number: [[${item.data.data.value} + ${playerInput}]]</b> <p></p>
+            <p></p><b>Target Number: [[${item.data.data.value} + ${playerInput} + ${this.actor.data.data.fatigue.penalty}]]</b> <p></p>
             <b>Result: [[${roll.result}]]</b><p></p>
             <b>${roll.total<=(item.data.data.value + playerInput) ? " <span style='color:green; font-size: 120%;'> <b>SUCCESS!</b></span>" : " <span style='color: rgb(168, 5, 5); font-size: 120%;'> <b>FAILURE!</b></span>"}`
           }
@@ -2937,6 +2938,21 @@
       let item = this.actor.getEmbeddedDocument('Item', rankElement.id)
       let option = rankElement.querySelector(`[value="${item.data.data.rank}"]`)
       option.selected = true
+    }
+  }
+
+  _incrementFatigue(event) {
+    event.preventDefault()
+    let element = event.currentTarget
+    let action = element.dataset.action
+    let fatigueLevel = this.actor.data.data.fatigue.level
+    let fatigueBonus = this.actor.data.data.fatigue.bonus
+
+    if (action === 'increase' && fatigueLevel < 5) {
+      this.actor.update({'data.fatigue.bonus': fatigueBonus + 1})
+    }
+    else if (action === 'decrease' && fatigueLevel > 0) {
+      this.actor.update({'data.fatigue.bonus': fatigueBonus - 1})
     }
   }
 }

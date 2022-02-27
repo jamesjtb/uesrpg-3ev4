@@ -722,6 +722,12 @@
   width: 14px;
 }
 
+.worldbuilding .label-flex-container {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
 
 /*---------------------------- 
   Actor Sheets - Magic Tab
@@ -932,6 +938,10 @@
   display: grid;
   grid-template-columns: 50% 50%;
   column-gap: 5px;
+}
+
+.worldbuilding .single-column-grid {
+  grid-template-columns: 100% !important;
 }
 
 .worldbuilding .modifier-container .grid-container {

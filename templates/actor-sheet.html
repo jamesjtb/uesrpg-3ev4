@@ -351,7 +351,13 @@
                                 </div>
                                 <div class="flex-container">
                                     <div>Fatigue</div>
-                                    <div>{{data.fatigue.level}} ({{data.fatigue.penalty}})</div>
+                                    <div class="label-flex-container">
+                                        <label title="Fatigue Level (Fatigue Modifier)">{{data.fatigue.level}} ({{data.fatigue.bonus}})</label>
+                                        <div class="resourceButton">
+                                            <i class="fas fa-angle-up incrementFatigue" data-action="increase"></i>
+                                            <i class="fas fa-angle-down incrementFatigue" data-action="decrease"></i>
+                                        </div>
+                                    </div>
                                 </div>
                                 <div class="flex-container">
                                     <div>Size</div>

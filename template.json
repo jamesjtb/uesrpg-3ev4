@@ -227,7 +227,8 @@
     },
     "fatigue": {
       "level": 0,
-      "penalty": 0
+      "penalty": 0,
+      "bonus": 0
     },
     "size": "",
     "size_cat": {
