@@ -83,7 +83,7 @@ export class SimpleItem extends Item {
     const woundPenalty = Number(this.actor.data.data.woundPenalty);
 
     let chaTotal = 0;
-    if (data.baseCha !== undefined && data.baseCha !== "") {
+    if (data.baseCha !== undefined && data.baseCha !== "" && data.baseCha !== "none") {
       chaTotal = Number(actorData.data.characteristics[data.baseCha].total + data.bonus + data.miscValue);
     }
 

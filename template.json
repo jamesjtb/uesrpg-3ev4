@@ -225,7 +225,10 @@
       "swimSpeed": 0,
       "flySpeed": 0
     },
-    "fatigueLevel": 0,
+    "fatigue": {
+      "level": 0,
+      "penalty": 0
+    },
     "size": "",
     "size_cat": {
       "puny": "Puny",
@@ -603,6 +606,7 @@
   "templates": {
     "characteristicArray": {
       "characteristics": {
+        "none": "None",
         "str": "STR",
         "end": "END",
         "agi": "AGI",

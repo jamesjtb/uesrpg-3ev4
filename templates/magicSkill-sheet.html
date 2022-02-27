@@ -1,66 +1,83 @@
 <form class="{{cssClass}}" autocomplete="off">
     <div class="stickyHeader">
-    <header class="sheet-header">
-        <img class="profile-img" src="{{item.img}}" data-edit="img" title="{{item.name}}"/>
-        <div class="header-fields">
-            <h1 class="charname"><input name="name" type="text" value="{{item.name}}" placeholder="Name"/></h1>
-            <div class="item-resource">
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Rank</th>
-                            <th>Characteristics</th>
-                            <th>Select</th>
-                        </tr>
-                    </thead>
-                    <tbod>
-                        <tr>
-                            <td><select name="data.rank" data-type="String">
-                                {{#select data.rank}}
-                                {{#each data.skillRanks as |skillRanks key|}}
-                                <option value="{{key}}">{{skillRanks}}</option> 
-                                {{/each}} {{/select}}
-                            </select></td>
-                            <td><input type="text" name="data.governingCha" value="{{data.governingCha}}"></td>
-                            <td><select name="data.baseCha" data-type="String">
-                                {{#select data.baseCha}}
-                                {{#each data.characteristics as |characteristics key|}}
-                                <option value="{{key}}">{{characteristics}}</option> 
-                                {{/each}} {{/select}}
-                            </select></td>
-                        </tr>
-                    <thead>
-                        <tr>
-                            <th>Bonus</th>
-                            <th>Target Num.</th>
-                            <th colspan="2">Specialization</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td><input type="text" name="data.bonus" value="{{data.bonus}}" data-dtype="Number" disabled></td>
-                            <td><input type="text" name="data.value" value="{{data.value}}" data-dtype="Number" disabled></td>
-                            <td colspan="2"><input type="text" name="data.trainedItems" value="{{data.trainedItems}}" data-dtype="String"></td>
-                        </tr>
-                    </tbody>
-                </table>
+        <header class="sheet-header">
+            <div class="header-fields">
+                <h1 class="charname flex-container">
+                    <img class="profile-img" src="{{item.img}}" data-edit="img" title="{{item.name}}"/>
+                    <input name="name" type="text" value="{{item.name}}" placeholder="Name"/>
+                </h1>
+                <div class="item-resource-container">
+                    <div class="item-resource-row">
+                        <div class="item-resource">
+                            <div class="stat-value-label">
+                                <input type="number" name="data.value" value="{{data.value}}"/>
+                            </div>
+                            <div class="flex-container">
+                                <div class="small-text-label">Target Number</div>
+                            </div>
+                        </div>
+                        <div class="item-resource">
+                            <div class="stat-value-label">
+                                <select name="data.rank" data-type="String">
+                                    {{#select data.rank}}
+                                    {{#each data.skillRanks as |skillRanks key|}}
+                                    <option value="{{key}}">{{skillRanks}}</option> 
+                                    {{/each}} {{/select}}
+                                </select>
+                            </div>
+                            <div class="flex-container">
+                                <div class="small-text-label">Rank</div>
+                            </div>
+                        </div>
+                        <div class="item-resource">
+                            <div class="stat-value-label">
+                                <input type="text" name="data.governingCha" value="{{data.governingCha}}">
+                            </div>
+                            <div class="flex-container">
+                                <div class="small-text-label">Characteristics</div>
+                            </div>
+                        </div>
+                        <div class="item-resource">
+                            <div class="stat-value-label">
+                                <select name="data.baseCha" data-type="String">
+                                    {{#select data.baseCha}}
+                                    {{#each data.characteristics as |characteristics key|}}
+                                    <option value="{{key}}">{{characteristics}}</option> 
+                                    {{/each}} {{/select}}
+                                </select>
+                            </div>
+                            <div class="flex-container">
+                                <div class="small-text-label">Selected</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="item-resource-row">
+                        <div class="item-resource">
+                            <div class="stat-value-label">
+                                <input type="text" name="data.trainedItems" value="{{data.trainedItems}}" data-dtype="String">
+                            </div>
+                            <div class="flex-container">
+                                <div class="small-text-label">Specialization</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
+        </header>
+    
+        {{!-- Sheet Tab Navigation --}}
+        <nav class="sheet-tabs tabs" data-group="primary">
+            <a class="item" data-tab="description">Description</a>
+        </nav>
         </div>
-    </header>
-
-    {{!-- Sheet Tab Navigation --}}
-    <nav class="sheet-tabs3 tabs" data-group="primary">
-        <a class="item" data-tab="description">Description</a>
-    </nav>
-    </div>
-
-    {{!-- Sheet Body --}}
-    <section class="sheet-body-items">
-
-        {{!-- Description Tab --}}
-        <div class="tab" data-group="primary" data-tab="description">
-            {{editor content=data.description target="data.description" button=true owner=owner editable=this.options.editable}}
-        </div>
-    </section>
+    
+        {{!-- Sheet Body --}}
+        <section class="sheet-body">
+    
+            {{!-- Description Tab --}}
+            <div class="tab" data-group="primary" data-tab="description">
+                {{editor content=data.description target="data.description" button=true owner=owner editable=editable}}
+            </div>
+        </section>
 </form>
 

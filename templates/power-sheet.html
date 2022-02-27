@@ -1,150 +1,155 @@
 <form class="{{cssClass}}" autocomplete="off">
     <div class="stickyHeader">
-    <header class="sheet-header">
-        <img class="profile-img" src="{{item.img}}" data-edit="img" title="{{item.name}}"/>
-        <div class="header-fields">
-            <h1 class="charname"><input name="name" type="text" value="{{item.name}}" placeholder="Name"/></h1>
-            <div class="item-resource">
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Daily Used</th>
-                            <th>Power Source</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td><input type="checkbox" name="data.dailyUse" {{checked data.dailyUse}}></td>
-                            <td><input type="text" name="data.source" value="{{data.source}}" data-dtype="String"></td>
-                        </tr>
-                    </tbody>
-                </table>
+        <header class="sheet-header">
+            <div class="header-fields">
+                <h1 class="charname flex-container">
+                    <img class="profile-img" src="{{item.img}}" data-edit="img" title="{{item.name}}"/>
+                    <input name="name" type="text" value="{{item.name}}" placeholder="Name"/>
+                </h1>
+                <div class="item-resource-container">
+                    <div class="item-resource-row">
+                        <div class="item-resource">
+                            <div class="stat-value-label">
+                                <input type="checkbox" name="data.dailyUse" {{checked data.dailyUse}}>
+                            </div>
+                            <div class="flex-container">
+                                <div class="small-text-label">Daily Used</div>
+                            </div>
+                        </div>
+                        <div class="item-resource">
+                            <div class="stat-value-label">
+                                <input type="text" name="data.source" value="{{data.source}}"/>
+                            </div>
+                            <div class="flex-container">
+                                <div class="small-text-label">Source</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
+        </header>
+    
+        {{!-- Sheet Tab Navigation --}}
+        <nav class="sheet-tabs tabs" data-group="primary">
+            <a class="item" data-tab="description">Description</a>
+            <a class="item" data-tab="attributes">Attributes</a>
+        </nav>
         </div>
-    </header>
-
-    {{!-- Sheet Tab Navigation --}}
-    <nav class="sheet-tabs3 tabs" data-group="primary">
-        <a class="item" data-tab="description">Description</a>
-        <a class="item" data-tab="attributes">Attributes</a>
-    </nav>
-    </div>
-
-    {{!-- Sheet Body --}}
-    <section class="sheet-body-items">
-
-        {{!-- Description Tab --}}
-        <div class="tab" data-group="primary" data-tab="description">
-            {{editor content=data.description target="data.description" button=true owner=owner editable=editable}}
-        </div>
-
-        {{!-- Attributes Tab --}}
-        <div class="tab" data-group="primary" data-tab="attributes">
-            <table class="field-inputs-small">
-                <thead>
-                    <tr>
-                        <th>HP+</th>
-                        <th>MP+</th>
-                        <th>SP+</th>
-                        <th>LP+</th>
-                        <th>WT+</th>
-                        <th>Init.+</th>
-                        <th>Speed+</th>
-                        <th>Fly+</th>
-                        <th>Swim+</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td><input type="text" name="data.hpBonus" value="{{data.hpBonus}}" data-dtype="Number"></td>
-                        <td><input type="text" name="data.mpBonus" value="{{data.mpBonus}}" data-dtype="Number"></td>
-                        <td><input type="text" name="data.spBonus" value="{{data.spBonus}}" data-dtype="Number"></td>
-                        <td><input type="text" name="data.lpBonus" value="{{data.lpBonus}}" data-dtype="Number"></td>
-                        <td><input type="text" name="data.wtBonus" value="{{data.wtBonus}}" data-dtype="Number"></td>
-                        <td><input type="text" name="data.iniBonus" value="{{data.iniBonus}}" data-dtype="Number"></td>
-                        <td><input type="text" name="data.speedBonus" value="{{data.speedBonus}}" data-dtype="Number"></td>
-                        <td><input type="text" name="data.flyBonus" value="{{data.flyBonus}}" data-dtype="Number"></td>
-                        <td><input type="text" name="data.swimBonus" value="{{data.swimBonus}}" data-dtype="Number"></td>
-                    </tr>
-                </tbody>
-            </table>
-            <table class="field-inputs-small">
-                <thead>
-                    <tr>
-                        <th>Disease %</th>
-                        <th>Fire</th>
-                        <th>Frost</th>
-                        <th>Shock</th>
-                        <th>Poison</th>
-                        <th>Magic</th>
-                        <th>Tough</th>
-                        <th>Silver</th>
-                        <th>Sunlight</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td><input type="text" name="data.diseaseR" value="{{data.diseaseR}}" data-dtype="Number"></td>
-                        <td><input type="text" name="data.fireR" value="{{data.fireR}}" data-dtype="Number"></td>
-                        <td><input type="text" name="data.frostR" value="{{data.frostR}}" data-dtype="Number"></td>
-                        <td><input type="text" name="data.shockR" value="{{data.shockR}}" data-dtype="Number"></td>
-                        <td><input type="text" name="data.poisonR" value="{{data.poisonR}}" data-dtype="Number"></td>
-                        <td><input type="text" name="data.magicR" value="{{data.magicR}}" data-dtype="Number"></td>
-                        <td><input type="text" name="data.natToughnessR" value="{{data.natToughnessR}}" data-dtype="Number"></td>
-                        <td><input type="text" name="data.silverR" value="{{data.silverR}}" data-dtype="Number"></td>
-                        <td><input type="text" name="data.sunlightR" value="{{data.sunlightR}}" data-dtype="Number"></td>
-                    </tr>
-                </tbody>
-            </table>
-            <table class="field-inputs-small">
-                <thead>
-                    <tr>
-                        <th>STR+</th>
-                        <th>END+</th>
-                        <th>AGI+</th>
-                        <th>INT+</th>
-                        <th>WP+</th>
-                        <th>PRC+</th>
-                        <th>PRS+</th>
-                        <th>LCK+</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td><input type="number" name="data.characteristicBonus.strChaBonus" value="{{data.characteristicBonus.strChaBonus}}"></td>
-                        <td><input type="number" name="data.characteristicBonus.endChaBonus" value="{{data.characteristicBonus.endChaBonus}}"></td>
-                        <td><input type="number" name="data.characteristicBonus.agiChaBonus" value="{{data.characteristicBonus.agiChaBonus}}"></td>
-                        <td><input type="number" name="data.characteristicBonus.intChaBonus" value="{{data.characteristicBonus.intChaBonus}}"></td>
-                        <td><input type="number" name="data.characteristicBonus.wpChaBonus" value="{{data.characteristicBonus.wpChaBonus}}"></td>
-                        <td><input type="number" name="data.characteristicBonus.prcChaBonus" value="{{data.characteristicBonus.prcChaBonus}}"></td>
-                        <td><input type="number" name="data.characteristicBonus.prsChaBonus" value="{{data.characteristicBonus.prsChaBonus}}"></td>
-                        <td><input type="number" name="data.characteristicBonus.lckChaBonus" value="{{data.characteristicBonus.lckChaBonus}}"></td>
-                    </tr>
-                </tbody>
-            </table>
-            <table class="field-inputs-small">
-                <thead>
-                    <tr>
-                        <th>Attribute</th>
-                        <th>Toggle</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <th>Centurion Sphere Form Shift</th>
-                        <td><input type="checkbox" name="data.shiftForm" {{checked data.shiftForm}}></td>
-                    </tr>
-                    <tr>
-                        <th>Form Shift Selection</th>
-                        <td><select name="data.shiftFormStyle" data-type="String">
-                            {{#select data.shiftFormStyle}}
-                            {{#each data.shiftStyles as |shiftStyles key|}}
-                            <option value="{{key}}">{{shiftStyles}}</option> 
-                            {{/each}} {{/select}}
-                        </select></td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
-    </section>
+    
+        {{!-- Sheet Body --}}
+        <section class="sheet-body">
+    
+            {{!-- Description Tab --}}
+            <div class="tab" data-group="primary" data-tab="description">
+                {{editor content=data.description target="data.description" button=true owner=owner editable=editable}}
+            </div>
+    
+            {{!-- Attributes Tab --}}
+            <div class="tab" data-group="primary" data-tab="attributes">
+                <div class="attribute-tab-container">
+                    <div class="item-selection-container">
+                        <h2>Attributes</h2>
+                        <div class="selection-container">
+                            <div class="grid-container">
+                                <div title="Shift in and out of Centurion Ball Form">Shift Centurion Form</div>
+                                <div class="right-align-content">
+                                    <input type="checkbox" name="data.shiftForm" {{checked data.shiftForm}}>
+                                </div>
+                            </div>
+                            <div class="grid-container">
+                                <div>Form Shift</div>
+                                <div class="right-align-content">
+                                    <select name="data.shiftFormStyle" data-type="String">
+                                        {{#select data.shiftFormStyle}}
+                                        {{#each data.shiftStyles as |shiftStyles key|}}
+                                        <option value="{{key}}">{{shiftStyles}}</option> 
+                                        {{/each}} {{/select}}
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="attribute-container">
+                        <div class="item-characteristic-container">
+                            <h2>Characteristics</h2>
+                            <div class="modifier-container">
+                                <div class="grid-container">
+                                    <div>Strength</div>
+                                    <div><input type="number" name="data.characteristicBonus.strChaBonus" value="{{data.characteristicBonus.strChaBonus}}"></div>
+                                </div>
+                                <div class="grid-container">
+                                    <div>Endurance</div>
+                                    <div><input type="number" name="data.characteristicBonus.endChaBonus" value="{{data.characteristicBonus.endChaBonus}}"></div>
+                                </div>
+                                <div class="grid-container">
+                                    <div>Agility</div>
+                                    <div><input type="number" name="data.characteristicBonus.agiChaBonus" value="{{data.characteristicBonus.agiChaBonus}}"></div>
+                                </div>
+                                <div class="grid-container">
+                                    <div>Intelligence</div>
+                                    <div><input type="number" name="data.characteristicBonus.intChaBonus" value="{{data.characteristicBonus.intChaBonus}}"></div>
+                                </div>
+                                <div class="grid-container">
+                                    <div>Willpower</div>
+                                    <div><input type="number" name="data.characteristicBonus.wpChaBonus" value="{{data.characteristicBonus.wpChaBonus}}"></div>
+                                </div>
+                                <div class="grid-container">
+                                    <div>Perception</div>
+                                    <div><input type="number" name="data.characteristicBonus.prcChaBonus" value="{{data.characteristicBonus.prcChaBonus}}"></div>
+                                </div>
+                                <div class="grid-container">
+                                    <div>Personality</div>
+                                    <div><input type="number" name="data.characteristicBonus.prsChaBonus" value="{{data.characteristicBonus.prsChaBonus}}"></div>
+                                </div>
+                                <div class="grid-container">
+                                    <div>Luck</div>
+                                    <div><input type="number" name="data.characteristicBonus.lckChaBonus" value="{{data.characteristicBonus.lckChaBonus}}"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="item-resistance-container">
+                            <h2>Resistances</h2>
+                            <div class="modifier-container">
+                                <div class="grid-container">
+                                    <div>Disease</div>
+                                    <div><input type="number" name="data.diseaseR" value="{{data.diseaseR}}"></div>
+                                </div>
+                                <div class="grid-container">
+                                    <div>Fire</div>
+                                    <div><input type="number" name="data.fireR" value="{{data.fireR}}"></div>
+                                </div>
+                                <div class="grid-container">
+                                    <div>Frost</div>
+                                    <div><input type="number" name="data.frostR" value="{{data.frostR}}"></div>
+                                </div>
+                                <div class="grid-container">
+                                    <div>Shock</div>
+                                    <div><input type="number" name="data.shockR" value="{{data.shockR}}"></div>
+                                </div>
+                                <div class="grid-container">
+                                    <div>Poison</div>
+                                    <div><input type="number" name="data.poisonR" value="{{data.poisonR}}"></div>
+                                </div>
+                                <div class="grid-container">
+                                    <div>Magic</div>
+                                    <div><input type="number" name="data.magicR" value="{{data.magicR}}"></div>
+                                </div>
+                                <div class="grid-container">
+                                    <div>Toughness</div>
+                                    <div><input type="number" name="data.natToughnessR" value="{{data.natToughnessR}}"></div>
+                                </div>
+                                <div class="grid-container">
+                                    <div>Silver</div>
+                                    <div><input type="number" name="data.silverR" value="{{data.silverR}}"></div>
+                                </div>
+                                <div class="grid-container">
+                                    <div>Sunlight</div>
+                                    <div><input type="number" name="data.sunlightR" value="{{data.sunlightR}}"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
 </form>

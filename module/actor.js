@@ -295,70 +295,14 @@ export class SimpleActor extends Actor {
     }
 
     //Fatigue Penalties
-    if (data.stamina.value == -1) {
-      for (var skill in data.skills) {
-        data.fatigueLevel = -10;
-        data.skills[skill].tn = data.skills[skill].tn + this._halfFatiguePenalty(actorData);
-      }
-      for (var skill in data.magic_skills) {
-        data.fatigueLevel = -10;
-        data.magic_skills[skill].tn = data.magic_skills[skill].tn + this._halfFatiguePenalty(actorData);
-      }
-      for (var skill in data.combat_styles) {
-        data.fatigueLevel = -10;
-        data.combat_styles[skill].tn = data.combat_styles[skill].tn + this._halfFatiguePenalty(actorData);
-      }
-
-    } else if (data.stamina.value == -2) {
-        for (var skill in data.skills) {
-        data.fatigueLevel = -20;
-        data.skills[skill].tn = data.skills[skill].tn + this._halfFatiguePenalty(actorData);
-        }
-        for (var skill in data.magic_skills) {
-          data.magic_skills[skill].tn = data.magic_skills[skill].tn -20 + this._halfFatiguePenalty(actorData);
-          data.fatigueLevel = -20;
-        }
-        for (var skill in data.combat_styles) {
-          data.fatigueLevel = -20;
-          data.combat_styles[skill].tn = data.combat_styles[skill].tn + this._halfFatiguePenalty(actorData);
-        }
-
-    } else if (data.stamina.value == -3) {
-        for (var skill in data.skills) {
-        data.fatigueLevel = -30;
-        data.skills[skill].tn = data.skills[skill].tn + this._halfFatiguePenalty(actorData);
-        }
-        for (var skill in data.magic_skills) {
-          data.fatigueLevel = -30;
-          data.magic_skills[skill].tn = data.magic_skills[skill].tn + this._halfFatiguePenalty(actorData);
-        }
-        for (var skill in data.combat_styles) {
-          data.fatigueLevel = -30;
-          data.combat_styles[skill].tn = data.combat_styles[skill].tn + this._halfFatiguePenalty(actorData);
-        }
-
-    } else if (data.stamina.value == -4) {
-        for (var skill in data.skills) {
-        data.skills[skill].tn = 0;
-        }
-        for (var skill in data.magic_skills) {
-          data.magic_skills[skill].tn = 0;
-        }
-        for (var skill in data.combat_styles) {
-          data.combat_styles[skill].tn = 0;
-        }
-
-    } else if (data.stamina.value <= -5) {
-        for (var skill in data.skills) {
-        data.skills[skill].tn = 0;
-        }
-        for (var skill in data.magic_skills) {
-          data.magic_skills[skill].tn = 0;
-        }
-        for (var skill in data.combat_styles) {
-          data.combat_styles[skill].tn = 0;
-        }
-      }
+    if (data.stamina.value < 0) {
+      data.fatigue.level = (data.stamina.value * -1)
+      data.fatigue.penalty = this._calcFatiguePenalty(actorData)
+    }
+    else {
+      data.fatigue.level = 0
+      data.fatigue.penalty = 0
+    }
 
   } 
 
@@ -590,31 +534,31 @@ export class SimpleActor extends Actor {
     if (data.stamina.value == -1) {
       for (var skill in data.professions) {
         data.fatigueLevel = -10;
-        data.professions[skill] = data.professions[skill] + this._halfFatiguePenalty(actorData);
+        data.professions[skill] = data.professions[skill] + this._calcFatiguePenalty(actorData);
       }
       for (var skill in data.skills) {
         data.fatigueLevel = -10;
-        data.skills[skill].bonus = data.skills[skill].tn + this._halfFatiguePenalty(actorData);
+        data.skills[skill].bonus = data.skills[skill].tn + this._calcFatiguePenalty(actorData);
       }
       
     } else if (data.stamina.value == -2) {
         for (var skill in data.professions) {
           data.fatigueLevel = -20;
-          data.professions[skill] = data.professions[skill] + this._halfFatiguePenalty(actorData);
+          data.professions[skill] = data.professions[skill] + this._calcFatiguePenalty(actorData);
       }
       for (var skill in data.skills) {
         data.fatigueLevel = -20;
-        data.skills[skill].bonus = data.skills[skill].tn + this._halfFatiguePenalty(actorData);
+        data.skills[skill].bonus = data.skills[skill].tn + this._calcFatiguePenalty(actorData);
       }
 
     } else if (data.stamina.value == -3) {
         for (var skill in data.professions) {
           data.fatigueLevel = -30;
-          data.professions[skill] = data.professions[skill] + this._halfFatiguePenalty(actorData);
+          data.professions[skill] = data.professions[skill] + this._calcFatiguePenalty(actorData);
       }
       for (var skill in data.skills) {
         data.fatigueLevel = -30;
-        data.skills[skill].bonus = data.skills[skill].tn + this._halfFatiguePenalty(actorData);
+        data.skills[skill].bonus = data.skills[skill].tn + this._calcFatiguePenalty(actorData);
       }
 
     } else if (data.stamina.value == -4) {
@@ -1051,7 +995,7 @@ export class SimpleActor extends Actor {
     let attribute = actorData.items.filter(item => item.type == "trait"|| item.type == "talent");
     let init = actorData.data.initiative.base;
       for (let item of attribute) {
-        if (item.data.data.replace.ini.iniToggle == true) {
+        if (item.data.data.replace.ini.characteristic != "none") {
           if (item.data.data.replace.ini.characteristic == "str") {
             init = Math.floor(actorData.data.characteristics.str.total / 10) * 3;
           } else if (item.data.data.replace.ini.characteristic == "end") {
@@ -1078,7 +1022,7 @@ export class SimpleActor extends Actor {
     let attribute = actorData.items.filter(item => item.type === "trait"|| item.type === "talent");
     let wound = actorData.data.wound_threshold.base;
       for (let item of attribute) {
-        if (item.data.data.replace.wt.wtToggle === true) {
+        if (item.data.data.replace.wt.characteristic != "none") {
           if (item.data.data.replace.wt.characteristic === "str") {
             wound = Math.floor(actorData.data.characteristics.str.total / 10) * 3;
           } else if (item.data.data.replace.wt.characteristic === "end") {
@@ -1101,15 +1045,15 @@ export class SimpleActor extends Actor {
     return wound;
   }
 
-  _halfFatiguePenalty(actorData) {
+  _calcFatiguePenalty(actorData) {
     let attribute = actorData.items.filter(item => item.data.data.halfFatiguePenalty == true);
-    let fatigueReduction = 0;
+    let penalty = 0;
     if (attribute.length >= 1) {
-      fatigueReduction = actorData.data.fatigueLevel / 2;
+      penalty = actorData.data.fatigue.level * -5;
     } else {
-      fatigueReduction = actorData.data.fatigueLevel;
+      penalty = actorData.data.fatigue.level * -10;
     }
-    return fatigueReduction
+    return penalty
   }
 
   _halfWoundPenalty(actorData) {

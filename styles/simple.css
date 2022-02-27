@@ -80,8 +80,20 @@
   border: none;
 }
 
-.worldbuilding select:hover,
+.worldbuilding .resourceButton {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 0 5px;
+}
+
 .worldbuilding .resourceButton i:hover {
+  cursor: pointer;
+  color: darkred;
+}
+
+.worldbuilding select:hover {
   cursor: pointer;
 }
 
@@ -101,8 +113,8 @@
 }
 
 .worldbuilding .checkbox {
-  height: 16px;
-  width: 16px;
+  height: 14px !important;
+  width: 14px !important;
 }
 
 /*---------------------------- 
@@ -299,22 +311,6 @@
   border: 2px solid black;
 }
 
-.worldbuilding .item-profile-container .profile-img-container {
-  position: relative;
-  height: 120px;
-  width: 100%;
-}
-
-.worldbuilding .item-profile-container .profile-img {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  width: 120px;
-  height: 120px;
-  border: 2px solid black;
-}
-
 .worldbuilding .charname input {
   border: none;
 }
@@ -349,6 +345,7 @@
   justify-content: center;
   gap: 5px;
   width: 100%;
+  border-top: 1px solid rgba(128, 128, 128, 0.719);
 }
 
 /*---------------------------- 
@@ -361,6 +358,7 @@
   width: 100%;
   align-items: flex-start;
   padding: 0 0 5px 0;
+  gap: 5px;
 }
 
 .worldbuilding #hpResource,
@@ -620,6 +618,8 @@
   align-items: center;
   justify-content: center;
   height: 50%;
+  width: 100%;
+  border-top: 1px solid rgba(128, 128, 128, 0.719);
 }
 
 .worldbuilding .combat-stat .stat-value-label {
@@ -627,6 +627,8 @@
   font-size: 18px;
   color: darkred;
   height: 50%;
+  width: 100%;
+  text-align: center;
 }
 
 .worldbuilding .small-text-label {
@@ -859,35 +861,6 @@
   width: 100%;
 }
 
-/* .worldbuilding .selection-container .flex-container {
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  justify-content: space-between;
-  width: 100%;
-  border-bottom: 1px solid rgba(128, 128, 128, 0.719);
-}
-
-.worldbuilding .selection-container .flex-container div {
-  width: 50%;
-}
-
-.worldbuilding .selection-container .flex-container input {
-  border: none;
-  text-align: right;
-}
-
-.worldbuilding .selection-container .vertical-flex-container {
-  display: flex;
-  flex-direction: column;
-  width: 100%;
-}
-
-.worldbuilding .selection-container .vertical-flex-container div,
-.worldbuilding .selection-container .vertical-flex-container h2 {
-  width: 100%;
-} */
-
 .worldbuilding .item-resource-container {
   display: flex;
   flex-direction: column;
@@ -903,6 +876,7 @@
   font-size: 18px;
   font-family: "cyrodiil";
   border: none;
+  width: 100%;
 }
 
 .worldbuilding .item-resource-container .item-resource {
@@ -911,20 +885,17 @@
   align-items: center;
   border: 1px solid;
   background: rgba(180, 180, 180, 0.562);
+  width: 100%;
 }
 
 .worldbuilding .item-resource-row {
   display: flex;
   flex-direction: row;
   align-items: center;
-  justify-content: center;
+  justify-content: space-evenly;
   gap: 5px;
   height: 40px;
-}
-
-.worldbuilding .item-resource-row .set-size-container {
-  min-width: 20%;
-  height: 100%;
+  width: 100%;
 }
 
 .worldbuilding .item-resource .stat-value-label {
@@ -932,6 +903,7 @@
   font-size: 18px;
   color: darkred;
   height: 26px;
+  width: 100%;
 }
 
 .worldbuilding .chargePlus,
@@ -946,6 +918,7 @@
 }
 
 .worldbuilding .item-resistance-container,
+.worldbuilding .item-characteristic-container,
 .worldbuilding .item-selection-container {
   display: flex;
   flex-direction: column;
@@ -976,17 +949,19 @@
 
 .worldbuilding .item-selection-container .grid-container {
   display: grid;
-  grid-template-columns: 80% 20%;
+  grid-template-columns: 70% 30%;
   border-bottom: 1px solid rgba(128, 128, 128, 0.719);
   align-items: center;
 }
 
-.worldbuilding .attribute-container .right-align-content {
+.worldbuilding .attribute-container .right-align-content,
+.worldbuilding .item-selection-container .right-align-content {
   display: flex;
-  justify-content: flex-end;
+  justify-content: center;
 }
 
 .worldbuilding .grid-container input {
   text-align: center;
   border: none;
+  height: 18px;
 }

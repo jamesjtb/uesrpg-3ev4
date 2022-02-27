@@ -1,5 +1,231 @@
 <form class="{{cssClass}}" autocomplete="off">
     <div class="stickyHeader">
+        <header class="sheet-header">
+            <div class="header-fields">
+                <h1 class="charname flex-container">
+                    <img class="profile-img" src="{{item.img}}" data-edit="img" title="{{item.name}}"/>
+                    <input name="name" type="text" value="{{item.name}}" placeholder="Name"/>
+                </h1>
+                <div class="item-resource-container">
+                    <div class="item-resource-row">
+                        <div class="item-resource">
+                            <div class="stat-value-label">
+                                <input type="number" name="data.level" value="{{data.level}}"/>
+                            </div>
+                            <div class="flex-container">
+                                <div class="small-text-label">Level</div>
+                            </div>
+                        </div>
+                        <div class="item-resource">
+                            <div class="stat-value-label">
+                                <input type="number" name="data.xpCost" value="{{data.xpCost}}"/>
+                            </div>
+                            <div class="flex-container">
+                                <div class="small-text-label">XP Cost</div>
+                            </div>
+                        </div>
+                        <div class="item-resource">
+                            <div class="stat-value-label">
+                                <input type="text" name="data.talentReq" value="{{data.talentReq}}"/>
+                            </div>
+                            <div class="flex-container">
+                                <div class="small-text-label">Required Talents</div>
+                            </div>
+                        </div>
+                        <div class="item-resource">
+                            <div class="stat-value-label">
+                                <input type="text" name="data.miscReq" value="{{data.miscReq}}"/>
+                            </div>
+                            <div class="flex-container">
+                                <div class="small-text-label">Other Requirements</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </header>
+    
+        {{!-- Sheet Tab Navigation --}}
+        <nav class="sheet-tabs tabs" data-group="primary">
+            <a class="item" data-tab="description">Description</a>
+            <a class="item" data-tab="attributes">Attributes</a>
+        </nav>
+    </div>
+    
+        {{!-- Sheet Body --}}
+        <section class="sheet-body">
+    
+            {{!-- Description Tab --}}
+            <div class="tab" data-group="primary" data-tab="description">
+                {{editor content=data.description target="data.description" button=true owner=owner editable=editable}}
+            </div>
+    
+            {{!-- Attributes Tab --}}
+            <div class="tab" data-group="primary" data-tab="attributes">
+                <div class="attribute-tab-container">
+                    <div class="item-selection-container">
+                        <h2>Attributes</h2>
+                        <div class="selection-container">
+                            <div class="grid-container">
+                                <div title="Replace initiative with 3x characteristic">Replace Initiative</div>
+                                <div class="right-align-content">
+                                    <select name="data.replace.ini.characteristic" data-type="String">
+                                        {{#select data.replace.ini.characteristic}}
+                                        {{#each data.characteristics as |characteristics key|}}
+                                        <option value="{{key}}">{{characteristics}}</option> 
+                                        {{/each}} {{/select}}
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="grid-container">
+                                <div title="Replace Wound Threshold with 3x characteristic">Replace Wound Threshold</div>
+                                <div class="right-align-content">
+                                    <select name="data.replace.wt.characteristic" data-type="String">
+                                        {{#select data.replace.wt.characteristic}}
+                                        {{#each data.characteristics as |characteristics key|}}
+                                        <option value="{{key}}">{{characteristics}}</option> 
+                                        {{/each}} {{/select}}
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="grid-container">
+                                <div title="Roll Damage Twice">1/2 Fatigue Penalty</div>
+                                <div class="right-align-content">
+                                    <input class="checkbox" type="checkbox" name="data.halfFatiguePenalty" {{checked data.halfFatiguePenalty}}>
+                                </div>
+                            </div>
+                            <div class="grid-container">
+                                <div>1/2 Wound Penalty</div>
+                                <div class="right-align-content">
+                                    <input class="checkbox" type="checkbox" name="data.halfWoundPenalty" {{checked data.halfWoundPenalty}}>
+                                </div>
+                            </div>
+                            <div class="grid-container">
+                                <div>Add INT to Magicka</div>
+                                <div class="right-align-content">
+                                    <input class="checkbox" type="checkbox" name="data.addIntToMP" {{checked data.addIntToMP}}>
+                                </div>
+                            </div>
+                            <div class="grid-container">
+                                <div>No Untrained Combat Penalty</div>
+                                <div class="right-align-content">
+                                    <input class="checkbox" type="checkbox" name="data.untrainedException" {{checked data.untrainedException}}>
+                                </div>
+                            </div>
+                            <div class="grid-container">
+                                <div>Add 1/2 Speed</div>
+                                <div class="right-align-content">
+                                    <input class="checkbox" type="checkbox" name="data.addHalfSpeed" {{checked data.addHalfSpeed}}>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="attribute-container">
+                        <div class="item-characteristic-container">
+                            <h2>Characteristics</h2>
+                            <div class="modifier-container">
+                                <div class="grid-container">
+                                    <div>Strength</div>
+                                    <div><input type="number" name="data.characteristicBonus.strChaBonus" value="{{data.characteristicBonus.strChaBonus}}"></div>
+                                </div>
+                                <div class="grid-container">
+                                    <div>Endurance</div>
+                                    <div><input type="number" name="data.characteristicBonus.endChaBonus" value="{{data.characteristicBonus.endChaBonus}}"></div>
+                                </div>
+                                <div class="grid-container">
+                                    <div>Agility</div>
+                                    <div><input type="number" name="data.characteristicBonus.agiChaBonus" value="{{data.characteristicBonus.agiChaBonus}}"></div>
+                                </div>
+                                <div class="grid-container">
+                                    <div>Intelligence</div>
+                                    <div><input type="number" name="data.characteristicBonus.intChaBonus" value="{{data.characteristicBonus.intChaBonus}}"></div>
+                                </div>
+                                <div class="grid-container">
+                                    <div>Willpower</div>
+                                    <div><input type="number" name="data.characteristicBonus.wpChaBonus" value="{{data.characteristicBonus.wpChaBonus}}"></div>
+                                </div>
+                                <div class="grid-container">
+                                    <div>Perception</div>
+                                    <div><input type="number" name="data.characteristicBonus.prcChaBonus" value="{{data.characteristicBonus.prcChaBonus}}"></div>
+                                </div>
+                                <div class="grid-container">
+                                    <div>Personality</div>
+                                    <div><input type="number" name="data.characteristicBonus.prsChaBonus" value="{{data.characteristicBonus.prsChaBonus}}"></div>
+                                </div>
+                                <div class="grid-container">
+                                    <div>Luck</div>
+                                    <div><input type="number" name="data.characteristicBonus.lckChaBonus" value="{{data.characteristicBonus.lckChaBonus}}"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="item-resistance-container">
+                            <h2>Resistances</h2>
+                            <div class="modifier-container">
+                                <div class="grid-container">
+                                    <div>Disease</div>
+                                    <div><input type="number" name="data.diseaseR" value="{{data.diseaseR}}"></div>
+                                </div>
+                                <div class="grid-container">
+                                    <div>Fire</div>
+                                    <div><input type="number" name="data.fireR" value="{{data.fireR}}"></div>
+                                </div>
+                                <div class="grid-container">
+                                    <div>Frost</div>
+                                    <div><input type="number" name="data.frostR" value="{{data.frostR}}"></div>
+                                </div>
+                                <div class="grid-container">
+                                    <div>Shock</div>
+                                    <div><input type="number" name="data.shockR" value="{{data.shockR}}"></div>
+                                </div>
+                                <div class="grid-container">
+                                    <div>Poison</div>
+                                    <div><input type="number" name="data.poisonR" value="{{data.poisonR}}"></div>
+                                </div>
+                                <div class="grid-container">
+                                    <div>Magic</div>
+                                    <div><input type="number" name="data.magicR" value="{{data.magicR}}"></div>
+                                </div>
+                                <div class="grid-container">
+                                    <div>Toughness</div>
+                                    <div><input type="number" name="data.natToughnessR" value="{{data.natToughnessR}}"></div>
+                                </div>
+                                <div class="grid-container">
+                                    <div>Silver</div>
+                                    <div><input type="number" name="data.silverR" value="{{data.silverR}}"></div>
+                                </div>
+                                <div class="grid-container">
+                                    <div>Sunlight</div>
+                                    <div><input type="number" name="data.sunlightR" value="{{data.sunlightR}}"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="quality-container">
+                        <div class="flex-container">
+                            <h2>Qualities</h2>
+                            <div>{{editor content=data.qualities target="data.qualities" button=true owner=owner editable=editable}}</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <!-- <div class="stickyHeader">
     <header class="sheet-header">
         <img class="profile-img" src="{{item.img}}" data-edit="img" title="{{item.name}}"/>
         <div class="header-fields">
@@ -196,5 +422,5 @@
                 </tbody>
             </table>
         </div>
-    </section>
+    </section> -->
 </form>

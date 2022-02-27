@@ -179,10 +179,6 @@
     html.find("#raceMenu").click(this._onRaceMenu.bind(this));
     html.find('#birthSignMenu').click(this._onBirthSignMenu.bind(this));
     html.find('#xpMenu').click(this._onXPMenu.bind(this));
-    html.find('.selectWeapon').contextmenu(this._selectWeaponMenu.bind(this))
-    html.find('.selectWeapon').click(this._onWeaponShortcut.bind(this))
-    html.find('.favorites-roll').contextmenu(this._selectFavoritesMenu.bind(this))
-    html.find('.favorites-roll').click(this._onFavoritesHotKey.bind(this))
     html.find('.rank-select').click(this._selectCombatRank.bind(this))
 
     //Update Item Attributes from Actor Sheet
@@ -196,34 +192,19 @@
     html.find(".incrementResource").click(this._onIncrementResource.bind(this))
     html.find(".resourceLabel button").click(this._onResetResource.bind(this))
     html.find("#spellFilter").click(this._filterSpells.bind(this))
-    html.find('#selectWornArmor').click(this._selectWornArmor.bind(this))
-    html.find('#resistanceToggle').click(this._toggleResistanceColumn.bind(this))
 
     //Item Create Buttons
     html.find(".item-create").click(await this._onItemCreate.bind(this));
 
     // Checks for UI Elements on Sheets and Updates
-    html.find(".swapContainer button").click(this._setPaperDoll.bind(this))
     this._createSpellFilterOptions()
     this._setDefaultSpellFilter()
     this._setResourceBars()
-    // this._setWoundIcon()
-    // this._setWoundBackground()
-    // this._setEquippedArmor()
     this._setResistanceColumnToggle()
     this._refreshWeaponShortcuts()
     this._createInnerValuesForHotKeys()
     this._createStatusTags()
     this._setDefaultCombatRank()
-
-    // Set saved scroll bar position if not default
-    // if (localStorage.getItem('scrollPosition') !== 0) {
-    //   this._setScrollPosition()
-    // }
-
-    // this.form.addEventListener('click', () => {
-    //   this._saveScrollPosition()
-    // })
 
     // Everything below here is only needed if the sheet is editable
     if (!this.options.editable) return;
@@ -2938,6 +2919,7 @@
   _createStatusTags() {
     this.actor.data.data.wounded ? this.form.querySelector('#wound-icon').classList.add('active') : this.form.querySelector('#wound-icon').classList.remove('active')
     this.actor.data.data.carry_rating.current > this.actor.data.data.carry_rating.max ? this.form.querySelector('#enc-icon').classList.add('active') : this.form.querySelector('#enc-icon').classList.remove('active')
+    this.actor.data.data.fatigue.level > 0 ? this.form.querySelector('#fatigue-icon').classList.add('active') : this.form.querySelector('#fatigue-icon').classList.remove('active')
   }
 
   _selectCombatRank(event) {

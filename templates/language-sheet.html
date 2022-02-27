@@ -1,40 +1,46 @@
 <form class="{{cssClass}}" autocomplete="off">
     <div class="stickyHeader">
-    <header class="sheet-header">
-        <img class="profile-img" src="{{item.img}}" data-edit="img" title="{{item.name}}"/>
-        <div class="header-fields">
-            <h1 class="charname"><input name="name" type="text" value="{{item.name}}" placeholder="Name"/></h1>
-            <div class="item-resource">
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Read/Write</th>
-                            <th>Speak</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td><input type="checkbox" name="data.readWrite" {{checked data.readWrite}}/></td>
-                            <td><input type="checkbox" name="data.speak" {{checked data.speak}}/></td>
-                        </tr>
-                    </tbody>
-                </table>
+        <header class="sheet-header">
+            <div class="header-fields">
+                <h1 class="charname flex-container">
+                    <img class="profile-img" src="{{item.img}}" data-edit="img" title="{{item.name}}"/>
+                    <input name="name" type="text" value="{{item.name}}" placeholder="Name"/>
+                </h1>
+                <div class="item-resource-container">
+                    <div class="item-resource-row">
+                        <div class="item-resource">
+                            <div class="stat-value-label">
+                                <input class="checkbox" type="checkbox" name="data.readWrite" {{checked data.readWrite}}/>
+                            </div>
+                            <div class="flex-container">
+                                <div class="small-text-label">Read/Write</div>
+                            </div>
+                        </div>
+                        <div class="item-resource">
+                            <div class="stat-value-label">
+                                <input class="checkbox" type="checkbox" name="data.speak" {{checked data.speak}}/>
+                            </div>
+                            <div class="flex-container">
+                                <div class="small-text-label">Speak</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
-        </div>
-    </header>
-
-    {{!-- Sheet Tab Navigation --}}
-    <nav class="sheet-tabs3 tabs" data-group="primary">
-        <a class="item" data-tab="description">Description</a>
-    </nav>
+        </header>
+    
+        {{!-- Sheet Tab Navigation --}}
+        <nav class="sheet-tabs tabs" data-group="primary">
+            <a class="item" data-tab="description">Description</a>
+        </nav>
     </div>
-
-    {{!-- Sheet Body --}}
-    <section class="sheet-body-items">
-
-        {{!-- Description Tab --}}
-        <div class="tab" data-group="primary" data-tab="description">
-            {{editor content=data.description target="data.description" button=true owner=owner editable=editable}}
-        </div>
-    </section>
+    
+        {{!-- Sheet Body --}}
+        <section class="sheet-body">
+    
+            {{!-- Description Tab --}}
+            <div class="tab" data-group="primary" data-tab="description">
+                {{editor content=data.description target="data.description" button=true owner=owner editable=editable}}
+            </div>
+        </section>
 </form>

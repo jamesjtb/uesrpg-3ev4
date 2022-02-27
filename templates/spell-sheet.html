@@ -1,85 +1,101 @@
 <form class="{{cssClass}}" autocomplete="off">
     <div class="stickyHeader">
-    <header class="sheet-header">
-        <img class="profile-img" src="{{item.img}}" data-edit="img" title="{{item.name}}"/>
-        <div class="header-fields">
-            <h1 class="charname"><input name="name" type="text" value="{{item.name}}" placeholder="Name"/></h1>
-            <div class="item-resource">
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Spell Level</th>
-                            <th>MP Cost</th>
-                            <th>School</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td><input type="text" name="data.level" value="{{data.level}}" data-dtype="Number"/></td>
-                            <td><input type="text" name="data.cost" value="{{data.cost}}" data-dtype="Number"></td>
-                            <td><select name="data.school" data-dtype="String">
-                                {{#select data.school}}
-                                {{#each data.school_cat as | school_cat key|}}
-                                <option value="{{key}}">{{school_cat}}</option>
-                                {{/each}} {{/select}}
-                            </select></td>
-                        </tr>
-                    </tbody>
-                    <thead>
-                        <tr>
-                            <th>Damage</th>
-                            <th>Form</th>
-                            <th>Type</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td><input type="text" name="data.damage" value="{{data.damage}}" data-dtype="String"/></td>
-                            <td><input type="text" name="data.form" value="{{data.form}}" data-dtype="String"></td>
-                            <td><select name="data.spellType" data-dtype="String">
-                                {{#select data.spellType}}
-                                {{#each data.spellTypes as | spellTypes key|}}
-                                <option value="{{key}}">{{spellTypes}}</option>
-                                {{/each}} {{/select}}
-                            </select></td>
-                        </tr>
-                    </tbody>
-                </table>
+        <header class="sheet-header">
+            <div class="header-fields">
+                <h1 class="charname flex-container">
+                    <img class="profile-img" src="{{item.img}}" data-edit="img" title="{{item.name}}"/>
+                    <input name="name" type="text" value="{{item.name}}" placeholder="Name"/>
+                </h1>
+                <div class="item-resource-container">
+                    <div class="item-resource-row">
+                        <div class="item-resource">
+                            <div class="stat-value-label">
+                                <input type="number" name="data.level" value="{{data.level}}"/>
+                            </div>
+                            <div class="flex-container">
+                                <div class="small-text-label">Level</div>
+                            </div>
+                        </div>
+                        <div class="item-resource">
+                            <div class="stat-value-label">
+                                <input type="number" name="data.cost" value="{{data.cost}}"/>
+                            </div>
+                            <div class="flex-container">
+                                <div class="small-text-label">MP Cost</div>
+                            </div>
+                        </div>
+                        <div class="item-resource">
+                            <div class="stat-value-label">
+                                <select name="data.school" data-dtype="String">
+                                    {{#select data.school}}
+                                    {{#each data.school_cat as | school_cat key|}}
+                                    <option value="{{key}}">{{school_cat}}</option>
+                                    {{/each}} {{/select}}
+                                </select>
+                            </div>
+                            <div class="flex-container">
+                                <div class="small-text-label">School</div>
+                            </div>
+                        </div>
+                        <div class="item-resource">
+                            <div class="stat-value-label">
+                                <select name="data.spellType" data-dtype="String">
+                                    {{#select data.spellType}}
+                                    {{#each data.spellTypes as | spellTypes key|}}
+                                    <option value="{{key}}">{{spellTypes}}</option>
+                                    {{/each}} {{/select}}
+                                </select>
+                            </div>
+                            <div class="flex-container">
+                                <div class="small-text-label">Type</div>
+                            </div>
+                        </div>
+                        <div class="item-resource">
+                            <div class="stat-value-label">
+                                <input type="text" name="data.damage" value="{{data.damage}}"/>
+                            </div>
+                            <div class="flex-container">
+                                <div class="small-text-label">Damage</div>
+                            </div>
+                        </div>
+                        <div class="item-resource">
+                            <div class="stat-value-label">
+                                <input type="text" name="data.form" value="{{data.form}}"/>
+                            </div>
+                            <div class="flex-container">
+                                <div class="small-text-label">Form</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
+        </header>
+    
+        {{!-- Sheet Tab Navigation --}}
+        <nav class="sheet-tabs tabs" data-group="primary">
+            <a class="item" data-tab="description">Description</a>
+            <a class="item" data-tab="attributes">Attributes</a>
+        </nav>
         </div>
-    </header>
-
-    {{!-- Sheet Tab Navigation --}}
-    <nav class="sheet-tabs3 tabs" data-group="primary">
-        <a class="item" data-tab="description">Description</a>
-        <a class="item" data-tab="attributes">Attributes</a>
-    </nav>
-    </div>
-
-    {{!-- Sheet Body --}}
-    <section class="sheet-body-items">
-
-        {{!-- Description Tab --}}
-        <div class="tab" data-group="primary" data-tab="description">
-            {{editor content=data.description target="data.description" button=true owner=owner editable=editable}}
-        </div>
-
-        {{!-- Attributes Tab --}}
-        <div class="tab" data-group="primary" data-tab="attributes">
-            <table class="field-inputs-small">
-                <thead>
-                    <tr>
-                        <th>Attribute</th>
-                        <th colspan="2">Input</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <th>Spell Attributes</th>
-                        <td colspan="2">{{editor content=data.attributes target="data.attributes" button=true owner=owner editable=editable}}</td>
-                    </tr>
-                </tbody>
-            </table>
-
-    </section>
+    
+        {{!-- Sheet Body --}}
+        <section class="sheet-body">
+    
+            {{!-- Description Tab --}}
+            <div class="tab" data-group="primary" data-tab="description">
+                {{editor content=data.description target="data.description" button=true owner=owner editable=editable}}
+            </div>
+    
+            {{!-- Attributes Tab --}}
+            <div class="tab" data-group="primary" data-tab="attributes">
+                <div class="attribute-tab-container">
+                    <div class="quality-container">
+                        <div class="flex-container">
+                            <h2>Spell Attributes</h2>
+                            <div>{{editor content=data.attributes target="data.attributes" button=true owner=owner editable=editable}}</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
 </form>
