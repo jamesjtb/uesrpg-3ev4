@@ -26,14 +26,6 @@
                         </div>
                         <div class="item-resource">
                             <div class="stat-value-label">
-                                <input class="checkbox" type="checkbox" name="data.wearable" {{checked data.wearable}}>
-                            </div>
-                            <div class="flex-container">
-                                <div class="small-text-label">Wearable</div>
-                            </div>
-                        </div>
-                        <div class="item-resource">
-                            <div class="stat-value-label">
                                 <input type="number" name="data.price" value="{{data.price}}"/>
                             </div>
                             <div class="flex-container">
@@ -94,6 +86,12 @@
                                 <div>Max Magic Charge</div>
                                 <div class="right-align-content">
                                     <input type="number" name="data.charge.max" value="{{data.charge.max}}">
+                                </div>
+                            </div>
+                            <div class="grid-container">
+                                <div>Wearable Item</div>
+                                <div class="right-align-content">
+                                    <input class="checkbox" type="checkbox" name="data.wearable" {{checked data.wearable}}>
                                 </div>
                             </div>
                         </div>

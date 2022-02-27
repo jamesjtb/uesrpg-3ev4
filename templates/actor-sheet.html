@@ -360,6 +360,10 @@
                                     </div>
                                 </div>
                                 <div class="flex-container">
+                                    <div>ENC</div>
+                                    <label>{{data.carry_rating.current}} / {{data.carry_rating.max}}</label>
+                                </div>
+                                <div class="flex-container">
                                     <div>Size</div>
                                     <select name="data.size" data-type="String">
                                         {{#select actor.data.size}}
@@ -422,7 +426,7 @@
                         <table class="weapon-table">
                             <thead>
                                 <tr>
-                                    <th class="item-name-cell item-create" id="weapon">+ Weapon</th>
+                                    <th class="item-name-cell equip-items" id="weapon">Equip Weapons</th>
                                     <th>Damage</th>
                                     <th>Reach</th>
                                     <th>2H</th>
@@ -430,7 +434,7 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                {{#each actor.data.weapon as |item id|}}
+                                {{#each actor.data.weapon.equipped as |item id|}}
                                     <tr class="item" data-item-id="{{item._id}}">
                                         <td class="item-name-cell">
                                             <div class="flex-container">
@@ -451,14 +455,14 @@
                         <table class="ammunition-table">
                             <thead>
                                 <tr>
-                                    <th class="item-name-cell item-create" id="ammunition">+ Ammunition</th>
+                                    <th class="item-name-cell equip-items" id="ammunition">Equip Ammo</th>
                                     <th>Bonus</th>
                                     <th>Qty</th>
                                     <th class="right-align-cell"><i class="fas fa-trash"></i></th>
                                 </tr>
                             </thead>
                             <tbody>
-                                {{#each actor.data.ammunition as |item id|}}
+                                {{#each actor.data.ammunition.equipped as |item id|}}
                                     <tr class="item" data-item-id="{{item._id}}">
                                         <td class="item-name-cell">
                                             <div class="flex-container">
@@ -478,7 +482,7 @@
                         <table class="armor-table">
                             <thead>
                                 <tr>
-                                    <th class="item-name-cell item-create" id="armor">+ Armor</th>
+                                    <th class="item-name-cell equip-items" id="armor" data-alt-type="item">Equip Armor</th>
                                     <th>AR</th>
                                     <th>MR</th>
                                     <th>BR</th>
@@ -486,7 +490,7 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                {{#each actor.data.armor as |item id|}}
+                                {{#each actor.data.armor.equipped as |item id|}}
                                     <tr class="item" data-item-id="{{item._id}}">
                                         <td class="item-name-cell">
                                             <div class="flex-container">
@@ -498,6 +502,21 @@
                                         <td>{{item.data.armor}}</td>
                                         <td>{{item.data.magic_ar}}</td>
                                         <td>{{item.data.blockRating}}</td>
+                                        <td class="right-align-cell"><a class="item-control item-delete" title="Delete Item"><i class="fas fa-trash"></i></a></td>
+                                    </tr>
+                                {{/each}}
+                                {{#each actor.data.gear.equipped as |item id|}}
+                                    <tr class="item" data-item-id="{{item._id}}">
+                                        <td class="item-name-cell">
+                                            <div class="flex-container">
+                                                <input type="checkbox" class="itemEquip checkbox" {{checked data.equipped}}>
+                                                <img class="item-img" src="{{item.img}}">
+                                                <div class="item-name">{{item.name}}</div>
+                                            </div>
+                                        </td>
+                                        <td>-</td>
+                                        <td>-</td>
+                                        <td>-</td>
                                         <td class="right-align-cell"><a class="item-control item-delete" title="Delete Item"><i class="fas fa-trash"></i></a></td>
                                     </tr>
                                 {{/each}}
@@ -652,28 +671,94 @@
                                 <thead>
                                     <tr>
                                         <th class="item-name-cell item-create" id="item">+ Item</th>
-                                        <th>Qty</th>
+                                        <th>
+                                            <select id="itemFilter">
+                                                <option>All</option>
+                                            </select>
+                                        </th>
                                         <th>ENC</th>
                                         <th>Price</th>
                                         <th><i class="fas fa-trash"></i></th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    {{#each actor.data.gear as |item id|}}
-                                        <tr class="item active" data-item-id="{{item._id}}" data-spell-school="{{item.data.school}}">
+                                    {{#each actor.data.gear.unequipped as |item id|}}
+                                        <tr class="item active" data-item-id="{{item._id}}" data-item-type="{{item.type}}">
                                             <td>
                                                 <div class="tableItemNameCell">
+                                                    <div class="qty-controls">
+                                                        <button class="minusQty plusQty" title="Click to increase, right click to decrease">
+                                                            <div>{{item.data.quantity}}</div>
+                                                        </button>
+                                                    </div>
                                                     <img class="item-img" src="{{item.img}}" title="Send to Chat"/>
                                                     <div class="item-name">{{item.name}}</div>
                                                 </div>
                                             </td>
+                                            <td>{{item.type}}</td>
+                                            <td>{{item.data.enc}}</td>
+                                            <td>{{item.data.price}}</td>
                                             <td>
-                                                <div class="qty-controls">
-                                                    <button class="minusQty plusQty" title="Click to increase, right click to decrease">
-                                                        <div>{{item.data.quantity}}</div>
-                                                    </button>
+                                                <a class="item-control item-delete" title="Delete Item"><i class="fas fa-trash"></i></a>
+                                            </td>
+                                        </tr>
+                                    {{/each}}
+                                    {{#each actor.data.armor.unequipped as |item id|}}
+                                        <tr class="item active" data-item-id="{{item._id}}" data-item-type="{{item.type}}">
+                                            <td>
+                                                <div class="tableItemNameCell">
+                                                    <div class="qty-controls">
+                                                        <button class="minusQty plusQty" title="Click to increase, right click to decrease">
+                                                            <div>{{item.data.quantity}}</div>
+                                                        </button>
+                                                    </div>
+                                                    <img class="item-img" src="{{item.img}}" title="Send to Chat"/>
+                                                    <div class="item-name">{{item.name}}</div>
                                                 </div>
                                             </td>
+                                            <td>{{item.type}}</td>
+                                            <td>{{item.data.enc}}</td>
+                                            <td>{{item.data.price}}</td>
+                                            <td>
+                                                <a class="item-control item-delete" title="Delete Item"><i class="fas fa-trash"></i></a>
+                                            </td>
+                                        </tr>
+                                    {{/each}}
+                                    {{#each actor.data.weapon.unequipped as |item id|}}
+                                        <tr class="item active" data-item-id="{{item._id}}" data-item-type="{{item.type}}">
+                                            <td>
+                                                <div class="tableItemNameCell">
+                                                    <div class="qty-controls">
+                                                        <button class="minusQty plusQty" title="Click to increase, right click to decrease">
+                                                            <div>{{item.data.quantity}}</div>
+                                                        </button>
+                                                    </div>
+                                                    <img class="item-img" src="{{item.img}}" title="Send to Chat"/>
+                                                    <div class="item-name">{{item.name}}</div>
+                                                </div>
+                                            </td>
+                                            <td>{{item.type}}</td>
+                                            <td>{{item.data.enc}}</td>
+                                            <td>{{item.data.price}}</td>
+                                            <td>
+                                                <a class="item-control item-delete" title="Delete Item"><i class="fas fa-trash"></i></a>
+                                            </td>
+                                        </tr>
+                                    {{/each}}
+                                    {{#each actor.data.ammunition.unequipped as |item id|}}
+                                        <tr class="item active" data-item-id="{{item._id}}" data-item-type="{{item.type}}">
+                                            <td>
+                                                <div class="tableItemNameCell">
+                                                    <div class="qty-controls">
+                                                        <button class="minusQty plusQty" title="Click to increase, right click to decrease">
+                                                            <div>{{item.data.quantity}}</div>
+                                                        </button>
+                                                    </div>
+                                                    <img class="item-img" src="{{item.img}}" title="Send to Chat"/>
+                                                    <div class="item-name">{{item.name}}</div>
+                                                </div>
+                                            </td>
+                                            <td>{{item.type}}</td>
                                             <td>{{item.data.enc}}</td>
                                             <td>{{item.data.price}}</td>
                                             <td>

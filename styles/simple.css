@@ -97,7 +97,8 @@
   cursor: pointer;
 }
 
-.worldbuilding .item-create:hover {
+.worldbuilding .item-create:hover,
+.worldbuilding .equip-items:hover {
   transition: 0.5s;
   cursor: pointer;
   color: black;
@@ -260,11 +261,13 @@
   gap: 5px;
 }
 
-.worldbuilding .spellList table .item {
+.worldbuilding .spellList table .item,
+.worldbuilding .equipmentList table .item {
   display: none;
 }
 
-.worldbuilding .spellList table .active {
+.worldbuilding .spellList table .active,
+.worldbuilding .equipmentList table .active {
   display: table-row;
 }
 
@@ -272,6 +275,14 @@
 .worldbuilding .ammunition-table button {
   height: 24px;
   line-height: 14px;
+}
+
+.worldbuilding .qty-controls {
+  width: 24px;
+}
+
+.worldbuilding .qty-controls button {
+  padding: 0;
 }
 
 /*---------------------------- 
@@ -758,13 +769,15 @@
   top: 0;
 }
 
-.worldbuilding #spellFilter {
+.worldbuilding #spellFilter,
+.worldbuilding #itemFilter {
   text-align: center;
   color: white;
   text-shadow: black;
 }
 
-.worldbuilding #spellFilter option {
+.worldbuilding #spellFilter option,
+.worldbuilding #itemFilter option {
   background: black;
 }
 
