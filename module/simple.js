@@ -139,44 +139,30 @@ Hooks.once("init", async function() {
           </div>
 
           <div style="overflow-y: scroll; height: 300px; margin: 5px; padding: 5px; background-color: rgba(78, 78, 78, 0.137);">
-            <h2 style="text-align: center;">v1.44 Changelog</h2>
+            <h2 style="text-align: center;">v${game.system.data.version} Changelog</h2>
 
                 <h3>General Changes</h3>
                   <ul>
-                      <li>Redesign of the entire character, merchant, and NPC sheets to be easier to use and in general more practical.</li>
-                      <li>Character Birthsign Selection Menu: Select a birthsign (or input a custom label to circumvent automation) and it will automatically create the appropriate 
-                          talents, powers, and traits according to your selection.
+                      <li><strong>Sheet Redesign:</strong> New layout for character, merchant, NPC, and all item sheets to be easier to use and in general more practical. Can now freely resize the sheet with minimal negative
+                          effect on the layout and design. Go nuts!
                       </li>
-                      <li>Character Race Selection Menu: Select from 10 of the default races (likely more will be added, as well as additional stat block options in later releases)
-                          and have their stat blocks automatically applied to the character's characteristics! Also has an option for custom races with no automation.
+                      <li><strong>Status Modifiers:</strong> A new way to visualize current effects on characters with a status column on the combat tab as well as icons next to the character portrait.
+                          Currently supports Fatigue effects, Wounded effects, and Overencumbered effects. This also outputs a tag on any rolled tests so users can easily see what effects
+                          are applied on the roll. Combat rolls, profession rolls, and characteristic rolls are automatically modified with status effects.
                       </li>
-                      <li>Lucky/Unlucky Numbers Selection Menu: Input your lucky/unlucky numbers into the menu, which also includes automation support for The Thief birthsign, which grants
-                          an additional lucky number.
+                      <li><strong>Item Equip System:</strong> Weapons, Armor, Items, and Ammo now have an equipped state. Unequipped items are now part of an item master list included on the Items tab. Any equipped
+                          items are moved over to the combat tab. They can easily be equipped in bulk on the combat tab by clicking on the headers and equipped any items. This cleans up the combat tab
+                          so that only the equipped items are shown, and all others are left on the items master list. NOTE: Regular items must have the "Wearable" toggle on in order to be equipped via the 
+                          combat tab Equip Armor button.
                       </li>
-                      <li>XP Tracker Menu: Track and input your XP and easily see your progress toward the next Campaign Rank level</li>
+                      <li><strong>New Item Filter:</strong> Filter by item types within the new master item list on the item tab.</li>
+                      <li><strong>Combat Style Auto-Select Highest Characteristic:</strong> New Combat Styles created on Character sheets automatically select the highest from STR or AGI on creation. This saves a click or two.</li>
                   </ul>
 
                 <h3>Combat Changes</h3>
                   <ul>
-                      <li>New blood splatter effect over the combat avatar when the wounded checkbox is ticked.</li>
-                      <li>Select a custom body avatar or use the default avatars. It is recommended you use a transparent file, otherwise the wounded effects might not be visible.</li>
-                      <li>New Equip Armor Menu: Equip armor and other items using the Armor button on the combat tab. Allows you to easily see your load-out and details in one place.</li>
-                      <li>New Primary/Secondary Weapon Hotkeys: Right click the hotkeys next to your combat avatar to select from your weapon list and assign the weapon for quick access.</li>
-                      <li>New Toggle for hiding Resistance Column. Useful if you want to clear up the UI a bit.</li>
-                  </ul>
-
-                <h3>Magic Changes</h3>
-                  <ul>
-                      <li>New Magic Spell Filter: Spells are now able to be filtered by School category (Alteration, Destruction, etc.). Helps with those massive spell lists on mage characters!</li>
-                      <li>New Spellcasting menu when you click to cast a spell. Lets you select Overload, Restraint, and a few others if you have the appropriate talents.</li>
-                      <li>If a spell does not have a damage value (or is set to 0), the output will not show up in the chat result (requested for non-damaging spells)</li>
-                      <li>New System Setting to automatically deduct calculated spell costs after modifiers (Restraint, Overload, Overcharge, Magicka Cycling, etc.) from the caster's current Magicka.</li>
-                  </ul>
-
-                <h3>Item Changes</h3>
-                  <ul>
-                      <li>New Equipment Tab Design: Alphabetically sorted to better organize long item lists, plus new qty increment function. Right click to decrease, click to increase.</li>
-                      <li>Items now have a "wearable" property. When tagged, it allows you to Equip it via the Equip Armor menu on the Combat tab. Great for use with rings, amulets, jewelry, and clothing.</li>
+                      <li><strong>Weapon Damage Toggle:</strong> Weapon damage toggle from 1H to 2H dynamically shows damage based on toggle status.</li>
+                      <li><strong>NPC Combat Buttons:</strong> New NPC Combat buttons on the Combat tab to make rolling a bit easier during combat.</li>
                   </ul>
           </div>
 

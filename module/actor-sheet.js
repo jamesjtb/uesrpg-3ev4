@@ -924,9 +924,9 @@
 
                     let contentString = `<h2><img src=${spellToCast.img}></im>${spellToCast.name}</h2>
                                             <table>
-                                                <thead style="background: rgba(161, 149, 149, 0.486);">
+                                                <thead>
                                                     <tr>
-                                                        <th style="min-width: 80px; text-align: center;">Name</th>
+                                                        <th style="min-width: 80px;">Name</th>
                                                         <th style="min-width: 80px; text-align: center;">Result</th>
                                                         <th style="min-width: 80px; text-align: center;">Detail</th>
                                                     </tr>
@@ -1362,10 +1362,21 @@
     }
 
     else {
-      itemData = [{
-        name: element.id,
-        type: element.id,
-      }]
+
+      if (element.id === 'combatStyle') {
+        let autoSelectedBaseCha = this.actor.data.data.characteristics.str.total > this.actor.data.data.characteristics.agi.total ? 'str' : 'agi'
+        itemData = [{
+          name: element.id,
+          type: element.id,
+          'data.baseCha': autoSelectedBaseCha
+        }]
+      } else {
+        itemData = [{
+          name: element.id,
+          type: element.id
+        }]
+      }
+
 
       let newItem = await this.actor.createEmbeddedDocuments("Item", itemData);
       await newItem[0].sheet.render(true)

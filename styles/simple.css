@@ -152,6 +152,13 @@
   width: 24px;
 }
 
+.chat-message .tableCenterText {
+  text-align: center;
+}
+
+.chat-message .inline-roll {
+  font-weight: bold;
+}
 
 /*---------------------------- 
   Actor Sheets
@@ -224,11 +231,10 @@
 
 .worldbuilding .itemInfo {
   justify-content: flex-start;
-  width: 60%;
+  width: 100%;
 }
 
 .worldbuilding .item-controls {
-  width: 40%;
   justify-content: flex-end;
 }
 
@@ -351,7 +357,6 @@
   transform: translate(-50%, -50%);
   width: 180px;
   height: 180px;
-  border: 2px solid black;
 }
 
 .worldbuilding .charname input {
@@ -375,6 +380,8 @@
   display: none;
   height: 24px;
   width: 24px;
+  border-radius: 50%;
+  border: 1px solid;
 }
 
 .worldbuilding .vertical-flex-container .active {
@@ -489,7 +496,6 @@
   justify-content: flex-start;
   border-bottom: 1px solid rgba(128, 128, 128, 0.719);
   background-color: rgba(194, 194, 194, 0.308);
-  height: 40px;
 }
 
 .worldbuilding .characteristic input:hover {
@@ -503,23 +509,6 @@
   flex-direction: row;
   align-items: center;
   justify-content: flex-end;
-}
-
-.worldbuilding .characteristic .right-align-content .relative-container {
-  width: 30px;
-  height: 30px;
-}
-
-.worldbuilding .characteristic .right-align-content .relative-container .styled-font {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  height: 30px;
-  width: 30px;
-  background-color: rgba(255, 255, 255, 0.5);
-  border-radius: 50%;
-  border: 1px solid;
 }
 
 .worldbuilding .characteristic .right-align-content img {
@@ -550,6 +539,10 @@
   font-family: "cyrodiil";
   color: darkred;
   font-size: 16px;
+}
+
+.worldbuilding .red {
+  color: darkred;
 }
 
 .worldbuilding .characteristics-container h2 {
@@ -621,6 +614,7 @@
 
 .worldbuilding .buttonStats button {
   border: 1px solid;
+  padding: 0;
 }
 
 .worldbuilding .npc-button-stats {
@@ -883,6 +877,10 @@
   border: 1px solid;
   background: rgba(180, 180, 180, 0.562);
   padding: 5px;
+}
+
+.worldbuilding .wealthContainer input {
+  border: none;
 }
 
 .worldbuilding .wealthCalc:hover {

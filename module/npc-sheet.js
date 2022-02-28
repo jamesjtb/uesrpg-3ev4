@@ -1027,9 +1027,9 @@ export class npcSheet extends ActorSheet {
 
                     let contentString = `<h2><img src=${spellToCast.img}></im>${spellToCast.name}</h2>
                                             <table>
-                                                <thead style="background: rgba(161, 149, 149, 0.486);">
+                                                <thead>
                                                     <tr>
-                                                        <th style="min-width: 80px; text-align: center;">Name</th>
+                                                        <th style="min-width: 80px;">Name</th>
                                                         <th style="min-width: 80px; text-align: center;">Result</th>
                                                         <th style="min-width: 80px; text-align: center;">Detail</th>
                                                     </tr>
