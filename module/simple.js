@@ -181,6 +181,7 @@ Hooks.once("init", async function() {
       close: html => console.log()
     });
     popup.position.width = 650;
+    popup.position.height = 750;
     popup.render(true);
   }
 

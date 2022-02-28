@@ -1933,7 +1933,7 @@
     })
 
     d.position.width = 600;
-    // d.position.height = 750;
+    d.position.height = 775;
     d.render(true)
   }
 
