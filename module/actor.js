@@ -293,7 +293,7 @@ export class SimpleActor extends Actor {
 
   } 
 
-  _prepareNPCData(actorData) {
+  async _prepareNPCData(actorData) {
     const data = actorData.data;
 
     //Add bonuses from items to Characteristics
@@ -370,7 +370,7 @@ export class SimpleActor extends Actor {
     data.luck_points.max = lckBonus + data.luck_points.bonus;
 
     data.carry_rating.max = Math.floor((4 * strBonus) + (2 * endBonus)) + data.carry_rating.bonus;
-    data.carry_rating.current = (this._calculateENC(actorData) - this._armorWeight(actorData) - this._excludeENC(actorData)).toFixed(1);
+    data.carry_rating.current = (this._calculateENC(actorData) - this._armorWeight(actorData) - this._excludeENC(actorData)).toFixed(1)
 
     //Form Shift Calcs
     if (this._wereWolfForm(actorData) === true) {

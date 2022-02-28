@@ -176,7 +176,6 @@ export class merchantSheet extends ActorSheet {
     html.find(".professions-roll").click(await this._onProfessionsRoll.bind(this));
     html.find(".damage-roll").click(await this._onDamageRoll.bind(this));
     html.find(".unconventional-roll").click(await this._onUnconventionalRoll.bind(this));
-    // html.find(".commerce-roll").click(await this._onUnconventionalRoll.bind(this));
     html.find(".magic-roll").click(await this._onSpellRoll.bind(this));
     html.find(".resistance-roll").click(await this._onResistanceRoll.bind(this));
     html.find(".armor-roll").click(await this._onArmorRoll.bind(this));
@@ -209,6 +208,7 @@ export class merchantSheet extends ActorSheet {
     this._updateModPrice()
     this._createItemFilterOptions()
     this._setDefaultItemFilter()
+    this._createStatusTags()
 
     // Everything below here is only needed if the sheet is editable
     if (!this.options.editable) return;
@@ -598,8 +598,11 @@ export class merchantSheet extends ActorSheet {
     async _onClickCharacteristic(event) {
       event.preventDefault()
       const element = event.currentTarget
-      const woundedValue = this.actor.data.data.characteristics[element.id].total + this.actor.data.data.woundPenalty + this.actor.data.data.fatigue.penalty + this.actor.data.data.carry_rating.penalty
-      const regularValue = this.actor.data.data.characteristics[element.id].total + this.actor.data.data.fatigue.penalty + this.actor.data.data.carry_rating.penalty
+      const woundedValue = this.actor.data.data.characteristics[element.id].total + this.actor.data.data.woundPenalty + this.actor.data.data.fatigue.penalty
+      const regularValue = this.actor.data.data.characteristics[element.id].total + this.actor.data.data.fatigue.penalty
+      let tags = []
+      if (this.actor.data.data.wounded) {tags.push(`<span class="tag wound-tag">Wounded ${this.actor.data.data.woundPenalty}</span>`)}
+      if (this.actor.data.data.fatigue.penalty != 0) {tags.push(`<span class="tag fatigue-tag">Fatigued ${this.actor.data.data.fatigue.penalty}</span>`)}
   
       let d = new Dialog({
         title: "Apply Roll Modifier",
@@ -704,7 +707,8 @@ export class merchantSheet extends ActorSheet {
         user: game.user.id, 
         speaker: ChatMessage.getSpeaker(), 
         roll: roll,
-        content: contentString
+        content: contentString,
+        flavor: `<div class="tag-container">${tags.join('')}</div>`
       })
   
       }
@@ -724,9 +728,8 @@ export class merchantSheet extends ActorSheet {
       event.preventDefault()
       const element = event.currentTarget
       let tags = []
-      if (this.actor.data.data.wounded) {tags.push(`<span style="border:none; border-radius:30px; background-color: darkred; color:white; text-align:center; font-size:xx-small; padding:5px">Wounded ${this.actor.data.data.woundPenalty}</span>`)}
-      if (this.actor.data.data.fatigue.penalty != 0) {tags.push(`<span style="border:none; border-radius:30px; background-color: green; color:white; text-align:center; font-size:xx-small; padding:5px">Fatigued ${this.actor.data.data.fatigue.penalty}</span>`)}
-      if (this.actor.data.data.carry_rating.penalty != 0) {tags.push(`<span style="border:none; border-radius:30px; background-color: black; color:white; text-align:center; font-size:xx-small; padding:5px">Overencumbered ${this.actor.data.data.carry_rating.penalty}</span>`)}
+      if (this.actor.data.data.wounded) {tags.push(`<span class="tag wound-tag">Wounded ${this.actor.data.data.woundPenalty}</span>`)}
+      if (this.actor.data.data.fatigue.penalty != 0) {tags.push(`<span class="tag fatigue-tag">Fatigued ${this.actor.data.data.fatigue.penalty}</span>`)}
   
       let d = new Dialog({
         title: "Apply Roll Modifier",
@@ -756,7 +759,7 @@ export class merchantSheet extends ActorSheet {
                 roll.result == this.actor.data.data.lucky_numbers.ln10)
                 {
                 contentString = `<h2>${element.getAttribute('name')}</h2>
-                <p></p><b>Target Number: [[${this.actor.data.data.professionsWound[element.getAttribute('id')]} + ${playerInput} + ${this.actor.data.data.fatigue.penalty} + ${this.actor.data.data.carry_rating.penalty}]]</b> <p></p>
+                <p></p><b>Target Number: [[${this.actor.data.data.professionsWound[element.getAttribute('id')]} + ${playerInput} + ${this.actor.data.data.fatigue.penalty}]]</b> <p></p>
                 <b>Result: [[${roll.result}]]</b><p></p>
                 <span style='color:green; font-size:120%;'> <b>LUCKY NUMBER!</b></span>`
   
@@ -769,15 +772,15 @@ export class merchantSheet extends ActorSheet {
                   roll.result == this.actor.data.data.unlucky_numbers.ul6) 
                   {
                     contentString = `<h2>${element.getAttribute('name')}</h2>
-                    <p></p><b>Target Number: [[${this.actor.data.data.professionsWound[element.getAttribute('id')]} + ${playerInput} + ${this.actor.data.data.fatigue.penalty} + ${this.actor.data.data.carry_rating.penalty}]]</b> <p></p>
+                    <p></p><b>Target Number: [[${this.actor.data.data.professionsWound[element.getAttribute('id')]} + ${playerInput} + ${this.actor.data.data.fatigue.penalty}]]</b> <p></p>
                     <b>Result: [[${roll.result}]]</b><p></p>
                     <span style='color:rgb(168, 5, 5); font-size:120%;'> <b>UNLUCKY NUMBER!</b></span>`
   
                   } else {
                     contentString = `<h2>${element.getAttribute('name')}</h2>
-                    <p></p><b>Target Number: [[${this.actor.data.data.professionsWound[element.getAttribute('id')]} + ${playerInput} + ${this.actor.data.data.fatigue.penalty} + ${this.actor.data.data.carry_rating.penalty}]]</b> <p></p>
+                    <p></p><b>Target Number: [[${this.actor.data.data.professionsWound[element.getAttribute('id')]} + ${playerInput} + ${this.actor.data.data.fatigue.penalty}]]</b> <p></p>
                     <b>Result: [[${roll.result}]]</b><p></p>
-                    <b>${roll.result<=(this.actor.data.data.professionsWound[element.getAttribute('id')] + playerInput + this.actor.data.data.fatigue.penalty + this.actor.data.data.carry_rating.penalty) ? " <span style='color:green; font-size: 120%;'> <b>SUCCESS!</b></span>" : " <span style='color:rgb(168, 5, 5); font-size: 120%;'> <b>FAILURE!</b></span>"}`
+                    <b>${roll.result<=(this.actor.data.data.professionsWound[element.getAttribute('id')] + playerInput + this.actor.data.data.fatigue.penalty) ? " <span style='color:green; font-size: 120%;'> <b>SUCCESS!</b></span>" : " <span style='color:rgb(168, 5, 5); font-size: 120%;'> <b>FAILURE!</b></span>"}`
   
                   }
   
@@ -788,7 +791,7 @@ export class merchantSheet extends ActorSheet {
                     speaker: ChatMessage.getSpeaker(), 
                     roll: roll,
                     content: contentString,
-                    flavor: tags.join('')
+                    flavor: `<div class="tag-container">${tags.join('')}</div>`
                   })
             }
           },
@@ -1567,6 +1570,12 @@ export class merchantSheet extends ActorSheet {
           }
         }
       }
+  }
+
+  _createStatusTags() {
+    this.actor.data.data.wounded ? this.form.querySelector('#wound-icon').classList.add('active') : this.form.querySelector('#wound-icon').classList.remove('active')
+    // this.actor.data.data.carry_rating.current > this.actor.data.data.carry_rating.max ? this.form.querySelector('#enc-icon').classList.add('active') : this.form.querySelector('#enc-icon').classList.remove('active')
+    this.actor.data.data.fatigue.level > 0 ? this.form.querySelector('#fatigue-icon').classList.add('active') : this.form.querySelector('#fatigue-icon').classList.remove('active')
   }
 
 }

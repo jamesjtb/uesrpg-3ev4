@@ -148,7 +148,8 @@ Hooks.once("init", async function() {
                       </li>
                       <li><strong>Status Modifiers:</strong> A new way to visualize current effects on characters with a status column on the combat tab as well as icons next to the character portrait.
                           Currently supports Fatigue effects, Wounded effects, and Overencumbered effects. This also outputs a tag on any rolled tests so users can easily see what effects
-                          are applied on the roll. Combat rolls, profession rolls, and characteristic rolls are automatically modified with status effects.
+                          are applied on the roll. Combat rolls, profession rolls, and characteristic rolls are automatically modified with status effects. Merchant sheet NPC's rolls are unaffected by ENC status so they
+                          can have as many items on them as you want without affecting their rolls.
                       </li>
                       <li><strong>Item Equip System:</strong> Weapons, Armor, Items, and Ammo now have an equipped state. Unequipped items are now part of an item master list included on the Items tab. Any equipped
                           items are moved over to the combat tab. They can easily be equipped in bulk on the combat tab by clicking on the headers and equipped any items. This cleans up the combat tab

@@ -483,9 +483,9 @@ export class npcSheet extends ActorSheet {
     const woundedValue = this.actor.data.data.characteristics[element.id].total + this.actor.data.data.woundPenalty + this.actor.data.data.fatigue.penalty + this.actor.data.data.carry_rating.penalty
     const regularValue = this.actor.data.data.characteristics[element.id].total + this.actor.data.data.fatigue.penalty + this.actor.data.data.carry_rating.penalty
     let tags = []
-    if (this.actor.data.data.wounded) {tags.push(`<span style="border:none; border-radius:30px; background-color: darkred; color:white; text-align:center; font-size:xx-small; padding:5px">Wounded ${this.actor.data.data.woundPenalty}</span>`)}
-    if (this.actor.data.data.fatigue.penalty != 0) {tags.push(`<span style="border:none; border-radius:30px; background-color: green; color:white; text-align:center; font-size:xx-small; padding:5px">Fatigued ${this.actor.data.data.fatigue.penalty}</span>`)}
-    if (this.actor.data.data.carry_rating.penalty != 0) {tags.push(`<span style="border:none; border-radius:30px; background-color: black; color:white; text-align:center; font-size:xx-small; padding:5px">Overencumbered ${this.actor.data.data.carry_rating.penalty}</span>`)}
+    if (this.actor.data.data.wounded) {tags.push(`<span class="tag wound-tag">Wounded ${this.actor.data.data.woundPenalty}</span>`)}
+    if (this.actor.data.data.fatigue.penalty != 0) {tags.push(`<span class="tag fatigue-tag">Fatigued ${this.actor.data.data.fatigue.penalty}</span>`)}
+    if (this.actor.data.data.carry_rating.penalty != 0) {tags.push(`<span class="tag enc-tag">Encumbered ${this.actor.data.data.carry_rating.penalty}</span>`)}
 
     let d = new Dialog({
       title: "Apply Roll Modifier",
@@ -591,7 +591,7 @@ export class npcSheet extends ActorSheet {
       speaker: ChatMessage.getSpeaker(), 
       roll: roll,
       content: contentString,
-      flavor: tags.join('')
+      flavor: `<div class="tag-container">${tags.join('')}</div>`
     })
 
     }
@@ -611,9 +611,9 @@ export class npcSheet extends ActorSheet {
     event.preventDefault()
     const element = event.currentTarget
     let tags = []
-    if (this.actor.data.data.wounded) {tags.push(`<span style="border:none; border-radius:30px; background-color: darkred; color:white; text-align:center; font-size:xx-small; padding:5px">Wounded ${this.actor.data.data.woundPenalty}</span>`)}
-    if (this.actor.data.data.fatigue.penalty != 0) {tags.push(`<span style="border:none; border-radius:30px; background-color: green; color:white; text-align:center; font-size:xx-small; padding:5px">Fatigued ${this.actor.data.data.fatigue.penalty}</span>`)}
-    if (this.actor.data.data.carry_rating.penalty != 0) {tags.push(`<span style="border:none; border-radius:30px; background-color: black; color:white; text-align:center; font-size:xx-small; padding:5px">Overencumbered ${this.actor.data.data.carry_rating.penalty}</span>`)}
+    if (this.actor.data.data.wounded) {tags.push(`<span class="tag wound-tag">Wounded ${this.actor.data.data.woundPenalty}</span>`)}
+    if (this.actor.data.data.fatigue.penalty != 0) {tags.push(`<span class="tag fatigue-tag">Fatigued ${this.actor.data.data.fatigue.penalty}</span>`)}
+    if (this.actor.data.data.carry_rating.penalty != 0) {tags.push(`<span class="tag enc-tag">Encumbered ${this.actor.data.data.carry_rating.penalty}</span>`)}
 
     let d = new Dialog({
       title: "Apply Roll Modifier",
@@ -675,7 +675,7 @@ export class npcSheet extends ActorSheet {
                   speaker: ChatMessage.getSpeaker(), 
                   roll: roll,
                   content: contentString,
-                  flavor: tags.join('')
+                  flavor: `<div class="tag-container">${tags.join('')}</div>`
                 })
           }
         },
