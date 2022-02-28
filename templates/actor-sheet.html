@@ -36,9 +36,10 @@
                             </div>
                         </div>
                         <div class="maxBar" data-resource="hp">
-                            <div id="hpBar" class="currentBar" data-resource="hp">
+                            <div class="bar-values">
                                 <input type="number" name="data.hp.value" value="{{data.hp.value}}"> / <label>{{data.hp.max}}</label>
                             </div>
+                            <div id="hpBar" class="currentBar" data-resource="hp"></div>
                         </div>
                     </div>
                     <div id="staminaResource">
@@ -49,10 +50,11 @@
                                 <i data-action="decrease" data-resource="stamina" class="fas fa-angle-down incrementResource"></i>
                             </div>
                         </div>
-                        <div class="maxBar" data-resource="stamina">
-                            <div id="staminaBar" class="currentBar" data-resource="stamina">
+                        <div class="maxBar" data-resource="hp">
+                            <div class="bar-values">
                                 <input type="number" name="data.stamina.value" value="{{data.stamina.value}}"> / <label>{{data.stamina.max}}</label>
                             </div>
+                            <div id="staminaBar" class="currentBar" data-resource="stamina"></div>
                         </div>
                     </div>
                     <div id="magickaResource">
@@ -63,10 +65,11 @@
                                 <i data-action="decrease" data-resource="magicka" class="fas fa-angle-down incrementResource"></i>
                             </div>
                         </div>
-                        <div class="maxBar" data-resource="magicka">
-                            <div id="magickaBar" class="currentBar" data-resource="magicka">
+                        <div class="maxBar" data-resource="hp">
+                            <div class="bar-values">
                                 <input type="number" name="data.magicka.value" value="{{data.magicka.value}}"> / <label>{{data.magicka.max}}</label>
                             </div>
+                            <div id="magickaBar" class="currentBar" data-resource="magicka"></div>
                         </div>
                     </div>
                     <div id="luckResource">
@@ -77,10 +80,11 @@
                                 <i data-action="decrease" data-resource="luck_points" class="fas fa-angle-down incrementResource"></i>
                             </div>
                         </div>
-                        <div class="maxBar" data-resource="luck_points">
-                            <div id="luck_pointsBar" class="currentBar" data-resource="luck_points">
+                        <div class="maxBar" data-resource="hp">
+                            <div class="bar-values">
                                 <input type="number" name="data.luck_points.value" value="{{data.luck_points.value}}"> / <label>{{data.luck_points.max}}</label>
                             </div>
+                            <div id="luck_pointsBar" class="currentBar" data-resource="luck_points"></div>
                         </div>
                     </div>
                 </div>

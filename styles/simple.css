@@ -350,6 +350,8 @@
 
 .worldbuilding .qty-controls button {
   padding: 0;
+  height: 24px;
+  line-height: 14px;
 }
 
 /*---------------------------- 
@@ -462,9 +464,22 @@
   position: relative;
   border: 1px solid;
   border-radius: 5px;
+  height: 28px;
   width: 100%;
   font-family: "cyrodiil";
   font-weight: bold;
+  background: rgb(73, 73, 73);
+}
+
+.worldbuilding .maxBar .bar-values {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  height: 26px;
+  width: 60%;
+  text-align: center;
+  color: white;
 }
 
 .worldbuilding .currentBar {
@@ -473,10 +488,11 @@
   align-items: center;
   justify-content: center;
   gap: 5px;
+  height: 26px;
   width: 100%;
 }
 
-.worldbuilding .currentBar input {
+.worldbuilding .maxBar input {
   width: 30px;
   color: white;
   border: none;

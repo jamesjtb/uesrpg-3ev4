@@ -2348,7 +2348,7 @@
 
               // if greater than 100 or lower than 20, set values to fit bars correctly
               proportion < 100 ? proportion = proportion : proportion = 100
-              proportion < 50 ? proportion = 50 : proportion = proportion
+              proportion < 0 ? proportion = 0 : proportion = proportion
 
               // Apply the proportion to the width of the resource bar
               resourceElement.style.width = `${proportion}%`
