@@ -1,104 +1,205 @@
 <form class="{{cssClass}}" autocomplete="off">
 
-    <div class="stickyHeader">
-        <div class="headerContainer">
-            <div>
-                <img class="profile-img" src="{{actor.img}}" data-edit="img" title="{{actor.name}}">
-            </div>
-            <div class="headerInfoFlexBox">
+    {{!-- Character Sheet Sections --}}
+    <div class="sheet-section-container">
+
+        <div class="sheet-fixed-container">
+            <div class="character-profile-container">
+                <div class="profile-img-container">
+                    <img class="profile-img" src="{{actor.img}}" data-edit="img" title="{{actor.name}}">
+                    <div class="status-column">
+                        <div class="vertical-flex-container">
+                            <img id="wound-icon" src="icons/skills/wounds/blood-drip-droplet-red.webp" title="Wounded {{data.woundPenalty}}">
+                            <img id="fatigue-icon" src="icons/magic/control/debuff-energy-hold-green.webp" title="Fatigued {{data.fatigue.penalty}}">
+                            <img id="enc-icon" src="icons/containers/bags/pack-leather-brown.webp" title="{{data.carry_rating.label}} {{data.carry_rating.penalty}}">
+                        </div>
+                    </div>
+                </div>
+                <nav class="sheet-tabs tabs" data-group="primary">
+                    <a class="item" data-tab="core">Core</a>
+                </nav>
                 <div>
                     <h1 class="charname"><input type="text" name="name" value="{{actor.name}}" placeholder="Name"></h1>
                 </div>
+            </div>
+            <div class="fixed-data-container">
                 <div class="resourceBars">
                     <div id="hpResource">
                         <div class="resourceLabel">
                             <button type="button" data-resource="hp">Health</button>
                             <div class="resourceButton">
-                                <i data-action="increase" data-resource="hp" class="fas fa-plus fa-xs incrementResource"></i>
-                                <i data-action="decrease" data-resource="hp" class="fas fa-minus fa-xs incrementResource"></i>
+                                <i data-action="increase" data-resource="hp" class="fas fa-angle-up incrementResource"></i>
+                                <i data-action="decrease" data-resource="hp" class="fas fa-angle-down incrementResource"></i>
                             </div>
                         </div>
                         <div class="maxBar" data-resource="hp">
-                            <div id="hpBar" class="currentBar" data-resource="hp"></div>
+                            <div id="hpBar" class="currentBar" data-resource="hp">
+                                <input type="number" name="data.hp.value" value="0"> / <label>0</label>
+                            </div>
                         </div>
                     </div>
                     <div id="staminaResource">
                         <div class="resourceLabel">
                             <button type="button" data-resource="stamina">Stamina</button>
                             <div class="resourceButton">
-                                <i data-action="increase" data-resource="stamina" class="fas fa-plus fa-xs incrementResource"></i>
-                                <i data-action="decrease" data-resource="stamina" class="fas fa-minus fa-xs incrementResource"></i>
+                                <i data-action="increase" data-resource="stamina" class="fas fa-angle-up incrementResource"></i>
+                                <i data-action="decrease" data-resource="stamina" class="fas fa-angle-down incrementResource"></i>
                             </div>
                         </div>
                         <div class="maxBar" data-resource="stamina">
-                            <div id="staminaBar" class="currentBar" data-resource="stamina"></div>
+                            <div id="staminaBar" class="currentBar" data-resource="stamina">
+                                <input type="number" name="data.stamina.value" value="0"> / <label>0</label>
+                            </div>
                         </div>
                     </div>
                     <div id="magickaResource">
                         <div class="resourceLabel">
                             <button type="button" data-resource="magicka">Magicka</button>
                             <div class="resourceButton">
-                                <i data-action="increase" data-resource="magicka" class="fas fa-plus fa-xs incrementResource"></i>
-                                <i data-action="decrease" data-resource="magicka" class="fas fa-minus fa-xs incrementResource"></i>
+                                <i data-action="increase" data-resource="magicka" class="fas fa-angle-up incrementResource"></i>
+                                <i data-action="decrease" data-resource="magicka" class="fas fa-angle-down incrementResource"></i>
                             </div>
                         </div>
                         <div class="maxBar" data-resource="magicka">
-                            <div id="magickaBar" class="currentBar" data-resource="magicka"></div>
+                            <div id="magickaBar" class="currentBar" data-resource="magicka">
+                                <input type="number" name="data.magicka.value" value="0"> / <label>0</label>
+                            </div>
                         </div>
                     </div>
                     <div id="luckResource">
                         <div class="resourceLabel">
                             <button type="button" data-resource="luck_points">Luck</button>
                             <div class="resourceButton">
-                                <i data-action="increase" data-resource="luck_points" class="fas fa-plus fa-xs incrementResource"></i>
-                                <i data-action="decrease" data-resource="luck_points" class="fas fa-minus fa-xs incrementResource"></i>
+                                <i data-action="increase" data-resource="luck_points" class="fas fa-angle-up incrementResource"></i>
+                                <i data-action="decrease" data-resource="luck_points" class="fas fa-angle-down incrementResource"></i>
                             </div>
                         </div>
                         <div class="maxBar" data-resource="luck_points">
-                            <div id="luck_pointsBar" class="currentBar" data-resource="luck_points"></div>
+                            <div id="luck_pointsBar" class="currentBar" data-resource="luck_points">
+                                <input type="number" name="data.luck_points.value" value="0"> / <label>0</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="characteristics-container">
+                    <h2>
+                        <button type="button" class="setBaseCharacteristics">Set</button>
+                        <div>Characteristics</div>
+                    </h2>
+                    <div class="characteristic-entry-container">
+                        <div class="characteristic">
+                            <input class="checkbox" type="checkbox" name="data.characteristics.str.favored" {{checked data.characteristics.str.favored}}>
+                            <div id="str" name="Strength" class="characteristic-roll styled-font rollable">Strength</div>
+                            <div class="right-align-content">
+                                <div class="relative-container">
+                                    <div class="styled-font">X</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="characteristic">
+                            <input class="checkbox" type="checkbox" name="data.characteristics.end.favored" {{checked data.characteristics.end.favored}}>
+                            <div id="end" name="Endurance" class="characteristic-roll styled-font rollable">Endurance</div>
+                            <div class="right-align-content">
+                                <div class="relative-container">
+                                    <div class="styled-font">X</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="characteristic">
+                            <input class="checkbox" type="checkbox" name="data.characteristics.agi.favored" {{checked data.characteristics.agi.favored}}>
+                            <div id="agi" name="Agility" class="characteristic-roll styled-font rollable">Agility</div>
+                            <div class="right-align-content">
+                                <div class="relative-container">
+                                    <div class="styled-font">X</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="characteristic">
+                            <input class="checkbox" type="checkbox" name="data.characteristics.int.favored" {{checked data.characteristics.int.favored}}>
+                            <div id="int" name="Intelligence" class="characteristic-roll styled-font rollable">Intelligence</div>
+                            <div class="right-align-content">
+                                <div class="relative-container">
+                                    <div class="styled-font">X</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="characteristic">
+                            <input class="checkbox" type="checkbox" name="data.characteristics.wp.favored" {{checked data.characteristics.wp.favored}}>
+                            <div id="wp" name="Willpower" class="characteristic-roll styled-font rollable">Willpower</div>
+                            <div class="right-align-content">
+                                <div class="relative-container">
+                                    <div class="styled-font">X</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="characteristic">
+                            <input class="checkbox" type="checkbox" name="data.characteristics.prc.favored" {{checked data.characteristics.prc.favored}}>
+                            <div id="prc" name="Perception" class="characteristic-roll styled-font rollable">Perception</div>
+                            <div class="right-align-content">
+                                <div class="relative-container">
+                                    <div class="styled-font">X</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="characteristic">
+                            <input class="checkbox" type="checkbox" name="data.characteristics.prs.favored" {{checked data.characteristics.prs.favored}}>
+                            <div id="prs" name="Personality" class="characteristic-roll styled-font rollable">Personality</div>
+                            <div class="right-align-content">
+                                <div class="relative-container">
+                                    <div class="styled-font">X</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="characteristic">
+                            <input class="checkbox" type="checkbox" name="data.characteristics.lck.favored" {{checked data.characteristics.lck.favored}}>
+                            <div id="lck" name="Luck" class="characteristic-roll styled-font rollable">Luck</div>
+                            <div class="right-align-content">
+                                <div class="relative-container">
+                                    <div class="styled-font">X</div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
 
-        {{!-- Sheet Tab Navigation --}}
-        <nav class="sheet-tabs tabs" data-group="primary">
-            <a class="item" data-tab="core">Core</a>
-        </nav>
-    </div>
-
-    {{!-- Sheet Body --}}
-    <section class="sheet-body">
-
-        {{!-- Core Tab --}}
-        <div class="tab core" data-group="primary" data-tab="core">
-            <div class="bioTabContainer">
-                <div class="buttonStats">
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>Race/Species</th>
-                                <th>Age</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td><input type="text" name="data.race" value="{{data.race}}" ></td>
-                                <td><input type="text" name="data.age" value="{{data.age}}"></td>
-                            </tr>
-                        </tbody>
-                    </table>              
-                </div>
-                <div class="bioPage">
-                    <h2>Biography</h2>
-                    <div class="contentContainer">
-                        {{editor content=data.bio target="data.bio" button=true owner=owner editable=editable}}
+        <section class="sheet-body">
+            <div class="tab core" data-group="primary" data-tab="core">
+                <div class="tabContainer">
+                    <div class="about-buttons">
+                        <div class="npc-button-stats">
+                            <div>
+                                <div class="styled-font">Soul Energy</div>
+                                <input type="text" name="data.soul_energy" placeholder="Soul Energy" value="{{data.soul_energy}}">
+                            </div>
+                            <div>
+                                <div class="styled-font">Race</div>
+                                <input type="text" placeholder="Race" value="{{data.race}}">
+                            </div>
+                            <div>
+                                <div class="styled-font">Threat</div>
+                                <select name="data.threat" data-type="String">
+                                    {{#select actor.data.threat}}
+                                    {{#each actor.data.threatCategory as |threatCategory key|}}
+                                    <option value="{{key}}">{{threatCategory}}</option> 
+                                    {{/each}} {{/select}}
+                                </select>
+                            </div>
+                        </div>
                     </div>
+
+                    <div class="bioPage">
+                        <h2>Biography</h2>
+                        <div class="contentContainer">
+                            {{editor content=data.bio target="data.bio" button=true owner=owner editable=editable}}
+                        </div>
+                    </div>
+
                 </div>
             </div>
-        </div>
 
-    </section>
+        </section>
+    </div>
 </form>
-

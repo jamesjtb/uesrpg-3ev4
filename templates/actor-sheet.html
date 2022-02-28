@@ -11,7 +11,7 @@
                         <div class="vertical-flex-container">
                             <img id="wound-icon" src="icons/skills/wounds/blood-drip-droplet-red.webp" title="Wounded {{data.woundPenalty}}">
                             <img id="fatigue-icon" src="icons/magic/control/debuff-energy-hold-green.webp" title="Fatigued {{data.fatigue.penalty}}">
-                            <img id="enc-icon" src="icons/containers/bags/pack-leather-brown.webp" title="Overencumbered">
+                            <img id="enc-icon" src="icons/containers/bags/pack-leather-brown.webp" title="{{data.carry_rating.label}} {{data.carry_rating.penalty}}">
                         </div>
                     </div>
                 </div>
@@ -361,7 +361,7 @@
                                 </div>
                                 <div class="flex-container">
                                     <div>ENC</div>
-                                    <label>{{data.carry_rating.current}} / {{data.carry_rating.max}}</label>
+                                    <label title="{{data.carry_rating.current}} / {{data.carry_rating.max}}">{{data.carry_rating.label}}</label>
                                 </div>
                                 <div class="flex-container">
                                     <div>Size</div>
@@ -670,7 +670,7 @@
                             <table>
                                 <thead>
                                     <tr>
-                                        <th class="item-name-cell item-create" id="item">+ Item</th>
+                                        <th class="item-name-cell item-create" id="createSelect">+ Item</th>
                                         <th>
                                             <select id="itemFilter">
                                                 <option>All</option>
@@ -695,7 +695,7 @@
                                                     <div class="item-name">{{item.name}}</div>
                                                 </div>
                                             </td>
-                                            <td>{{item.type}}</td>
+                                            <td>item</td>
                                             <td>{{item.data.enc}}</td>
                                             <td>{{item.data.price}}</td>
                                             <td>
@@ -716,7 +716,7 @@
                                                     <div class="item-name">{{item.name}}</div>
                                                 </div>
                                             </td>
-                                            <td>{{item.type}}</td>
+                                            <td>armor</td>
                                             <td>{{item.data.enc}}</td>
                                             <td>{{item.data.price}}</td>
                                             <td>
@@ -737,7 +737,7 @@
                                                     <div class="item-name">{{item.name}}</div>
                                                 </div>
                                             </td>
-                                            <td>{{item.type}}</td>
+                                            <td>weapon</td>
                                             <td>{{item.data.enc}}</td>
                                             <td>{{item.data.price}}</td>
                                             <td>
@@ -758,7 +758,7 @@
                                                     <div class="item-name">{{item.name}}</div>
                                                 </div>
                                             </td>
-                                            <td>{{item.type}}</td>
+                                            <td>ammo</td>
                                             <td>{{item.data.enc}}</td>
                                             <td>{{item.data.price}}</td>
                                             <td>

@@ -8,8 +8,8 @@ export class merchantSheet extends ActorSheet {
 	static get defaultOptions() {
 	  return mergeObject(super.defaultOptions, {
       classes: ["worldbuilding", "sheet", "actor", "npc"],
-      width: 700,
-      height: 720,
+      width: 780,
+      height: 860,
       tabs: [{navSelector: ".sheet-tabs", contentSelector: ".sheet-body", initial: "merchant"}],
       dragDrop: [{dragSelector: [
         ".item-list .item", 
@@ -262,6 +262,7 @@ export class merchantSheet extends ActorSheet {
         //Create Purchased Item on Buyer's Sheet
           const itemDuplicate = merchantItem.toObject();
           itemDuplicate.data.quantity = 1;
+          itemDuplicate.data.equipped = false
           const qtyUpdateItem = buyer.items.find(i => i.name === itemDuplicate.name);
 
           if (itemDuplicate.type === "weapon" || itemDuplicate.type === "armor" || qtyUpdateItem == undefined) {
@@ -313,6 +314,7 @@ export class merchantSheet extends ActorSheet {
     //Create Purchased Item and Update Buyer Wealth
       const itemDuplicate = merchantItem.toObject();
       itemDuplicate.data.quantity = 1;
+      itemDuplicate.data.equipped = false
       const qtyUpdateItem = game.user.character.items.find(i => i.name === itemDuplicate.name);
 
       if (itemDuplicate.type === "weapon" || itemDuplicate.type === "armor" || qtyUpdateItem == undefined) {
@@ -1218,7 +1220,7 @@ export class merchantSheet extends ActorSheet {
      item.update({"data.equipped" : item.data.data.equipped})
   }
 
-   _onItemCreate(event) {
+  async _onItemCreate(event) {
     event.preventDefault()
     const element = event.currentTarget
     let itemData
@@ -1234,30 +1236,34 @@ export class merchantSheet extends ActorSheet {
         buttons: {
           one: {
             label: "Item",
-            callback: html => {
+            callback: async html => {
                 const itemData = [{name: 'item', type: 'item'}]
-                this.actor.createEmbeddedDocuments("Item", itemData);
+                let newItem = await this.actor.createEmbeddedDocuments("Item", itemData);
+                await newItem[0].sheet.render(true)
             }
           },
           two: {
             label: "Ammunition",
-            callback: html => {
+            callback: async html => {
                 const itemData = [{name: 'ammunition', type: 'ammunition'}]
-                this.actor.createEmbeddedDocuments("Item", itemData);
+                let newItem = await this.actor.createEmbeddedDocuments("Item", itemData);
+                await newItem[0].sheet.render(true)
             }
           },
           three: {
             label: "Armor",
-            callback: html => {
+            callback: async html => {
                 const itemData = [{name: 'armor', type: 'armor'}]
-                this.actor.createEmbeddedDocuments("Item", itemData);
+                let newItem = await this.actor.createEmbeddedDocuments("Item", itemData);
+                await newItem[0].sheet.render(true)
             }
           },
           four: {
             label: "Weapon",
-            callback: html => {
+            callback: async html => {
               const itemData = [{name: 'weapon', type: 'weapon'}]
-              this.actor.createEmbeddedDocuments("Item", itemData);
+              let newItem = await this.actor.createEmbeddedDocuments("Item", itemData);
+              await newItem[0].sheet.render(true)
             }
           },
           five: {
@@ -1277,9 +1283,10 @@ export class merchantSheet extends ActorSheet {
         name: element.id,
         type: element.id,
       }]
-    }
 
-     this.actor.createEmbeddedDocuments("Item", itemData);
+      let newItem = await this.actor.createEmbeddedDocuments("Item", itemData);
+      await newItem[0].sheet.render(true)
+    }
   }
 
    async _onTalentRoll(event) {
@@ -1332,12 +1339,13 @@ export class merchantSheet extends ActorSheet {
   }
 
   _createItemFilterOptions() {
-    for (let merchantItem of this.actor.items.filter(item => item.type === 'ammunition'||item.type === 'weapon'||item.type === 'armor'||item.type === 'item')) {
-      if ([...document.querySelectorAll('#itemFilter option')].some(i => i.innerHTML === merchantItem.type)) {continue}
+    for (let item of this.actor.items.filter(i => i.data.data.hasOwnProperty('equipped') && i.data.data.equipped === false)) {
+      if ([...this.form.querySelectorAll('#itemFilter option')].some(i => i.innerHTML === item.type)) {continue}
       else {
         let option = document.createElement('option')
-        option.innerHTML = merchantItem.type
-        document.querySelector('#itemFilter').append(option)
+        option.innerHTML = item.type === 'ammunition' ? 'ammo' : item.type
+        option.value = item.type
+        this.form.querySelector('#itemFilter').append(option)
       }
     }
   }
@@ -1346,16 +1354,16 @@ export class merchantSheet extends ActorSheet {
     event.preventDefault()
     let filterBy = event.currentTarget.value
     
-    for (let merchantItem of [...document.querySelectorAll("#merchantItemList .item")]) {
+    for (let item of [...this.form.querySelectorAll(".merchant-item-list tbody .item")]) {
       switch (filterBy) {
         case 'All':
-          merchantItem.classList.add('active')
-          sessionStorage.setItem('savedMerchantItemFilter', filterBy)
+          item.classList.add('active')
+          sessionStorage.setItem('savedMerchantFilter', filterBy)
           break
           
         case `${filterBy}`:
-          filterBy == merchantItem.dataset.itemType ? merchantItem.classList.add('active') : merchantItem.classList.remove('active')
-          sessionStorage.setItem('savedMerchantItemFilter', filterBy)
+          filterBy == item.dataset.itemType ? item.classList.add('active') : item.classList.remove('active')
+          sessionStorage.setItem('savedMerchantFilter', filterBy)
           break
       }
     }
@@ -1366,7 +1374,7 @@ export class merchantSheet extends ActorSheet {
 
       if (filterBy !== null||filterBy !== undefined) {
         document.querySelector('#itemFilter').value = filterBy
-        for (let merchantItem of [...document.querySelectorAll('#merchantItemList .item')]) {
+        for (let merchantItem of [...document.querySelectorAll('.merchant-item-list tbody .item')]) {
           switch (filterBy) {
             case 'All':
               merchantItem.classList.add('active')

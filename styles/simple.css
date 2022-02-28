@@ -106,7 +106,8 @@
   background-color: rgba(214, 214, 214, 0.651);
 }
 
-.worldbuilding .item .flex-container {
+.worldbuilding .item .flex-container,
+.worldbuilding .npc-item .flex-container {
   display: flex;
   flex-direction: row;
   align-items: center;
@@ -194,6 +195,7 @@
 }
 
 .worldbuilding .skillList .item,
+.worldbuilding .skillList .npc-item,
 .worldbuilding .single-column-list .item {
   display: flex;
   flex-direction: row;
@@ -220,7 +222,24 @@
   gap: 5px;
 }
 
-.worldbuilding .item img {
+.worldbuilding .itemInfo {
+  justify-content: flex-start;
+  width: 60%;
+}
+
+.worldbuilding .item-controls {
+  width: 40%;
+  justify-content: flex-end;
+}
+
+.worldbuilding .itemInfo .skill-name input {
+  height: 18px;
+  border: none;
+  width: 100%;
+}
+
+.worldbuilding .item img,
+.worldbuilding .npc-item img {
   height: 24px;
   width: 24px;
 }
@@ -250,6 +269,17 @@
   width: 12px;
 }
 
+.worldbuilding .profession {
+  text-align: right;
+  width: 100%;
+}
+
+.worldbuilding .profession input {
+  height: 18px;
+  width: 35%;
+  border: none;
+}
+
 .worldbuilding table td {
   text-align: center;
 }
@@ -262,12 +292,14 @@
 }
 
 .worldbuilding .spellList table .item,
-.worldbuilding .equipmentList table .item {
+.worldbuilding .equipmentList table .item,
+.worldbuilding .merchant-item-list .item {
   display: none;
 }
 
 .worldbuilding .spellList table .active,
-.worldbuilding .equipmentList table .active {
+.worldbuilding .equipmentList table .active,
+.worldbuilding .merchant-item-list .active {
   display: table-row;
 }
 
@@ -591,6 +623,30 @@
   border: 1px solid;
 }
 
+.worldbuilding .npc-button-stats {
+  display: flex;
+  flex-direction: row;
+  align-items: top;
+  justify-content: space-between;
+  height: 100%;
+  background: rgba(180, 180, 180, 0.562);
+  border: 1px solid;
+  padding: 0 5px 5px 5px;
+}
+
+.worldbuilding .npc-button-stats input {
+  height: 18px;
+  border: none;
+  text-align: center;
+}
+
+.worldbuilding .npc-button-stats div {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  height: 100%;
+}
+
 /*---------------------------- 
   Actor Sheets - Combat Tab
 ------------------------------*/
@@ -827,7 +883,10 @@
   border: 1px solid;
   background: rgba(180, 180, 180, 0.562);
   padding: 5px;
+}
 
+.worldbuilding .wealthCalc:hover {
+  cursor: pointer;
 }
 
 .worldbuilding .encContainer .encLabel {
@@ -856,8 +915,110 @@
 }
 
 /*---------------------------- 
+  NPC Sheets
+------------------------------*/
+
+.worldbuilding .combat-button-container {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  gap: 5px;
+}
+
+.worldbuilding .combat-button {
+  height: 40px;
+  width: 100%;
+  border-radius: 5px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  border: 1px solid;
+  background: rgba(180, 180, 180, 0.562);
+}
+
+.worldbuilding .combat-button:hover {
+  background: white;
+  cursor: pointer;
+}
+
+.worldbuilding .combat-button .flex-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  width: 100%;
+}
+
+.worldbuilding .combat-button-label {
+  font-size: 10px;
+  height: 15px;
+  width: 100%;
+  border-top: 1px solid rgba(128, 128, 128, 0.719);
+}
+
+.worldbuilding .combat-button-value {
+  font-family: "cyrodiil";
+  color: darkred;
+  font-size: 18px;
+  height: 25px;
+  width: 100%;
+}
+
+
+/*---------------------------- 
+  Merchant Sheets
+------------------------------*/
+
+.worldbuilding .merchant-attribute-container {
+  display: grid;
+  grid-template-columns: 60% 40%;
+  align-items: center;
+  border-bottom: 1px solid rgba(128, 128, 128, 0.719);
+}
+
+.worldbuilding .merchant-resources {
+  display: flex;
+  flex-direction: column;
+}
+
+.worldbuilding .merchant-controls-container {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: flex-end;
+}
+
+.worldbuilding .merchant-attribute-container input {
+  text-align: center;
+  border: none;
+}
+
+.worldbuilding #merchantPriceValue {
+  font-family: "cyrodiil";
+  font-size: 18px;
+  color: darkred;
+  width: 75px;
+}
+
+.worldbuilding .store-name input {
+  font-family: "cyrodiil";
+  border: none;
+}
+
+.worldbuilding table .merchant-item-name-cell {
+  width: 50%;
+  text-align: left;
+  padding: 0 0 0 5px;
+}
+
+
+/*---------------------------- 
   Item Sheets
 ------------------------------*/
+
 .worldbuilding .attribute-tab-container {
   display: flex;
   flex-direction: column;

@@ -8,9 +8,9 @@ export class npcSheet extends ActorSheet {
 	static get defaultOptions() {
 	  return mergeObject(super.defaultOptions, {
       classes: ["worldbuilding", "sheet", "actor", "npc"],
-      width: 700,
-      height: 720,
-      tabs: [{navSelector: ".sheet-tabs", contentSelector: ".sheet-body", initial: "core"}],
+      width: 780,
+      height: 860,
+      tabs: [{navSelector: ".sheet-tabs", contentSelector: ".sheet-body", initial: "description"}],
       dragDrop: [{dragSelector: [
         ".equipmentList .item", 
         ".spellList .item",
@@ -45,17 +45,27 @@ export class npcSheet extends ActorSheet {
       const actorData = sheetData.actor.data;
   
       //Initialize containers
-      const gear = [];
-      const weapon = [];
-      const armor = [];
+      const gear = {
+        equipped: [],
+        unequipped: []
+      };
+      const weapon = {
+        equipped: [],
+        unequipped: []
+      };
+      const armor = {
+        equipped: [],
+        unequipped: []
+      };
       const power = [];
       const trait = [];
       const talent = [];
       const combatStyle = [];
       const spell = [];
-      const skill = [];
-      const magicSkill = [];
-      const ammunition = [];
+      const ammunition = {
+        equipped: [],
+        unequipped: []
+      };
       const language = [];
       const faction = [];
   
@@ -66,15 +76,15 @@ export class npcSheet extends ActorSheet {
         i.img = i.img || DEFAULT_TOKEN;
         //Append to item
         if (i.type === 'item') {
-          gear.push(i);
+          i.data.equipped ? gear.equipped.push(i) : gear.unequipped.push(i)
         }
         //Append to weapons
         else if (i.type === 'weapon') {
-            weapon.push(i);
+            i.data.equipped ? weapon.equipped.push(i) : weapon.unequipped.push(i)
         }
         //Append to armor
         else if (i.type === 'armor') {
-          armor.push(i);
+          i.data.equipped ? armor.equipped.push(i) : armor.unequipped.push(i)
       }
         //Append to power
         else if (i.type === 'power') {
@@ -96,17 +106,9 @@ export class npcSheet extends ActorSheet {
         else if (i.type === 'spell') {
           spell.push(i)
         }
-        //Append to skill
-        else if (i.type === 'skill') {
-            skill.push(i);
-        }
-        //Append to magicSkill
-        else if (i.type === 'magicSkill') {
-          magicSkill.push(i);
-        }
         //Append to ammunition
         else if (i.type === 'ammunition') {
-          ammunition.push(i);
+          i.data.equipped ? ammunition.equipped.push(i) : ammunition.unequipped.push(i)
         }
         else if (i.type === "language") {
           language.push(i);
@@ -118,7 +120,24 @@ export class npcSheet extends ActorSheet {
       }
   
       // Alphabetically sort all item lists
-      const itemCats = [gear, weapon, armor, power, trait, talent, combatStyle, spell, skill, magicSkill, ammunition, language, faction]
+      const itemCats = [
+        gear.equipped, 
+        gear.unequipped, 
+        weapon.equipped,
+        weapon.unequipped, 
+        armor.equipped, 
+        armor.unequipped, 
+        power, 
+        trait, 
+        talent, 
+        combatStyle, 
+        spell, 
+        ammunition.equipped,
+        ammunition.unequipped, 
+        language, 
+        faction
+      ]
+  
       for (let category of itemCats) {
         if (category.length > 1 && category != spell) {
           category.sort((a,b) => {
@@ -143,14 +162,12 @@ export class npcSheet extends ActorSheet {
       //Assign and return
       actorData.gear = gear;
       actorData.weapon = weapon;
-      actorData.armor = armor;
+      actorData.armor = armor
       actorData.power = power;
       actorData.trait = trait;
       actorData.talent = talent;
       actorData.combatStyle = combatStyle;
       actorData.spell = spell;
-      actorData.skill = skill;
-      actorData.magicSkill = magicSkill;
       actorData.ammunition = ammunition;
       actorData.language = language;
       actorData.faction = faction;
@@ -193,22 +210,18 @@ export class npcSheet extends ActorSheet {
     html.find(".wealthCalc").click(await this._onWealthCalc.bind(this));
     html.find(".incrementResource").click(this._onIncrementResource.bind(this))
     html.find(".resourceLabel button").click(this._onResetResource.bind(this))
-    html.find(".swapContainer button").click(this._setPaperDoll.bind(this))
     html.find("#spellFilter").click(this._filterSpells.bind(this))
-    html.find('#selectWornArmor').click(this._selectWornArmor.bind(this))
-    html.find('#resistanceToggle').click(this._toggleResistanceColumn.bind(this))
-    html.find('.selectWeapon').contextmenu(this._selectWeaponMenu.bind(this))
-    html.find('.selectWeapon').click(this._onWeaponShortcut.bind(this))
+    html.find("#itemFilter").click(this._filterItems.bind(this))
+    html.find('.incrementFatigue').click(this._incrementFatigue.bind(this))
+    html.find('.equip-items').click(this._onEquipItems.bind(this))
 
     // Checks UI Elements for update
     this._createSpellFilterOptions()
+    this._createItemFilterOptions()
     this._setDefaultSpellFilter()
+    this._setDefaultItemFilter()
     this._setResourceBars()
-    this._setWoundIcon()
-    this._setWoundBackground()
-    this._setEquippedArmor()
-    this._setResistanceColumnToggle()
-    this._refreshWeaponShortcuts()
+    this._createStatusTags()
 
     //Item Create Buttons
     html.find(".item-create").click(await this._onItemCreate.bind(this));
@@ -609,7 +622,7 @@ export class npcSheet extends ActorSheet {
               roll.result == this.actor.data.data.lucky_numbers.ln10)
               {
               contentString = `<h2>${element.getAttribute('name')}</h2>
-              <p></p><b>Target Number: [[${this.actor.data.data.professionsWound[element.getAttribute('id')]} + ${playerInput}]]</b> <p></p>
+              <p></p><b>Target Number: [[${this.actor.data.data.professionsWound[element.getAttribute('id')]} + ${playerInput} + ${this.actor.data.data.fatigue.penalty}]]</b> <p></p>
               <b>Result: [[${roll.result}]]</b><p></p>
               <span style='color:green; font-size:120%;'> <b>LUCKY NUMBER!</b></span>`
 
@@ -622,15 +635,15 @@ export class npcSheet extends ActorSheet {
                 roll.result == this.actor.data.data.unlucky_numbers.ul6) 
                 {
                   contentString = `<h2>${element.getAttribute('name')}</h2>
-                  <p></p><b>Target Number: [[${this.actor.data.data.professionsWound[element.getAttribute('id')]} + ${playerInput}]]</b> <p></p>
+                  <p></p><b>Target Number: [[${this.actor.data.data.professionsWound[element.getAttribute('id')]} + ${playerInput} + ${this.actor.data.data.fatigue.penalty}]]</b> <p></p>
                   <b>Result: [[${roll.result}]]</b><p></p>
                   <span style='color:rgb(168, 5, 5); font-size:120%;'> <b>UNLUCKY NUMBER!</b></span>`
 
                 } else {
                   contentString = `<h2>${element.getAttribute('name')}</h2>
-                  <p></p><b>Target Number: [[${this.actor.data.data.professionsWound[element.getAttribute('id')]} + ${playerInput}]]</b> <p></p>
+                  <p></p><b>Target Number: [[${this.actor.data.data.professionsWound[element.getAttribute('id')]} + ${playerInput} + ${this.actor.data.data.fatigue.penalty}]]</b> <p></p>
                   <b>Result: [[${roll.result}]]</b><p></p>
-                  <b>${roll.result<=(this.actor.data.data.professionsWound[element.getAttribute('id')] + playerInput) ? " <span style='color:green; font-size: 120%;'> <b>SUCCESS!</b></span>" : " <span style='color:rgb(168, 5, 5); font-size: 120%;'> <b>FAILURE!</b></span>"}`
+                  <b>${roll.result<=(this.actor.data.data.professionsWound[element.getAttribute('id')] + playerInput + this.actor.data.data.fatigue.penalty) ? " <span style='color:green; font-size: 120%;'> <b>SUCCESS!</b></span>" : " <span style='color:rgb(168, 5, 5); font-size: 120%;'> <b>FAILURE!</b></span>"}`
 
                 }
 
@@ -1181,16 +1194,73 @@ export class npcSheet extends ActorSheet {
     await item.update({"data.equipped" : item.data.data.equipped})
   }
 
-   _onItemCreate(event) {
+  async _onItemCreate(event) {
     event.preventDefault()
     const element = event.currentTarget
+    let itemData
 
-    const itemData = [{
-      name: element.id,
-      type: element.id,
-    }]
+    if (element.id === 'createSelect') {
+      let d = new Dialog({
+        title: "Create Item",
+        content: `<div style="padding: 10px 0;">
+                      <h2>Select an Item Type</h2>
+                      <label>Create an item on this sheet</label>
+                  </div>`,
 
-     this.actor.createEmbeddedDocuments("Item", itemData);
+        buttons: {
+          one: {
+            label: "Item",
+            callback: async html => {
+                const itemData = [{name: 'item', type: 'item'}]
+                let newItem = await this.actor.createEmbeddedDocuments("Item", itemData);
+                await newItem[0].sheet.render(true)
+            }
+          },
+          two: {
+            label: "Ammunition",
+            callback: async html => {
+                const itemData = [{name: 'ammunition', type: 'ammunition'}]
+                let newItem = await this.actor.createEmbeddedDocuments("Item", itemData);
+                await newItem[0].sheet.render(true)
+            }
+          },
+          three: {
+            label: "Armor",
+            callback: async html => {
+                const itemData = [{name: 'armor', type: 'armor'}]
+                let newItem = await this.actor.createEmbeddedDocuments("Item", itemData);
+                await newItem[0].sheet.render(true)
+            }
+          },
+          four: {
+            label: "Weapon",
+            callback: async html => {
+              const itemData = [{name: 'weapon', type: 'weapon'}]
+              let newItem = await this.actor.createEmbeddedDocuments("Item", itemData);
+              await newItem[0].sheet.render(true)
+            }
+          },
+          five: {
+            label: "Cancel",
+            callback: html => console.log('Cancelled')
+          }
+        },
+        default: "one",
+        close: html => console.log()
+      })
+
+      d.render(true)
+    }
+
+    else {
+      itemData = [{
+        name: element.id,
+        type: element.id,
+      }]
+
+      let newItem = await this.actor.createEmbeddedDocuments("Item", itemData);
+      await newItem[0].sheet.render(true)
+    }
   }
 
    async _onTalentRoll(event) {
@@ -1284,16 +1354,16 @@ export class npcSheet extends ActorSheet {
     const data = this.actor.data.data
 
     if (data) {
-        for (let bar of [...document.querySelectorAll('.currentBar')]) {
+        for (let bar of [...this.form.querySelectorAll('.currentBar')]) {
           let resource = data[bar.dataset.resource]
 
           if (resource.max !== 0) {
-              let resourceElement = document.querySelector(`#${bar.id}`)
+              let resourceElement = this.form.querySelector(`#${bar.id}`)
               let proportion = Number((100 * (resource.value / resource.max)).toFixed(0))
 
               // if greater than 100 or lower than 20, set values to fit bars correctly
               proportion < 100 ? proportion = proportion : proportion = 100
-              proportion < 20 ? proportion = 20 : proportion = proportion
+              proportion < 50 ? proportion = 50 : proportion = proportion
 
               // Apply the proportion to the width of the resource bar
               resourceElement.style.width = `${proportion}%`
@@ -1321,47 +1391,25 @@ export class npcSheet extends ActorSheet {
     this.actor.update({[dataPath]: resource.value = resource.max})
   }
 
-  _setWoundIcon() {
-    let woundIcon = document.querySelector('.woundIcon')
-    this.actor.data.data.wounded ? woundIcon.style.visibility = 'visible' : woundIcon.style.visibility = 'hidden'
-  }
-
-  _setWoundBackground() {
-    if (this.actor.data.data.wounded) {
-      document.querySelector('.paperDollContainer').classList.add('wounded')
-    }
-    else {
-      document.querySelector('.paperDollContainer').classList.remove('wounded')
-    }
-  }
-
-  _setPaperDoll(event) {
-    event.preventDefault()
-    if (this.actor.data.data.paperDoll === 'systems/uesrpg-d100/images/paperDoll_Male_Outline_White.png') {
-      this.actor.update({'data.paperDoll': 'systems/uesrpg-d100/images/paperDoll_Female_Outline_White.png'})
-    } 
-    else {
-      this.actor.update({'data.paperDoll': 'systems/uesrpg-d100/images/paperDoll_Male_Outline_White.png'})
-    }
-  }
-
-  _saveScrollPosition(event) {
-    sessionStorage.setItem('scrollPosition.combatItemContainer', document.querySelector('.combatItemContainer').scrollTop)
-    sessionStorage.setItem('scrollPosition.attributeList', document.querySelector('.attributeList').scrollTop)
-  }
-
-  _setScrollPosition() {
-    document.querySelector('.combatItemContainer').scrollTop = sessionStorage.getItem('scrollPosition.combatItemContainer')
-    document.querySelector('.attributeList').scrollTop = sessionStorage.getItem('scrollPosition.attributeList')
-  }
-
   _createSpellFilterOptions() {
     for (let spell of this.actor.items.filter(item => item.type === 'spell')) {
-      if ([...document.querySelectorAll('#spellFilter option')].some(i => i.innerHTML === spell.data.data.school)) {continue}
+      if ([...this.form.querySelectorAll('#spellFilter option')].some(i => i.innerHTML === spell.data.data.school)) {continue}
       else {
         let option = document.createElement('option')
         option.innerHTML = spell.data.data.school
-        document.querySelector('#spellFilter').append(option)
+        this.form.querySelector('#spellFilter').append(option)
+      }
+    }
+  }
+
+  _createItemFilterOptions() {
+    for (let item of this.actor.items.filter(i => i.data.data.hasOwnProperty('equipped') && i.data.data.equipped === false)) {
+      if ([...this.form.querySelectorAll('#itemFilter option')].some(i => i.innerHTML === item.type)) {continue}
+      else {
+        let option = document.createElement('option')
+        option.innerHTML = item.type === 'ammunition' ? 'ammo' : item.type
+        option.value = item.type
+        this.form.querySelector('#itemFilter').append(option)
       }
     }
   }
@@ -1370,7 +1418,7 @@ export class npcSheet extends ActorSheet {
     event.preventDefault()
     let filterBy = event.currentTarget.value
     
-    for (let spellItem of [...document.querySelectorAll(".spellList tbody .item")]) {
+    for (let spellItem of [...this.form.querySelectorAll(".spellList tbody .item")]) {
       switch (filterBy) {
         case 'All':
           spellItem.classList.add('active')
@@ -1385,12 +1433,50 @@ export class npcSheet extends ActorSheet {
     }
   }
 
+  _filterItems(event) {
+    event.preventDefault()
+    let filterBy = event.currentTarget.value
+    
+    for (let item of [...this.form.querySelectorAll(".equipmentList tbody .item")]) {
+      switch (filterBy) {
+        case 'All':
+          item.classList.add('active')
+          sessionStorage.setItem('savedItemFilter', filterBy)
+          break
+          
+        case `${filterBy}`:
+          filterBy == item.dataset.itemType ? item.classList.add('active') : item.classList.remove('active')
+          sessionStorage.setItem('savedItemFilter', filterBy)
+          break
+      }
+    }
+  }
+
+  _setDefaultItemFilter() {
+    let filterBy = sessionStorage.getItem('savedItemFilter')
+
+    if (filterBy !== null||filterBy !== undefined) {
+      this.form.querySelector('#itemFilter').value = filterBy
+      for (let item of [...this.form.querySelectorAll('.equipmentList tbody .item')]) {
+        switch (filterBy) {
+          case 'All':
+            item.classList.add('active')
+            break
+
+          case `${filterBy}`:
+            filterBy == item.dataset.itemType ? item.classList.add('active') : item.classList.remove('active')
+            break
+        }
+      }
+    }
+}
+
   _setDefaultSpellFilter() {
       let filterBy = sessionStorage.getItem('savedSpellFilter')
 
       if (filterBy !== null||filterBy !== undefined) {
-        document.querySelector('#spellFilter').value = filterBy
-        for (let spellItem of [...document.querySelectorAll('.spellList tbody .item')]) {
+        this.form.querySelector('#spellFilter').value = filterBy
+        for (let spellItem of [...this.form.querySelectorAll('.spellList tbody .item')]) {
           switch (filterBy) {
             case 'All':
               spellItem.classList.add('active')
@@ -1404,77 +1490,172 @@ export class npcSheet extends ActorSheet {
       }
   }
 
-  _setEquippedArmor() {
-    for (let armor of this.actor.items.filter(item => item.data.data.equipped)) {
-      let tableEntry = document.createElement('tr')
-      tableEntry.classList.add('item')
-      tableEntry.dataset.itemId = armor.id
-      tableEntry.innerHTML = `
-                              <td><input type="checkbox" class="itemEquip" ${armor.data.data.equipped ? 'checked' : ''}></td>
-                              <td class="armorName" data-item-id="${armor.id}">
-                                  <div class="item-name" style="display: flex; flex-direction: row; align-items: center; gap: 5px;">
-                                    <img class="item-img" src="${armor.img}">
-                                    ${armor.name}
-                                  </div>
-                              </td>
-                              <td>${armor.data.data.armor}</td>
-                              <td>${armor.data.data.magic_ar}</td>\
-                              <td>${armor.data.data.blockRating}</td>
-                              `
-      tableEntry.querySelector('.itemEquip').addEventListener('click', (event) => {this._onItemEquip(event)})
-      this.form.querySelector('#equippedItemTableBody').append(tableEntry)
+  _incrementFatigue(event) {
+    event.preventDefault()
+    let element = event.currentTarget
+    let action = element.dataset.action
+    let fatigueLevel = this.actor.data.data.fatigue.level
+    let fatigueBonus = this.actor.data.data.fatigue.bonus
+
+    if (action === 'increase' && fatigueLevel < 5) {
+      this.actor.update({'data.fatigue.bonus': fatigueBonus + 1})
+    }
+    else if (action === 'decrease' && fatigueLevel > 0) {
+      this.actor.update({'data.fatigue.bonus': fatigueBonus - 1})
     }
   }
 
-  _selectWornArmor(event) {
+  _onEquipItems(event) {
     event.preventDefault()
-    let armorList = this.actor.items.filter(armor => armor.type === 'armor'||armor.data.data.wearable)
+    let element = event.currentTarget
+    let itemList = this.actor.items.filter(item => item.type === element.id||(item.type === element.dataset.altType && item.data.data.wearable))
+    console.log(itemList)
 
-    let armorEntries = []
-    for (let armor of armorList) {
-      let tableEntry = `<tr>
-                            <td data-item-id="${armor.data._id}">
+    let itemEntries = []
+    let tableHeader = ''
+    let tableEntry = ''
+
+    // Loop through Item List and create table rows
+    for (let item of itemList) {
+      switch (item.type) {
+        case 'armor':
+        case 'item':
+          tableEntry = `<tr>
+                            <td data-item-id="${item.data._id}">
                                 <div style="display: flex; flex-direction: row; align-items: center; gap: 5px;">
-                                  <img class="item-img" src="${armor.img}" height="24" width="24">
-                                  ${armor.name}
+                                  <img class="item-img" src="${item.img}" height="24" width="24">
+                                  ${item.name}
                                 </div>
                             </td>
-                            <td style="text-align: center;">${armor.data.data.armor}</td>
-                            <td style="text-align: center;">${armor.data.data.magic_ar}</td>
-                            <td style="text-align: center;">${armor.data.data.blockRating}</td>
+                            <td style="text-align: center;">${item.data.data.armor}</td>
+                            <td style="text-align: center;">${item.data.data.magic_ar}</td>
+                            <td style="text-align: center;">${item.data.data.blockRating}</td>
                             <td style="text-align: center;">
-                                <input type="checkbox" class="armorSelect" data-item-id="${armor.data._id}" ${armor.data.data.equipped ? 'checked' : ''}>
+                                <input type="checkbox" class="itemSelect" data-item-id="${item.data._id}" ${item.data.data.equipped ? 'checked' : ''}>
                             </td>
                         </tr>`
+                        break
 
-      armorEntries.push(tableEntry)
+        case 'weapon':
+          tableEntry = `<tr>
+                            <td data-item-id="${item.data._id}">
+                                <div style="display: flex; flex-direction: row; align-items: center; gap: 5px;">
+                                  <img class="item-img" src="${item.img}" height="24" width="24">
+                                  ${item.name}
+                                </div>
+                            </td>
+                            <td style="text-align: center;">${item.data.data.damage}</td>
+                            <td style="text-align: center;">${item.data.data.damage2}</td>
+                            <td style="text-align: center;">${item.data.data.reach}</td>
+                            <td style="text-align: center;">
+                                <input type="checkbox" class="itemSelect" data-item-id="${item.data._id}" ${item.data.data.equipped ? 'checked' : ''}>
+                            </td>
+                        </tr>`
+                        break
+
+        case 'ammunition':
+          tableEntry = `<tr>
+                            <td data-item-id="${item.data._id}">
+                                <div style="display: flex; flex-direction: row; align-items: center; gap: 5px;">
+                                  <img class="item-img" src="${item.img}" height="24" width="24">
+                                  ${item.name}
+                                </div>
+                            </td>
+                            <td style="text-align: center;">${item.data.data.quantity}</td>
+                            <td style="text-align: center;">${item.data.data.damage}</td>
+                            <td style="text-align: center;">${item.data.data.enchant_level}</td>
+                            <td style="text-align: center;">
+                                <input type="checkbox" class="itemSelect" data-item-id="${item.data._id}" ${item.data.data.equipped ? 'checked' : ''}>
+                            </td>
+                        </tr>`
+                        break
+      }
+
+      itemEntries.push(tableEntry)
+    }
+
+    // Find first entry and determine item type to create appropriate item header
+    if (itemList.length === 0) {return ui.notifications.info(`${this.actor.name} does not have any items of this type to equip.`)}
+    switch (itemList[0].type) {
+      case 'armor':
+      case 'item':
+        tableHeader = `<div>
+                          <div style="padding: 5px 0;">
+                              <label>Selecting nothing will unequip all items</label>
+                          </div>
+
+                          <div>
+                              <table>
+                                  <thead>
+                                      <tr>
+                                          <th>Name</th>
+                                          <th>AR</th>
+                                          <th>MR</th>
+                                          <th>BR</th>
+                                          <th>Equipped</th>
+                                      </tr>
+                                  </thead>
+                                  <tbody>
+                                      ${itemEntries.join('')}
+                                  </tbody>
+                              </table>
+                          </div>
+                      </div>`
+                      break
+
+      case 'weapon': 
+        tableHeader = `<div>
+                          <div style="padding: 5px 0;">
+                              <label>Selecting nothing will unequip all items</label>
+                          </div>
+
+                          <div>
+                              <table>
+                                  <thead>
+                                      <tr>
+                                          <th>Name</th>
+                                          <th>1H</th>
+                                          <th>2H</th>
+                                          <th>Reach</th>
+                                          <th>Equipped</th>
+                                      </tr>
+                                  </thead>
+                                  <tbody>
+                                      ${itemEntries.join('')}
+                                  </tbody>
+                              </table>
+                          </div>
+                      </div>`
+                      break
+
+      case 'ammunition': 
+      tableHeader = `<div>
+                        <div style="padding: 5px 0;">
+                            <label>Selecting nothing will unequip all items</label>
+                        </div>
+
+                        <div>
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>Name</th>
+                                        <th>Qty</th>
+                                        <th>Damage</th>
+                                        <th>Enchant</th>
+                                        <th>Equipped</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    ${itemEntries.join('')}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>`
     }
 
     let d = new Dialog({
-      title: "Armor List",
-      content: `<div>
-                    <div style="padding: 5px 0;">
-                        <label>Selecting nothing will unequip all armor</label>
-                    </div>
-
-                    <div>
-                        <table>
-                            <thead>
-                                <tr>
-                                    <th>Armor</th>
-                                    <th>AR</th>
-                                    <th>MR</th>
-                                    <th>BR</th>
-                                    <th>Equipped</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                ${armorEntries.join('')}
-                            </tbody>
-                        </table>
-                    </div>
-                </div>`,
-
+      title: "Item List",
+      content: tableHeader,
       buttons: {
         one: {
           label: "Cancel",
@@ -1483,21 +1664,11 @@ export class npcSheet extends ActorSheet {
         two: {
           label: "Submit",
           callback: async html => {
-                let selectedArmor = [...document.querySelectorAll('.armorSelect')].filter(armor => armor.checked)
+                let selectedArmor = [...document.querySelectorAll('.itemSelect')]
 
-                // Unequip all existing armors
-                for (let armor of this.actor.items.filter(item => item.type === 'armor')) {
-                  await armor.update({'data.equipped': false})
-                }
-
-                for (let wearable of this.actor.items.filter(item => item.data.data.wearable)) {
-                  await wearable.update({'data.equipped': false})
-                }
-
-                // Equip all selected armors
-                for (let armor of selectedArmor) {
-                  let thisArmor = this.actor.items.filter(item => item.id == armor.dataset.itemId)[0]
-                  await thisArmor.update({'data.equipped': true})
+                for (let armorItem of selectedArmor) {
+                  let thisArmor = this.actor.items.filter(item => item.id == armorItem.dataset.itemId)[0]
+                  armorItem.checked ? thisArmor.update({'data.equipped': true}) : thisArmor.update({'data.equipped': false})
                 }
           }
         }
@@ -1510,288 +1681,10 @@ export class npcSheet extends ActorSheet {
     d.render(true)
   }
 
-  _toggleResistanceColumn(event) {
-    event.preventDefault()
-    let leftColumn = this.form.querySelector('.leftColumn')
-
-    if ([...leftColumn.classList].some(string => string === 'collapsed')) {
-      leftColumn.classList.remove('collapsed')
-      sessionStorage.setItem('columnCollapsed', 'false')
-    }
-    else {
-      leftColumn.classList.add('collapsed')
-      sessionStorage.setItem('columnCollapsed', 'true')
-    }
-  }
-
-  _setResistanceColumnToggle() {
-    let leftColumn = this.form.querySelector('.leftColumn')
-    let columnCollapsed = sessionStorage.getItem('columnCollapsed')
-
-    switch (columnCollapsed) {
-      case 'true': 
-        leftColumn.classList.add('collapsed')
-        break
-
-      case 'false': 
-        leftColumn.classList.remove('collapsed')
-        break
-    }
-  }
-
-  _selectWeaponMenu(event) {
-    event.preventDefault()
-    let element = event.currentTarget
-    let weaponEntries = []
-    let slot = [...element.classList].some(string => string === 'primaryWeapon') ? "primaryWeapon" : 'secondaryWeapon'
-
-    for (let weapon of this.actor.items.filter(item => item.type === 'weapon')) {
-        let checked = weapon.id === this.actor.data.data.equippedWeapons[slot].id ? 'checked' : ''
-        let entry = `<tr class="item flex-row" data-item-id="${weapon.id}">
-                          <td style="min-width: 50px;"><input type="checkbox" class="selectedWeapon" data-weapon-id="${weapon.id}" ${checked}></td>
-                          <td>
-                              <div style="display: flex; flex-direction: row; align-items: center; justify-content: flex-start; gap: 5px; text-align: left;">
-                                  <img class="item-img" src="${weapon.img}" height=24 width=24>
-                                  <div class="item-name">${weapon.name}</div>
-                              </div>
-                          </td>
-                          <td style="min-width: 50px;">${weapon.data.data.reach}</td>
-                          <td style="min-width: 50px;">${weapon.data.data.damage}</td>
-                          <td style="min-width: 50px;">${weapon.data.data.damage2}</td>
-                          <td>${weapon.data.data.qualities}</td>
-                      </tr>`
-        weaponEntries.push(entry)
-    }
-
-    let d = new Dialog({
-      title: `Select ${[...element.classList].some(string => string === 'primaryWeapon') ? 'Primary' : 'Secondary'} Weapon`,
-      content: `<div>
-                    <div>
-                        <h2>Select a weapon to bind to this button</h2>
-                    </div>
-
-                    <div style="padding: 10px; margin-top: 10px; background: rgba(161, 149, 149, 0.486); border: black 1px; font-style: italic;">
-                          To clear/reset the hotkey to no bindings, de-select any weapons and hit the submit button.
-                    </div>
-
-                    <div>
-                        <table style="text-align: center;">
-                            <thead>
-                                <tr>
-                                    <th>Select</th>
-                                    <th style="text-align: left;">Weapon</th>
-                                    <th>Reach</th>
-                                    <th>Damage</th>
-                                    <th>2H</th>
-                                    <th>Qualities</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                ${weaponEntries.join('')}
-                            </tbody>
-                        </table>
-                    </div>
-
-                </div>`,
-      buttons: {
-        one: {
-          label: 'Cancel',
-          callback: html => console.log('Cancelled')
-        },
-        two: {
-          label: 'Submit',
-          callback: html => {
-              const checkedBox = [...document.querySelectorAll('.selectedWeapon')].filter(item => item.checked)[0]
-
-              if (checkedBox === null || checkedBox === undefined) {
-                ui.notifications.info("Cleared weapon hotkey")
-                this.actor.update({
-                  'data.equippedWeapons.primaryWeapon.name': "None: Right click to bind weapon",
-                  'data.equippedWeapons.primaryWeapon.img': 'icons/svg/sword.svg',
-                  'data.equippedWeapons.primaryWeapon.id': ""
-                })
-
-                this.actor.update({
-                  'data.equippedWeapons.secondaryWeapon.name': "None: Right click to bind weapon",
-                  'data.equippedWeapons.secondaryWeapon.img': 'icons/svg/sword.svg',
-                  'data.equippedWeapons.secondaryWeapon.id': ""
-                })
-              }
-
-              else {
-                const selectedWeapon = this.actor.getEmbeddedDocument('Item', checkedBox.dataset.weaponId)
-
-                switch ([...element.classList].some(i => i === 'primaryWeapon')) {
-                  case true: 
-                      this.actor.update({
-                        'data.equippedWeapons.primaryWeapon.name': selectedWeapon.name,
-                        'data.equippedWeapons.primaryWeapon.img': selectedWeapon.img,
-                        'data.equippedWeapons.primaryWeapon.id': selectedWeapon.id
-                      })
-                      break
-
-                  case false: 
-                      this.actor.update({
-                        'data.equippedWeapons.secondaryWeapon.name': selectedWeapon.name,
-                        'data.equippedWeapons.secondaryWeapon.img': selectedWeapon.img,
-                        'data.equippedWeapons.secondaryWeapon.id': selectedWeapon.id
-                      })
-                      break
-                }
-              }
-          }
-        }
-      },
-      default: 'two',
-      close: html => console.log()
-    })
-
-    d.position.width = 500;
-    d.render(true)
-  }
-
-  _onWeaponShortcut(event) {
-    event.preventDefault()
-    let element = event.currentTarget
-    let shortcutWeapon
-    switch ([...element.classList].some(i => i === 'primaryWeapon')) {
-      case true: 
-          shortcutWeapon = this.actor.getEmbeddedDocument('Item', this.actor.data.data.equippedWeapons.primaryWeapon.id)
-          break
-
-      case false: 
-          shortcutWeapon = this.actor.getEmbeddedDocument('Item', this.actor.data.data.equippedWeapons.secondaryWeapon.id)
-          break
-    }
-
-    if (shortcutWeapon === null || shortcutWeapon === undefined) {
-      return ui.notifications.info("No weapon bound to this hotkey. Right click the hotkey to bind a weapon.")
-    }
-
-    let hit_loc = ""
-    let hit = new Roll("1d10")
-    hit.roll({async: false})
-
-    switch (hit.result) {
-      case "1":
-        hit_loc = "Body"
-        break
-
-      case "2":
-        hit_loc = "Body"
-        break
-
-      case "3":
-        hit_loc = "Body"
-        break
-
-      case "4":
-        hit_loc = "Body"
-        break
-
-      case "5":
-        hit_loc = "Body"
-        break
-
-      case "6":
-        hit_loc = "Right Leg"
-        break
-
-      case "7":
-        hit_loc = "Left Leg"
-        break
-      
-      case "8":
-        hit_loc = "Right Arm"
-        break
-
-      case "9":
-        hit_loc = "Left Arm"
-        break
-
-      case "10":
-        hit_loc = "Head"
-        break
-    }
-
-    let damageString
-    shortcutWeapon.data.data.weapon2H ? damageString = shortcutWeapon.data.data.damage2 : damageString = shortcutWeapon.data.data.damage
-    let weaponRoll = new Roll(damageString)
-    weaponRoll.roll({async: false})
-    
-    // Superior Weapon Roll
-    let supRollTag = ``
-    let superiorRoll = new Roll(damageString)
-    superiorRoll.roll({async: false})
-
-    if (shortcutWeapon.data.data.superior) {
-      supRollTag = `[[${superiorRoll.result}]]`
-    }
-
-    let contentString = `<div>
-                              <h2>
-                                  <img src="${shortcutWeapon.img}">
-                                  <div>${shortcutWeapon.name}</div>
-                              </h2>
-
-                              <table>
-                                  <thead>
-                                      <tr>
-                                          <th>Damage</th>
-                                          <th class="tableCenterText">Result</th>
-                                          <th class="tableCenterText">Detail</th>
-                                      </tr>
-                                  </thead>
-                                  <tbody>
-                                      <tr>
-                                          <td class="tableAttribute">Damage</td>
-                                          <td class="tableCenterText">[[${weaponRoll.result}]] ${supRollTag}</td>
-                                          <td class="tableCenterText">${damageString}</td>
-                                      </tr>
-                                      <tr>
-                                          <td class="tableAttribute">Hit Location</td>
-                                          <td class="tableCenterText">${hit_loc}</td>
-                                          <td class="tableCenterText">[[${hit.result}]]</td>
-                                      </tr>
-                                      <tr>
-                                          <td class="tableAttribute">Qualities</td>
-                                          <td class="tableCenterText" colspan="2">${shortcutWeapon.data.data.qualities}</td>
-                                      </tr>
-                                  </tbody>
-                              </table>
-                          <div>`
-
-
-    // tags for flavor on chat message
-    let tags = [];
-
-    if (shortcutWeapon.data.data.superior){
-        let tagEntry = `<span style="border: none; border-radius: 30px; background-color: rgba(29, 97, 187, 0.80); color: white; text-align: center; font-size: xx-small; padding: 5px;" title="Damage was rolled twice and output was highest of the two">Superior</span>`;
-        tags.push(tagEntry);
-    }
-
-    ChatMessage.create({
-      type: CONST.CHAT_MESSAGE_TYPES.ROLL,
-      user: game.user.id,
-      speaker: ChatMessage.getSpeaker(),
-      flavor: tags.join(''),
-      content: contentString,
-      roll: weaponRoll
-    })
-  }
-
-  _refreshWeaponShortcuts() {
-    this.actor.update({
-      'data.equippedWeapons.primaryWeapon.name': this.actor.data.data.equippedWeapons.primaryWeapon.name,
-      'data.equippedWeapons.primaryWeapon.img': this.actor.data.data.equippedWeapons.primaryWeapon.img,
-      'data.equippedWeapons.primaryWeapon.id': this.actor.data.data.equippedWeapons.primaryWeapon.id
-    })
-
-    this.actor.update({
-      'data.equippedWeapons.secondaryWeapon.name': this.actor.data.data.equippedWeapons.secondaryWeapon.name,
-      'data.equippedWeapons.secondaryWeapon.img': this.actor.data.data.equippedWeapons.secondaryWeapon.img,
-      'data.equippedWeapons.secondaryWeapon.id': this.actor.data.data.equippedWeapons.secondaryWeapon.id
-    })
+  _createStatusTags() {
+    this.actor.data.data.wounded ? this.form.querySelector('#wound-icon').classList.add('active') : this.form.querySelector('#wound-icon').classList.remove('active')
+    this.actor.data.data.carry_rating.current > this.actor.data.data.carry_rating.max ? this.form.querySelector('#enc-icon').classList.add('active') : this.form.querySelector('#enc-icon').classList.remove('active')
+    this.actor.data.data.fatigue.level > 0 ? this.form.querySelector('#fatigue-icon').classList.add('active') : this.form.querySelector('#fatigue-icon').classList.remove('active')
   }
 
 }

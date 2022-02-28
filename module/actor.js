@@ -227,14 +227,23 @@ export class SimpleActor extends Actor {
 
     //ENC Burden Calculations
     if (data.carry_rating.current > data.carry_rating.max * 3) {
+      data.carry_rating.label = 'Crushing'
+      data.carry_rating.penalty = -40
       data.speed.value = 0;
       data.stamina.max = data.stamina.max - 5;
     } else if (data.carry_rating.current > data.carry_rating.max * 2) {
+      data.carry_rating.label = 'Severe'
+      data.carry_rating.penalty = -20
       data.speed.value = Math.floor(data.speed.base / 2);
       data.stamina.max = data.stamina.max - 3;
     } else if (data.carry_rating.current > data.carry_rating.max) {
+      data.carry_rating.label = 'Moderate'
+      data.carry_rating.penalty = -10
       data.speed.value = data.speed.value - 1;
       data.stamina.max = data.stamina.max - 1;
+    } else if (data.carry_rating.current <= data.carry_rating.max) {
+      data.carry_rating.label = "Minimal"
+      data.carry_rating.penalty = 0
     }
 
     //Armor Weight Class Calculations
@@ -253,42 +262,16 @@ export class SimpleActor extends Actor {
     }
 
     //Wounded Penalties
-    let woundPen = -20;
-    data.woundPenalty = woundPen;
-
-    if (this._painIntolerant(actorData) === true) {
-      woundPen = -30;
-      data.woundPenalty = woundPen;
-    }
-
-    let halfWound = woundPen / 2;
-    let woundIni = -2;
-    let halfWoundIni = woundIni / 2;
-
     if (data.wounded == true) {
+      let woundPen = 0
+      let woundIni = -2;
+      this._painIntolerant(actorData) ? woundPen = -30 : woundPen = -20
+
       if (this._halfWoundPenalty(actorData) === true) {
-        for (var skill in data.skills) {
-          data.skills[skill].tn = data.skills[skill].tn + halfWound;
-        }
-        for (var skill in data.magic_skills) {
-          data.magic_skills[skill].tn = data.magic_skills[skill].tn + halfWound;
-        }
-        for (var skill in data.combat_styles) {
-          data.combat_styles[skill].tn = data.combat_styles[skill].tn + halfWound;
-        }
-        data.initiative.value = data.initiative.base + halfWoundIni;
-        data.woundPenalty = halfWound;
+        data.woundPenalty = woundPen / 2
+        data.initiative.value = data.initiative.base + (woundIni / 2);
 
       } else if (this._halfWoundPenalty(actorData) === false) {
-        for (var skill in data.skills) {
-          data.skills[skill].tn = data.skills[skill].tn + woundPen;
-        }
-        for (var skill in data.magic_skills) {
-          data.magic_skills[skill].tn = data.magic_skills[skill].tn + woundPen;
-        }
-        for (var skill in data.combat_styles) {
-          data.combat_styles[skill].tn = data.combat_styles[skill].tn + woundPen;
-        }
         data.initiative.value = data.initiative.base + woundIni;
         data.woundPenalty = woundPen;
       }
@@ -469,14 +452,23 @@ export class SimpleActor extends Actor {
 
     //ENC Burden Calculations
     if (data.carry_rating.current > data.carry_rating.max * 3) {
-      data.speed.base = 0;
+      data.carry_rating.label = 'Crushing'
+      data.carry_rating.penalty = -40
+      data.speed.value = 0;
       data.stamina.max = data.stamina.max - 5;
     } else if (data.carry_rating.current > data.carry_rating.max * 2) {
-      data.speed.base = Math.floor(data.speed.base / 2);
+      data.carry_rating.label = 'Severe'
+      data.carry_rating.penalty = -20
+      data.speed.value = Math.floor(data.speed.base / 2);
       data.stamina.max = data.stamina.max - 3;
     } else if (data.carry_rating.current > data.carry_rating.max) {
-      data.speed.base = data.speed.base - 1;
+      data.carry_rating.label = 'Moderate'
+      data.carry_rating.penalty = -10
+      data.speed.value = data.speed.value - 1;
       data.stamina.max = data.stamina.max - 1;
+    } else if (data.carry_rating.current <= data.carry_rating.max) {
+      data.carry_rating.label = "Minimal"
+      data.carry_rating.penalty = 0
     }
 
     //Armor Weight Class Calculations
@@ -494,19 +486,6 @@ export class SimpleActor extends Actor {
       data.speed.swimSpeed = data.speed.swimSpeed;
     }
 
-    //Wounded Penalties
-    let woundPen = -20;
-    let halfWound = woundPen / 2;
-    let woundIni = -2;
-    let halfWoundIni = woundIni / 2;
-
-    if (this._painIntolerant(actorData) == true) {
-      woundPen = -30;
-    } else {
-      woundPen = -20;
-    }
-
-    data.woundPenalty = woundPen
 
     // Set Skill professions to regular professions (This is a fucking mess, but it's the way it's done for now...)
     for (let prof in data.professions) {
@@ -516,70 +495,51 @@ export class SimpleActor extends Actor {
     }
 
 
+    // Wound Penalties
     if (data.wounded === true) {
+      let woundPen = 0
+      let woundIni = -2;
+      this._painIntolerant(actorData) ? woundPen = -30 : woundPen = -20
+
       if (this._halfWoundPenalty(actorData) === true) {
         for (var skill in data.professionsWound) {
-          data.professionsWound[skill] = data.professions[skill] + halfWound;
+          data.professionsWound[skill] = data.professions[skill] + (woundPen / 2);
         }
-        data.initiative.value = data.initiative.base + halfWoundIni;
-      } else if (this._halfWoundPenalty(actorData) === false) {
+
+        data.woundPenalty = woundPen / 2
+        data.initiative.value = data.initiative.base + (woundIni / 2);
+
+      } 
+
+      else if (this._halfWoundPenalty(actorData) === false) {
         for (var skill in data.professionsWound) {
           data.professionsWound[skill] = data.professions[skill] + woundPen;
         }
+
         data.initiative.value = data.initiative.base + woundIni;
+        data.woundPenalty = woundPen;
+
         }
-      } else if (data.wounded === false) {
+      } 
+      
+      else if (data.wounded === false) {
           for (var skill in data.professionsWound) {
            data.professionsWound[skill] = data.professions[skill];
         }
       }
 
     //Fatigue Penalties
-    if (data.stamina.value == -1) {
-      for (var skill in data.professions) {
-        data.fatigueLevel = -10;
-        data.professions[skill] = data.professions[skill] + this._calcFatiguePenalty(actorData);
-      }
-      for (var skill in data.skills) {
-        data.fatigueLevel = -10;
-        data.skills[skill].bonus = data.skills[skill].tn + this._calcFatiguePenalty(actorData);
-      }
-      
-    } else if (data.stamina.value == -2) {
-        for (var skill in data.professions) {
-          data.fatigueLevel = -20;
-          data.professions[skill] = data.professions[skill] + this._calcFatiguePenalty(actorData);
-      }
-      for (var skill in data.skills) {
-        data.fatigueLevel = -20;
-        data.skills[skill].bonus = data.skills[skill].tn + this._calcFatiguePenalty(actorData);
-      }
+    data.fatigue.level = data.stamina.value <= 0 ? ((data.stamina.value -1) * -1) + data.fatigue.bonus : 0 + data.fatigue.bonus
 
-    } else if (data.stamina.value == -3) {
-        for (var skill in data.professions) {
-          data.fatigueLevel = -30;
-          data.professions[skill] = data.professions[skill] + this._calcFatiguePenalty(actorData);
-      }
-      for (var skill in data.skills) {
-        data.fatigueLevel = -30;
-        data.skills[skill].bonus = data.skills[skill].tn + this._calcFatiguePenalty(actorData);
-      }
+    switch (data.fatigue.level > 0) {
+      case true:
+        data.fatigue.penalty = this._calcFatiguePenalty(actorData)
+        break
 
-    } else if (data.stamina.value == -4) {
-        for (var skill in data.professions) {
-        data.professions[skill] = 0;
-      }
-      for (var skill in data.skills) {
-        data.skills[skill].bonus = 0;
-      }
-
-    } else if (data.stamina.value <= -5) {
-        for (var skill in data.professions) {
-          data.professions[skill] = 0;
-      }
-      for (var skill in data.skills) {
-        data.skills[skill].bonus = 0;
-      }
+      case false:
+        data.fatigue.level = 0
+        data.fatigue.penalty = 0
+        break
     }
 
     // Set Lucky/Unlucky Numbers based on Threat Category

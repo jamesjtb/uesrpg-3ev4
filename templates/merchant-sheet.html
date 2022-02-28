@@ -1,184 +1,268 @@
 <form class="{{cssClass}}" autocomplete="off">
 
-    {{!-- Sheet Header --}}
-    <div class="stickyHeader">
-        <div class="headerContainer">
-            <div>
-                <img class="profile-img" src="{{actor.img}}" data-edit="img" title="{{actor.name}}">
-            </div>
-            <div class="headerInfoFlexBox">
+    {{!-- Character Sheet Sections --}}
+    <div class="sheet-section-container">
+
+        <div class="sheet-fixed-container">
+            <div class="character-profile-container">
+                <div class="profile-img-container">
+                    <img class="profile-img" src="{{actor.img}}" data-edit="img" title="{{actor.name}}">
+                    <div class="status-column">
+                        <div class="vertical-flex-container">
+                            <img id="wound-icon" src="icons/skills/wounds/blood-drip-droplet-red.webp" title="Wounded {{data.woundPenalty}}">
+                            <img id="fatigue-icon" src="icons/magic/control/debuff-energy-hold-green.webp" title="Fatigued {{data.fatigue.penalty}}">
+                            <img id="enc-icon" src="icons/containers/bags/pack-leather-brown.webp" title="{{data.carry_rating.label}} {{data.carry_rating.penalty}}">
+                        </div>
+                    </div>
+                </div>
+                <nav class="sheet-tabs tabs" data-group="primary">
+                    <a class="item" data-tab="merchant">Merchant</a>
+                    <a class="item" data-tab="core">Core</a>
+                    <a class="item" data-tab="abilities">Abilities</a>
+                </nav>
                 <div>
                     <h1 class="charname"><input type="text" name="name" value="{{actor.name}}" placeholder="Name"></h1>
                 </div>
-                <div class="merchantResources">
-                    <div class="container1">
-                        <div class="sliderControls">
-                            <div class="priceModifierContainer">
-                                <div class="priceModifierControls">
-                                    <button type="button" class="increasePriceMod"><i class="fas fa-arrow-up"></i></button>
-                                    <button type="button" class="decreasePriceMod"><i class="fas fa-arrow-down"></i></button>
+            </div>
+            <div class="fixed-data-container">
+                <div class="merchant-resources">
+                    <div class="merchant-attribute-container">
+                        <div>Price Modifier</div>
+                        <div class="merchant-controls-container">
+                            <div id="priceModifierBox" title="Price Modifer adjusts costs of all merchant's items">
+                                <div>
+                                    <label id="merchantPriceValue">{{data.priceMod}}%</label>
                                 </div>
-                                <div id="priceModifierBox" title="Price Modifer adjusts costs of all merchant's items">
-                                    <div>
-                                        <label id="merchantPriceValue">{{data.priceMod}}%</label>
-                                    </div>
+                            </div>
+                            <div class="resourceButton">
+                                <i class="fas fa-angle-up fa-xs increasePriceMod"></i>
+                                <i class="fas fa-angle-down fa-xs decreasePriceMod"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="merchant-attribute-container">
+                        <div><i class="fas fa-balance-scale wealthCalc"></i> Wealth</div>
+                        <div><input type="number" name="data.wealth" value="{{data.wealth}}"></div>
+                    </div>
+                </div>
+
+                <div class="characteristics-container">
+                    <h2>
+                        <button type="button" class="setBaseCharacteristics">Set</button>
+                        <div>Characteristics</div>
+                    </h2>
+                    <div class="characteristic-entry-container">
+                        <div class="characteristic">
+                            <input class="checkbox" type="checkbox" name="data.characteristics.str.favored" {{checked data.characteristics.str.favored}}>
+                            <div id="str" name="Strength" class="characteristic-roll styled-font rollable">Strength</div>
+                            <div class="right-align-content">
+                                <div class="relative-container">
+                                    <div class="styled-font">{{data.characteristics.str.total}}</div>
                                 </div>
                             </div>
                         </div>
-                        <div class="storeName">
-                            <input type="text" name="data.storeName" value="{{data.storeName}}" placeholder="Store Name">
+                        <div class="characteristic">
+                            <input class="checkbox" type="checkbox" name="data.characteristics.end.favored" {{checked data.characteristics.end.favored}}>
+                            <div id="end" name="Endurance" class="characteristic-roll styled-font rollable">Endurance</div>
+                            <div class="right-align-content">
+                                <div class="relative-container">
+                                    <div class="styled-font">{{data.characteristics.end.total}}</div>
+                                </div>
+                            </div>
                         </div>
-                    </div>
-                    <div class="container2">
-                        <div class="wealthContainer">
-                            <button type="button">
-                                <img class="wealthCalc" src="icons/commodities/currency/coins-plain-stack-gold-yellow.webp" alt="wealth" title="Quick Add/Subtract">
-                            </button>
-                            <input type="number" name="data.wealth" value="{{data.wealth}}">
+                        <div class="characteristic">
+                            <input class="checkbox" type="checkbox" name="data.characteristics.agi.favored" {{checked data.characteristics.agi.favored}}>
+                            <div id="agi" name="Agility" class="characteristic-roll styled-font rollable">Agility</div>
+                            <div class="right-align-content">
+                                <div class="relative-container">
+                                    <div class="styled-font">{{data.characteristics.agi.total}}</div>
+                                </div>
+                            </div>
                         </div>
-                        <div class="merchantSkills">
-                            <button type="button" class="professions-roll" name="Social" id="social">Social {{data.professions.social}}%</button>
-                            <button type="button" class="professions-roll" name="Commerce" id="commerce">Commerce {{data.skills.commerce.tn}}%</button>
-                            <button type="button" class="professions-roll" name="Knowledge" id="knowledge">Knowledge {{data.professions.knowledge}}%</button>
+                        <div class="characteristic">
+                            <input class="checkbox" type="checkbox" name="data.characteristics.int.favored" {{checked data.characteristics.int.favored}}>
+                            <div id="int" name="Intelligence" class="characteristic-roll styled-font rollable">Intelligence</div>
+                            <div class="right-align-content">
+                                <div class="relative-container">
+                                    <div class="styled-font">{{data.characteristics.int.total}}</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="characteristic">
+                            <input class="checkbox" type="checkbox" name="data.characteristics.wp.favored" {{checked data.characteristics.wp.favored}}>
+                            <div id="wp" name="Willpower" class="characteristic-roll styled-font rollable">Willpower</div>
+                            <div class="right-align-content">
+                                <div class="relative-container">
+                                    <div class="styled-font">{{data.characteristics.wp.total}}</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="characteristic">
+                            <input class="checkbox" type="checkbox" name="data.characteristics.prc.favored" {{checked data.characteristics.prc.favored}}>
+                            <div id="prc" name="Perception" class="characteristic-roll styled-font rollable">Perception</div>
+                            <div class="right-align-content">
+                                <div class="relative-container">
+                                    <div class="styled-font">{{data.characteristics.prc.total}}</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="characteristic">
+                            <input class="checkbox" type="checkbox" name="data.characteristics.prs.favored" {{checked data.characteristics.prs.favored}}>
+                            <div id="prs" name="Personality" class="characteristic-roll styled-font rollable">Personality</div>
+                            <div class="right-align-content">
+                                <div class="relative-container">
+                                    <div class="styled-font">{{data.characteristics.prs.total}}</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="characteristic">
+                            <input class="checkbox" type="checkbox" name="data.characteristics.lck.favored" {{checked data.characteristics.lck.favored}}>
+                            <div id="lck" name="Luck" class="characteristic-roll styled-font rollable">Luck</div>
+                            <div class="right-align-content">
+                                <div class="relative-container">
+                                    <div class="styled-font">{{data.characteristics.lck.total}}</div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
 
-        {{!-- Sheet Tab Navigation --}}
-        <nav class="sheet-tabs tabs" data-group="primary">
-            <a class="item" data-tab="merchant">Merchant</a>
-            <a class="item" data-tab="core">Core</a>
-            <a class="item" data-tab="abilities">Abilities</a>
-            <a class="item" data-tab="journal">Journal</a>
-        </nav>
-    </div>
+        <section class="sheet-body">
+            <div class="tab merchant" data-group="primary" data-tab="merchant">
+                <div class="tabContainer">
 
-    {{!-- Sheet Body --}}
-    <section class="sheet-body">
+                    <h2 class="store-name">
+                        <input type="text" name="data.storeName" value="{{data.storeName}}" placeholder="Store Name">
+                    </h2>
 
-        {{!-- Merchant List Tab --}}
-        <div class="tab core" data-group="primary" data-tab="merchant">
-            <div class="merchantTabContainer">
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Buy</th>
-                            <th>Item</th>
-                            <th>Type</th>
-                            <th>ENC</th>
-                            <th>QTY</th>
-                            <th><i class="fas fa-trash"></i></th>
-                        </tr>
-                    </thead>
-                    <tbody id="merchantItemList">
-                        <div class="tableListHeader">
-                            <h2>
-                                <div class="leftInfo">
-                                    <button type="button" class="item-create" id="createSelect">+</button>
-                                    <label>Items</label>
-                                </div>
-                                <select id="itemFilter">
-                                    <option>All</option>
-                                </select>
-                            </h2>
+                    <div class="combat-button-container">
+                        <div class="combat-button professions-roll" name="Commerce" id="commerce">
+                            <div class="flex-container">
+                                <div class="combat-button-value">{{data.skills.commerce.tn}}</div>
+                                <div class="combat-button-label">Commerce</div>
+                            </div>
                         </div>
-                        {{#each actor.data.merchantItem as |item id|}}
-                        <tr class="item active" data-item-id="{{item._id}}" data-item-type="{{item.type}}">
-                            <td>
-                                <div class="buyFlexContainer">
-                                    <a class="buyButton" title="Buy Item for {{item.data.modPrice}}">
-                                        <i class="fas fa-coins"></i>
-                                    </a>
-                                    <div>{{item.data.modPrice}}</div>
-                                </div>
-                            </td>
-                            <td>
-                                <div class="tableItemNameCell">
-                                    <img class="item-img" src="{{item.img}}" title="Send to Chat"/>
-                                    <div class="item-name">{{item.name}}</div>
-                                </div>
-                            </td>
-                            <td>{{item.type}}</td>
-                            <td>{{item.data.enc}}</td>
-                            <td>
-                                <div class="qty-controls">
-                                    <button class="minusQty plusQty" title="Click to increase, right click to decrease">
-                                        <div>{{item.data.quantity}}</div>
-                                    </button>
-                                </div>
-                            </td>
-                            <td>
-                                <a class="item-control item-delete" title="Delete Item"><i class="fas fa-trash"></i></a>
-                            </td>
-                        </tr>
-                        {{/each}}
-                    </tbody>
-                </table>
-            </div>
-        </div>
+                        <div class="combat-button professions-roll" name="Social" id="social">
+                            <div class="flex-container">
+                                <div class="combat-button-value">{{data.professions.social}}</div>
+                                <div class="combat-button-label">Social</div>
+                            </div>
+                        </div>
+                        <div class="combat-button professions-roll" name="Observe" id="observe">
+                            <div class="flex-container">
+                                <div class="combat-button-value">{{data.professions.observe}}</div>
+                                <div class="combat-button-label">Observe</div>
+                            </div>
+                        </div>
+                        <div class="combat-button professions-roll" name="Knowledge" id="knowledge">
+                            <div class="flex-container">
+                                <div class="combat-button-value">{{data.professions.knowledge}}</div>
+                                <div class="combat-button-label">Knowledge</div>
+                            </div>
+                        </div>
+                        <div class="combat-button professions-roll" name="Magic" id="magic">
+                            <div class="flex-container">
+                                <div class="combat-button-value">{{data.professions.magic}}</div>
+                                <div class="combat-button-label">Magic</div>
+                            </div>
+                        </div>
+                        <div class="combat-button professions-roll" name="Evade" id="evade">
+                            <div class="flex-container">
+                                <div class="combat-button-value">{{data.professions.evade}}</div>
+                                <div class="combat-button-label">Evade</div>
+                            </div>
+                        </div>
+                        <div class="combat-button professions-roll" name="Physical" id="physical">
+                            <div class="flex-container">
+                                <div class="combat-button-value">{{data.professions.physical}}</div>
+                                <div class="combat-button-label">Physical</div>
+                            </div>
+                        </div>
+                    </div>
 
-        {{!-- Core Tab --}}
-        <div class="tab core" data-group="primary" data-tab="core">
-            <div class="coreTabContainer">
-                <div class="characteristicSideBar">
-                    <button type="button" class="setBaseCharacteristics">
-                        Characteristics
-                    </button>
-                    <table>
-                        <tbody>
+                    <table class="merchant-item-list">
+                        <thead>
                             <tr>
-                                <td><input type="checkbox" name="data.characteristics.str.favored" {{checked data.characteristics.str.favored}}></td>
-                                <td><button type="button" id="str" name="Strength" class="characteristic-roll">Strength</button></td>
-                                <td><div id="strCha">{{data.characteristics.str.total}}</div></td>
+                                <th>Buy</th>
+                                <th class="item-create merchant-item-name-cell" id="createSelect">+ Item</th>
+                                <th>
+                                    <select id="itemFilter">
+                                        <option>All</option>
+                                    </select>
+                                </th>
+                                <th>ENC</th>
+                                <th>QTY</th>
+                                <th><i class="fas fa-trash"></i></th>
                             </tr>
-                            <tr>
-                                <td><input type="checkbox" name="data.characteristics.end.favored" {{checked data.characteristics.end.favored}}></td>
-                                <td><button type="button" id="end" name="Endurance" class="characteristic-roll">Endurance</button></td>
-                                <td><div id="strCha">{{data.characteristics.end.total}}</div></td>
+                        </thead>
+                        <tbody id="merchantItemList">
+                            {{#each actor.data.merchantItem as |item id|}}
+                            <tr class="item active" data-item-id="{{item._id}}" data-item-type="{{item.type}}">
+                                <td>
+                                    <div class="flex-container">
+                                        <a class="buyButton" title="Buy Item for {{item.data.modPrice}}">
+                                            <i class="fas fa-coins"></i>
+                                        </a>
+                                        <div>{{item.data.modPrice}}</div>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="tableItemNameCell">
+                                        <img class="item-img" src="{{item.img}}" title="Send to Chat"/>
+                                        <div class="item-name">{{item.name}}</div>
+                                    </div>
+                                </td>
+                                <td>{{item.type}}</td>
+                                <td>{{item.data.enc}}</td>
+                                <td>
+                                    <div class="qty-controls">
+                                        <button class="minusQty plusQty" title="Click to increase, right click to decrease">
+                                            <div>{{item.data.quantity}}</div>
+                                        </button>
+                                    </div>
+                                </td>
+                                <td>
+                                    <a class="item-control item-delete" title="Delete Item"><i class="fas fa-trash"></i></a>
+                                </td>
                             </tr>
-                            <tr>
-                                <td><input type="checkbox" name="data.characteristics.agi.favored" {{checked data.characteristics.agi.favored}}></td>
-                                <td><button type="button" id="agi" name="Agility" class="characteristic-roll">Agility</button></td>
-                                <td><div id="strCha">{{data.characteristics.agi.total}}</div></td>
-                            </tr>
-                            <tr>
-                                <td><input type="checkbox" name="data.characteristics.int.favored" {{checked data.characteristics.int.favored}}></td>
-                                <td><button type="button" id="int" name="Intelligence" class="characteristic-roll">Intelligence</button></td>
-                                <td><div id="strCha">{{data.characteristics.int.total}}</div></td>
-                            </tr>
-                            <tr>
-                                <td><input type="checkbox" name="data.characteristics.wp.favored" {{checked data.characteristics.wp.favored}}></td>
-                                <td><button type="button" id="wp" name="Willpower" class="characteristic-roll">Willpower</button></td>
-                                <td><div id="strCha">{{data.characteristics.wp.total}}</div></td>
-                            </tr>
-                            <tr>
-                                <td><input type="checkbox" name="data.characteristics.prc.favored" {{checked data.characteristics.prc.favored}}></td>
-                                <td><button type="button" id="prc" name="Perception" class="characteristic-roll">Perception</button></td>
-                                <td><div id="strCha">{{data.characteristics.prc.total}}</div></td>
-                            </tr>
-                            <tr>
-                                <td><input type="checkbox" name="data.characteristics.prs.favored" {{checked data.characteristics.prs.favored}}></td>
-                                <td><button type="button" id="prs" name="Personality" class="characteristic-roll">Personality</button></td>
-                                <td><div id="strCha">{{data.characteristics.prs.total}}</div></td>
-                            </tr>
-                            <tr>
-                                <td><input type="checkbox" name="data.characteristics.lck.favored" {{checked data.characteristics.lck.favored}}></td>
-                                <td><button type="button" id="lck" name="Luck" class="characteristic-roll">Luck</button></td>
-                                <td><div id="strCha">{{data.characteristics.lck.total}}</div></td>
-                            </tr>
+                            {{/each}}
                         </tbody>
                     </table>
                 </div>
+            </div>
 
-                <div class="skillContainer">
-                    <div>
+            <div class="tab core" data-group="primary" data-tab="core">
+                <div class="tabContainer">
+                    <div class="about-buttons">
+                        <div class="npc-button-stats">
+                            <div>
+                                <div class="styled-font">Soul Energy</div>
+                                <input type="text" name="data.soul_energy" placeholder="Soul Energy" value="{{data.soul_energy}}">
+                            </div>
+                            <div>
+                                <div class="styled-font">Race</div>
+                                <input type="text" placeholder="Race" value="{{data.race}}">
+                            </div>
+                            <div>
+                                <div class="styled-font">Threat</div>
+                                <select name="data.threat" data-type="String">
+                                    {{#select actor.data.threat}}
+                                    {{#each actor.data.threatCategory as |threatCategory key|}}
+                                    <option value="{{key}}">{{threatCategory}}</option> 
+                                    {{/each}} {{/select}}
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="skillContainer">
                         <h2 class="headerWithButton">
                             <label>Professions</label>
                         </h2>
-                        <ol class="skillList">
-                            <li class="item" data-item-id="{{item._id}}">
+                        <ul class="skillList">
+                            <li class="npc-item">
                                 <div class="itemInfo">
                                     <i class="fas fa-dice-d20 professions-roll" name="Combat" id="combat"></i>
                                     <img class="item-img" src="icons/skills/melee/weapons-crossed-swords-yellow.webp" title="Send to Chat"/>
@@ -188,7 +272,7 @@
                                     <div class="item-value profession"><input type="number" name="data.professions.combat" value="{{data.professions.combat}}"/>%</div>
                                 </div>
                             </li>
-                            <li class="item" data-item-id="{{item._id}}">
+                            <li class="npc-item">
                                 <div class="itemInfo">
                                     <i class="fas fa-dice-d20 professions-roll" name="Evade" id="evade"></i>
                                     <img class="item-img" src="icons/skills/movement/arrow-upward-yellow.webp" title="Send to Chat"/>
@@ -198,7 +282,7 @@
                                     <div class="item-value profession"><input type="number" name="data.professions.evade" value="{{data.professions.evade}}"/>%</div>
                                 </div>
                             </li>
-                            <li class="item" data-item-id="{{item._id}}">
+                            <li class="npc-item">
                                 <div class="itemInfo">
                                     <i class="fas fa-dice-d20 professions-roll" name="Knowledge" id="knowledge"></i>
                                     <img class="item-img" src="icons/skills/trades/academics-study-reading-book.webp" title="Send to Chat"/>
@@ -208,7 +292,7 @@
                                     <div class="item-value profession"><input type="number" name="data.professions.knowledge" value="{{data.professions.knowledge}}"/>%</div>
                                 </div>
                             </li>
-                            <li class="item" data-item-id="{{item._id}}">
+                            <li class="npc-item">
                                 <div class="itemInfo">
                                     <i class="fas fa-dice-d20 professions-roll" name="Magic" id="magic"></i>
                                     <img class="item-img" src="icons/sundries/books/book-open-purple.webp" title="Send to Chat"/>
@@ -218,7 +302,7 @@
                                     <div class="item-value profession"><input type="number" name="data.professions.magic" value="{{data.professions.magic}}"/>%</div>
                                 </div>
                             </li>
-                            <li class="item" data-item-id="{{item._id}}">
+                            <li class="npc-item">
                                 <div class="itemInfo">
                                     <i class="fas fa-dice-d20 professions-roll" name="Observe" id="observe"></i>
                                     <img class="item-img" src="icons/magic/perception/eye-ringed-green.webp" title="Send to Chat"/>
@@ -228,7 +312,7 @@
                                     <div class="item-value profession"><input type="number" name="data.professions.observe" value="{{data.professions.observe}}"/>%</div>
                                 </div>
                             </li>
-                            <li class="item" data-item-id="{{item._id}}">
+                            <li class="npc-item">
                                 <div class="itemInfo">
                                     <i class="fas fa-dice-d20 professions-roll" name="Physical" id="physical"></i>
                                     <img class="item-img" src="icons/skills/melee/unarmed-punch-fist.webp" title="Send to Chat"/>
@@ -238,7 +322,7 @@
                                     <div class="item-value profession"><input type="number" name="data.professions.physical" value="{{data.professions.physical}}"/>%</div>
                                 </div>
                             </li>
-                            <li class="item" data-item-id="{{item._id}}">
+                            <li class="npc-item">
                                 <div class="itemInfo">
                                     <i class="fas fa-dice-d20 professions-roll" name="Social" id="social"></i>
                                     <img class="item-img" src="icons/skills/social/diplomacy-peace-alliance.webp" title="Send to Chat"/>
@@ -248,7 +332,7 @@
                                     <div class="item-value profession"><input type="number" name="data.professions.social" value="{{data.professions.social}}"/>%</div>
                                 </div>
                             </li>
-                            <li class="item" data-item-id="{{item._id}}">
+                            <li class="npc-item">
                                 <div class="itemInfo">
                                     <i class="fas fa-dice-d20 professions-roll" name="Stealth" id="stealth"></i>
                                     <img class="item-img" src="systems/uesrpg-d100/images/Icons/invisible.webp" title="Send to Chat"/>
@@ -258,17 +342,22 @@
                                     <div class="item-value profession"><input type="number" name="data.professions.stealth" value="{{data.professions.stealth}}"/>%</div>
                                 </div>
                             </li>
-                        </ol>
-                    </div>
-
-                    <div>
-                        <h2 class="headerWithButton">
-                            <label>Unconventional Skills</label>
-                        </h2>
-                        <ol class="skillList">
-                            <li class="item" data-item-id="{{item._id}}">
+                            <li class="npc-item">
+                                <div class="itemInfo">
+                                    <i class="fas fa-dice-d20 professions-roll" name="{{data.skills.commerce.specialization}}" id="commerce"></i>
+                                    <img class="item-img" src="icons/skills/social/trading-justice-scale-yellow.webp" title="Send to Chat"/>
+                                    <div class="skill-name">
+                                        <div class="skill-name">Commerce</div>
+                                    </div>
+                                </div>
+                                <div class="item-controls">
+                                    <div class="item-value profession"><input type="number" name="data.skills.commerce.tn" value="{{data.skills.commerce.tn}}"/>%</div>
+                                </div>
+                            </li>
+                            <li class="npc-item">
                                 <div class="itemInfo">
                                     <i class="fas fa-dice-d20 professions-roll" name="{{data.skills.profession1.specialization}}" id="profession1"></i>
+                                    <img class="item-img" src="icons/skills/social/trading-justice-scale-yellow.webp" title="Send to Chat"/>
                                     <div class="skill-name">
                                         <input type="text" placeholder="Profession 1" name="data.skills.profession1.specialization" value="{{data.skills.profession1.specialization}}">
                                     </div>
@@ -277,9 +366,10 @@
                                     <div class="item-value profession"><input type="number" name="data.skills.profession1.tn" value="{{data.skills.profession1.tn}}"/>%</div>
                                 </div>
                             </li>
-                            <li class="item" data-item-id="{{item._id}}">
+                            <li class="npc-item">
                                 <div class="itemInfo">
                                     <i class="fas fa-dice-d20 professions-roll" name="{{data.skills.profession2.specialization}}" id="profession2"></i>
+                                    <img class="item-img" src="icons/skills/social/trading-justice-scale-yellow.webp" title="Send to Chat"/>
                                     <div class="skill-name">
                                         <input type="text" placeholder="Profession 2" name="data.skills.profession2.specialization" value="{{data.skills.profession2.specialization}}">
                                     </div>
@@ -288,9 +378,10 @@
                                     <div class="item-value profession"><input type="number" name="data.skills.profession2.tn" value="{{data.skills.profession2.tn}}"/>%</div>
                                 </div>
                             </li>
-                            <li class="item" data-item-id="{{item._id}}">
+                            <li class="npc-item">
                                 <div class="itemInfo">
                                     <i class="fas fa-dice-d20 professions-roll" name="{{data.skills.profession3.specialization}}" id="profession3"></i>
+                                    <img class="item-img" src="icons/skills/social/trading-justice-scale-yellow.webp" title="Send to Chat"/>
                                     <div class="skill-name">
                                         <input type="text" placeholder="Profession 3" name="data.skills.profession3.specialization" value="{{data.skills.profession3.specialization}}">
                                     </div>
@@ -299,76 +390,17 @@
                                     <div class="item-value profession"><input type="number" name="data.skills.profession3.tn" value="{{data.skills.profession3.tn}}"/>%</div>
                                 </div>
                             </li>
-                            <li class="item" data-item-id="{{item._id}}">
-                                <div class="itemInfo">
-                                    <i class="fas fa-dice-d20 professions-roll" name="Commerce" id="commerce"></i>
-                                    <div class="skill-name">
-                                        <input type="text" name="Commerce" value="Commerce" disabled>
-                                    </div>
-                                </div>
-                                <div class="item-controls">
-                                    <div class="item-value profession"><input type="number" name="data.skills.commerce.tn" value="{{data.skills.commerce.tn}}"/>%</div>
-                                </div>
-                            </li>
-                        </ol>
+                        </ul>
                     </div>
-                </div>
 
-                <div class="bioContainer">
-                    <div class="buttonStats">
-                        <table>
-                            <thead>
-                                <tr>
-                                    <th>Race/Species</th>
-                                    <th>Age</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td><input type="text" name="data.race" value="{{data.race}}" ></td>
-                                    <td><input type="text" name="data.age" value="{{data.age}}"></td>
-                                </tr>
-                            </tbody>
-                            <thead>
-                                <tr>
-                                    <th>Threat</th>
-                                    <th>Soul Energy</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td><select name="data.threat" data-type="String">
-                                        {{#select actor.data.threat}}
-                                        {{#each actor.data.threatCategory as |threatCategory key|}}
-                                        <option value="{{key}}">{{threatCategory}}</option> 
-                                        {{/each}} {{/select}}
-                                    </select></td>
-                                    <td><input type="text" name="data.soul_energy" value="{{data.soul_energy}}"></td>
-                                </tr>
-                            </tbody>
-                        </table>              
-                    </div>
-                    <div class="bioPage">
-                        <h2>Biography</h2>
-                        <div class="contentContainer">
-                            {{editor content=data.data.bio target="data.data.bio" button=true owner=owner editable=editable}}
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        {{!-- Abilities Tab --}}
-        <div class="tab abilities" data-group="primary" data-tab="abilities">
-            <div class="abilitiesTabContainer">
-                <div class="abilitiesContainer">
-                    <div class="abilityContainer">
-                        <h2 class="headerWithButton">
-                                <button type="button" class="item-create" id="trait">+</button>
-                                <label>Traits</label>
+                    <div class="two-column-flex-container">
+                        <div class="languageContainer">
+                            <h2 class="headerWithButton">
+                                <button type="button" class="item-create" id="language">+</button>
+                                <label>Languages</label>
                             </h2>
-                            <ol class="skillList">
-                                {{#each actor.data.trait as |item id|}}
+                            <ol class="single-column-list">
+                                {{#each actor.data.language as |item id|}}
                                     <li class="item" data-item-id="{{item._id}}">
                                         <div class="itemInfo">
                                             <img class="item-img" src="{{item.img}}" title="Send to Chat"/>
@@ -380,13 +412,65 @@
                                     </li>
                                 {{/each}}
                             </ol>
+                        </div>
+                        <div class="factionContainer">
+                            <h2 class="headerWithButton">
+                                <button type="button" class="item-create" id="faction">+</button>
+                                <label>Factions</label>
+                            </h2>
+                            <ol class="single-column-list">
+                                {{#each actor.data.faction as |item id|}}
+                                    <li class="item" data-item-id="{{item._id}}">
+                                        <div class="itemInfo">
+                                            <img class="item-img" src="{{item.img}}" title="Send to Chat"/>
+                                            <div class="item-name">{{item.name}}</div>
+                                        </div>
+                                        <div class="item-controls">
+                                            <a class="item-control item-delete" title="Delete Item"><i class="fas fa-trash"></i></a>
+                                        </div>
+                                    </li>
+                                {{/each}}
+                            </ol>
+                        </div>
                     </div>
-                    <div class="abilityContainer">
+
+                    <div class="bioPage">
+                        <h2>Biography</h2>
+                        <div class="contentContainer">
+                            {{editor content=data.bio target="data.bio" button=true owner=owner editable=editable}}
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+            <div class="tab abilities" data-group="primary" data-tab="abilities">
+                <div class="three-column-flex-container">
+                    <div class="trait-container">
+                        <h2 class="headerWithButton">
+                            <button type="button" class="item-create" id="trait">+</button>
+                            <label>Traits</label>
+                        </h2>
+                        <ol class="single-column-list">
+                            {{#each actor.data.trait as |item id|}}
+                                <li class="item" data-item-id="{{item._id}}">
+                                    <div class="itemInfo">
+                                        <img class="item-img" src="{{item.img}}" title="Send to Chat"/>
+                                        <div class="item-name">{{item.name}}</div>
+                                    </div>
+                                    <div class="item-controls">
+                                        <a class="item-control item-delete" title="Delete Item"><i class="fas fa-trash"></i></a>
+                                    </div>
+                                </li>
+                            {{/each}}
+                        </ol>
+                    </div>
+                    <div class="talent-container">
                         <h2 class="headerWithButton">
                             <button type="button" class="item-create" id="talent">+</button>
                             <label>Talents</label>
                         </h2>
-                        <ol class="skillList">
+                        <ol class="single-column-list">
                             {{#each actor.data.talent as |item id|}}
                                 <li class="item" data-item-id="{{item._id}}">
                                     <div class="itemInfo">
@@ -400,12 +484,12 @@
                             {{/each}}
                         </ol>
                     </div>
-                    <div class="abilityContainer">
+                    <div class="power-container">
                         <h2 class="headerWithButton">
                             <button type="button" class="item-create" id="power">+</button>
                             <label>Powers</label>
                         </h2>
-                        <ol class="skillList">
+                        <ol class="single-column-list">
                             {{#each actor.data.power as |item id|}}
                                 <li class="item" data-item-id="{{item._id}}">
                                     <div class="itemInfo">
@@ -421,39 +505,8 @@
                     </div>
                 </div>
             </div>
-        </div>
 
-        {{!-- Journal Tab --}}
-        <div class="tab journal" data-group="primary" data-tab="journal">
-            <div class="journalTabContainer">
-                <div class="journalContainer">
-                    <h2>Journal</h2>
-                    <div>
-                        {{editor content=data.notes target="data.notes" button=true owner=owner editable=this.options.editable}}
-                    </div>
-                </div>
-                <div class="factionContainer">
-                    <h2 class="headerWithButton">
-                        <button type="button" class="item-create" id="faction">+</button>
-                        <label>Factions</label>
-                    </h2>
-                    <ol class="skillList">
-                        {{#each actor.data.faction as |item id|}}
-                            <li class="item" data-item-id="{{item._id}}">
-                                <div class="itemInfo">
-                                    <img class="item-img" src="{{item.img}}" title="Send to Chat"/>
-                                    <div class="item-name">{{item.name}}</div>
-                                </div>
-                                <div class="item-controls">
-                                    <a class="item-control item-delete" title="Delete Item"><i class="fas fa-trash"></i></a>
-                                </div>
-                            </li>
-                        {{/each}}
-                    </ol>
-                </div>
-            </div>
-        </div>
-    </section>
-    
+        </section>
+    </div>
 </form>
 

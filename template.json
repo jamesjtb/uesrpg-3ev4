@@ -105,7 +105,9 @@
     "carry_rating": {
       "current": 0,
       "max": 0,
-      "bonus": 0
+      "bonus": 0,
+      "penalty": 0,
+      "label": "Minimal"
     },
     "characteristics": {
       "str": {
@@ -332,7 +334,11 @@
       "silverR": 0,
       "sunlightR": 0
     },
-    "fatigueLevel": 0,
+    "fatigue": {
+      "level": 0,
+      "penalty": 0,
+      "bonus": 0
+    },
     "lucky_numbers": {
       "ln1": 0,
       "ln2": 0,
@@ -366,7 +372,9 @@
     "carry_rating": {
       "current": 0,
       "max": 0,
-      "bonus": 0
+      "bonus": 0,
+      "penalty": 0,
+      "label": "Minimal"
     },
     "characteristics": {
       "str": {

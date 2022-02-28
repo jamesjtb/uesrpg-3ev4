@@ -1259,26 +1259,70 @@
   async _onItemCreate(event) {
     event.preventDefault()
     const element = event.currentTarget
-    const actor = this.actor
-    let itemData;
+    let itemData
 
-    if (element.id == 'spell') {
-      itemData = [{
-        name: element.id,
-        type: 'spell',
-        'data.school': element.dataset.school
-      }]
+    if (element.id === 'createSelect') {
+      let d = new Dialog({
+        title: "Create Item",
+        content: `<div style="padding: 10px 0;">
+                      <h2>Select an Item Type</h2>
+                      <label>Create an item on this sheet</label>
+                  </div>`,
+
+        buttons: {
+          one: {
+            label: "Item",
+            callback: async html => {
+                const itemData = [{name: 'item', type: 'item'}]
+                let newItem = await this.actor.createEmbeddedDocuments("Item", itemData);
+                await newItem[0].sheet.render(true)
+            }
+          },
+          two: {
+            label: "Ammunition",
+            callback: async html => {
+                const itemData = [{name: 'ammunition', type: 'ammunition'}]
+                let newItem = await this.actor.createEmbeddedDocuments("Item", itemData);
+                await newItem[0].sheet.render(true)
+            }
+          },
+          three: {
+            label: "Armor",
+            callback: async html => {
+                const itemData = [{name: 'armor', type: 'armor'}]
+                let newItem = await this.actor.createEmbeddedDocuments("Item", itemData);
+                await newItem[0].sheet.render(true)
+            }
+          },
+          four: {
+            label: "Weapon",
+            callback: async html => {
+              const itemData = [{name: 'weapon', type: 'weapon'}]
+              let newItem = await this.actor.createEmbeddedDocuments("Item", itemData);
+              await newItem[0].sheet.render(true)
+            }
+          },
+          five: {
+            label: "Cancel",
+            callback: html => console.log('Cancelled')
+          }
+        },
+        default: "one",
+        close: html => console.log()
+      })
+
+      d.render(true)
     }
+
     else {
       itemData = [{
         name: element.id,
-        type: element.id
+        type: element.id,
       }]
-    }
 
-    const created = await Item.create(itemData, {parent: actor});
-    created[0].sheet.render(true)
-    return created;
+      let newItem = await this.actor.createEmbeddedDocuments("Item", itemData);
+      await newItem[0].sheet.render(true)
+    }
   }
 
   async _onTalentRoll(event) {
@@ -2271,7 +2315,8 @@
       if ([...this.form.querySelectorAll('#itemFilter option')].some(i => i.innerHTML === item.type)) {continue}
       else {
         let option = document.createElement('option')
-        option.innerHTML = item.type
+        option.innerHTML = item.type === 'ammunition' ? 'ammo' : item.type
+        option.value = item.type
         this.form.querySelector('#itemFilter').append(option)
       }
     }
@@ -2462,6 +2507,7 @@
     }
 
     // Find first entry and determine item type to create appropriate item header
+    if (itemList.length === 0) {return ui.notifications.info(`${this.actor.name} does not have any items of this type to equip.`)}
     switch (itemList[0].type) {
       case 'armor':
       case 'item':
