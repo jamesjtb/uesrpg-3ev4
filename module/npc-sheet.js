@@ -12,9 +12,16 @@ export class npcSheet extends ActorSheet {
       height: 860,
       tabs: [{navSelector: ".sheet-tabs", contentSelector: ".sheet-body", initial: "description"}],
       dragDrop: [{dragSelector: [
-        ".equipmentList .item", 
+        ".armor-table .item",
+        ".ammunition-table .item",
+        ".weapon-table .item",
         ".spellList .item",
-        ".skillList .item"
+        ".skillList .item",
+        ".factionContainer .item",
+        ".languageContainer .item",
+        ".talent-container .item",
+        ".trait-container .item",
+        ".power-container .item"
       ], 
       dropSelector: null}]
     });
@@ -473,13 +480,18 @@ export class npcSheet extends ActorSheet {
   async _onClickCharacteristic(event) {
     event.preventDefault()
     const element = event.currentTarget
-    let wounded_char = this.actor.data.data.characteristics[element.id].total - 20
+    const woundedValue = this.actor.data.data.characteristics[element.id].total + this.actor.data.data.woundPenalty + this.actor.data.data.fatigue.penalty + this.actor.data.data.carry_rating.penalty
+    const regularValue = this.actor.data.data.characteristics[element.id].total + this.actor.data.data.fatigue.penalty + this.actor.data.data.carry_rating.penalty
+    let tags = []
+    if (this.actor.data.data.wounded) {tags.push(`<span style="border:none; border-radius:30px; background-color: darkred; color:white; text-align:center; font-size:xx-small; padding:5px">Wounded ${this.actor.data.data.woundPenalty}</span>`)}
+    if (this.actor.data.data.fatigue.penalty != 0) {tags.push(`<span style="border:none; border-radius:30px; background-color: green; color:white; text-align:center; font-size:xx-small; padding:5px">Fatigued ${this.actor.data.data.fatigue.penalty}</span>`)}
+    if (this.actor.data.data.carry_rating.penalty != 0) {tags.push(`<span style="border:none; border-radius:30px; background-color: black; color:white; text-align:center; font-size:xx-small; padding:5px">Overencumbered ${this.actor.data.data.carry_rating.penalty}</span>`)}
 
     let d = new Dialog({
       title: "Apply Roll Modifier",
       content: `<form>
                   <div class="dialogForm">
-                  <label><b>${element.name} Modifier: </b></label><input placeholder="ex. -20, +10" id="playerInput" value="0" style=" text-align: center; width: 50%; border-style: groove; float: right;" type="text"></input></div>
+                  <label><b>${element.getAttribute('name')} Modifier: </b></label><input placeholder="ex. -20, +10" id="playerInput" value="0" style=" text-align: center; width: 50%; border-style: groove; float: right;" type="text"></input></div>
                 </form>`,
       buttons: {
         one: {
@@ -504,8 +516,8 @@ export class npcSheet extends ActorSheet {
           roll.total == this.actor.data.data.lucky_numbers.ln10)
 
          {
-          contentString = `<h2>${element.name}</h2
-          <p></p><b>Target Number: [[${wounded_char} + ${playerInput}]]</b> <p></p>
+          contentString = `<h2>${element.getAttribute('name')}</h2
+          <p></p><b>Target Number: [[${woundedValue + playerInput}]]</b> <p></p>
           <b>Result: [[${roll.result}]]</b><p></p>
           <span style='color:green; font-size:120%;'> <b>LUCKY NUMBER!</b></span>`
 
@@ -517,17 +529,17 @@ export class npcSheet extends ActorSheet {
           roll.total == this.actor.data.data.unlucky_numbers.ul5 ||
           roll.total == this.actor.data.data.unlucky_numbers.ul6) 
           {
-          contentString = `<h2>${element.name}</h2
-          <p></p><b>Target Number: [[${wounded_char} + ${playerInput}]]</b> <p></p>
+          contentString = `<h2>${element.getAttribute('name')}</h2
+          <p></p><b>Target Number: [[${woundedValue + playerInput}]]</b> <p></p>
           <b>Result: [[${roll.result}]]</b><p></p>
           <span style='color:rgb(168, 5, 5); font-size:120%;'> <b>UNLUCKY NUMBER!</b></span>`
 
     
         } else {
-          contentString = `<h2>${element.name}</h2
-          <p></p><b>Target Number: [[${wounded_char} + ${playerInput}]]</b> <p></p>
+          contentString = `<h2>${element.getAttribute('name')}</h2
+          <p></p><b>Target Number: [[${woundedValue + playerInput}]]</b> <p></p>
           <b>Result: [[${roll.result}]]</b><p></p>
-          <b>${roll.total<=wounded_char ? " <span style='color:green; font-size: 120%;'> <b>SUCCESS!</b></span>" : " <span style='color:rgb(168, 5, 5); font-size: 120%;'> <b>FAILURE!</b></span>"}`
+          <b>${roll.total <= (woundedValue + playerInput) ? "<span style='color:green; font-size: 120%;'> <b>SUCCESS!</b></span>" : " <span style='color:rgb(168, 5, 5); font-size: 120%;'> <b>FAILURE!</b></span>"}`
 
         } 
       } else {
@@ -543,8 +555,8 @@ export class npcSheet extends ActorSheet {
           roll.total == this.actor.data.data.lucky_numbers.ln10)
 
       {
-        contentString = `<h2>${element.name}</h2
-        <p></p><b>Target Number: [[${this.actor.data.data.characteristics[element.id].total} + ${playerInput}]]</b> <p></p>
+        contentString = `<h2>${element.getAttribute('name')}</h2
+        <p></p><b>Target Number: [[${regularValue + playerInput}]]</b> <p></p>
         <b>Result: [[${roll.result}]]</b><p></p>
         <span style='color:green; font-size:120%;'> <b>LUCKY NUMBER!</b></span>`
 
@@ -557,26 +569,31 @@ export class npcSheet extends ActorSheet {
           roll.total == this.actor.data.data.unlucky_numbers.ul6) 
 
       {
-        contentString = `<h2>${element.name}</h2
-        <p></p><b>Target Number: [[${this.actor.data.data.characteristics[element.id].total} + ${playerInput}]]</b> <p></p>
+        contentString = `<h2>${element.getAttribute('name')}</h2
+        <p></p><b>Target Number: [[${regularValue + playerInput}]]</b> <p></p>
         <b>Result: [[${roll.result}]]</b><p></p>
         <span style='color:rgb(168, 5, 5); font-size:120%;'> <b>UNLUCKY NUMBER!</b></span>`
 
 
       } else {
-        contentString = `<h2>${element.name}</h2
-        <p></p><b>Target Number: [[${this.actor.data.data.characteristics[element.id].total} + ${playerInput}]]</b> <p></p>
+        contentString = `<h2>${element.getAttribute('name')}</h2
+        <p></p><b>Target Number: [[${regularValue + playerInput}]]</b> <p></p>
         <b>Result: [[${roll.result}]]</b><p></p>
-        <b>${roll.total<=(this.actor.data.data.characteristics[element.id].total + playerInput) ? " <span style='color:green; font-size: 120%;'> <b>SUCCESS!</b></span>" : " <span style='color:rgb(168, 5, 5); font-size: 120%;'> <b>FAILURE!</b></span>"}`
+        <b>${roll.total<=(regularValue + playerInput) ? "<span style='color:green; font-size: 120%;'> <b>SUCCESS!</b></span>" : " <span style='color:rgb(168, 5, 5); font-size: 120%;'> <b>FAILURE!</b></span>"}`
 
       }
-       roll.toMessage({
-        async: false,
-        user: game.user.id,
-        speaker: ChatMessage.getSpeaker(),
-        content: contentString
-      })
     } 
+
+    ChatMessage.create({
+      async:false, 
+      type: CONST.CHAT_MESSAGE_TYPES.ROLL, 
+      user: game.user.id, 
+      speaker: ChatMessage.getSpeaker(), 
+      roll: roll,
+      content: contentString,
+      flavor: tags.join('')
+    })
+
     }
   },
   two: {
@@ -593,6 +610,10 @@ export class npcSheet extends ActorSheet {
    _onProfessionsRoll(event) {
     event.preventDefault()
     const element = event.currentTarget
+    let tags = []
+    if (this.actor.data.data.wounded) {tags.push(`<span style="border:none; border-radius:30px; background-color: darkred; color:white; text-align:center; font-size:xx-small; padding:5px">Wounded ${this.actor.data.data.woundPenalty}</span>`)}
+    if (this.actor.data.data.fatigue.penalty != 0) {tags.push(`<span style="border:none; border-radius:30px; background-color: green; color:white; text-align:center; font-size:xx-small; padding:5px">Fatigued ${this.actor.data.data.fatigue.penalty}</span>`)}
+    if (this.actor.data.data.carry_rating.penalty != 0) {tags.push(`<span style="border:none; border-radius:30px; background-color: black; color:white; text-align:center; font-size:xx-small; padding:5px">Overencumbered ${this.actor.data.data.carry_rating.penalty}</span>`)}
 
     let d = new Dialog({
       title: "Apply Roll Modifier",
@@ -622,7 +643,7 @@ export class npcSheet extends ActorSheet {
               roll.result == this.actor.data.data.lucky_numbers.ln10)
               {
               contentString = `<h2>${element.getAttribute('name')}</h2>
-              <p></p><b>Target Number: [[${this.actor.data.data.professionsWound[element.getAttribute('id')]} + ${playerInput} + ${this.actor.data.data.fatigue.penalty}]]</b> <p></p>
+              <p></p><b>Target Number: [[${this.actor.data.data.professionsWound[element.getAttribute('id')]} + ${playerInput} + ${this.actor.data.data.fatigue.penalty} + ${this.actor.data.data.carry_rating.penalty}]]</b> <p></p>
               <b>Result: [[${roll.result}]]</b><p></p>
               <span style='color:green; font-size:120%;'> <b>LUCKY NUMBER!</b></span>`
 
@@ -635,15 +656,15 @@ export class npcSheet extends ActorSheet {
                 roll.result == this.actor.data.data.unlucky_numbers.ul6) 
                 {
                   contentString = `<h2>${element.getAttribute('name')}</h2>
-                  <p></p><b>Target Number: [[${this.actor.data.data.professionsWound[element.getAttribute('id')]} + ${playerInput} + ${this.actor.data.data.fatigue.penalty}]]</b> <p></p>
+                  <p></p><b>Target Number: [[${this.actor.data.data.professionsWound[element.getAttribute('id')]} + ${playerInput} + ${this.actor.data.data.fatigue.penalty} + ${this.actor.data.data.carry_rating.penalty}]]</b> <p></p>
                   <b>Result: [[${roll.result}]]</b><p></p>
                   <span style='color:rgb(168, 5, 5); font-size:120%;'> <b>UNLUCKY NUMBER!</b></span>`
 
                 } else {
                   contentString = `<h2>${element.getAttribute('name')}</h2>
-                  <p></p><b>Target Number: [[${this.actor.data.data.professionsWound[element.getAttribute('id')]} + ${playerInput} + ${this.actor.data.data.fatigue.penalty}]]</b> <p></p>
+                  <p></p><b>Target Number: [[${this.actor.data.data.professionsWound[element.getAttribute('id')]} + ${playerInput} + ${this.actor.data.data.fatigue.penalty} + ${this.actor.data.data.carry_rating.penalty}]]</b> <p></p>
                   <b>Result: [[${roll.result}]]</b><p></p>
-                  <b>${roll.result<=(this.actor.data.data.professionsWound[element.getAttribute('id')] + playerInput + this.actor.data.data.fatigue.penalty) ? " <span style='color:green; font-size: 120%;'> <b>SUCCESS!</b></span>" : " <span style='color:rgb(168, 5, 5); font-size: 120%;'> <b>FAILURE!</b></span>"}`
+                  <b>${roll.result<=(this.actor.data.data.professionsWound[element.getAttribute('id')] + playerInput + this.actor.data.data.fatigue.penalty + this.actor.data.data.carry_rating.penalty) ? " <span style='color:green; font-size: 120%;'> <b>SUCCESS!</b></span>" : " <span style='color:rgb(168, 5, 5); font-size: 120%;'> <b>FAILURE!</b></span>"}`
 
                 }
 
@@ -653,7 +674,8 @@ export class npcSheet extends ActorSheet {
                   user: game.user.id, 
                   speaker: ChatMessage.getSpeaker(), 
                   roll: roll,
-                  content: contentString
+                  content: contentString,
+                  flavor: tags.join('')
                 })
           }
         },
@@ -1509,7 +1531,6 @@ export class npcSheet extends ActorSheet {
     event.preventDefault()
     let element = event.currentTarget
     let itemList = this.actor.items.filter(item => item.type === element.id||(item.type === element.dataset.altType && item.data.data.wearable))
-    console.log(itemList)
 
     let itemEntries = []
     let tableHeader = ''
@@ -1668,7 +1689,7 @@ export class npcSheet extends ActorSheet {
 
                 for (let armorItem of selectedArmor) {
                   let thisArmor = this.actor.items.filter(item => item.id == armorItem.dataset.itemId)[0]
-                  armorItem.checked ? thisArmor.update({'data.equipped': true}) : thisArmor.update({'data.equipped': false})
+                  armorItem.checked ? await thisArmor.update({'data.equipped': true}) : await thisArmor.update({'data.equipped': false})
                 }
           }
         }

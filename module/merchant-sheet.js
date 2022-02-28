@@ -12,12 +12,17 @@ export class merchantSheet extends ActorSheet {
       height: 860,
       tabs: [{navSelector: ".sheet-tabs", contentSelector: ".sheet-body", initial: "merchant"}],
       dragDrop: [{dragSelector: [
-        ".item-list .item", 
-        ".combat-list .item", 
-        ".ability-list .item", 
-        ".spell-list .item",
-        ".talents-list .item",
-        ".merchant-list .item"
+        ".merchant-item-list .item",
+        ".armor-table .item",
+        ".ammunition-table .item",
+        ".weapon-table .item",
+        ".spellList .item",
+        ".skillList .item",
+        ".factionContainer .item",
+        ".languageContainer .item",
+        ".talent-container .item",
+        ".trait-container .item",
+        ".power-container .item"
       ], 
       dropSelector: null}]
     });
@@ -189,7 +194,7 @@ export class merchantSheet extends ActorSheet {
     html.find(".minusQty").contextmenu(await this._onMinusQty.bind(this));
     html.find(".itemEquip").click(await this._onItemEquip.bind(this));
     html.find(".wealthCalc").click(await this._onWealthCalc.bind(this));
-    html.find(".setBaseCharacteristicsNPC").click(await this._onSetBaseCharacteristics.bind(this));
+    html.find(".setBaseCharacteristics").click(await this._onSetBaseCharacteristics.bind(this));
 
     //Item Create Buttons
     html.find('.item-create').click(this._onItemCreate.bind(this))
@@ -590,203 +595,213 @@ export class merchantSheet extends ActorSheet {
     }
   
     
-  async _onClickCharacteristic(event) {
-    event.preventDefault()
-    const element = event.currentTarget
-    let wounded_char = this.actor.data.data.characteristics[element.id].total - 20
-
-    let d = new Dialog({
-      title: "Apply Roll Modifier",
-      content: `<form>
-                  <div class="dialogForm">
-                  <label><b>${element.name} Modifier: </b></label><input placeholder="ex. -20, +10" id="playerInput" value="0" style=" text-align: center; width: 50%; border-style: groove; float: right;" type="text"></input></div>
-                </form>`,
-      buttons: {
-        one: {
-          label: "Roll!",
-          callback: html => {
-            const playerInput = parseInt(html.find('[id="playerInput"]').val());
-
-    let contentString = "";
-    let roll = new Roll("1d100");
-    roll.roll({async:false});
-
-      if (this.actor.data.data.wounded == true) {
-        if (roll.total == this.actor.data.data.lucky_numbers.ln1 || 
-          roll.total == this.actor.data.data.lucky_numbers.ln2 || 
-          roll.total == this.actor.data.data.lucky_numbers.ln3 || 
-          roll.total == this.actor.data.data.lucky_numbers.ln4 || 
-          roll.total == this.actor.data.data.lucky_numbers.ln5 ||
-          roll.total == this.actor.data.data.lucky_numbers.ln6 ||
-          roll.total == this.actor.data.data.lucky_numbers.ln7 ||
-          roll.total == this.actor.data.data.lucky_numbers.ln8 ||
-          roll.total == this.actor.data.data.lucky_numbers.ln9 ||
-          roll.total == this.actor.data.data.lucky_numbers.ln10)
-
-         {
-          contentString = `<h2>${element.name}</h2
-          <p></p><b>Target Number: [[${wounded_char} + ${playerInput}]]</b> <p></p>
+    async _onClickCharacteristic(event) {
+      event.preventDefault()
+      const element = event.currentTarget
+      const woundedValue = this.actor.data.data.characteristics[element.id].total + this.actor.data.data.woundPenalty + this.actor.data.data.fatigue.penalty + this.actor.data.data.carry_rating.penalty
+      const regularValue = this.actor.data.data.characteristics[element.id].total + this.actor.data.data.fatigue.penalty + this.actor.data.data.carry_rating.penalty
+  
+      let d = new Dialog({
+        title: "Apply Roll Modifier",
+        content: `<form>
+                    <div class="dialogForm">
+                    <label><b>${element.getAttribute('name')} Modifier: </b></label><input placeholder="ex. -20, +10" id="playerInput" value="0" style=" text-align: center; width: 50%; border-style: groove; float: right;" type="text"></input></div>
+                  </form>`,
+        buttons: {
+          one: {
+            label: "Roll!",
+            callback: html => {
+              const playerInput = parseInt(html.find('[id="playerInput"]').val());
+  
+      let contentString = "";
+      let roll = new Roll("1d100");
+      roll.roll({async:false});
+  
+        if (this.actor.data.data.wounded == true) {
+          if (roll.total == this.actor.data.data.lucky_numbers.ln1 || 
+            roll.total == this.actor.data.data.lucky_numbers.ln2 || 
+            roll.total == this.actor.data.data.lucky_numbers.ln3 || 
+            roll.total == this.actor.data.data.lucky_numbers.ln4 || 
+            roll.total == this.actor.data.data.lucky_numbers.ln5 ||
+            roll.total == this.actor.data.data.lucky_numbers.ln6 ||
+            roll.total == this.actor.data.data.lucky_numbers.ln7 ||
+            roll.total == this.actor.data.data.lucky_numbers.ln8 ||
+            roll.total == this.actor.data.data.lucky_numbers.ln9 ||
+            roll.total == this.actor.data.data.lucky_numbers.ln10)
+  
+           {
+            contentString = `<h2>${element.getAttribute('name')}</h2
+            <p></p><b>Target Number: [[${woundedValue + playerInput}]]</b> <p></p>
+            <b>Result: [[${roll.result}]]</b><p></p>
+            <span style='color:green; font-size:120%;'> <b>LUCKY NUMBER!</b></span>`
+  
+      
+          } else if (roll.total == this.actor.data.data.unlucky_numbers.ul1 || 
+            roll.total == this.actor.data.data.unlucky_numbers.ul2 || 
+            roll.total == this.actor.data.data.unlucky_numbers.ul3 || 
+            roll.total == this.actor.data.data.unlucky_numbers.ul4 || 
+            roll.total == this.actor.data.data.unlucky_numbers.ul5 ||
+            roll.total == this.actor.data.data.unlucky_numbers.ul6) 
+            {
+            contentString = `<h2>${element.getAttribute('name')}</h2
+            <p></p><b>Target Number: [[${woundedValue + playerInput}]]</b> <p></p>
+            <b>Result: [[${roll.result}]]</b><p></p>
+            <span style='color:rgb(168, 5, 5); font-size:120%;'> <b>UNLUCKY NUMBER!</b></span>`
+  
+      
+          } else {
+            contentString = `<h2>${element.getAttribute('name')}</h2
+            <p></p><b>Target Number: [[${woundedValue + playerInput}]]</b> <p></p>
+            <b>Result: [[${roll.result}]]</b><p></p>
+            <b>${roll.total <= (woundedValue + playerInput) ? "<span style='color:green; font-size: 120%;'> <b>SUCCESS!</b></span>" : " <span style='color:rgb(168, 5, 5); font-size: 120%;'> <b>FAILURE!</b></span>"}`
+  
+          } 
+        } else {
+          if (roll.total == this.actor.data.data.lucky_numbers.ln1 || 
+            roll.total == this.actor.data.data.lucky_numbers.ln2 || 
+            roll.total == this.actor.data.data.lucky_numbers.ln3 || 
+            roll.total == this.actor.data.data.lucky_numbers.ln4 || 
+            roll.total == this.actor.data.data.lucky_numbers.ln5 ||
+            roll.total == this.actor.data.data.lucky_numbers.ln6 ||
+            roll.total == this.actor.data.data.lucky_numbers.ln7 ||
+            roll.total == this.actor.data.data.lucky_numbers.ln8 ||
+            roll.total == this.actor.data.data.lucky_numbers.ln9 ||
+            roll.total == this.actor.data.data.lucky_numbers.ln10)
+  
+        {
+          contentString = `<h2>${element.getAttribute('name')}</h2
+          <p></p><b>Target Number: [[${regularValue + playerInput}]]</b> <p></p>
           <b>Result: [[${roll.result}]]</b><p></p>
           <span style='color:green; font-size:120%;'> <b>LUCKY NUMBER!</b></span>`
-
-    
+  
+  
         } else if (roll.total == this.actor.data.data.unlucky_numbers.ul1 || 
-          roll.total == this.actor.data.data.unlucky_numbers.ul2 || 
-          roll.total == this.actor.data.data.unlucky_numbers.ul3 || 
-          roll.total == this.actor.data.data.unlucky_numbers.ul4 || 
-          roll.total == this.actor.data.data.unlucky_numbers.ul5 ||
-          roll.total == this.actor.data.data.unlucky_numbers.ul6) 
-          {
-          contentString = `<h2>${element.name}</h2
-          <p></p><b>Target Number: [[${wounded_char} + ${playerInput}]]</b> <p></p>
+            roll.total == this.actor.data.data.unlucky_numbers.ul2 || 
+            roll.total == this.actor.data.data.unlucky_numbers.ul3 || 
+            roll.total == this.actor.data.data.unlucky_numbers.ul4 || 
+            roll.total == this.actor.data.data.unlucky_numbers.ul5 ||
+            roll.total == this.actor.data.data.unlucky_numbers.ul6) 
+  
+        {
+          contentString = `<h2>${element.getAttribute('name')}</h2
+          <p></p><b>Target Number: [[${regularValue + playerInput}]]</b> <p></p>
           <b>Result: [[${roll.result}]]</b><p></p>
           <span style='color:rgb(168, 5, 5); font-size:120%;'> <b>UNLUCKY NUMBER!</b></span>`
-
-    
+  
+  
         } else {
-          contentString = `<h2>${element.name}</h2
-          <p></p><b>Target Number: [[${wounded_char} + ${playerInput}]]</b> <p></p>
+          contentString = `<h2>${element.getAttribute('name')}</h2
+          <p></p><b>Target Number: [[${regularValue + playerInput}]]</b> <p></p>
           <b>Result: [[${roll.result}]]</b><p></p>
-          <b>${roll.total<=wounded_char ? " <span style='color:green; font-size: 120%;'> <b>SUCCESS!</b></span>" : " <span style='color:rgb(168, 5, 5); font-size: 120%;'> <b>FAILURE!</b></span>"}`
-
-        } 
-      } else {
-        if (roll.total == this.actor.data.data.lucky_numbers.ln1 || 
-          roll.total == this.actor.data.data.lucky_numbers.ln2 || 
-          roll.total == this.actor.data.data.lucky_numbers.ln3 || 
-          roll.total == this.actor.data.data.lucky_numbers.ln4 || 
-          roll.total == this.actor.data.data.lucky_numbers.ln5 ||
-          roll.total == this.actor.data.data.lucky_numbers.ln6 ||
-          roll.total == this.actor.data.data.lucky_numbers.ln7 ||
-          roll.total == this.actor.data.data.lucky_numbers.ln8 ||
-          roll.total == this.actor.data.data.lucky_numbers.ln9 ||
-          roll.total == this.actor.data.data.lucky_numbers.ln10)
-
-      {
-        contentString = `<h2>${element.name}</h2
-        <p></p><b>Target Number: [[${this.actor.data.data.characteristics[element.id].total} + ${playerInput}]]</b> <p></p>
-        <b>Result: [[${roll.result}]]</b><p></p>
-        <span style='color:green; font-size:120%;'> <b>LUCKY NUMBER!</b></span>`
-
-
-      } else if (roll.total == this.actor.data.data.unlucky_numbers.ul1 || 
-          roll.total == this.actor.data.data.unlucky_numbers.ul2 || 
-          roll.total == this.actor.data.data.unlucky_numbers.ul3 || 
-          roll.total == this.actor.data.data.unlucky_numbers.ul4 || 
-          roll.total == this.actor.data.data.unlucky_numbers.ul5 ||
-          roll.total == this.actor.data.data.unlucky_numbers.ul6) 
-
-      {
-        contentString = `<h2>${element.name}</h2
-        <p></p><b>Target Number: [[${this.actor.data.data.characteristics[element.id].total} + ${playerInput}]]</b> <p></p>
-        <b>Result: [[${roll.result}]]</b><p></p>
-        <span style='color:rgb(168, 5, 5); font-size:120%;'> <b>UNLUCKY NUMBER!</b></span>`
-
-
-      } else {
-        contentString = `<h2>${element.name}</h2
-        <p></p><b>Target Number: [[${this.actor.data.data.characteristics[element.id].total} + ${playerInput}]]</b> <p></p>
-        <b>Result: [[${roll.result}]]</b><p></p>
-        <b>${roll.total<=(this.actor.data.data.characteristics[element.id].total + playerInput) ? " <span style='color:green; font-size: 120%;'> <b>SUCCESS!</b></span>" : " <span style='color:rgb(168, 5, 5); font-size: 120%;'> <b>FAILURE!</b></span>"}`
-
-      }
-       roll.toMessage({
-        async: false,
-        user: game.user.id,
-        speaker: ChatMessage.getSpeaker(),
+          <b>${roll.total<=(regularValue + playerInput) ? "<span style='color:green; font-size: 120%;'> <b>SUCCESS!</b></span>" : " <span style='color:rgb(168, 5, 5); font-size: 120%;'> <b>FAILURE!</b></span>"}`
+  
+        }
+      } 
+  
+      ChatMessage.create({
+        async:false, 
+        type: CONST.CHAT_MESSAGE_TYPES.ROLL, 
+        user: game.user.id, 
+        speaker: ChatMessage.getSpeaker(), 
+        roll: roll,
         content: contentString
       })
-    } 
+  
+      }
+    },
+    two: {
+      label: "Cancel",
+      callback: html => console.log("Cancelled")
     }
-  },
-  two: {
-    label: "Cancel",
-    callback: html => console.log("Cancelled")
-  }
-  },
-  default: "one",
-  close: html => console.log()
-  });
-  d.render(true);
-  }
+    },
+    default: "one",
+    close: html => console.log()
+    });
+    d.render(true);
+    }
 
-  _onProfessionsRoll(event) {
-    event.preventDefault()
-    const element = event.currentTarget
-
-    let d = new Dialog({
-      title: "Apply Roll Modifier",
-      content: `<form>
-                  <div class="dialogForm">
-                  <label><b>${element.getAttribute('name')} Modifier: </b></label><input placeholder="ex. -20, +10" id="playerInput" value="0" style=" text-align: center; width: 50%; border-style: groove; float: right;" type="text"></input></div>
-                </form>`,
-      buttons: {
-        one: {
-          label: "Roll!",
-          callback: html => {
-            const playerInput = parseInt(html.find('[id="playerInput"]').val());
-
-            let contentString = "";
-            let roll = new Roll("1d100");
-            roll.roll();
-
-            if (roll.result == this.actor.data.data.lucky_numbers.ln1 || 
-              roll.result == this.actor.data.data.lucky_numbers.ln2 || 
-              roll.result == this.actor.data.data.lucky_numbers.ln3 || 
-              roll.result == this.actor.data.data.lucky_numbers.ln4 || 
-              roll.result == this.actor.data.data.lucky_numbers.ln5 ||
-              roll.result == this.actor.data.data.lucky_numbers.ln6 ||
-              roll.result == this.actor.data.data.lucky_numbers.ln7 ||
-              roll.result == this.actor.data.data.lucky_numbers.ln8 ||
-              roll.result == this.actor.data.data.lucky_numbers.ln9 ||
-              roll.result == this.actor.data.data.lucky_numbers.ln10)
-              {
-              contentString = `<h2 style='font-size: large'>${element.getAttribute('name')}</h2>
-              <p></p><b>Target Number: [[${this.actor.data.data.professionsWound[element.getAttribute('id')]} + ${playerInput}]]</b> <p></p>
-              <b>Result: [[${roll.result}]]</b><p></p>
-              <span style='color:green; font-size:120%;'> <b>LUCKY NUMBER!</b></span>`
-
-              }
-              else if (roll.result == this.actor.data.data.unlucky_numbers.ul1 || 
-                roll.result == this.actor.data.data.unlucky_numbers.ul2 || 
-                roll.result == this.actor.data.data.unlucky_numbers.ul3 || 
-                roll.result == this.actor.data.data.unlucky_numbers.ul4 || 
-                roll.result == this.actor.data.data.unlucky_numbers.ul5 ||
-                roll.result == this.actor.data.data.unlucky_numbers.ul6) 
+    _onProfessionsRoll(event) {
+      event.preventDefault()
+      const element = event.currentTarget
+      let tags = []
+      if (this.actor.data.data.wounded) {tags.push(`<span style="border:none; border-radius:30px; background-color: darkred; color:white; text-align:center; font-size:xx-small; padding:5px">Wounded ${this.actor.data.data.woundPenalty}</span>`)}
+      if (this.actor.data.data.fatigue.penalty != 0) {tags.push(`<span style="border:none; border-radius:30px; background-color: green; color:white; text-align:center; font-size:xx-small; padding:5px">Fatigued ${this.actor.data.data.fatigue.penalty}</span>`)}
+      if (this.actor.data.data.carry_rating.penalty != 0) {tags.push(`<span style="border:none; border-radius:30px; background-color: black; color:white; text-align:center; font-size:xx-small; padding:5px">Overencumbered ${this.actor.data.data.carry_rating.penalty}</span>`)}
+  
+      let d = new Dialog({
+        title: "Apply Roll Modifier",
+        content: `<form>
+                    <div class="dialogForm">
+                    <label><b>${element.getAttribute('name')} Modifier: </b></label><input placeholder="ex. -20, +10" id="playerInput" value="0" style=" text-align: center; width: 50%; border-style: groove; float: right;" type="text"></input></div>
+                  </form>`,
+        buttons: {
+          one: {
+            label: "Roll!",
+            callback: html => {
+              const playerInput = parseInt(html.find('[id="playerInput"]').val());
+  
+              let contentString = "";
+              let roll = new Roll("1d100");
+              roll.roll({async: false});
+  
+              if (roll.result == this.actor.data.data.lucky_numbers.ln1 || 
+                roll.result == this.actor.data.data.lucky_numbers.ln2 || 
+                roll.result == this.actor.data.data.lucky_numbers.ln3 || 
+                roll.result == this.actor.data.data.lucky_numbers.ln4 || 
+                roll.result == this.actor.data.data.lucky_numbers.ln5 ||
+                roll.result == this.actor.data.data.lucky_numbers.ln6 ||
+                roll.result == this.actor.data.data.lucky_numbers.ln7 ||
+                roll.result == this.actor.data.data.lucky_numbers.ln8 ||
+                roll.result == this.actor.data.data.lucky_numbers.ln9 ||
+                roll.result == this.actor.data.data.lucky_numbers.ln10)
                 {
-                  contentString = `<h2 style='font-size: large'>${element.getAttribute('name')}</h2>
-                  <p></p><b>Target Number: [[${this.actor.data.data.professionsWound[element.getAttribute('id')]} + ${playerInput}]]</b> <p></p>
-                  <b>Result: [[${roll.result}]]</b><p></p>
-                  <span style='color:rgb(168, 5, 5); font-size:120%;'> <b>UNLUCKY NUMBER!</b></span>`
-
-                } else {
-                  contentString = `<h2 style='font-size: large'>${element.getAttribute('name')}</h2>
-                  <p></p><b>Target Number: [[${this.actor.data.data.professionsWound[element.getAttribute('id')]} + ${playerInput}]]</b> <p></p>
-                  <b>Result: [[${roll.result}]]</b><p></p>
-                  <b>${roll.result<=(this.actor.data.data.professionsWound[element.getAttribute('id')] + playerInput) ? " <span style='color:green; font-size: 120%;'> <b>SUCCESS!</b></span>" : " <span style='color:rgb(168, 5, 5); font-size: 120%;'> <b>FAILURE!</b></span>"}`
-
+                contentString = `<h2>${element.getAttribute('name')}</h2>
+                <p></p><b>Target Number: [[${this.actor.data.data.professionsWound[element.getAttribute('id')]} + ${playerInput} + ${this.actor.data.data.fatigue.penalty} + ${this.actor.data.data.carry_rating.penalty}]]</b> <p></p>
+                <b>Result: [[${roll.result}]]</b><p></p>
+                <span style='color:green; font-size:120%;'> <b>LUCKY NUMBER!</b></span>`
+  
                 }
-
-                ChatMessage.create({
-                  async:false, 
-                  type: CONST.CHAT_MESSAGE_TYPES.ROLL, 
-                  user: game.user.id, 
-                  speaker: ChatMessage.getSpeaker(), 
-                  roll: roll,
-                  content: contentString
-                })
+                else if (roll.result == this.actor.data.data.unlucky_numbers.ul1 || 
+                  roll.result == this.actor.data.data.unlucky_numbers.ul2 || 
+                  roll.result == this.actor.data.data.unlucky_numbers.ul3 || 
+                  roll.result == this.actor.data.data.unlucky_numbers.ul4 || 
+                  roll.result == this.actor.data.data.unlucky_numbers.ul5 ||
+                  roll.result == this.actor.data.data.unlucky_numbers.ul6) 
+                  {
+                    contentString = `<h2>${element.getAttribute('name')}</h2>
+                    <p></p><b>Target Number: [[${this.actor.data.data.professionsWound[element.getAttribute('id')]} + ${playerInput} + ${this.actor.data.data.fatigue.penalty} + ${this.actor.data.data.carry_rating.penalty}]]</b> <p></p>
+                    <b>Result: [[${roll.result}]]</b><p></p>
+                    <span style='color:rgb(168, 5, 5); font-size:120%;'> <b>UNLUCKY NUMBER!</b></span>`
+  
+                  } else {
+                    contentString = `<h2>${element.getAttribute('name')}</h2>
+                    <p></p><b>Target Number: [[${this.actor.data.data.professionsWound[element.getAttribute('id')]} + ${playerInput} + ${this.actor.data.data.fatigue.penalty} + ${this.actor.data.data.carry_rating.penalty}]]</b> <p></p>
+                    <b>Result: [[${roll.result}]]</b><p></p>
+                    <b>${roll.result<=(this.actor.data.data.professionsWound[element.getAttribute('id')] + playerInput + this.actor.data.data.fatigue.penalty + this.actor.data.data.carry_rating.penalty) ? " <span style='color:green; font-size: 120%;'> <b>SUCCESS!</b></span>" : " <span style='color:rgb(168, 5, 5); font-size: 120%;'> <b>FAILURE!</b></span>"}`
+  
+                  }
+  
+                  ChatMessage.create({
+                    async:false, 
+                    type: CONST.CHAT_MESSAGE_TYPES.ROLL, 
+                    user: game.user.id, 
+                    speaker: ChatMessage.getSpeaker(), 
+                    roll: roll,
+                    content: contentString,
+                    flavor: tags.join('')
+                  })
+            }
+          },
+          two: {
+            label: "Cancel",
+            callback: html => console.log("Cancelled")
           }
-        },
-        two: {
-          label: "Cancel",
-          callback: html => console.log("Cancelled")
-        }
-        },
-        default: "one",
-        close: html => console.log()
-        });
-        d.render(true);
-  }
+          },
+          default: "one",
+          close: html => console.log()
+          });
+          d.render(true);
+    }
 
    _onUnconventionalRoll(event) {
     event.preventDefault()
@@ -961,108 +976,274 @@ export class merchantSheet extends ActorSheet {
   }
 
    _onSpellRoll(event) {
-      event.preventDefault()
-      let button = $(event.currentTarget);
-      const li = button.parents(".item");
-      const item = this.actor.getEmbeddedDocument("Item", li.data("itemId"));
-      
-      let hit_loc = ""
-      
-      let roll = new Roll(item.data.data.damage);
-      roll.roll({async:false});
-      let hit = new Roll("1d10");
-      hit.roll({async:false});
-      
-      if (hit.total <= 5) {
-        hit_loc = "Body"
-      } else if (hit.total == 6) {
-        hit_loc = "Right Leg"
-      } else if (hit.total == 7) {
-        hit_loc = "Left Leg"
-      } else if (hit.total == 8) {
-         hit_loc = "Right Arm"
-       } else if (hit.total == 9) {
-        hit_loc = "Left Arm"
-       } else if (hit.total == 10) {
-        hit_loc = "Head"
-      }
-    
-      const content = `<h2 style='font-size: large'><img src="${item.img}" height=20 width=20 style='margin-right: 5px;'</img>${item.name}</h2>
-       <p></p>
-       <b>Damage: [[${roll.result}]]</b> ${roll._formula}<b>
-      <p></p>
-      Hit Location: [[${hit.total}]]</b> ${hit_loc}<b>
-       <p></p>
-       MP Cost: [[${item.data.data.cost}]]
-      <p></p>
-       Attributes:</b> ${item.data.data.attributes}`
-      
-       roll.toMessage({
-         async:false, 
-         type: CONST.CHAT_MESSAGE_TYPES.ROLL, 
-         user: game.user.id, 
-         speaker: ChatMessage.getSpeaker(), 
-         content: content});
-  }
-      
-   _onCombatRoll(event) {
-  event.preventDefault()
-  let button = $(event.currentTarget);
-  const li = button.parents(".item");
-  const item = this.actor.getEmbeddedDocument("Item", li.data("itemId"));
-      
-  let d = new Dialog({
-    title: "Apply Roll Modifier",
-    content: `<form>
-                <div class="dialogForm">
-                <label><b>${item.name} Modifier: </b></label><input placeholder="ex. -20, +10" id="playerInput" value="0" style=" text-align: center; width: 50%; border-style: groove; float: right;" type="text"></input></div>
+    //Search for Talents that affect Spellcasting Costs
+    let spellToCast
+
+    if (event.currentTarget.closest('.item') != null || event.currentTarget.closest('.item') != undefined) {
+      spellToCast = this.actor.items.find(spell => spell.id === event.currentTarget.closest('.item').dataset.itemId)
+    }
+    else {
+      spellToCast = this.actor.getEmbeddedDocument('Item', this.actor.data.data.favorites[event.currentTarget.dataset.hotkey].id)
+    }
+
+    // const spellToCast = this.actor.items.find(spell => spell.id === event.currentTarget.closest('.item').dataset.itemId)
+    const hasCreative = this.actor.items.find(i => i.type === "talent" && i.name === "Creative") ? true : false;
+    const hasForceOfWill = this.actor.items.find(i => i.type === "talent" && i.name === "Force of Will") ? true : false;
+    const hasMethodical = this.actor.items.find(i => i.type === "talent" && i.name === "Methodical") ? true : false;
+    const hasOvercharge = this.actor.items.find(i => i.type === "talent" && i.name === "Overcharge") ? true : false;
+    const hasMagickaCycling = this.actor.items.find(i => i.type === "talent" && i.name === "Magicka Cycling") ? true : false;
+
+    //Add options in Dialog based on Talents and Traits
+    let overchargeOption = ""
+    let magickaCyclingOption = ""
+
+    if (hasOvercharge){
+        overchargeOption = `<tr>
+                                <td><input type="checkbox" id="Overcharge"/></td>
+                                <td><strong>Overcharge</strong></td>
+                                <td>Roll damage twice and use the highest value (spell cost is doubled)</td>
+                            </tr>`
+    }
+
+    if (hasMagickaCycling){
+        magickaCyclingOption = `<tr>
+                                    <td><input type="checkbox" id="MagickaCycling"/></td>
+                                    <td><strong>Magicka Cycling</strong></td>
+                                    <td>Double Restraint Value, but backfires on failure</td>
+                                </tr>`
+    }
+
+    // If Description exists, put into the dialog for reference
+    let spellDescriptionDiv = ''
+    if (spellToCast.data.data.description != '' && spellToCast.data.data.description != undefined) {
+      spellDescriptionDiv = `<div style="padding: 10px;">
+                                  ${spellToCast.data.data.description}
+                              </div>`
+    }
+
+      const m = new Dialog({
+        title: "Cast Spell",
+        content: `<form>
+                    <div>
+
+                        <div>
+                            <h2 style="text-align: center; display: flex; flex-direction: row; align-items: center; justify-content: center; gap: 5px; font-size: xx-large;">
+                                <img src="${spellToCast.img}" class="item-img" height=35 width=35>
+                                <div>${spellToCast.name}</div>
+                            </h2>
+
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>Magicka Cost</th>
+                                        <th>Spell Restraint Base</th>
+                                        <th>Spell Level</th>
+                                    </tr>
+                                </thead>
+                                <tbody style="text-align: center;">
+                                    <tr>
+                                        <td>${spellToCast.data.data.cost}</td>
+                                        <td>${Math.floor(this.actor.data.data.characteristics.wp.total/10)}</td>
+                                        <td>${spellToCast.data.data.level}</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+
+                            ${spellDescriptionDiv}
+
+                            <div style="padding: 10px; margin-top: 10px; background: rgba(161, 149, 149, 0.486); border: black 1px; font-style: italic;">
+                                Select one of the options below OR skip this to cast the spell without any modifications.
+                            </div>
+                        </div>
+
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Select</th>
+                                    <th style="min-width: 120px;">Option</th>
+                                    <th>Effect</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><input type="checkbox" id="Restraint"/></td>
+                                    <td><strong>Spell Restraint</strong></td>
+                                    <td>Reduces cost of spell by WP Bonus</td>
+                                </tr>
+                                <tr>
+                                    <td><input type="checkbox" id="Overload"/></td>
+                                    <td><strong>Overload</strong></td>
+                                    <td>Additional effects if not Restrained</td>
+                                </tr>
+                                ${magickaCyclingOption}
+                                ${overchargeOption}
+                            </tbody>
+                        </table>
+
+                    </div>
                   </form>`,
         buttons: {
-          one: {
-            label: "Roll!",
-            callback: html => {
-              const playerInput = parseInt(html.find('[id="playerInput"]').val());
-      
-            let contentString = "";
-            let roll = new Roll("1d100");
-            roll.roll({async:false});
-      
-                if (roll.total == this.actor.data.data.lucky_numbers.ln1 || roll.total == this.actor.data.data.lucky_numbers.ln2 || roll.total == this.actor.data.data.lucky_numbers.ln3 || roll.total == this.actor.data.data.lucky_numbers.ln4 || roll.total == this.actor.data.data.lucky_numbers.ln5) {
-                  contentString = `<h2 style='font-size: large'><img src="${item.img}" height=20 width=20 style='margin-right: 5px;'</img>${item.name}</h2>
-                  <p></p><b>Target Number: [[${item.data.data.value} + ${playerInput}]]</b> <p></p>
-                  <b>Result: [[${roll.result}]]</b><p></p>
-                  <span style='color:green; font-size:120%;'> <b>LUCKY NUMBER!</b></span>`
-      
-                } else if (roll.total == this.actor.data.data.unlucky_numbers.ul1 || roll.total == this.actor.data.data.unlucky_numbers.ul2 || roll.total == this.actor.data.data.unlucky_numbers.ul3 || roll.total == this.actor.data.data.unlucky_numbers.ul4 || roll.total == this.actor.data.data.unlucky_numbers.ul5) {
-                  contentString = `<h2 style='font-size: large'><img src="${item.img}" height=20 width=20 style='margin-right: 5px;'</img>${item.name}</h2>
-                  <p></p><b>Target Number: [[${item.data.data.value} + ${playerInput}]]</b> <p></p>
-                  <b>Result: [[${roll.result}]]</b><p></p>
-                  <span style='color:rgb(168, 5, 5); font-size:120%;'> <b>UNLUCKY NUMBER!</b></span>`
-      
-                } else {
-                  contentString = `<h2 style='font-size: large'><img src="${item.img}" height=20 width=20 style='margin-right: 5px;'</img>${item.name}</h2>
-                  <p></p><b>Target Number: [[${item.data.data.value} + ${playerInput}]]</b> <p></p>
-                  <b>Result: [[${roll.result}]]</b><p></p>
-                  <b>${roll.total<=(item.data.data.value + playerInput) ? " <span style='color:green; font-size: 120%;'> <b>SUCCESS!</b></span>" : " <span style='color: rgb(168, 5, 5); font-size: 120%;'> <b>FAILURE!</b></span>"}`
+            one: {
+                label: "Cast Spell",
+                callback: async (html) => {
+                    let spellRestraint = 0;
+                    let stackCostMod = 0;
+
+                    //Assign Tags for Chat Output
+                    const isRestrained = html.find(`[id="Restraint"]`)[0].checked;
+                    const isOverloaded = html.find(`[id="Overload"]`)[0].checked;
+                    let isMagickaCycled = "";
+                    let isOvercharged = "";
+
+                    if (hasMagickaCycling){
+                        isMagickaCycled = html.find(`[id="MagickaCycling"]`)[0].checked;
+                    }
+
+                    if (hasOvercharge){
+                        isOvercharged = html.find(`[id="Overcharge"]`)[0].checked;
+                    }
+
+                    const tags = [];
+
+
+                    //Functions for Spell Modifiers
+                    if (isRestrained){
+                        let restraint = `<span style="border: none; border-radius: 30px; background-color: rgba(29, 97, 187, 0.80); color: white; text-align: center; font-size: xx-small; padding: 5px;">Restraint</span>`;
+                        tags.push(restraint);
+
+                        //Determine cost mod based on talents and other modifiers
+                        if (hasCreative && spellToCast.data.data.spellType === "unconventional"){
+                            stackCostMod = stackCostMod - 1;
+                        } 
+
+                        if (hasMethodical && spellToCast.data.data.spellType === "conventional"){
+                            stackCostMod = stackCostMod - 1;
+                        }
+                        
+                        if(hasForceOfWill){
+                            stackCostMod = stackCostMod - 1;
+                        }
+
+                        spellRestraint = 0 - Math.floor(this.actor.data.data.characteristics.wp.total/10);
+                    }
+
+                    if (isOverloaded){
+                        let overload = `<span style="border: none; border-radius: 30px; background-color: rgba(161, 2, 2, 0.80); color: white; text-align: center; font-size: xx-small; padding: 5px;">Overload</span>`;
+                        tags.push(overload);
+                    }
+
+                    if (isMagickaCycled){
+                        let cycled = `<span style="border: none; border-radius: 30px; background-color: rgba(126, 40, 224, 0.80); color: white; text-align: center; font-size: xx-small; padding: 5px;">Magicka Cycle</span>`;
+                        tags.push(cycled);
+                        spellRestraint = 0 - (2 * Math.floor(this.actor.data.data.characteristics.wp.total/10));
+                    }
+
+
+                    //If spell has damage value it outputs to Chat, otherwise no damage will be shown in Chat Output
+                    const damageRoll = new Roll(spellToCast.data.data.damage);
+                    let damageEntry = "";
+
+                    if (spellToCast.data.data.damage != '' && spellToCast.data.data.damage != 0){
+                        damageRoll.roll({async: false});
+                        damageEntry = `<tr>
+                                            <td style="font-weight: bold;">Damage</td>
+                                            <td style="font-weight: bold; text-align: center;">[[${damageRoll.result}]]</td>
+                                            <td style="text-align: center;">${damageRoll.formula}</td>
+                                        </tr>`
+                    }
+
+                    const hitLocRoll = new Roll("1d10");
+                    hitLocRoll.roll({async: false});
+                    let hitLoc = "";
+
+                    if (hitLocRoll.result <= 5) {
+                        hitLoc = "Body"
+                      } else if (hitLocRoll.result == 6) {
+                        hitLoc = "Right Leg"
+                      } else if (hitLocRoll.result == 7) {
+                        hitLoc = "Left Leg"
+                      } else if (hitLocRoll.result == 8) {
+                        hitLoc = "Right Arm"
+                      } else if (hitLocRoll.result == 9) {
+                        hitLoc = "Left Arm"
+                      } else if (hitLocRoll.result == 10) {
+                        hitLoc = "Head"
+                      }
+
+                    let displayCost = 0;
+                    let actualCost = spellToCast.data.data.cost + spellRestraint + stackCostMod;
+
+                    //Double Cost of Spell if Overcharge Talent is used
+                    if (isOvercharged){
+                        actualCost = actualCost * 2;
+                        let overcharge = `<span style="border: none; border-radius: 30px; background-color: rgba(219, 135, 0, 0.8); color: white; text-align: center; font-size: xx-small; padding: 5px;">Overcharge</span>`;
+                        tags.push(overcharge);
+                    }
+
+                    if (actualCost < 1){
+                        displayCost = 1;
+                    } else {
+                        displayCost = actualCost;
+                    }
+
+                    // Stop The Function if the user does not have enough Magicka to Cast the Spell
+                    if (game.settings.get("uesrpg-d100", "automateMagicka")) {
+                      if (displayCost > this.actor.data.data.magicka.value) {
+                        return ui.notifications.info(`You do not have enough Magicka to cast this spell: Cost: ${spellToCast.data.data.cost} || Restraint: ${spellRestraint} || Other: ${stackCostMod}`)
+                      }
+                    }
+
+                    let contentString = `<h2><img src=${spellToCast.img}></im>${spellToCast.name}</h2>
+                                            <table>
+                                                <thead style="background: rgba(161, 149, 149, 0.486);">
+                                                    <tr>
+                                                        <th style="min-width: 80px; text-align: center;">Name</th>
+                                                        <th style="min-width: 80px; text-align: center;">Result</th>
+                                                        <th style="min-width: 80px; text-align: center;">Detail</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    ${damageEntry}
+                                                    <tr>
+                                                        <td style="font-weight: bold;">Hit Location</td>
+                                                        <td style="font-weight: bold; text-align: center;">[[${hitLocRoll.result}]]</td>
+                                                        <td style="text-align: center;">${hitLoc}</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td style="font-weight: bold;">Spell Cost</td>
+                                                        <td style="font-weight: bold; text-align: center;">[[${displayCost}]]</td>
+                                                        <td title="Cost/Restraint Modifier/Other" style="text-align: center;">${spellToCast.data.data.cost} / ${spellRestraint} / ${stackCostMod}</td>
+                                                    </tr>
+                                                    <tr style="border-top: double 1px;">
+                                                        <td style="font-weight: bold;">Attributes</td>
+                                                        <td colspan="2">${spellToCast.data.data.attributes}</td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>`
+                                            
+                    damageRoll.toMessage({
+                        user: game.user.id,
+                        speaker: ChatMessage.getSpeaker(),
+                        type: CONST.CHAT_MESSAGE_TYPES.ROLL,
+                        flavor: tags.join(""),
+                        content: contentString
+                    })
+
+                    // If Automate Magicka Setting is on, reduce the character's magicka by the calculated output cost
+                    if (game.settings.get("uesrpg-d100", "automateMagicka")) {this.actor.update({'data.magicka.value': this.actor.data.data.magicka.value - displayCost})}
                 }
-                 roll.toMessage({
-                  async: false,
-                  type: CONST.CHAT_MESSAGE_TYPES.ROLL,
-                  user: game.user.id, 
-                  speaker: ChatMessage.getSpeaker(),
-                  content: contentString
-                })
-              }
             },
             two: {
-              label: "Cancel",
-              callback: html => console.log("Cancelled")
+                label: "Cancel",
+                callback: html => console.log("Cancelled")
             }
-            },
-            default: "one",
-            close: html => console.log()
-            });
-            d.render(true);
+        },
+        default: "one",
+        close: html => console.log()
+      });
+
+    m.position.width = 450;
+    m.render(true);
   }
 
    _onResistanceRoll(event) {
@@ -1339,7 +1520,7 @@ export class merchantSheet extends ActorSheet {
   }
 
   _createItemFilterOptions() {
-    for (let item of this.actor.items.filter(i => i.data.data.hasOwnProperty('equipped') && i.data.data.equipped === false)) {
+    for (let item of this.actor.items.filter(i => i.data.data.hasOwnProperty('price'))) {
       if ([...this.form.querySelectorAll('#itemFilter option')].some(i => i.innerHTML === item.type)) {continue}
       else {
         let option = document.createElement('option')
