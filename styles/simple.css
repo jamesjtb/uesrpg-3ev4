@@ -369,6 +369,12 @@
   background-color: rgba(199, 199, 199, 0.774);
 }
 
+.worldbuilding .sheet-fixed-container button {
+  color: white;
+  border: 1px solid black;
+  background: rgb(73, 73, 73);
+}
+
 .worldbuilding .fixed-data-container {
   display: flex;
   flex-direction: column;
