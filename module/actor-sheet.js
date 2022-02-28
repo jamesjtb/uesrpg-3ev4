@@ -1481,7 +1481,7 @@
         d = new Dialog({
           title: "Lucky & Unlucky Numbers",
           content: `<form style="padding: 10px">
-                      <div style="background: rgba(85, 85, 85, 0.40); border: solid 1px; padding: 10px; font-style: italic;">
+                      <div style="background: rgba(180, 180, 180, 0.562); border: solid 1px; padding: 10px; font-style: italic;">
                           Input your character's lucky and unlucky numbers and click submit to register them. You can change them at any point.
                       </div>
 
@@ -1547,7 +1547,7 @@
       d = new Dialog({
         title: "Lucky & Unlucky Numbers",
         content: `<form style="padding: 10px">
-                    <div style="background: rgba(85, 85, 85, 0.40); border: solid 1px; padding: 10px; font-style: italic;">
+                    <div style="background: rgba(180, 180, 180, 0.562); border: solid 1px; padding: 10px; font-style: italic;">
                         Input your character's lucky and unlucky numbers and click submit to register them. You can change them at any point.
                     </div>
 
@@ -2277,7 +2277,7 @@
                     <div style="display: flex; flex-direction: column;">
 
                         <div style="padding: 10px;">
-                            <div style="display: flex; flex-direction: row; justify-content: space-around; background: rgba(85, 85, 85, 0.40); padding: 10px; text-align: center; border: 1px solid;">
+                            <div style="display: flex; flex-direction: row; justify-content: space-around; background: rgba(180, 180, 180, 0.562); padding: 10px; text-align: center; border: 1px solid;">
                                 <div style="width: 33.33%">
                                     <div>Current XP</div>
                                     <input type="number" id="xp" value="${this.actor.data.data.xp}">
