@@ -21,8 +21,7 @@ export class SimpleItem extends Item {
     const actorData = this.actor ? this.actor.data : {}
 
     // Prepare data based on item type
-
-    if (this.isEmbedded && actorData) {
+    if (this.isEmbedded && this.actor.data != null) {
       if (this.data.data.hasOwnProperty('baseCha')) {this._prepareCombatStyleData(actorData, itemData)}
       if (this.data.data.hasOwnProperty('modPrice')) {this._prepareMerchantItem(actorData, itemData)}
       if (this.data.data.hasOwnProperty('damaged')) {this._prepareArmorItem(actorData, itemData)}

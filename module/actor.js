@@ -55,6 +55,7 @@ export class SimpleActor extends Actor {
     data.characteristics.prc.total = data.characteristics.prc.base + this._prcBonusCalc(actorData);
     data.characteristics.prs.total = data.characteristics.prs.base + this._prsBonusCalc(actorData);
     data.characteristics.lck.total = data.characteristics.lck.base + this._lckBonusCalc(actorData);
+    this._updateSkillItems(actorData)
 
 
     //Characteristic Bonuses
@@ -681,6 +682,13 @@ export class SimpleActor extends Actor {
       data.lucky_numbers.ln10 = 10;
     }
 
+  }
+
+  _updateSkillItems(actorData) {
+    let skillItems = actorData.items.filter(item => item.type === 'skill'||item.type === 'magicSkill'||item.type === 'combatStyle')
+    for (let item of skillItems) {
+      item.data.update({'data.value': Number(actorData.data.characteristics[item.data.data.baseCha].total + item.data.data.bonus + item.data.data.miscValue)})
+    }
   }
 
   _strBonusCalc(actorData) {
