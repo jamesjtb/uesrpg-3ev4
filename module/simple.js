@@ -6,6 +6,7 @@ import { SimpleActorSheet } from "./actor-sheet.js";
 import { merchantSheet } from "./merchant-sheet.js";
 import { SimpleItem } from "./item.js";
 import { SimpleItemSheet } from "./item-sheet.js";
+import { SystemCombat } from "./combat.js";
 
 
 /* -------------------------------------------- */
@@ -14,8 +15,7 @@ import { SimpleItemSheet } from "./item-sheet.js";
 
 Hooks.once("init", async function() {
   console.log(`Initializing UESRPG System`);
-    
-  
+
 	/**
 	 * Set an initiative formula for the system
 	 * @type {String}
@@ -24,6 +24,9 @@ Hooks.once("init", async function() {
     formula: "1d6 + @initiative.base",
     decimals: 0
   };
+
+  // Set up custom combat functionality for the system.
+  CONFIG.Combat.documentClass = SystemCombat;
 
   // Record Configuration Values
 	CONFIG.UESRPG = UESRPG;
@@ -35,18 +38,18 @@ Hooks.once("init", async function() {
   // Register sheet application classes
   Actors.unregisterSheet("core", ActorSheet);
   Items.unregisterSheet("core", ItemSheet);
-  Actors.registerSheet("uesrpg-d100", SimpleActorSheet, 
-    {types: ["character"], 
+  Actors.registerSheet("uesrpg-d100", SimpleActorSheet,
+    {types: ["character"],
     makeDefault: true,
     label: "Default UESRPG Character Sheet"
     });
-  Items.registerSheet("uesrpg-d100", SimpleItemSheet, 
-    { 
+  Items.registerSheet("uesrpg-d100", SimpleItemSheet,
+    {
     makeDefault: true,
     label: "Default UESRPG Item Sheet"
     });
   Actors.registerSheet("uesrpg-d100", npcSheet, {
-    types: ["npc"], 
+    types: ["npc"],
     makeDefault: true,
     label: "Default UESRPG NPC Sheet"
     });
@@ -56,7 +59,7 @@ Hooks.once("init", async function() {
     label: "Default UESRPG Merchant Sheet"
   });
 
-  // Register system settings 
+  // Register system settings
   game.settings.register("uesrpg-d100", "legacyUntrainedPenalty", {
     name: "Legacy Untrained Penalty",
     hint: "Checking this option enables the UESRPG v2 penalty for Untrained skills at -20 instead of the standard -10. Must refresh the client manually (F5) after selecting this option to see the changes on actor sheets.",
@@ -84,6 +87,16 @@ Hooks.once("init", async function() {
     type: Boolean
   });
 
+  game.settings.register("uesrpg-d100", "automateActionPoints", {
+    name: "Automate Action Points",
+    hint: `Automatically set all combatants' AP to max at the start of each encounter.
+           Automatically set a combatant's AP to max at the start of their turn (except during the first round).`,
+    scope: "world",
+    config: true,
+    default: false,
+    type: Boolean
+  });
+
   const startUpFunction = () => {
     const startUpDialog = game.settings.get("uesrpg-d100", "startUpDialog");
     let discordIcon = `<i class="fab fa-discord fa-2x"></i>`;
@@ -100,10 +113,10 @@ Hooks.once("init", async function() {
         <div class="dialogForm" style="padding: 5px">
 
           <div style="text-align: center; margin: 5px; padding: 5px; background-color: rgba(78, 78, 78, 0.137);">
-            <span style="margin-left: 10px; margin-right: 10px;">  
+            <span style="margin-left: 10px; margin-right: 10px;">
               ${patreonIcon.link("https://www.patreon.com/bePatron?u=30258550")}
             </span>
-            <span style="margin-left: 10px; margin-right: 10px;"> 
+            <span style="margin-left: 10px; margin-right: 10px;">
               ${discordIcon.link("https://discord.gg/pBRJwy3Ec5")}
             </span>
             <span style="margin-left: 10px; margin-right: 10px;">
@@ -114,15 +127,15 @@ Hooks.once("init", async function() {
           <div style="margin: 5px; padding: 5px; background-color: rgba(78, 78, 78, 0.137);">
               <h2 style="text-align: center;">Join the Community!</h2>
               <label>
-                Hey adventurer! Thanks for taking the time to check out the UESRPG system on Foundry. UESRPG is 
-                an incredible game developed by a team of dedicated and talented designers. You can find out more about the game, 
+                Hey adventurer! Thanks for taking the time to check out the UESRPG system on Foundry. UESRPG is
+                an incredible game developed by a team of dedicated and talented designers. You can find out more about the game,
                 download the free rulebooks, and interact with our lively community on the ${discordLink.link("https://discord.gg/pBRJwy3Ec5")}.
               </label>
 
               <p></p>
 
               <label>
-                If you want to support further development of this system, please consider supporting me on ${patreonLink.link("https://www.patreon.com/bePatron?u=30258550")}. 
+                If you want to support further development of this system, please consider supporting me on ${patreonLink.link("https://www.patreon.com/bePatron?u=30258550")}.
                 Thank you, and enjoy the UESRPG System!
               </<label>
 
@@ -130,7 +143,7 @@ Hooks.once("init", async function() {
 
             <h2 style="text-align: center;">Recommended Game Content</h2>
               <label>
-                The following modules/content were created by some dedicated community members and are <b>highly recommended</b> 
+                The following modules/content were created by some dedicated community members and are <b>highly recommended</b>
                 as they provide hundreds of pre-built items, NPC's, and much more.
               </label>
               <ul>
@@ -153,7 +166,7 @@ Hooks.once("init", async function() {
                       </li>
                       <li><strong>Item Equip System:</strong> Weapons, Armor, Items, and Ammo now have an equipped state. Unequipped items are now part of an item master list included on the Items tab. Any equipped
                           items are moved over to the combat tab. They can easily be equipped in bulk on the combat tab by clicking on the headers and equipped any items. This cleans up the combat tab
-                          so that only the equipped items are shown, and all others are left on the items master list. NOTE: Regular items must have the "Wearable" toggle on in order to be equipped via the 
+                          so that only the equipped items are shown, and all others are left on the items master list. NOTE: Regular items must have the "Wearable" toggle on in order to be equipped via the
                           combat tab Equip Armor button.
                       </li>
                       <li><strong>New Item Filter:</strong> Filter by item types within the new master item list on the item tab.</li>
