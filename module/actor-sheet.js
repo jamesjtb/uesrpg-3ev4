@@ -22,7 +22,8 @@
         ".languageContainer .item",
         ".talent-container .item",
         ".trait-container .item",
-        ".power-container .item"
+        ".power-container .item",
+        ".equipmentList .item"
       ], 
       dropSelector: null}]
     });
