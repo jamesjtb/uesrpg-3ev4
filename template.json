@@ -680,10 +680,13 @@
       "natToughnessR": 0,
       "silverR": 0,
       "sunlightR": 0
+    },
+    "objectArrays": {
+      "skillArray": []
     }
   },
   "item": {
-    "templates": ["characteristicArray", "replaceAttributesArray", "resistanceArray"],
+    "templates": ["characteristicArray", "replaceAttributesArray", "resistanceArray", "objectArrays"],
     "description": "",
     "quantity": 1,
     "enc": 0,
@@ -708,7 +711,7 @@
     }
   },
   "armor": {
-    "templates": ["resistanceArray", "characteristicArray", "replaceAttributesArray"],
+    "templates": ["resistanceArray", "characteristicArray", "replaceAttributesArray", "objectArrays"],
     "description": "",
     "quantity": 1,
     "enc": 0,
@@ -743,7 +746,7 @@
     }
   },
   "weapon": {
-    "templates": ["resistanceArray", "characteristicArray", "replaceAttributesArray"],
+    "templates": ["resistanceArray", "characteristicArray", "replaceAttributesArray", "objectArrays"],
     "description": "",
     "quantity": 1,
     "enc": 0,
@@ -794,7 +797,7 @@
     }
   },
   "trait": {
-    "templates": ["resistanceArray", "replaceAttributesArray", "characteristicArray"],
+    "templates": ["resistanceArray", "replaceAttributesArray", "characteristicArray", "objectArrays"],
     "description": "",
     "halfSpeed": false,
     "addHalfSpeed": false,
@@ -805,7 +808,7 @@
     "painIntolerant": false
   },
   "power": {
-    "templates": ["resistanceArray", "characteristicArray"],
+    "templates": ["resistanceArray", "characteristicArray", "objectArrays"],
     "description": "",
     "dailyUse": false,
     "source": "",
@@ -824,7 +827,7 @@
     }
   },
   "talent": {
-    "templates": ["resistanceArray", "replaceAttributesArray", "characteristicArray"],
+    "templates": ["resistanceArray", "replaceAttributesArray", "characteristicArray", "objectArrays"],
     "description": "",
     "xpCost": 0,
     "level": 0,

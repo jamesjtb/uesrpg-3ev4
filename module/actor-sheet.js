@@ -251,6 +251,12 @@
     if (!this.options.editable) return;
 
     // Update Inventory Item
+    html.find('.item-name').contextmenu(async (ev) => {
+      const li = ev.currentTarget.closest('.item')
+      const item = this.actor.items.get(li.dataset.itemId)
+      this._duplicateItem(item)
+    })
+
     html.find('.item-name').click( async (ev) => {
       const li = ev.currentTarget.closest(".item");
       const item = this.actor.items.get(li.dataset.itemId);
@@ -271,6 +277,32 @@
    * @param event   The originating click event
    * @private
    */
+
+  _duplicateItem(item) {
+    let d = new Dialog({
+      title: 'Duplicate Item',
+      content: `<div style="padding: 10px; display: flex; flex-direction: row; align-items: center; justify-content: center;">
+                    <div>Duplicate Item?</div>
+                </div>`,
+      buttons: {
+        one: {
+          label: 'Cancel',
+          callback: html => console.log("Cancelled")
+        },
+        two: {
+          label: 'Duplicate',
+          callback: async (html) => {
+            let newItem = await this.actor.createEmbeddedDocuments('Item', [item.toObject()])
+            await newItem[0].sheet.render(true)
+          }
+        }
+      },
+      default: 'two',
+      close: html => console.log()
+    })
+
+    d.render(true)
+  }
 
   async _onSetBaseCharacteristics(event) {
       event.preventDefault()

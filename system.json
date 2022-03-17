@@ -2,7 +2,7 @@
   "name": "uesrpg-d100",
   "title": "UESRPG d100",
   "description": "A system used to play the UESRPG (Unofficial Elder Scrolls Roleplaying Game) d100 system.",
-  "version": 1.50,
+  "version": 1.51,
   "minimumCoreVersion": "0.8.9",
   "compatibleCoreVersion": "9",
   "templateVersion": 2,
