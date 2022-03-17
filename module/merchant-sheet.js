@@ -123,24 +123,26 @@ export class merchantSheet extends ActorSheet {
       }
   
       // Alphabetically sort all item lists
-      const itemCats = [merchantItem, power, trait, talent, combatStyle, spell, skill, magicSkill, language, faction]
-      for (let category of itemCats) {
-        if (category.length > 1 && category != spell) {
-          category.sort((a,b) => {
-            let nameA = a.name.toLowerCase()
-            let nameB = b.name.toLowerCase()
-            if (nameA > nameB) {return 1}
-            else {return -1}
-          })
-        }
-        else if (category == spell) {
-          if (category.length > 1) {
-            category.sort((a, b) => {
-              let nameA = a.data.school
-              let nameB = b.data.school
+      if (game.settings.get('uesrpg-d100', 'sortAlpha')) {
+        const itemCats = [merchantItem, power, trait, talent, combatStyle, spell, skill, magicSkill, language, faction]
+        for (let category of itemCats) {
+          if (category.length > 1 && category != spell) {
+            category.sort((a,b) => {
+              let nameA = a.name.toLowerCase()
+              let nameB = b.name.toLowerCase()
               if (nameA > nameB) {return 1}
               else {return -1}
             })
+          }
+          else if (category == spell) {
+            if (category.length > 1) {
+              category.sort((a, b) => {
+                let nameA = a.data.school
+                let nameB = b.data.school
+                if (nameA > nameB) {return 1}
+                else {return -1}
+              })
+            }
           }
         }
       }

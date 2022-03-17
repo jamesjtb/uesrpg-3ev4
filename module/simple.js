@@ -102,8 +102,18 @@ Hooks.once("init", async function() {
   });
 
   game.settings.register("uesrpg-d100", "npcENCPenalty", {
-    name: "NPC's suffer Encumbrance Penalties",
+    name: "NPC's Suffer Encumbrance Penalties",
     hint: "If checked, NPC's suffer from the same overencumbrance penalties that player characters do. Otherwise, they suffer no ENC Penalties.",
+    scope: "world",
+    config: true,
+    default: true,
+    type: Boolean,
+    onChange: delayedReload
+  });
+
+  game.settings.register("uesrpg-d100", "sortAlpha", {
+    name: "Sort Actor Items Alphabetically",
+    hint: "If checked, Actor items are automatically sorted alphabetically. Otherwise, items are not sorted and are organized manually.",
     scope: "world",
     config: true,
     default: true,

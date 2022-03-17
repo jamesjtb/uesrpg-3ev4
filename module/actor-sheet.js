@@ -141,43 +141,45 @@
     }
 
     // Alphabetically sort all item lists
-    const itemCats = [
-      gear.equipped, 
-      gear.unequipped, 
-      weapon.equipped,
-      weapon.unequipped, 
-      armor.equipped, 
-      armor.unequipped, 
-      power, 
-      trait, 
-      talent, 
-      combatStyle, 
-      spell, 
-      skill, 
-      magicSkill, 
-      ammunition.equipped,
-      ammunition.unequipped, 
-      language, 
-      faction
-    ]
+    if (game.settings.get('uesrpg-d100', 'sortAlpha')) {
+      const itemCats = [
+        gear.equipped, 
+        gear.unequipped, 
+        weapon.equipped,
+        weapon.unequipped, 
+        armor.equipped, 
+        armor.unequipped, 
+        power, 
+        trait, 
+        talent, 
+        combatStyle, 
+        spell, 
+        skill, 
+        magicSkill, 
+        ammunition.equipped,
+        ammunition.unequipped, 
+        language, 
+        faction
+      ]
 
-    for (let category of itemCats) {
-      if (category.length > 1 && category != spell) {
-        category.sort((a,b) => {
-          let nameA = a.name.toLowerCase()
-          let nameB = b.name.toLowerCase()
-          if (nameA > nameB) {return 1}
-          else {return -1}
-        })
-      }
-      else if (category == spell) {
-        if (category.length > 1) {
-          category.sort((a, b) => {
-            let nameA = a.data.school
-            let nameB = b.data.school
+      for (let category of itemCats) {
+        if (category.length > 1 && category != spell) {
+          category.sort((a,b) => {
+            let nameA = a.name.toLowerCase()
+            let nameB = b.name.toLowerCase()
             if (nameA > nameB) {return 1}
             else {return -1}
           })
+        }
+        else if (category == spell) {
+          if (category.length > 1) {
+            category.sort((a, b) => {
+              let nameA = a.data.school
+              let nameB = b.data.school
+              if (nameA > nameB) {return 1}
+              else {return -1}
+            })
+          }
         }
       }
     }
@@ -2532,7 +2534,6 @@
     event.preventDefault()
     let element = event.currentTarget
     let itemList = this.actor.items.filter(item => item.type === element.id||(item.type === element.dataset.altType && item.data.data.wearable))
-    console.log(itemList)
 
     let itemEntries = []
     let tableHeader = ''
