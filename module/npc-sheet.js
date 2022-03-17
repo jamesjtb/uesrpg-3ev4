@@ -202,10 +202,16 @@ export class npcSheet extends ActorSheet {
     html.find(".resistance-roll").click(await this._onResistanceRoll.bind(this));
     html.find(".ammo-roll").click(await this._onAmmoRoll.bind(this));
     html.find(".ability-list .item-img").click(await this._onTalentRoll.bind(this));
-    html.find(".talents-list .item-img").click(await this._onTalentRoll.bind(this));
-    html.find(".spell-list .item-img").click(await this._onTalentRoll.bind(this));
-    html.find(".combat-list .item-img").click(await this._onTalentRoll.bind(this));
-    html.find(".item-list .item-img").click(await this._onTalentRoll.bind(this));
+    html.find(".talent-container .item-img").click(await this._onTalentRoll.bind(this));
+    html.find(".trait-container .item-img").click(await this._onTalentRoll.bind(this));
+    html.find(".power-container .item-img").click(await this._onTalentRoll.bind(this));
+    html.find(".spellList .item-img").click(await this._onTalentRoll.bind(this));
+    html.find(".weapon-table .item-img").click(await this._onTalentRoll.bind(this));
+    html.find(".ammunition-table .item-img").click(await this._onTalentRoll.bind(this));
+    html.find(".armor-table .item-img").click(await this._onTalentRoll.bind(this));
+    html.find(".equipmentList .item-img").click(await this._onTalentRoll.bind(this));
+    html.find(".languageContainer .item-img").click(await this._onTalentRoll.bind(this));
+    html.find(".factionContainer .item-img").click(await this._onTalentRoll.bind(this));
 
     //Update Item Attributes from Actor Sheet
     html.find(".toggle2H").click(await this._onToggle2H.bind(this));
@@ -1705,7 +1711,9 @@ export class npcSheet extends ActorSheet {
 
   _createStatusTags() {
     this.actor.data.data.wounded ? this.form.querySelector('#wound-icon').classList.add('active') : this.form.querySelector('#wound-icon').classList.remove('active')
-    this.actor.data.data.carry_rating.current > this.actor.data.data.carry_rating.max ? this.form.querySelector('#enc-icon').classList.add('active') : this.form.querySelector('#enc-icon').classList.remove('active')
+    if (game.settings.get('uesrpg-d100', 'npcENCPenalty')) {
+      this.actor.data.data.carry_rating.current > this.actor.data.data.carry_rating.max ? this.form.querySelector('#enc-icon').classList.add('active') : this.form.querySelector('#enc-icon').classList.remove('active')
+    }
     this.actor.data.data.fatigue.level > 0 ? this.form.querySelector('#fatigue-icon').classList.add('active') : this.form.querySelector('#fatigue-icon').classList.remove('active')
   }
 

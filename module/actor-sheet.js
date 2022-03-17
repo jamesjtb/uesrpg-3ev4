@@ -213,7 +213,7 @@
     html.find(".resistance-roll").click(this._onResistanceRoll.bind(this));
     html.find(".damage-roll").click(this._onDamageRoll.bind(this));
     html.find(".ammo-roll").click(await this._onAmmoRoll.bind(this));
-    html.find(".skillList .item-img").click(await this._onTalentRoll.bind(this));
+    html.find(".item-img").click(await this._onTalentRoll.bind(this));
     html.find("#luckyMenu").click(this._onLuckyMenu.bind(this));
     html.find("#raceMenu").click(this._onRaceMenu.bind(this));
     html.find('#birthSignMenu').click(this._onBirthSignMenu.bind(this));

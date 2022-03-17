@@ -60,13 +60,16 @@ Hooks.once("init", async function() {
   });
 
   // Register system settings
+  function delayedReload() {window.setTimeout(() => location.reload(), 500)}
+
   game.settings.register("uesrpg-d100", "legacyUntrainedPenalty", {
     name: "Legacy Untrained Penalty",
-    hint: "Checking this option enables the UESRPG v2 penalty for Untrained skills at -20 instead of the standard -10. Must refresh the client manually (F5) after selecting this option to see the changes on actor sheets.",
+    hint: "Checking this option enables the UESRPG v2 penalty for Untrained skills at -20 instead of the standard -10.",
     scope: "world",
     config: true,
     default: false,
-    type: Boolean
+    type: Boolean,
+    onChange: delayedReload
   });
 
   game.settings.register("uesrpg-d100", "startUpDialog", {
@@ -84,7 +87,8 @@ Hooks.once("init", async function() {
     scope: "world",
     config: true,
     default: false,
-    type: Boolean
+    type: Boolean,
+    onChange: delayedReload
   });
 
   game.settings.register("uesrpg-d100", "automateActionPoints", {
@@ -95,6 +99,16 @@ Hooks.once("init", async function() {
     config: true,
     default: false,
     type: Boolean
+  });
+
+  game.settings.register("uesrpg-d100", "npcENCPenalty", {
+    name: "NPC's suffer Encumbrance Penalties",
+    hint: "If checked, NPC's suffer from the same overencumbrance penalties that player characters do. Otherwise, they suffer no ENC Penalties.",
+    scope: "world",
+    config: true,
+    default: true,
+    type: Boolean,
+    onChange: delayedReload
   });
 
   const startUpFunction = () => {
