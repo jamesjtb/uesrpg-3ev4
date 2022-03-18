@@ -1139,6 +1139,17 @@
   width: 100%;
 }
 
+.worldbuilding .stat-value-label .flex-container {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+}
+
+.worldbuilding .stat-value-label .flex-container input {
+  width: 50%;
+}
+
 .worldbuilding .chargePlus,
 .worldbuilding .chargeMinus {
   width: 15px;
@@ -1195,6 +1206,10 @@
 .worldbuilding .item-selection-container .right-align-content {
   display: flex;
   justify-content: center;
+}
+
+.worldbuilding .grid-container .right-align-content {
+  justify-content: right;
 }
 
 .worldbuilding .grid-container input {

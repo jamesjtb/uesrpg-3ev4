@@ -707,7 +707,8 @@
     "wearable": false,
     "charge": {
       "value": 0,
-      "max": 0
+      "max": 0,
+      "reduction": 1
     }
   },
   "armor": {
@@ -742,7 +743,8 @@
      },
      "charge": {
       "value": 0,
-      "max": 0
+      "max": 0,
+      "reduction": 1
     }
   },
   "weapon": {
@@ -769,7 +771,8 @@
     "qualities": "",
     "charge": {
       "value": 0,
-      "max": 0
+      "max": 0,
+      "reduction": 1
     }
   },
   "spell": {

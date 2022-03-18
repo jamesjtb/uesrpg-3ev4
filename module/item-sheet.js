@@ -165,11 +165,11 @@ export class SimpleItemSheet extends ItemSheet {
     let chargeMax = this.document.data.data.charge.max;
     let currentCharge = this.document.data.data.charge.value;
 
-    if (currentCharge >= chargeMax) {
+    if (currentCharge >= chargeMax||currentCharge + this.item.data.data.charge.reduction >= chargeMax) {
       ui.notifications.info("Your item is fully charged.")
+      this.document.update({'data.charge.value': chargeMax})
     } else {
-    currentCharge = currentCharge + 1;
-    this.document.update({"data.charge.value" : currentCharge});
+    this.document.update({"data.charge.value" : currentCharge + this.item.data.data.charge.reduction});
     }
   }
 
@@ -177,11 +177,10 @@ export class SimpleItemSheet extends ItemSheet {
     event.preventDefault()
     let currentCharge = this.document.data.data.charge.value;
 
-    if (currentCharge <= 0) {
-      ui.notifications.info("Your item is completely drained.")
+    if (currentCharge <= 0||currentCharge - this.item.data.data.charge.reduction < 0) {
+      ui.notifications.info(`${this.item.name} does not have enough charge.`)
     } else {
-    currentCharge = currentCharge - 1;
-    this.document.update({"data.charge.value" : currentCharge});
+    this.document.update({"data.charge.value" : currentCharge - this.item.data.data.charge.reduction});
     }
   }
 

@@ -75,9 +75,11 @@
                                 <div class="small-text-label">Block</div>
                             </div>
                         </div>
-                        <div class="item-resource set-size-container">
+                        <div class="item-resource">
                             <div class="stat-value-label">
-                                {{data.charge.value}} / {{data.charge.max}}
+                                <div class="flex-container">
+                                    <input type="number" name="data.charge.value" value="{{data.charge.value}}"> / <input type="number" name="data.charge.max" value="{{data.charge.max}}">
+                                </div>
                             </div>
                             <div class="flex-container">
                                 <i class="fas fa-angle-down fa-xs chargeMinus"></i>
@@ -129,9 +131,9 @@
                                 </div>
                             </div>
                             <div class="grid-container">
-                                <div>Max Magic Charge</div>
+                                <div>Charge Reduction</div>
                                 <div class="right-align-content">
-                                    <input type="number" name="data.charge.max" value="{{data.charge.max}}">
+                                    <input type="number" name="data.charge.reduction" value="{{data.charge.reduction}}">
                                 </div>
                             </div>
                         </div>
