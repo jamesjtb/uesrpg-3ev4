@@ -54,6 +54,13 @@ export class SimpleItemSheet extends ItemSheet {
     //Item Value Change Buttons
     html.find(".chargePlus").click(this._onChargePlus.bind(this));
     html.find(".chargeMinus").click(this._onChargeMinus.bind(this));
+
+    // Register listeners for items that have modifier arrays
+    if (this.item.data.data.hasOwnProperty('skillArray')) {
+      html.find(".modifier-create").click(this._onModifierCreate.bind(this))
+      this._createModifierEntries()
+      html.find('.item-delete').click(this._onDeleteModifier.bind(this))
+    }
   }
 
   /**
@@ -61,6 +68,97 @@ export class SimpleItemSheet extends ItemSheet {
    * @param {Event} event   The originating click event
    * @private
    */
+
+  _onModifierCreate(event) {
+    event.preventDefault()
+
+    // Return if not embedded onto Actor
+    if (!this.document.isEmbedded) {return}
+
+    // Create Options for Dropdown
+    let modifierOptions = []
+    if (this.actor.type === 'character') {
+      for (let skill of this.actor.items.filter(i => i.type === 'skill'||i.type === 'magicSkill'||i.type === 'combatStyle')) {
+        modifierOptions.push(`<option value="${skill.id}">${skill.name}</option>`)
+      }
+    }
+
+    if (this.actor.type === 'npc') {
+      for (let profession in this.actor.data.data.professions) {
+        modifierOptions.push(`<option value="${profession}">${profession}</option>`)
+      }
+    }
+
+    // Create Dialog for selecting skill/item to modify
+    let d = new Dialog({
+      title: 'Create Modifier',
+      content: `<div style="display: flex; flex-direction: column; align-items: center; justify-content: center;">
+
+                    <div style="background: rgba(180, 180, 180, 0.562); border: solid 1px; padding: 10px; font-style: italic;">
+                        ${this.item.data.name} can apply a bonus or penalty to various skills of the character that has possession of it.
+                        Select a skill, then apply the modifier.
+                    </div>
+
+                    <div style="padding: 5px; display: flex; flex-direction: row; align-items: center; justify-content: center; gap: 5px; text-align: center;">
+                        <select id="modifierSelect" name="modifierSelect">
+                          ${modifierOptions.join('')}
+                        </select>
+                        <input id="modifier-value" type="number" value="0">
+                    </div>
+
+                </div>`,
+      buttons: {
+        one: {
+          label: 'Cancel',
+          callback: html => console.log("Cancelled")
+        },
+        two: {
+          label: 'Create',
+          callback: html => {
+            let skillObject = {id: html[0].querySelector('#modifierSelect').value, value: html[0].querySelector('#modifier-value').value}
+            this.item.data.data.skillArray.push(skillObject)
+            this.item.update({'data.skillArray': this.item.data.data.skillArray})
+          }
+        }
+      },
+      default: 'two',
+      close: html => console.log()
+    })
+
+    d.render(true)
+  }
+
+  _createModifierEntries() {
+    for (let entry of this.item.data.data.skillArray) {
+      let modItem = this.actor.type === 'character' ? this.actor.getEmbeddedDocument('Item', entry.id) : entry.id
+      let entryElement = document.createElement('div')
+      entryElement.classList.add('grid-container')
+      entryElement.id = entry.id
+      entryElement.innerHTML = `<div>${modItem.name ? modItem.name : entry.id}</div>
+                                <div class="right-align-content">
+                                    <div class="item-controls">
+                                        <div>${entry.value}%</div>
+                                        <a class="item-control item-delete" title="Delete Item"><i class="fas fa-trash"></i></a>
+                                    </div>
+                                </div>`
+      this.form.querySelector('#item-modifiers').append(entryElement)
+    }
+  }
+
+  _onDeleteModifier(event) {
+    event.preventDefault()
+    let element = event.currentTarget
+    let modEntry = element.closest('.grid-container')
+    for (let entry of this.item.data.data.skillArray) {
+      if (entry.id == modEntry.id) {
+        let index = this.item.data.data.skillArray.indexOf(entry)
+        this.item.data.data.skillArray.splice(index, 1)
+        this.item.update({'data.skillArray': this.item.data.data.skillArray})
+        break
+      } 
+    }
+
+  }
 
   async _onChargePlus(event) {
     event.preventDefault()

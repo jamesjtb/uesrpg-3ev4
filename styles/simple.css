@@ -241,7 +241,8 @@
   background-color: rgba(194, 194, 194, 0.308);
 }
 
-.worldbuilding .headerWithButton .item-create {
+.worldbuilding .headerWithButton .item-create,
+.worldbuilding .headerWithButton .modifier-create {
   position: absolute;
   left: 0;
   width: 24px;
@@ -1200,4 +1201,13 @@
   text-align: center;
   border: none;
   height: 18px;
+}
+
+.worldbuilding .item-description-container {
+  display: grid;
+  grid-template-columns: 35% 65%;
+}
+
+.worldbuilding .basic-padding {
+  padding: 0 5px;
 }
