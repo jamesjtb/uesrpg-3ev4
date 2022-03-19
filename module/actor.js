@@ -699,7 +699,6 @@ export class SimpleActor extends Actor {
     for (let item of modItems) {
       for (let entry of item.data.data.skillArray) {
         let moddedSkill = actorData.data.professions[entry.name]
-        console.log(moddedSkill)
         actorData.data.professions[entry.name] = Number(moddedSkill) + Number(entry.value)
         actorData.data.professionsWound[entry.name] = Number(moddedSkill) + Number(entry.value)
       }
