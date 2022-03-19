@@ -180,27 +180,13 @@ Hooks.once("init", async function() {
 
                 <h3>General Changes</h3>
                   <ul>
-                      <li><strong>Sheet Redesign:</strong> New layout for character, merchant, NPC, and all item sheets to be easier to use and in general more practical. Can now freely resize the sheet with minimal negative
-                          effect on the layout and design. Go nuts!
+                      <li><strong>New Skill Modifiers on Items:</strong> Weapons, Armor, and normal Items now have the ability to add bonuses/penalties to skills, magic skills, and combat styles! You can create enchanted items or 
+                      modified weapons and armor that provide bonuses to various skills now.
                       </li>
-                      <li><strong>Status Modifiers:</strong> A new way to visualize current effects on characters with a status column on the combat tab as well as icons next to the character portrait.
-                          Currently supports Fatigue effects, Wounded effects, and Overencumbered effects. This also outputs a tag on any rolled tests so users can easily see what effects
-                          are applied on the roll. Combat rolls, profession rolls, and characteristic rolls are automatically modified with status effects. Merchant sheet NPC's rolls are unaffected by ENC status so they
-                          can have as many items on them as you want without affecting their rolls.
+                      <li><strong>Enchant Charges more Functional:</strong> Enchant charges on items are now editable directly from the resource control, and additionally have an editable attribute to customize how much charge goes up or 
+                      down on each click.
                       </li>
-                      <li><strong>Item Equip System:</strong> Weapons, Armor, Items, and Ammo now have an equipped state. Unequipped items are now part of an item master list included on the Items tab. Any equipped
-                          items are moved over to the combat tab. They can easily be equipped in bulk on the combat tab by clicking on the headers and equipped any items. This cleans up the combat tab
-                          so that only the equipped items are shown, and all others are left on the items master list. NOTE: Regular items must have the "Wearable" toggle on in order to be equipped via the
-                          combat tab Equip Armor button.
-                      </li>
-                      <li><strong>New Item Filter:</strong> Filter by item types within the new master item list on the item tab.</li>
-                      <li><strong>Combat Style Auto-Select Highest Characteristic:</strong> New Combat Styles created on Character sheets automatically select the highest from STR or AGI on creation. This saves a click or two.</li>
-                  </ul>
-
-                <h3>Combat Changes</h3>
-                  <ul>
-                      <li><strong>Weapon Damage Toggle:</strong> Weapon damage toggle from 1H to 2H dynamically shows damage based on toggle status.</li>
-                      <li><strong>NPC Combat Buttons:</strong> New NPC Combat buttons on the Combat tab to make rolling a bit easier during combat.</li>
+                      <li><strong>New System Settings:</strong> Added two new system settings. One to toggle OFF the auto alphabetical sort of item lists, and the other to toggle OFF NPC encumbrance penalties.</li>
                   </ul>
           </div>
 
