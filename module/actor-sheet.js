@@ -1341,7 +1341,7 @@
   async _onItemCreate(event) {
     event.preventDefault()
     const element = event.currentTarget
-    let itemData
+    let itemData = [{name: element.id, type: element.id, 'data.baseCha': 'str'}]
 
     if (element.id === 'createSelect') {
       let d = new Dialog({
@@ -1399,16 +1399,18 @@
     else {
 
       if (element.id === 'combatStyle') {
-        let autoSelectedBaseCha = this.actor.data.data.characteristics.str.total > this.actor.data.data.characteristics.agi.total ? 'str' : 'agi'
         itemData = [{
           name: element.id,
           type: element.id,
-          'data.baseCha': autoSelectedBaseCha
+          'data.baseCha': this.actor.data.data.characteristics.str.total >= this.actor.data.data.characteristics.agi.total ? 'str' : 'agi'
         }]
-      } else {
+      } 
+      
+      if (element.id === 'magicSkill') {
         itemData = [{
           name: element.id,
-          type: element.id
+          type: element.id,
+          'data.baseCha': this.actor.data.data.characteristics.int.total >= this.actor.data.data.characteristics.wp.total ? 'wp' : 'int'
         }]
       }
 

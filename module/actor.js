@@ -292,9 +292,6 @@ export class SimpleActor extends Actor {
         break
     }
 
-    // Calculate Item Skill Modifiers
-    this._calculateItemSkillModifiers(actorData)
-
   } 
 
   async _prepareNPCData(actorData) {
@@ -692,25 +689,29 @@ export class SimpleActor extends Actor {
 
   }
 
-  _calculateItemSkillModifiers(actorData) {
-    let modItems = actorData.items.filter(i => i.data.data.hasOwnProperty('skillArray') && i.data.data.skillArray.length > 0)
+  async _calculateItemSkillModifiers(actorData) {
+    let modItems = actorData.items.filter(i => 
+      i.data.data.hasOwnProperty('skillArray')
+      && i.data.data.skillArray.length > 0
+      && i.data.data.equipped
+    )
+
     for (let item of modItems) {
       for (let entry of item.data.data.skillArray) {
-        let moddedSkill = this.type === 'character' ? this.getEmbeddedDocument('Item', entry.id) : actorData.data.professions[entry.id]
-        this.type === 'character' ? moddedSkill.data.data.value = Number(moddedSkill.data.data.value) + Number(entry.value) : actorData.data.professions[entry.id] = Number(moddedSkill) + Number(entry.value)
-        if (this.type === 'character') {moddedSkill.data.data.value = Number(moddedSkill.data.data.value) + Number(entry.value)}
-        if (this.type === 'npc') {
-          actorData.data.professions[entry.id] = Number(moddedSkill) + Number(entry.value)
-          actorData.data.professionsWound[entry.id] = Number(moddedSkill) + Number(entry.value)
-        }
+        let moddedSkill = actorData.data.professions[entry.name]
+        console.log(moddedSkill)
+        actorData.data.professions[entry.name] = Number(moddedSkill) + Number(entry.value)
+        actorData.data.professionsWound[entry.name] = Number(moddedSkill) + Number(entry.value)
       }
     }
   }
 
-  _updateSkillItems(actorData) {
+  async _updateSkillItems(actorData) {
     let skillItems = actorData.items.filter(item => item.type === 'skill'||item.type === 'magicSkill'||item.type === 'combatStyle')
     for (let item of skillItems) {
-      item.data.update({'data.value': Number(actorData.data.characteristics[item.data.data.baseCha].total + item.data.data.bonus + item.data.data.miscValue)})
+      if (item.data.data.baseCha !== 'none') {
+        await item.data.update({'data.value': item.data.data.value})
+      }
     }
   }
 

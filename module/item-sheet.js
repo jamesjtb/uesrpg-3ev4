@@ -79,7 +79,7 @@ export class SimpleItemSheet extends ItemSheet {
     let modifierOptions = []
     if (this.actor.type === 'character') {
       for (let skill of this.actor.items.filter(i => i.type === 'skill'||i.type === 'magicSkill'||i.type === 'combatStyle')) {
-        modifierOptions.push(`<option value="${skill.id}">${skill.name}</option>`)
+        modifierOptions.push(`<option value="${skill.name}">${skill.name}</option>`)
       }
     }
 
@@ -115,7 +115,7 @@ export class SimpleItemSheet extends ItemSheet {
         two: {
           label: 'Create',
           callback: html => {
-            let skillObject = {id: html[0].querySelector('#modifierSelect').value, value: html[0].querySelector('#modifier-value').value}
+            let skillObject = {name: html[0].querySelector('#modifierSelect').value, value: html[0].querySelector('#modifier-value').value}
             this.item.data.data.skillArray.push(skillObject)
             this.item.update({'data.skillArray': this.item.data.data.skillArray})
           }
@@ -130,11 +130,12 @@ export class SimpleItemSheet extends ItemSheet {
 
   _createModifierEntries() {
     for (let entry of this.item.data.data.skillArray) {
-      let modItem = this.actor.type === 'character' ? this.actor.getEmbeddedDocument('Item', entry.id) : entry.id
+      let modItem = this.actor.items.find(i => i.name === entry.name) || entry.name
+
       let entryElement = document.createElement('div')
       entryElement.classList.add('grid-container')
-      entryElement.id = entry.id
-      entryElement.innerHTML = `<div>${modItem.name ? modItem.name : entry.id}</div>
+      entryElement.id = entry.name
+      entryElement.innerHTML = `<div>${modItem.name != undefined ? modItem.name : entry.name}</div>
                                 <div class="right-align-content">
                                     <div class="item-controls">
                                         <div>${entry.value}%</div>
@@ -150,7 +151,7 @@ export class SimpleItemSheet extends ItemSheet {
     let element = event.currentTarget
     let modEntry = element.closest('.grid-container')
     for (let entry of this.item.data.data.skillArray) {
-      if (entry.id == modEntry.id) {
+      if (entry.name == modEntry.getAttribute('id')) {
         let index = this.item.data.data.skillArray.indexOf(entry)
         this.item.data.data.skillArray.splice(index, 1)
         this.item.update({'data.skillArray': this.item.data.data.skillArray})
@@ -166,7 +167,7 @@ export class SimpleItemSheet extends ItemSheet {
     let currentCharge = this.document.data.data.charge.value;
 
     if (currentCharge >= chargeMax||currentCharge + this.item.data.data.charge.reduction >= chargeMax) {
-      ui.notifications.info("Your item is fully charged.")
+      ui.notifications.info(`${this.item.name} is fully charged.`)
       this.document.update({'data.charge.value': chargeMax})
     } else {
     this.document.update({"data.charge.value" : currentCharge + this.item.data.data.charge.reduction});

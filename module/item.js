@@ -25,7 +25,9 @@ export class SimpleItem extends Item {
       if (this.data.data.hasOwnProperty('baseCha')) {this._prepareCombatStyleData(actorData, itemData)}
       if (this.data.data.hasOwnProperty('modPrice')) {this._prepareMerchantItem(actorData, itemData)}
       if (this.data.data.hasOwnProperty('damaged')) {this._prepareArmorItem(actorData, itemData)}
+      if (this.data.type === 'item') {this._prepareNormalItem(actorData, itemData)}
       if (this.data.type === 'weapon') {this._prepareWeaponItem(actorData, itemData)}
+      if (this.data.data.hasOwnProperty('skillArray') && actorData.type === 'character') {this._prepareModSkillItems(actorData, itemData)}
     }
   }
 
@@ -107,8 +109,23 @@ export class SimpleItem extends Item {
       
   }
 
+  _prepareNormalItem(actorData, itemData) {
+    // Auto Assigns as a wearable item if the Equipped Toggle is on
+    if (itemData.equipped) {itemData.wearable = true}
+  }
+
   _prepareWeaponItem(actorData, itemData) {
     itemData.weapon2H ? itemData.damage3 = itemData.damage2 : itemData.damage3 = itemData.damage
+  }
+
+  _prepareModSkillItems(actorData, itemData) {
+    if (itemData.skillArray.length == 0) {return}
+    for (let entry of itemData.skillArray) {
+      let moddedSkill = actorData.items.find(i => i.name === entry.name)
+      if (itemData.equipped) {
+        moddedSkill.data.update({'data.value': moddedSkill.data.data.value + Number(entry.value)})
+      }
+    }
   }
 
   /**
