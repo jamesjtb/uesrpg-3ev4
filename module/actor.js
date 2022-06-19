@@ -2,6 +2,7 @@
  * Extend the base Actor entity by defining a custom roll data structure which is ideal for the Simple system.
  * @extends {Actor}
  */
+
 export class SimpleActor extends Actor {
   async _preCreate(data, options, user) {
     await super._preCreate(data, options, user);
@@ -55,7 +56,6 @@ export class SimpleActor extends Actor {
     data.characteristics.prc.total = data.characteristics.prc.base + this._prcBonusCalc(actorData);
     data.characteristics.prs.total = data.characteristics.prs.base + this._prsBonusCalc(actorData);
     data.characteristics.lck.total = data.characteristics.lck.base + this._lckBonusCalc(actorData);
-    this._updateSkillItems(actorData)
 
 
     //Characteristic Bonuses
@@ -701,15 +701,6 @@ export class SimpleActor extends Actor {
         let moddedSkill = actorData.data.professions[entry.name]
         actorData.data.professions[entry.name] = Number(moddedSkill) + Number(entry.value)
         actorData.data.professionsWound[entry.name] = Number(moddedSkill) + Number(entry.value)
-      }
-    }
-  }
-
-  async _updateSkillItems(actorData) {
-    let skillItems = actorData.items.filter(item => item.type === 'skill'||item.type === 'magicSkill'||item.type === 'combatStyle')
-    for (let item of skillItems) {
-      if (item.data.data.baseCha !== 'none') {
-        await item.data.update({'data.value': item.data.data.value})
       }
     }
   }

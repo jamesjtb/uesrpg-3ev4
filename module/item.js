@@ -2,6 +2,8 @@
  * Extend the base Actor entity by defining a custom roll data structure which is ideal for the Simple system.
  * @extends {Item}
  */
+import { skillHelper } from "./skillCalcHelper.js";
+
 export class SimpleItem extends Item {
   async _preCreate(data, options, user) {
     await super._preCreate(data, options, user);
@@ -22,12 +24,12 @@ export class SimpleItem extends Item {
 
     // Prepare data based on item type
     if (this.isEmbedded && this.actor.data != null) {
-      if (this.data.data.hasOwnProperty('baseCha')) {this._prepareCombatStyleData(actorData, itemData)}
       if (this.data.data.hasOwnProperty('modPrice')) {this._prepareMerchantItem(actorData, itemData)}
       if (this.data.data.hasOwnProperty('damaged')) {this._prepareArmorItem(actorData, itemData)}
       if (this.data.type === 'item') {this._prepareNormalItem(actorData, itemData)}
       if (this.data.type === 'weapon') {this._prepareWeaponItem(actorData, itemData)}
       if (this.data.data.hasOwnProperty('skillArray') && actorData.type === 'character') {this._prepareModSkillItems(actorData, itemData)}
+      if (this.data.data.hasOwnProperty('baseCha')) {this._prepareCombatStyleData(actorData, itemData)}
     }
   }
 
@@ -87,9 +89,10 @@ export class SimpleItem extends Item {
     const woundPenalty = Number(this.actor.data.data.woundPenalty)
     const fatiguePenalty = Number(this.actor.data.data.fatigue.penalty)
 
+    let itemChaBonus = skillHelper(actorData, data.baseCha)
     let chaTotal = 0;
     if (data.baseCha !== undefined && data.baseCha !== "" && data.baseCha !== "none") {
-      chaTotal = Number(actorData.data.characteristics[data.baseCha].total + data.bonus + data.miscValue);
+      chaTotal = Number(actorData.data.characteristics[data.baseCha].total + data.bonus + data.miscValue + itemChaBonus);
     }
 
     if (this.actor.data.data.wounded) {
