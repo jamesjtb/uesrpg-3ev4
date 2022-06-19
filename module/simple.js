@@ -180,13 +180,13 @@ Hooks.once("init", async function() {
 
                 <h3>General Changes</h3>
                   <ul>
-                      <li><strong>New Skill Modifiers on Items:</strong> Weapons, Armor, and normal Items now have the ability to add bonuses/penalties to skills, magic skills, and combat styles! You can create enchanted items or 
-                      modified weapons and armor that provide bonuses to various skills now.
+                      <li>
+                          Fixed issue where NPC Race field could not be edited correctly and fixed issue where hitting the Enter/Return key while on an NPC sheet registered a click and incremented the qty 
+                          of the first item on that NPC's item list.
                       </li>
-                      <li><strong>Enchant Charges more Functional:</strong> Enchant charges on items are now editable directly from the resource control, and additionally have an editable attribute to customize how much charge goes up or 
-                      down on each click.
+                      <li>
+                          Fixed issue where Items that modified characteristics were not correctly affecting the value of Skills that use that characteristic as a base. 
                       </li>
-                      <li><strong>New System Settings:</strong> Added two new system settings. One to toggle OFF the auto alphabetical sort of item lists, and the other to toggle OFF NPC encumbrance penalties.</li>
                   </ul>
           </div>
 
