@@ -91,7 +91,7 @@
                         <div class="npc-button-stats">
                             <div>
                                 <div class="styled-font">Soul Energy</div>
-                                <input type="text" name="data.soul_energy" placeholder="Soul Energy" value="{{data.soul_energy}}">
+                                <input type="text" name="data.soul_energy" placeholder="Soul Energy" value="---">
                             </div>
                             <div>
                                 <div class="styled-font">Race</div>
@@ -102,7 +102,7 @@
                                 <select name="data.threat" data-type="String">
                                     {{#select actor.data.threat}}
                                     {{#each actor.data.threatCategory as |threatCategory key|}}
-                                    <option value="{{key}}">{{threatCategory}}</option> 
+                                    <option value="{{key}}">{{threatCategory}}</option>
                                     {{/each}} {{/select}}
                                 </select>
                             </div>
