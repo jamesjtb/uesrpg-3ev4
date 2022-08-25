@@ -358,7 +358,7 @@
                                     <select name="data.size" data-type="String">
                                         {{#select actor.data.size}}
                                         {{#each actor.data.size_cat as |size_cat key|}}
-                                        <option value="{{key}}">{{size_cat}}</option> 
+                                        <option value="{{key}}">{{size_cat}}</option>
                                         {{/each}} {{/select}}
                                     </select>
                                 </div>
@@ -367,7 +367,7 @@
                                     <select name="data.armor_class" data-type="String">
                                         {{#select actor.data.armor_class}}
                                         {{#each actor.data.armor_class_cat as |armor_class_cat key|}}
-                                        <option value="{{key}}">{{armor_class_cat}}</option> 
+                                        <option value="{{key}}">{{armor_class_cat}}</option>
                                         {{/each}} {{/select}}
                                     </select>
                                 </div>
@@ -462,7 +462,7 @@
                                             </div>
                                         </td>
                                         <td>{{item.data.damage}}</td>
-                                        <td><button class="minusQty plusQty" title="Click to Increase, right-click to decrease">{{item.data.quantity}}</button></td>
+                                        <td><button type="button" class="minusQty plusQty" title="Click to Increase, right-click to decrease">{{item.data.quantity}}</button></td>
                                         <td class="right-align-cell"><a class="item-control item-delete" title="Delete Item"><i class="fas fa-trash"></i></a></td>
                                     </tr>
                                 {{/each}}
@@ -599,7 +599,7 @@
                             {{/each}}
                         </ol>
                     </div>
-    
+
                     <div class="spellListContainer">
                         <div class="spellList">
                             <table>
@@ -677,7 +677,7 @@
                                             <td>
                                                 <div class="tableItemNameCell">
                                                     <div class="qty-controls">
-                                                        <button class="minusQty plusQty" title="Click to increase, right click to decrease">
+                                                        <button type="button" class="minusQty plusQty" title="Click to increase, right click to decrease">
                                                             <div>{{item.data.quantity}}</div>
                                                         </button>
                                                     </div>
@@ -698,7 +698,7 @@
                                             <td>
                                                 <div class="tableItemNameCell">
                                                     <div class="qty-controls">
-                                                        <button class="minusQty plusQty" title="Click to increase, right click to decrease">
+                                                        <button type="button" class="minusQty plusQty" title="Click to increase, right click to decrease">
                                                             <div>{{item.data.quantity}}</div>
                                                         </button>
                                                     </div>
@@ -719,7 +719,7 @@
                                             <td>
                                                 <div class="tableItemNameCell">
                                                     <div class="qty-controls">
-                                                        <button class="minusQty plusQty" title="Click to increase, right click to decrease">
+                                                        <button type="button" class="minusQty plusQty" title="Click to increase, right click to decrease">
                                                             <div>{{item.data.quantity}}</div>
                                                         </button>
                                                     </div>
@@ -740,7 +740,7 @@
                                             <td>
                                                 <div class="tableItemNameCell">
                                                     <div class="qty-controls">
-                                                        <button class="minusQty plusQty" title="Click to increase, right click to decrease">
+                                                        <button type="button" class="minusQty plusQty" title="Click to increase, right click to decrease">
                                                             <div>{{item.data.quantity}}</div>
                                                         </button>
                                                     </div>
