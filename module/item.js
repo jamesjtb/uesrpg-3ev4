@@ -11,7 +11,8 @@ export class SimpleItem extends Item {
       case 'combatStyle':
       case 'skill':
       case 'magicSkill':
-        this.data.update({'data.rank': 'untrained'})
+        data.rank = 'untrained'
+        // await this.update({_id: this._id}, {'system.rank': 'untrained'})
     }
   }
 
@@ -19,17 +20,17 @@ export class SimpleItem extends Item {
     super.prepareData();
 
     // Get the Item's data & Actor's Data
-    const itemData = this.data.data
-    const actorData = this.actor ? this.actor.data : {}
+    const itemData = this.system
+    const actorData = this.actor ? this.actor : {}
 
     // Prepare data based on item type
-    if (this.isEmbedded && this.actor.data != null) {
-      if (this.data.data.hasOwnProperty('modPrice')) {this._prepareMerchantItem(actorData, itemData)}
-      if (this.data.data.hasOwnProperty('damaged')) {this._prepareArmorItem(actorData, itemData)}
-      if (this.data.type === 'item') {this._prepareNormalItem(actorData, itemData)}
-      if (this.data.type === 'weapon') {this._prepareWeaponItem(actorData, itemData)}
-      if (this.data.data.hasOwnProperty('skillArray') && actorData.type === 'character') {this._prepareModSkillItems(actorData, itemData)}
-      if (this.data.data.hasOwnProperty('baseCha')) {this._prepareCombatStyleData(actorData, itemData)}
+    if (this.isEmbedded && this.actor.system != null) {
+      if (this.system.hasOwnProperty('modPrice')) {this._prepareMerchantItem(actorData, itemData)}
+      if (this.system.hasOwnProperty('damaged')) {this._prepareArmorItem(actorData, itemData)}
+      if (this.type === 'item') {this._prepareNormalItem(actorData, itemData)}
+      if (this.type === 'weapon') {this._prepareWeaponItem(actorData, itemData)}
+      if (this.system.hasOwnProperty('skillArray') && actorData.type === 'character') {this._prepareModSkillItems(actorData, itemData)}
+      if (this.system.hasOwnProperty('baseCha')) {this._prepareCombatStyleData(actorData, itemData)}
     }
   }
 
@@ -44,68 +45,66 @@ export class SimpleItem extends Item {
    */
 
   async _prepareCombatStyleData(actorData, itemData) {
-    const data = itemData;
 
     //Skill Bonus Calculation
     const legacyUntrained = game.settings.get("uesrpg-d100", "legacyUntrainedPenalty");
 
     //Combat Style Skill Bonus Calculation
     if (legacyUntrained) {
-        if (data.rank === "untrained") {
-          data.bonus = -20 + this._untrainedException(actorData);
-        } else if (data.rank === "novice") {
-          data.bonus = 0;
-        } else if (data.rank === "apprentice") {
-          data.bonus = 10;
-        } else if (data.rank === "journeyman") {
-          data.bonus = 20;
-        } else if (data.rank === "adept") {
-          data.bonus = 30;
-        } else if (data.rank === "expert") {
-          data.bonus = 40;
-        } else if (data.rank === "master") {
-          data.bonus = 50;
+        if (itemData.rank === "untrained") {
+          itemData.bonus = -20 + this._untrainedException(actorData);
+        } else if (itemData.rank === "novice") {
+          itemData.bonus = 0;
+        } else if (itemData.rank === "apprentice") {
+          itemData.bonus = 10;
+        } else if (itemData.rank === "journeyman") {
+          itemData.bonus = 20;
+        } else if (itemData.rank === "adept") {
+          itemData.bonus = 30;
+        } else if (itemData.rank === "expert") {
+          itemData.bonus = 40;
+        } else if (itemData.rank === "master") {
+          itemData.bonus = 50;
       }
 
     } else {
-          if (data.rank == "untrained") {
-            data.bonus = -10 + this._untrainedException(actorData);
-          } else if (data.rank === "novice") {
-            data.bonus = 0;
-          } else if (data.rank === "apprentice") {
-            data.bonus = 10;
-          } else if (data.rank === "journeyman") {
-            data.bonus = 20;
-          } else if (data.rank === "adept") {
-            data.bonus = 30;
-          } else if (data.rank === "expert") {
-            data.bonus = 40;
-          } else if (data.rank === "master") {
-            data.bonus = 50;
+          if (itemData.rank == "untrained") {
+            itemData.bonus = -10 + this._untrainedException(actorData);
+          } else if (itemData.rank === "novice") {
+            itemData.bonus = 0;
+          } else if (itemData.rank === "apprentice") {
+            itemData.bonus = 10;
+          } else if (itemData.rank === "journeyman") {
+            itemData.bonus = 20;
+          } else if (itemData.rank === "adept") {
+            itemData.bonus = 30;
+          } else if (itemData.rank === "expert") {
+            itemData.bonus = 40;
+          } else if (itemData.rank === "master") {
+            itemData.bonus = 50;
       }
   }
 
     // Combat Style Skill Calculation
-    const woundPenalty = Number(this.actor.data.data.woundPenalty)
-    const fatiguePenalty = Number(this.actor.data.data.fatigue.penalty)
+    const woundPenalty = Number(actorData.system.woundPenalty)
+    const fatiguePenalty = Number(actorData.system.fatigue.penalty)
 
-    let itemChaBonus = skillHelper(actorData, data.baseCha)
+    let itemChaBonus = skillHelper(actorData, itemData.baseCha)
     let chaTotal = 0;
-    if (data.baseCha !== undefined && data.baseCha !== "" && data.baseCha !== "none") {
-      chaTotal = Number(actorData.data.characteristics[data.baseCha].total + data.bonus + data.miscValue + itemChaBonus);
+    if (itemData.baseCha !== undefined && itemData.baseCha !== "" && itemData.baseCha !== "none") {
+      chaTotal = Number(actorData.system.characteristics[itemData.baseCha].total + itemData.bonus + itemData.miscValue + itemChaBonus);
     }
 
-    if (this.actor.data.data.wounded) {
-      data.value = Number(woundPenalty + fatiguePenalty + chaTotal)
+    if (actorData.system.wounded) {
+      itemData.value = Number(woundPenalty + fatiguePenalty + chaTotal)
     } else {
-      data.value = Number(fatiguePenalty + chaTotal)
+      itemData.value = Number(fatiguePenalty + chaTotal)
     }
 
   }
 
   _prepareMerchantItem(actorData, itemData) {
-    const data = itemData
-    data.modPrice = (data.price + (data.price * (this.actor.data.data.priceMod/100))).toFixed(0);
+    itemData.modPrice = (itemData.price + (itemData.price * (actorData.system.priceMod/100))).toFixed(0);
   }
 
   _prepareArmorItem(actorData, itemData) {
@@ -126,7 +125,7 @@ export class SimpleItem extends Item {
     for (let entry of itemData.skillArray) {
       let moddedSkill = actorData.items.find(i => i.name === entry.name)
       if (itemData.equipped) {
-        moddedSkill.data.update({'data.value': moddedSkill.data.data.value + Number(entry.value)})
+        moddedSkill.updateSource({'data.value': moddedSkill.system.value + Number(entry.value)})
       }
     }
   }
@@ -138,10 +137,10 @@ export class SimpleItem extends Item {
    */
 
   _untrainedException(actorData) {
-    let attribute = this.actor.items.filter(item => item.data.data.untrainedException == true);
+    let attribute = actorData.items.filter(item => item.system.untrainedException == true);
     const legacyUntrained = game.settings.get("uesrpg-d100", "legacyUntrainedPenalty");
     let x = 0;
-    if (this.data.type === "combatStyle"){
+    if (this.type === "combatStyle"){
       if (legacyUntrained === true) {
         if (attribute.length >= 1) {
           x = 20; }

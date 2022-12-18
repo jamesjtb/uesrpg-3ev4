@@ -38,8 +38,8 @@ export class merchantSheet extends ActorSheet {
     data.editable = data.options.editable;
     const actorData = data.data;
     data.actor = actorData;
-    data.data = actorData.data;
-    if (this.actor.data.type === 'npc') {
+    data.data = actorData.system;
+    if (this.actor.type === 'npc') {
 
       //Prepare character items
       this._prepareCharacterItems(data);
@@ -50,7 +50,7 @@ export class merchantSheet extends ActorSheet {
 
   
     _prepareCharacterItems(sheetData) {
-      const actorData = sheetData.actor.data;
+      const actorData = sheetData.actor.system;
   
       //Initialize containers
       const merchantItem = [];
@@ -67,7 +67,7 @@ export class merchantSheet extends ActorSheet {
       //Iterate through items, allocating to containers
       //let totaWeight = 0;
       for (let i of sheetData.items) {
-        let item = i.data;
+        let item = i.system;
         i.img = i.img || DEFAULT_TOKEN;
         //Append to item
         if (i.type === 'item') {
@@ -137,8 +137,8 @@ export class merchantSheet extends ActorSheet {
           else if (category == spell) {
             if (category.length > 1) {
               category.sort((a, b) => {
-                let nameA = a.data.school
-                let nameB = b.data.school
+                let nameA = a.system.school
+                let nameB = b.system.school
                 if (nameA > nameB) {return 1}
                 else {return -1}
               })
@@ -226,7 +226,7 @@ export class merchantSheet extends ActorSheet {
       const li = ev.currentTarget.closest(".item");
       const item = this.actor.items.get(li.dataset.itemId);
       item.sheet.render(true);
-      await item.update({"data.value" : item.data.data.value})
+      await item.update({"system.value" : item.system.value})
     });
 
     // Delete Inventory Item
@@ -271,18 +271,18 @@ export class merchantSheet extends ActorSheet {
 
   _updateModPrice() {
     for (let item of this.actor.items.filter(item => item.hasOwnProperty('modPrice'))) {
-      item.data.data.modPrice = (item.data.data.price + (item.data.data.price * (this.actor.data.data.priceMod/100))).toFixed(0);
-      item.update({"data.modPrice" : item.data.data.modPrice, "data.price": item.data.data.price});
+      item.system.modPrice = (item.system.price + (item.system.price * (this.actor.system.priceMod/100))).toFixed(0);
+      item.update({"data.modPrice" : item.system.modPrice, "data.price": item.system.price});
     }
   }
 
   async _onBuyItem(event) {
     event.preventDefault()
-    const merchant = this.actor.data.data;
+    const merchant = this.actor.system;
     const button = event.currentTarget;
     const li = button.closest(".item");
     const merchantItem = this.actor.items.get(li?.dataset.itemId);
-    const itemPrice = Number(merchantItem.data.data.modPrice);
+    const itemPrice = Number(merchantItem.system.modPrice);
 
     //{--- Start of the GM Buy Item Function ---}
 
@@ -290,9 +290,9 @@ export class merchantSheet extends ActorSheet {
     if (game.user.isGM) {
       const controlledToken = game.canvas.tokens.controlled[0];
       const buyer = controlledToken.actor;
-      const buyerData = controlledToken.actor.data.data;
+      const buyerData = controlledToken.actor.system;
 
-      if (merchantItem.data.data.quantity <= 0) {
+      if (merchantItem.system.quantity <= 0) {
         ui.notifications.info("This Merchant is out of stock! How unfortunate...")
       } else if (buyerData.wealth < itemPrice) {
           ui.notifications.info("You cannot afford this item. Try coming back with more jingle in your pockets.");
@@ -300,33 +300,33 @@ export class merchantSheet extends ActorSheet {
 
         //Create Purchased Item on Buyer's Sheet
           const itemDuplicate = merchantItem.toObject();
-          itemDuplicate.data.quantity = 1;
-          itemDuplicate.data.equipped = false
+          itemDuplicate.system.quantity = 1;
+          itemDuplicate.system.equipped = false
           const qtyUpdateItem = buyer.items.find(i => i.name === itemDuplicate.name);
 
           if (itemDuplicate.type === "weapon" || itemDuplicate.type === "armor" || qtyUpdateItem == undefined) {
             buyer.createEmbeddedDocuments("Item", [itemDuplicate]);
           } else {
-              qtyUpdateItem.data.data.quantity = qtyUpdateItem.data.data.quantity + 1;
-              qtyUpdateItem.update({"data.quantity" : qtyUpdateItem.data.data.quantity});
+              qtyUpdateItem.system.quantity = qtyUpdateItem.system.quantity + 1;
+              qtyUpdateItem.update({"system.quantity" : qtyUpdateItem.system.quantity});
           }
 
           //Update Transaction Values on Merchant/Buyer
-          merchantItem.data.data.quantity = merchantItem.data.data.quantity - 1;
-          merchantItem.update({"data.quantity" : merchantItem.data.data.quantity});
+          merchantItem.system.quantity = merchantItem.system.quantity - 1;
+          merchantItem.update({"system.quantity" : merchantItem.system.quantity});
 
           merchant.wealth = merchant.wealth + itemPrice;
-          this.actor.update({"data.wealth" : merchant.wealth});
+          this.actor.update({"system.wealth" : merchant.wealth});
 
           buyerData.wealth = buyerData.wealth - itemPrice;
-          buyer.update({"data.wealth" : buyerData.wealth});
+          buyer.update({"system.wealth" : buyerData.wealth});
 
           //Output Chat Message
           ChatMessage.create({
             user: game.user.id,
             speaker: ChatMessage.getSpeaker(),
             content: `<h2 style='font-size: large'><img src="${merchantItem.img}" height=20 width=20 style='margin-right: 5px;'</img>${merchantItem.name}</h2><p></p>
-              <i>${buyer.name} spent ${merchantItem.data.data.modPrice} on this ${merchantItem.type}</i>`,
+              <i>${buyer.name} spent ${merchantItem.system.modPrice} on this ${merchantItem.type}</i>`,
             sound: "systems/uesrpg-d100/sounds/coinJingle.mp3"
             })
 
@@ -341,10 +341,10 @@ export class merchantSheet extends ActorSheet {
 
     //Designate Buyer as owned character if Player
     const buyer = game.user.character;
-    const buyerData = game.user.character.data.data;
+    const buyerData = game.user.character.system;
 
     //Chat and Notification Outputs on Purchase
-    if (merchantItem.data.data.quantity === 0) {
+    if (merchantItem.system.quantity === 0) {
       ui.notifications.info("This Merchant is out of stock! How unfortunate...")
     } else if (buyerData.wealth < itemPrice) {
         ui.notifications.info("You cannot afford this item. Try coming back with more jingle in your pockets.");
@@ -359,26 +359,26 @@ export class merchantSheet extends ActorSheet {
       if (itemDuplicate.type === "weapon" || itemDuplicate.type === "armor" || qtyUpdateItem == undefined) {
         game.user.character.createEmbeddedDocuments("Item", [itemDuplicate]);
       } else {
-          qtyUpdateItem.data.data.quantity = qtyUpdateItem.data.data.quantity + 1;
-          qtyUpdateItem.update({"data.quantity" : qtyUpdateItem.data.data.quantity});
+          qtyUpdateItem.system.quantity = qtyUpdateItem.system.quantity + 1;
+          qtyUpdateItem.update({"data.quantity" : qtyUpdateItem.system.quantity});
       }
 
       //Update Transaction Values on Merchant/Buyer
-      merchantItem.data.data.quantity = merchantItem.data.data.quantity - 1;
-      merchantItem.update({"data.quantity" : merchantItem.data.data.quantity});
+      merchantItem.system.quantity = merchantItem.system.quantity - 1;
+      merchantItem.update({"data.quantity" : merchantItem.system.quantity});
 
       merchant.wealth = merchant.wealth + itemPrice;
       this.actor.update({"data.wealth" : merchant.wealth});
 
       buyerData.wealth = buyerData.wealth - itemPrice;
-      game.user.character.update({"data.wealth" : game.user.character.data.data.wealth});
+      game.user.character.update({"data.wealth" : game.user.character.system.wealth});
 
       //Output Chat Message
       ChatMessage.create({
         user: game.user.id,
         speaker: ChatMessage.getSpeaker(),
         content: `<h2 style='font-size: large'><img src="${merchantItem.img}" height=20 width=20 style='margin-right: 5px;'</img>${merchantItem.name}</h2><p></p>
-          <i>${game.user.character.name} spent ${merchantItem.data.data.modPrice} on this ${merchantItem.type}</i>`,
+          <i>${game.user.character.name} spent ${merchantItem.system.modPrice} on this ${merchantItem.type}</i>`,
         sound: "systems/uesrpg-d100/sounds/coinJingle.mp3"
         }) 
     }
@@ -388,26 +388,26 @@ export class merchantSheet extends ActorSheet {
     
   async _onIncreasePriceMod(event) {
     event.preventDefault()
-    const merchantItems = this.actor.items.filter(item => item.data.data.hasOwnProperty("modPrice"));
-    this.actor.data.data.priceMod = Number(this.actor.data.data.priceMod + 5);
-    this.actor.update({"data.priceMod" : this.actor.data.data.priceMod});
+    const merchantItems = this.actor.items.filter(item => item.system.hasOwnProperty("modPrice"));
+    this.actor.system.priceMod = Number(this.actor.system.priceMod + 5);
+    this.actor.update({"data.priceMod" : this.actor.system.priceMod});
 
     for (let item of merchantItems) {
-      item.data.data.modPrice = (item.data.data.price + (item.data.data.price * (this.actor.data.data.priceMod/100))).toFixed(0);
-      await item.update({"data.modPrice" : item.data.data.modPrice});
+      item.system.modPrice = (item.system.price + (item.system.price * (this.actor.system.priceMod/100))).toFixed(0);
+      await item.update({"data.modPrice" : item.system.modPrice});
     }
 
     }
 
   async _onDecreasePriceMod(event) {
     event.preventDefault()
-    const merchantItems = this.actor.items.filter(item => item.data.data.hasOwnProperty("modPrice"));
-    this.actor.data.data.priceMod = Number(this.actor.data.data.priceMod - 5);
-    this.actor.update({"data.priceMod" : this.actor.data.data.priceMod});
+    const merchantItems = this.actor.items.filter(item => item.system.hasOwnProperty("modPrice"));
+    this.actor.system.priceMod = Number(this.actor.system.priceMod - 5);
+    this.actor.update({"data.priceMod" : this.actor.system.priceMod});
 
     for (let item of merchantItems) {
-      item.data.data.modPrice = (item.data.data.price + (item.data.data.price * (this.actor.data.data.priceMod/100))).toFixed(0);
-      await item.update({"data.modPrice" : item.data.data.modPrice});
+      item.system.modPrice = (item.system.price + (item.system.price * (this.actor.system.priceMod/100))).toFixed(0);
+      await item.update({"data.modPrice" : item.system.modPrice});
     }
 
     }
@@ -423,31 +423,31 @@ export class merchantSheet extends ActorSheet {
       const prsBonusArray = [];
       const lckBonusArray = [];
   
-      const bonusItems = this.actor.items.filter(item => item.data.data.hasOwnProperty("characteristicBonus"));
+      const bonusItems = this.actor.items.filter(item => item.system.hasOwnProperty("characteristicBonus"));
   
       for (let item of bonusItems) {
-        if (item.data.data.characteristicBonus.strChaBonus !==0) {
+        if (item.system.characteristicBonus.strChaBonus !==0) {
           let name = item.name;
           strBonusArray.push(name);
-        } else if (item.data.data.characteristicBonus.endChaBonus !==0) {
+        } else if (item.system.characteristicBonus.endChaBonus !==0) {
             let name = item.name;
             endBonusArray.push(name);
-        } else if (item.data.data.characteristicBonus.agiChaBonus !==0) {
+        } else if (item.system.characteristicBonus.agiChaBonus !==0) {
             let name = item.name;
             agiBonusArray.push(name);
-        } else if (item.data.data.characteristicBonus.intChaBonus !==0) {
+        } else if (item.system.characteristicBonus.intChaBonus !==0) {
             let name = item.name;
             intBonusArray.push(name);
-        } else if (item.data.data.characteristicBonus.wpChaBonus !==0) {
+        } else if (item.system.characteristicBonus.wpChaBonus !==0) {
             let name = item.name;
             wpBonusArray.push(name);
-        } else if (item.data.data.characteristicBonus.prcChaBonus !==0) {
+        } else if (item.system.characteristicBonus.prcChaBonus !==0) {
             let name = item.name;
             prcBonusArray.push(name);
-        } else if (item.data.data.characteristicBonus.prsChaBonus !==0) {
+        } else if (item.system.characteristicBonus.prsChaBonus !==0) {
             let name = item.name;
             prsBonusArray.push(name);
-        } else if (item.data.data.characteristicBonus.lckChaBonus !==0) {
+        } else if (item.system.characteristicBonus.lckChaBonus !==0) {
             let name = item.name;
             lckBonusArray.push(name);
         }
@@ -468,14 +468,14 @@ export class merchantSheet extends ActorSheet {
                     <div style="margin-bottom: 10px;">
                       <label><b>Points Total: </b></label>
                       <label>
-                      ${this.actor.data.data.characteristics.str.base +
-                      this.actor.data.data.characteristics.end.base +
-                      this.actor.data.data.characteristics.agi.base +
-                      this.actor.data.data.characteristics.int.base +
-                      this.actor.data.data.characteristics.wp.base +
-                      this.actor.data.data.characteristics.prc.base +
-                      this.actor.data.data.characteristics.prs.base +
-                      this.actor.data.data.characteristics.lck.base}
+                      ${this.actor.system.characteristics.str.base +
+                      this.actor.system.characteristics.end.base +
+                      this.actor.system.characteristics.agi.base +
+                      this.actor.system.characteristics.int.base +
+                      this.actor.system.characteristics.wp.base +
+                      this.actor.system.characteristics.prc.base +
+                      this.actor.system.characteristics.prs.base +
+                      this.actor.system.characteristics.lck.base}
                       </label>
                       <table style="table-layout: fixed; text-align: center;">
                         <tr>
@@ -489,14 +489,14 @@ export class merchantSheet extends ActorSheet {
                           <th>LCK</th>
                         </tr>
                         <tr>
-                          <td><input type="number" id="strInput" value="${this.actor.data.data.characteristics.str.base}"></td>
-                          <td><input type="number" id="endInput" value="${this.actor.data.data.characteristics.end.base}"></td>
-                          <td><input type="number" id="agiInput" value="${this.actor.data.data.characteristics.agi.base}"></td>
-                          <td><input type="number" id="intInput" value="${this.actor.data.data.characteristics.int.base}"></td>
-                          <td><input type="number" id="wpInput" value="${this.actor.data.data.characteristics.wp.base}"></td>
-                          <td><input type="number" id="prcInput" value="${this.actor.data.data.characteristics.prc.base}"></td>
-                          <td><input type="number" id="prsInput" value="${this.actor.data.data.characteristics.prs.base}"></td>
-                          <td><input type="number" id="lckInput" value="${this.actor.data.data.characteristics.lck.base}"></td>
+                          <td><input type="number" id="strInput" value="${this.actor.system.characteristics.str.base}"></td>
+                          <td><input type="number" id="endInput" value="${this.actor.system.characteristics.end.base}"></td>
+                          <td><input type="number" id="agiInput" value="${this.actor.system.characteristics.agi.base}"></td>
+                          <td><input type="number" id="intInput" value="${this.actor.system.characteristics.int.base}"></td>
+                          <td><input type="number" id="wpInput" value="${this.actor.system.characteristics.wp.base}"></td>
+                          <td><input type="number" id="prcInput" value="${this.actor.system.characteristics.prc.base}"></td>
+                          <td><input type="number" id="prsInput" value="${this.actor.system.characteristics.prs.base}"></td>
+                          <td><input type="number" id="lckInput" value="${this.actor.system.characteristics.lck.base}"></td>
                         </tr>
                       </table>
                     </div>
@@ -556,7 +556,7 @@ export class merchantSheet extends ActorSheet {
               const lckInput = parseInt(html.find('[id="lckInput"]').val());
   
               //Shortcut for characteristics
-              const chaPath = this.actor.data.data.characteristics;
+              const chaPath = this.actor.system.characteristics;
   
               //Assign values to characteristics
               chaPath.str.base = strInput;
@@ -632,11 +632,11 @@ export class merchantSheet extends ActorSheet {
     async _onClickCharacteristic(event) {
       event.preventDefault()
       const element = event.currentTarget
-      const woundedValue = this.actor.data.data.characteristics[element.id].total + this.actor.data.data.woundPenalty + this.actor.data.data.fatigue.penalty
-      const regularValue = this.actor.data.data.characteristics[element.id].total + this.actor.data.data.fatigue.penalty
+      const woundedValue = this.actor.system.characteristics[element.id].total + this.actor.system.woundPenalty + this.actor.system.fatigue.penalty
+      const regularValue = this.actor.system.characteristics[element.id].total + this.actor.system.fatigue.penalty
       let tags = []
-      if (this.actor.data.data.wounded) {tags.push(`<span class="tag wound-tag">Wounded ${this.actor.data.data.woundPenalty}</span>`)}
-      if (this.actor.data.data.fatigue.penalty != 0) {tags.push(`<span class="tag fatigue-tag">Fatigued ${this.actor.data.data.fatigue.penalty}</span>`)}
+      if (this.actor.system.wounded) {tags.push(`<span class="tag wound-tag">Wounded ${this.actor.system.woundPenalty}</span>`)}
+      if (this.actor.system.fatigue.penalty != 0) {tags.push(`<span class="tag fatigue-tag">Fatigued ${this.actor.system.fatigue.penalty}</span>`)}
   
       let d = new Dialog({
         title: "Apply Roll Modifier",
@@ -654,17 +654,17 @@ export class merchantSheet extends ActorSheet {
       let roll = new Roll("1d100");
       roll.roll({async:false});
   
-        if (this.actor.data.data.wounded == true) {
-          if (roll.total == this.actor.data.data.lucky_numbers.ln1 || 
-            roll.total == this.actor.data.data.lucky_numbers.ln2 || 
-            roll.total == this.actor.data.data.lucky_numbers.ln3 || 
-            roll.total == this.actor.data.data.lucky_numbers.ln4 || 
-            roll.total == this.actor.data.data.lucky_numbers.ln5 ||
-            roll.total == this.actor.data.data.lucky_numbers.ln6 ||
-            roll.total == this.actor.data.data.lucky_numbers.ln7 ||
-            roll.total == this.actor.data.data.lucky_numbers.ln8 ||
-            roll.total == this.actor.data.data.lucky_numbers.ln9 ||
-            roll.total == this.actor.data.data.lucky_numbers.ln10)
+        if (this.actor.system.wounded == true) {
+          if (roll.total == this.actor.system.lucky_numbers.ln1 || 
+            roll.total == this.actor.system.lucky_numbers.ln2 || 
+            roll.total == this.actor.system.lucky_numbers.ln3 || 
+            roll.total == this.actor.system.lucky_numbers.ln4 || 
+            roll.total == this.actor.system.lucky_numbers.ln5 ||
+            roll.total == this.actor.system.lucky_numbers.ln6 ||
+            roll.total == this.actor.system.lucky_numbers.ln7 ||
+            roll.total == this.actor.system.lucky_numbers.ln8 ||
+            roll.total == this.actor.system.lucky_numbers.ln9 ||
+            roll.total == this.actor.system.lucky_numbers.ln10)
   
            {
             contentString = `<h2>${element.getAttribute('name')}</h2
@@ -673,12 +673,12 @@ export class merchantSheet extends ActorSheet {
             <span style='color:green; font-size:120%;'> <b>LUCKY NUMBER!</b></span>`
   
       
-          } else if (roll.total == this.actor.data.data.unlucky_numbers.ul1 || 
-            roll.total == this.actor.data.data.unlucky_numbers.ul2 || 
-            roll.total == this.actor.data.data.unlucky_numbers.ul3 || 
-            roll.total == this.actor.data.data.unlucky_numbers.ul4 || 
-            roll.total == this.actor.data.data.unlucky_numbers.ul5 ||
-            roll.total == this.actor.data.data.unlucky_numbers.ul6) 
+          } else if (roll.total == this.actor.system.unlucky_numbers.ul1 || 
+            roll.total == this.actor.system.unlucky_numbers.ul2 || 
+            roll.total == this.actor.system.unlucky_numbers.ul3 || 
+            roll.total == this.actor.system.unlucky_numbers.ul4 || 
+            roll.total == this.actor.system.unlucky_numbers.ul5 ||
+            roll.total == this.actor.system.unlucky_numbers.ul6) 
             {
             contentString = `<h2>${element.getAttribute('name')}</h2
             <p></p><b>Target Number: [[${woundedValue + playerInput}]]</b> <p></p>
@@ -694,16 +694,16 @@ export class merchantSheet extends ActorSheet {
   
           } 
         } else {
-          if (roll.total == this.actor.data.data.lucky_numbers.ln1 || 
-            roll.total == this.actor.data.data.lucky_numbers.ln2 || 
-            roll.total == this.actor.data.data.lucky_numbers.ln3 || 
-            roll.total == this.actor.data.data.lucky_numbers.ln4 || 
-            roll.total == this.actor.data.data.lucky_numbers.ln5 ||
-            roll.total == this.actor.data.data.lucky_numbers.ln6 ||
-            roll.total == this.actor.data.data.lucky_numbers.ln7 ||
-            roll.total == this.actor.data.data.lucky_numbers.ln8 ||
-            roll.total == this.actor.data.data.lucky_numbers.ln9 ||
-            roll.total == this.actor.data.data.lucky_numbers.ln10)
+          if (roll.total == this.actor.system.lucky_numbers.ln1 || 
+            roll.total == this.actor.system.lucky_numbers.ln2 || 
+            roll.total == this.actor.system.lucky_numbers.ln3 || 
+            roll.total == this.actor.system.lucky_numbers.ln4 || 
+            roll.total == this.actor.system.lucky_numbers.ln5 ||
+            roll.total == this.actor.system.lucky_numbers.ln6 ||
+            roll.total == this.actor.system.lucky_numbers.ln7 ||
+            roll.total == this.actor.system.lucky_numbers.ln8 ||
+            roll.total == this.actor.system.lucky_numbers.ln9 ||
+            roll.total == this.actor.system.lucky_numbers.ln10)
   
         {
           contentString = `<h2>${element.getAttribute('name')}</h2
@@ -712,12 +712,12 @@ export class merchantSheet extends ActorSheet {
           <span style='color:green; font-size:120%;'> <b>LUCKY NUMBER!</b></span>`
   
   
-        } else if (roll.total == this.actor.data.data.unlucky_numbers.ul1 || 
-            roll.total == this.actor.data.data.unlucky_numbers.ul2 || 
-            roll.total == this.actor.data.data.unlucky_numbers.ul3 || 
-            roll.total == this.actor.data.data.unlucky_numbers.ul4 || 
-            roll.total == this.actor.data.data.unlucky_numbers.ul5 ||
-            roll.total == this.actor.data.data.unlucky_numbers.ul6) 
+        } else if (roll.total == this.actor.system.unlucky_numbers.ul1 || 
+            roll.total == this.actor.system.unlucky_numbers.ul2 || 
+            roll.total == this.actor.system.unlucky_numbers.ul3 || 
+            roll.total == this.actor.system.unlucky_numbers.ul4 || 
+            roll.total == this.actor.system.unlucky_numbers.ul5 ||
+            roll.total == this.actor.system.unlucky_numbers.ul6) 
   
         {
           contentString = `<h2>${element.getAttribute('name')}</h2
@@ -762,8 +762,8 @@ export class merchantSheet extends ActorSheet {
       event.preventDefault()
       const element = event.currentTarget
       let tags = []
-      if (this.actor.data.data.wounded) {tags.push(`<span class="tag wound-tag">Wounded ${this.actor.data.data.woundPenalty}</span>`)}
-      if (this.actor.data.data.fatigue.penalty != 0) {tags.push(`<span class="tag fatigue-tag">Fatigued ${this.actor.data.data.fatigue.penalty}</span>`)}
+      if (this.actor.system.wounded) {tags.push(`<span class="tag wound-tag">Wounded ${this.actor.system.woundPenalty}</span>`)}
+      if (this.actor.system.fatigue.penalty != 0) {tags.push(`<span class="tag fatigue-tag">Fatigued ${this.actor.system.fatigue.penalty}</span>`)}
   
       let d = new Dialog({
         title: "Apply Roll Modifier",
@@ -781,40 +781,40 @@ export class merchantSheet extends ActorSheet {
               let roll = new Roll("1d100");
               roll.roll({async: false});
   
-              if (roll.result == this.actor.data.data.lucky_numbers.ln1 || 
-                roll.result == this.actor.data.data.lucky_numbers.ln2 || 
-                roll.result == this.actor.data.data.lucky_numbers.ln3 || 
-                roll.result == this.actor.data.data.lucky_numbers.ln4 || 
-                roll.result == this.actor.data.data.lucky_numbers.ln5 ||
-                roll.result == this.actor.data.data.lucky_numbers.ln6 ||
-                roll.result == this.actor.data.data.lucky_numbers.ln7 ||
-                roll.result == this.actor.data.data.lucky_numbers.ln8 ||
-                roll.result == this.actor.data.data.lucky_numbers.ln9 ||
-                roll.result == this.actor.data.data.lucky_numbers.ln10)
+              if (roll.result == this.actor.system.lucky_numbers.ln1 || 
+                roll.result == this.actor.system.lucky_numbers.ln2 || 
+                roll.result == this.actor.system.lucky_numbers.ln3 || 
+                roll.result == this.actor.system.lucky_numbers.ln4 || 
+                roll.result == this.actor.system.lucky_numbers.ln5 ||
+                roll.result == this.actor.system.lucky_numbers.ln6 ||
+                roll.result == this.actor.system.lucky_numbers.ln7 ||
+                roll.result == this.actor.system.lucky_numbers.ln8 ||
+                roll.result == this.actor.system.lucky_numbers.ln9 ||
+                roll.result == this.actor.system.lucky_numbers.ln10)
                 {
                 contentString = `<h2>${element.getAttribute('name')}</h2>
-                <p></p><b>Target Number: [[${this.actor.data.data.professionsWound[element.getAttribute('id')]} + ${playerInput} + ${this.actor.data.data.fatigue.penalty}]]</b> <p></p>
+                <p></p><b>Target Number: [[${this.actor.system.professionsWound[element.getAttribute('id')]} + ${playerInput} + ${this.actor.system.fatigue.penalty}]]</b> <p></p>
                 <b>Result: [[${roll.result}]]</b><p></p>
                 <span style='color:green; font-size:120%;'> <b>LUCKY NUMBER!</b></span>`
   
                 }
-                else if (roll.result == this.actor.data.data.unlucky_numbers.ul1 || 
-                  roll.result == this.actor.data.data.unlucky_numbers.ul2 || 
-                  roll.result == this.actor.data.data.unlucky_numbers.ul3 || 
-                  roll.result == this.actor.data.data.unlucky_numbers.ul4 || 
-                  roll.result == this.actor.data.data.unlucky_numbers.ul5 ||
-                  roll.result == this.actor.data.data.unlucky_numbers.ul6) 
+                else if (roll.result == this.actor.system.unlucky_numbers.ul1 || 
+                  roll.result == this.actor.system.unlucky_numbers.ul2 || 
+                  roll.result == this.actor.system.unlucky_numbers.ul3 || 
+                  roll.result == this.actor.system.unlucky_numbers.ul4 || 
+                  roll.result == this.actor.system.unlucky_numbers.ul5 ||
+                  roll.result == this.actor.system.unlucky_numbers.ul6) 
                   {
                     contentString = `<h2>${element.getAttribute('name')}</h2>
-                    <p></p><b>Target Number: [[${this.actor.data.data.professionsWound[element.getAttribute('id')]} + ${playerInput} + ${this.actor.data.data.fatigue.penalty}]]</b> <p></p>
+                    <p></p><b>Target Number: [[${this.actor.system.professionsWound[element.getAttribute('id')]} + ${playerInput} + ${this.actor.system.fatigue.penalty}]]</b> <p></p>
                     <b>Result: [[${roll.result}]]</b><p></p>
                     <span style='color:rgb(168, 5, 5); font-size:120%;'> <b>UNLUCKY NUMBER!</b></span>`
   
                   } else {
                     contentString = `<h2>${element.getAttribute('name')}</h2>
-                    <p></p><b>Target Number: [[${this.actor.data.data.professionsWound[element.getAttribute('id')]} + ${playerInput} + ${this.actor.data.data.fatigue.penalty}]]</b> <p></p>
+                    <p></p><b>Target Number: [[${this.actor.system.professionsWound[element.getAttribute('id')]} + ${playerInput} + ${this.actor.system.fatigue.penalty}]]</b> <p></p>
                     <b>Result: [[${roll.result}]]</b><p></p>
-                    <b>${roll.result<=(this.actor.data.data.professionsWound[element.getAttribute('id')] + playerInput + this.actor.data.data.fatigue.penalty) ? " <span style='color:green; font-size: 120%;'> <b>SUCCESS!</b></span>" : " <span style='color:rgb(168, 5, 5); font-size: 120%;'> <b>FAILURE!</b></span>"}`
+                    <b>${roll.result<=(this.actor.system.professionsWound[element.getAttribute('id')] + playerInput + this.actor.system.fatigue.penalty) ? " <span style='color:green; font-size: 120%;'> <b>SUCCESS!</b></span>" : " <span style='color:rgb(168, 5, 5); font-size: 120%;'> <b>FAILURE!</b></span>"}`
   
                   }
   
@@ -860,39 +860,39 @@ export class merchantSheet extends ActorSheet {
           let roll = new Roll("1d100");
           roll.roll();
 
-          if (roll.total == this.actor.data.data.lucky_numbers.ln1 || 
-            roll.total == this.actor.data.data.lucky_numbers.ln2 || 
-            roll.total == this.actor.data.data.lucky_numbers.ln3 || 
-            roll.total == this.actor.data.data.lucky_numbers.ln4 || 
-            roll.total == this.actor.data.data.lucky_numbers.ln5 ||
-            roll.total == this.actor.data.data.lucky_numbers.ln6 ||
-            roll.total == this.actor.data.data.lucky_numbers.ln7 ||
-            roll.total == this.actor.data.data.lucky_numbers.ln8 ||
-            roll.total == this.actor.data.data.lucky_numbers.ln9 ||
-            roll.total == this.actor.data.data.lucky_numbers.ln10)
+          if (roll.total == this.actor.system.lucky_numbers.ln1 || 
+            roll.total == this.actor.system.lucky_numbers.ln2 || 
+            roll.total == this.actor.system.lucky_numbers.ln3 || 
+            roll.total == this.actor.system.lucky_numbers.ln4 || 
+            roll.total == this.actor.system.lucky_numbers.ln5 ||
+            roll.total == this.actor.system.lucky_numbers.ln6 ||
+            roll.total == this.actor.system.lucky_numbers.ln7 ||
+            roll.total == this.actor.system.lucky_numbers.ln8 ||
+            roll.total == this.actor.system.lucky_numbers.ln9 ||
+            roll.total == this.actor.system.lucky_numbers.ln10)
             {
               contentString = `<h2 style='font-size: large'>${element.name}</h2>
-              <p></p><b>Target Number: [[${this.actor.data.data.skills[element.id].bonus} + ${playerInput}]]</b> <p></p>
+              <p></p><b>Target Number: [[${this.actor.system.skills[element.id].bonus} + ${playerInput}]]</b> <p></p>
               <b>Result: [[${roll.result}]]</b><p></p>
               <span style='color:green; font-size:120%;'> <b>LUCKY NUMBER!</b></span>`
 
-            } else if (roll.total == this.actor.data.data.unlucky_numbers.ul1 || 
-              roll.total == this.actor.data.data.unlucky_numbers.ul2 || 
-              roll.total == this.actor.data.data.unlucky_numbers.ul3 || 
-              roll.total == this.actor.data.data.unlucky_numbers.ul4 || 
-              roll.total == this.actor.data.data.unlucky_numbers.ul5 ||
-              roll.total == this.actor.data.data.unlucky_numbers.ul6) 
+            } else if (roll.total == this.actor.system.unlucky_numbers.ul1 || 
+              roll.total == this.actor.system.unlucky_numbers.ul2 || 
+              roll.total == this.actor.system.unlucky_numbers.ul3 || 
+              roll.total == this.actor.system.unlucky_numbers.ul4 || 
+              roll.total == this.actor.system.unlucky_numbers.ul5 ||
+              roll.total == this.actor.system.unlucky_numbers.ul6) 
               {
                 contentString = `<h2 style='font-size: large'>${element.name}</h2>
-                <p></p><b>Target Number: [[${this.actor.data.data.skills[element.id].bonus} + ${playerInput}]]</b> <p></p>
+                <p></p><b>Target Number: [[${this.actor.system.skills[element.id].bonus} + ${playerInput}]]</b> <p></p>
                 <b>Result: [[${roll.result}]]</b><p></p>
                 <span style='color:rgb(168, 5, 5); font-size:120%;'> <b>UNLUCKY NUMBER!</b></span>`
 
               } else {
                 contentString = `<h2 style='font-size: large'>${element.name}</h2>
-                <p></p><b>Target Number: [[${this.actor.data.data.skills[element.id].bonus} + ${playerInput}]]</b> <p></p>
+                <p></p><b>Target Number: [[${this.actor.system.skills[element.id].bonus} + ${playerInput}]]</b> <p></p>
                 <b>Result: [[${roll.result}]]</b><p></p>
-                <b>${roll.total<=(this.actor.data.data.skills[element.id].bonus + playerInput) ? " <span style='color:green; font-size: 120%;'> <b>SUCCESS!</b></span>" : " <span style='color:rgb(168, 5, 5); font-size: 120%;'> <b>FAILURE!</b></span>"}`
+                <b>${roll.total<=(this.actor.system.skills[element.id].bonus + playerInput) ? " <span style='color:green; font-size: 120%;'> <b>SUCCESS!</b></span>" : " <span style='color:rgb(168, 5, 5); font-size: 120%;'> <b>FAILURE!</b></span>"}`
 
               }
                ChatMessage.create({
@@ -918,8 +918,8 @@ export class merchantSheet extends ActorSheet {
     const button = event.currentTarget;
     const li = button.closest(".item");
     const item = this.actor.items.get(li?.dataset.itemId);
-    const d1 = this.actor.items.get(li?.dataset.itemId).data.data.damage;
-    const d2 = this.actor.items.get(li?.dataset.itemId).data.data.damage2;
+    const d1 = this.actor.items.get(li?.dataset.itemId).system.damage;
+    const d2 = this.actor.items.get(li?.dataset.itemId).system.damage2;
 
     let hit_loc = "";
 
@@ -950,13 +950,13 @@ export class merchantSheet extends ActorSheet {
     roll2H.roll({async:false});
     supRoll2H.roll({async:false});
 
-    if (item.data.data.weapon2H === true) {
-      if (item.data.data.superior === true) {
+    if (item.system.weapon2H === true) {
+      if (item.system.superior === true) {
         contentString = `<h2 style='font-size: large'><img src="${item.img}" height=20 width=20 style='margin-right: 5px;'</img>${item.name}</h2>
           <p></p>
           <b>Damage:</b> <b> [[${roll2H.result}]] [[${supRoll2H.result}]]</b> ${roll2H._formula}<p></p>
           <b>Hit Location:</b> <b> [[${hit.total}]] </b> ${hit_loc}<p></p>
-          <b>Qualities:</b> ${item.data.data.qualities}`
+          <b>Qualities:</b> ${item.system.qualities}`
           ChatMessage.create({
             type: CONST.CHAT_MESSAGE_TYPES.ROLL,
             user: game.user.id,
@@ -970,7 +970,7 @@ export class merchantSheet extends ActorSheet {
             <p></p>
             <b>Damage:</b> <b> [[${roll2H.result}]]</b> ${roll2H._formula}<p></p>
             <b>Hit Location:</b> <b> [[${hit.total}]] </b> ${hit_loc}<p></p>
-            <b>Qualities:</b> ${item.data.data.qualities}`
+            <b>Qualities:</b> ${item.system.qualities}`
             ChatMessage.create({
               type: CONST.CHAT_MESSAGE_TYPES.ROLL,
               user: game.user.id,
@@ -981,12 +981,12 @@ export class merchantSheet extends ActorSheet {
         }
 
     } else {
-        if (item.data.data.superior === true) {
+        if (item.system.superior === true) {
           contentString = `<h2 style='font-size: large'><img src="${item.img}" height=20 width=20 style='margin-right: 5px;'</img>${item.name}</h2>
             <p></p>
             <b>Damage:</b> <b> [[${roll.result}]] [[${supRoll.result}]]</b> ${roll._formula}<p></p>
             <b>Hit Location:</b> <b> [[${hit.total}]] </b> ${hit_loc}<p></p>
-            <b>Qualities:</b> ${item.data.data.qualities}`
+            <b>Qualities:</b> ${item.system.qualities}`
             ChatMessage.create({
               type: CONST.CHAT_MESSAGE_TYPES.ROLL,
               user: game.user.id,
@@ -1000,7 +1000,7 @@ export class merchantSheet extends ActorSheet {
             <p></p>
             <b>Damage:</b> <b> [[${roll.result}]]</b> ${roll._formula}<p></p>
             <b>Hit Location:</b> <b> [[${hit.total}]] </b> ${hit_loc}<p></p>
-            <b>Qualities:</b> ${item.data.data.qualities}`
+            <b>Qualities:</b> ${item.system.qualities}`
             ChatMessage.create({
               type: CONST.CHAT_MESSAGE_TYPES.ROLL,
               user: game.user.id,
@@ -1020,7 +1020,7 @@ export class merchantSheet extends ActorSheet {
       spellToCast = this.actor.items.find(spell => spell.id === event.currentTarget.closest('.item').dataset.itemId)
     }
     else {
-      spellToCast = this.actor.getEmbeddedDocument('Item', this.actor.data.data.favorites[event.currentTarget.dataset.hotkey].id)
+      spellToCast = this.actor.getEmbeddedDocument('Item', this.actor.system.favorites[event.currentTarget.dataset.hotkey].id)
     }
 
     // const spellToCast = this.actor.items.find(spell => spell.id === event.currentTarget.closest('.item').dataset.itemId)
@@ -1052,9 +1052,9 @@ export class merchantSheet extends ActorSheet {
 
     // If Description exists, put into the dialog for reference
     let spellDescriptionDiv = ''
-    if (spellToCast.data.data.description != '' && spellToCast.data.data.description != undefined) {
+    if (spellToCast.system.description != '' && spellToCast.system.description != undefined) {
       spellDescriptionDiv = `<div style="padding: 10px;">
-                                  ${spellToCast.data.data.description}
+                                  ${spellToCast.system.description}
                               </div>`
     }
 
@@ -1079,9 +1079,9 @@ export class merchantSheet extends ActorSheet {
                                 </thead>
                                 <tbody style="text-align: center;">
                                     <tr>
-                                        <td>${spellToCast.data.data.cost}</td>
-                                        <td>${Math.floor(this.actor.data.data.characteristics.wp.total/10)}</td>
-                                        <td>${spellToCast.data.data.level}</td>
+                                        <td>${spellToCast.system.cost}</td>
+                                        <td>${Math.floor(this.actor.system.characteristics.wp.total/10)}</td>
+                                        <td>${spellToCast.system.level}</td>
                                     </tr>
                                 </tbody>
                             </table>
@@ -1149,11 +1149,11 @@ export class merchantSheet extends ActorSheet {
                         tags.push(restraint);
 
                         //Determine cost mod based on talents and other modifiers
-                        if (hasCreative && spellToCast.data.data.spellType === "unconventional"){
+                        if (hasCreative && spellToCast.system.spellType === "unconventional"){
                             stackCostMod = stackCostMod - 1;
                         } 
 
-                        if (hasMethodical && spellToCast.data.data.spellType === "conventional"){
+                        if (hasMethodical && spellToCast.system.spellType === "conventional"){
                             stackCostMod = stackCostMod - 1;
                         }
                         
@@ -1161,7 +1161,7 @@ export class merchantSheet extends ActorSheet {
                             stackCostMod = stackCostMod - 1;
                         }
 
-                        spellRestraint = 0 - Math.floor(this.actor.data.data.characteristics.wp.total/10);
+                        spellRestraint = 0 - Math.floor(this.actor.system.characteristics.wp.total/10);
                     }
 
                     if (isOverloaded){
@@ -1172,15 +1172,15 @@ export class merchantSheet extends ActorSheet {
                     if (isMagickaCycled){
                         let cycled = `<span style="border: none; border-radius: 30px; background-color: rgba(126, 40, 224, 0.80); color: white; text-align: center; font-size: xx-small; padding: 5px;">Magicka Cycle</span>`;
                         tags.push(cycled);
-                        spellRestraint = 0 - (2 * Math.floor(this.actor.data.data.characteristics.wp.total/10));
+                        spellRestraint = 0 - (2 * Math.floor(this.actor.system.characteristics.wp.total/10));
                     }
 
 
                     //If spell has damage value it outputs to Chat, otherwise no damage will be shown in Chat Output
-                    const damageRoll = new Roll(spellToCast.data.data.damage);
+                    const damageRoll = new Roll(spellToCast.system.damage);
                     let damageEntry = "";
 
-                    if (spellToCast.data.data.damage != '' && spellToCast.data.data.damage != 0){
+                    if (spellToCast.system.damage != '' && spellToCast.system.damage != 0){
                         damageRoll.roll({async: false});
                         damageEntry = `<tr>
                                             <td style="font-weight: bold;">Damage</td>
@@ -1208,7 +1208,7 @@ export class merchantSheet extends ActorSheet {
                       }
 
                     let displayCost = 0;
-                    let actualCost = spellToCast.data.data.cost + spellRestraint + stackCostMod;
+                    let actualCost = spellToCast.system.cost + spellRestraint + stackCostMod;
 
                     //Double Cost of Spell if Overcharge Talent is used
                     if (isOvercharged){
@@ -1225,8 +1225,8 @@ export class merchantSheet extends ActorSheet {
 
                     // Stop The Function if the user does not have enough Magicka to Cast the Spell
                     if (game.settings.get("uesrpg-d100", "automateMagicka")) {
-                      if (displayCost > this.actor.data.data.magicka.value) {
-                        return ui.notifications.info(`You do not have enough Magicka to cast this spell: Cost: ${spellToCast.data.data.cost} || Restraint: ${spellRestraint} || Other: ${stackCostMod}`)
+                      if (displayCost > this.actor.system.magicka.value) {
+                        return ui.notifications.info(`You do not have enough Magicka to cast this spell: Cost: ${spellToCast.system.cost} || Restraint: ${spellRestraint} || Other: ${stackCostMod}`)
                       }
                     }
 
@@ -1249,11 +1249,11 @@ export class merchantSheet extends ActorSheet {
                                                     <tr>
                                                         <td style="font-weight: bold;">Spell Cost</td>
                                                         <td style="font-weight: bold; text-align: center;">[[${displayCost}]]</td>
-                                                        <td title="Cost/Restraint Modifier/Other" style="text-align: center;">${spellToCast.data.data.cost} / ${spellRestraint} / ${stackCostMod}</td>
+                                                        <td title="Cost/Restraint Modifier/Other" style="text-align: center;">${spellToCast.system.cost} / ${spellRestraint} / ${stackCostMod}</td>
                                                     </tr>
                                                     <tr style="border-top: double 1px;">
                                                         <td style="font-weight: bold;">Attributes</td>
-                                                        <td colspan="2">${spellToCast.data.data.attributes}</td>
+                                                        <td colspan="2">${spellToCast.system.attributes}</td>
                                                     </tr>
                                                 </tbody>
                                             </table>`
@@ -1267,7 +1267,7 @@ export class merchantSheet extends ActorSheet {
                     })
 
                     // If Automate Magicka Setting is on, reduce the character's magicka by the calculated output cost
-                    if (game.settings.get("uesrpg-d100", "automateMagicka")) {this.actor.update({'data.magicka.value': this.actor.data.data.magicka.value - displayCost})}
+                    if (game.settings.get("uesrpg-d100", "automateMagicka")) {this.actor.update({'data.magicka.value': this.actor.system.magicka.value - displayCost})}
                 }
             },
             two: {
@@ -1303,23 +1303,23 @@ export class merchantSheet extends ActorSheet {
           let roll = new Roll("1d100");
           roll.roll({async:false});
 
-          if (roll.total == this.actor.data.data.lucky_numbers.ln1 || roll.total == this.actor.data.data.lucky_numbers.ln2 || roll.total == this.actor.data.data.lucky_numbers.ln3 || roll.total == this.actor.data.data.lucky_numbers.ln4 || roll.total == this.actor.data.data.lucky_numbers.ln5) {
+          if (roll.total == this.actor.system.lucky_numbers.ln1 || roll.total == this.actor.system.lucky_numbers.ln2 || roll.total == this.actor.system.lucky_numbers.ln3 || roll.total == this.actor.system.lucky_numbers.ln4 || roll.total == this.actor.system.lucky_numbers.ln5) {
             contentString = `<h2 style='font-size: large;'${element.name} Resistance</h2>
-            <p></p><b>Target Number: [[${this.actor.data.data.resistance[element.id]} + ${playerInput}]]</b> <p></p>
+            <p></p><b>Target Number: [[${this.actor.system.resistance[element.id]} + ${playerInput}]]</b> <p></p>
             <b>Result: [[${roll.result}]]</b><p></p>
             <span style='color:green; font-size:120%;'> <b>LUCKY NUMBER!</b></span>`
 
-          } else if (roll.total == this.actor.data.data.unlucky_numbers.ul1 || roll.total == this.actor.data.data.unlucky_numbers.ul2 || roll.total == this.actor.data.data.unlucky_numbers.ul3 || roll.total == this.actor.data.data.unlucky_numbers.ul4 || roll.total == this.actor.data.data.unlucky_numbers.ul5) {
+          } else if (roll.total == this.actor.system.unlucky_numbers.ul1 || roll.total == this.actor.system.unlucky_numbers.ul2 || roll.total == this.actor.system.unlucky_numbers.ul3 || roll.total == this.actor.system.unlucky_numbers.ul4 || roll.total == this.actor.system.unlucky_numbers.ul5) {
             contentString = `<h4>${element.name} Resistance</h4>
-            <p></p><b>Target Number: [[${this.actor.data.data.resistance[element.id]} + ${playerInput}]]</b> <p></p>
+            <p></p><b>Target Number: [[${this.actor.system.resistance[element.id]} + ${playerInput}]]</b> <p></p>
             <b>Result: [[${roll.result}]]</b><p></p>
             <span style='color:rgb(168, 5, 5); font-size:120%;'> <b>UNLUCKY NUMBER!</b></span>`
 
           } else {
             contentString = `<h4>${element.name} Resistance</h4>
-            <p></p><b>Target Number: [[${this.actor.data.data.resistance[element.id]} + ${playerInput}]]</b> <p></p>
+            <p></p><b>Target Number: [[${this.actor.system.resistance[element.id]} + ${playerInput}]]</b> <p></p>
             <b>Result: [[${roll.result}]]</b><p></p>
-            <b>${roll.total<=(this.actor.data.data.resistance[element.id] + playerInput) ? " <span style='color:green; font-size: 120%;'> <b>SUCCESS!</b></span>" : " <span style='color: rgb(168, 5, 5); font-size: 120%;'> <b>FAILURE!</b></span>"}`
+            <b>${roll.total<=(this.actor.system.resistance[element.id] + playerInput) ? " <span style='color:green; font-size: 120%;'> <b>SUCCESS!</b></span>" : " <span style='color: rgb(168, 5, 5); font-size: 120%;'> <b>FAILURE!</b></span>"}`
           }
            roll.toMessage({
             async: false,
@@ -1349,9 +1349,9 @@ export class merchantSheet extends ActorSheet {
     const item = this.actor.getEmbeddedDocument("Item", li.data("itemId"));
 
     const content = `<h2 style='font-size: large;'>${item.name}</h2><p>
-      <b>AR:</b> ${item.data.data.armor}<p>
-      <b>Magic AR:</b> ${item.data.data.magic_ar}<p>
-      <b>Qualities</b> ${item.data.data.qualities}`
+      <b>AR:</b> ${item.system.armor}<p>
+      <b>Magic AR:</b> ${item.system.magic_ar}<p>
+      <b>Qualities</b> ${item.system.qualities}`
       ChatMessage.create(
         {user: game.user.id, 
           speaker: ChatMessage.getSpeaker(), 
@@ -1365,10 +1365,10 @@ export class merchantSheet extends ActorSheet {
     const item = this.actor.getEmbeddedDocument("Item", li.data("itemId"));
 
     const contentString = `<h2 style='font-size: large;'>${item.name}</h2><p>
-      <b>Damage Bonus:</b> ${item.data.data.damage}<p>
-      <b>Qualities</b> ${item.data.data.qualities}`
+      <b>Damage Bonus:</b> ${item.system.damage}<p>
+      <b>Qualities</b> ${item.system.qualities}`
 
-      if (item.data.data.quantity > 0){
+      if (item.system.quantity > 0){
          ChatMessage.create({
           user: game.user.id,
           speaker: ChatMessage.getSpeaker(),
@@ -1376,12 +1376,12 @@ export class merchantSheet extends ActorSheet {
         })
       }
 
-    item.data.data.quantity = item.data.data.quantity - 1;
-    if (item.data.data.quantity < 0){
-      item.data.data.quantity = 0;
+    item.system.quantity = item.system.quantity - 1;
+    if (item.system.quantity < 0){
+      item.system.quantity = 0;
       ui.notifications.info("Out of Ammunition!");
     }
-       item.update({"data.quantity" : item.data.data.quantity})
+       item.update({"data.quantity" : item.system.quantity})
   }
 
    _onToggle2H(event) {
@@ -1390,12 +1390,12 @@ export class merchantSheet extends ActorSheet {
     const li = toggle.parents(".item");
     const item = this.actor.getEmbeddedDocument("Item", li.data("itemId"));
 
-    if (item.data.data.weapon2H === false) {
-      item.data.data.weapon2H = true;
-    } else if (item.data.data.weapon2H === true) {
-      item.data.data.weapon2H = false;
+    if (item.system.weapon2H === false) {
+      item.system.weapon2H = true;
+    } else if (item.system.weapon2H === true) {
+      item.system.weapon2H = false;
     }
-     item.update({"data.weapon2H" : item.data.data.weapon2H})
+     item.update({"data.weapon2H" : item.system.weapon2H})
   }
 
   _onPlusQty(event) {
@@ -1404,9 +1404,9 @@ export class merchantSheet extends ActorSheet {
     const li = toggle.parents(".item");
     const item = this.actor.getEmbeddedDocument("Item", li.data("itemId"));
 
-    item.data.data.quantity = item.data.data.quantity + 1;
+    item.system.quantity = item.system.quantity + 1;
 
-     item.update({"data.quantity" : item.data.data.quantity})
+     item.update({"data.quantity" : item.system.quantity})
   }
 
   async _onMinusQty(event) {
@@ -1415,13 +1415,13 @@ export class merchantSheet extends ActorSheet {
     const li = toggle.parents(".item");
     const item = this.actor.getEmbeddedDocument("Item", li.data("itemId"));
 
-    item.data.data.quantity = item.data.data.quantity - 1;
-    if (item.data.data.quantity <= 0){
-      item.data.data.quantity = 0;
+    item.system.quantity = item.system.quantity - 1;
+    if (item.system.quantity <= 0){
+      item.system.quantity = 0;
       ui.notifications.info(`You have used your last ${item.name}!`);
     }
 
-    await item.update({"data.quantity" : item.data.data.quantity})
+    await item.update({"data.quantity" : item.system.quantity})
   }
 
    _onItemEquip(event) {
@@ -1430,12 +1430,12 @@ export class merchantSheet extends ActorSheet {
     const li = toggle.parents(".item");
     const item = this.actor.getEmbeddedDocument("Item", li.data("itemId"));
 
-    if (item.data.data.equipped === false) {
-      item.data.data.equipped = true;
-    } else if (item.data.data.equipped === true) {
-      item.data.data.equipped = false;
+    if (item.system.equipped === false) {
+      item.system.equipped = true;
+    } else if (item.system.equipped === true) {
+      item.system.equipped = false;
     }
-     item.update({"data.equipped" : item.data.data.equipped})
+     item.update({"data.equipped" : item.system.equipped})
   }
 
   async _onItemCreate(event) {
@@ -1515,7 +1515,7 @@ export class merchantSheet extends ActorSheet {
 
     let contentString = `<h2>${item.name}</h2><p>
     <i><b>${item.type}</b></i><p>
-      <i>${item.data.data.description}</i>`
+      <i>${item.system.description}</i>`
 
      await ChatMessage.create({
       user: game.user.id,
@@ -1542,7 +1542,7 @@ export class merchantSheet extends ActorSheet {
           label: "Submit",
           callback: async (html) => {
             const playerInput = parseInt(html.find('[id="playerInput"]').val());
-            let wealth = this.actor.data.data.wealth;
+            let wealth = this.actor.system.wealth;
 
             wealth = wealth + playerInput;
             this.actor.update({"data.wealth" : wealth});
@@ -1557,7 +1557,7 @@ export class merchantSheet extends ActorSheet {
   }
 
   _createItemFilterOptions() {
-    for (let item of this.actor.items.filter(i => i.data.data.hasOwnProperty('price'))) {
+    for (let item of this.actor.items.filter(i => i.system.hasOwnProperty('price'))) {
       if ([...this.form.querySelectorAll('#itemFilter option')].some(i => i.innerHTML === item.type)) {continue}
       else {
         let option = document.createElement('option')
@@ -1607,9 +1607,9 @@ export class merchantSheet extends ActorSheet {
   }
 
   _createStatusTags() {
-    this.actor.data.data.wounded ? this.form.querySelector('#wound-icon').classList.add('active') : this.form.querySelector('#wound-icon').classList.remove('active')
-    // this.actor.data.data.carry_rating.current > this.actor.data.data.carry_rating.max ? this.form.querySelector('#enc-icon').classList.add('active') : this.form.querySelector('#enc-icon').classList.remove('active')
-    this.actor.data.data.fatigue.level > 0 ? this.form.querySelector('#fatigue-icon').classList.add('active') : this.form.querySelector('#fatigue-icon').classList.remove('active')
+    this.actor.system.wounded ? this.form.querySelector('#wound-icon').classList.add('active') : this.form.querySelector('#wound-icon').classList.remove('active')
+    // this.actor.system.carry_rating.current > this.actor.system.carry_rating.max ? this.form.querySelector('#enc-icon').classList.add('active') : this.form.querySelector('#enc-icon').classList.remove('active')
+    this.actor.system.fatigue.level > 0 ? this.form.querySelector('#fatigue-icon').classList.add('active') : this.form.querySelector('#fatigue-icon').classList.remove('active')
   }
 
 }

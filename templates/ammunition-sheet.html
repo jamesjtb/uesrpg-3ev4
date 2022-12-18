@@ -10,7 +10,7 @@
                 <div class="item-resource-row">
                     <div class="item-resource">
                         <div class="stat-value-label">
-                            <input type="text" name="data.quantity" value="{{data.quantity}}" data-dtype="Number"/>
+                            <input type="text" name="system.quantity" value="{{item.system.quantity}}" data-dtype="Number"/>
                         </div>
                         <div class="flex-container">
                             <div class="small-text-label">Quantity</div>
@@ -18,7 +18,7 @@
                     </div>
                     <div class="item-resource">
                         <div class="stat-value-label">
-                            <input type="text" name="data.enc" value="{{data.enc}}" data-dtype="Number"/>
+                            <input type="text" name="system.enc" value="{{item.system.enc}}" data-dtype="Number"/>
                         </div>
                         <div class="flex-container">
                             <div class="small-text-label">ENC</div>
@@ -26,7 +26,7 @@
                     </div>
                     <div class="item-resource">
                         <div class="stat-value-label">
-                            <input type="text" name="data.price" value="{{data.price}}" data-dtype="Number"/>
+                            <input type="text" name="system.price" value="{{item.system.price}}" data-dtype="Number"/>
                         </div>
                         <div class="flex-container">
                             <div class="small-text-label">Price</div>
@@ -34,7 +34,7 @@
                     </div>
                     <div class="item-resource">
                         <div class="stat-value-label">
-                            <input type="text" name="data.damage" value="{{data.damage}}" data-dtype="Number"/>
+                            <input type="text" name="system.damage" value="{{item.system.damage}}" data-dtype="Number"/>
                         </div>
                         <div class="flex-container">
                             <div class="small-text-label">Damage</div>
@@ -42,7 +42,7 @@
                     </div>
                     <div class="item-resource">
                         <div class="stat-value-label">
-                            <input type="text" name="data.enchant_level" value="{{data.enchant_level}}" data-dtype="Number"/>
+                            <input type="text" name="system.enchant_level" value="{{item.system.enchant_level}}" data-dtype="Number"/>
                         </div>
                         <div class="flex-container">
                             <div class="small-text-label">Enchant Lv.</div>
@@ -65,7 +65,7 @@
 
         {{!-- Description Tab --}}
         <div class="tab" data-group="primary" data-tab="description">
-            {{editor content=data.description target="data.description" button=true owner=owner editable=editable}}
+            {{editor item.system.description target="item.system.description" button=true owner=owner editable=editable}}
         </div>
 
         {{!-- Attributes Tab --}}
@@ -78,7 +78,7 @@
                             <div class="grid-container">
                                 <div>Ignore ENC</div>
                                 <div class="right-align-content">
-                                    <input class="checkbox" type="checkbox" name="data.excludeENC" {{checked data.excludeENC}}>
+                                    <input class="checkbox" type="checkbox" name="system.excludeENC" {{checked item.system.excludeENC}}>
                                 </div>
                             </div>
                         </div>
@@ -87,7 +87,7 @@
                 <div class="quality-container">
                     <div class="flex-container">
                         <h2>Qualities</h2>
-                        <div>{{editor content=data.qualities target="data.qualities" button=true owner=owner editable=editable}}</div>
+                        <div>{{editor item.system.qualities target="system.qualities" button=true owner=owner editable=editable}}</div>
                     </div>
                 </div>
             </div>

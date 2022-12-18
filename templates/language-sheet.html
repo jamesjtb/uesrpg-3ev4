@@ -10,7 +10,7 @@
                     <div class="item-resource-row">
                         <div class="item-resource">
                             <div class="stat-value-label">
-                                <input class="checkbox" type="checkbox" name="data.readWrite" {{checked data.readWrite}}/>
+                                <input class="checkbox" type="checkbox" name="system.readWrite" {{checked item.system.readWrite}}/>
                             </div>
                             <div class="flex-container">
                                 <div class="small-text-label">Read/Write</div>
@@ -18,7 +18,7 @@
                         </div>
                         <div class="item-resource">
                             <div class="stat-value-label">
-                                <input class="checkbox" type="checkbox" name="data.speak" {{checked data.speak}}/>
+                                <input class="checkbox" type="checkbox" name="system.speak" {{checked item.system.speak}}/>
                             </div>
                             <div class="flex-container">
                                 <div class="small-text-label">Speak</div>
@@ -40,7 +40,7 @@
     
             {{!-- Description Tab --}}
             <div class="tab" data-group="primary" data-tab="description">
-                {{editor content=data.description target="data.description" button=true owner=owner editable=editable}}
+                {{editor item.system.description target="system.description" button=true owner=owner editable=editable}}
             </div>
         </section>
 </form>

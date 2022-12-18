@@ -38,14 +38,14 @@
     data.dtypes = ["String", "Number", "Boolean"];
     data.isGM = game.user.isGM;
     data.editable = data.options.editable;
-    const actorData = data.data;
+    const actorData = data.actor;
     data.actor = actorData;
-    data.data = actorData.data;
+    data.data = actorData.system;
     let options = 0;
     let user = this.user;
 
     // Prepare Items
-    if (this.actor.data.type === 'character') {
+    if (this.actor.type === 'character') {
       this._prepareCharacterItems(data);
     }
 
@@ -53,7 +53,7 @@
     }
 
   _prepareCharacterItems(sheetData) {
-    const actorData = sheetData.actor.data;
+    const actorData = sheetData.actor;
 
     //Initialize containers
     const gear = {
@@ -85,19 +85,19 @@
     //Iterate through items, allocating to containers
     //let totaWeight = 0;
     for (let i of sheetData.items) {
-      let item = i.data;
+      let item = i.system;
       i.img = i.img || DEFAULT_TOKEN;
       //Append to item
       if (i.type === 'item') {
-        i.data.equipped ? gear.equipped.push(i) : gear.unequipped.push(i)
+        i.system.equipped ? gear.equipped.push(i) : gear.unequipped.push(i)
       }
       //Append to weapons
       else if (i.type === 'weapon') {
-          i.data.equipped ? weapon.equipped.push(i) : weapon.unequipped.push(i)
+          i.system.equipped ? weapon.equipped.push(i) : weapon.unequipped.push(i)
       }
       //Append to armor
       else if (i.type === 'armor') {
-        i.data.equipped ? armor.equipped.push(i) : armor.unequipped.push(i)
+        i.system.equipped ? armor.equipped.push(i) : armor.unequipped.push(i)
     }
       //Append to power
       else if (i.type === 'power') {
@@ -129,7 +129,7 @@
       }
       //Append to ammunition
       else if (i.type === 'ammunition') {
-        i.data.equipped ? ammunition.equipped.push(i) : ammunition.unequipped.push(i)
+        i.system.equipped ? ammunition.equipped.push(i) : ammunition.unequipped.push(i)
       }
       else if (i.type === "language") {
         language.push(i);
@@ -174,8 +174,8 @@
         else if (category == spell) {
           if (category.length > 1) {
             category.sort((a, b) => {
-              let nameA = a.data.school
-              let nameB = b.data.school
+              let nameA = a.system.school
+              let nameB = b.system.school
               if (nameA > nameB) {return 1}
               else {return -1}
             })
@@ -263,7 +263,7 @@
       const li = ev.currentTarget.closest(".item");
       const item = this.actor.items.get(li.dataset.itemId);
       item.sheet.render(true);
-      await item.update({"data.value" : item.data.data.value})
+      await item.update({"data.value" : item.system.value})
     });
 
     // Delete Inventory Item
@@ -318,11 +318,11 @@
       const prsBonusArray = [];
       const lckBonusArray = [];
 
-      const bonusItems = this.actor.items.filter(item => item.data.data.hasOwnProperty("characteristicBonus"));
+      const bonusItems = this.actor.items.filter(item => item.system.hasOwnProperty("characteristicBonus"));
 
       for (let item of bonusItems) {
-        for (let key in item.data.data.characteristicBonus) {
-            let itemBonus = item.data.data.characteristicBonus[key]
+        for (let key in item.system.characteristicBonus) {
+            let itemBonus = item.system.characteristicBonus[key]
             if (itemBonus !== 0) {
               let itemButton = `<button style="width: auto;" onclick="getItem(this.id, this.dataset.actor)" id="${item.id}" data-actor="${item.actor.id}">${item.name} ${itemBonus >= 0 ? `+${itemBonus}` : itemBonus}</button>`
               let bonusName = eval([...key].splice(0, 3).join('') + 'BonusArray')
@@ -340,12 +340,12 @@
                           let tokenActor = game.scenes.find(scene => scene.active === true).tokens.find(token => token.data.actorId === actorID)
 
                           if (actor.data.token.actorLink) {
-                            let actorBonusItems = actor.items.filter(item => item.data.data.hasOwnProperty('characteristicBonus'))
+                            let actorBonusItems = actor.items.filter(item => item.system.hasOwnProperty('characteristicBonus'))
                             let item = actorBonusItems.find(i => i.id === itemID)
                             item.sheet.render(true)
                           }
                           else {
-                            let tokenBonusItems = tokenActor._actor.items.filter(item => item.data.data.hasOwnProperty('characteristicBonus'))
+                            let tokenBonusItems = tokenActor._actor.items.filter(item => item.system.hasOwnProperty('characteristicBonus'))
                             let item = tokenBonusItems.find(i => i.id === itemID)
                             item.sheet.render(true)
                           }
@@ -364,14 +364,14 @@
                     <div style="margin-bottom: 10px;">
                       <label><b>Points Total: </b></label>
                       <label>
-                      ${this.actor.data.data.characteristics.str.base +
-                      this.actor.data.data.characteristics.end.base +
-                      this.actor.data.data.characteristics.agi.base +
-                      this.actor.data.data.characteristics.int.base +
-                      this.actor.data.data.characteristics.wp.base +
-                      this.actor.data.data.characteristics.prc.base +
-                      this.actor.data.data.characteristics.prs.base +
-                      this.actor.data.data.characteristics.lck.base}
+                      ${this.actor.system.characteristics.str.base +
+                      this.actor.system.characteristics.end.base +
+                      this.actor.system.characteristics.agi.base +
+                      this.actor.system.characteristics.int.base +
+                      this.actor.system.characteristics.wp.base +
+                      this.actor.system.characteristics.prc.base +
+                      this.actor.system.characteristics.prs.base +
+                      this.actor.system.characteristics.lck.base}
                       </label>
                       <table style="table-layout: fixed; text-align: center;">
                         <tr>
@@ -385,14 +385,14 @@
                           <th>LCK</th>
                         </tr>
                         <tr>
-                          <td><input type="number" id="strInput" value="${this.actor.data.data.characteristics.str.base}"></td>
-                          <td><input type="number" id="endInput" value="${this.actor.data.data.characteristics.end.base}"></td>
-                          <td><input type="number" id="agiInput" value="${this.actor.data.data.characteristics.agi.base}"></td>
-                          <td><input type="number" id="intInput" value="${this.actor.data.data.characteristics.int.base}"></td>
-                          <td><input type="number" id="wpInput" value="${this.actor.data.data.characteristics.wp.base}"></td>
-                          <td><input type="number" id="prcInput" value="${this.actor.data.data.characteristics.prc.base}"></td>
-                          <td><input type="number" id="prsInput" value="${this.actor.data.data.characteristics.prs.base}"></td>
-                          <td><input type="number" id="lckInput" value="${this.actor.data.data.characteristics.lck.base}"></td>
+                          <td><input type="number" id="strInput" value="${this.actor.system.characteristics.str.base}"></td>
+                          <td><input type="number" id="endInput" value="${this.actor.system.characteristics.end.base}"></td>
+                          <td><input type="number" id="agiInput" value="${this.actor.system.characteristics.agi.base}"></td>
+                          <td><input type="number" id="intInput" value="${this.actor.system.characteristics.int.base}"></td>
+                          <td><input type="number" id="wpInput" value="${this.actor.system.characteristics.wp.base}"></td>
+                          <td><input type="number" id="prcInput" value="${this.actor.system.characteristics.prc.base}"></td>
+                          <td><input type="number" id="prsInput" value="${this.actor.system.characteristics.prs.base}"></td>
+                          <td><input type="number" id="lckInput" value="${this.actor.system.characteristics.lck.base}"></td>
                         </tr>
                       </table>
                     </div>
@@ -452,7 +452,7 @@
             const lckInput = parseInt(html.find('[id="lckInput"]').val());
 
             //Shortcut for characteristics
-            const chaPath = this.actor.data.data.characteristics;
+            const chaPath = this.actor.system.characteristics;
 
             //Assign values to characteristics
             chaPath.str.base = strInput;
@@ -527,12 +527,12 @@
   async _onClickCharacteristic(event) {
     event.preventDefault()
     const element = event.currentTarget
-    const woundedValue = this.actor.data.data.characteristics[element.id].total + this.actor.data.data.woundPenalty + this.actor.data.data.fatigue.penalty + this.actor.data.data.carry_rating.penalty
-    const regularValue = this.actor.data.data.characteristics[element.id].total + this.actor.data.data.fatigue.penalty + this.actor.data.data.carry_rating.penalty
+    const woundedValue = this.actor.system.characteristics[element.id].total + this.actor.system.woundPenalty + this.actor.system.fatigue.penalty + this.actor.system.carry_rating.penalty
+    const regularValue = this.actor.system.characteristics[element.id].total + this.actor.system.fatigue.penalty + this.actor.system.carry_rating.penalty
     let tags = []
-    if (this.actor.data.data.wounded) {tags.push(`<span class="tag wound-tag">Wounded ${this.actor.data.data.woundPenalty}</span>`)}
-    if (this.actor.data.data.fatigue.penalty != 0) {tags.push(`<span class="tag fatigue-tag">Fatigued ${this.actor.data.data.fatigue.penalty}</span>`)}
-    if (this.actor.data.data.carry_rating.penalty != 0) {tags.push(`<span class="tag enc-tag">Encumbered ${this.actor.data.data.carry_rating.penalty}</span>`)}
+    if (this.actor.system.wounded) {tags.push(`<span class="tag wound-tag">Wounded ${this.actor.system.woundPenalty}</span>`)}
+    if (this.actor.system.fatigue.penalty != 0) {tags.push(`<span class="tag fatigue-tag">Fatigued ${this.actor.system.fatigue.penalty}</span>`)}
+    if (this.actor.system.carry_rating.penalty != 0) {tags.push(`<span class="tag enc-tag">Encumbered ${this.actor.system.carry_rating.penalty}</span>`)}
 
     let d = new Dialog({
       title: "Apply Roll Modifier",
@@ -550,17 +550,17 @@
     let roll = new Roll("1d100");
     roll.roll({async:false});
 
-      if (this.actor.data.data.wounded == true) {
-        if (roll.total == this.actor.data.data.lucky_numbers.ln1 || 
-          roll.total == this.actor.data.data.lucky_numbers.ln2 || 
-          roll.total == this.actor.data.data.lucky_numbers.ln3 || 
-          roll.total == this.actor.data.data.lucky_numbers.ln4 || 
-          roll.total == this.actor.data.data.lucky_numbers.ln5 ||
-          roll.total == this.actor.data.data.lucky_numbers.ln6 ||
-          roll.total == this.actor.data.data.lucky_numbers.ln7 ||
-          roll.total == this.actor.data.data.lucky_numbers.ln8 ||
-          roll.total == this.actor.data.data.lucky_numbers.ln9 ||
-          roll.total == this.actor.data.data.lucky_numbers.ln10)
+      if (this.actor.system.wounded == true) {
+        if (roll.total == this.actor.system.lucky_numbers.ln1 || 
+          roll.total == this.actor.system.lucky_numbers.ln2 || 
+          roll.total == this.actor.system.lucky_numbers.ln3 || 
+          roll.total == this.actor.system.lucky_numbers.ln4 || 
+          roll.total == this.actor.system.lucky_numbers.ln5 ||
+          roll.total == this.actor.system.lucky_numbers.ln6 ||
+          roll.total == this.actor.system.lucky_numbers.ln7 ||
+          roll.total == this.actor.system.lucky_numbers.ln8 ||
+          roll.total == this.actor.system.lucky_numbers.ln9 ||
+          roll.total == this.actor.system.lucky_numbers.ln10)
 
          {
           contentString = `<h2>${element.getAttribute('name')}</h2
@@ -569,12 +569,12 @@
           <span style='color:green; font-size:120%;'> <b>LUCKY NUMBER!</b></span>`
 
     
-        } else if (roll.total == this.actor.data.data.unlucky_numbers.ul1 || 
-          roll.total == this.actor.data.data.unlucky_numbers.ul2 || 
-          roll.total == this.actor.data.data.unlucky_numbers.ul3 || 
-          roll.total == this.actor.data.data.unlucky_numbers.ul4 || 
-          roll.total == this.actor.data.data.unlucky_numbers.ul5 ||
-          roll.total == this.actor.data.data.unlucky_numbers.ul6) 
+        } else if (roll.total == this.actor.system.unlucky_numbers.ul1 || 
+          roll.total == this.actor.system.unlucky_numbers.ul2 || 
+          roll.total == this.actor.system.unlucky_numbers.ul3 || 
+          roll.total == this.actor.system.unlucky_numbers.ul4 || 
+          roll.total == this.actor.system.unlucky_numbers.ul5 ||
+          roll.total == this.actor.system.unlucky_numbers.ul6) 
           {
           contentString = `<h2>${element.getAttribute('name')}</h2
           <p></p><b>Target Number: [[${woundedValue + playerInput}]]</b> <p></p>
@@ -590,16 +590,16 @@
 
         } 
       } else {
-        if (roll.total == this.actor.data.data.lucky_numbers.ln1 || 
-          roll.total == this.actor.data.data.lucky_numbers.ln2 || 
-          roll.total == this.actor.data.data.lucky_numbers.ln3 || 
-          roll.total == this.actor.data.data.lucky_numbers.ln4 || 
-          roll.total == this.actor.data.data.lucky_numbers.ln5 ||
-          roll.total == this.actor.data.data.lucky_numbers.ln6 ||
-          roll.total == this.actor.data.data.lucky_numbers.ln7 ||
-          roll.total == this.actor.data.data.lucky_numbers.ln8 ||
-          roll.total == this.actor.data.data.lucky_numbers.ln9 ||
-          roll.total == this.actor.data.data.lucky_numbers.ln10)
+        if (roll.total == this.actor.system.lucky_numbers.ln1 || 
+          roll.total == this.actor.system.lucky_numbers.ln2 || 
+          roll.total == this.actor.system.lucky_numbers.ln3 || 
+          roll.total == this.actor.system.lucky_numbers.ln4 || 
+          roll.total == this.actor.system.lucky_numbers.ln5 ||
+          roll.total == this.actor.system.lucky_numbers.ln6 ||
+          roll.total == this.actor.system.lucky_numbers.ln7 ||
+          roll.total == this.actor.system.lucky_numbers.ln8 ||
+          roll.total == this.actor.system.lucky_numbers.ln9 ||
+          roll.total == this.actor.system.lucky_numbers.ln10)
 
       {
         contentString = `<h2>${element.getAttribute('name')}</h2
@@ -608,12 +608,12 @@
         <span style='color:green; font-size:120%;'> <b>LUCKY NUMBER!</b></span>`
 
 
-      } else if (roll.total == this.actor.data.data.unlucky_numbers.ul1 || 
-          roll.total == this.actor.data.data.unlucky_numbers.ul2 || 
-          roll.total == this.actor.data.data.unlucky_numbers.ul3 || 
-          roll.total == this.actor.data.data.unlucky_numbers.ul4 || 
-          roll.total == this.actor.data.data.unlucky_numbers.ul5 ||
-          roll.total == this.actor.data.data.unlucky_numbers.ul6) 
+      } else if (roll.total == this.actor.system.unlucky_numbers.ul1 || 
+          roll.total == this.actor.system.unlucky_numbers.ul2 || 
+          roll.total == this.actor.system.unlucky_numbers.ul3 || 
+          roll.total == this.actor.system.unlucky_numbers.ul4 || 
+          roll.total == this.actor.system.unlucky_numbers.ul5 ||
+          roll.total == this.actor.system.unlucky_numbers.ul6) 
 
       {
         contentString = `<h2>${element.getAttribute('name')}</h2
@@ -659,23 +659,23 @@
     const button = event.currentTarget;
     const li = button.closest(".item");
     const item = this.actor.items.get(li?.dataset.itemId);
-    const luck1 = this.actor.data.data.lucky_numbers.ln1;
-    const luck2 = this.actor.data.data.lucky_numbers.ln2;
-    const luck3 = this.actor.data.data.lucky_numbers.ln3;
-    const luck4 = this.actor.data.data.lucky_numbers.ln4;
-    const luck5 = this.actor.data.data.lucky_numbers.ln5;
-    const luckExtra = this.actor.data.data.lucky_numbers.ln6;
-    const luck6 = this.actor.data.data.unlucky_numbers.ul1;
-    const luck7 = this.actor.data.data.unlucky_numbers.ul2;
-    const luck8 = this.actor.data.data.unlucky_numbers.ul3;
-    const luck9 = this.actor.data.data.unlucky_numbers.ul4;
-    const luck10 = this.actor.data.data.unlucky_numbers.ul5;
-    const woundedValue = item.data.data.value + this.actor.data.data.woundPenalty + this.actor.data.data.fatigue.penalty + this.actor.data.data.carry_rating.penalty
-    const regularValue = item.data.data.value + this.actor.data.data.fatigue.penalty + this.actor.data.data.carry_rating.penalty
+    const luck1 = this.actor.system.lucky_numbers.ln1;
+    const luck2 = this.actor.system.lucky_numbers.ln2;
+    const luck3 = this.actor.system.lucky_numbers.ln3;
+    const luck4 = this.actor.system.lucky_numbers.ln4;
+    const luck5 = this.actor.system.lucky_numbers.ln5;
+    const luckExtra = this.actor.system.lucky_numbers.ln6;
+    const luck6 = this.actor.system.unlucky_numbers.ul1;
+    const luck7 = this.actor.system.unlucky_numbers.ul2;
+    const luck8 = this.actor.system.unlucky_numbers.ul3;
+    const luck9 = this.actor.system.unlucky_numbers.ul4;
+    const luck10 = this.actor.system.unlucky_numbers.ul5;
+    const woundedValue = item.system.value + this.actor.system.woundPenalty + this.actor.system.fatigue.penalty + this.actor.system.carry_rating.penalty
+    const regularValue = item.system.value + this.actor.system.fatigue.penalty + this.actor.system.carry_rating.penalty
     let tags = []
-    if (this.actor.data.data.wounded) {tags.push(`<span class="tag wound-tag">Wounded ${this.actor.data.data.woundPenalty}</span>`)}
-    if (this.actor.data.data.fatigue.penalty != 0) {tags.push(`<span class="tag fatigue-tag">Fatigued ${this.actor.data.data.fatigue.penalty}</span>`)}
-    if (this.actor.data.data.carry_rating.penalty != 0) {tags.push(`<span class="tag enc-tag">Encumbered ${this.actor.data.data.carry_rating.penalty}</span>`)}
+    if (this.actor.system.wounded) {tags.push(`<span class="tag wound-tag">Wounded ${this.actor.system.woundPenalty}</span>`)}
+    if (this.actor.system.fatigue.penalty != 0) {tags.push(`<span class="tag fatigue-tag">Fatigued ${this.actor.system.fatigue.penalty}</span>`)}
+    if (this.actor.system.carry_rating.penalty != 0) {tags.push(`<span class="tag enc-tag">Encumbered ${this.actor.system.carry_rating.penalty}</span>`)}
 
     let d = new Dialog({
       title: "Apply Roll Modifier",
@@ -694,17 +694,17 @@
 
           if (roll.total === luck1 || roll.total === luck2 || roll.total === luck3 || roll.total === luck4 || roll.total === luck5 || roll.total === luckExtra) {
             contentString = `<h2><img src="${item.img}"</img>${item.name}</h2>
-            <p></p><b>Target Number: [[${regularValue} + ${playerInput} + ${this.actor.data.data.wounded ? this.actor.data.data.woundPenalty : 0}]]</b> <p></p>
+            <p></p><b>Target Number: [[${regularValue} + ${playerInput} + ${this.actor.system.wounded ? this.actor.system.woundPenalty : 0}]]</b> <p></p>
             <b>Result: [[${roll.result}]]</b><p></p>
             <span style='color:green; font-size:120%;'> <b>LUCKY NUMBER!</b></span>`
 
           } else if (roll.total == luck6 || roll.total === luck7 || roll.total === luck8 || roll.total === luck9 || roll.total === luck10) {
             contentString = `<h2><img src="${item.img}"</img>${item.name}</h2>
-            <p></p><b>Target Number: [[${regularValue} + ${playerInput} + ${this.actor.data.data.wounded ? this.actor.data.data.woundPenalty : 0}]]</b> <p></p>
+            <p></p><b>Target Number: [[${regularValue} + ${playerInput} + ${this.actor.system.wounded ? this.actor.system.woundPenalty : 0}]]</b> <p></p>
             <b>Result: [[${roll.result}]]</b><p></p>
             <span style='color:rgb(168, 5, 5); font-size:120%;'> <b>UNLUCKY NUMBER!</b></span>`
 
-          } else if (this.actor.data.data.wounded === true) {
+          } else if (this.actor.system.wounded === true) {
             contentString = `<h2><img src="${item.img}"</img>${item.name}</h2>
             <p></p><b>Target Number: [[${woundedValue + playerInput}]]</b> <p></p>
             <b>Result: [[${roll.result}]]</b><p></p>
@@ -747,7 +747,7 @@
       spellToCast = this.actor.items.find(spell => spell.id === event.currentTarget.closest('.item').dataset.itemId)
     }
     else {
-      spellToCast = this.actor.getEmbeddedDocument('Item', this.actor.data.data.favorites[event.currentTarget.dataset.hotkey].id)
+      spellToCast = this.actor.getEmbeddedDocument('Item', this.actor.system.favorites[event.currentTarget.dataset.hotkey].id)
     }
 
     // const spellToCast = this.actor.items.find(spell => spell.id === event.currentTarget.closest('.item').dataset.itemId)
@@ -779,9 +779,9 @@
 
     // If Description exists, put into the dialog for reference
     let spellDescriptionDiv = ''
-    if (spellToCast.data.data.description != '' && spellToCast.data.data.description != undefined) {
+    if (spellToCast.system.description != '' && spellToCast.system.description != undefined) {
       spellDescriptionDiv = `<div style="padding: 10px;">
-                                  ${spellToCast.data.data.description}
+                                  ${spellToCast.system.description}
                               </div>`
     }
 
@@ -806,9 +806,9 @@
                                 </thead>
                                 <tbody style="text-align: center;">
                                     <tr>
-                                        <td>${spellToCast.data.data.cost}</td>
-                                        <td>${Math.floor(this.actor.data.data.characteristics.wp.total/10)}</td>
-                                        <td>${spellToCast.data.data.level}</td>
+                                        <td>${spellToCast.system.cost}</td>
+                                        <td>${Math.floor(this.actor.system.characteristics.wp.total/10)}</td>
+                                        <td>${spellToCast.system.level}</td>
                                     </tr>
                                 </tbody>
                             </table>
@@ -876,11 +876,11 @@
                         tags.push(restraint);
 
                         //Determine cost mod based on talents and other modifiers
-                        if (hasCreative && spellToCast.data.data.spellType === "unconventional"){
+                        if (hasCreative && spellToCast.system.spellType === "unconventional"){
                             stackCostMod = stackCostMod - 1;
                         } 
 
-                        if (hasMethodical && spellToCast.data.data.spellType === "conventional"){
+                        if (hasMethodical && spellToCast.system.spellType === "conventional"){
                             stackCostMod = stackCostMod - 1;
                         }
                         
@@ -888,7 +888,7 @@
                             stackCostMod = stackCostMod - 1;
                         }
 
-                        spellRestraint = 0 - Math.floor(this.actor.data.data.characteristics.wp.total/10);
+                        spellRestraint = 0 - Math.floor(this.actor.system.characteristics.wp.total/10);
                     }
 
                     if (isOverloaded){
@@ -899,15 +899,15 @@
                     if (isMagickaCycled){
                         let cycled = `<span style="border: none; border-radius: 30px; background-color: rgba(126, 40, 224, 0.80); color: white; text-align: center; font-size: xx-small; padding: 5px;">Magicka Cycle</span>`;
                         tags.push(cycled);
-                        spellRestraint = 0 - (2 * Math.floor(this.actor.data.data.characteristics.wp.total/10));
+                        spellRestraint = 0 - (2 * Math.floor(this.actor.system.characteristics.wp.total/10));
                     }
 
 
                     //If spell has damage value it outputs to Chat, otherwise no damage will be shown in Chat Output
-                    const damageRoll = new Roll(spellToCast.data.data.damage);
+                    const damageRoll = new Roll(spellToCast.system.damage);
                     let damageEntry = "";
 
-                    if (spellToCast.data.data.damage != '' && spellToCast.data.data.damage != 0){
+                    if (spellToCast.system.damage != '' && spellToCast.system.damage != 0){
                         damageRoll.roll({async: false});
                         damageEntry = `<tr>
                                             <td style="font-weight: bold;">Damage</td>
@@ -935,7 +935,7 @@
                       }
 
                     let displayCost = 0;
-                    let actualCost = spellToCast.data.data.cost + spellRestraint + stackCostMod;
+                    let actualCost = spellToCast.system.cost + spellRestraint + stackCostMod;
 
                     //Double Cost of Spell if Overcharge Talent is used
                     if (isOvercharged){
@@ -952,8 +952,8 @@
 
                     // Stop The Function if the user does not have enough Magicka to Cast the Spell
                     if (game.settings.get("uesrpg-d100", "automateMagicka")) {
-                      if (displayCost > this.actor.data.data.magicka.value) {
-                        return ui.notifications.info(`You do not have enough Magicka to cast this spell: Cost: ${spellToCast.data.data.cost} || Restraint: ${spellRestraint} || Other: ${stackCostMod}`)
+                      if (displayCost > this.actor.system.magicka.value) {
+                        return ui.notifications.info(`You do not have enough Magicka to cast this spell: Cost: ${spellToCast.system.cost} || Restraint: ${spellRestraint} || Other: ${stackCostMod}`)
                       }
                     }
 
@@ -976,11 +976,11 @@
                                                     <tr>
                                                         <td style="font-weight: bold;">Spell Cost</td>
                                                         <td style="font-weight: bold; text-align: center;">[[${displayCost}]]</td>
-                                                        <td title="Cost/Restraint Modifier/Other" style="text-align: center;">${spellToCast.data.data.cost} / ${spellRestraint} / ${stackCostMod}</td>
+                                                        <td title="Cost/Restraint Modifier/Other" style="text-align: center;">${spellToCast.system.cost} / ${spellRestraint} / ${stackCostMod}</td>
                                                     </tr>
                                                     <tr style="border-top: double 1px;">
                                                         <td style="font-weight: bold;">Attributes</td>
-                                                        <td colspan="2">${spellToCast.data.data.attributes}</td>
+                                                        <td colspan="2">${spellToCast.system.attributes}</td>
                                                     </tr>
                                                 </tbody>
                                             </table>`
@@ -994,7 +994,7 @@
                     })
 
                     // If Automate Magicka Setting is on, reduce the character's magicka by the calculated output cost
-                    if (game.settings.get("uesrpg-d100", "automateMagicka")) {this.actor.update({'data.magicka.value': this.actor.data.data.magicka.value - displayCost})}
+                    if (game.settings.get("uesrpg-d100", "automateMagicka")) {this.actor.update({'data.magicka.value': this.actor.system.magicka.value - displayCost})}
                 }
             },
             two: {
@@ -1015,12 +1015,12 @@
     let button = $(event.currentTarget);
     const li = button.parents(".item");
     const item = this.actor.getEmbeddedDocument("Item", li.data("itemId"));
-    const woundedValue = item.data.data.value + this.actor.data.data.woundPenalty + this.actor.data.data.fatigue.penalty + this.actor.data.data.carry_rating.penalty
-    const regularValue = item.data.data.value + this.actor.data.data.fatigue.penalty + this.actor.data.data.carry_rating.penalty
+    const woundedValue = item.system.value + this.actor.system.woundPenalty + this.actor.system.fatigue.penalty + this.actor.system.carry_rating.penalty
+    const regularValue = item.system.value + this.actor.system.fatigue.penalty + this.actor.system.carry_rating.penalty
     let tags = []
-    if (this.actor.data.data.wounded) {tags.push(`<span class="tag wound-tag">Wounded ${this.actor.data.data.woundPenalty}</span>`)}
-    if (this.actor.data.data.fatigue.penalty != 0) {tags.push(`<span class="tag fatigue-tag">Fatigued ${this.actor.data.data.fatigue.penalty}</span>`)}
-    if (this.actor.data.data.carry_rating.penalty != 0) {tags.push(`<span class="tag enc-tag">Encumbered ${this.actor.data.data.carry_rating.penalty}</span>`)}
+    if (this.actor.system.wounded) {tags.push(`<span class="tag wound-tag">Wounded ${this.actor.system.woundPenalty}</span>`)}
+    if (this.actor.system.fatigue.penalty != 0) {tags.push(`<span class="tag fatigue-tag">Fatigued ${this.actor.system.fatigue.penalty}</span>`)}
+    if (this.actor.system.carry_rating.penalty != 0) {tags.push(`<span class="tag enc-tag">Encumbered ${this.actor.system.carry_rating.penalty}</span>`)}
 
     let d = new Dialog({
       title: "Apply Roll Modifier",
@@ -1038,19 +1038,19 @@
           roll.roll({async:false});
           let contentString = "";
           
-          if (roll.total == this.actor.data.data.lucky_numbers.ln1 || roll.total == this.actor.data.data.lucky_numbers.ln2 || roll.total == this.actor.data.data.lucky_numbers.ln3 || roll.total == this.actor.data.data.lucky_numbers.ln4 || roll.total == this.actor.data.data.lucky_numbers.ln5) {
+          if (roll.total == this.actor.system.lucky_numbers.ln1 || roll.total == this.actor.system.lucky_numbers.ln2 || roll.total == this.actor.system.lucky_numbers.ln3 || roll.total == this.actor.system.lucky_numbers.ln4 || roll.total == this.actor.system.lucky_numbers.ln5) {
             contentString = `<h2><img src="${item.img}"</img>${item.name}</h2>
-            <p></p><b>Target Number: [[${regularValue} + ${playerInput} + ${this.actor.data.data.wounded ? this.actor.data.data.woundPenalty : 0}]]</b> <p></p>
+            <p></p><b>Target Number: [[${regularValue} + ${playerInput} + ${this.actor.system.wounded ? this.actor.system.woundPenalty : 0}]]</b> <p></p>
             <b>Result: [[${roll.result}]]</b><p></p>
             <span style='color:green; font-size:120%;'> <b>LUCKY NUMBER!</b></span>`
 
-          } else if (roll.total == this.actor.data.data.unlucky_numbers.ul1 || roll.total == this.actor.data.data.unlucky_numbers.ul2 || roll.total == this.actor.data.data.unlucky_numbers.ul3 || roll.total == this.actor.data.data.unlucky_numbers.ul4 || roll.total == this.actor.data.data.unlucky_numbers.ul5) {
+          } else if (roll.total == this.actor.system.unlucky_numbers.ul1 || roll.total == this.actor.system.unlucky_numbers.ul2 || roll.total == this.actor.system.unlucky_numbers.ul3 || roll.total == this.actor.system.unlucky_numbers.ul4 || roll.total == this.actor.system.unlucky_numbers.ul5) {
             contentString = `<h2><img src="${item.img}"</img>${item.name}</h2>
-            <p></p><b>Target Number: [[${regularValue} + ${playerInput} + ${this.actor.data.data.wounded ? this.actor.data.data.woundPenalty : 0}]]</b> <p></p>
+            <p></p><b>Target Number: [[${regularValue} + ${playerInput} + ${this.actor.system.wounded ? this.actor.system.woundPenalty : 0}]]</b> <p></p>
             <b>Result: [[${roll.result}]]</b><p></p>
             <span style='color:rgb(168, 5, 5); font-size:120%;'> <b>UNLUCKY NUMBER!</b></span>`
 
-          } else if (this.actor.data.data.wounded === true) {
+          } else if (this.actor.system.wounded === true) {
             contentString = `<h2><img src="${item.img}"</img>${item.name}</h2>
             <p></p><b>Target Number: [[${woundedValue} + ${playerInput}]]</b> <p></p>
             <b>Result: [[${roll.result}]]</b><p></p>
@@ -1106,23 +1106,23 @@
           roll.roll({async:false});
           let contentString = "";
 
-          if (roll.total == this.actor.data.data.lucky_numbers.ln1 || roll.total == this.actor.data.data.lucky_numbers.ln2 || roll.total == this.actor.data.data.lucky_numbers.ln3 || roll.total == this.actor.data.data.lucky_numbers.ln4 || roll.total == this.actor.data.data.lucky_numbers.ln5) {
+          if (roll.total == this.actor.system.lucky_numbers.ln1 || roll.total == this.actor.system.lucky_numbers.ln2 || roll.total == this.actor.system.lucky_numbers.ln3 || roll.total == this.actor.system.lucky_numbers.ln4 || roll.total == this.actor.system.lucky_numbers.ln5) {
             contentString = `<h2>${element.name} Resistance</h2>
-            <p></p><b>Target Number: [[${this.actor.data.data.resistance[element.id]} + ${playerInput}]]</b> <p></p>
+            <p></p><b>Target Number: [[${this.actor.system.resistance[element.id]} + ${playerInput}]]</b> <p></p>
             <b>Result: [[${roll.result}]]</b><p></p>
             <span style='color:green; font-size:120%;'> <b>LUCKY NUMBER!</b></span>`
 
-          } else if (roll.total == this.actor.data.data.unlucky_numbers.ul1 || roll.total == this.actor.data.data.unlucky_numbers.ul2 || roll.total == this.actor.data.data.unlucky_numbers.ul3 || roll.total == this.actor.data.data.unlucky_numbers.ul4 || roll.total == this.actor.data.data.unlucky_numbers.ul5) {
+          } else if (roll.total == this.actor.system.unlucky_numbers.ul1 || roll.total == this.actor.system.unlucky_numbers.ul2 || roll.total == this.actor.system.unlucky_numbers.ul3 || roll.total == this.actor.system.unlucky_numbers.ul4 || roll.total == this.actor.system.unlucky_numbers.ul5) {
             contentString = `<h2>${element.name} Resistance</h2>
-            <p></p><b>Target Number: [[${this.actor.data.data.resistance[element.id]} + ${playerInput}]]</b> <p></p>
+            <p></p><b>Target Number: [[${this.actor.system.resistance[element.id]} + ${playerInput}]]</b> <p></p>
             <b>Result: [[${roll.result}]]</b><p></p>
             <span style='color:rgb(168, 5, 5); font-size:120%;'> <b>UNLUCKY NUMBER!</b></span>`
 
           } else {
             contentString = `<h2>${element.name} Resistance</h2>
-            <p></p><b>Target Number: [[${this.actor.data.data.resistance[element.id]} + ${playerInput}]]</b> <p></p>
+            <p></p><b>Target Number: [[${this.actor.system.resistance[element.id]} + ${playerInput}]]</b> <p></p>
             <b>Result: [[${roll.result}]]</b><p></p>
-            <b>${roll.total<=(this.actor.data.data.resistance[element.id] + playerInput) ? " <span style='color:green; font-size: 120%;'> <b>SUCCESS!</b></span>" : " <span style='color: rgb(168, 5, 5); font-size: 120%;'> <b>FAILURE!</b></span>"}`
+            <b>${roll.total<=(this.actor.system.resistance[element.id] + playerInput) ? " <span style='color:green; font-size: 120%;'> <b>SUCCESS!</b></span>" : " <span style='color: rgb(168, 5, 5); font-size: 120%;'> <b>FAILURE!</b></span>"}`
           }
           await roll.toMessage({
             async: false,
@@ -1196,7 +1196,7 @@
     }
 
     let damageString
-    shortcutWeapon.data.data.weapon2H ? damageString = shortcutWeapon.data.data.damage2 : damageString = shortcutWeapon.data.data.damage
+    shortcutWeapon.system.weapon2H ? damageString = shortcutWeapon.system.damage2 : damageString = shortcutWeapon.system.damage
     let weaponRoll = new Roll(damageString)
     weaponRoll.roll({async: false})
     
@@ -1205,7 +1205,7 @@
     let superiorRoll = new Roll(damageString)
     superiorRoll.roll({async: false})
 
-    if (shortcutWeapon.data.data.superior) {
+    if (shortcutWeapon.system.superior) {
       supRollTag = `[[${superiorRoll.result}]]`
     }
 
@@ -1236,7 +1236,7 @@
                                       </tr>
                                       <tr>
                                           <td class="tableAttribute">Qualities</td>
-                                          <td class="tableCenterText" colspan="2">${shortcutWeapon.data.data.qualities}</td>
+                                          <td class="tableCenterText" colspan="2">${shortcutWeapon.system.qualities}</td>
                                       </tr>
                                   </tbody>
                               </table>
@@ -1246,7 +1246,7 @@
     // tags for flavor on chat message
     let tags = [];
 
-    if (shortcutWeapon.data.data.superior){
+    if (shortcutWeapon.system.superior){
         let tagEntry = `<span style="border: none; border-radius: 30px; background-color: rgba(29, 97, 187, 0.80); color: white; text-align: center; font-size: xx-small; padding: 5px;" title="Damage was rolled twice and output was highest of the two">Superior</span>`;
         tags.push(tagEntry);
     }
@@ -1268,10 +1268,10 @@
     const item = this.actor.getEmbeddedDocument("Item", li.data("itemId"));
 
     const contentString = `<h2><img src="${item.img}"</img>${item.name}</h2>
-      <b>Damage Bonus:</b> ${item.data.data.damage}<p>
-      <b>Qualities</b> ${item.data.data.qualities}`
+      <b>Damage Bonus:</b> ${item.system.damage}<p>
+      <b>Qualities</b> ${item.system.qualities}`
 
-      if (item.data.data.quantity > 0){
+      if (item.system.quantity > 0){
         await ChatMessage.create({
           user: game.user.id,
           speaker: ChatMessage.getSpeaker(),
@@ -1279,12 +1279,12 @@
         })
       }
 
-    item.data.data.quantity = item.data.data.quantity - 1;
-    if (item.data.data.quantity < 0){
-      item.data.data.quantity = 0;
+    item.system.quantity = item.system.quantity - 1;
+    if (item.system.quantity < 0){
+      item.system.quantity = 0;
       ui.notifications.info("Out of Ammunition!");
     }
-      await item.update({"data.quantity" : item.data.data.quantity})
+      await item.update({"data.quantity" : item.system.quantity})
     }
 
   async _onToggle2H(event) {
@@ -1293,9 +1293,9 @@
     const li = toggle.parents(".item");
     const item = this.actor.getEmbeddedDocument("Item", li.data("itemId"));
 
-    if (item.data.data.weapon2H === false) {
+    if (item.system.weapon2H === false) {
       item.update({"data.weapon2H" : true})
-    } else if (item.data.data.weapon2H === true) {
+    } else if (item.system.weapon2H === true) {
       item.update({"data.weapon2H" : false})
     }
   }
@@ -1306,9 +1306,9 @@
     const li = toggle.parents(".item");
     const item = this.actor.getEmbeddedDocument("Item", li.data("itemId"));
 
-    item.data.data.quantity = item.data.data.quantity + 1;
+    item.system.quantity = item.system.quantity + 1;
 
-    await item.update({"data.quantity" : item.data.data.quantity})
+    await item.update({"data.quantity" : item.system.quantity})
   }
 
   async _onMinusQty(event) {
@@ -1317,13 +1317,13 @@
     const li = toggle.parents(".item");
     const item = this.actor.getEmbeddedDocument("Item", li.data("itemId"));
 
-    item.data.data.quantity = item.data.data.quantity - 1;
-    if (item.data.data.quantity <= 0){
-      item.data.data.quantity = 0;
+    item.system.quantity = item.system.quantity - 1;
+    if (item.system.quantity <= 0){
+      item.system.quantity = 0;
       ui.notifications.info(`You have used your last ${item.name}!`);
     }
 
-    await item.update({"data.quantity" : item.data.data.quantity})
+    await item.update({"data.quantity" : item.system.quantity})
   }
 
   async _onItemEquip(event) {
@@ -1331,9 +1331,9 @@
     const li = toggle.closest(".item");
     const item = this.actor.getEmbeddedDocument("Item", li.data("itemId"));
 
-    if (item.data.data.equipped === false) {
+    if (item.system.equipped === false) {
       item.update({"data.equipped" : true})
-    } else if (item.data.data.equipped === true) {
+    } else if (item.system.equipped === true) {
       item.update({"data.equipped" : false})
     }
   }
@@ -1402,7 +1402,7 @@
         itemData = [{
           name: element.id,
           type: element.id,
-          'data.baseCha': this.actor.data.data.characteristics.str.total >= this.actor.data.data.characteristics.agi.total ? 'str' : 'agi'
+          'data.baseCha': this.actor.system.characteristics.str.total >= this.actor.system.characteristics.agi.total ? 'str' : 'agi'
         }]
       } 
       
@@ -1410,7 +1410,7 @@
         itemData = [{
           name: element.id,
           type: element.id,
-          'data.baseCha': this.actor.data.data.characteristics.int.total >= this.actor.data.data.characteristics.wp.total ? 'wp' : 'int'
+          'data.baseCha': this.actor.system.characteristics.int.total >= this.actor.system.characteristics.wp.total ? 'wp' : 'int'
         }]
       }
 
@@ -1428,7 +1428,7 @@
 
     let contentString = `<h2><img src="${item.img}"</img>${item.name}</h2>
     <i><b>${item.type}</b></i><p>
-      <i>${item.data.data.description}</i>`
+      <i>${item.system.description}</i>`
 
     await ChatMessage.create({
       user: game.user.id,
@@ -1458,7 +1458,7 @@
           label: "Submit",
           callback: async (html) => {
             const playerInput = parseInt(html.find('[id="playerInput"]').val());
-            let wealth = this.actor.data.data.wealth;
+            let wealth = this.actor.system.wealth;
 
             wealth = wealth + playerInput;
             this.actor.update({"data.wealth" : wealth});
@@ -1481,7 +1481,7 @@
                   <div class="dialogForm">
                     <div style="margin: 5px; display: flex; flex-direction: row; justify-content: space-between; align-items: center;">
                       <label><b>Current Carry Rating Bonus: </b></label>
-                      <label style=" text-align: center; float: right; width: 50%;">${this.actor.data.data.carry_rating.bonus}</label>
+                      <label style=" text-align: center; float: right; width: 50%;">${this.actor.system.carry_rating.bonus}</label>
                     </div>
 
                     <div style="margin: 5px; display: flex; flex-direction: row; justify-content: space-between; align-items: center;">
@@ -1499,8 +1499,8 @@
           label: "Submit",
           callback: async (html) => {
             const playerInput = parseInt(html.find('[id="playerInput"]').val());
-            this.actor.data.data.carry_rating.bonus = playerInput;
-            this.actor.update({"data.carry_rating.bonus" : this.actor.data.data.carry_rating.bonus});
+            this.actor.system.carry_rating.bonus = playerInput;
+            this.actor.update({"data.carry_rating.bonus" : this.actor.system.carry_rating.bonus});
           }
         }
       },
@@ -1527,12 +1527,12 @@
                           Lucky Numbers
                         </h2>
                         <div style="display: flex; justify-content: space-around; align-items: center; text-align: center;">
-                            <input class="luckyNum" id="ln1" type="number" value="${this.actor.data.data.lucky_numbers.ln1}">
-                            <input class="luckyNum" id="ln2" type="number" value="${this.actor.data.data.lucky_numbers.ln2}">
-                            <input class="luckyNum" id="ln3" type="number" value="${this.actor.data.data.lucky_numbers.ln3}">
-                            <input class="luckyNum" id="ln4" type="number" value="${this.actor.data.data.lucky_numbers.ln4}">
-                            <input class="luckyNum" id="ln5" type="number" value="${this.actor.data.data.lucky_numbers.ln5}">
-                            <input class="luckyNum thiefNum" id="ln6" type="number" value="${this.actor.data.data.lucky_numbers.ln6}">
+                            <input class="luckyNum" id="ln1" type="number" value="${this.actor.system.lucky_numbers.ln1}">
+                            <input class="luckyNum" id="ln2" type="number" value="${this.actor.system.lucky_numbers.ln2}">
+                            <input class="luckyNum" id="ln3" type="number" value="${this.actor.system.lucky_numbers.ln3}">
+                            <input class="luckyNum" id="ln4" type="number" value="${this.actor.system.lucky_numbers.ln4}">
+                            <input class="luckyNum" id="ln5" type="number" value="${this.actor.system.lucky_numbers.ln5}">
+                            <input class="luckyNum thiefNum" id="ln6" type="number" value="${this.actor.system.lucky_numbers.ln6}">
                         </div>
                       </div>
 
@@ -1541,11 +1541,11 @@
                           Unlucky Numbers
                         </h2>
                         <div style="display: flex; justify-content: space-around; align-items: center; text-align: center;">
-                            <input class="unluckyNum" id="ul1" type="number" value="${this.actor.data.data.unlucky_numbers.ul1}">
-                            <input class="unluckyNum" id="ul2" type="number" value="${this.actor.data.data.unlucky_numbers.ul2}">
-                            <input class="unluckyNum" id="ul3" type="number" value="${this.actor.data.data.unlucky_numbers.ul3}">
-                            <input class="unluckyNum" id="ul4" type="number" value="${this.actor.data.data.unlucky_numbers.ul4}">
-                            <input class="unluckyNum" id="ul5" type="number" value="${this.actor.data.data.unlucky_numbers.ul5}">
+                            <input class="unluckyNum" id="ul1" type="number" value="${this.actor.system.unlucky_numbers.ul1}">
+                            <input class="unluckyNum" id="ul2" type="number" value="${this.actor.system.unlucky_numbers.ul2}">
+                            <input class="unluckyNum" id="ul3" type="number" value="${this.actor.system.unlucky_numbers.ul3}">
+                            <input class="unluckyNum" id="ul4" type="number" value="${this.actor.system.unlucky_numbers.ul4}">
+                            <input class="unluckyNum" id="ul5" type="number" value="${this.actor.system.unlucky_numbers.ul5}">
                         </div>
                       </div>
                     </form>`,
@@ -1593,11 +1593,11 @@
                         Lucky Numbers
                       </h2>
                       <div style="display: flex; justify-content: space-around; align-items: center; text-align: center;">
-                          <input class="luckyNum" id="ln1" type="number" value=${this.actor.data.data.lucky_numbers.ln1}>
-                          <input class="luckyNum" id="ln2" type="number" value=${this.actor.data.data.lucky_numbers.ln2}>
-                          <input class="luckyNum" id="ln3" type="number" value=${this.actor.data.data.lucky_numbers.ln3}>
-                          <input class="luckyNum" id="ln4" type="number" value=${this.actor.data.data.lucky_numbers.ln4}>
-                          <input class="luckyNum" id="ln5" type="number" value=${this.actor.data.data.lucky_numbers.ln5}>
+                          <input class="luckyNum" id="ln1" type="number" value=${this.actor.system.lucky_numbers.ln1}>
+                          <input class="luckyNum" id="ln2" type="number" value=${this.actor.system.lucky_numbers.ln2}>
+                          <input class="luckyNum" id="ln3" type="number" value=${this.actor.system.lucky_numbers.ln3}>
+                          <input class="luckyNum" id="ln4" type="number" value=${this.actor.system.lucky_numbers.ln4}>
+                          <input class="luckyNum" id="ln5" type="number" value=${this.actor.system.lucky_numbers.ln5}>
                       </div>
                     </div>
 
@@ -1606,11 +1606,11 @@
                         Unlucky Numbers
                       </h2>
                       <div style="display: flex; justify-content: space-around; align-items: center; text-align: center;">
-                          <input class="unluckyNum" id="ul1" type="number" value=${this.actor.data.data.unlucky_numbers.ul1}>
-                          <input class="unluckyNum" id="ul2" type="number" value=${this.actor.data.data.unlucky_numbers.ul2}>
-                          <input class="unluckyNum" id="ul3" type="number" value=${this.actor.data.data.unlucky_numbers.ul3}>
-                          <input class="unluckyNum" id="ul4" type="number" value=${this.actor.data.data.unlucky_numbers.ul4}>
-                          <input class="unluckyNum" id="ul5" type="number" value=${this.actor.data.data.unlucky_numbers.ul5}>
+                          <input class="unluckyNum" id="ul1" type="number" value=${this.actor.system.unlucky_numbers.ul1}>
+                          <input class="unluckyNum" id="ul2" type="number" value=${this.actor.system.unlucky_numbers.ul2}>
+                          <input class="unluckyNum" id="ul3" type="number" value=${this.actor.system.unlucky_numbers.ul3}>
+                          <input class="unluckyNum" id="ul4" type="number" value=${this.actor.system.unlucky_numbers.ul4}>
+                          <input class="unluckyNum" id="ul5" type="number" value=${this.actor.system.unlucky_numbers.ul5}>
                       </div>
                     </div>
                   </form>`,
@@ -1931,12 +1931,12 @@
                   let selectedRace = races[raceName.toLowerCase()]
                   
                   // Loop through and update actor base characteristics with race object baselines
-                  for (let value in this.actor.data.data.characteristics) {
+                  for (let value in this.actor.system.characteristics) {
                     let baseChaPath = `data.characteristics.${value}.base`
                     let totalChaPath = `data.characteristics.${value}.total`
                     this.actor.update({
                       [baseChaPath]: selectedRace.baseline[value],
-                      [totalChaPath]: selectedRace.baseline[value] + this.actor.data.data.characteristics[value].bonus
+                      [totalChaPath]: selectedRace.baseline[value] + this.actor.system.characteristics[value].bonus
                     })
                   }
 
@@ -2266,7 +2266,7 @@
 
   _onIncrementResource(event) {
     event.preventDefault()
-    const resource = this.actor.data.data[event.currentTarget.dataset.resource]
+    const resource = this.actor.system[event.currentTarget.dataset.resource]
     const action = event.currentTarget.dataset.action
     let dataPath = `data.${event.currentTarget.dataset.resource}.value`
     
@@ -2277,7 +2277,7 @@
   _onResetResource(event) {
     event.preventDefault()
     const resourceLabel = event.currentTarget.dataset.resource
-    const resource = this.actor.data.data[resourceLabel]
+    const resource = this.actor.system[resourceLabel]
     let dataPath = `data.${resourceLabel}.value`
 
     this.actor.update({[dataPath]: resource.value = resource.max})
@@ -2285,8 +2285,8 @@
 
   _onXPMenu(event) {
     event.preventDefault()
-    let currentXP = this.actor.data.data.xp
-    let totalXP = this.actor.data.data.xpTotal
+    let currentXP = this.actor.system.xp
+    let totalXP = this.actor.system.xpTotal
 
     // Rank Objects
     const ranks = {
@@ -2317,15 +2317,15 @@
                             <div style="display: flex; flex-direction: row; justify-content: space-around; background: rgba(180, 180, 180, 0.562); padding: 10px; text-align: center; border: 1px solid;">
                                 <div style="width: 33.33%">
                                     <div>Current XP</div>
-                                    <input type="number" id="xp" value="${this.actor.data.data.xp}">
+                                    <input type="number" id="xp" value="${this.actor.system.xp}">
                                 </div>
                                 <div style="width: 33.33%">
                                     <div>Total XP</div>
-                                    <input type="number" id="xpTotal" value="${this.actor.data.data.xpTotal}">
+                                    <input type="number" id="xpTotal" value="${this.actor.system.xpTotal}">
                                 </div>
                                 <div style="width: 33.33%">
                                     <div>Campaign Rank</div>
-                                    <div style="padding: 5px 0;">${this.actor.data.data.campaignRank}</div>
+                                    <div style="padding: 5px 0;">${this.actor.system.campaignRank}</div>
                                 </div>
                             </div>
                         </div>
@@ -2373,7 +2373,7 @@
   }
 
   _setResourceBars() {
-    const data = this.actor.data.data
+    const data = this.actor.system
 
     if (data) {
         for (let bar of [...this.form.querySelectorAll('.currentBar')]) {
@@ -2396,17 +2396,17 @@
 
   _createSpellFilterOptions() {
     for (let spell of this.actor.items.filter(item => item.type === 'spell')) {
-      if ([...this.form.querySelectorAll('#spellFilter option')].some(i => i.innerHTML === spell.data.data.school)) {continue}
+      if ([...this.form.querySelectorAll('#spellFilter option')].some(i => i.innerHTML === spell.system.school)) {continue}
       else {
         let option = document.createElement('option')
-        option.innerHTML = spell.data.data.school
+        option.innerHTML = spell.system.school
         this.form.querySelector('#spellFilter').append(option)
       }
     }
   }
 
   _createItemFilterOptions() {
-    for (let item of this.actor.items.filter(i => i.data.data.hasOwnProperty('equipped') && i.data.data.equipped === false)) {
+    for (let item of this.actor.items.filter(i => i.system.hasOwnProperty('equipped') && i.system.equipped === false)) {
       if ([...this.form.querySelectorAll('#itemFilter option')].some(i => i.innerHTML === item.type)) {continue}
       else {
         let option = document.createElement('option')
@@ -2494,9 +2494,9 @@
   }
 
   _createStatusTags() {
-    this.actor.data.data.wounded ? this.form.querySelector('#wound-icon').classList.add('active') : this.form.querySelector('#wound-icon').classList.remove('active')
-    this.actor.data.data.carry_rating.current > this.actor.data.data.carry_rating.max ? this.form.querySelector('#enc-icon').classList.add('active') : this.form.querySelector('#enc-icon').classList.remove('active')
-    this.actor.data.data.fatigue.level > 0 ? this.form.querySelector('#fatigue-icon').classList.add('active') : this.form.querySelector('#fatigue-icon').classList.remove('active')
+    this.actor.system.wounded ? this.form.querySelector('#wound-icon').classList.add('active') : this.form.querySelector('#wound-icon').classList.remove('active')
+    this.actor.system.carry_rating.current > this.actor.system.carry_rating.max ? this.form.querySelector('#enc-icon').classList.add('active') : this.form.querySelector('#enc-icon').classList.remove('active')
+    this.actor.system.fatigue.level > 0 ? this.form.querySelector('#fatigue-icon').classList.add('active') : this.form.querySelector('#fatigue-icon').classList.remove('active')
   }
 
   _selectCombatRank(event) {
@@ -2512,7 +2512,7 @@
   _setDefaultCombatRank() {
     for (let rankElement of [...this.form.querySelectorAll('.rank-select')]) {
       let item = this.actor.getEmbeddedDocument('Item', rankElement.id)
-      let option = rankElement.querySelector(`[value="${item.data.data.rank}"]`)
+      let option = rankElement.querySelector(`[value="${item.system.rank}"]`)
       option.selected = true
     }
   }
@@ -2521,8 +2521,8 @@
     event.preventDefault()
     let element = event.currentTarget
     let action = element.dataset.action
-    let fatigueLevel = this.actor.data.data.fatigue.level
-    let fatigueBonus = this.actor.data.data.fatigue.bonus
+    let fatigueLevel = this.actor.system.fatigue.level
+    let fatigueBonus = this.actor.system.fatigue.bonus
 
     if (action === 'increase' && fatigueLevel < 5) {
       this.actor.update({'data.fatigue.bonus': fatigueBonus + 1})
@@ -2535,7 +2535,7 @@
   _onEquipItems(event) {
     event.preventDefault()
     let element = event.currentTarget
-    let itemList = this.actor.items.filter(item => item.type === element.id||(item.type === element.dataset.altType && item.data.data.wearable))
+    let itemList = this.actor.items.filter(item => item.type === element.id||(item.type === element.dataset.altType && item.system.wearable))
 
     let itemEntries = []
     let tableHeader = ''
@@ -2553,11 +2553,11 @@
                                   ${item.name}
                                 </div>
                             </td>
-                            <td style="text-align: center;">${item.data.data.armor}</td>
-                            <td style="text-align: center;">${item.data.data.magic_ar}</td>
-                            <td style="text-align: center;">${item.data.data.blockRating}</td>
+                            <td style="text-align: center;">${item.system.armor}</td>
+                            <td style="text-align: center;">${item.system.magic_ar}</td>
+                            <td style="text-align: center;">${item.system.blockRating}</td>
                             <td style="text-align: center;">
-                                <input type="checkbox" class="itemSelect" data-item-id="${item.data._id}" ${item.data.data.equipped ? 'checked' : ''}>
+                                <input type="checkbox" class="itemSelect" data-item-id="${item.data._id}" ${item.system.equipped ? 'checked' : ''}>
                             </td>
                         </tr>`
                         break
@@ -2570,11 +2570,11 @@
                                   ${item.name}
                                 </div>
                             </td>
-                            <td style="text-align: center;">${item.data.data.damage}</td>
-                            <td style="text-align: center;">${item.data.data.damage2}</td>
-                            <td style="text-align: center;">${item.data.data.reach}</td>
+                            <td style="text-align: center;">${item.system.damage}</td>
+                            <td style="text-align: center;">${item.system.damage2}</td>
+                            <td style="text-align: center;">${item.system.reach}</td>
                             <td style="text-align: center;">
-                                <input type="checkbox" class="itemSelect" data-item-id="${item.data._id}" ${item.data.data.equipped ? 'checked' : ''}>
+                                <input type="checkbox" class="itemSelect" data-item-id="${item.data._id}" ${item.system.equipped ? 'checked' : ''}>
                             </td>
                         </tr>`
                         break
@@ -2587,11 +2587,11 @@
                                   ${item.name}
                                 </div>
                             </td>
-                            <td style="text-align: center;">${item.data.data.quantity}</td>
-                            <td style="text-align: center;">${item.data.data.damage}</td>
-                            <td style="text-align: center;">${item.data.data.enchant_level}</td>
+                            <td style="text-align: center;">${item.system.quantity}</td>
+                            <td style="text-align: center;">${item.system.damage}</td>
+                            <td style="text-align: center;">${item.system.enchant_level}</td>
                             <td style="text-align: center;">
-                                <input type="checkbox" class="itemSelect" data-item-id="${item.data._id}" ${item.data.data.equipped ? 'checked' : ''}>
+                                <input type="checkbox" class="itemSelect" data-item-id="${item.data._id}" ${item.system.equipped ? 'checked' : ''}>
                             </td>
                         </tr>`
                         break

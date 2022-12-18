@@ -9,9 +9,9 @@
                     <img class="profile-img" src="{{actor.img}}" data-edit="img" title="{{actor.name}}">
                     <div class="status-column">
                         <div class="vertical-flex-container">
-                            <img id="wound-icon" src="icons/skills/wounds/blood-drip-droplet-red.webp" title="Wounded {{data.woundPenalty}}">
-                            <img id="fatigue-icon" src="icons/magic/control/debuff-energy-hold-green.webp" title="Fatigued {{data.fatigue.penalty}}">
-                            <img id="enc-icon" src="icons/containers/bags/pack-leather-brown.webp" title="{{data.carry_rating.label}} {{data.carry_rating.penalty}}">
+                            <img id="wound-icon" src="icons/skills/wounds/blood-drip-droplet-red.webp" title="Wounded {{actor.system.woundPenalty}}">
+                            <img id="fatigue-icon" src="icons/magic/control/debuff-energy-hold-green.webp" title="Fatigued {{actor.system.fatigue.penalty}}">
+                            <img id="enc-icon" src="icons/containers/bags/pack-leather-brown.webp" title="{{actor.system.carry_rating.label}} {{actor.system.carry_rating.penalty}}">
                         </div>
                     </div>
                 </div>
@@ -37,7 +37,7 @@
                         </div>
                         <div class="maxBar" data-resource="hp">
                             <div class="bar-values">
-                                <input type="number" name="data.hp.value" value="{{data.hp.value}}"> / <label>{{data.hp.max}}</label>
+                                <input type="number" name="system.hp.value" value="{{actor.system.hp.value}}"> / <label>{{actor.system.hp.max}}</label>
                             </div>
                             <div id="hpBar" class="currentBar" data-resource="hp"></div>
                         </div>
@@ -52,7 +52,7 @@
                         </div>
                         <div class="maxBar" data-resource="hp">
                             <div class="bar-values">
-                                <input type="number" name="data.stamina.value" value="{{data.stamina.value}}"> / <label>{{data.stamina.max}}</label>
+                                <input type="number" name="system.stamina.value" value="{{actor.system.stamina.value}}"> / <label>{{actor.system.stamina.max}}</label>
                             </div>
                             <div id="staminaBar" class="currentBar" data-resource="stamina"></div>
                         </div>
@@ -67,7 +67,7 @@
                         </div>
                         <div class="maxBar" data-resource="hp">
                             <div class="bar-values">
-                                <input type="number" name="data.magicka.value" value="{{data.magicka.value}}"> / <label>{{data.magicka.max}}</label>
+                                <input type="number" name="system.magicka.value" value="{{actor.system.magicka.value}}"> / <label>{{actor.system.magicka.max}}</label>
                             </div>
                             <div id="magickaBar" class="currentBar" data-resource="magicka"></div>
                         </div>
@@ -82,7 +82,7 @@
                         </div>
                         <div class="maxBar" data-resource="hp">
                             <div class="bar-values">
-                                <input type="number" name="data.luck_points.value" value="{{data.luck_points.value}}"> / <label>{{data.luck_points.max}}</label>
+                                <input type="number" name="system.luck_points.value" value="{{actor.system.luck_points.value}}"> / <label>{{actor.system.luck_points.max}}</label>
                             </div>
                             <div id="luck_pointsBar" class="currentBar" data-resource="luck_points"></div>
                         </div>
@@ -96,60 +96,60 @@
                     </h2>
                     <div class="characteristic-entry-container">
                         <div class="characteristic">
-                            <input class="checkbox" type="checkbox" name="data.characteristics.str.favored" {{checked data.characteristics.str.favored}}>
+                            <input class="checkbox" type="checkbox" name="system.characteristics.str.favored" {{checked actor.system.characteristics.str.favored}}>
                             <div id="str" name="Strength" class="characteristic-roll styled-font rollable">Strength</div>
                             <div class="right-align-content">
-                                <div class="styled-font red">{{data.characteristics.str.total}}</div>
+                                <div class="styled-font red">{{actor.system.characteristics.str.total}}</div>
                             </div>
                         </div>
                         <div class="characteristic">
-                            <input class="checkbox" type="checkbox" name="data.characteristics.end.favored" {{checked data.characteristics.end.favored}}>
+                            <input class="checkbox" type="checkbox" name="system.characteristics.end.favored" {{checked actor.system.characteristics.end.favored}}>
                             <div id="end" name="Endurance" class="characteristic-roll styled-font rollable">Endurance</div>
                             <div class="right-align-content">
-                                <div class="styled-font red">{{data.characteristics.end.total}}</div>
+                                <div class="styled-font red">{{actor.system.characteristics.end.total}}</div>
                             </div>
                         </div>
                         <div class="characteristic">
-                            <input class="checkbox" type="checkbox" name="data.characteristics.agi.favored" {{checked data.characteristics.agi.favored}}>
+                            <input class="checkbox" type="checkbox" name="system.characteristics.agi.favored" {{checked actor.system.characteristics.agi.favored}}>
                             <div id="agi" name="Agility" class="characteristic-roll styled-font rollable">Agility</div>
                             <div class="right-align-content">
-                                <div class="styled-font red">{{data.characteristics.agi.total}}</div>
+                                <div class="styled-font red">{{actor.system.characteristics.agi.total}}</div>
                             </div>
                         </div>
                         <div class="characteristic">
-                            <input class="checkbox" type="checkbox" name="data.characteristics.int.favored" {{checked data.characteristics.int.favored}}>
+                            <input class="checkbox" type="checkbox" name="system.characteristics.int.favored" {{checked actor.system.characteristics.int.favored}}>
                             <div id="int" name="Intelligence" class="characteristic-roll styled-font rollable">Intelligence</div>
                             <div class="right-align-content">
-                                <div class="styled-font red">{{data.characteristics.int.total}}</div>
+                                <div class="styled-font red">{{actor.system.characteristics.int.total}}</div>
                             </div>
                         </div>
                         <div class="characteristic">
-                            <input class="checkbox" type="checkbox" name="data.characteristics.wp.favored" {{checked data.characteristics.wp.favored}}>
+                            <input class="checkbox" type="checkbox" name="system.characteristics.wp.favored" {{checked actor.system.characteristics.wp.favored}}>
                             <div id="wp" name="Willpower" class="characteristic-roll styled-font rollable">Willpower</div>
                             <div class="right-align-content">
-                                <div class="styled-font red">{{data.characteristics.wp.total}}</div>
+                                <div class="styled-font red">{{actor.system.characteristics.wp.total}}</div>
                             </div>
                         </div>
                         <div class="characteristic">
-                            <input class="checkbox" type="checkbox" name="data.characteristics.prc.favored" {{checked data.characteristics.prc.favored}}>
+                            <input class="checkbox" type="checkbox" name="system.characteristics.prc.favored" {{checked actor.system.characteristics.prc.favored}}>
                             <div id="prc" name="Perception" class="characteristic-roll styled-font rollable">Perception</div>
                             <div class="right-align-content">
-                                <div class="styled-font red">{{data.characteristics.prc.total}}</div>
+                                <div class="styled-font red">{{actor.system.characteristics.prc.total}}</div>
                             </div>
                         </div>
                         <div class="characteristic">
-                            <input class="checkbox" type="checkbox" name="data.characteristics.prs.favored" {{checked data.characteristics.prs.favored}}>
+                            <input class="checkbox" type="checkbox" name="system.characteristics.prs.favored" {{checked actor.system.characteristics.prs.favored}}>
                             <div id="prs" name="Personality" class="characteristic-roll styled-font rollable">Personality</div>
                             <div class="right-align-content">
-                                <div class="styled-font red">{{data.characteristics.prs.total}}</div>
+                                <div class="styled-font red">{{actor.system.characteristics.prs.total}}</div>
                             </div>
                         </div>
                         <div class="characteristic">
-                            <input class="checkbox" type="checkbox" name="data.characteristics.lck.favored" {{checked data.characteristics.lck.favored}}>
+                            <input class="checkbox" type="checkbox" name="system.characteristics.lck.favored" {{checked actor.system.characteristics.lck.favored}}>
                             <div id="lck" name="Luck" class="characteristic-roll styled-font rollable">Luck</div>
                             <div class="right-align-content">
                                 <div class="relative-container">
-                                    <div class="styled-font red">{{data.characteristics.lck.total}}</div>
+                                    <div class="styled-font red">{{actor.system.characteristics.lck.total}}</div>
                                 </div>
                             </div>
                         </div>
@@ -165,17 +165,17 @@
                         <div class="npc-button-stats">
                             <div>
                                 <div class="styled-font">Soul Energy</div>
-                                <input type="text" name="data.soul_energy" placeholder="Soul Energy" value="{{data.soul_energy}}">
+                                <input type="text" name="system.soul_energy" placeholder="Soul Energy" value="{{actor.system.soul_energy}}">
                             </div>
                             <div>
                                 <div class="styled-font">Race</div>
-                                <input type="text" placeholder="Race" value="{{data.race}}">
+                                <input type="text" placeholder="Race" value="{{actor.system.race}}">
                             </div>
                             <div>
                                 <div class="styled-font">Threat</div>
-                                <select name="data.threat" data-type="String">
-                                    {{#select actor.data.threat}}
-                                    {{#each actor.data.threatCategory as |threatCategory key|}}
+                                <select name="system.threat" data-type="String">
+                                    {{#select actor.system.threat}}
+                                    {{#each actor.system.threatCategory as |threatCategory key|}}
                                     <option value="{{key}}">{{threatCategory}}</option> 
                                     {{/each}} {{/select}}
                                 </select>
@@ -195,7 +195,7 @@
                                     <div class="skill-name">Combat</div>
                                 </div>
                                 <div class="item-controls">
-                                    <div class="item-value profession"><input type="number" name="data.professions.combat" value="{{data.professions.combat}}"/>%</div>
+                                    <div class="item-value profession"><input type="number" name="system.professions.combat" value="{{actor.system.professions.combat}}"/>%</div>
                                 </div>
                             </li>
                             <li class="npc-item">
@@ -205,7 +205,7 @@
                                     <div class="skill-name">Evade</div>
                                 </div>
                                 <div class="item-controls">
-                                    <div class="item-value profession"><input type="number" name="data.professions.evade" value="{{data.professions.evade}}"/>%</div>
+                                    <div class="item-value profession"><input type="number" name="system.professions.evade" value="{{actor.system.professions.evade}}"/>%</div>
                                 </div>
                             </li>
                             <li class="npc-item">
@@ -215,7 +215,7 @@
                                     <div class="skill-name">Knowledge</div>
                                 </div>
                                 <div class="item-controls">
-                                    <div class="item-value profession"><input type="number" name="data.professions.knowledge" value="{{data.professions.knowledge}}"/>%</div>
+                                    <div class="item-value profession"><input type="number" name="system.professions.knowledge" value="{{actor.system.professions.knowledge}}"/>%</div>
                                 </div>
                             </li>
                             <li class="npc-item">
@@ -225,7 +225,7 @@
                                     <div class="skill-name">Magic</div>
                                 </div>
                                 <div class="item-controls">
-                                    <div class="item-value profession"><input type="number" name="data.professions.magic" value="{{data.professions.magic}}"/>%</div>
+                                    <div class="item-value profession"><input type="number" name="system.professions.magic" value="{{actor.system.professions.magic}}"/>%</div>
                                 </div>
                             </li>
                             <li class="npc-item">
@@ -235,7 +235,7 @@
                                     <div class="skill-name">Observe</div>
                                 </div>
                                 <div class="item-controls">
-                                    <div class="item-value profession"><input type="number" name="data.professions.observe" value="{{data.professions.observe}}"/>%</div>
+                                    <div class="item-value profession"><input type="number" name="system.professions.observe" value="{{actor.system.professions.observe}}"/>%</div>
                                 </div>
                             </li>
                             <li class="npc-item">
@@ -245,7 +245,7 @@
                                     <div class="skill-name">Physical</div>
                                 </div>
                                 <div class="item-controls">
-                                    <div class="item-value profession"><input type="number" name="data.professions.physical" value="{{data.professions.physical}}"/>%</div>
+                                    <div class="item-value profession"><input type="number" name="system.professions.physical" value="{{actor.system.professions.physical}}"/>%</div>
                                 </div>
                             </li>
                             <li class="npc-item">
@@ -255,7 +255,7 @@
                                     <div class="skill-name">Social</div>
                                 </div>
                                 <div class="item-controls">
-                                    <div class="item-value profession"><input type="number" name="data.professions.social" value="{{data.professions.social}}"/>%</div>
+                                    <div class="item-value profession"><input type="number" name="system.professions.social" value="{{actor.system.professions.social}}"/>%</div>
                                 </div>
                             </li>
                             <li class="npc-item">
@@ -265,55 +265,55 @@
                                     <div class="skill-name">Stealth</div>
                                 </div>
                                 <div class="item-controls">
-                                    <div class="item-value profession"><input type="number" name="data.professions.stealth" value="{{data.professions.stealth}}"/>%</div>
+                                    <div class="item-value profession"><input type="number" name="system.professions.stealth" value="{{actor.system.professions.stealth}}"/>%</div>
                                 </div>
                             </li>
                             <li class="npc-item">
                                 <div class="itemInfo">
-                                    <i class="fas fa-dice-d20 professions-roll" name="{{data.skills.commerce.specialization}}" id="commerce"></i>
+                                    <i class="fas fa-dice-d20 professions-roll" name="{{actor.system.skills.commerce.specialization}}" id="commerce"></i>
                                     <img class="item-img" src="icons/skills/social/trading-justice-scale-yellow.webp" title="Send to Chat"/>
                                     <div class="skill-name">
                                         <div class="skill-name">Commerce</div>
                                     </div>
                                 </div>
                                 <div class="item-controls">
-                                    <div class="item-value profession"><input type="number" name="data.skills.commerce.tn" value="{{data.skills.commerce.tn}}"/>%</div>
+                                    <div class="item-value profession"><input type="number" name="system.skills.commerce.tn" value="{{actor.system.skills.commerce.tn}}"/>%</div>
                                 </div>
                             </li>
                             <li class="npc-item">
                                 <div class="itemInfo">
-                                    <i class="fas fa-dice-d20 professions-roll" name="{{data.skills.profession1.specialization}}" id="profession1"></i>
+                                    <i class="fas fa-dice-d20 professions-roll" name="{{actor.system.skills.profession1.specialization}}" id="profession1"></i>
                                     <img class="item-img" src="icons/skills/social/trading-justice-scale-yellow.webp" title="Send to Chat"/>
                                     <div class="skill-name">
-                                        <input type="text" placeholder="Profession 1" name="data.skills.profession1.specialization" value="{{data.skills.profession1.specialization}}">
+                                        <input type="text" placeholder="Profession 1" name="system.skills.profession1.specialization" value="{{actor.system.skills.profession1.specialization}}">
                                     </div>
                                 </div>
                                 <div class="item-controls">
-                                    <div class="item-value profession"><input type="number" name="data.skills.profession1.tn" value="{{data.skills.profession1.tn}}"/>%</div>
+                                    <div class="item-value profession"><input type="number" name="system.skills.profession1.tn" value="{{actor.system.skills.profession1.tn}}"/>%</div>
                                 </div>
                             </li>
                             <li class="npc-item">
                                 <div class="itemInfo">
-                                    <i class="fas fa-dice-d20 professions-roll" name="{{data.skills.profession2.specialization}}" id="profession2"></i>
+                                    <i class="fas fa-dice-d20 professions-roll" name="{{actor.system.skills.profession2.specialization}}" id="profession2"></i>
                                     <img class="item-img" src="icons/skills/social/trading-justice-scale-yellow.webp" title="Send to Chat"/>
                                     <div class="skill-name">
-                                        <input type="text" placeholder="Profession 2" name="data.skills.profession2.specialization" value="{{data.skills.profession2.specialization}}">
+                                        <input type="text" placeholder="Profession 2" name="system.skills.profession2.specialization" value="{{actor.system.skills.profession2.specialization}}">
                                     </div>
                                 </div>
                                 <div class="item-controls">
-                                    <div class="item-value profession"><input type="number" name="data.skills.profession2.tn" value="{{data.skills.profession2.tn}}"/>%</div>
+                                    <div class="item-value profession"><input type="number" name="system.skills.profession2.tn" value="{{actor.system.skills.profession2.tn}}"/>%</div>
                                 </div>
                             </li>
                             <li class="npc-item">
                                 <div class="itemInfo">
-                                    <i class="fas fa-dice-d20 professions-roll" name="{{data.skills.profession3.specialization}}" id="profession3"></i>
+                                    <i class="fas fa-dice-d20 professions-roll" name="{{actor.system.skills.profession3.specialization}}" id="profession3"></i>
                                     <img class="item-img" src="icons/skills/social/trading-justice-scale-yellow.webp" title="Send to Chat"/>
                                     <div class="skill-name">
-                                        <input type="text" placeholder="Profession 3" name="data.skills.profession3.specialization" value="{{data.skills.profession3.specialization}}">
+                                        <input type="text" placeholder="Profession 3" name="system.skills.profession3.specialization" value="{{actor.system.skills.profession3.specialization}}">
                                     </div>
                                 </div>
                                 <div class="item-controls">
-                                    <div class="item-value profession"><input type="number" name="data.skills.profession3.tn" value="{{data.skills.profession3.tn}}"/>%</div>
+                                    <div class="item-value profession"><input type="number" name="system.skills.profession3.tn" value="{{actor.system.skills.profession3.tn}}"/>%</div>
                                 </div>
                             </li>
                         </ul>
@@ -326,7 +326,7 @@
                                 <label>Languages</label>
                             </h2>
                             <ol class="single-column-list">
-                                {{#each actor.data.language as |item id|}}
+                                {{#each actor.language as |item id|}}
                                     <li class="item" data-item-id="{{item._id}}">
                                         <div class="itemInfo">
                                             <img class="item-img" src="{{item.img}}" title="Send to Chat"/>
@@ -345,7 +345,7 @@
                                 <label>Factions</label>
                             </h2>
                             <ol class="single-column-list">
-                                {{#each actor.data.faction as |item id|}}
+                                {{#each actor.faction as |item id|}}
                                     <li class="item" data-item-id="{{item._id}}">
                                         <div class="itemInfo">
                                             <img class="item-img" src="{{item.img}}" title="Send to Chat"/>
@@ -363,7 +363,7 @@
                     <div class="bioPage">
                         <h2>Biography</h2>
                         <div class="contentContainer">
-                            {{editor content=data.bio target="data.bio" button=true owner=owner editable=editable}}
+                            {{editor actor.system.bio target="system.bio" button=true owner=owner editable=editable}}
                         </div>
                     </div>
 
@@ -375,7 +375,7 @@
                     <div class="combat-tab-primary-header">
                         <div class="combat-stats-container">
                             <div class="combat-stat">
-                                <div class="stat-value-label">{{data.speed.value}}</div>
+                                <div class="stat-value-label">{{actor.system.speed.value}}</div>
                                 <div class="flex-container">
                                     <div class="small-text-label">Speed</div>
                                 </div>
@@ -383,9 +383,9 @@
                             <div class="combat-stat">
                                 <div class="stat-value-label">
                                     <div class="flex-container-input">
-                                        <input type="number" name="data.action_points.value" value="{{data.action_points.value}}">
+                                        <input type="number" name="system.action_points.value" value="{{actor.system.action_points.value}}">
                                         /
-                                        <input type="number" name="data.action_points.max" value="{{data.action_points.max}}">
+                                        <input type="number" name="system.action_points.max" value="{{actor.system.action_points.max}}">
                                     </div>
                                 </div>
                                 <div class="flex-container">
@@ -393,25 +393,25 @@
                                 </div>
                             </div>
                             <div class="combat-stat">
-                                <div class="stat-value-label">{{data.speed.swimSpeed}}</div>
+                                <div class="stat-value-label">{{actor.system.speed.swimSpeed}}</div>
                                 <div class="flex-container">
                                     <div class="small-text-label">Swim</div>
                                 </div>
                             </div>
                             <div class="combat-stat">
-                                <div class="stat-value-label">{{data.wound_threshold.value}}</div>
+                                <div class="stat-value-label">{{actor.system.wound_threshold.value}}</div>
                                 <div class="flex-container">
                                     <div class="small-text-label">Wound</div>
                                 </div>
                             </div>
                             <div class="combat-stat">
-                                <div class="stat-value-label">{{data.speed.flySpeed}}</div>
+                                <div class="stat-value-label">{{actor.system.speed.flySpeed}}</div>
                                 <div class="flex-container">
                                     <div class="small-text-label">Fly</div>
                                 </div>
                             </div>
                             <div class="combat-stat">
-                                <div class="stat-value-label">{{data.initiative.value}}</div>
+                                <div class="stat-value-label">{{actor.system.initiative.value}}</div>
                                 <div class="flex-container">
                                     <div class="small-text-label">Initiative</div>
                                 </div>
@@ -422,39 +422,39 @@
                             <div class="resistance-grid">
                                 <div class="flex-container">
                                     <div>Fire</div>
-                                    <div class="styled-font-red center-align">{{data.resistance.fireR}}</div>
+                                    <div class="styled-font-red center-align">{{actor.system.resistance.fireR}}</div>
                                 </div>
                                 <div class="flex-container">
                                     <div>Frost</div>
-                                    <div class="styled-font-red center-align">{{data.resistance.frostR}}</div>
+                                    <div class="styled-font-red center-align">{{actor.system.resistance.frostR}}</div>
                                 </div>
                                 <div class="flex-container">
                                     <div>Shock</div>
-                                    <div class="styled-font-red center-align">{{data.resistance.shockR}}</div>
+                                    <div class="styled-font-red center-align">{{actor.system.resistance.shockR}}</div>
                                 </div>
                                 <div class="flex-container">
                                     <div>Magic</div>
-                                    <div class="styled-font-red center-align">{{data.resistance.magicR}}</div>
+                                    <div class="styled-font-red center-align">{{actor.system.resistance.magicR}}</div>
                                 </div>
                                 <div class="flex-container">
                                     <div>Poison</div>
-                                    <div class="styled-font-red center-align">{{data.resistance.poisonR}}</div>
+                                    <div class="styled-font-red center-align">{{actor.system.resistance.poisonR}}</div>
                                 </div>
                                 <div class="flex-container">
                                     <div>Silver</div>
-                                    <div class="styled-font-red center-align">{{data.resistance.silverR}}</div>
+                                    <div class="styled-font-red center-align">{{actor.system.resistance.silverR}}</div>
                                 </div>
                                 <div class="flex-container">
                                     <div>Sunlight</div>
-                                    <div class="styled-font-red center-align">{{data.resistance.sunlightR}}</div>
+                                    <div class="styled-font-red center-align">{{actor.system.resistance.sunlightR}}</div>
                                 </div>
                                 <div class="flex-container">
                                     <div>Toughness</div>
-                                    <div class="styled-font-red center-align">{{data.resistance.natToughness}}</div>
+                                    <div class="styled-font-red center-align">{{actor.system.resistance.natToughness}}</div>
                                 </div>
                                 <div class="flex-container">
                                     <div>Disease</div>
-                                    <div class="styled-font-red center-align">{{data.resistance.diseaseR}}%</div>
+                                    <div class="styled-font-red center-align">{{actor.system.resistance.diseaseR}}%</div>
                                 </div>
                             </div>
                         </div>
@@ -463,12 +463,12 @@
                             <div class="status-grid-container">
                                 <div class="flex-container">
                                     <div>Wounded</div>
-                                    <input title="Wounded" class="woundCheckBox checkbox" type="checkbox" name="data.wounded" {{checked data.wounded}}>
+                                    <input title="Wounded" class="woundCheckBox checkbox" type="checkbox" name="system.wounded" {{checked actor.system.wounded}}>
                                 </div>
                                 <div class="flex-container">
                                     <div>Fatigue</div>
                                     <div class="label-flex-container">
-                                        <label title="Fatigue Level (Fatigue Modifier)">{{data.fatigue.level}} ({{data.fatigue.bonus}})</label>
+                                        <label title="Fatigue Level (Fatigue Modifier)">{{actor.system.fatigue.level}} ({{actor.system.fatigue.bonus}})</label>
                                         <div class="resourceButton">
                                             <i class="fas fa-angle-up incrementFatigue" data-action="increase"></i>
                                             <i class="fas fa-angle-down incrementFatigue" data-action="decrease"></i>
@@ -477,22 +477,22 @@
                                 </div>
                                 <div class="flex-container">
                                     <div>ENC</div>
-                                    <label title="{{data.carry_rating.current}} / {{data.carry_rating.max}}">{{data.carry_rating.label}}</label>
+                                    <label title="{{actor.system.carry_rating.current}} / {{actor.system.carry_rating.max}}">{{actor.system.carry_rating.label}}</label>
                                 </div>
                                 <div class="flex-container">
                                     <div>Size</div>
-                                    <select name="data.size" data-type="String">
-                                        {{#select actor.data.size}}
-                                        {{#each actor.data.size_cat as |size_cat key|}}
+                                    <select name="system.size" data-type="String">
+                                        {{#select actor.system.size}}
+                                        {{#each actor.system.size_cat as |size_cat key|}}
                                         <option value="{{key}}">{{size_cat}}</option> 
                                         {{/each}} {{/select}}
                                     </select>
                                 </div>
                                 <div class="flex-container">
                                     <div>AC</div>
-                                    <select name="data.armor_class" data-type="String">
-                                        {{#select actor.data.armor_class}}
-                                        {{#each actor.data.armor_class_cat as |armor_class_cat key|}}
+                                    <select name="system.armor_class" data-type="String">
+                                        {{#select actor.system.armor_class}}
+                                        {{#each actor.system.armor_class_cat as |armor_class_cat key|}}
                                         <option value="{{key}}">{{armor_class_cat}}</option> 
                                         {{/each}} {{/select}}
                                     </select>
@@ -505,49 +505,49 @@
                         <div class="combat-button-container">
                             <div class="combat-button professions-roll" name="Combat" id="combat">
                                 <div class="flex-container">
-                                    <div class="combat-button-value">{{data.professions.combat}}</div>
+                                    <div class="combat-button-value">{{actor.system.professions.combat}}</div>
                                     <div class="combat-button-label">Combat</div>
                                 </div>
                             </div>
                             <div class="combat-button professions-roll" name="Magic" id="magic">
                                 <div class="flex-container">
-                                    <div class="combat-button-value">{{data.professions.magic}}</div>
+                                    <div class="combat-button-value">{{actor.system.professions.magic}}</div>
                                     <div class="combat-button-label">Magic</div>
                                 </div>
                             </div>
                             <div class="combat-button professions-roll" name="Evade" id="evade">
                                 <div class="flex-container">
-                                    <div class="combat-button-value">{{data.professions.evade}}</div>
+                                    <div class="combat-button-value">{{actor.system.professions.evade}}</div>
                                     <div class="combat-button-label">Evade</div>
                                 </div>
                             </div>
                             <div class="combat-button professions-roll" name="Physical" id="physical">
                                 <div class="flex-container">
-                                    <div class="combat-button-value">{{data.professions.physical}}</div>
+                                    <div class="combat-button-value">{{actor.system.professions.physical}}</div>
                                     <div class="combat-button-label">Physical</div>
                                 </div>
                             </div>
                             <div class="combat-button professions-roll" name="Observe" id="observe">
                                 <div class="flex-container">
-                                    <div class="combat-button-value">{{data.professions.observe}}</div>
+                                    <div class="combat-button-value">{{actor.system.professions.observe}}</div>
                                     <div class="combat-button-label">Observe</div>
                                 </div>
                             </div>
                             <div class="combat-button professions-roll" name="Stealth" id="stealth">
                                 <div class="flex-container">
-                                    <div class="combat-button-value">{{data.professions.stealth}}</div>
+                                    <div class="combat-button-value">{{actor.system.professions.stealth}}</div>
                                     <div class="combat-button-label">Stealth</div>
                                 </div>
                             </div>
                             <div class="combat-button professions-roll" name="Social" id="social">
                                 <div class="flex-container">
-                                    <div class="combat-button-value">{{data.professions.social}}</div>
+                                    <div class="combat-button-value">{{actor.system.professions.social}}</div>
                                     <div class="combat-button-label">Social</div>
                                 </div>
                             </div>
                             <div class="combat-button professions-roll" name="Knowledge" id="knowledge">
                                 <div class="flex-container">
-                                    <div class="combat-button-value">{{data.professions.knowledge}}</div>
+                                    <div class="combat-button-value">{{actor.system.professions.knowledge}}</div>
                                     <div class="combat-button-label">Knowledge</div>
                                 </div>
                             </div>
@@ -564,7 +564,7 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                {{#each actor.data.weapon.equipped as |item id|}}
+                                {{#each actor.weapon.equipped as |item id|}}
                                     <tr class="item" data-item-id="{{item._id}}">
                                         <td class="item-name-cell">
                                             <div class="flex-container">
@@ -573,9 +573,9 @@
                                                 <div class="item-name">{{item.name}}</div>
                                             </div>
                                         </td>
-                                        <td class="damage-entry">{{item.data.damage3}}</td>
-                                        <td>{{item.data.reach}}</td>
-                                        <td><input class="toggle2H checkbox" type="checkbox" {{checked item.data.weapon2H}} title="Toggle 2H Damage"></td>
+                                        <td class="damage-entry">{{item.system.damage3}}</td>
+                                        <td>{{item.system.reach}}</td>
+                                        <td><input class="toggle2H checkbox" type="checkbox" {{checked item.system.weapon2H}} title="Toggle 2H Damage"></td>
                                         <td class="right-align-cell"><a class="item-control item-delete" title="Delete Item"><i class="fas fa-trash"></i></a></td>
                                     </tr>
                                 {{/each}}
@@ -592,7 +592,7 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                {{#each actor.data.ammunition.equipped as |item id|}}
+                                {{#each actor.ammunition.equipped as |item id|}}
                                     <tr class="item" data-item-id="{{item._id}}">
                                         <td class="item-name-cell">
                                             <div class="flex-container">
@@ -601,8 +601,8 @@
                                                 <div class="item-name">{{item.name}}</div>
                                             </div>
                                         </td>
-                                        <td>{{item.data.damage}}</td>
-                                        <td><button class="minusQty plusQty" title="Click to Increase, right-click to decrease">{{item.data.quantity}}</button></td>
+                                        <td>{{item.system.damage}}</td>
+                                        <td><button class="minusQty plusQty" title="Click to Increase, right-click to decrease">{{item.system.quantity}}</button></td>
                                         <td class="right-align-cell"><a class="item-control item-delete" title="Delete Item"><i class="fas fa-trash"></i></a></td>
                                     </tr>
                                 {{/each}}
@@ -620,26 +620,26 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                {{#each actor.data.armor.equipped as |item id|}}
+                                {{#each actor.armor.equipped as |item id|}}
                                     <tr class="item" data-item-id="{{item._id}}">
                                         <td class="item-name-cell">
                                             <div class="flex-container">
-                                                <input type="checkbox" class="itemEquip checkbox" {{checked data.equipped}}>
+                                                <input type="checkbox" class="itemEquip checkbox" name="system.equipped" {{checked item.system.equipped}}>
                                                 <img class="item-img" src="{{item.img}}">
                                                 <div class="item-name">{{item.name}}</div>
                                             </div>
                                         </td>
-                                        <td>{{item.data.armor}}</td>
-                                        <td>{{item.data.magic_ar}}</td>
-                                        <td>{{item.data.blockRating}}</td>
+                                        <td>{{item.system.armor}}</td>
+                                        <td>{{item.system.magic_ar}}</td>
+                                        <td>{{item.system.blockRating}}</td>
                                         <td class="right-align-cell"><a class="item-control item-delete" title="Delete Item"><i class="fas fa-trash"></i></a></td>
                                     </tr>
                                 {{/each}}
-                                {{#each actor.data.gear.equipped as |item id|}}
+                                {{#each actor.gear.equipped as |item id|}}
                                     <tr class="item" data-item-id="{{item._id}}">
                                         <td class="item-name-cell">
                                             <div class="flex-container">
-                                                <input type="checkbox" class="itemEquip checkbox" {{checked data.equipped}}>
+                                                <input type="checkbox" class="itemEquip checkbox" name="system.equipped" {{checked item.system.equipped}}>
                                                 <img class="item-img" src="{{item.img}}">
                                                 <div class="item-name">{{item.name}}</div>
                                             </div>
@@ -661,7 +661,7 @@
                                 <label>Traits</label>
                             </h2>
                             <ol class="single-column-list">
-                                {{#each actor.data.trait as |item id|}}
+                                {{#each actor.trait as |item id|}}
                                     <li class="item" data-item-id="{{item._id}}">
                                         <div class="itemInfo">
                                             <img class="item-img" src="{{item.img}}" title="Send to Chat"/>
@@ -680,7 +680,7 @@
                                 <label>Talents</label>
                             </h2>
                             <ol class="single-column-list">
-                                {{#each actor.data.talent as |item id|}}
+                                {{#each actor.talent as |item id|}}
                                     <li class="item" data-item-id="{{item._id}}">
                                         <div class="itemInfo">
                                             <img class="item-img" src="{{item.img}}" title="Send to Chat"/>
@@ -699,7 +699,7 @@
                                 <label>Powers</label>
                             </h2>
                             <ol class="single-column-list">
-                                {{#each actor.data.power as |item id|}}
+                                {{#each actor.power as |item id|}}
                                     <li class="item" data-item-id="{{item._id}}">
                                         <div class="itemInfo">
                                             <img class="item-img" src="{{item.img}}" title="Send to Chat"/>
@@ -721,49 +721,49 @@
                     <div class="combat-button-container">
                         <div class="combat-button professions-roll" name="Combat" id="combat">
                             <div class="flex-container">
-                                <div class="combat-button-value">{{data.professions.combat}}</div>
+                                <div class="combat-button-value">{{actor.system.professions.combat}}</div>
                                 <div class="combat-button-label">Combat</div>
                             </div>
                         </div>
                         <div class="combat-button professions-roll" name="Magic" id="magic">
                             <div class="flex-container">
-                                <div class="combat-button-value">{{data.professions.magic}}</div>
+                                <div class="combat-button-value">{{actor.system.professions.magic}}</div>
                                 <div class="combat-button-label">Magic</div>
                             </div>
                         </div>
                         <div class="combat-button professions-roll" name="Evade" id="evade">
                             <div class="flex-container">
-                                <div class="combat-button-value">{{data.professions.evade}}</div>
+                                <div class="combat-button-value">{{actor.system.professions.evade}}</div>
                                 <div class="combat-button-label">Evade</div>
                             </div>
                         </div>
                         <div class="combat-button professions-roll" name="Physical" id="physical">
                             <div class="flex-container">
-                                <div class="combat-button-value">{{data.professions.physical}}</div>
+                                <div class="combat-button-value">{{actor.system.professions.physical}}</div>
                                 <div class="combat-button-label">Physical</div>
                             </div>
                         </div>
                         <div class="combat-button professions-roll" name="Observe" id="observe">
                             <div class="flex-container">
-                                <div class="combat-button-value">{{data.professions.observe}}</div>
+                                <div class="combat-button-value">{{actor.system.professions.observe}}</div>
                                 <div class="combat-button-label">Observe</div>
                             </div>
                         </div>
                         <div class="combat-button professions-roll" name="Stealth" id="stealth">
                             <div class="flex-container">
-                                <div class="combat-button-value">{{data.professions.stealth}}</div>
+                                <div class="combat-button-value">{{actor.system.professions.stealth}}</div>
                                 <div class="combat-button-label">Stealth</div>
                             </div>
                         </div>
                         <div class="combat-button professions-roll" name="Social" id="social">
                             <div class="flex-container">
-                                <div class="combat-button-value">{{data.professions.social}}</div>
+                                <div class="combat-button-value">{{actor.system.professions.social}}</div>
                                 <div class="combat-button-label">Social</div>
                             </div>
                         </div>
                         <div class="combat-button professions-roll" name="Knowledge" id="knowledge">
                             <div class="flex-container">
-                                <div class="combat-button-value">{{data.professions.knowledge}}</div>
+                                <div class="combat-button-value">{{actor.system.professions.knowledge}}</div>
                                 <div class="combat-button-label">Knowledge</div>
                             </div>
                         </div>
@@ -784,8 +784,8 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    {{#each actor.data.spell as |item id|}}
-                                        <tr class="item active" data-item-id="{{item._id}}" data-spell-school="{{item.data.school}}">
+                                    {{#each actor.spell as |item id|}}
+                                        <tr class="item active" data-item-id="{{item._id}}" data-spell-school="{{item.system.school}}">
                                             <td>
                                                 <div class="tableItemNameCell">
                                                     <i class="fas fa-dice-d20 magic-roll"></i>
@@ -793,8 +793,8 @@
                                                     <div class="item-name">{{item.name}}</div>
                                                 </div>
                                             </td>
-                                            <td>{{item.data.cost}}</td>
-                                            <td>{{item.data.school}}</td>
+                                            <td>{{item.system.cost}}</td>
+                                            <td>{{item.system.school}}</td>
                                             <td>
                                                 <a class="item-control item-delete" title="Delete Item"><i class="fas fa-trash"></i></a>
                                             </td>
@@ -814,12 +814,12 @@
                             <div class="equipment-info-container">
                                 <div class="wealthContainer">
                                     <h2>Wealth</h2>
-                                    <input type="number" name="data.wealth" value="{{data.wealth}}">
+                                    <input type="number" name="system.wealth" value="{{actor.system.wealth}}">
                                     <button type="button" class="wealthCalc">Add/Subtract</button>
                                 </div>
                                 <div class="encContainer">
                                     <h2>Encumbrance</h2>
-                                    <div class="encLabel">{{data.carry_rating.current}} / {{data.carry_rating.max}} ENC</div>
+                                    <div class="encLabel">{{actor.system.carry_rating.current}} / {{actor.system.carry_rating.max}} ENC</div>
                                     <button type="button" class="carryBonus">Set Carry Bonus</button>
                                 </div>
                             </div>
@@ -840,13 +840,13 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    {{#each actor.data.gear.unequipped as |item id|}}
+                                    {{#each actor.gear.unequipped as |item id|}}
                                         <tr class="item active" data-item-id="{{item._id}}" data-item-type="{{item.type}}">
                                             <td>
                                                 <div class="tableItemNameCell">
                                                     <div class="qty-controls">
                                                         <button type="button" class="minusQty plusQty" title="Click to increase, right click to decrease">
-                                                            <div>{{item.data.quantity}}</div>
+                                                            <div>{{item.system.quantity}}</div>
                                                         </button>
                                                     </div>
                                                     <img class="item-img" src="{{item.img}}" title="Send to Chat"/>
@@ -854,20 +854,20 @@
                                                 </div>
                                             </td>
                                             <td>item</td>
-                                            <td>{{item.data.enc}}</td>
-                                            <td>{{item.data.price}}</td>
+                                            <td>{{item.system.enc}}</td>
+                                            <td>{{item.system.price}}</td>
                                             <td>
                                                 <a class="item-control item-delete" title="Delete Item"><i class="fas fa-trash"></i></a>
                                             </td>
                                         </tr>
                                     {{/each}}
-                                    {{#each actor.data.armor.unequipped as |item id|}}
+                                    {{#each actor.armor.unequipped as |item id|}}
                                         <tr class="item active" data-item-id="{{item._id}}" data-item-type="{{item.type}}">
                                             <td>
                                                 <div class="tableItemNameCell">
                                                     <div class="qty-controls">
                                                         <button type="button" class="minusQty plusQty" title="Click to increase, right click to decrease">
-                                                            <div>{{item.data.quantity}}</div>
+                                                            <div>{{item.system.quantity}}</div>
                                                         </button>
                                                     </div>
                                                     <img class="item-img" src="{{item.img}}" title="Send to Chat"/>
@@ -875,20 +875,20 @@
                                                 </div>
                                             </td>
                                             <td>armor</td>
-                                            <td>{{item.data.enc}}</td>
-                                            <td>{{item.data.price}}</td>
+                                            <td>{{item.system.enc}}</td>
+                                            <td>{{item.system.price}}</td>
                                             <td>
                                                 <a class="item-control item-delete" title="Delete Item"><i class="fas fa-trash"></i></a>
                                             </td>
                                         </tr>
                                     {{/each}}
-                                    {{#each actor.data.weapon.unequipped as |item id|}}
+                                    {{#each actor.weapon.unequipped as |item id|}}
                                         <tr class="item active" data-item-id="{{item._id}}" data-item-type="{{item.type}}">
                                             <td>
                                                 <div class="tableItemNameCell">
                                                     <div class="qty-controls">
                                                         <button type="button" class="minusQty plusQty" title="Click to increase, right click to decrease">
-                                                            <div>{{item.data.quantity}}</div>
+                                                            <div>{{item.system.quantity}}</div>
                                                         </button>
                                                     </div>
                                                     <img class="item-img" src="{{item.img}}" title="Send to Chat"/>
@@ -896,20 +896,20 @@
                                                 </div>
                                             </td>
                                             <td>weapon</td>
-                                            <td>{{item.data.enc}}</td>
-                                            <td>{{item.data.price}}</td>
+                                            <td>{{item.system.enc}}</td>
+                                            <td>{{item.system.price}}</td>
                                             <td>
                                                 <a class="item-control item-delete" title="Delete Item"><i class="fas fa-trash"></i></a>
                                             </td>
                                         </tr>
                                     {{/each}}
-                                    {{#each actor.data.ammunition.unequipped as |item id|}}
+                                    {{#each actor.ammunition.unequipped as |item id|}}
                                         <tr class="item active" data-item-id="{{item._id}}" data-item-type="{{item.type}}">
                                             <td>
                                                 <div class="tableItemNameCell">
                                                     <div class="qty-controls">
                                                         <button type="button" class="minusQty plusQty" title="Click to increase, right click to decrease">
-                                                            <div>{{item.data.quantity}}</div>
+                                                            <div>{{item.system.quantity}}</div>
                                                         </button>
                                                     </div>
                                                     <img class="item-img" src="{{item.img}}" title="Send to Chat"/>
@@ -917,8 +917,8 @@
                                                 </div>
                                             </td>
                                             <td>ammo</td>
-                                            <td>{{item.data.enc}}</td>
-                                            <td>{{item.data.price}}</td>
+                                            <td>{{item.system.enc}}</td>
+                                            <td>{{item.system.price}}</td>
                                             <td>
                                                 <a class="item-control item-delete" title="Delete Item"><i class="fas fa-trash"></i></a>
                                             </td>

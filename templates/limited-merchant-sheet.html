@@ -9,9 +9,9 @@
                     <img class="profile-img" src="{{actor.img}}" data-edit="img" title="{{actor.name}}">
                     <div class="status-column">
                         <div class="vertical-flex-container">
-                            <img id="wound-icon" src="icons/skills/wounds/blood-drip-droplet-red.webp" title="Wounded {{data.woundPenalty}}">
-                            <img id="fatigue-icon" src="icons/magic/control/debuff-energy-hold-green.webp" title="Fatigued {{data.fatigue.penalty}}">
-                            <img id="enc-icon" src="icons/containers/bags/pack-leather-brown.webp" title="{{data.carry_rating.label}} {{data.carry_rating.penalty}}">
+                            <img id="wound-icon" src="icons/skills/wounds/blood-drip-droplet-red.webp" title="Wounded {{actor.system.woundPenalty}}">
+                            <img id="fatigue-icon" src="icons/magic/control/debuff-energy-hold-green.webp" title="Fatigued {{actor.system.fatigue.penalty}}">
+                            <img id="enc-icon" src="icons/containers/bags/pack-leather-brown.webp" title="{{actor.system.carry_rating.label}} {{actor.system.carry_rating.penalty}}">
                         </div>
                     </div>
                 </div>
@@ -31,7 +31,7 @@
                 <div class="tabContainer">
 
                     <h2 class="store-name">
-                        <input type="text" name="data.storeName" value="{{data.storeName}}" placeholder="Store Name" disabled>
+                        <input type="text" name="system.storeName" value="{{actor.system.storeName}}" placeholder="Store Name" disabled>
                     </h2>
 
                     <table class="merchant-item-list">
@@ -49,14 +49,14 @@
                             </tr>
                         </thead>
                         <tbody id="merchantItemList">
-                            {{#each actor.data.merchantItem as |item id|}}
+                            {{#each actor.system.merchantItem as |item id|}}
                             <tr class="item active" data-item-id="{{item._id}}" data-item-type="{{item.type}}">
                                 <td>
                                     <div class="flex-container">
-                                        <a class="buyButton" title="Buy Item for {{item.data.modPrice}}">
+                                        <a class="buyButton" title="Buy Item for {{item.system.modPrice}}">
                                             <i class="fas fa-coins"></i>
                                         </a>
-                                        <div>{{item.data.modPrice}}</div>
+                                        <div>{{item.system.modPrice}}</div>
                                     </div>
                                 </td>
                                 <td>
@@ -66,8 +66,8 @@
                                     </div>
                                 </td>
                                 <td>{{item.type}}</td>
-                                <td>{{item.data.enc}}</td>
-                                <td>{{item.data.quantity}}</td>
+                                <td>{{item.system.enc}}</td>
+                                <td>{{item.system.quantity}}</td>
                             </tr>
                             {{/each}}
                         </tbody>

@@ -19,7 +19,7 @@ export class SimpleItemSheet extends ItemSheet {
 /** @override */
     get template() {
       const path = "systems/uesrpg-d100/templates";
-      return `${path}/${this.item.data.type}-sheet.html`;
+      return `${path}/${this.item.type}-sheet.html`;
     }
 
     getData() {
@@ -27,9 +27,9 @@ export class SimpleItemSheet extends ItemSheet {
       data.dtypes = ["String", "Number", "Boolean"];
       data.isGM = game.user.isGM;
       data.editable = data.options.editable;
-      const itemData = data.data;
+      const itemData = data.system;
       data.actor = itemData;
-      data.data = itemData.data;
+      data.data = itemData;
   
       return data;
       }
@@ -56,7 +56,7 @@ export class SimpleItemSheet extends ItemSheet {
     html.find(".chargeMinus").click(this._onChargeMinus.bind(this));
 
     // Register listeners for items that have modifier arrays
-    if (this.item.data.data.hasOwnProperty('skillArray')) {
+    if (this.item.system.hasOwnProperty('skillArray')) {
       html.find(".modifier-create").click(this._onModifierCreate.bind(this))
       this._createModifierEntries()
       html.find('.item-delete').click(this._onDeleteModifier.bind(this))
@@ -84,7 +84,7 @@ export class SimpleItemSheet extends ItemSheet {
     }
 
     if (this.actor.type === 'npc') {
-      for (let profession in this.actor.data.data.professions) {
+      for (let profession in this.actor.system.professions) {
         modifierOptions.push(`<option value="${profession}">${profession}</option>`)
       }
     }
@@ -95,7 +95,7 @@ export class SimpleItemSheet extends ItemSheet {
       content: `<div style="display: flex; flex-direction: column; align-items: center; justify-content: center;">
 
                     <div style="background: rgba(180, 180, 180, 0.562); border: solid 1px; padding: 10px; font-style: italic;">
-                        ${this.item.data.name} can apply a bonus or penalty to various skills of the character that has possession of it.
+                        ${this.item.name} can apply a bonus or penalty to various skills of the character that has possession of it.
                         Select a skill, then apply the modifier.
                     </div>
 
@@ -116,8 +116,8 @@ export class SimpleItemSheet extends ItemSheet {
           label: 'Create',
           callback: html => {
             let skillObject = {name: html[0].querySelector('#modifierSelect').value, value: html[0].querySelector('#modifier-value').value}
-            this.item.data.data.skillArray.push(skillObject)
-            this.item.update({'data.skillArray': this.item.data.data.skillArray})
+            this.item.system.skillArray.push(skillObject)
+            this.item.updateSource({'data.skillArray': this.item.system.skillArray})
           }
         }
       },
@@ -129,7 +129,7 @@ export class SimpleItemSheet extends ItemSheet {
   }
 
   _createModifierEntries() {
-    for (let entry of this.item.data.data.skillArray) {
+    for (let entry of this.item.system.skillArray) {
       let modItem = this.actor.items.find(i => i.name === entry.name) || entry.name
 
       let entryElement = document.createElement('div')
@@ -150,11 +150,11 @@ export class SimpleItemSheet extends ItemSheet {
     event.preventDefault()
     let element = event.currentTarget
     let modEntry = element.closest('.grid-container')
-    for (let entry of this.item.data.data.skillArray) {
+    for (let entry of this.item.system.skillArray) {
       if (entry.name == modEntry.getAttribute('id')) {
-        let index = this.item.data.data.skillArray.indexOf(entry)
-        this.item.data.data.skillArray.splice(index, 1)
-        this.item.update({'data.skillArray': this.item.data.data.skillArray})
+        let index = this.item.system.skillArray.indexOf(entry)
+        this.item.system.skillArray.splice(index, 1)
+        this.item.updateSource({'data.skillArray': this.item.system.skillArray})
         break
       } 
     }
@@ -166,11 +166,11 @@ export class SimpleItemSheet extends ItemSheet {
     let chargeMax = this.document.data.data.charge.max;
     let currentCharge = this.document.data.data.charge.value;
 
-    if (currentCharge >= chargeMax||currentCharge + this.item.data.data.charge.reduction >= chargeMax) {
+    if (currentCharge >= chargeMax||currentCharge + this.item.system.charge.reduction >= chargeMax) {
       ui.notifications.info(`${this.item.name} is fully charged.`)
       this.document.update({'data.charge.value': chargeMax})
     } else {
-    this.document.update({"data.charge.value" : currentCharge + this.item.data.data.charge.reduction});
+    this.document.update({"data.charge.value" : currentCharge + this.item.system.charge.reduction});
     }
   }
 
@@ -178,10 +178,10 @@ export class SimpleItemSheet extends ItemSheet {
     event.preventDefault()
     let currentCharge = this.document.data.data.charge.value;
 
-    if (currentCharge <= 0||currentCharge - this.item.data.data.charge.reduction < 0) {
+    if (currentCharge <= 0||currentCharge - this.item.system.charge.reduction < 0) {
       ui.notifications.info(`${this.item.name} does not have enough charge.`)
     } else {
-    this.document.update({"data.charge.value" : currentCharge - this.item.data.data.charge.reduction});
+    this.document.update({"data.charge.value" : currentCharge - this.item.system.charge.reduction});
     }
   }
 

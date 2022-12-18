@@ -10,9 +10,9 @@
                     <div class="item-resource-row">
                         <div class="item-resource">
                             <div class="stat-value-label">
-                                <select name="data.rankTitle" data-type="String">
-                                    {{#select data.rankTitle}}
-                                    {{#each data.ranks as |ranks key|}}
+                                <select name="system.rankTitle" data-type="String">
+                                    {{#select item.system.rankTitle}}
+                                    {{#each item.system.ranks as |ranks key|}}
                                     <option value="{{key}}">{{ranks}}</option> 
                                     {{/each}} {{/select}}
                                 </select>
@@ -23,7 +23,7 @@
                         </div>
                         <div class="item-resource">
                             <div class="stat-value-label">
-                                <input type="text" name="data.location" value="{{data.location}}">
+                                <input type="text" name="system.location" value="{{item.system.location}}">
                             </div>
                             <div class="flex-container">
                                 <div class="small-text-label">HQ Location</div>
@@ -46,7 +46,7 @@
     
             {{!-- Description Tab --}}
             <div class="tab" data-group="primary" data-tab="description">
-                {{editor content=data.description target="data.description" button=true owner=owner editable=editable}}
+                {{editor item.system.description target="system.description" button=true owner=owner editable=editable}}
             </div>
     
             {{!-- Attributes Tab --}}
@@ -58,37 +58,37 @@
                             <div class="grid-container">
                                 <div>Rank 1 Title</div>
                                 <div class="right-align-content">
-                                    <input type="text" name="data.ranks.rank1" value="{{data.ranks.rank1}}"/>
+                                    <input type="text" name="system.ranks.rank1" value="{{item.system.ranks.rank1}}"/>
                                 </div>
                             </div>
                             <div class="grid-container">
                                 <div>Rank 2 Title</div>
                                 <div class="right-align-content">
-                                    <input type="text" name="data.ranks.rank2" value="{{data.ranks.rank2}}"/>
+                                    <input type="text" name="system.ranks.rank2" value="{{item.system.ranks.rank2}}"/>
                                 </div>
                             </div>
                             <div class="grid-container">
                                 <div>Rank 3 Title</div>
                                 <div class="right-align-content">
-                                    <input type="text" name="data.ranks.rank3" value="{{data.ranks.rank3}}"/>
+                                    <input type="text" name="system.ranks.rank3" value="{{item.system.ranks.rank3}}"/>
                                 </div>
                             </div>
                             <div class="grid-container">
                                 <div>Rank 4 Title</div>
                                 <div class="right-align-content">
-                                    <input type="text" name="data.ranks.rank4" value="{{data.ranks.rank4}}"/>
+                                    <input type="text" name="system.ranks.rank4" value="{{item.system.ranks.rank4}}"/>
                                 </div>
                             </div>
                             <div class="grid-container">
                                 <div>Rank 5 Title</div>
                                 <div class="right-align-content">
-                                    <input type="text" name="data.ranks.rank5" value="{{data.ranks.rank5}}"/>
+                                    <input type="text" name="system.ranks.rank5" value="{{item.system.ranks.rank5}}"/>
                                 </div>
                             </div>
                             <div class="grid-container">
                                 <div>Rank 6 Title</div>
                                 <div class="right-align-content">
-                                    <input type="text" name="data.ranks.rank6" value="{{data.ranks.rank6}}"/>
+                                    <input type="text" name="system.ranks.rank6" value="{{item.system.ranks.rank6}}"/>
                                 </div>
                             </div>
                         </div>

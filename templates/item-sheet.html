@@ -10,7 +10,7 @@
                     <div class="item-resource-row">
                         <div class="item-resource">
                             <div class="stat-value-label">
-                                <input type="number" name="data.quantity" value="{{data.quantity}}"/>
+                                <input type="number" name="system.quantity" value="{{item.system.quantity}}"/>
                             </div>
                             <div class="flex-container">
                                 <div class="small-text-label">Quantity</div>
@@ -18,7 +18,7 @@
                         </div>
                         <div class="item-resource">
                             <div class="stat-value-label">
-                                <input type="number" name="data.enc" value="{{data.enc}}"/>
+                                <input type="number" name="system.enc" value="{{item.system.enc}}"/>
                             </div>
                             <div class="flex-container">
                                 <div class="small-text-label">ENC</div>
@@ -26,7 +26,7 @@
                         </div>
                         <div class="item-resource">
                             <div class="stat-value-label">
-                                <input type="number" name="data.price" value="{{data.price}}"/>
+                                <input type="number" name="system.price" value="{{item.system.price}}"/>
                             </div>
                             <div class="flex-container">
                                 <div class="small-text-label">Price</div>
@@ -34,7 +34,7 @@
                         </div>
                         <div class="item-resource">
                             <div class="stat-value-label">
-                                <input type="number" name="data.enchant_level" value="{{data.enchant_level}}"/>
+                                <input type="number" name="system.enchant_level" value="{{item.system.enchant_level}}"/>
                             </div>
                             <div class="flex-container">
                                 <div class="small-text-label">Enchant Lv.</div>
@@ -43,7 +43,7 @@
                         <div class="item-resource">
                             <div class="stat-value-label">
                                 <div class="flex-container">
-                                    <input type="number" name="data.charge.value" value="{{data.charge.value}}"> / <input type="number" name="data.charge.max" value="{{data.charge.max}}">
+                                    <input type="number" name="system.charge.value" value="{{item.system.charge.value}}"> / <input type="number" name="system.charge.max" value="{{item.system.charge.max}}">
                                 </div>
                             </div>
                             <div class="flex-container">
@@ -78,7 +78,7 @@
                         <div class="selection-container" id="item-modifiers"></div>
                     </div>
                     <div class="basic-padding">
-                        {{editor content=data.description target="data.description" button=true owner=owner editable=editable}}
+                        {{editor item.system.description target="system.description" button=true owner=owner editable=editable}}
                     </div>
                 </div>
             </div>
@@ -92,25 +92,25 @@
                             <div class="grid-container">
                                 <div>Ignore ENC</div>
                                 <div class="right-align-content">
-                                    <input class="checkbox" type="checkbox" name="data.excludeENC" {{checked data.excludeENC}}>
+                                    <input class="checkbox" type="checkbox" name="system.excludeENC" {{checked item.system.excludeENC}}>
                                 </div>
                             </div>
                             <div class="grid-container">
                                 <div>Wearable Item</div>
                                 <div class="right-align-content">
-                                    <input class="checkbox" type="checkbox" name="data.wearable" {{checked data.wearable}}>
+                                    <input class="checkbox" type="checkbox" name="system.wearable" {{checked item.system.wearable}}>
                                 </div>
                             </div>
                             <div class="grid-container">
                                 <div>Equipped</div>
                                 <div class="right-align-content">
-                                    <input class="checkbox" type="checkbox" name="data.equipped" {{checked data.equipped}}>
+                                    <input class="checkbox" type="checkbox" name="system.equipped" {{checked item.system.equipped}}>
                                 </div>
                             </div>
                             <div class="grid-container">
                                 <div>Charge Reduction</div>
                                 <div class="right-align-content">
-                                    <input type="number" name="data.charge.reduction" value="{{data.charge.reduction}}">
+                                    <input type="number" name="system.charge.reduction" value="{{item.system.charge.reduction}}">
                                 </div>
                             </div>
                         </div>
@@ -121,35 +121,35 @@
                             <div class="modifier-container">
                                 <div class="grid-container">
                                     <div>Strength</div>
-                                    <div><input type="number" name="data.characteristicBonus.strChaBonus" value="{{data.characteristicBonus.strChaBonus}}"></div>
+                                    <div><input type="number" name="system.characteristicBonus.strChaBonus" value="{{item.system.characteristicBonus.strChaBonus}}"></div>
                                 </div>
                                 <div class="grid-container">
                                     <div>Endurance</div>
-                                    <div><input type="number" name="data.characteristicBonus.endChaBonus" value="{{data.characteristicBonus.endChaBonus}}"></div>
+                                    <div><input type="number" name="system.characteristicBonus.endChaBonus" value="{{item.system.characteristicBonus.endChaBonus}}"></div>
                                 </div>
                                 <div class="grid-container">
                                     <div>Agility</div>
-                                    <div><input type="number" name="data.characteristicBonus.agiChaBonus" value="{{data.characteristicBonus.agiChaBonus}}"></div>
+                                    <div><input type="number" name="system.characteristicBonus.agiChaBonus" value="{{item.system.characteristicBonus.agiChaBonus}}"></div>
                                 </div>
                                 <div class="grid-container">
                                     <div>Intelligence</div>
-                                    <div><input type="number" name="data.characteristicBonus.intChaBonus" value="{{data.characteristicBonus.intChaBonus}}"></div>
+                                    <div><input type="number" name="system.characteristicBonus.intChaBonus" value="{{item.system.characteristicBonus.intChaBonus}}"></div>
                                 </div>
                                 <div class="grid-container">
                                     <div>Willpower</div>
-                                    <div><input type="number" name="data.characteristicBonus.wpChaBonus" value="{{data.characteristicBonus.wpChaBonus}}"></div>
+                                    <div><input type="number" name="system.characteristicBonus.wpChaBonus" value="{{item.system.characteristicBonus.wpChaBonus}}"></div>
                                 </div>
                                 <div class="grid-container">
                                     <div>Perception</div>
-                                    <div><input type="number" name="data.characteristicBonus.prcChaBonus" value="{{data.characteristicBonus.prcChaBonus}}"></div>
+                                    <div><input type="number" name="system.characteristicBonus.prcChaBonus" value="{{item.system.characteristicBonus.prcChaBonus}}"></div>
                                 </div>
                                 <div class="grid-container">
                                     <div>Personality</div>
-                                    <div><input type="number" name="data.characteristicBonus.prsChaBonus" value="{{data.characteristicBonus.prsChaBonus}}"></div>
+                                    <div><input type="number" name="system.characteristicBonus.prsChaBonus" value="{{item.system.characteristicBonus.prsChaBonus}}"></div>
                                 </div>
                                 <div class="grid-container">
                                     <div>Luck</div>
-                                    <div><input type="number" name="data.characteristicBonus.lckChaBonus" value="{{data.characteristicBonus.lckChaBonus}}"></div>
+                                    <div><input type="number" name="system.characteristicBonus.lckChaBonus" value="{{item.system.characteristicBonus.lckChaBonus}}"></div>
                                 </div>
                             </div>
                         </div>
@@ -158,39 +158,39 @@
                             <div class="modifier-container">
                                 <div class="grid-container">
                                     <div>Disease</div>
-                                    <div><input type="number" name="data.diseaseR" value="{{data.diseaseR}}"></div>
+                                    <div><input type="number" name="system.diseaseR" value="{{item.system.diseaseR}}"></div>
                                 </div>
                                 <div class="grid-container">
                                     <div>Fire</div>
-                                    <div><input type="number" name="data.fireR" value="{{data.fireR}}"></div>
+                                    <div><input type="number" name="system.fireR" value="{{item.system.fireR}}"></div>
                                 </div>
                                 <div class="grid-container">
                                     <div>Frost</div>
-                                    <div><input type="number" name="data.frostR" value="{{data.frostR}}"></div>
+                                    <div><input type="number" name="system.frostR" value="{{item.system.frostR}}"></div>
                                 </div>
                                 <div class="grid-container">
                                     <div>Shock</div>
-                                    <div><input type="number" name="data.shockR" value="{{data.shockR}}"></div>
+                                    <div><input type="number" name="system.shockR" value="{{item.system.shockR}}"></div>
                                 </div>
                                 <div class="grid-container">
                                     <div>Poison</div>
-                                    <div><input type="number" name="data.poisonR" value="{{data.poisonR}}"></div>
+                                    <div><input type="number" name="system.poisonR" value="{{item.system.poisonR}}"></div>
                                 </div>
                                 <div class="grid-container">
                                     <div>Magic</div>
-                                    <div><input type="number" name="data.magicR" value="{{data.magicR}}"></div>
+                                    <div><input type="number" name="system.magicR" value="{{item.system.magicR}}"></div>
                                 </div>
                                 <div class="grid-container">
                                     <div>Toughness</div>
-                                    <div><input type="number" name="data.natToughnessR" value="{{data.natToughnessR}}"></div>
+                                    <div><input type="number" name="system.natToughnessR" value="{{item.system.natToughnessR}}"></div>
                                 </div>
                                 <div class="grid-container">
                                     <div>Silver</div>
-                                    <div><input type="number" name="data.silverR" value="{{data.silverR}}"></div>
+                                    <div><input type="number" name="system.silverR" value="{{item.system.silverR}}"></div>
                                 </div>
                                 <div class="grid-container">
                                     <div>Sunlight</div>
-                                    <div><input type="number" name="data.sunlightR" value="{{data.sunlightR}}"></div>
+                                    <div><input type="number" name="system.sunlightR" value="{{item.system.sunlightR}}"></div>
                                 </div>
                             </div>
                         </div>

@@ -10,7 +10,7 @@
                     <div class="item-resource-row">
                         <div class="item-resource">
                             <div class="stat-value-label">
-                                <label>{{data.value}}</label>
+                                <label>{{item.system.value}}</label>
                             </div>
                             <div class="flex-container">
                                 <div class="small-text-label">Target Number</div>
@@ -18,9 +18,9 @@
                         </div>
                         <div class="item-resource">
                             <div class="stat-value-label">
-                                <select name="data.rank" data-type="String">
-                                    {{#select data.rank}}
-                                    {{#each data.skillRanks as |skillRanks key|}}
+                                <select name="system.rank" data-type="String">
+                                    {{#select item.system.rank}}
+                                    {{#each item.system.skillRanks as |skillRanks key|}}
                                     <option value="{{key}}">{{skillRanks}}</option> 
                                     {{/each}} {{/select}}
                                 </select>
@@ -31,7 +31,7 @@
                         </div>
                         <div class="item-resource">
                             <div class="stat-value-label">
-                                <input type="text" name="data.governingCha" value="{{data.governingCha}}">
+                                <input type="text" name="system.governingCha" value="{{item.system.governingCha}}">
                             </div>
                             <div class="flex-container">
                                 <div class="small-text-label">Characteristics</div>
@@ -39,9 +39,9 @@
                         </div>
                         <div class="item-resource">
                             <div class="stat-value-label">
-                                <select name="data.baseCha" data-type="String">
-                                    {{#select data.baseCha}}
-                                    {{#each data.characteristics as |characteristics key|}}
+                                <select name="system.baseCha" data-type="String">
+                                    {{#select item.system.baseCha}}
+                                    {{#each item.system.characteristics as |characteristics key|}}
                                     <option value="{{key}}">{{characteristics}}</option> 
                                     {{/each}} {{/select}}
                                 </select>
@@ -54,7 +54,7 @@
                     <div class="item-resource-row">
                         <div class="item-resource">
                             <div class="stat-value-label">
-                                <input type="text" name="data.trainedItems" value="{{data.trainedItems}}" data-dtype="String">
+                                <input type="text" name="system.trainedItems" value="{{item.system.trainedItems}}" data-dtype="String">
                             </div>
                             <div class="flex-container">
                                 <div class="small-text-label">Specialization</div>
@@ -76,7 +76,7 @@
     
             {{!-- Description Tab --}}
             <div class="tab" data-group="primary" data-tab="description">
-                {{editor content=data.description target="data.description" button=true owner=owner editable=editable}}
+                {{editor item.system.description target="item.system.description" button=true owner=owner editable=editable}}
             </div>
         </section>
 </form>
