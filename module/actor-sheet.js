@@ -2547,7 +2547,7 @@
         case 'armor':
         case 'item':
           tableEntry = `<tr>
-                            <td data-item-id="${item.data._id}">
+                            <td data-item-id="${item._id}">
                                 <div style="display: flex; flex-direction: row; align-items: center; gap: 5px;">
                                   <img class="item-img" src="${item.img}" height="24" width="24">
                                   ${item.name}
@@ -2557,14 +2557,14 @@
                             <td style="text-align: center;">${item.system.magic_ar}</td>
                             <td style="text-align: center;">${item.system.blockRating}</td>
                             <td style="text-align: center;">
-                                <input type="checkbox" class="itemSelect" data-item-id="${item.data._id}" ${item.system.equipped ? 'checked' : ''}>
+                                <input type="checkbox" class="itemSelect" data-item-id="${item._id}" ${item.system.equipped ? 'checked' : ''}>
                             </td>
                         </tr>`
                         break
 
         case 'weapon':
           tableEntry = `<tr>
-                            <td data-item-id="${item.data._id}">
+                            <td data-item-id="${item._id}">
                                 <div style="display: flex; flex-direction: row; align-items: center; gap: 5px;">
                                   <img class="item-img" src="${item.img}" height="24" width="24">
                                   ${item.name}
@@ -2574,14 +2574,14 @@
                             <td style="text-align: center;">${item.system.damage2}</td>
                             <td style="text-align: center;">${item.system.reach}</td>
                             <td style="text-align: center;">
-                                <input type="checkbox" class="itemSelect" data-item-id="${item.data._id}" ${item.system.equipped ? 'checked' : ''}>
+                                <input type="checkbox" class="itemSelect" data-item-id="${item._id}" ${item.system.equipped ? 'checked' : ''}>
                             </td>
                         </tr>`
                         break
 
         case 'ammunition':
           tableEntry = `<tr>
-                            <td data-item-id="${item.data._id}">
+                            <td data-item-id="${item._id}">
                                 <div style="display: flex; flex-direction: row; align-items: center; gap: 5px;">
                                   <img class="item-img" src="${item.img}" height="24" width="24">
                                   ${item.name}
@@ -2591,7 +2591,7 @@
                             <td style="text-align: center;">${item.system.damage}</td>
                             <td style="text-align: center;">${item.system.enchant_level}</td>
                             <td style="text-align: center;">
-                                <input type="checkbox" class="itemSelect" data-item-id="${item.data._id}" ${item.system.equipped ? 'checked' : ''}>
+                                <input type="checkbox" class="itemSelect" data-item-id="${item._id}" ${item.system.equipped ? 'checked' : ''}>
                             </td>
                         </tr>`
                         break
