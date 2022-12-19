@@ -117,7 +117,7 @@ export class SimpleItemSheet extends ItemSheet {
           callback: html => {
             let skillObject = {name: html[0].querySelector('#modifierSelect').value, value: html[0].querySelector('#modifier-value').value}
             this.item.system.skillArray.push(skillObject)
-            this.item.updateSource({'data.skillArray': this.item.system.skillArray})
+            this.item.update({'system.skillArray': this.item.system.skillArray})
           }
         }
       },
@@ -154,7 +154,7 @@ export class SimpleItemSheet extends ItemSheet {
       if (entry.name == modEntry.getAttribute('id')) {
         let index = this.item.system.skillArray.indexOf(entry)
         this.item.system.skillArray.splice(index, 1)
-        this.item.updateSource({'data.skillArray': this.item.system.skillArray})
+        this.item.update({'system.skillArray': this.item.system.skillArray})
         break
       } 
     }
