@@ -125,7 +125,7 @@ export class SimpleItem extends Item {
     for (let entry of itemData.skillArray) {
       let moddedSkill = actorData.items.find(i => i.name === entry.name)
       if (itemData.equipped) {
-        moddedSkill.updateSource({'data.value': moddedSkill.system.value + Number(entry.value)})
+        moddedSkill.updateSource({'system.value': moddedSkill.system.value + Number(entry.value)})
       }
     }
   }
