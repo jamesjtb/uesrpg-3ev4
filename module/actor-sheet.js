@@ -1294,9 +1294,9 @@
     const item = this.actor.getEmbeddedDocument("Item", li.data("itemId"));
 
     if (item.system.weapon2H === false) {
-      item.update({"data.weapon2H" : true})
+      item.update({"system.weapon2H" : true})
     } else if (item.system.weapon2H === true) {
-      item.update({"data.weapon2H" : false})
+      item.update({"system.weapon2H" : false})
     }
   }
 
@@ -1308,7 +1308,7 @@
 
     item.system.quantity = item.system.quantity + 1;
 
-    await item.update({"data.quantity" : item.system.quantity})
+    await item.update({"system.quantity" : item.system.quantity})
   }
 
   async _onMinusQty(event) {
@@ -1323,7 +1323,7 @@
       ui.notifications.info(`You have used your last ${item.name}!`);
     }
 
-    await item.update({"data.quantity" : item.system.quantity})
+    await item.update({"system.quantity" : item.system.quantity})
   }
 
   async _onItemEquip(event) {
@@ -1332,9 +1332,9 @@
     const item = this.actor.getEmbeddedDocument("Item", li.data("itemId"));
 
     if (item.system.equipped === false) {
-      item.update({"data.equipped" : true})
+      item.update({"system.equipped" : true})
     } else if (item.system.equipped === true) {
-      item.update({"data.equipped" : false})
+      item.update({"system.equipped" : false})
     }
   }
 

@@ -176,7 +176,7 @@ Hooks.once("init", async function() {
           </div>
 
           <div style="overflow-y: scroll; height: 300px; margin: 5px; padding: 5px; background-color: rgba(78, 78, 78, 0.137);">
-            <h2 style="text-align: center;">v${game.system.data.version} Changelog</h2>
+            <h2 style="text-align: center;">v${game.system.version} Changelog</h2>
 
                 <h3>General Changes</h3>
                   <ul>
