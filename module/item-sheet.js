@@ -163,25 +163,25 @@ export class SimpleItemSheet extends ItemSheet {
 
   async _onChargePlus(event) {
     event.preventDefault()
-    let chargeMax = this.document.data.data.charge.max;
-    let currentCharge = this.document.data.data.charge.value;
+    let chargeMax = this.document.system.charge.max;
+    let currentCharge = this.document.system.charge.value;
 
     if (currentCharge >= chargeMax||currentCharge + this.item.system.charge.reduction >= chargeMax) {
       ui.notifications.info(`${this.item.name} is fully charged.`)
-      this.document.update({'data.charge.value': chargeMax})
+      this.document.update({'system.charge.value': chargeMax})
     } else {
-    this.document.update({"data.charge.value" : currentCharge + this.item.system.charge.reduction});
+    this.document.update({"system.charge.value" : currentCharge + this.item.system.charge.reduction});
     }
   }
 
   async _onChargeMinus(event) {
     event.preventDefault()
-    let currentCharge = this.document.data.data.charge.value;
+    let currentCharge = this.document.system.charge.value;
 
     if (currentCharge <= 0||currentCharge - this.item.system.charge.reduction < 0) {
       ui.notifications.info(`${this.item.name} does not have enough charge.`)
     } else {
-    this.document.update({"data.charge.value" : currentCharge - this.item.system.charge.reduction});
+    this.document.update({"system.charge.value" : currentCharge - this.item.system.charge.reduction});
     }
   }
 

@@ -1,66 +1,78 @@
 {
-  "name": "uesrpg-d100",
   "title": "UESRPG d100",
   "description": "A system used to play the UESRPG (Unofficial Elder Scrolls Roleplaying Game) d100 system.",
-  "version": 1.56,
-  "minimumCoreVersion": "10",
-  "compatibleCoreVersion": "10",
-  "templateVersion": 2,
-  "author": "DogBoneZone",
-  "esmodules": ["module/simple.js"],
-  "styles": ["styles/simple.css"],
+  "version": "1.56",
+  "esmodules": [
+    "module/simple.js"
+  ],
+  "styles": [
+    "styles/simple.css"
+  ],
   "packs": [
     {
       "name": "roll-tables",
       "label": "Loot Tables",
       "system": "uesrpg-d100",
-      "path": "./packs/roll-tables.db",
-      "entity": "RollTable"
+      "path": "packs/roll-tables.db",
+      "type": "RollTable",
+      "private": false,
+      "flags": {}
     },
     {
       "name": "macros",
       "label": "Macros",
       "system": "uesrpg-d100",
-      "path": "./packs/macros.db",
-      "entity": "Macro"
+      "path": "packs/macros.db",
+      "type": "Macro",
+      "private": false,
+      "flags": {}
     },
     {
       "name": "powers",
       "label": "Powers",
       "system": "uesrpg-d100",
-      "path": "./packs/powers.db",
-      "entity": "Item"
+      "path": "packs/powers.db",
+      "type": "Item",
+      "private": false,
+      "flags": {}
     },
     {
       "name": "traits",
       "label": "Traits",
       "system": "uesrpg-d100",
-      "path": "./packs/traits.db",
-      "entity": "Item"
+      "path": "packs/traits.db",
+      "type": "Item",
+      "private": false,
+      "flags": {}
     },
     {
       "name": "talents",
       "label": "Talents",
       "system": "uesrpg-d100",
-      "path": "./packs/talents.db",
-      "entity": "Item"
+      "path": "packs/talents.db",
+      "type": "Item",
+      "private": false,
+      "flags": {}
     },
     {
       "name": "standard-skills",
       "label": "Standard Skills",
       "system": "uesrpg-d100",
-      "path": "./packs/standard-skills.db",
-      "entity": "Item"
+      "path": "packs/standard-skills.db",
+      "type": "Item",
+      "private": false,
+      "flags": {}
     },
     {
       "name": "signs",
       "label": "Birth Signs",
       "system": "uesrpg-d100",
-      "path": "./packs/signs.db",
-      "entity": "Item"
+      "path": "packs/signs.db",
+      "type": "Item",
+      "private": false,
+      "flags": {}
     }
   ],
-  "languages": [],
   "gridDistance": 1,
   "gridUnits": "m",
   "primaryTokenAttribute": "hp",
@@ -68,5 +80,16 @@
   "url": "https://gitlab.com/DogBoneZone/uesrpg-3e/",
   "manifest": "https://gitlab.com/DogBoneZone/uesrpg-3e/raw/master/system.json",
   "download": "https://gitlab.com/DogBoneZone/uesrpg-3e/-/archive/1.56/uesrpg-3e-1.56.zip",
-  "license": "LICENSE.txt"
+  "license": "LICENSE.txt",
+  "id": "uesrpg-d100",
+  "authors": [
+    {
+      "name": "DogBoneZone",
+      "flags": {}
+    }
+  ],
+  "compatibility": {
+    "minimum": "10",
+    "verified": "10"
+  }
 }

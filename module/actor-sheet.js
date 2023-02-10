@@ -2,6 +2,9 @@
  * Extend the basic ActorSheet with some very simple modifications
  * @extends {ActorSheet}
  */
+import { isLucky } from './skillCalcHelper.js'
+import { isUnlucky } from './skillCalcHelper.js'
+
  export class SimpleActorSheet extends ActorSheet {
 
   /** @override */
@@ -534,6 +537,7 @@
     if (this.actor.system.fatigue.penalty != 0) {tags.push(`<span class="tag fatigue-tag">Fatigued ${this.actor.system.fatigue.penalty}</span>`)}
     if (this.actor.system.carry_rating.penalty != 0) {tags.push(`<span class="tag enc-tag">Encumbered ${this.actor.system.carry_rating.penalty}</span>`)}
 
+    // Dialog Menu
     let d = new Dialog({
       title: "Apply Roll Modifier",
       content: `<form>
@@ -551,31 +555,13 @@
     roll.roll({async:false});
 
       if (this.actor.system.wounded == true) {
-        if (roll.total == this.actor.system.lucky_numbers.ln1 || 
-          roll.total == this.actor.system.lucky_numbers.ln2 || 
-          roll.total == this.actor.system.lucky_numbers.ln3 || 
-          roll.total == this.actor.system.lucky_numbers.ln4 || 
-          roll.total == this.actor.system.lucky_numbers.ln5 ||
-          roll.total == this.actor.system.lucky_numbers.ln6 ||
-          roll.total == this.actor.system.lucky_numbers.ln7 ||
-          roll.total == this.actor.system.lucky_numbers.ln8 ||
-          roll.total == this.actor.system.lucky_numbers.ln9 ||
-          roll.total == this.actor.system.lucky_numbers.ln10)
-
-         {
+        if (isLucky()) {
           contentString = `<h2>${element.getAttribute('name')}</h2
           <p></p><b>Target Number: [[${woundedValue + playerInput}]]</b> <p></p>
           <b>Result: [[${roll.result}]]</b><p></p>
           <span style='color:green; font-size:120%;'> <b>LUCKY NUMBER!</b></span>`
-
     
-        } else if (roll.total == this.actor.system.unlucky_numbers.ul1 || 
-          roll.total == this.actor.system.unlucky_numbers.ul2 || 
-          roll.total == this.actor.system.unlucky_numbers.ul3 || 
-          roll.total == this.actor.system.unlucky_numbers.ul4 || 
-          roll.total == this.actor.system.unlucky_numbers.ul5 ||
-          roll.total == this.actor.system.unlucky_numbers.ul6) 
-          {
+        } else if (isUnlucky()) {
           contentString = `<h2>${element.getAttribute('name')}</h2
           <p></p><b>Target Number: [[${woundedValue + playerInput}]]</b> <p></p>
           <b>Result: [[${roll.result}]]</b><p></p>
@@ -590,32 +576,14 @@
 
         } 
       } else {
-        if (roll.total == this.actor.system.lucky_numbers.ln1 || 
-          roll.total == this.actor.system.lucky_numbers.ln2 || 
-          roll.total == this.actor.system.lucky_numbers.ln3 || 
-          roll.total == this.actor.system.lucky_numbers.ln4 || 
-          roll.total == this.actor.system.lucky_numbers.ln5 ||
-          roll.total == this.actor.system.lucky_numbers.ln6 ||
-          roll.total == this.actor.system.lucky_numbers.ln7 ||
-          roll.total == this.actor.system.lucky_numbers.ln8 ||
-          roll.total == this.actor.system.lucky_numbers.ln9 ||
-          roll.total == this.actor.system.lucky_numbers.ln10)
-
-      {
+        if (isLucky()) {
         contentString = `<h2>${element.getAttribute('name')}</h2
         <p></p><b>Target Number: [[${regularValue + playerInput}]]</b> <p></p>
         <b>Result: [[${roll.result}]]</b><p></p>
         <span style='color:green; font-size:120%;'> <b>LUCKY NUMBER!</b></span>`
 
 
-      } else if (roll.total == this.actor.system.unlucky_numbers.ul1 || 
-          roll.total == this.actor.system.unlucky_numbers.ul2 || 
-          roll.total == this.actor.system.unlucky_numbers.ul3 || 
-          roll.total == this.actor.system.unlucky_numbers.ul4 || 
-          roll.total == this.actor.system.unlucky_numbers.ul5 ||
-          roll.total == this.actor.system.unlucky_numbers.ul6) 
-
-      {
+      } else if (isUnlucky()) {
         contentString = `<h2>${element.getAttribute('name')}</h2
         <p></p><b>Target Number: [[${regularValue + playerInput}]]</b> <p></p>
         <b>Result: [[${roll.result}]]</b><p></p>
@@ -659,17 +627,7 @@
     const button = event.currentTarget;
     const li = button.closest(".item");
     const item = this.actor.items.get(li?.dataset.itemId);
-    const luck1 = this.actor.system.lucky_numbers.ln1;
-    const luck2 = this.actor.system.lucky_numbers.ln2;
-    const luck3 = this.actor.system.lucky_numbers.ln3;
-    const luck4 = this.actor.system.lucky_numbers.ln4;
-    const luck5 = this.actor.system.lucky_numbers.ln5;
-    const luckExtra = this.actor.system.lucky_numbers.ln6;
-    const luck6 = this.actor.system.unlucky_numbers.ul1;
-    const luck7 = this.actor.system.unlucky_numbers.ul2;
-    const luck8 = this.actor.system.unlucky_numbers.ul3;
-    const luck9 = this.actor.system.unlucky_numbers.ul4;
-    const luck10 = this.actor.system.unlucky_numbers.ul5;
+
     const woundedValue = item.system.value + this.actor.system.woundPenalty + this.actor.system.fatigue.penalty + this.actor.system.carry_rating.penalty
     const regularValue = item.system.value + this.actor.system.fatigue.penalty + this.actor.system.carry_rating.penalty
     let tags = []
@@ -677,6 +635,7 @@
     if (this.actor.system.fatigue.penalty != 0) {tags.push(`<span class="tag fatigue-tag">Fatigued ${this.actor.system.fatigue.penalty}</span>`)}
     if (this.actor.system.carry_rating.penalty != 0) {tags.push(`<span class="tag enc-tag">Encumbered ${this.actor.system.carry_rating.penalty}</span>`)}
 
+    // Skill Roll Dialog Menu
     let d = new Dialog({
       title: "Apply Roll Modifier",
       content: `<form>
@@ -692,13 +651,13 @@
             let roll = new Roll("1d100");
             roll.roll({async:false});
 
-          if (roll.total === luck1 || roll.total === luck2 || roll.total === luck3 || roll.total === luck4 || roll.total === luck5 || roll.total === luckExtra) {
+          if (isLucky()) {
             contentString = `<h2><img src="${item.img}"</img>${item.name}</h2>
             <p></p><b>Target Number: [[${regularValue} + ${playerInput} + ${this.actor.system.wounded ? this.actor.system.woundPenalty : 0}]]</b> <p></p>
             <b>Result: [[${roll.result}]]</b><p></p>
             <span style='color:green; font-size:120%;'> <b>LUCKY NUMBER!</b></span>`
 
-          } else if (roll.total == luck6 || roll.total === luck7 || roll.total === luck8 || roll.total === luck9 || roll.total === luck10) {
+          } else if (isUnlucky()) {
             contentString = `<h2><img src="${item.img}"</img>${item.name}</h2>
             <p></p><b>Target Number: [[${regularValue} + ${playerInput} + ${this.actor.system.wounded ? this.actor.system.woundPenalty : 0}]]</b> <p></p>
             <b>Result: [[${roll.result}]]</b><p></p>
@@ -1038,13 +997,13 @@
           roll.roll({async:false});
           let contentString = "";
           
-          if (roll.total == this.actor.system.lucky_numbers.ln1 || roll.total == this.actor.system.lucky_numbers.ln2 || roll.total == this.actor.system.lucky_numbers.ln3 || roll.total == this.actor.system.lucky_numbers.ln4 || roll.total == this.actor.system.lucky_numbers.ln5) {
+          if (isLucky()) {
             contentString = `<h2><img src="${item.img}"</img>${item.name}</h2>
             <p></p><b>Target Number: [[${regularValue} + ${playerInput} + ${this.actor.system.wounded ? this.actor.system.woundPenalty : 0}]]</b> <p></p>
             <b>Result: [[${roll.result}]]</b><p></p>
             <span style='color:green; font-size:120%;'> <b>LUCKY NUMBER!</b></span>`
 
-          } else if (roll.total == this.actor.system.unlucky_numbers.ul1 || roll.total == this.actor.system.unlucky_numbers.ul2 || roll.total == this.actor.system.unlucky_numbers.ul3 || roll.total == this.actor.system.unlucky_numbers.ul4 || roll.total == this.actor.system.unlucky_numbers.ul5) {
+          } else if (isUnlucky()) {
             contentString = `<h2><img src="${item.img}"</img>${item.name}</h2>
             <p></p><b>Target Number: [[${regularValue} + ${playerInput} + ${this.actor.system.wounded ? this.actor.system.woundPenalty : 0}]]</b> <p></p>
             <b>Result: [[${roll.result}]]</b><p></p>
@@ -1106,13 +1065,13 @@
           roll.roll({async:false});
           let contentString = "";
 
-          if (roll.total == this.actor.system.lucky_numbers.ln1 || roll.total == this.actor.system.lucky_numbers.ln2 || roll.total == this.actor.system.lucky_numbers.ln3 || roll.total == this.actor.system.lucky_numbers.ln4 || roll.total == this.actor.system.lucky_numbers.ln5) {
+          if (isLucky()) {
             contentString = `<h2>${element.name} Resistance</h2>
             <p></p><b>Target Number: [[${this.actor.system.resistance[element.id]} + ${playerInput}]]</b> <p></p>
             <b>Result: [[${roll.result}]]</b><p></p>
             <span style='color:green; font-size:120%;'> <b>LUCKY NUMBER!</b></span>`
 
-          } else if (roll.total == this.actor.system.unlucky_numbers.ul1 || roll.total == this.actor.system.unlucky_numbers.ul2 || roll.total == this.actor.system.unlucky_numbers.ul3 || roll.total == this.actor.system.unlucky_numbers.ul4 || roll.total == this.actor.system.unlucky_numbers.ul5) {
+          } else if (isLucky()) {
             contentString = `<h2>${element.name} Resistance</h2>
             <p></p><b>Target Number: [[${this.actor.system.resistance[element.id]} + ${playerInput}]]</b> <p></p>
             <b>Result: [[${roll.result}]]</b><p></p>
