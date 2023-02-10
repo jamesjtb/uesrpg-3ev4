@@ -256,7 +256,7 @@ export class npcSheet extends ActorSheet {
       const li = ev.currentTarget.closest(".item");
       const item = this.actor.items.get(li.dataset.itemId);
       item.sheet.render(true);
-      await item.update({"data.value" : item.system.value})
+      await item.update({"system.value" : item.system.value})
     });
 
     // Delete Inventory Item
@@ -1213,7 +1213,7 @@ export class npcSheet extends ActorSheet {
     } else if (item.system.weapon2H === true) {
       item.system.weapon2H = false;
     }
-     item.update({"data.weapon2H" : item.system.weapon2H})
+     item.update({"system.weapon2H" : item.system.weapon2H})
   }
 
    _onPlusQty(event) {
@@ -1224,7 +1224,7 @@ export class npcSheet extends ActorSheet {
 
     item.system.quantity = item.system.quantity + 1;
 
-     item.update({"data.quantity" : item.system.quantity})
+     item.update({"system.quantity" : item.system.quantity})
   }
 
   async _onMinusQty(event) {
@@ -1239,7 +1239,7 @@ export class npcSheet extends ActorSheet {
       ui.notifications.info(`You have used your last ${item.name}!`);
     }
 
-    await item.update({"data.quantity" : item.system.quantity})
+    await item.update({"system.quantity" : item.system.quantity})
   }
 
   async _onItemEquip(event) {
