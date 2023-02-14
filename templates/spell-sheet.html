@@ -83,7 +83,7 @@
     
             {{!-- Description Tab --}}
             <div class="tab" data-group="primary" data-tab="description">
-                {{editor item.system.description target="system.description" button=true owner=owner editable=editable}}
+                {{editor item.system.description target="system.description" engine="prosemirror" button=true owner=owner editable=editable}}
             </div>
     
             {{!-- Attributes Tab --}}
@@ -92,7 +92,7 @@
                     <div class="quality-container">
                         <div class="flex-container">
                             <h2>Spell Attributes</h2>
-                            <div>{{editor item.system.attributes target="system.attributes" button=true owner=owner editable=editable}}</div>
+                            <div>{{editor item.system.attributes target="system.attributes" engine="prosemirror" button=true owner=owner editable=editable}}</div>
                         </div>
                     </div>
                 </div>
