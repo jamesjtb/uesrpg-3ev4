@@ -3,6 +3,7 @@
  * @extends {Item}
  */
 import { skillHelper } from "./skillCalcHelper.js";
+import { skillModHelper } from "./skillCalcHelper.js";
 
 export class SimpleItem extends Item {
   async _preCreate(data, options, user) {
@@ -90,15 +91,16 @@ export class SimpleItem extends Item {
     const fatiguePenalty = Number(actorData.system.fatigue.penalty)
 
     let itemChaBonus = skillHelper(actorData, itemData.baseCha)
+    let itemSkillBonus = skillModHelper(actorData, this.name)
     let chaTotal = 0;
     if (itemData.baseCha !== undefined && itemData.baseCha !== "" && itemData.baseCha !== "none") {
       chaTotal = Number(actorData.system.characteristics[itemData.baseCha].total + itemData.bonus + itemData.miscValue + itemChaBonus);
     }
 
     if (actorData.system.wounded) {
-      itemData.value = Number(woundPenalty + fatiguePenalty + chaTotal)
+      itemData.value = Number(woundPenalty + fatiguePenalty + chaTotal + itemSkillBonus)
     } else {
-      itemData.value = Number(fatiguePenalty + chaTotal)
+      itemData.value = Number(fatiguePenalty + chaTotal + itemSkillBonus)
     }
 
   }
