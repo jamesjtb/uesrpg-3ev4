@@ -1,7 +1,7 @@
 {
   "title": "UESRPG d100",
   "description": "A system used to play the UESRPG (Unofficial Elder Scrolls Roleplaying Game) d100 system.",
-  "version": "1.56",
+  "version": "1.57",
   "esmodules": [
     "module/simple.js"
   ],
@@ -79,7 +79,7 @@
   "secondaryTokenAttribute": "action_points",
   "url": "https://gitlab.com/DogBoneZone/uesrpg-3e/",
   "manifest": "https://gitlab.com/DogBoneZone/uesrpg-3e/raw/master/system.json",
-  "download": "https://gitlab.com/DogBoneZone/uesrpg-3e/-/archive/1.56/uesrpg-3e-1.56.zip",
+  "download": "https://gitlab.com/DogBoneZone/uesrpg-3e/-/archive/1.57/uesrpg-3e-1.57.zip",
   "license": "LICENSE.txt",
   "id": "uesrpg-d100",
   "authors": [
