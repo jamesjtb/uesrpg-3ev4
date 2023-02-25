@@ -555,13 +555,13 @@ import { isUnlucky } from './skillCalcHelper.js'
     roll.roll({async:false});
 
       if (this.actor.system.wounded == true) {
-        if (isLucky()) {
+        if (isLucky(this.actor, roll.result)) {
           contentString = `<h2>${element.getAttribute('name')}</h2
           <p></p><b>Target Number: [[${woundedValue + playerInput}]]</b> <p></p>
           <b>Result: [[${roll.result}]]</b><p></p>
           <span style='color:green; font-size:120%;'> <b>LUCKY NUMBER!</b></span>`
     
-        } else if (isUnlucky()) {
+        } else if (isUnlucky(this.actor, roll.result)) {
           contentString = `<h2>${element.getAttribute('name')}</h2
           <p></p><b>Target Number: [[${woundedValue + playerInput}]]</b> <p></p>
           <b>Result: [[${roll.result}]]</b><p></p>
@@ -576,14 +576,14 @@ import { isUnlucky } from './skillCalcHelper.js'
 
         } 
       } else {
-        if (isLucky()) {
+        if (isLucky(this.actor, roll.result)) {
         contentString = `<h2>${element.getAttribute('name')}</h2
         <p></p><b>Target Number: [[${regularValue + playerInput}]]</b> <p></p>
         <b>Result: [[${roll.result}]]</b><p></p>
         <span style='color:green; font-size:120%;'> <b>LUCKY NUMBER!</b></span>`
 
 
-      } else if (isUnlucky()) {
+      } else if (isUnlucky(this.actor, roll.result)) {
         contentString = `<h2>${element.getAttribute('name')}</h2
         <p></p><b>Target Number: [[${regularValue + playerInput}]]</b> <p></p>
         <b>Result: [[${roll.result}]]</b><p></p>
@@ -651,13 +651,13 @@ import { isUnlucky } from './skillCalcHelper.js'
             let roll = new Roll("1d100");
             roll.roll({async:false});
 
-          if (isLucky()) {
+          if (isLucky(this.actor, roll.result)) {
             contentString = `<h2><img src="${item.img}"</img>${item.name}</h2>
             <p></p><b>Target Number: [[${regularValue} + ${playerInput} + ${this.actor.system.wounded ? this.actor.system.woundPenalty : 0}]]</b> <p></p>
             <b>Result: [[${roll.result}]]</b><p></p>
             <span style='color:green; font-size:120%;'> <b>LUCKY NUMBER!</b></span>`
 
-          } else if (isUnlucky()) {
+          } else if (isUnlucky(this.actor, roll.result)) {
             contentString = `<h2><img src="${item.img}"</img>${item.name}</h2>
             <p></p><b>Target Number: [[${regularValue} + ${playerInput} + ${this.actor.system.wounded ? this.actor.system.woundPenalty : 0}]]</b> <p></p>
             <b>Result: [[${roll.result}]]</b><p></p>
@@ -997,13 +997,13 @@ import { isUnlucky } from './skillCalcHelper.js'
           roll.roll({async:false});
           let contentString = "";
           
-          if (isLucky()) {
+          if (isLucky(this.actor, roll.result)) {
             contentString = `<h2><img src="${item.img}"</img>${item.name}</h2>
             <p></p><b>Target Number: [[${regularValue} + ${playerInput} + ${this.actor.system.wounded ? this.actor.system.woundPenalty : 0}]]</b> <p></p>
             <b>Result: [[${roll.result}]]</b><p></p>
             <span style='color:green; font-size:120%;'> <b>LUCKY NUMBER!</b></span>`
 
-          } else if (isUnlucky()) {
+          } else if (isUnlucky(this.actor, roll.result)) {
             contentString = `<h2><img src="${item.img}"</img>${item.name}</h2>
             <p></p><b>Target Number: [[${regularValue} + ${playerInput} + ${this.actor.system.wounded ? this.actor.system.woundPenalty : 0}]]</b> <p></p>
             <b>Result: [[${roll.result}]]</b><p></p>
@@ -1065,13 +1065,13 @@ import { isUnlucky } from './skillCalcHelper.js'
           roll.roll({async:false});
           let contentString = "";
 
-          if (isLucky()) {
+          if (isLucky(this.actor, roll.result)) {
             contentString = `<h2>${element.name} Resistance</h2>
             <p></p><b>Target Number: [[${this.actor.system.resistance[element.id]} + ${playerInput}]]</b> <p></p>
             <b>Result: [[${roll.result}]]</b><p></p>
             <span style='color:green; font-size:120%;'> <b>LUCKY NUMBER!</b></span>`
 
-          } else if (isLucky()) {
+          } else if (isLucky(this.actor, roll.result)) {
             contentString = `<h2>${element.name} Resistance</h2>
             <p></p><b>Target Number: [[${this.actor.system.resistance[element.id]} + ${playerInput}]]</b> <p></p>
             <b>Result: [[${roll.result}]]</b><p></p>
