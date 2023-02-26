@@ -1,0 +1,113 @@
+<form class="{{cssClass}}" autocomplete="off">
+    <div class="stickyHeader">
+        <header class="sheet-header">
+            <div class="header-fields">
+                <h1 class="charname flex-container">
+                    <img class="profile-img" src="{{item.img}}" data-edit="img" title="{{item.name}}"/>
+                    <input name="name" type="text" value="{{item.name}}" placeholder="Name"/>
+                </h1>
+                <div class="item-resource-container">
+                    <div class="item-resource-row">
+                        <div class="item-resource">
+                            <div class="stat-value-label">
+                                <input type="number" name="system.enc" value="{{item.system.enc}}"/>
+                            </div>
+                            <div class="flex-container">
+                                <div class="small-text-label">ENC</div>
+                            </div>
+                        </div>
+                        <div class="item-resource">
+                            <div class="stat-value-label">
+                                <div class="flex-container">
+                                    {{item.system.container_enc.current}}
+                                    /
+                                    <input type="number" name="system.container_enc.max" value="{{item.system.container_enc.max}}"/>
+                                </div>
+                            </div>
+                            <div class="flex-container">
+                                <div class="small-text-label">Capacity</div>
+                            </div>
+                        </div>
+                        <div class="item-resource">
+                            <div class="stat-value-label">
+                                <input type="number" name="system.price" value="{{item.system.price}}"/>
+                            </div>
+                            <div class="flex-container">
+                                <div class="small-text-label">Price</div>
+                            </div>
+                        </div>
+                        <div class="item-resource">
+                            <div class="stat-value-label">
+                                <input type="number" name="system.container_enc.item_count" value="{{item.system.container_enc.item_count}}"/>
+                            </div>
+                            <div class="flex-container">
+                                <div class="small-text-label">Item Count</div>
+                            </div>
+                        </div>
+                        <div class="item-resource">
+                            <div class="stat-value-label">
+                                <div class="flex-container">
+                                    <input type="number" name="system.container_enc.applied_enc" value="{{item.system.container_enc.applied_enc}}">
+                                </div>
+                            </div>
+                            <div class="flex-container">
+                                <div class="small-text-label">Applied ENC</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </header>
+    
+        {{!-- Sheet Tab Navigation --}}
+        <nav class="sheet-tabs tabs" data-group="primary">
+            <!-- <a class="item" data-tab="description">Description</a> -->
+            <a class="item" data-tab="attributes">Contents</a>
+        </nav>
+        </div>
+    
+        {{!-- Sheet Body --}}
+        <section class="sheet-body">
+    
+            {{!-- Description Tab --}}
+            <!-- <div class="tab" data-group="primary" data-tab="description">
+                {{editor item.system.description target="system.description" engine="prosemirror" button=true owner=owner editable=editable}}
+            </div> -->
+    
+            {{!-- Attributes Tab --}}
+            <div class="tab" data-group="primary" data-tab="attributes">
+                <div class="attribute-tab-container">
+                    <div class="item-selection-container">
+                        <h2>Contents</h2>
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th class="item-name-cell item-create addToContainer">+ Item</th>
+                                    <th>Qty</th>
+                                    <th>ENC</th>
+                                    <th><i class="fas fa-trash"></i></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {{#each item.system.contained_items as |item id|}}
+                                    <tr class="item active" data-item-id="{{item._id}}" data-item-type="{{item.type}}">
+                                        <td>
+                                            <div class="tableItemNameCell">
+                                                <img class="item-img" src="{{item.img}}" title="Send to Chat"/>
+                                                <div class="item-name">{{item.name}}</div>
+                                            </div>
+                                        </td>
+                                        <td>{{item.quantity}}</td>
+                                        <td>{{item.enc}}</td>
+                                        <td>
+                                            <a class="item-control item-delete remove-contained-item" title="Delete Item"><i class="fas fa-trash"></i></a>
+                                        </td>
+                                    </tr>
+                                {{/each}}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </section>
+</form>

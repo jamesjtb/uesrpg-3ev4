@@ -656,6 +656,42 @@
                                 </div>
                             </div>
                         </div>
+
+                        <div class="containerList">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th class="item-name-cell item-create" id="container">+ Container</th>
+                                        <th title="ENC Value of the empty container / ENC Value applied to carry limit">ENC</th>
+                                        <th>Capacity</th>
+                                        <th>Item Count</th>
+                                        <th><i class="fas fa-trash"></i></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {{#each actor.container as |item id|}}
+                                        <tr class="item active" data-item-id="{{item._id}}" data-item-type="{{item.type}}">
+                                            <td>
+                                                <div class="tableItemNameCell">
+                                                    <div class="qty-controls">
+                                                        <input type="checkbox" class="itemEquip checkbox" {{checked system.equipped}} title="Equip">
+                                                    </div>
+                                                    <img class="item-img" src="{{item.img}}" title="Send to Chat"/>
+                                                    <div class="item-name">{{item.name}}</div>
+                                                </div>
+                                            </td>
+                                            <td title="ENC/Applied ENC">{{item.system.enc}}/{{item.system.container_enc.applied_enc}}</td>
+                                            <td>{{item.system.container_enc.current}}/{{item.system.container_enc.max}}</td>
+                                            <td>{{item.system.container_enc.item_count}}</td>
+                                            <td>
+                                                <a class="item-control item-delete" title="Delete Item"><i class="fas fa-trash"></i></a>
+                                            </td>
+                                        </tr>
+                                    {{/each}}
+                                </tbody>
+                            </table>
+                        </div>
+
                         <div class="equipmentList">
                             <table>
                                 <thead>

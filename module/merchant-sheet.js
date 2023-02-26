@@ -22,7 +22,8 @@ export class merchantSheet extends ActorSheet {
         ".languageContainer .item",
         ".talent-container .item",
         ".trait-container .item",
-        ".power-container .item"
+        ".power-container .item",
+        ".containerList .item"
       ], 
       dropSelector: null}]
     });
@@ -63,6 +64,7 @@ export class merchantSheet extends ActorSheet {
       const magicSkill = [];
       const language = [];
       const faction = [];
+      const container = [];
   
       //Iterate through items, allocating to containers
       //let totaWeight = 0;
@@ -120,11 +122,15 @@ export class merchantSheet extends ActorSheet {
         else if (i.type === "faction") {
           faction.push(i);
         }
+        //Append to container
+        else if (i.type === "container") {
+          container.push(i);
+        }
       }
   
       // Alphabetically sort all item lists
       if (game.settings.get('uesrpg-d100', 'sortAlpha')) {
-        const itemCats = [merchantItem, power, trait, talent, combatStyle, spell, skill, magicSkill, language, faction]
+        const itemCats = [merchantItem, power, trait, talent, combatStyle, spell, skill, magicSkill, language, faction, container]
         for (let category of itemCats) {
           if (category.length > 1 && category != spell) {
             category.sort((a,b) => {
@@ -158,6 +164,7 @@ export class merchantSheet extends ActorSheet {
       actorData.magicSkill = magicSkill;
       actorData.language = language;
       actorData.faction = faction;
+      actorData.container = container;
   
     }
 

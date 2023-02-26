@@ -176,18 +176,7 @@ Hooks.once("init", async function() {
           </div>
 
           <div style="overflow-y: scroll; height: 300px; margin: 5px; padding: 5px; background-color: rgba(78, 78, 78, 0.137);">
-            <h2 style="text-align: center;">v${game.system.version} Changelog</h2>
-
-                <h3>General Changes</h3>
-                  <ul>
-                      <li>
-                          Fixed issue where NPC Race field could not be edited correctly and fixed issue where hitting the Enter/Return key while on an NPC sheet registered a click and incremented the qty 
-                          of the first item on that NPC's item list.
-                      </li>
-                      <li>
-                          Fixed issue where Items that modified characteristics were not correctly affecting the value of Skills that use that characteristic as a base. 
-                      </li>
-                  </ul>
+            <h2 style="text-align: center;">v${game.system.version}</h2>
           </div>
 
           <div style="padding: 5px;">

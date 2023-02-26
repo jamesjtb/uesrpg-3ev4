@@ -32,6 +32,7 @@ export class SimpleItem extends Item {
       if (this.type === 'weapon') {this._prepareWeaponItem(actorData, itemData)}
       if (this.system.hasOwnProperty('skillArray') && actorData.type === 'character') {this._prepareModSkillItems(actorData, itemData)}
       if (this.system.hasOwnProperty('baseCha')) {this._prepareCombatStyleData(actorData, itemData)}
+      if (this.type == 'container') {this._prepareContainerItem(actorData, itemData)}
     }
   }
 
@@ -130,6 +131,18 @@ export class SimpleItem extends Item {
         moddedSkill.updateSource({'system.value': moddedSkill.system.value + Number(entry.value)})
       }
     }
+  }
+
+  _prepareContainerItem(actorData, itemData) {
+    // Need to calculate container stats like current capacity, applied ENC, and item count
+    let itemCount = itemData.contained_items.length
+    let currentCapacity = itemData.contained_items.reduce((a, b) => a + (b.enc * b.quantity), 0)
+    let appliedENC = Math.floor(currentCapacity / 2)
+
+    itemData.container_enc.item_count = itemCount
+    itemData.container_enc.current = currentCapacity
+    itemData.container_enc.applied_enc = appliedENC
+    
   }
 
   /**

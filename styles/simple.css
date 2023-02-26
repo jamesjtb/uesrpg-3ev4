@@ -333,18 +333,21 @@
 
 .worldbuilding .spellList table .item,
 .worldbuilding .equipmentList table .item,
-.worldbuilding .merchant-item-list .item {
+.worldbuilding .merchant-item-list .item,
+.worldbuilding .containerList .item {
   display: none;
 }
 
 .worldbuilding .spellList table .active,
 .worldbuilding .equipmentList table .active,
-.worldbuilding .merchant-item-list .active {
+.worldbuilding .merchant-item-list .active,
+.worldbuilding .containerList .active {
   display: table-row;
 }
 
 .worldbuilding .equipmentList button,
-.worldbuilding .ammunition-table button {
+.worldbuilding .ammunition-table button,
+.worldbuilding .containerList button {
   height: 24px;
   line-height: 14px;
 }
@@ -838,7 +841,8 @@
   align-items: center;
 }
 
-.worldbuilding .woundCheckBox:hover {
+.worldbuilding .woundCheckBox:hover,
+.worldbuilding .checkbox:hover {
   cursor: pointer;
 }
 
@@ -966,11 +970,13 @@
   gap: 20px;
 }
 
-.worldbuilding .itemListContainer .equipmentList h2 {
+.worldbuilding .itemListContainer .equipmentList h2,
+.worldbuilding .itemListContainer .containerList h2 {
   position: relative;
 }
 
-.worldbuilding .itemListContainer .equipmentList h2 button {
+.worldbuilding .itemListContainer .equipmentList h2 button,
+.worldbuilding .itemListContainer .containerList h2 button {
   position: absolute;
   left: 0;
   top: 0;

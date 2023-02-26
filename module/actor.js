@@ -792,7 +792,9 @@ export class SimpleActor extends Actor {
     let weighted = actorData.items.filter(item => item.system.hasOwnProperty("enc"));
     let totalWeight = 0.0;
     for (let item of weighted) {
-      totalWeight = totalWeight + (item.system.enc * item.system.quantity);
+      let containerAppliedENC = item.type == 'container' ? item.system.container_enc.applied_enc : 0
+      let containedItemReduction = item.type != 'container' && item.system.containerStats.contained ? (item.system.enc * item.system.quantity) : 0
+      totalWeight = totalWeight + (item.system.enc * item.system.quantity) + containerAppliedENC - containedItemReduction;
     }
     return totalWeight
   }

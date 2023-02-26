@@ -22,7 +22,8 @@ export class npcSheet extends ActorSheet {
         ".talent-container .item",
         ".trait-container .item",
         ".power-container .item",
-        ".equipmentList .item"
+        ".equipmentList .item",
+        ".containerList .item"
       ], 
       dropSelector: null}]
     });
@@ -76,6 +77,7 @@ export class npcSheet extends ActorSheet {
       };
       const language = [];
       const faction = [];
+      const container = [];
   
       //Iterate through items, allocating to containers
       //let totaWeight = 0;
@@ -125,6 +127,10 @@ export class npcSheet extends ActorSheet {
         else if (i.type === "faction") {
           faction.push(i);
         }
+        //Append to container
+        else if (i.type === "container") {
+          container.push(i);
+        }
       }
   
       // Alphabetically sort all item lists
@@ -144,7 +150,8 @@ export class npcSheet extends ActorSheet {
           ammunition.equipped,
           ammunition.unequipped, 
           language, 
-          faction
+          faction,
+          container
         ]
     
         for (let category of itemCats) {
@@ -181,6 +188,7 @@ export class npcSheet extends ActorSheet {
       actorData.ammunition = ammunition;
       actorData.language = language;
       actorData.faction = faction;
+      actorData.container = container;
   
     }
 

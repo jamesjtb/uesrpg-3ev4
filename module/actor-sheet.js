@@ -26,7 +26,8 @@ import { isUnlucky } from './skillCalcHelper.js'
         ".talent-container .item",
         ".trait-container .item",
         ".power-container .item",
-        ".equipmentList .item"
+        ".equipmentList .item",
+        ".containerList .item"
       ], 
       dropSelector: null}]
     });
@@ -84,6 +85,7 @@ import { isUnlucky } from './skillCalcHelper.js'
     };
     const language = [];
     const faction = [];
+    const container = [];
 
     //Iterate through items, allocating to containers
     //let totaWeight = 0;
@@ -141,6 +143,10 @@ import { isUnlucky } from './skillCalcHelper.js'
       else if (i.type === "faction") {
         faction.push(i);
       }
+      //Append to container
+      else if (i.type === "container") {
+        container.push(i);
+      }
     }
 
     // Alphabetically sort all item lists
@@ -162,7 +168,8 @@ import { isUnlucky } from './skillCalcHelper.js'
         ammunition.equipped,
         ammunition.unequipped, 
         language, 
-        faction
+        faction,
+        container
       ]
 
       for (let category of itemCats) {
@@ -201,6 +208,7 @@ import { isUnlucky } from './skillCalcHelper.js'
     actorData.ammunition = ammunition;
     actorData.language = language;
     actorData.faction = faction;
+    actorData.container = container;
 
   }
 
