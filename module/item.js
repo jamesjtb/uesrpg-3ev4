@@ -141,7 +141,7 @@ export class SimpleItem extends Item {
     let currentCapacity = 0
     for (let containedItem of itemData.contained_items) {
       let encProduct = containedItem?.item ? containedItem.item.system.enc * containedItem.item.system.quantity : containedItem.system.enc * containedItem.system.quantity
-      currentCapacity = currentCapacity + (encProduct)
+      currentCapacity = Math.ceil(currentCapacity + (encProduct))
     }
 
     // let currentCapacity = itemData.contained_items.reduce((a, b) => {a + (b.item.system.enc * b.item.system.quantity)}, 0)
@@ -173,7 +173,7 @@ export class SimpleItem extends Item {
         }
         else {
           let duplicateObject = itemOwner.items.find(i => i._id == containedItem._id)
-          itemsToDuplicate.push(duplicateObject)
+          itemsToDuplicate.push({_id: duplicateObject._id, item: duplicateObject})
         }
       }
     }

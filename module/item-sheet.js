@@ -75,7 +75,7 @@ export class SimpleItemSheet extends ItemSheet {
     html.find(".remove-contained-item").click(this._onRemoveContainedItem.bind(this));
 
     // Update contained Items elements list (this keeps the contents list updated if items are updated themselves)
-    this.item.type == 'container' && this.isOwned ? this._updateContainedItemsList() : {}
+    this.item.type == 'container' && this.item.isOwned ? this._updateContainedItemsList() : {}
     this.item.system.hasOwnProperty('containerStats') && this.item.type != 'container' ? this._pushContainedItemData() : {}
   }
 
@@ -301,7 +301,7 @@ export class SimpleItemSheet extends ItemSheet {
           callback: html => console.log("Cancelled")
         }
       },
-      default: "Apply",
+      default: "one",
       close: html => console.log("Closed")
     })
 
@@ -347,6 +347,10 @@ export class SimpleItemSheet extends ItemSheet {
     let removedItemId = element.closest('.item').dataset.itemId
     let indexToRemove = this.item.system.contained_items.indexOf(this.item.system.contained_items.find(item => item._id == removedItemId))
 
+    // Update the container item contents list
+    console.log(this.item.system.contained_items, indexToRemove)
+    this.item.update({'system.contained_items': this.item.system.contained_items.splice(indexToRemove, 1)})
+
     // Update the contained item's status
     this.actor.items.find(i => i._id == removedItemId).update({
       'system.containerStats.contained': false, 
@@ -354,29 +358,19 @@ export class SimpleItemSheet extends ItemSheet {
       'system.containerStats.container_name': ""
     })
 
-    // Update the container item contents list
-    this.item.update({'system.contained_items': this.item.system.contained_items.splice(indexToRemove, 1)})
-
     this._updateContainedItemsList()
 
   }
 
   _updateContainedItemsList() {
     let updatedContainedList = []
-    this.item.system.contained_items.forEach(item => {
+    for (let item of this.item.system.contained_items) {
       let sourceItem = this.actor.items.find(i => i._id == item._id)
+      if (!sourceItem) continue
       let updatedEntry = {_id: sourceItem._id, item: sourceItem}
-      // {
-        // _id: sourceItem._id,
-        // name: sourceItem.name,
-        // type: sourceItem.type,
-        // img: sourceItem.img,
-        // enc: sourceItem.system.enc,
-        // quantity: sourceItem.system.quantity
-      // }
 
       updatedContainedList.push(updatedEntry)
-    })
+    }
 
     this.item.update({'system.contained_items': updatedContainedList})
   }
@@ -386,22 +380,15 @@ export class SimpleItemSheet extends ItemSheet {
     let containerItem = this.actor.items.find(i => i._id == this.item.system.containerStats.container_id)
     if (!containerItem || containerItem != null || containerItem != undefined) return
     let indexOfStoredItem = containerItem.system.contained_items.indexOf(containerItem.system.contained_items.find(i => i._id == this.item._id))
-    let refreshedData = this.item
-    //{
-      // _id: this.item._id,
-      // name: this.item.name,
-      // type: this.item.type,
-      // img: this.item.img,
-      // enc: this.item.system.enc,
-      // quantity: this.item.system.quantity
-    // }
+    let refreshedData = {_id: this.item._id, item: this.item}
 
     // Remove old entry
-    containerItem.system.contained_items.splice(indexOfStoredItem, 1)
+    let splicedArray = containerItem.system.contained_items.splice(indexOfStoredItem, 1)
+    console.log(splicedArray)
 
     // Add refreshed entry
-    containerItem.system.contained_items.push(refreshedData)
-    containerItem.update({'system.contained_items': containerItem.system.contained_items})
+    let refreshedArray = containerItem.system.contained_items.push(refreshedData)
+    containerItem.update({'system.contained_items': refreshedArray})
   }
 
 }
