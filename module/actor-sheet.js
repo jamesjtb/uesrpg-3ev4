@@ -277,6 +277,15 @@ import { isUnlucky } from './skillCalcHelper.js'
       await item.update({"data.value" : item.system.value})
     });
 
+    // Open Container of item
+    html.find('.fa-backpack').click( async (ev) => {
+      const li = ev.currentTarget.dataset.containerId
+      console.log(li)
+      const item = this.actor.items.get(li);
+      item.sheet.render(true);
+      await item.update({"data.value" : item.system.value})
+    });
+
     // Delete Inventory Item
     html.find('.item-delete').click(ev => {
       const li = ev.currentTarget.closest(".item");

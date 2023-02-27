@@ -61,7 +61,8 @@
   text-decoration: underline;
 }
 
-.worldbuilding .fa-dice-d20:hover {
+.worldbuilding .fa-dice-d20:hover,
+.worldbuilding .fa-backpack:hover {
   cursor: pointer;
   color: darkred;
 }

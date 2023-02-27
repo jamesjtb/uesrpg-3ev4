@@ -90,15 +90,15 @@
                             </thead>
                             <tbody>
                                 {{#each item.system.contained_items as |item id|}}
-                                    <tr class="item active" data-item-id="{{item._id}}" data-item-type="{{item.type}}">
+                                    <tr class="item active" data-item-id="{{item._id}}" data-item-type="{{item.item.type}}">
                                         <td>
                                             <div class="tableItemNameCell">
-                                                <img class="item-img" src="{{item.img}}" title="Send to Chat"/>
-                                                <div class="item-name">{{item.name}}</div>
+                                                <img class="item-img" src="{{item.item.img}}" title="Send to Chat"/>
+                                                <div class="item-name">{{item.item.name}}</div>
                                             </div>
                                         </td>
-                                        <td>{{item.quantity}}</td>
-                                        <td>{{item.enc}}</td>
+                                        <td>{{item.item.system.quantity}}</td>
+                                        <td>{{item.item.system.enc}}</td>
                                         <td>
                                             <a class="item-control item-delete remove-contained-item" title="Delete Item"><i class="fas fa-trash"></i></a>
                                         </td>

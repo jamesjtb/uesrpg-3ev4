@@ -136,12 +136,49 @@ export class SimpleItem extends Item {
   _prepareContainerItem(actorData, itemData) {
     // Need to calculate container stats like current capacity, applied ENC, and item count
     let itemCount = itemData.contained_items.length
-    let currentCapacity = itemData.contained_items.reduce((a, b) => a + (b.enc * b.quantity), 0)
-    let appliedENC = Math.floor(currentCapacity / 2)
+    if (!itemData.contained_items) return
+
+    let currentCapacity = 0
+    for (let containedItem of itemData.contained_items) {
+      let encProduct = containedItem?.item ? containedItem.item.system.enc * containedItem.item.system.quantity : containedItem.system.enc * containedItem.system.quantity
+      currentCapacity = currentCapacity + (encProduct)
+    }
+
+    // let currentCapacity = itemData.contained_items.reduce((a, b) => {a + (b.item.system.enc * b.item.system.quantity)}, 0)
+    let appliedENC = (currentCapacity / 2)
 
     itemData.container_enc.item_count = itemCount
     itemData.container_enc.current = currentCapacity
     itemData.container_enc.applied_enc = appliedENC
+
+    // Call function to create items contained in container that are NOT in the actor's current inventory
+    // Need to loop through container contents and compare _id's to that in actor's inventory and create those
+    // That are not found
+
+    let itemsToDuplicate = []
+    for (let containedItem of this.system.contained_items) {
+      let sourceObject = this.actor.items.find(i => i._id == containedItem._id || (i.name == containedItem.name && i.system.quantity == containedItem.system.quantity))
+      if (sourceObject == null || sourceObject == undefined) {
+        let itemOwner = game.actors.find(actor => actor.items.find(i => i._id == containedItem._id) != (undefined || null))
+        if (!itemOwner) {
+          itemsToDuplicate.push({
+            name: containedItem.name,
+            type: containedItem.type,
+            img: containedItem.img,
+            'system.enc': containedItem.enc,
+            'system.quantity': containedItem.quantity,
+            'system.containerStats.container_id': this._id,
+            'system.containerStats.contained': true
+          })
+        }
+        else {
+          let duplicateObject = itemOwner.items.find(i => i._id == containedItem._id)
+          itemsToDuplicate.push(duplicateObject)
+        }
+      }
+    }
+    console.log(itemsToDuplicate)
+    // this.actor.createEmbeddedDocuments("Item", itemsToDuplicate)
     
   }
 

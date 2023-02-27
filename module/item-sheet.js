@@ -75,7 +75,7 @@ export class SimpleItemSheet extends ItemSheet {
     html.find(".remove-contained-item").click(this._onRemoveContainedItem.bind(this));
 
     // Update contained Items elements list (this keeps the contents list updated if items are updated themselves)
-    this.item.type == 'container' ? this._updateContainedItemsList() : {}
+    this.item.type == 'container' && this.isOwned ? this._updateContainedItemsList() : {}
     this.item.system.hasOwnProperty('containerStats') && this.item.type != 'container' ? this._pushContainedItemData() : {}
   }
 
@@ -206,7 +206,7 @@ export class SimpleItemSheet extends ItemSheet {
     // Create list item entries
     let tableEntries = []
     for (let bagItem of bagListItems) {
-      let entry = `<tr>
+      let entry = `<tr data-item-id="${bagItem._id}">
                       <td data-item-id="${bagItem._id}">
                           <div style="display: flex; flex-direction: row; align-items: center; gap: 5px;">
                             <img class="item-img" src="${bagItem.img}" height="24" width="24">
@@ -217,7 +217,7 @@ export class SimpleItemSheet extends ItemSheet {
                       <td style="text-align: center;">${bagItem.system.quantity}</td>
                       <td style="text-align: center;">${bagItem.system.enc}</td>
                       <td style="text-align: center;">
-                          <input type="checkbox" class="itemSelect container-select" data-item-id="${bagItem._id}" ${bagItem.system.containerStats.contained ? 'checked' : ''}>
+                          <input type="checkbox" class="itemSelect container-select" data-item-id="${bagItem._id}" ${bagItem.system.containerStats.contained && bagItem.system.containerStats.container_id == this.item._id ? 'checked' : ''}>
                       </td>
                   </tr>`
 
@@ -260,23 +260,40 @@ export class SimpleItemSheet extends ItemSheet {
             let containedItemsList = []
 
                 for (let i of selectedItems) {
-                  let thisItem = this.actor.items.filter(item => item.id == i.dataset.itemId)[0]
+                  let thisItem = this.item.isOwned ? this.actor.items.filter(item => item._id == i.dataset.itemId)[0] : {}
+
+                  // Escapes iteration if item is not found on actor
+                  if (!thisItem) continue
+
+                  // checks to see if item was selected for storage
                   if (i.checked) {
-                    containedItemsList.push({
-                      _id: thisItem._id, 
-                      name: thisItem.name, 
-                      img: thisItem.img, 
-                      enc: thisItem.system.enc, 
-                      quantity: thisItem.system.quantity
-                    })
-                    thisItem.update({'system.containerStats.contained': true, 'system.containerStats.container_id': this.item._id})
+                    // This pushes a duplicate of the item into contained_item array, but duping the item data does NOT
+                    // push over the _id property for some reason. Need to find a way to add it back in
+
+                    thisItem.update({
+                      'system.containerStats.contained': true, 
+                      'system.containerStats.container_id': this.item._id,
+                      'system.containerStats.container_name': this.item.name
+                  })
+
+                  // This is the data structure for stored items: _id & data
+                  containedItemsList.push({_id: thisItem._id, item: thisItem}
+                  )
+
                   } else {
-                      thisItem.update({'system.containerStats.contained': false, 'system.containerStats.container_id': ""})
+                      if (thisItem.system.containerStats.container_id == this.item._id) {
+                        thisItem.update({
+                          'system.containerStats.contained': false, 
+                          'system.containerStats.container_id': "",
+                          "system.containerStats.container_name": ""
+                        })
+                      }
                   }
                 }
 
             //Update the container item with updated list of items
             this.item.update({'system.contained_items': containedItemsList})
+            console.log(this.item.system.contained_items)
           }
         },
         two: {
@@ -298,8 +315,21 @@ export class SimpleItemSheet extends ItemSheet {
     // Create List of items to show in list
     const bagListItems = []
     let tooLarge = false
-    for (let i of this.actor.items) {
-      if (i._id == this.item._id || (i.system.containerStats?.contained && i.system.containerStats?.container_id != this.item._id)) continue
+    let itemList = []
+
+    // Return if container is not embedded onto actor
+    if (this.item.isOwned) {itemList = this.actor.items}
+    else { 
+      return ui.notifications.info("Containers must be owned by Actors in order to add items. This will be updated in the future.")
+    }
+
+    for (let i of itemList) {
+      if (
+            i._id == this.item._id 
+            //(i.system.containerStats?.contained && 
+            //i.system.containerStats?.container_id != this.item._id)
+          ) continue
+
       i.system.enc > this.item.system.container_enc.max ? tooLarge = true : {}
       if (i.system.enc <= this.item.system.container_enc.max && i.system.hasOwnProperty("containerStats")) {
         bagListItems.push(i)
@@ -316,16 +346,18 @@ export class SimpleItemSheet extends ItemSheet {
     let element = event.currentTarget
     let removedItemId = element.closest('.item').dataset.itemId
     let indexToRemove = this.item.system.contained_items.indexOf(this.item.system.contained_items.find(item => item._id == removedItemId))
-    this.item.system.contained_items.splice(indexToRemove, 1)
-
-    // Update the container item contents list
-    this.item.update({'system.contained_items': this.item.system.contained_items})
 
     // Update the contained item's status
     this.actor.items.find(i => i._id == removedItemId).update({
       'system.containerStats.contained': false, 
-      'system.containerStats.container_id': ""
+      'system.containerStats.container_id': "",
+      'system.containerStats.container_name': ""
     })
+
+    // Update the container item contents list
+    this.item.update({'system.contained_items': this.item.system.contained_items.splice(indexToRemove, 1)})
+
+    this._updateContainedItemsList()
 
   }
 
@@ -333,13 +365,15 @@ export class SimpleItemSheet extends ItemSheet {
     let updatedContainedList = []
     this.item.system.contained_items.forEach(item => {
       let sourceItem = this.actor.items.find(i => i._id == item._id)
-      let updatedEntry = {
-        _id: sourceItem._id,
-        name: sourceItem.name,
-        img: sourceItem.img,
-        enc: sourceItem.system.enc,
-        quantity: sourceItem.system.quantity
-      }
+      let updatedEntry = {_id: sourceItem._id, item: sourceItem}
+      // {
+        // _id: sourceItem._id,
+        // name: sourceItem.name,
+        // type: sourceItem.type,
+        // img: sourceItem.img,
+        // enc: sourceItem.system.enc,
+        // quantity: sourceItem.system.quantity
+      // }
 
       updatedContainedList.push(updatedEntry)
     })
@@ -350,14 +384,17 @@ export class SimpleItemSheet extends ItemSheet {
   _pushContainedItemData() {
     // this refreshes content from a stored item to the container item on stored item refresh
     let containerItem = this.actor.items.find(i => i._id == this.item.system.containerStats.container_id)
-    if (!containerItem) return
+    if (!containerItem || containerItem != null || containerItem != undefined) return
     let indexOfStoredItem = containerItem.system.contained_items.indexOf(containerItem.system.contained_items.find(i => i._id == this.item._id))
-    let refreshedData = {
-      _id: this.item._id,
-      name: this.item.name,
-      enc: this.item.system.enc,
-      quantity: this.item.system.quantity
-    }
+    let refreshedData = this.item
+    //{
+      // _id: this.item._id,
+      // name: this.item.name,
+      // type: this.item.type,
+      // img: this.item.img,
+      // enc: this.item.system.enc,
+      // quantity: this.item.system.quantity
+    // }
 
     // Remove old entry
     containerItem.system.contained_items.splice(indexOfStoredItem, 1)

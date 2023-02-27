@@ -689,7 +689,8 @@
       "isPhysicalObject": true,
       "containerStats": {
         "contained": false,
-        "container_id": ""
+        "container_id": "",
+        "container_name": ""
       }
     }
   },
