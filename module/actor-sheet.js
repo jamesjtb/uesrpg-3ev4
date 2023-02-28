@@ -310,7 +310,6 @@ import { isUnlucky } from './skillCalcHelper.js'
       }
 
       // Logic for removing container linking if deleted item is in a container
-      console.log(itemToDelete)
       if (itemToDelete.system.isPhysicalObject && itemToDelete.type != 'container' && itemToDelete.system.containerStats.contained) {
         let containerObject = this.actor.items.find(item => item._id == itemToDelete.system.containerStats.container_id)
         let indexToRemove = containerObject.system.contained_items.indexOf(containerObject.system.contained_items.find(i => i._id == itemToDelete._id))

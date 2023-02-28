@@ -65,6 +65,7 @@ export class SimpleItemSheet extends ItemSheet {
 
     // Registers functions for item sheet renders
     html.find('.item-name').click( async (ev) => {
+      if (!this.actor) return ui.notifications.info("Containers must be on Actor Sheets in order to open the contents.")
       const li = ev.currentTarget.closest(".item");
       const item = this.actor.items.get(li.dataset.itemId);
       item.sheet.render(true);

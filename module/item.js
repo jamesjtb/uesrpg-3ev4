@@ -13,7 +13,16 @@ export class SimpleItem extends Item {
       case 'skill':
       case 'magicSkill':
         data.rank = 'untrained'
-        // await this.update({_id: this._id}, {'system.rank': 'untrained'})
+        break;
+    }
+  }
+
+  async _onCreate(data, options, user) {
+    await super._onCreate(data, options, user)
+    switch (data.type) {
+      case 'container':
+        this._duplicateContainedItemsOnActor(this.actor, data)
+        break;
     }
   }
 
@@ -150,36 +159,34 @@ export class SimpleItem extends Item {
     itemData.container_enc.item_count = itemCount
     itemData.container_enc.current = currentCapacity
     itemData.container_enc.applied_enc = appliedENC
-
-    // Call function to create items contained in container that are NOT in the actor's current inventory
-    // Need to loop through container contents and compare _id's to that in actor's inventory and create those
-    // That are not found
-
-    let itemsToDuplicate = []
-    for (let containedItem of this.system.contained_items) {
-      let sourceObject = this.actor.items.find(i => i._id == containedItem._id || (i.name == containedItem.name && i.system.quantity == containedItem.system.quantity))
-      if (sourceObject == null || sourceObject == undefined) {
-        let itemOwner = game.actors.find(actor => actor.items.find(i => i._id == containedItem._id) != (undefined || null))
-        if (!itemOwner) {
-          itemsToDuplicate.push({
-            name: containedItem.name,
-            type: containedItem.type,
-            img: containedItem.img,
-            'system.enc': containedItem.enc,
-            'system.quantity': containedItem.quantity,
-            'system.containerStats.container_id': this._id,
-            'system.containerStats.contained': true
-          })
-        }
-        else {
-          let duplicateObject = itemOwner.items.find(i => i._id == containedItem._id)
-          itemsToDuplicate.push({_id: duplicateObject._id, item: duplicateObject})
-        }
-      }
-    }
-    console.log(itemsToDuplicate)
-    // this.actor.createEmbeddedDocuments("Item", itemsToDuplicate)
     
+  }
+
+  async _duplicateContainedItemsOnActor(actorData, itemData) {
+    let itemsToDuplicate = []
+    let containedItems = []
+    console.log(itemData._id, this._id)
+    for (let containedItem of itemData.system.contained_items) {
+      containedItem.item.system.containerStats.container_id = itemData._id
+      itemsToDuplicate.push(containedItem.item)
+      containedItems.push(containedItem)
+    }
+
+    if (itemsToDuplicate.length == 0 || !actorData) return
+    let createdContainedItems = await actorData.createEmbeddedDocuments("Item", itemsToDuplicate)
+
+    // Loop through newly created items and grab their new ID's to store in the container contained_items array
+    this.system.contained_items = await this._assignNewlyCreatedItemDataToContainer(createdContainedItems, actorData, itemData)
+  }
+
+  async _assignNewlyCreatedItemDataToContainer(createdContainedItems, actorData, itemData) {
+      // Loop through newly created items and grab their new ID's to store in the container contained_items array
+      console.log(createdContainedItems)
+      let newContainedItems = []
+      for (let newItem of await createdContainedItems) {
+        newContainedItems.push({_id: newItem._id, item: newItem})
+      }
+      return newContainedItems
   }
 
   /**
