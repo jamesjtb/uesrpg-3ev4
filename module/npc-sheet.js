@@ -267,9 +267,52 @@ export class npcSheet extends ActorSheet {
       await item.update({"system.value" : item.system.value})
     });
 
+    // Open Container of item
+    html.find('.fa-backpack').click( async (ev) => {
+      const li = ev.currentTarget.dataset.containerId
+      const item = this.actor.items.get(li);
+      item.sheet.render(true);
+      await item.update({"data.value" : item.system.value})
+    });
+
     // Delete Inventory Item
     html.find('.item-delete').click(ev => {
       const li = ev.currentTarget.closest(".item");
+      // Detect if the deleted item is a container OR is contained in one
+      // Before deleting the item, update the container or contained item to remove the linking
+      let itemToDelete = this.actor.items.find(item => item._id == li.dataset.itemId)
+
+      // Logic for removing container linking if deleted item is the container
+      if (itemToDelete.type == 'container') {
+        // resets contained items status and then sets contained_items array to empty
+        itemToDelete.system.contained_items.forEach(item => {
+
+          let sourceItem = this.actor.items.find(i => i._id == item._id) 
+          sourceItem.update({
+            'system.containerStats.container_id': "",
+            'system.containerStats.container_name': "",
+            'system.containerStats.contained': false
+          })
+        })
+
+        itemToDelete.update({'system.contained_items': []})
+
+      }
+
+      // Logic for removing container linking if deleted item is in a container
+      if (itemToDelete.system.isPhysicalObject && itemToDelete.type != 'container' && itemToDelete.system.containerStats.contained) {
+        let containerObject = this.actor.items.find(item => item._id == itemToDelete.system.containerStats.container_id)
+        let indexToRemove = containerObject.system.contained_items.indexOf(containerObject.system.contained_items.find(i => i._id == itemToDelete._id))
+        containerObject.system.contained_items.splice(indexToRemove, 1)
+        containerObject.update({'system.contained_items': containerObject.system.contained_items})
+
+        itemToDelete.update({
+          'system.containerStats.container_id': "",
+          'system.containerStats.container_name': "",
+          'system.containerStats.contained': false
+        })
+      }
+
       this.actor.deleteEmbeddedDocuments("Item", [li.dataset.itemId]);
     });
 
