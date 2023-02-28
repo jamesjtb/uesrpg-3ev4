@@ -211,6 +211,7 @@ export class SimpleItemSheet extends ItemSheet {
                       <td data-item-id="${bagItem._id}">
                           <div style="display: flex; flex-direction: row; align-items: center; gap: 5px;">
                             <img class="item-img" src="${bagItem.img}" height="24" width="24">
+                            ${bagItem.system.containerStats.contained ? '<i class="fa-solid fa-backpack"></i>' : ''}
                             ${bagItem.name}
                           </div>
                       </td>
@@ -271,6 +272,14 @@ export class SimpleItemSheet extends ItemSheet {
                     // This pushes a duplicate of the item into contained_item array, but duping the item data does NOT
                     // push over the _id property for some reason. Need to find a way to add it back in
 
+                    // If the item has an existing container, need to access that container and rewrite it's contained_items array
+                    if (thisItem.system.containerStats.container_id != "") {
+                      let oldContainer = this.actor.items.get(thisItem.system.containerStats.container_id)
+                      let indexToRemove = oldContainer.system.contained_items.indexOf(oldContainer.system.contained_items.find(i => i._id == thisItem._id))
+                      oldContainer.system.contained_items.splice(indexToRemove, 1)
+                      oldContainer.update({'system.contained_items': oldContainer.system.contained_items})
+                    }
+
                     thisItem.update({
                       'system.containerStats.contained': true, 
                       'system.containerStats.container_id': this.item._id,
@@ -294,7 +303,6 @@ export class SimpleItemSheet extends ItemSheet {
 
             //Update the container item with updated list of items
             this.item.update({'system.contained_items': containedItemsList})
-            console.log(this.item.system.contained_items)
           }
         },
         two: {
@@ -349,8 +357,8 @@ export class SimpleItemSheet extends ItemSheet {
     let indexToRemove = this.item.system.contained_items.indexOf(this.item.system.contained_items.find(item => item._id == removedItemId))
 
     // Update the container item contents list
-    console.log(this.item.system.contained_items, indexToRemove)
-    this.item.update({'system.contained_items': this.item.system.contained_items.splice(indexToRemove, 1)})
+    this.item.system.contained_items.splice(indexToRemove, 1)
+    this.item.update({'system.contained_items': this.item.system.contained_items})
 
     // Update the contained item's status
     this.actor.items.find(i => i._id == removedItemId).update({
@@ -385,7 +393,6 @@ export class SimpleItemSheet extends ItemSheet {
 
     // Remove old entry
     let splicedArray = containerItem.system.contained_items.splice(indexOfStoredItem, 1)
-    console.log(splicedArray)
 
     // Add refreshed entry
     let refreshedArray = containerItem.system.contained_items.push(refreshedData)

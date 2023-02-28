@@ -165,7 +165,6 @@ export class SimpleItem extends Item {
   async _duplicateContainedItemsOnActor(actorData, itemData) {
     let itemsToDuplicate = []
     let containedItems = []
-    console.log(itemData._id, this._id)
     for (let containedItem of itemData.system.contained_items) {
       containedItem.item.system.containerStats.container_id = itemData._id
       itemsToDuplicate.push(containedItem.item)
@@ -181,7 +180,6 @@ export class SimpleItem extends Item {
 
   async _assignNewlyCreatedItemDataToContainer(createdContainedItems, actorData, itemData) {
       // Loop through newly created items and grab their new ID's to store in the container contained_items array
-      console.log(createdContainedItems)
       let newContainedItems = []
       for (let newItem of await createdContainedItems) {
         newContainedItems.push({_id: newItem._id, item: newItem})

@@ -313,9 +313,8 @@ import { isUnlucky } from './skillCalcHelper.js'
       if (itemToDelete.system.isPhysicalObject && itemToDelete.type != 'container' && itemToDelete.system.containerStats.contained) {
         let containerObject = this.actor.items.find(item => item._id == itemToDelete.system.containerStats.container_id)
         let indexToRemove = containerObject.system.contained_items.indexOf(containerObject.system.contained_items.find(i => i._id == itemToDelete._id))
-        containerObject.update({
-          'system.contained_items': containerObject.system.contained_items.splice(indexToRemove, 1)
-        })
+        containerObject.system.contained_items.splice(indexToRemove, 1)
+        containerObject.update({'system.contained_items': containerObject.system.contained_items})
 
         itemToDelete.update({
           'system.containerStats.container_id': "",
