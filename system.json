@@ -73,8 +73,10 @@
       "flags": {}
     }
   ],
-  "gridDistance": 1,
-  "gridUnits": "m",
+  "grid": {
+    "distance": 1,
+    "units": "m"
+  },
   "primaryTokenAttribute": "hp",
   "secondaryTokenAttribute": "action_points",
   "url": "https://github.com/jamesjtb/uesrpg-3ev4",
