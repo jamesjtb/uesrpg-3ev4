@@ -1,3 +1,8 @@
+# UESRPG 3e v4
+This system is a fork of the original project created by DogBoneZone at https://gitlab.com/DogBoneZone/uesrpg-3e.
+
+The original contents of his readme are preserved below for posterity.
+
 # UESRPG d100
 Please consider supporting the development of this system on Patreon here: https://www.patreon.com/swordsandstones
 

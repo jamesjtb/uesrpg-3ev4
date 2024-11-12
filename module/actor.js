@@ -9,8 +9,8 @@ export class SimpleActor extends Actor {
     if (this.type === 'character') {
       // Updates token default settings for Character types
       this.prototypeToken.updateSource({
-        'sight.enabled': true, 
-        actorLink: true, 
+        'sight.enabled': true,
+        actorLink: true,
         disposition: 1
       })
     }
@@ -18,7 +18,7 @@ export class SimpleActor extends Actor {
     // Preps and adds standard skill items to Character types
     await super._preCreate(data, options, user);
     if (this.type === "character") {
-      let skillPack = game.packs.get("uesrpg-d100.standard-skills");
+      let skillPack = game.packs.get("uesrpg-3ev4.standard-skills");
       let collection = await skillPack.getDocuments();
       collection.sort(function (a, b) {
         let nameA = a.name.toUpperCase();
@@ -120,7 +120,7 @@ export class SimpleActor extends Actor {
     }
     data.wound_threshold.value = data.wound_threshold.base;
     data.wound_threshold.value = this._woundThresholdCalc(actorData);
-    
+
     data.speed.base = strBonus + (2 * agiBonus) + (data.speed.bonus);
     data.speed.value = this._speedCalc(actorData);
     data.speed.swimSpeed = parseFloat(this._swimCalc(actorData)) + parseFloat((data.speed.value/2).toFixed(0));
@@ -303,7 +303,7 @@ export class SimpleActor extends Actor {
         break
     }
 
-  } 
+  }
 
   async _prepareNPCData(actorData) {
     const data = actorData.system;
@@ -463,7 +463,7 @@ export class SimpleActor extends Actor {
     data.speed.value = this._addHalfSpeed(actorData);
 
     //ENC Burden Calculations
-    if (game.settings.get('uesrpg-d100', 'npcENCPenalty')) {
+    if (game.settings.get('uesrpg-3ev4', 'npcENCPenalty')) {
       if (data.carry_rating.current > data.carry_rating.max * 3) {
         data.carry_rating.label = 'Crushing'
         data.carry_rating.penalty = -40
@@ -523,7 +523,7 @@ export class SimpleActor extends Actor {
         data.woundPenalty = woundPen / 2
         data.initiative.value = data.initiative.base + (woundIni / 2);
 
-      } 
+      }
 
       else if (this._halfWoundPenalty(actorData) === false) {
         for (var skill in data.professionsWound) {
@@ -534,8 +534,8 @@ export class SimpleActor extends Actor {
         data.woundPenalty = woundPen;
 
         }
-      } 
-      
+      }
+
       else if (data.wounded === false) {
           for (var skill in data.professionsWound) {
            data.professionsWound[skill] = data.professions[skill];
@@ -701,7 +701,7 @@ export class SimpleActor extends Actor {
   }
 
   async _calculateItemSkillModifiers(actorData) {
-    let modItems = actorData.items.filter(i => 
+    let modItems = actorData.items.filter(i =>
       i.system.hasOwnProperty('skillArray')
       && i.system.skillArray.length > 0
       && i.system.equipped
@@ -804,7 +804,7 @@ export class SimpleActor extends Actor {
     let armorENC = 0.0;
     for (let item of worn) {
       armorENC = armorENC + ((item.system.enc / 2) * item.system.quantity);
-    } 
+    }
     return armorENC
   }
 
@@ -1079,7 +1079,7 @@ export class SimpleActor extends Actor {
 
   _untrainedException(actorData) {
     let attribute = actorData.items.filter(item => item.system.untrainedException == true);
-    const legacyUntrained = game.settings.get("uesrpg-d100", "legacyUntrainedPenalty");
+    const legacyUntrained = game.settings.get("uesrpg-3ev4", "legacyUntrainedPenalty");
     let x = 0;
     if (legacyUntrained) {
       if (attribute.length >= 1) {
@@ -1185,7 +1185,7 @@ export class SimpleActor extends Actor {
     let pain = false;
     if (attribute.length >= 1) {
       pain = true;
-    } 
+    }
     return pain
   }
 

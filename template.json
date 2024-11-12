@@ -65,7 +65,7 @@
     "bio": "",
     "journal": "",
     "notes": "",
-    "paperDoll": "systems/uesrpg-d100/images/paperDoll_Male_Outline_White.png",
+    "paperDoll": "systems/uesrpg-3ev4/images/paperDoll_Male_Outline_White.png",
     "resistance": {
       "fireR": 0,
       "frostR": 0,
@@ -308,7 +308,7 @@
     "woundPenalty": 0,
     "woundNotes": "",
     "bio": "",
-    "paperDoll": "systems/uesrpg-d100/images/paperDoll_Male_Outline_White.png",
+    "paperDoll": "systems/uesrpg-3ev4/images/paperDoll_Male_Outline_White.png",
     "soul_energy": "",
     "journal": "",
     "notes": "",
@@ -551,26 +551,26 @@
     },
     "skills": {
       "profession1": {
-        "rank": "", 
+        "rank": "",
         "bonus": 0,
         "specialization": "",
         "characteristic": "",
         "tn": 0
       },
       "profession2": {
-        "rank": "", 
+        "rank": "",
         "bonus": 0,
         "specialization": "",
         "characteristic": "",
         "tn": 0
       },
       "profession3": {
-        "rank": "", 
+        "rank": "",
         "bonus": 0,
         "specialization": "",
         "characteristic": "",
         "tn": 0
-      }, 
+      },
       "commerce": {
         "bonus": 0,
         "specialization": "",
@@ -594,21 +594,21 @@
     "storeName": "",
     "priceMod": 0
   }
-    
+
 },
 "Item": {
   "types": [
     "item",
-    "container", 
-    "armor", 
-    "weapon", 
-    "spell", 
-    "trait", 
-    "power", 
-    "talent", 
-    "combatStyle", 
-    "skill", 
-    "magicSkill", 
+    "container",
+    "armor",
+    "weapon",
+    "spell",
+    "trait",
+    "power",
+    "talent",
+    "combatStyle",
+    "skill",
+    "magicSkill",
     "ammunition",
     "language",
     "faction"
@@ -846,7 +846,7 @@
     "description": "",
     "dailyUse": false,
     "source": "",
-    "shiftForm": false, 
+    "shiftForm": false,
     "shiftFormStyle": "",
     "shiftStyles": {
       "shiftFormNone": "Regular Form",

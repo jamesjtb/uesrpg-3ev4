@@ -1,7 +1,7 @@
 {
-  "title": "UESRPG d100",
-  "description": "A system used to play the UESRPG (Unofficial Elder Scrolls Roleplaying Game) d100 system.",
-  "version": "1.63",
+  "title": "UESRPG 3ev4",
+  "description": "A system used to play the UESRPG (Unofficial Elder Scrolls Roleplaying Game) 3ev4 d100 system.",
+  "version": "1.0",
   "esmodules": [
     "module/simple.js"
   ],
@@ -12,7 +12,7 @@
     {
       "name": "roll-tables",
       "label": "Loot Tables",
-      "system": "uesrpg-d100",
+      "system": "uesrpg-3ev4",
       "path": "packs/roll-tables.db",
       "type": "RollTable",
       "private": false,
@@ -21,7 +21,7 @@
     {
       "name": "macros",
       "label": "Macros",
-      "system": "uesrpg-d100",
+      "system": "uesrpg-3ev4",
       "path": "packs/macros.db",
       "type": "Macro",
       "private": false,
@@ -30,7 +30,7 @@
     {
       "name": "powers",
       "label": "Powers",
-      "system": "uesrpg-d100",
+      "system": "uesrpg-3ev4",
       "path": "packs/powers.db",
       "type": "Item",
       "private": false,
@@ -39,7 +39,7 @@
     {
       "name": "traits",
       "label": "Traits",
-      "system": "uesrpg-d100",
+      "system": "uesrpg-3ev4",
       "path": "packs/traits.db",
       "type": "Item",
       "private": false,
@@ -48,7 +48,7 @@
     {
       "name": "talents",
       "label": "Talents",
-      "system": "uesrpg-d100",
+      "system": "uesrpg-3ev4",
       "path": "packs/talents.db",
       "type": "Item",
       "private": false,
@@ -57,7 +57,7 @@
     {
       "name": "standard-skills",
       "label": "Standard Skills",
-      "system": "uesrpg-d100",
+      "system": "uesrpg-3ev4",
       "path": "packs/standard-skills.db",
       "type": "Item",
       "private": false,
@@ -66,7 +66,7 @@
     {
       "name": "signs",
       "label": "Birth Signs",
-      "system": "uesrpg-d100",
+      "system": "uesrpg-3ev4",
       "path": "packs/signs.db",
       "type": "Item",
       "private": false,
@@ -77,12 +77,16 @@
   "gridUnits": "m",
   "primaryTokenAttribute": "hp",
   "secondaryTokenAttribute": "action_points",
-  "url": "https://gitlab.com/DogBoneZone/uesrpg-3e/",
-  "manifest": "https://gitlab.com/DogBoneZone/uesrpg-3e/raw/master/system.json",
-  "download": "https://gitlab.com/DogBoneZone/uesrpg-3e/-/archive/1.63/uesrpg-3e-1.63.zip",
+  "url": "https://github.com/jamesjtb/uesrpg-3ev4",
+  "manifest": "https://raw.githubusercontent.com/jamesjtb/uesrpg-3ev4/refs/heads/master/system.json",
+  "download": "",
   "license": "LICENSE.txt",
-  "id": "uesrpg-d100",
+  "id": "uesrpg-3ev4",
   "authors": [
+    {
+      "name": "SupaBeardyMan",
+      "flags": {}
+    },
     {
       "name": "DogBoneZone",
       "flags": {}

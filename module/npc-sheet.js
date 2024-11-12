@@ -24,7 +24,7 @@ export class npcSheet extends ActorSheet {
         ".power-container .item",
         ".equipmentList .item",
         ".containerList .item"
-      ], 
+      ],
       dropSelector: null}]
     });
   }
@@ -33,7 +33,7 @@ export class npcSheet extends ActorSheet {
 
   /** @override */
   getData() {
-    const  data = super.getData(); 
+    const  data = super.getData();
     data.dtypes = ["String", "Number", "Boolean"];
     data.isGM = game.user.isGM;
     data.editable = data.options.editable;
@@ -49,10 +49,10 @@ export class npcSheet extends ActorSheet {
     return data;
     }
 
-  
+
     _prepareCharacterItems(sheetData) {
       const actorData = sheetData.actor;
-  
+
       //Initialize containers
       const gear = {
         equipped: [],
@@ -78,7 +78,7 @@ export class npcSheet extends ActorSheet {
       const language = [];
       const faction = [];
       const container = [];
-  
+
       //Iterate through items, allocating to containers
       //let totaWeight = 0;
       for (let i of sheetData.items) {
@@ -132,28 +132,28 @@ export class npcSheet extends ActorSheet {
           container.push(i);
         }
       }
-  
+
       // Alphabetically sort all item lists
-      if (game.settings.get('uesrpg-d100', 'sortAlpha')) {
+      if (game.settings.get('uesrpg-3ev4', 'sortAlpha')) {
         const itemCats = [
-          gear.equipped, 
-          gear.unequipped, 
+          gear.equipped,
+          gear.unequipped,
           weapon.equipped,
-          weapon.unequipped, 
-          armor.equipped, 
-          armor.unequipped, 
-          power, 
-          trait, 
-          talent, 
-          combatStyle, 
-          spell, 
+          weapon.unequipped,
+          armor.equipped,
+          armor.unequipped,
+          power,
+          trait,
+          talent,
+          combatStyle,
+          spell,
           ammunition.equipped,
-          ammunition.unequipped, 
-          language, 
+          ammunition.unequipped,
+          language,
           faction,
           container
         ]
-    
+
         for (let category of itemCats) {
           if (category.length > 1 && category != spell) {
             category.sort((a,b) => {
@@ -175,7 +175,7 @@ export class npcSheet extends ActorSheet {
           }
         }
       }
-  
+
       //Assign and return
       actorData.gear = gear;
       actorData.weapon = weapon;
@@ -189,12 +189,12 @@ export class npcSheet extends ActorSheet {
       actorData.language = language;
       actorData.faction = faction;
       actorData.container = container;
-  
+
     }
 
     get template() {
-      const path = "systems/uesrpg-d100/templates";
-      if (!game.user.isGM && this.actor.limited) return "systems/uesrpg-d100/templates/limited-npc-sheet.html"; 
+      const path = "systems/uesrpg-3ev4/templates";
+      if (!game.user.isGM && this.actor.limited) return "systems/uesrpg-3ev4/templates/limited-npc-sheet.html";
       return `${path}/${this.actor.type}-sheet.html`;
     }
 
@@ -287,7 +287,7 @@ export class npcSheet extends ActorSheet {
         // resets contained items status and then sets contained_items array to empty
         itemToDelete.system.contained_items.forEach(item => {
 
-          let sourceItem = this.actor.items.find(i => i._id == item._id) 
+          let sourceItem = this.actor.items.find(i => i._id == item._id)
           sourceItem.update({
             'system.containerStats.container_id': "",
             'system.containerStats.container_name': "",
@@ -398,8 +398,8 @@ export class npcSheet extends ActorSheet {
                     <h2>Set the Character's Base Characteristics.</h2>
 
                     <div style="border: inset; margin-bottom: 10px; padding: 5px;">
-                    <i>Use this menu to adjust characteristic values on the character 
-                      when first creating a character or when spending XP to increase 
+                    <i>Use this menu to adjust characteristic values on the character
+                      when first creating a character or when spending XP to increase
                       their characteristics.
                     </i>
                     </div>
@@ -566,7 +566,7 @@ export class npcSheet extends ActorSheet {
     })
     d.render(true);
   }
-  
+
   async _onClickCharacteristic(event) {
     event.preventDefault()
     const element = event.currentTarget
@@ -594,10 +594,10 @@ export class npcSheet extends ActorSheet {
     roll.roll({async:false});
 
       if (this.actor.system.wounded == true) {
-        if (roll.total == this.actor.system.lucky_numbers.ln1 || 
-          roll.total == this.actor.system.lucky_numbers.ln2 || 
-          roll.total == this.actor.system.lucky_numbers.ln3 || 
-          roll.total == this.actor.system.lucky_numbers.ln4 || 
+        if (roll.total == this.actor.system.lucky_numbers.ln1 ||
+          roll.total == this.actor.system.lucky_numbers.ln2 ||
+          roll.total == this.actor.system.lucky_numbers.ln3 ||
+          roll.total == this.actor.system.lucky_numbers.ln4 ||
           roll.total == this.actor.system.lucky_numbers.ln5 ||
           roll.total == this.actor.system.lucky_numbers.ln6 ||
           roll.total == this.actor.system.lucky_numbers.ln7 ||
@@ -611,32 +611,32 @@ export class npcSheet extends ActorSheet {
           <b>Result: [[${roll.result}]]</b><p></p>
           <span style='color:green; font-size:120%;'> <b>LUCKY NUMBER!</b></span>`
 
-    
-        } else if (roll.total == this.actor.system.unlucky_numbers.ul1 || 
-          roll.total == this.actor.system.unlucky_numbers.ul2 || 
-          roll.total == this.actor.system.unlucky_numbers.ul3 || 
-          roll.total == this.actor.system.unlucky_numbers.ul4 || 
+
+        } else if (roll.total == this.actor.system.unlucky_numbers.ul1 ||
+          roll.total == this.actor.system.unlucky_numbers.ul2 ||
+          roll.total == this.actor.system.unlucky_numbers.ul3 ||
+          roll.total == this.actor.system.unlucky_numbers.ul4 ||
           roll.total == this.actor.system.unlucky_numbers.ul5 ||
-          roll.total == this.actor.system.unlucky_numbers.ul6) 
+          roll.total == this.actor.system.unlucky_numbers.ul6)
           {
           contentString = `<h2>${element.getAttribute('name')}</h2
           <p></p><b>Target Number: [[${woundedValue + playerInput}]]</b> <p></p>
           <b>Result: [[${roll.result}]]</b><p></p>
           <span style='color:rgb(168, 5, 5); font-size:120%;'> <b>UNLUCKY NUMBER!</b></span>`
 
-    
+
         } else {
           contentString = `<h2>${element.getAttribute('name')}</h2
           <p></p><b>Target Number: [[${woundedValue + playerInput}]]</b> <p></p>
           <b>Result: [[${roll.result}]]</b><p></p>
           <b>${roll.total <= (woundedValue + playerInput) ? "<span style='color:green; font-size: 120%;'> <b>SUCCESS!</b></span>" : " <span style='color:rgb(168, 5, 5); font-size: 120%;'> <b>FAILURE!</b></span>"}`
 
-        } 
+        }
       } else {
-        if (roll.total == this.actor.system.lucky_numbers.ln1 || 
-          roll.total == this.actor.system.lucky_numbers.ln2 || 
-          roll.total == this.actor.system.lucky_numbers.ln3 || 
-          roll.total == this.actor.system.lucky_numbers.ln4 || 
+        if (roll.total == this.actor.system.lucky_numbers.ln1 ||
+          roll.total == this.actor.system.lucky_numbers.ln2 ||
+          roll.total == this.actor.system.lucky_numbers.ln3 ||
+          roll.total == this.actor.system.lucky_numbers.ln4 ||
           roll.total == this.actor.system.lucky_numbers.ln5 ||
           roll.total == this.actor.system.lucky_numbers.ln6 ||
           roll.total == this.actor.system.lucky_numbers.ln7 ||
@@ -651,12 +651,12 @@ export class npcSheet extends ActorSheet {
         <span style='color:green; font-size:120%;'> <b>LUCKY NUMBER!</b></span>`
 
 
-      } else if (roll.total == this.actor.system.unlucky_numbers.ul1 || 
-          roll.total == this.actor.system.unlucky_numbers.ul2 || 
-          roll.total == this.actor.system.unlucky_numbers.ul3 || 
-          roll.total == this.actor.system.unlucky_numbers.ul4 || 
+      } else if (roll.total == this.actor.system.unlucky_numbers.ul1 ||
+          roll.total == this.actor.system.unlucky_numbers.ul2 ||
+          roll.total == this.actor.system.unlucky_numbers.ul3 ||
+          roll.total == this.actor.system.unlucky_numbers.ul4 ||
           roll.total == this.actor.system.unlucky_numbers.ul5 ||
-          roll.total == this.actor.system.unlucky_numbers.ul6) 
+          roll.total == this.actor.system.unlucky_numbers.ul6)
 
       {
         contentString = `<h2>${element.getAttribute('name')}</h2
@@ -672,13 +672,13 @@ export class npcSheet extends ActorSheet {
         <b>${roll.total<=(regularValue + playerInput) ? "<span style='color:green; font-size: 120%;'> <b>SUCCESS!</b></span>" : " <span style='color:rgb(168, 5, 5); font-size: 120%;'> <b>FAILURE!</b></span>"}`
 
       }
-    } 
+    }
 
     ChatMessage.create({
-      async:false, 
-      type: CONST.CHAT_MESSAGE_TYPES.ROLL, 
-      user: game.user.id, 
-      speaker: ChatMessage.getSpeaker(), 
+      async:false,
+      type: CONST.CHAT_MESSAGE_TYPES.ROLL,
+      user: game.user.id,
+      speaker: ChatMessage.getSpeaker(),
       roll: roll,
       content: contentString,
       flavor: `<div class="tag-container">${tags.join('')}</div>`
@@ -721,10 +721,10 @@ export class npcSheet extends ActorSheet {
             let roll = new Roll("1d100");
             roll.roll({async: false});
 
-            if (roll.result == this.actor.system.lucky_numbers.ln1 || 
-              roll.result == this.actor.system.lucky_numbers.ln2 || 
-              roll.result == this.actor.system.lucky_numbers.ln3 || 
-              roll.result == this.actor.system.lucky_numbers.ln4 || 
+            if (roll.result == this.actor.system.lucky_numbers.ln1 ||
+              roll.result == this.actor.system.lucky_numbers.ln2 ||
+              roll.result == this.actor.system.lucky_numbers.ln3 ||
+              roll.result == this.actor.system.lucky_numbers.ln4 ||
               roll.result == this.actor.system.lucky_numbers.ln5 ||
               roll.result == this.actor.system.lucky_numbers.ln6 ||
               roll.result == this.actor.system.lucky_numbers.ln7 ||
@@ -738,12 +738,12 @@ export class npcSheet extends ActorSheet {
               <span style='color:green; font-size:120%;'> <b>LUCKY NUMBER!</b></span>`
 
               }
-              else if (roll.result == this.actor.system.unlucky_numbers.ul1 || 
-                roll.result == this.actor.system.unlucky_numbers.ul2 || 
-                roll.result == this.actor.system.unlucky_numbers.ul3 || 
-                roll.result == this.actor.system.unlucky_numbers.ul4 || 
+              else if (roll.result == this.actor.system.unlucky_numbers.ul1 ||
+                roll.result == this.actor.system.unlucky_numbers.ul2 ||
+                roll.result == this.actor.system.unlucky_numbers.ul3 ||
+                roll.result == this.actor.system.unlucky_numbers.ul4 ||
                 roll.result == this.actor.system.unlucky_numbers.ul5 ||
-                roll.result == this.actor.system.unlucky_numbers.ul6) 
+                roll.result == this.actor.system.unlucky_numbers.ul6)
                 {
                   contentString = `<h2>${element.getAttribute('name')}</h2>
                   <p></p><b>Target Number: [[${this.actor.system.professionsWound[element.getAttribute('id')]} + ${playerInput}  + ${this.actor.system.fatigue.penalty} + ${this.actor.system.carry_rating.penalty}]]</b> <p></p>
@@ -759,10 +759,10 @@ export class npcSheet extends ActorSheet {
                 }
 
                 ChatMessage.create({
-                  async:false, 
-                  type: CONST.CHAT_MESSAGE_TYPES.ROLL, 
-                  user: game.user.id, 
-                  speaker: ChatMessage.getSpeaker(), 
+                  async:false,
+                  type: CONST.CHAT_MESSAGE_TYPES.ROLL,
+                  user: game.user.id,
+                  speaker: ChatMessage.getSpeaker(),
                   roll: roll,
                   content: contentString,
                   flavor: `<div class="tag-container">${tags.join('')}</div>`
@@ -817,7 +817,7 @@ export class npcSheet extends ActorSheet {
       case "7":
         hit_loc = "Left Leg"
         break
-      
+
       case "8":
         hit_loc = "Right Arm"
         break
@@ -835,7 +835,7 @@ export class npcSheet extends ActorSheet {
     shortcutWeapon.system.weapon2H ? damageString = shortcutWeapon.system.damage2 : damageString = shortcutWeapon.system.damage
     let weaponRoll = new Roll(damageString)
     weaponRoll.roll({async: false})
-    
+
     // Superior Weapon Roll
     let supRollTag = ``
     let superiorRoll = new Roll(damageString)
@@ -1036,12 +1036,12 @@ export class npcSheet extends ActorSheet {
                         //Determine cost mod based on talents and other modifiers
                         if (hasCreative && spellToCast.system.spellType === "unconventional"){
                             stackCostMod = stackCostMod - 1;
-                        } 
+                        }
 
                         if (hasMethodical && spellToCast.system.spellType === "conventional"){
                             stackCostMod = stackCostMod - 1;
                         }
-                        
+
                         if(hasForceOfWill){
                             stackCostMod = stackCostMod - 1;
                         }
@@ -1109,7 +1109,7 @@ export class npcSheet extends ActorSheet {
                     }
 
                     // Stop The Function if the user does not have enough Magicka to Cast the Spell
-                    if (game.settings.get("uesrpg-d100", "automateMagicka")) {
+                    if (game.settings.get("uesrpg-3ev4", "automateMagicka")) {
                       if (displayCost > this.actor.system.magicka.value) {
                         return ui.notifications.info(`You do not have enough Magicka to cast this spell: Cost: ${spellToCast.system.cost} || Restraint: ${spellRestraint} || Other: ${stackCostMod}`)
                       }
@@ -1142,7 +1142,7 @@ export class npcSheet extends ActorSheet {
                                                     </tr>
                                                 </tbody>
                                             </table>`
-                                            
+
                     damageRoll.toMessage({
                         user: game.user.id,
                         speaker: ChatMessage.getSpeaker(),
@@ -1152,7 +1152,7 @@ export class npcSheet extends ActorSheet {
                     })
 
                     // If Automate Magicka Setting is on, reduce the character's magicka by the calculated output cost
-                    if (game.settings.get("uesrpg-d100", "automateMagicka")) {this.actor.update({'data.magicka.value': this.actor.system.magicka.value - displayCost})}
+                    if (game.settings.get("uesrpg-3ev4", "automateMagicka")) {this.actor.update({'data.magicka.value': this.actor.system.magicka.value - displayCost})}
                 }
             },
             two: {
@@ -1183,7 +1183,7 @@ export class npcSheet extends ActorSheet {
           label: "Roll!",
           callback: html => {
             const playerInput = parseInt(html.find('[id="playerInput"]').val());
-          
+
           let contentString = "";
           let roll = new Roll("1d100");
           roll.roll({async:false});
@@ -1489,7 +1489,7 @@ export class npcSheet extends ActorSheet {
     const resource = this.actor.system[event.currentTarget.dataset.resource]
     const action = event.currentTarget.dataset.action
     let dataPath = `data.${event.currentTarget.dataset.resource}.value`
-    
+
     // Update and increment resource
     action == 'increase' ? this.actor.update({[dataPath]: resource.value + 1}) : this.actor.update({[dataPath]: resource.value - 1})
   }
@@ -1529,14 +1529,14 @@ export class npcSheet extends ActorSheet {
   _filterSpells(event) {
     event.preventDefault()
     let filterBy = event.currentTarget.value
-    
+
     for (let spellItem of [...this.form.querySelectorAll(".spellList tbody .item")]) {
       switch (filterBy) {
         case 'All':
           spellItem.classList.add('active')
           sessionStorage.setItem('savedSpellFilter', filterBy)
           break
-          
+
         case `${filterBy}`:
           filterBy == spellItem.dataset.spellSchool ? spellItem.classList.add('active') : spellItem.classList.remove('active')
           sessionStorage.setItem('savedSpellFilter', filterBy)
@@ -1548,14 +1548,14 @@ export class npcSheet extends ActorSheet {
   _filterItems(event) {
     event.preventDefault()
     let filterBy = event.currentTarget.value
-    
+
     for (let item of [...this.form.querySelectorAll(".equipmentList tbody .item")]) {
       switch (filterBy) {
         case 'All':
           item.classList.add('active')
           sessionStorage.setItem('savedItemFilter', filterBy)
           break
-          
+
         case `${filterBy}`:
           filterBy == item.dataset.itemType ? item.classList.add('active') : item.classList.remove('active')
           sessionStorage.setItem('savedItemFilter', filterBy)
@@ -1714,7 +1714,7 @@ export class npcSheet extends ActorSheet {
                       </div>`
                       break
 
-      case 'weapon': 
+      case 'weapon':
         tableHeader = `<div>
                           <div style="padding: 5px 0;">
                               <label>Selecting nothing will unequip all items</label>
@@ -1739,7 +1739,7 @@ export class npcSheet extends ActorSheet {
                       </div>`
                       break
 
-      case 'ammunition': 
+      case 'ammunition':
       tableHeader = `<div>
                         <div style="padding: 5px 0;">
                             <label>Selecting nothing will unequip all items</label>
@@ -1787,14 +1787,14 @@ export class npcSheet extends ActorSheet {
       default: "two",
       close: html => console.log()
     })
-    
+
     d.position.width = 500
     d.render(true)
   }
 
   _createStatusTags() {
     this.actor.system.wounded ? this.form.querySelector('#wound-icon').classList.add('active') : this.form.querySelector('#wound-icon').classList.remove('active')
-    if (game.settings.get('uesrpg-d100', 'npcENCPenalty')) {
+    if (game.settings.get('uesrpg-3ev4', 'npcENCPenalty')) {
       this.actor.system.carry_rating.current > this.actor.system.carry_rating.max ? this.form.querySelector('#enc-icon').classList.add('active') : this.form.querySelector('#enc-icon').classList.remove('active')
     }
     this.actor.system.fatigue.level > 0 ? this.form.querySelector('#fatigue-icon').classList.add('active') : this.form.querySelector('#fatigue-icon').classList.remove('active')

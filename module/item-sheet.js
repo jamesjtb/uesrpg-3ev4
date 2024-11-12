@@ -18,19 +18,19 @@ export class SimpleItemSheet extends ItemSheet {
 
 /** @override */
     get template() {
-      const path = "systems/uesrpg-d100/templates";
+      const path = "systems/uesrpg-3ev4/templates";
       return `${path}/${this.item.type}-sheet.html`;
     }
 
     getData() {
-      const  data = super.getData(); 
+      const  data = super.getData();
       data.dtypes = ["String", "Number", "Boolean"];
       data.isGM = game.user.isGM;
       data.editable = data.options.editable;
       const itemData = data.system;
       data.actor = itemData;
       data.data = itemData;
-  
+
       return data;
       }
 
@@ -173,7 +173,7 @@ export class SimpleItemSheet extends ItemSheet {
         this.item.system.skillArray.splice(index, 1)
         this.item.update({'system.skillArray': this.item.system.skillArray})
         break
-      } 
+      }
     }
 
   }
@@ -281,7 +281,7 @@ export class SimpleItemSheet extends ItemSheet {
                     }
 
                     thisItem.update({
-                      'system.containerStats.contained': true, 
+                      'system.containerStats.contained': true,
                       'system.containerStats.container_id': this.item._id,
                       'system.containerStats.container_name': this.item.name
                   })
@@ -293,7 +293,7 @@ export class SimpleItemSheet extends ItemSheet {
                   } else {
                       if (thisItem.system.containerStats.container_id == this.item._id) {
                         thisItem.update({
-                          'system.containerStats.contained': false, 
+                          'system.containerStats.contained': false,
                           'system.containerStats.container_id': "",
                           "system.containerStats.container_name": ""
                         })
@@ -318,7 +318,7 @@ export class SimpleItemSheet extends ItemSheet {
   }
 
   _addToContainer() {
-    // Bring up list of all items that are able to be stored into the container. 
+    // Bring up list of all items that are able to be stored into the container.
     // Need to limit the list based on the bag's capacity vs the enc of the items
 
     // Create List of items to show in list
@@ -328,14 +328,14 @@ export class SimpleItemSheet extends ItemSheet {
 
     // Return if container is not embedded onto actor
     if (this.item.isOwned) {itemList = this.actor.items}
-    else { 
+    else {
       return ui.notifications.info("Containers must be owned by Actors in order to add items. This will be updated in the future.")
     }
 
     for (let i of itemList) {
       if (
-            i._id == this.item._id 
-            //(i.system.containerStats?.contained && 
+            i._id == this.item._id
+            //(i.system.containerStats?.contained &&
             //i.system.containerStats?.container_id != this.item._id)
           ) continue
 
@@ -362,7 +362,7 @@ export class SimpleItemSheet extends ItemSheet {
 
     // Update the contained item's status
     this.actor.items.find(i => i._id == removedItemId).update({
-      'system.containerStats.contained': false, 
+      'system.containerStats.contained': false,
       'system.containerStats.container_id': "",
       'system.containerStats.container_name': ""
     })

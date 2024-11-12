@@ -6,7 +6,7 @@ export class SystemCombat extends Combat {
 
   /** @override */
   startCombat() {
-    if (game.settings.get("uesrpg-d100", "automateActionPoints")) {
+    if (game.settings.get("uesrpg-3ev4", "automateActionPoints")) {
       // Set all combatant's action points to their maximum values.
       this.turns.forEach((combatant) => {
         combatant.actor.update({
@@ -20,7 +20,7 @@ export class SystemCombat extends Combat {
 
   /** @override */
   nextTurn() {
-    if (game.settings.get("uesrpg-d100", "automateActionPoints")) {
+    if (game.settings.get("uesrpg-3ev4", "automateActionPoints")) {
       // Set the next combatant's action points to their maximum value, but only if it's not the first round of combat.
       // Characters can take reactions before their first turn, but they start with less AP on their first turn as a
       // result. The 3rd edition v3 core rules state:

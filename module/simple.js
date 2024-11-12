@@ -38,22 +38,22 @@ Hooks.once("init", async function() {
   // Register sheet application classes
   Actors.unregisterSheet("core", ActorSheet);
   Items.unregisterSheet("core", ItemSheet);
-  Actors.registerSheet("uesrpg-d100", SimpleActorSheet,
+  Actors.registerSheet("uesrpg-3ev4", SimpleActorSheet,
     {types: ["character"],
     makeDefault: true,
     label: "Default UESRPG Character Sheet"
     });
-  Items.registerSheet("uesrpg-d100", SimpleItemSheet,
+  Items.registerSheet("uesrpg-3ev4", SimpleItemSheet,
     {
     makeDefault: true,
     label: "Default UESRPG Item Sheet"
     });
-  Actors.registerSheet("uesrpg-d100", npcSheet, {
+  Actors.registerSheet("uesrpg-3ev4", npcSheet, {
     types: ["npc"],
     makeDefault: true,
     label: "Default UESRPG NPC Sheet"
     });
-  Actors.registerSheet("uesrpg-d100", merchantSheet, {
+  Actors.registerSheet("uesrpg-3ev4", merchantSheet, {
     types: ["npc"],
     makeDefault: false,
     label: "Default UESRPG Merchant Sheet"
@@ -62,7 +62,7 @@ Hooks.once("init", async function() {
   // Register system settings
   function delayedReload() {window.setTimeout(() => location.reload(), 500)}
 
-  game.settings.register("uesrpg-d100", "legacyUntrainedPenalty", {
+  game.settings.register("uesrpg-3ev4", "legacyUntrainedPenalty", {
     name: "Legacy Untrained Penalty",
     hint: "Checking this option enables the UESRPG v2 penalty for Untrained skills at -20 instead of the standard -10.",
     scope: "world",
@@ -72,7 +72,7 @@ Hooks.once("init", async function() {
     onChange: delayedReload
   });
 
-  game.settings.register("uesrpg-d100", "startUpDialog", {
+  game.settings.register("uesrpg-3ev4", "startUpDialog", {
     name: "Do Not Show Dialog on Startup",
     hint: "Checking this box hides the startup popup dialog informing the user on additional game resources.",
     scope: "world",
@@ -81,7 +81,7 @@ Hooks.once("init", async function() {
     type: Boolean
   });
 
-  game.settings.register("uesrpg-d100", "automateMagicka", {
+  game.settings.register("uesrpg-3ev4", "automateMagicka", {
     name: "Automate Magicka Cost",
     hint: "Automatically deduct the cost of a spell after cost calculation from the token/character's current magicka.",
     scope: "world",
@@ -91,7 +91,7 @@ Hooks.once("init", async function() {
     onChange: delayedReload
   });
 
-  game.settings.register("uesrpg-d100", "automateActionPoints", {
+  game.settings.register("uesrpg-3ev4", "automateActionPoints", {
     name: "Automate Action Points",
     hint: `Automatically set all combatants' AP to max at the start of each encounter.
            Automatically set a combatant's AP to max at the start of their turn (except during the first round).`,
@@ -101,7 +101,7 @@ Hooks.once("init", async function() {
     type: Boolean
   });
 
-  game.settings.register("uesrpg-d100", "npcENCPenalty", {
+  game.settings.register("uesrpg-3ev4", "npcENCPenalty", {
     name: "NPC's Suffer Encumbrance Penalties",
     hint: "If checked, NPC's suffer from the same overencumbrance penalties that player characters do. Otherwise, they suffer no ENC Penalties.",
     scope: "world",
@@ -111,7 +111,7 @@ Hooks.once("init", async function() {
     onChange: delayedReload
   });
 
-  game.settings.register("uesrpg-d100", "sortAlpha", {
+  game.settings.register("uesrpg-3ev4", "sortAlpha", {
     name: "Sort Actor Items Alphabetically",
     hint: "If checked, Actor items are automatically sorted alphabetically. Otherwise, items are not sorted and are organized manually.",
     scope: "world",
@@ -122,7 +122,7 @@ Hooks.once("init", async function() {
   });
 
   const startUpFunction = () => {
-    const startUpDialog = game.settings.get("uesrpg-d100", "startUpDialog");
+    const startUpDialog = game.settings.get("uesrpg-3ev4", "startUpDialog");
     let discordIcon = `<i class="fab fa-discord fa-2x"></i>`;
     let patreonIcon = `<i class="fab fa-patreon fa-2x"></i>`;
     let gitLabIcon = `<i class="fab fa-gitlab fa-2x"></i>`;
@@ -197,6 +197,6 @@ Hooks.once("init", async function() {
     popup.render(true);
   }
 
-  if (game.settings.get('uesrpg-d100', 'startUpDialog') === false) {startUpFunction()}
+  if (game.settings.get('uesrpg-3ev4', 'startUpDialog') === false) {startUpFunction()}
 
 });

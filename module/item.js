@@ -58,7 +58,7 @@ export class SimpleItem extends Item {
   async _prepareCombatStyleData(actorData, itemData) {
 
     //Skill Bonus Calculation
-    const legacyUntrained = game.settings.get("uesrpg-d100", "legacyUntrainedPenalty");
+    const legacyUntrained = game.settings.get("uesrpg-3ev4", "legacyUntrainedPenalty");
 
     //Combat Style Skill Bonus Calculation
     if (legacyUntrained) {
@@ -120,7 +120,7 @@ export class SimpleItem extends Item {
   }
 
   _prepareArmorItem(actorData, itemData) {
-      
+
   }
 
   _prepareNormalItem(actorData, itemData) {
@@ -159,7 +159,7 @@ export class SimpleItem extends Item {
     itemData.container_enc.item_count = itemCount
     itemData.container_enc.current = currentCapacity
     itemData.container_enc.applied_enc = appliedENC
-    
+
   }
 
   async _duplicateContainedItemsOnActor(actorData, itemData) {
@@ -195,7 +195,7 @@ export class SimpleItem extends Item {
 
   _untrainedException(actorData) {
     let attribute = actorData.items.filter(item => item.system.untrainedException == true);
-    const legacyUntrained = game.settings.get("uesrpg-d100", "legacyUntrainedPenalty");
+    const legacyUntrained = game.settings.get("uesrpg-3ev4", "legacyUntrainedPenalty");
     let x = 0;
     if (this.type === "combatStyle"){
       if (legacyUntrained === true) {

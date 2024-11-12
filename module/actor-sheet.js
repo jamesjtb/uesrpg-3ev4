@@ -11,7 +11,7 @@ import { isUnlucky } from './skillCalcHelper.js'
 	static get defaultOptions() {
 	  return mergeObject(super.defaultOptions, {
   	  classes: ["worldbuilding", "sheet", "actor"],
-  	  template: "systems/uesrpg-d100/templates/actor-sheet.html",
+  	  template: "systems/uesrpg-3ev4/templates/actor-sheet.html",
       width: 780,
       height: 860,
       tabs: [{navSelector: ".sheet-tabs", contentSelector: ".sheet-body", initial: "description"}],
@@ -28,7 +28,7 @@ import { isUnlucky } from './skillCalcHelper.js'
         ".power-container .item",
         ".equipmentList .item",
         ".containerList .item"
-      ], 
+      ],
       dropSelector: null}]
     });
   }
@@ -38,7 +38,7 @@ import { isUnlucky } from './skillCalcHelper.js'
   /** @override */
 
   getData() {
-    const  data = super.getData(); 
+    const  data = super.getData();
     data.dtypes = ["String", "Number", "Boolean"];
     data.isGM = game.user.isGM;
     data.editable = data.options.editable;
@@ -150,24 +150,24 @@ import { isUnlucky } from './skillCalcHelper.js'
     }
 
     // Alphabetically sort all item lists
-    if (game.settings.get('uesrpg-d100', 'sortAlpha')) {
+    if (game.settings.get('uesrpg-3ev4', 'sortAlpha')) {
       const itemCats = [
-        gear.equipped, 
-        gear.unequipped, 
+        gear.equipped,
+        gear.unequipped,
         weapon.equipped,
-        weapon.unequipped, 
-        armor.equipped, 
-        armor.unequipped, 
-        power, 
-        trait, 
-        talent, 
-        combatStyle, 
-        spell, 
-        skill, 
-        magicSkill, 
+        weapon.unequipped,
+        armor.equipped,
+        armor.unequipped,
+        power,
+        trait,
+        talent,
+        combatStyle,
+        spell,
+        skill,
+        magicSkill,
         ammunition.equipped,
-        ammunition.unequipped, 
-        language, 
+        ammunition.unequipped,
+        language,
         faction,
         container
       ]
@@ -297,7 +297,7 @@ import { isUnlucky } from './skillCalcHelper.js'
         // resets contained items status and then sets contained_items array to empty
         itemToDelete.system.contained_items.forEach(item => {
 
-          let sourceItem = this.actor.items.find(i => i._id == item._id) 
+          let sourceItem = this.actor.items.find(i => i._id == item._id)
           sourceItem.update({
             'system.containerStats.container_id': "",
             'system.containerStats.container_name': "",
@@ -409,8 +409,8 @@ import { isUnlucky } from './skillCalcHelper.js'
                     <h2>Set the Character's Base Characteristics.</h2>
 
                     <div style="border: inset; margin-bottom: 10px; padding: 5px;">
-                    <i>Use this menu to adjust characteristic values on the character 
-                      when first creating a character or when spending XP to increase 
+                    <i>Use this menu to adjust characteristic values on the character
+                      when first creating a character or when spending XP to increase
                       their characteristics.
                     </i>
                     </div>
@@ -611,21 +611,21 @@ import { isUnlucky } from './skillCalcHelper.js'
           <p></p><b>Target Number: [[${woundedValue + playerInput}]]</b> <p></p>
           <b>Result: [[${roll.result}]]</b><p></p>
           <span style='color:green; font-size:120%;'> <b>LUCKY NUMBER!</b></span>`
-    
+
         } else if (isUnlucky(this.actor, roll.result)) {
           contentString = `<h2>${element.getAttribute('name')}</h2
           <p></p><b>Target Number: [[${woundedValue + playerInput}]]</b> <p></p>
           <b>Result: [[${roll.result}]]</b><p></p>
           <span style='color:rgb(168, 5, 5); font-size:120%;'> <b>UNLUCKY NUMBER!</b></span>`
 
-    
+
         } else {
           contentString = `<h2>${element.getAttribute('name')}</h2
           <p></p><b>Target Number: [[${woundedValue + playerInput}]]</b> <p></p>
           <b>Result: [[${roll.result}]]</b><p></p>
           <b>${roll.total <= (woundedValue + playerInput) ? "<span style='color:green; font-size: 120%;'> <b>SUCCESS!</b></span>" : " <span style='color:rgb(168, 5, 5); font-size: 120%;'> <b>FAILURE!</b></span>"}`
 
-        } 
+        }
       } else {
         if (isLucky(this.actor, roll.result)) {
         contentString = `<h2>${element.getAttribute('name')}</h2
@@ -648,13 +648,13 @@ import { isUnlucky } from './skillCalcHelper.js'
         <b>${roll.total<=(regularValue + playerInput) ? "<span style='color:green; font-size: 120%;'> <b>SUCCESS!</b></span>" : " <span style='color:rgb(168, 5, 5); font-size: 120%;'> <b>FAILURE!</b></span>"}`
 
       }
-    } 
+    }
 
     ChatMessage.create({
-      async:false, 
-      type: CONST.CHAT_MESSAGE_TYPES.ROLL, 
-      user: game.user.id, 
-      speaker: ChatMessage.getSpeaker(), 
+      async:false,
+      type: CONST.CHAT_MESSAGE_TYPES.ROLL,
+      user: game.user.id,
+      speaker: ChatMessage.getSpeaker(),
       roll: roll,
       content: contentString,
       flavor: `<div class="tag-container">${tags.join('')}</div>`
@@ -728,10 +728,10 @@ import { isUnlucky } from './skillCalcHelper.js'
           }
 
           ChatMessage.create({
-            async:false, 
-            type: CONST.CHAT_MESSAGE_TYPES.ROLL, 
-            user: game.user.id, 
-            speaker: ChatMessage.getSpeaker(), 
+            async:false,
+            type: CONST.CHAT_MESSAGE_TYPES.ROLL,
+            user: game.user.id,
+            speaker: ChatMessage.getSpeaker(),
             roll: roll,
             content: contentString,
             flavor: `<div class="tag-container">${tags.join('')}</div>`
@@ -888,12 +888,12 @@ import { isUnlucky } from './skillCalcHelper.js'
                         //Determine cost mod based on talents and other modifiers
                         if (hasCreative && spellToCast.system.spellType === "unconventional"){
                             stackCostMod = stackCostMod - 1;
-                        } 
+                        }
 
                         if (hasMethodical && spellToCast.system.spellType === "conventional"){
                             stackCostMod = stackCostMod - 1;
                         }
-                        
+
                         if(hasForceOfWill){
                             stackCostMod = stackCostMod - 1;
                         }
@@ -961,7 +961,7 @@ import { isUnlucky } from './skillCalcHelper.js'
                     }
 
                     // Stop The Function if the user does not have enough Magicka to Cast the Spell
-                    if (game.settings.get("uesrpg-d100", "automateMagicka")) {
+                    if (game.settings.get("uesrpg-3ev4", "automateMagicka")) {
                       if (displayCost > this.actor.system.magicka.value) {
                         return ui.notifications.info(`You do not have enough Magicka to cast this spell: Cost: ${spellToCast.system.cost} || Restraint: ${spellRestraint} || Other: ${stackCostMod}`)
                       }
@@ -994,7 +994,7 @@ import { isUnlucky } from './skillCalcHelper.js'
                                                     </tr>
                                                 </tbody>
                                             </table>`
-                                            
+
                     damageRoll.toMessage({
                         user: game.user.id,
                         speaker: ChatMessage.getSpeaker(),
@@ -1004,7 +1004,7 @@ import { isUnlucky } from './skillCalcHelper.js'
                     })
 
                     // If Automate Magicka Setting is on, reduce the character's magicka by the calculated output cost
-                    if (game.settings.get("uesrpg-d100", "automateMagicka")) {this.actor.update({'data.magicka.value': this.actor.system.magicka.value - displayCost})}
+                    if (game.settings.get("uesrpg-3ev4", "automateMagicka")) {this.actor.update({'data.magicka.value': this.actor.system.magicka.value - displayCost})}
                 }
             },
             two: {
@@ -1047,7 +1047,7 @@ import { isUnlucky } from './skillCalcHelper.js'
           let roll = new Roll("1d100");
           roll.roll({async:false});
           let contentString = "";
-          
+
           if (isLucky(this.actor, roll.result)) {
             contentString = `<h2><img src="${item.img}"</img>${item.name}</h2>
             <p></p><b>Target Number: [[${regularValue} + ${playerInput} + ${this.actor.system.wounded ? this.actor.system.woundPenalty : 0}]]</b> <p></p>
@@ -1074,10 +1074,10 @@ import { isUnlucky } from './skillCalcHelper.js'
           }
 
           ChatMessage.create({
-            async:false, 
-            type: CONST.CHAT_MESSAGE_TYPES.ROLL, 
-            user: game.user.id, 
-            speaker: ChatMessage.getSpeaker(), 
+            async:false,
+            type: CONST.CHAT_MESSAGE_TYPES.ROLL,
+            user: game.user.id,
+            speaker: ChatMessage.getSpeaker(),
             roll: roll,
             content: contentString,
             flavor: `<div class="tag-container">${tags.join('')}</div>`
@@ -1191,7 +1191,7 @@ import { isUnlucky } from './skillCalcHelper.js'
       case "7":
         hit_loc = "Left Leg"
         break
-      
+
       case "8":
         hit_loc = "Right Arm"
         break
@@ -1209,7 +1209,7 @@ import { isUnlucky } from './skillCalcHelper.js'
     shortcutWeapon.system.weapon2H ? damageString = shortcutWeapon.system.damage2 : damageString = shortcutWeapon.system.damage
     let weaponRoll = new Roll(damageString)
     weaponRoll.roll({async: false})
-    
+
     // Superior Weapon Roll
     let supRollTag = ``
     let superiorRoll = new Roll(damageString)
@@ -1414,8 +1414,8 @@ import { isUnlucky } from './skillCalcHelper.js'
           type: element.id,
           'data.baseCha': this.actor.system.characteristics.str.total >= this.actor.system.characteristics.agi.total ? 'str' : 'agi'
         }]
-      } 
-      
+      }
+
       if (element.id === 'magicSkill') {
         itemData = [{
           name: element.id,
@@ -1524,7 +1524,7 @@ import { isUnlucky } from './skillCalcHelper.js'
     event.preventDefault()
     let d
 
-    if (this.actor.items.filter(item => item.type === 'trait' && (item.name === 'The Thief'||item.name === 'The Star-Cursed Thief')).length > 0) { 
+    if (this.actor.items.filter(item => item.type === 'trait' && (item.name === 'The Thief'||item.name === 'The Star-Cursed Thief')).length > 0) {
         d = new Dialog({
           title: "Lucky & Unlucky Numbers",
           content: `<form style="padding: 10px">
@@ -1659,7 +1659,7 @@ import { isUnlucky } from './skillCalcHelper.js'
 
   _onRaceMenu(event) {
     event.preventDefault();
-    const imgPath = 'systems/uesrpg-d100/images'
+    const imgPath = 'systems/uesrpg-3ev4/images'
 
     const races = {
       altmer: {
@@ -1674,10 +1674,10 @@ import { isUnlucky } from './skillCalcHelper.js'
           'During Character Creation, Altmer can pick one additional magic skill to begin trained at Novice for free'
         ],
         items: [
-          {name: 'Disease Resistance (50%) (Racial)', img: 'systems/uesrpg-d100/images/Icons/diseaseResistance.webp', type: 'trait', dataPath: 'data.diseaseR', value: 50, desc: "This character has a chance to resist disease."},
-          {name: 'Power Well (20) (Racial)', img: 'systems/uesrpg-d100/images/Icons/powerWell.webp', type: 'trait', dataPath: 'data.mpBonus', value: 20, desc: "This character has extra reserves of magicka available."},
+          {name: 'Disease Resistance (50%) (Racial)', img: 'systems/uesrpg-3ev4/images/Icons/diseaseResistance.webp', type: 'trait', dataPath: 'data.diseaseR', value: 50, desc: "This character has a chance to resist disease."},
+          {name: 'Power Well (20) (Racial)', img: 'systems/uesrpg-3ev4/images/Icons/powerWell.webp', type: 'trait', dataPath: 'data.mpBonus', value: 20, desc: "This character has extra reserves of magicka available."},
           {name: 'Weakness (Magic, 2) (Racial)', img: 'icons/magic/defensive/shield-barrier-blue.webp', type: 'trait', dataPath: 'data.magicR', value: -2},
-          {name: 'Mental Strength (Racial)', img: 'systems/uesrpg-d100/images/Icons/Skill_203.webp', type: 'trait', desc: 'Altmer ignore penalties to Willpower made to resist paralysis.'}
+          {name: 'Mental Strength (Racial)', img: 'systems/uesrpg-3ev4/images/Icons/Skill_203.webp', type: 'trait', desc: 'Altmer ignore penalties to Willpower made to resist paralysis.'}
 
         ]
       },
@@ -1693,10 +1693,10 @@ import { isUnlucky } from './skillCalcHelper.js'
           'Inscrutable: -10 penalty on Persuade tests vs. Non-Argonians & others receive -10 penalty on Observe tests to determine an Argonians motives'
         ],
         items: [
-          {name: 'Disease Resistance (75%) (Racial)', img: 'systems/uesrpg-d100/images/Icons/diseaseResistance.webp', type: 'trait', dataPath: 'data.diseaseR', value: 75, desc: "This character has a chance to resist disease."},
-          {name: 'Immunity (Poison) (Racial)', img: 'systems/uesrpg-d100/images/Icons/poison.webp', type: 'trait', dataPath: 'data.poisonR', value: 200, desc: "This character does not take damage from Poison effects."},
-          {name: 'Amphibious (Racial)', img: 'systems/uesrpg-d100/images/Icons/amphibious.webp', type: 'trait', desc: 'Can breathe water and ignores skill-cap placed on Combat rolls by their Athletics Skill when fighting in water.'},
-          {name: 'Inscrutable (Racial)', img: 'systems/uesrpg-d100/images/Icons/Assassinskill_31.webp', type: 'trait', desc: 'Argonians receive a -10 penalty to Persuade tests made to interact with non-Argonians. However, Observe tests made to try to distingush their motives are made with -10 penalty.'}
+          {name: 'Disease Resistance (75%) (Racial)', img: 'systems/uesrpg-3ev4/images/Icons/diseaseResistance.webp', type: 'trait', dataPath: 'data.diseaseR', value: 75, desc: "This character has a chance to resist disease."},
+          {name: 'Immunity (Poison) (Racial)', img: 'systems/uesrpg-3ev4/images/Icons/poison.webp', type: 'trait', dataPath: 'data.poisonR', value: 200, desc: "This character does not take damage from Poison effects."},
+          {name: 'Amphibious (Racial)', img: 'systems/uesrpg-3ev4/images/Icons/amphibious.webp', type: 'trait', desc: 'Can breathe water and ignores skill-cap placed on Combat rolls by their Athletics Skill when fighting in water.'},
+          {name: 'Inscrutable (Racial)', img: 'systems/uesrpg-3ev4/images/Icons/Assassinskill_31.webp', type: 'trait', desc: 'Argonians receive a -10 penalty to Persuade tests made to interact with non-Argonians. However, Observe tests made to try to distingush their motives are made with -10 penalty.'}
         ]
       },
 
@@ -1711,10 +1711,10 @@ import { isUnlucky } from './skillCalcHelper.js'
           'Beast Tongue: Can speak with animals'
         ],
         items: [
-          {name: 'Disease Resistance (50%) (Racial)', img: 'systems/uesrpg-d100/images/Icons/diseaseResistance.webp', type: 'trait', dataPath: 'data.diseaseR', value: 50, desc: "This character has a chance to resist disease."},
-          {name: 'Resistance (Poison, 1) (Racial)', img: 'systems/uesrpg-d100/images/Icons/poison.webp', type: 'trait', dataPath: 'data.poisonR', value: 1, desc: "This character reduces any incoming Poison damage by 1 and receives +10 bonus to resist non-damaging Poison effects."},
-          {name: 'Natural Archer (Racial)', img: 'systems/uesrpg-d100/images/Icons/Archerskill_04.webp', type: 'trait', desc: "Bosmer add shortbows to any combat style they use. This does not count towards that combat style's maximum trained weapon count."},
-          {name: 'Beast Tongue (Racial)', img: 'systems/uesrpg-d100/images/Icons/beastAbility.webp', type: 'power', desc: "Bosmer can speak to and understand the speech of animals. How exactly this functions is left to the GM's discretion, though it is recommended to call for a Perception test when the Bosmer encounters an unfamiliar creature to determine if they can speak to it."}
+          {name: 'Disease Resistance (50%) (Racial)', img: 'systems/uesrpg-3ev4/images/Icons/diseaseResistance.webp', type: 'trait', dataPath: 'data.diseaseR', value: 50, desc: "This character has a chance to resist disease."},
+          {name: 'Resistance (Poison, 1) (Racial)', img: 'systems/uesrpg-3ev4/images/Icons/poison.webp', type: 'trait', dataPath: 'data.poisonR', value: 1, desc: "This character reduces any incoming Poison damage by 1 and receives +10 bonus to resist non-damaging Poison effects."},
+          {name: 'Natural Archer (Racial)', img: 'systems/uesrpg-3ev4/images/Icons/Archerskill_04.webp', type: 'trait', desc: "Bosmer add shortbows to any combat style they use. This does not count towards that combat style's maximum trained weapon count."},
+          {name: 'Beast Tongue (Racial)', img: 'systems/uesrpg-3ev4/images/Icons/beastAbility.webp', type: 'power', desc: "Bosmer can speak to and understand the speech of animals. How exactly this functions is left to the GM's discretion, though it is recommended to call for a Perception test when the Bosmer encounters an unfamiliar creature to determine if they can speak to it."}
         ]
       },
 
@@ -1729,7 +1729,7 @@ import { isUnlucky } from './skillCalcHelper.js'
         ],
         items: [
           {name: 'Resistance (Magic, 2) (Racial)', img: 'icons/magic/defensive/shield-barrier-blue.webp', type: 'trait', dataPath: 'data.magicR', value: 2, desc: "This character reduces incoming Magic damage by 2 and receives +20 bonus to resist any non-damaging magic effects"},
-          {name: 'Power Well (10) (Racial)', img: 'systems/uesrpg-d100/images/Icons/powerWell.webp', type: 'trait', dataPath: 'data.mpBonus', value: 10, desc: "This character has extra reserves of magicka available to them."}
+          {name: 'Power Well (10) (Racial)', img: 'systems/uesrpg-3ev4/images/Icons/powerWell.webp', type: 'trait', dataPath: 'data.mpBonus', value: 10, desc: "This character has extra reserves of magicka available to them."}
         ]
       },
 
@@ -1744,7 +1744,7 @@ import { isUnlucky } from './skillCalcHelper.js'
         ],
         items: [
           {name: 'Resistance (Fire, 3) (Racial)', img: 'icons/magic/defensive/shield-barrier-glowing-triangle-red.webp', type: 'trait', dataPath: 'data.fireR', value: 3, desc: "This character reduces any incoming fire damage by 3 and receives +30 bonus to resist non-damaging fire effects"},
-          {name: 'Ancestor Guardian (Racial)', img: 'systems/uesrpg-d100/images/Icons/ancestorGuardian.webp', type: 'power', desc: 'The Dunmer can, once per Long Rest, cast Sanctuary (3) on themselves that lasts for 3 rounds as a Free Action that costs no magicka and requires no test. Additionally, the Dunmer can perform a ritual that costs 10 drakes worth of incense and powders during a Long Rest to consult with an ancestor, asking up to 1d4+1 questions. The ancestor replies with a voice only the Dunmer can hear or sends imagery or signs to be interpreted.'}
+          {name: 'Ancestor Guardian (Racial)', img: 'systems/uesrpg-3ev4/images/Icons/ancestorGuardian.webp', type: 'power', desc: 'The Dunmer can, once per Long Rest, cast Sanctuary (3) on themselves that lasts for 3 rounds as a Free Action that costs no magicka and requires no test. Additionally, the Dunmer can perform a ritual that costs 10 drakes worth of incense and powders during a Long Rest to consult with an ancestor, asking up to 1d4+1 questions. The ancestor replies with a voice only the Dunmer can hear or sends imagery or signs to be interpreted.'}
         ]
       },
 
@@ -1772,8 +1772,8 @@ import { isUnlucky } from './skillCalcHelper.js'
           'Natural Weapons: (Claws - 1d4 Slashing)'
         ],
         items: [
-          {name: 'Dark Sight (Racial)', img: 'systems/uesrpg-d100/images/Icons/darkSight.webp', type: 'trait', desc: 'A Khajiit can see normally even in areas with total darkness and never takes penalties for acting in areas with dim or no lighting.'},
-          {name: 'Claws', img: 'systems/uesrpg-d100/images/Icons/claw_strike.webp', type: 'weapon', dataPath: 'data.damage', value: '1d4', dataPath2: 'data.qualities', qualities: 'Slashing'}
+          {name: 'Dark Sight (Racial)', img: 'systems/uesrpg-3ev4/images/Icons/darkSight.webp', type: 'trait', desc: 'A Khajiit can see normally even in areas with total darkness and never takes penalties for acting in areas with dim or no lighting.'},
+          {name: 'Claws', img: 'systems/uesrpg-3ev4/images/Icons/claw_strike.webp', type: 'weapon', dataPath: 'data.damage', value: '1d4', dataPath2: 'data.qualities', qualities: 'Slashing'}
         ]
       },
 
@@ -1788,10 +1788,10 @@ import { isUnlucky } from './skillCalcHelper.js'
           'War Cry: See Powers section of Core Rulebook'
         ],
         items: [
-          {name: 'Tough (Racial)', img: 'systems/uesrpg-d100/images/Icons/unarmedProwess.webp', type: 'trait', dataPath: 'data.wound_threshold', value: 1, desc: "A Nord has their Wound Threshold increased by 1. (If using newer rules, gain +10 bonus to Shock Tests instead)"},
+          {name: 'Tough (Racial)', img: 'systems/uesrpg-3ev4/images/Icons/unarmedProwess.webp', type: 'trait', dataPath: 'data.wound_threshold', value: 1, desc: "A Nord has their Wound Threshold increased by 1. (If using newer rules, gain +10 bonus to Shock Tests instead)"},
           {name: 'Resistance (Frost, 2) (Racial)', img: 'icons/magic/water/snowflake-ice-blue.webp', type: 'trait', dataPath: 'data.frostR', value: 2, desc: 'The character reduces all incoming frost damage by 2 and gains +20 bonus to resist non-damaging frost/cold effects.'},
           {name: 'Resistance (Shock, 1) (Racial)', img: 'icons/magic/lightning/bolt-blue.webp', type: 'trait', dataPath: 'data.shockR', value: 1, desc: 'The character reduces all incoming shock damage by 1 and gains +10 bonus to resist non-damaging shock effects.'},
-          {name: 'War Cry (Racial)', img: 'systems/uesrpg-d100/images/Icons/godOfWar.webp', type: 'power', desc: "Nords are able to call on a very simple form of the Thu'um and harness it to frighten their enemies. As an action, they can issue a mighty war cry that forces all enemies who hear it to make a Panic (+30) test. If a character passes, they are immune to this effect for the remainder of the encounter. Can only be used once per Long Rest."}
+          {name: 'War Cry (Racial)', img: 'systems/uesrpg-3ev4/images/Icons/godOfWar.webp', type: 'power', desc: "Nords are able to call on a very simple form of the Thu'um and harness it to frighten their enemies. As an action, they can issue a mighty war cry that forces all enemies who hear it to make a Panic (+30) test. If a character passes, they are immune to this effect for the remainder of the encounter. Can only be used once per Long Rest."}
         ]
       },
 
@@ -1804,10 +1804,10 @@ import { isUnlucky } from './skillCalcHelper.js'
           'Tough: Gain +10 to Shock Tests',
           'Resistance (Magic, 1)',
           'During Character Creation, may choose to begin with Profession (Smithing) at Novice rank for free'
-        ], 
+        ],
         items: [
-          {name: 'Resilient (3) (Racial)', img: 'systems/uesrpg-d100/images/Icons/Warriorskill_44.webp', type: 'trait', dataPath: 'data.hpBonus', value: 3, desc: "Increase the character's HP maximum by 3"},
-          {name: 'Tough (Racial)', img: 'systems/uesrpg-d100/images/Icons/Warriorskill_44.webp', type: 'trait', dataPath: 'data.wound_threshold', value: 1, desc: "An Orc has their Wound Threshold increased by 1. (If using newer rules, gain +10 bonus to Shock Tests instead)"},
+          {name: 'Resilient (3) (Racial)', img: 'systems/uesrpg-3ev4/images/Icons/Warriorskill_44.webp', type: 'trait', dataPath: 'data.hpBonus', value: 3, desc: "Increase the character's HP maximum by 3"},
+          {name: 'Tough (Racial)', img: 'systems/uesrpg-3ev4/images/Icons/Warriorskill_44.webp', type: 'trait', dataPath: 'data.wound_threshold', value: 1, desc: "An Orc has their Wound Threshold increased by 1. (If using newer rules, gain +10 bonus to Shock Tests instead)"},
           {name: 'Resistance (Magic, 1) (Racial)', img: 'icons/magic/defensive/shield-barrier-blue.webp', type: 'trait', datPath: 'data.magicR', value: 1, desc: "This character reduces all incoming Magic damage by 1 and gains +10 bonus to tests made to resist non-damaging magic effects."}
         ]
       },
@@ -1823,9 +1823,9 @@ import { isUnlucky } from './skillCalcHelper.js'
           'During Character Creation, may choose to begin with a Combat Style skill at Novice rank for free'
         ],
         items: [
-          {name: 'Disease Resistance (75%) (Racial)', img: 'systems/uesrpg-d100/images/Icons/diseaseResistance.webp', type: 'trait', dataPath: 'data.diseaseR', value: 75, desc: "Characters with this trait have a chance to resist disease."},
-          {name: 'Resistance (Poison, 3) (Racial)', img: 'systems/uesrpg-d100/images/Icons/poison.webp', type: 'trait', dataPath: 'data.poisonR', value: 3, desc: "This character reduces all incoming Poison damage by 3 and gains +30 bonus to resist non-damaging Poison effects."},
-          {name: "Adrenaline Rush (Racial)", img: 'systems/uesrpg-d100/images/Icons/champion.webp', type: 'power', desc: "Redguards may choose to gain 1 Stamina Point at any time. If the character is fatigued when this power is used then then remove a level of fatigue instead. This Stamina Point persists for only that encounter and may only be used once per Long Rest."}
+          {name: 'Disease Resistance (75%) (Racial)', img: 'systems/uesrpg-3ev4/images/Icons/diseaseResistance.webp', type: 'trait', dataPath: 'data.diseaseR', value: 75, desc: "Characters with this trait have a chance to resist disease."},
+          {name: 'Resistance (Poison, 3) (Racial)', img: 'systems/uesrpg-3ev4/images/Icons/poison.webp', type: 'trait', dataPath: 'data.poisonR', value: 3, desc: "This character reduces all incoming Poison damage by 3 and gains +30 bonus to resist non-damaging Poison effects."},
+          {name: "Adrenaline Rush (Racial)", img: 'systems/uesrpg-3ev4/images/Icons/champion.webp', type: 'power', desc: "Redguards may choose to gain 1 Stamina Point at any time. If the character is fatigued when this power is used then then remove a level of fatigue instead. This Stamina Point persists for only that encounter and may only be used once per Long Rest."}
         ]
       },
     }
@@ -1841,7 +1841,7 @@ import { isUnlucky } from './skillCalcHelper.js'
           const trait = `<li>${i}</li>`
           traits.push(trait)
       }
-      
+
 
       // Loop through baseline values and create table cells
       for (let i in race.baseline) {
@@ -1885,7 +1885,7 @@ import { isUnlucky } from './skillCalcHelper.js'
                             </div>
                         </div>
                     </div>`
-      
+
       raceCards.push(card)
 
     }
@@ -1902,7 +1902,7 @@ import { isUnlucky } from './skillCalcHelper.js'
                   </div>
 
                   <div>
-                      <img src="systems/uesrpg-d100/images/Races_Oblivion.webp" title="Races of Elder Scrolls" style="border: none;">
+                      <img src="systems/uesrpg-3ev4/images/Races_Oblivion.webp" title="Races of Elder Scrolls" style="border: none;">
                   </div>
 
                   <div style="height: 500px; overflow-y: scroll;">
@@ -1926,8 +1926,8 @@ import { isUnlucky } from './skillCalcHelper.js'
 
               if (raceSelection.length < 1 && customRaceLabel === '') {
                 ui.notifications.error("Please select a race or input a custom race label")
-              } 
-              
+              }
+
               // Logic for setting Race Name and Other factors
               else {
                 let raceName
@@ -1939,7 +1939,7 @@ import { isUnlucky } from './skillCalcHelper.js'
                 else {
                   raceName = raceSelection[0].id
                   let selectedRace = races[raceName.toLowerCase()]
-                  
+
                   // Loop through and update actor base characteristics with race object baselines
                   for (let value in this.actor.system.characteristics) {
                     let baseChaPath = `data.characteristics.${value}.base`
@@ -1988,12 +1988,12 @@ import { isUnlucky } from './skillCalcHelper.js'
     event.preventDefault()
 
     let signCards = []
-    const imgPath = 'systems/uesrpg-d100/images'
+    const imgPath = 'systems/uesrpg-3ev4/images'
     const signs = {
       apprentice: {
         name: 'Apprentice',
         img: `${imgPath}/sign-apprentice.webp`,
-        description: `The Apprentice’s Season is Sun’s Height. Those born under the sign of the apprentice have a special 
+        description: `The Apprentice’s Season is Sun’s Height. Those born under the sign of the apprentice have a special
                       affinity for magick of all kinds, but are more vulnerable to magick as well.`,
         traits: [
           'Power Well (25)',
@@ -2005,8 +2005,8 @@ import { isUnlucky } from './skillCalcHelper.js'
       atronach: {
         name: 'Atronach',
         img: `${imgPath}/sign-atronach.webp`,
-        description: `The Atronach (often called the Golem) is one of the Mage’s Charges. Its season is Sun’s Dusk. 
-                      Those born under this sign are natural sorcerers with deep reserves of magicka, but they cannot 
+        description: `The Atronach (often called the Golem) is one of the Mage’s Charges. Its season is Sun’s Dusk.
+                      Those born under this sign are natural sorcerers with deep reserves of magicka, but they cannot
                       generate magicka of their own.`,
         traits: [
           'Power Well (50)',
@@ -2032,7 +2032,7 @@ import { isUnlucky } from './skillCalcHelper.js'
       lord: {
         name: 'Lord',
         img: `${imgPath}/sign-lord.webp`,
-        description: `The Lord’s Season is First Seed and he oversees all of Tamriel during the planting. Those born under the sign 
+        description: `The Lord’s Season is First Seed and he oversees all of Tamriel during the planting. Those born under the sign
                       of the Lord are stronger and healthier than those born under other signs.`,
         traits: [
           "Healing Rate is doubled",
@@ -2055,8 +2055,8 @@ import { isUnlucky } from './skillCalcHelper.js'
       mage: {
         name: 'Mage',
         img: `${imgPath}/sign-mage.webp`,
-        description: `The Mage is a Guardian Constellation whose Season is Rain’s Hand when magicka was first used by men. 
-                      His Charges are the Apprentice, the Golem, and the Ritual. Those born under the Mage have more magicka 
+        description: `The Mage is a Guardian Constellation whose Season is Rain’s Hand when magicka was first used by men.
+                      His Charges are the Apprentice, the Golem, and the Ritual. Those born under the Mage have more magicka
                       and talent for all kinds of spellcasting, but are often arrogant and absent-minded.`,
         traits: [
           'Power Well (10)',
@@ -2068,7 +2068,7 @@ import { isUnlucky } from './skillCalcHelper.js'
       ritual: {
         name: 'Ritual',
         img: `${imgPath}/sign-ritual.webp`,
-        description: `The Ritual is one of the Mage’s Charges and its Season is Morning Star. Those born under this sign have 
+        description: `The Ritual is one of the Mage’s Charges and its Season is Morning Star. Those born under this sign have
                       a variety of abilities depending on the aspects of the moons and the Divines.`,
         traits: [
           "At the start of each day, select a Power to gain until the start of the next day, where you can choose again.",
@@ -2100,7 +2100,7 @@ import { isUnlucky } from './skillCalcHelper.js'
       steed: {
         name: 'Steed',
         img: `${imgPath}/sign-steed.webp`,
-        description: `The Steed is one of the Warrior’s Charges, and her Season is Mid Year. Those born under the sign of the Steed are impatient and 
+        description: `The Steed is one of the Warrior’s Charges, and her Season is Mid Year. Those born under the sign of the Steed are impatient and
                       always hurrying from one place to another.”`,
         traits: [
           "+2 Speed",
@@ -2112,8 +2112,8 @@ import { isUnlucky } from './skillCalcHelper.js'
       thief: {
         name: 'Thief',
         img: `${imgPath}/sign-thief.webp`,
-        description: `The Thief is the last Guardian Constellation, and her Season is the darkest month of Evening Star. Her Charges are the Lover, 
-                      the Shadow, and the Tower. Those born under the sign of the Thief are not typically thieves, though they take risks more often 
+        description: `The Thief is the last Guardian Constellation, and her Season is the darkest month of Evening Star. Her Charges are the Lover,
+                      the Shadow, and the Tower. Those born under the sign of the Thief are not typically thieves, though they take risks more often
                       and only rarely come to harm.`,
         traits: [
           "Roll an extra Lucky Number that cannot be lost, regardless of Luck Score",
@@ -2125,7 +2125,7 @@ import { isUnlucky } from './skillCalcHelper.js'
       tower: {
         name: 'Tower',
         img: `${imgPath}/sign-tower.webp`,
-        description: `The Tower is one of the Thief ’s Charges and its Season is Frostfall. Those born under the sign of the Tower have a knack for finding gold 
+        description: `The Tower is one of the Thief ’s Charges and its Season is Frostfall. Those born under the sign of the Tower have a knack for finding gold
                       and can open locks of all kinds.`,
         traits: [
           "Treasure Seeker: See Powers section in the Core Rulebook",
@@ -2139,8 +2139,8 @@ import { isUnlucky } from './skillCalcHelper.js'
         name: 'Warrior',
         img: `${imgPath}/sign-warrior.webp`,
         description: `The Warrior is the first Guardian Constellation and he protects his charges during their Seasons.
-                      The Warrior’s own season is Last Seed when his Strength is needed for the harvest. His Charges are 
-                      the Lady, the Steed, and the Lord. Those born under the sign of the Warrior are skilled with weapons 
+                      The Warrior’s own season is Last Seed when his Strength is needed for the harvest. His Charges are
+                      the Lady, the Steed, and the Lord. Those born under the sign of the Warrior are skilled with weapons
                       of all kinds, but prone to short tempers.`,
         traits: [
           'Increase Stamina Point Maximum by +1',
@@ -2231,7 +2231,7 @@ import { isUnlucky } from './skillCalcHelper.js'
 
               if (signSelection.length < 1 && customSignLabel === '') {
                 ui.notifications.error("Please select a race or input a custom race label")
-              } 
+              }
 
               // Assign selected sign to actor object
               else {
@@ -2240,7 +2240,7 @@ import { isUnlucky } from './skillCalcHelper.js'
                     this.actor.update({'data.birthsign': signObject.name})
 
                     // Loop through selected Sign Object  and add items from compendium
-                    const signCompendium = await game.packs.get('uesrpg-d100.signs').getDocuments()
+                    const signCompendium = await game.packs.get('uesrpg-3ev4.signs').getDocuments()
 
                     if (starCursedSelection.length > 0) {
                       for (let item of signObject.starCursed) {
@@ -2279,7 +2279,7 @@ import { isUnlucky } from './skillCalcHelper.js'
     const resource = this.actor.system[event.currentTarget.dataset.resource]
     const action = event.currentTarget.dataset.action
     let dataPath = `data.${event.currentTarget.dataset.resource}.value`
-    
+
     // Update and increment resource
     action == 'increase' ? this.actor.update({[dataPath]: resource.value + 1}) : this.actor.update({[dataPath]: resource.value - 1})
   }
@@ -2369,7 +2369,7 @@ import { isUnlucky } from './skillCalcHelper.js'
               // Grab Input Values
               const currentXP = document.querySelector("#xp").value
               const totalXP = document.querySelector("#xpTotal").value
-              
+
               // Update XP Values on Actor
               this.actor.update({'data.xp': currentXP, 'data.xpTotal': totalXP})
           }
@@ -2430,14 +2430,14 @@ import { isUnlucky } from './skillCalcHelper.js'
   _filterSpells(event) {
     event.preventDefault()
     let filterBy = event.currentTarget.value
-    
+
     for (let spellItem of [...this.form.querySelectorAll(".spellList tbody .item")]) {
       switch (filterBy) {
         case 'All':
           spellItem.classList.add('active')
           sessionStorage.setItem('savedSpellFilter', filterBy)
           break
-          
+
         case `${filterBy}`:
           filterBy == spellItem.dataset.spellSchool ? spellItem.classList.add('active') : spellItem.classList.remove('active')
           sessionStorage.setItem('savedSpellFilter', filterBy)
@@ -2449,14 +2449,14 @@ import { isUnlucky } from './skillCalcHelper.js'
   _filterItems(event) {
     event.preventDefault()
     let filterBy = event.currentTarget.value
-    
+
     for (let item of [...this.form.querySelectorAll(".equipmentList tbody .item")]) {
       switch (filterBy) {
         case 'All':
           item.classList.add('active')
           sessionStorage.setItem('savedItemFilter', filterBy)
           break
-          
+
         case `${filterBy}`:
           filterBy == item.dataset.itemType ? item.classList.add('active') : item.classList.remove('active')
           sessionStorage.setItem('savedItemFilter', filterBy)
@@ -2639,7 +2639,7 @@ import { isUnlucky } from './skillCalcHelper.js'
                       </div>`
                       break
 
-      case 'weapon': 
+      case 'weapon':
         tableHeader = `<div>
                           <div style="padding: 5px 0;">
                               <label>Selecting nothing will unequip all items</label>
@@ -2664,7 +2664,7 @@ import { isUnlucky } from './skillCalcHelper.js'
                       </div>`
                       break
 
-      case 'ammunition': 
+      case 'ammunition':
       tableHeader = `<div>
                         <div style="padding: 5px 0;">
                             <label>Selecting nothing will unequip all items</label>
@@ -2712,7 +2712,7 @@ import { isUnlucky } from './skillCalcHelper.js'
       default: "two",
       close: html => console.log()
     })
-    
+
     d.position.width = 500
     d.render(true)
   }
