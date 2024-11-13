@@ -1083,10 +1083,10 @@ export class SimpleActor extends Actor {
     let x = 0;
     if (legacyUntrained) {
       if (attribute.length >= 1) {
-        x = 20;
+        x = 10;
       }
     } else if (attribute.length >= 1) {
-      x = 10;
+      x = 20;
     }
     return x
   }

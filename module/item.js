@@ -63,7 +63,7 @@ export class SimpleItem extends Item {
     //Combat Style Skill Bonus Calculation
     if (legacyUntrained) {
         if (itemData.rank === "untrained") {
-          itemData.bonus = -20 + this._untrainedException(actorData);
+          itemData.bonus = -10 + this._untrainedException(actorData);
         } else if (itemData.rank === "novice") {
           itemData.bonus = 0;
         } else if (itemData.rank === "apprentice") {
@@ -80,7 +80,7 @@ export class SimpleItem extends Item {
 
     } else {
           if (itemData.rank == "untrained") {
-            itemData.bonus = -10 + this._untrainedException(actorData);
+            itemData.bonus = -20 + this._untrainedException(actorData);
           } else if (itemData.rank === "novice") {
             itemData.bonus = 0;
           } else if (itemData.rank === "apprentice") {
@@ -200,9 +200,9 @@ export class SimpleItem extends Item {
     if (this.type === "combatStyle"){
       if (legacyUntrained === true) {
         if (attribute.length >= 1) {
-          x = 20; }
+          x = 10; }
       } else if (attribute.length >= 1) {
-        x = 10;
+        x = 20;
     }
   }
     return x

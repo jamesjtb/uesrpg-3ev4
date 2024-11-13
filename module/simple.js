@@ -63,8 +63,8 @@ Hooks.once("init", async function() {
   function delayedReload() {window.setTimeout(() => location.reload(), 500)}
 
   game.settings.register("uesrpg-3ev4", "legacyUntrainedPenalty", {
-    name: "Legacy Untrained Penalty",
-    hint: "Checking this option enables the UESRPG v2 penalty for Untrained skills at -20 instead of the standard -10.",
+    name: "v3 Untrained Penalty",
+    hint: "Checking this option enables the UESRPG v3 penalty for Untrained skills at -10 instead of the standard -20.",
     scope: "world",
     config: true,
     default: false,
