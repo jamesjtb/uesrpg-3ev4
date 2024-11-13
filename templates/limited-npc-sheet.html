@@ -100,10 +100,7 @@
                             <div>
                                 <div class="styled-font">Threat</div>
                                 <select name="system.threat" data-type="String">
-                                    {{#select actor.system.threat}}
-                                    {{#each actor.system.threatCategory as |threatCategory key|}}
-                                    <option value="{{key}}">{{threatCategory}}</option>
-                                    {{/each}} {{/select}}
+                                    {{selectOptions actor.system.threatCategory selected=actor.system.threat localized=true}}
                                 </select>
                             </div>
                         </div>

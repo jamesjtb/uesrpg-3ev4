@@ -44,22 +44,22 @@
                 </div>
             </div>
         </header>
-    
+
         {{!-- Sheet Tab Navigation --}}
         <nav class="sheet-tabs tabs" data-group="primary">
             <a class="item" data-tab="description">Description</a>
             <a class="item" data-tab="attributes">Attributes</a>
         </nav>
     </div>
-    
+
         {{!-- Sheet Body --}}
         <section class="sheet-body">
-    
+
             {{!-- Description Tab --}}
             <div class="tab" data-group="primary" data-tab="description">
                 {{editor item.system.description target="system.description" engine="prosemirror" button=true owner=owner editable=editable}}
             </div>
-    
+
             {{!-- Attributes Tab --}}
             <div class="tab" data-group="primary" data-tab="attributes">
                 <div class="attribute-tab-container">
@@ -70,10 +70,7 @@
                                 <div title="Replace initiative with 3x characteristic">Replace Initiative</div>
                                 <div class="right-align-content">
                                     <select name="system.replace.ini.characteristic" data-type="String">
-                                        {{#select item.system.replace.ini.characteristic}}
-                                        {{#each item.system.characteristics as |characteristics key|}}
-                                        <option value="{{key}}">{{characteristics}}</option> 
-                                        {{/each}} {{/select}}
+                                        {{selectOptions item.system.characteristics selected=item.system.replace.ini.characteristic localize=true}}
                                     </select>
                                 </div>
                             </div>
@@ -81,10 +78,7 @@
                                 <div title="Replace Wound Threshold with 3x characteristic">Replace Wound Threshold</div>
                                 <div class="right-align-content">
                                     <select name="system.replace.wt.characteristic" data-type="String">
-                                        {{#select item.system.replace.wt.characteristic}}
-                                        {{#each item.system.characteristics as |characteristics key|}}
-                                        <option value="{{key}}">{{characteristics}}</option> 
-                                        {{/each}} {{/select}}
+                                        {{selectOptions item.system.characteristics selected=item.system.replace.wt.characteristic localize=true}}
                                     </select>
                                 </div>
                             </div>

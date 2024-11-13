@@ -716,8 +716,12 @@ export class SimpleActor extends Actor {
     }
   }
 
+  _filterToEquippedBonusItems(items, bonusProperty) {
+    return items.filter(i => i.system.hasOwnProperty(bonusProperty) && (i.system.hasOwnProperty('equipped') ? i.system.equipped : true));
+  }
+
   _strBonusCalc(actorData) {
-    let strBonusItems = actorData.items.filter(item => item.system.hasOwnProperty("characteristicBonus"));
+    const strBonusItems = this._filterToEquippedBonusItems(actorData.items, 'characteristicBonus');
     let totalBonus = 0;
     for (let item of strBonusItems) {
       totalBonus = totalBonus + item.system.characteristicBonus.strChaBonus;
@@ -726,63 +730,63 @@ export class SimpleActor extends Actor {
   }
 
   _endBonusCalc(actorData) {
-    let strBonusItems = actorData.items.filter(item => item.system.hasOwnProperty("characteristicBonus"));
+    let endBonusItems = this._filterToEquippedBonusItems(actorData.items, 'characteristicBonus');
     let totalBonus = 0;
-    for (let item of strBonusItems) {
+    for (let item of endBonusItems) {
       totalBonus = totalBonus + item.system.characteristicBonus.endChaBonus;
     }
     return totalBonus
   }
 
   _agiBonusCalc(actorData) {
-    let strBonusItems = actorData.items.filter(item => item.system.hasOwnProperty("characteristicBonus"));
+    let agiBonusItems = this._filterToEquippedBonusItems(actorData.items, 'characteristicBonus');
     let totalBonus = 0;
-    for (let item of strBonusItems) {
+    for (let item of agiBonusItems) {
       totalBonus = totalBonus + item.system.characteristicBonus.agiChaBonus;
     }
     return totalBonus
   }
 
   _intBonusCalc(actorData) {
-    let strBonusItems = actorData.items.filter(item => item.system.hasOwnProperty("characteristicBonus"));
+    let intBonusItems = this._filterToEquippedBonusItems(actorData.items, 'characteristicBonus');
     let totalBonus = 0;
-    for (let item of strBonusItems) {
+    for (let item of intBonusItems) {
       totalBonus = totalBonus + item.system.characteristicBonus.intChaBonus;
     }
     return totalBonus
   }
 
   _wpBonusCalc(actorData) {
-    let strBonusItems = actorData.items.filter(item => item.system.hasOwnProperty("characteristicBonus"));
+    let wpBonusItems = this._filterToEquippedBonusItems(actorData.items, 'characteristicBonus');
     let totalBonus = 0;
-    for (let item of strBonusItems) {
+    for (let item of wpBonusItems) {
       totalBonus = totalBonus + item.system.characteristicBonus.wpChaBonus;
     }
     return totalBonus
   }
 
   _prcBonusCalc(actorData) {
-    let strBonusItems = actorData.items.filter(item => item.system.hasOwnProperty("characteristicBonus"));
+    let prcBonusItems = this._filterToEquippedBonusItems(actorData.items, 'characteristicBonus');
     let totalBonus = 0;
-    for (let item of strBonusItems) {
+    for (let item of prcBonusItems) {
       totalBonus = totalBonus + item.system.characteristicBonus.prcChaBonus;
     }
     return totalBonus
   }
 
   _prsBonusCalc(actorData) {
-    let strBonusItems = actorData.items.filter(item => item.system.hasOwnProperty("characteristicBonus"));
+    let prsBonusItems = this._filterToEquippedBonusItems(actorData.items, 'characteristicBonus');
     let totalBonus = 0;
-    for (let item of strBonusItems) {
+    for (let item of prsBonusItems) {
       totalBonus = totalBonus + item.system.characteristicBonus.prsChaBonus;
     }
     return totalBonus
   }
 
   _lckBonusCalc(actorData) {
-    let strBonusItems = actorData.items.filter(item => item.system.hasOwnProperty("characteristicBonus"));
+    let lckBonusItems = this._filterToEquippedBonusItems(actorData.items, 'characteristicBonus');
     let totalBonus = 0;
-    for (let item of strBonusItems) {
+    for (let item of lckBonusItems) {
       totalBonus = totalBonus + item.system.characteristicBonus.lckChaBonus;
     }
     return totalBonus
@@ -818,7 +822,7 @@ export class SimpleActor extends Actor {
   }
 
   _hpBonus(actorData) {
-    let attribute = actorData.items.filter(item => item.system.hasOwnProperty("hpBonus"));
+    let attribute = this._filterToEquippedBonusItems(actorData.items, 'hpBonus');
     let bonus = 0;
     for (let item of attribute) {
       bonus = bonus + item.system.hpBonus;
@@ -827,7 +831,7 @@ export class SimpleActor extends Actor {
   }
 
   _mpBonus(actorData) {
-    let attribute = actorData.items.filter(item => item.system.hasOwnProperty("mpBonus"));
+    let attribute = this._filterToEquippedBonusItems(actorData.items, 'mpBonus');
     let bonus = 0;
     for (let item of attribute) {
       bonus = bonus + item.system.mpBonus;
@@ -836,7 +840,7 @@ export class SimpleActor extends Actor {
   }
 
   _spBonus(actorData) {
-    let attribute = actorData.items.filter(item => item.system.hasOwnProperty("spBonus"));
+    let attribute = this._filterToEquippedBonusItems(actorData.items, 'spBonus');
     let bonus = 0;
     for (let item of attribute) {
       bonus = bonus + item.system.spBonus;
@@ -845,7 +849,7 @@ export class SimpleActor extends Actor {
   }
 
   _lpBonus(actorData) {
-    let attribute = actorData.items.filter(item => item.system.hasOwnProperty("lpBonus"));
+    let attribute = this._filterToEquippedBonusItems(actorData.items, 'lpBonus');
     let bonus = 0;
     for (let item of attribute) {
       bonus = bonus + item.system.lpBonus;
@@ -854,7 +858,7 @@ export class SimpleActor extends Actor {
   }
 
   _wtBonus(actorData) {
-    let attribute = actorData.items.filter(item => item.system.hasOwnProperty("wtBonus"));
+    let attribute = this._filterToEquippedBonusItems(actorData.items, 'wtBonus');
     let bonus = 0;
     for (let item of attribute) {
       bonus = bonus + item.system.wtBonus;
@@ -863,7 +867,7 @@ export class SimpleActor extends Actor {
   }
 
   _speedBonus(actorData) {
-    let attribute = actorData.items.filter(item => item.system.hasOwnProperty("speedBonus"));
+    let attribute = this._filterToEquippedBonusItems(actorData.items, 'speedBonus');
     let bonus = 0;
     for (let item of attribute) {
       bonus = bonus + item.system.speedBonus;
@@ -872,7 +876,7 @@ export class SimpleActor extends Actor {
   }
 
   _iniBonus(actorData) {
-    let attribute = actorData.items.filter(item => item.system.hasOwnProperty("iniBonus"));
+    let attribute = this._filterToEquippedBonusItems(actorData.items, 'iniBonus');
     let bonus = 0;
     for (let item of attribute) {
       bonus = bonus + item.system.iniBonus;
@@ -881,7 +885,7 @@ export class SimpleActor extends Actor {
   }
 
   _diseaseR(actorData) {
-    let attribute = actorData.items.filter(item => item.system.hasOwnProperty("diseaseR"));
+    let attribute = this._filterToEquippedBonusItems(actorData.items, 'diseaseR');
     let bonus = 0;
     for (let item of attribute) {
       bonus = bonus + item.system.diseaseR;
@@ -890,7 +894,7 @@ export class SimpleActor extends Actor {
   }
 
   _fireR(actorData) {
-    let attribute = actorData.items.filter(item => item.system.hasOwnProperty("fireR"));
+    let attribute = this._filterToEquippedBonusItems(actorData.items, 'fireR');
     let bonus = 0;
     for (let item of attribute) {
         bonus = bonus + item.system.fireR;
@@ -899,7 +903,7 @@ export class SimpleActor extends Actor {
   }
 
   _frostR(actorData) {
-    let attribute = actorData.items.filter(item => item.system.hasOwnProperty("frostR"));
+    let attribute = this._filterToEquippedBonusItems(actorData.items, 'frostR');
     let bonus = 0;
     for (let item of attribute) {
         bonus = bonus + item.system.frostR;
@@ -908,7 +912,7 @@ export class SimpleActor extends Actor {
   }
 
   _shockR(actorData) {
-    let attribute = actorData.items.filter(item => item.system.hasOwnProperty("shockR"));
+    let attribute = this._filterToEquippedBonusItems(actorData.items, 'shockR');
     let bonus = 0;
     for (let item of attribute) {
         bonus = bonus + item.system.shockR;
@@ -917,7 +921,7 @@ export class SimpleActor extends Actor {
   }
 
   _poisonR(actorData) {
-    let attribute = actorData.items.filter(item => item.system.hasOwnProperty("poisonR"));
+    let attribute = this._filterToEquippedBonusItems(actorData.items, 'poisonR');
     let bonus = 0;
     for (let item of attribute) {
         bonus = bonus + item.system.poisonR;
@@ -926,7 +930,7 @@ export class SimpleActor extends Actor {
   }
 
   _magicR(actorData) {
-    let attribute = actorData.items.filter(item => item.system.hasOwnProperty("magicR"));
+    let attribute = this._filterToEquippedBonusItems(actorData.items, 'magicR');
     let bonus = 0;
     for (let item of attribute) {
         bonus = bonus + item.system.magicR;
@@ -935,7 +939,7 @@ export class SimpleActor extends Actor {
   }
 
   _natToughnessR(actorData) {
-    let attribute = actorData.items.filter(item => item.system.hasOwnProperty("natToughnessR"));
+    let attribute = this._filterToEquippedBonusItems(actorData.items, 'natToughnessR');
     let bonus = 0;
     for (let item of attribute) {
         bonus = bonus + item.system.natToughnessR;
@@ -944,7 +948,7 @@ export class SimpleActor extends Actor {
   }
 
   _silverR(actorData) {
-    let attribute = actorData.items.filter(item => item.system.hasOwnProperty("silverR"));
+    let attribute = this._filterToEquippedBonusItems(actorData.items, 'silverR');
     let bonus = 0;
     for (let item of attribute) {
         bonus = bonus + item.system.silverR;
@@ -953,7 +957,7 @@ export class SimpleActor extends Actor {
   }
 
   _sunlightR(actorData) {
-    let attribute = actorData.items.filter(item => item.system.hasOwnProperty("sunlightR"));
+    let attribute = this._filterToEquippedBonusItems(actorData.items, 'sunlightR');
     let bonus = 0;
     for (let item of attribute) {
         bonus = bonus + item.system.sunlightR;
@@ -962,7 +966,7 @@ export class SimpleActor extends Actor {
   }
 
   _swimCalc(actorData) {
-    let attribute = actorData.items.filter(item => item.system.hasOwnProperty("swimBonus"));
+    let attribute = this._filterToEquippedBonusItems(actorData.items, 'swimBonus');
     let bonus = 0;
     for (let item of attribute) {
       bonus = bonus + item.system.swimBonus;
@@ -971,7 +975,7 @@ export class SimpleActor extends Actor {
   }
 
   _flyCalc(actorData) {
-    let attribute = actorData.items.filter(item => item.system.hasOwnProperty("flyBonus"));
+    let attribute = this._filterToEquippedBonusItems(actorData.items, 'flyBonus');
     let bonus = 0;
     for (let item of attribute) {
       bonus = bonus + item.system.flyBonus;

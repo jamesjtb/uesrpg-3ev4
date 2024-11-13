@@ -20,10 +20,7 @@
                         <div class="item-resource">
                             <div class="stat-value-label">
                                 <select name="system.rank" data-type="String">
-                                    {{#select item.system.rank}}
-                                    {{#each item.system.skillRanks as |skillRanks key|}}
-                                    <option value="{{key}}">{{skillRanks}}</option> 
-                                    {{/each}} {{/select}}
+                                    {{selectOptions item.system.skillRanks selected=item.system.rank localize=true}}
                                 </select>
                             </div>
                             <div class="flex-container">
@@ -33,10 +30,7 @@
                         <div class="item-resource">
                             <div class="stat-value-label">
                                 <select name="system.baseCha" data-type="String">
-                                    {{#select item.system.baseCha}}
-                                    {{#each item.system.characteristics as |characteristics key|}}
-                                    <option value="{{key}}">{{characteristics}}</option> 
-                                    {{/each}} {{/select}}
+                                    {{selectOptions item.system.characteristics selected=item.system.baseCha localize=true}}
                                 </select>
                             </div>
                             <div class="flex-container">
@@ -47,16 +41,16 @@
                 </div>
             </div>
         </header>
-    
+
         {{!-- Sheet Tab Navigation --}}
         <nav class="sheet-tabs tabs" data-group="primary">
             <a class="item" data-tab="description">Description</a>
         </nav>
         </div>
-    
+
         {{!-- Sheet Body --}}
         <section class="sheet-body">
-    
+
             {{!-- Description Tab --}}
             <div class="tab" data-group="primary" data-tab="description">
                 {{editor item.system.description target="system.description" engine="prosemirror" button=true owner=owner editable=editable}}

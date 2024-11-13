@@ -27,10 +27,7 @@
                         <div class="item-resource">
                             <div class="stat-value-label">
                                 <select name="system.school" data-dtype="String">
-                                    {{#select item.system.school}}
-                                    {{#each item.system.school_cat as | school_cat key|}}
-                                    <option value="{{key}}">{{school_cat}}</option>
-                                    {{/each}} {{/select}}
+                                    {{selectOptions item.system.school_cat selected=item.system.school localize=true}}
                                 </select>
                             </div>
                             <div class="flex-container">
@@ -40,10 +37,7 @@
                         <div class="item-resource">
                             <div class="stat-value-label">
                                 <select name="system.spellType" data-dtype="String">
-                                    {{#select item.system.spellType}}
-                                    {{#each item.system.spellTypes as | spellTypes key|}}
-                                    <option value="{{key}}">{{spellTypes}}</option>
-                                    {{/each}} {{/select}}
+                                    {{selectOptions item.system.spellTypes selected=item.system.spellType localize=true}}
                                 </select>
                             </div>
                             <div class="flex-container">
@@ -70,22 +64,22 @@
                 </div>
             </div>
         </header>
-    
+
         {{!-- Sheet Tab Navigation --}}
         <nav class="sheet-tabs tabs" data-group="primary">
             <a class="item" data-tab="description">Description</a>
             <a class="item" data-tab="attributes">Attributes</a>
         </nav>
         </div>
-    
+
         {{!-- Sheet Body --}}
         <section class="sheet-body">
-    
+
             {{!-- Description Tab --}}
             <div class="tab" data-group="primary" data-tab="description">
                 {{editor item.system.description target="system.description" engine="prosemirror" button=true owner=owner editable=editable}}
             </div>
-    
+
             {{!-- Attributes Tab --}}
             <div class="tab" data-group="primary" data-tab="attributes">
                 <div class="attribute-tab-container">

@@ -11,10 +11,7 @@
                         <div class="item-resource">
                             <div class="stat-value-label">
                                 <select name="system.rankTitle" data-type="String">
-                                    {{#select item.system.rankTitle}}
-                                    {{#each item.system.ranks as |ranks key|}}
-                                    <option value="{{key}}">{{ranks}}</option> 
-                                    {{/each}} {{/select}}
+                                    {{selectOptions item.system.ranks selected=item.system.rankTitle localized=true}}
                                 </select>
                             </div>
                             <div class="flex-container">
@@ -33,22 +30,22 @@
                 </div>
             </div>
         </header>
-    
+
         {{!-- Sheet Tab Navigation --}}
         <nav class="sheet-tabs tabs" data-group="primary">
             <a class="item" data-tab="description">Description</a>
             <a class="item" data-tab="attributes">Attributes</a>
         </nav>
     </div>
-    
+
         {{!-- Sheet Body --}}
         <section class="sheet-body">
-    
+
             {{!-- Description Tab --}}
             <div class="tab" data-group="primary" data-tab="description">
                 {{editor item.system.description target="system.description" engine="prosemirror" button=true owner=owner editable=editable}}
             </div>
-    
+
             {{!-- Attributes Tab --}}
             <div class="tab" data-group="primary" data-tab="attributes">
                 <div class="attribute-tab-container">

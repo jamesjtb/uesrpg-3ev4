@@ -28,22 +28,22 @@
                 </div>
             </div>
         </header>
-    
+
         {{!-- Sheet Tab Navigation --}}
         <nav class="sheet-tabs tabs" data-group="primary">
             <a class="item" data-tab="description">Description</a>
             <a class="item" data-tab="attributes">Attributes</a>
         </nav>
         </div>
-    
+
         {{!-- Sheet Body --}}
         <section class="sheet-body">
-    
+
             {{!-- Description Tab --}}
             <div class="tab" data-group="primary" data-tab="description">
                 {{editor item.system.description target="system.description" engine="prosemirror" button=true owner=owner editable=editable}}
             </div>
-    
+
             {{!-- Attributes Tab --}}
             <div class="tab" data-group="primary" data-tab="attributes">
                 <div class="attribute-tab-container">
@@ -60,10 +60,7 @@
                                 <div>Form Shift</div>
                                 <div class="right-align-content">
                                     <select name="system.shiftFormStyle" data-type="String">
-                                        {{#select item.system.shiftFormStyle}}
-                                        {{#each item.system.shiftStyles as |shiftStyles key|}}
-                                        <option value="{{key}}">{{shiftStyles}}</option> 
-                                        {{/each}} {{/select}}
+                                        {{selectOptions item.system.shiftStyles selected=item.system.shiftFormStyle localize=true}}
                                     </select>
                                 </div>
                             </div>

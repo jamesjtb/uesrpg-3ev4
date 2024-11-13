@@ -356,19 +356,13 @@
                                 <div class="flex-container">
                                     <div>Size</div>
                                     <select name="system.size" data-type="String">
-                                        {{#select actor.system.size}}
-                                        {{#each actor.system.size_cat as |size_cat key|}}
-                                        <option value="{{key}}">{{size_cat}}</option>
-                                        {{/each}} {{/select}}
+                                        {{selectOptions actor.system.size_cat selected=actor.system.size localize=true}}
                                     </select>
                                 </div>
                                 <div class="flex-container">
                                     <div>AC</div>
                                     <select name="system.armor_class" data-type="String">
-                                        {{#select actor.system.armor_class}}
-                                        {{#each actor.system.armor_class_cat as |armor_class_cat key|}}
-                                        <option value="{{key}}">{{armor_class_cat}}</option>
-                                        {{/each}} {{/select}}
+                                        {{selectOptions actor.system.armor_class_cat selected=actor.system.armor_class localize=true}}
                                     </select>
                                 </div>
                             </div>
