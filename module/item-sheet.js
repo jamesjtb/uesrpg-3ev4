@@ -6,7 +6,7 @@ export class SimpleItemSheet extends ItemSheet {
 
   /** @override */
 	static get defaultOptions() {
-	  return mergeObject(super.defaultOptions, {
+	  return foundry.utils.mergeObject(super.defaultOptions, {
       classes: ["worldbuilding", "sheet", "item"],
 			width: 480,
 			height: 520,

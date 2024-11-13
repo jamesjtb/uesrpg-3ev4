@@ -10,7 +10,7 @@ export class SystemCombat extends Combat {
       // Set all combatant's action points to their maximum values.
       this.turns.forEach((combatant) => {
         combatant.actor.update({
-          "data.action_points.value": combatant.actor.data.data.action_points.max,
+          "system.action_points.value": combatant.actor.system.action_points.max,
         });
       });
     }
@@ -30,7 +30,7 @@ export class SystemCombat extends Combat {
       // Note: In Foundry, rounds are one-indexed, whereas turns are zero-indexed.
       if (this.round !== 1 || (this.turn + 1) === this.turns.length) {
         this.nextCombatant().actor.update({
-          "data.action_points.value": this.nextCombatant().actor.data.data.action_points.max,
+          "system.action_points.value": this.nextCombatant().actor.system.action_points.max,
         });
       }
     }

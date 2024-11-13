@@ -6,7 +6,7 @@ export class npcSheet extends ActorSheet {
 
   /** @override */
 	static get defaultOptions() {
-	  return mergeObject(super.defaultOptions, {
+	  return foundry.utils.mergeObject(super.defaultOptions, {
       classes: ["worldbuilding", "sheet", "actor", "npc"],
       width: 780,
       height: 860,
@@ -380,9 +380,9 @@ export class npcSheet extends ActorSheet {
                     <script>
                       function getItem(itemID, actorID) {
                           let actor = game.actors.find(actor => actor.id === actorID)
-                          let tokenActor = game.scenes.find(scene => scene.active === true).tokens.find(token => token.data.actorId === actorID)
+                          let tokenActor = game.scenes.find(scene => scene.active === true).tokens.find(token => token.system.actorId === actorID)
 
-                          if (actor.data.token.actorLink) {
+                          if (tokenActor?.actorLink) {
                             let actorBonusItems = actor.items.filter(item => item.system.hasOwnProperty('characteristicBonus'))
                             let item = actorBonusItems.find(i => i.id === itemID)
                             item.sheet.render(true)
