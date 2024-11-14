@@ -669,12 +669,12 @@ export class SimpleActorSheet extends ActorSheet {
       buttons: {
         one: {
           label: "Roll!",
-          callback: (html) => {
+          callback: async (html) => {
             const playerInput = parseInt(html.find('[id="playerInput"]').val());
 
             let contentString = "";
             let roll = new Roll("1d100");
-            roll.roll({ async: false });
+            await roll.evaluate();
 
             if (this.actor.system.wounded == true) {
               if (isLucky(this.actor, roll.result)) {
@@ -788,7 +788,7 @@ export class SimpleActorSheet extends ActorSheet {
             const playerInput = parseInt(html.find('[id="playerInput"]').val());
             let contentString = "";
             let roll = new Roll("1d100");
-            roll.roll({ async: false });
+            await roll.evaluate();
 
             if (isLucky(this.actor, roll.result)) {
               contentString = `<h2><img src="${item.img}"</img>${item.name}</h2>
@@ -1065,7 +1065,7 @@ export class SimpleActorSheet extends ActorSheet {
               spellToCast.system.damage != "" &&
               spellToCast.system.damage != 0
             ) {
-              damageRoll.roll({ async: false });
+              await damageRoll.evaluate();
               damageEntry = `<tr>
                                             <td style="font-weight: bold;">Damage</td>
                                             <td style="font-weight: bold; text-align: center;">[[${damageRoll.result}]]</td>
@@ -1074,7 +1074,7 @@ export class SimpleActorSheet extends ActorSheet {
             }
 
             const hitLocRoll = new Roll("1d10");
-            hitLocRoll.roll({ async: false });
+            await hitLocRoll.evaluate();
             let hitLoc = "";
 
             if (hitLocRoll.result <= 5) {
@@ -1222,7 +1222,7 @@ export class SimpleActorSheet extends ActorSheet {
             const playerInput = parseInt(html.find('[id="playerInput"]').val());
 
             let roll = new Roll("1d100");
-            roll.roll({ async: false });
+            await roll.evaluate();
             let contentString = "";
 
             if (isLucky(this.actor, roll.result)) {
@@ -1298,7 +1298,7 @@ export class SimpleActorSheet extends ActorSheet {
             const playerInput = parseInt(html.find('[id="playerInput"]').val());
 
             let roll = new Roll("1d100");
-            roll.roll({ async: false });
+            roll.evaluate();
             let contentString = "";
 
             if (isLucky(this.actor, roll.result)) {
@@ -1347,7 +1347,7 @@ export class SimpleActorSheet extends ActorSheet {
     d.render(true);
   }
 
-  _onDamageRoll(event) {
+  async _onDamageRoll(event) {
     event.preventDefault();
     let itemElement = event.currentTarget.closest(".item");
     let shortcutWeapon = this.actor.getEmbeddedDocument(
@@ -1357,7 +1357,7 @@ export class SimpleActorSheet extends ActorSheet {
 
     let hit_loc = "";
     let hit = new Roll("1d10");
-    hit.roll({ async: false });
+    await hit.evaluate();
 
     switch (hit.result) {
       case "1":
@@ -1406,12 +1406,12 @@ export class SimpleActorSheet extends ActorSheet {
       ? (damageString = shortcutWeapon.system.damage2)
       : (damageString = shortcutWeapon.system.damage);
     let weaponRoll = new Roll(damageString);
-    weaponRoll.roll({ async: false });
+    await weaponRoll.evaluate();
 
     // Superior Weapon Roll
     let supRollTag = ``;
     let superiorRoll = new Roll(damageString);
-    superiorRoll.roll({ async: false });
+    await superiorRoll.evaluate();
 
     if (shortcutWeapon.system.superior) {
       supRollTag = `[[${superiorRoll.result}]]`;
