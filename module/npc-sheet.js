@@ -806,7 +806,6 @@ export class npcSheet extends ActorSheet {
 
             ChatMessage.create({
               async: false,
-              type: CONST.CHAT_MESSAGE_TYPES.ROLL,
               user: game.user.id,
               speaker: ChatMessage.getSpeaker(),
               roll: roll,
@@ -927,7 +926,6 @@ export class npcSheet extends ActorSheet {
 
             ChatMessage.create({
               async: false,
-              type: CONST.CHAT_MESSAGE_TYPES.ROLL,
               user: game.user.id,
               speaker: ChatMessage.getSpeaker(),
               roll: roll,
@@ -1059,7 +1057,6 @@ export class npcSheet extends ActorSheet {
     }
 
     ChatMessage.create({
-      type: CONST.CHAT_MESSAGE_TYPES.ROLL,
       user: game.user.id,
       speaker: ChatMessage.getSpeaker(),
       flavor: tags.join(""),
@@ -1366,7 +1363,6 @@ export class npcSheet extends ActorSheet {
             damageRoll.toMessage({
               user: game.user.id,
               speaker: ChatMessage.getSpeaker(),
-              type: CONST.CHAT_MESSAGE_TYPES.ROLL,
               flavor: tags.join(""),
               content: contentString,
             });
@@ -1454,7 +1450,6 @@ export class npcSheet extends ActorSheet {
             }
             roll.toMessage({
               async: false,
-              type: CONST.CHAT_MESSAGE_TYPES.ROLL,
               user: game.user.id,
               speaker: ChatMessage.getSpeaker(),
               content: contentString,

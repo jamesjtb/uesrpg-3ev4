@@ -928,7 +928,6 @@ export class merchantSheet extends ActorSheet {
 
             ChatMessage.create({
               async: false,
-              type: CONST.CHAT_MESSAGE_TYPES.ROLL,
               user: game.user.id,
               speaker: ChatMessage.getSpeaker(),
               roll: roll,
@@ -1043,7 +1042,6 @@ export class merchantSheet extends ActorSheet {
 
             ChatMessage.create({
               async: false,
-              type: CONST.CHAT_MESSAGE_TYPES.ROLL,
               user: game.user.id,
               speaker: ChatMessage.getSpeaker(),
               roll: roll,
@@ -1191,7 +1189,6 @@ export class merchantSheet extends ActorSheet {
           <b>Hit Location:</b> <b> [[${hit.total}]] </b> ${hit_loc}<p></p>
           <b>Qualities:</b> ${item.system.qualities}`;
         ChatMessage.create({
-          type: CONST.CHAT_MESSAGE_TYPES.ROLL,
           user: game.user.id,
           speaker: ChatMessage.getSpeaker(),
           content: contentString,
@@ -1205,7 +1202,6 @@ export class merchantSheet extends ActorSheet {
             <b>Hit Location:</b> <b> [[${hit.total}]] </b> ${hit_loc}<p></p>
             <b>Qualities:</b> ${item.system.qualities}`;
         ChatMessage.create({
-          type: CONST.CHAT_MESSAGE_TYPES.ROLL,
           user: game.user.id,
           speaker: ChatMessage.getSpeaker(),
           content: contentString,
@@ -1220,7 +1216,6 @@ export class merchantSheet extends ActorSheet {
             <b>Hit Location:</b> <b> [[${hit.total}]] </b> ${hit_loc}<p></p>
             <b>Qualities:</b> ${item.system.qualities}`;
         ChatMessage.create({
-          type: CONST.CHAT_MESSAGE_TYPES.ROLL,
           user: game.user.id,
           speaker: ChatMessage.getSpeaker(),
           content: contentString,
@@ -1234,7 +1229,6 @@ export class merchantSheet extends ActorSheet {
             <b>Hit Location:</b> <b> [[${hit.total}]] </b> ${hit_loc}<p></p>
             <b>Qualities:</b> ${item.system.qualities}`;
         ChatMessage.create({
-          type: CONST.CHAT_MESSAGE_TYPES.ROLL,
           user: game.user.id,
           speaker: ChatMessage.getSpeaker(),
           content: contentString,
@@ -1542,7 +1536,6 @@ export class merchantSheet extends ActorSheet {
             damageRoll.toMessage({
               user: game.user.id,
               speaker: ChatMessage.getSpeaker(),
-              type: CONST.CHAT_MESSAGE_TYPES.ROLL,
               flavor: tags.join(""),
               content: contentString,
             });
@@ -1632,7 +1625,6 @@ export class merchantSheet extends ActorSheet {
             }
             roll.toMessage({
               async: false,
-              type: CONST.CHAT_MESSAGE_TYPES.ROLL,
               user: game.user.id,
               speaker: ChatMessage.getSpeaker(),
               content: contentString,
