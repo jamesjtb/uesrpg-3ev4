@@ -77,6 +77,7 @@ export class SimpleItemSheet extends ItemSheet {
 
     // Update contained Items elements list (this keeps the contents list updated if items are updated themselves)
     this.item.type == 'container' && this.item.isOwned ? this._updateContainedItemsList() : {}
+
     this.item.system.hasOwnProperty('containerStats') && this.item.type != 'container' ? this._pushContainedItemData() : {}
   }
 
@@ -205,6 +206,8 @@ export class SimpleItemSheet extends ItemSheet {
   _createContainerListDialog(bagListItems, tooLarge) {
     // Create dialog box for selecting items to add to container
     // Create list item entries
+
+    console.log(bagListItems);
     let tableEntries = []
     for (let bagItem of bagListItems) {
       let entry = `<tr data-item-id="${bagItem._id}">
@@ -327,10 +330,11 @@ export class SimpleItemSheet extends ItemSheet {
     let itemList = []
 
     // Return if container is not embedded onto actor
-    if (this.item.isOwned) {itemList = this.actor.items}
-    else {
+    if (!this.item.isOwned) {
       return ui.notifications.info("Containers must be owned by Actors in order to add items. This will be updated in the future.")
     }
+
+    itemList = this.actor.items;
 
     for (let i of itemList) {
       if (
@@ -366,22 +370,27 @@ export class SimpleItemSheet extends ItemSheet {
       'system.containerStats.container_id': "",
       'system.containerStats.container_name': ""
     })
-
     this._updateContainedItemsList()
-
   }
 
   _updateContainedItemsList() {
-    let updatedContainedList = []
+    let updatedContainedList = [];
+
+    let wasChanged = false;
     for (let item of this.item.system.contained_items) {
       let sourceItem = this.actor.items.find(i => i._id == item._id)
       if (!sourceItem) continue
-      let updatedEntry = {_id: sourceItem._id, item: sourceItem}
 
-      updatedContainedList.push(updatedEntry)
+      const diff = foundry.utils.diffObject(item.item, sourceItem);
+      if (diff._stats?.modifiedTime) wasChanged = true;
+
+      updatedContainedList.push({_id: sourceItem._id, item: sourceItem});
     }
 
-    this.item.update({'system.contained_items': updatedContainedList})
+    // Bail if there are no updates to avoid infinite loop
+    if (!wasChanged) return;
+
+    this.item.update({'system.contained_items': updatedContainedList});
   }
 
   _pushContainedItemData() {
