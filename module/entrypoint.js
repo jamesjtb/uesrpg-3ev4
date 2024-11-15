@@ -35,30 +35,6 @@ Hooks.once("init", async function() {
   CONFIG.Actor.documentClass = SimpleActor;
   CONFIG.Item.documentClass = SimpleItem;
 
-  // Register sheet application classes
-  Actors.unregisterSheet("core", ActorSheet);
-  Items.unregisterSheet("core", ItemSheet);
-  Actors.registerSheet("uesrpg-3ev4", SimpleActorSheet,
-    {types: ["character"],
-    makeDefault: true,
-    label: "Default UESRPG Character Sheet"
-    });
-  Items.registerSheet("uesrpg-3ev4", SimpleItemSheet,
-    {
-    makeDefault: true,
-    label: "Default UESRPG Item Sheet"
-    });
-  Actors.registerSheet("uesrpg-3ev4", npcSheet, {
-    types: ["npc"],
-    makeDefault: true,
-    label: "Default UESRPG NPC Sheet"
-    });
-  Actors.registerSheet("uesrpg-3ev4", merchantSheet, {
-    types: ["npc"],
-    makeDefault: false,
-    label: "Default UESRPG Merchant Sheet"
-  });
-
   // Register system settings
   function delayedReload() {window.setTimeout(() => location.reload(), 500)}
 
@@ -91,15 +67,19 @@ Hooks.once("init", async function() {
     onChange: delayedReload
   });
 
-  game.settings.register("uesrpg-3ev4", "automateActionPoints", {
-    name: "Automate Action Points",
-    hint: `Automatically set all combatants' AP to max at the start of each encounter.
-           Automatically set a combatant's AP to max at the start of their turn (except during the first round).`,
+  game.settings.register('uesrpg-3ev4', 'actionPointAutomation', {
+    name: "Action Point Automation",
+    hint: "Round-Based: AP is set to max at the start of each round. Turn-Based: Ap is set to max at the start of each turn, except the first round in which all combatants start with max AP. None: No automation.",
     scope: "world",
     config: true,
-    default: false,
-    type: Boolean
-  });
+    type: String,
+    default: 'round',
+    choices: {
+      round: "Round-Based",
+      turn: "Turn-Based",
+      none: "None"
+    },
+  })
 
   game.settings.register("uesrpg-3ev4", "npcENCPenalty", {
     name: "NPC's Suffer Encumbrance Penalties",
@@ -121,11 +101,36 @@ Hooks.once("init", async function() {
     onChange: delayedReload
   });
 
+  // Register sheet application classes
+  Actors.unregisterSheet("core", ActorSheet);
+  Items.unregisterSheet("core", ItemSheet);
+  Actors.registerSheet("uesrpg-3ev4", SimpleActorSheet,
+    {types: ["character"],
+    makeDefault: true,
+    label: "Default UESRPG Character Sheet"
+    });
+  Items.registerSheet("uesrpg-3ev4", SimpleItemSheet,
+    {
+    makeDefault: true,
+    label: "Default UESRPG Item Sheet"
+    });
+  Actors.registerSheet("uesrpg-3ev4", npcSheet, {
+    types: ["npc"],
+    makeDefault: true,
+    label: "Default UESRPG NPC Sheet"
+    });
+  Actors.registerSheet("uesrpg-3ev4", merchantSheet, {
+    types: ["npc"],
+    makeDefault: false,
+    label: "Default UESRPG Merchant Sheet"
+  });
+
   const startUpFunction = () => {
     const discordIcon = `<i class="fab fa-discord fa-2x"></i>`;
     const githubIcon = `<i class="fab fa-github fa-2x"></i>`;
     const discordInviteUrl = "https://discord.gg/pBRJwy3Ec5";
     const githubUrl = "https://github.com/jamesjtb/uesrpg-3ev4"
+    const contentModLink = "https://github.com/95Gman/UESRPG-revised";
 
     const renderLink = (content, url) => `<a href="${url}">${content}</a>`;
 
