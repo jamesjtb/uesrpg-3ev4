@@ -122,29 +122,26 @@ Hooks.once("init", async function() {
   });
 
   const startUpFunction = () => {
-    const startUpDialog = game.settings.get("uesrpg-3ev4", "startUpDialog");
-    let discordIcon = `<i class="fab fa-discord fa-2x"></i>`;
-    let patreonIcon = `<i class="fab fa-patreon fa-2x"></i>`;
-    let gitLabIcon = `<i class="fab fa-gitlab fa-2x"></i>`;
-    let patreonLink = "Patreon";
-    let discordLink = "Discord Channel";
-    let gitLabLink = 'GitLab Repo'
-    let contentModLink = "https://github.com/95Gman/UESRPG-revised";
+    const discordIcon = `<i class="fab fa-discord fa-2x"></i>`;
+    const githubIcon = `<i class="fab fa-github fa-2x"></i>`;
+    const patreonLink = "Patreon";
+    const discordInviteUrl = "https://discord.gg/pBRJwy3Ec5";
+    const githubUrl = "https://github.com/jamesjtb/uesrpg-3ev4"
+    const contentModLink = "https://github.com/95Gman/UESRPG-revised";
 
-    let popup = new Dialog({
+    const renderLink = (content, url) => `<a href="${url}">${content}</a>`;
+
+    const popup = new Dialog({
       title: "Welcome to the UESRPG Foundry System!",
       content: `<form style="height: 100%;>
         <div class="dialogForm" style="padding: 5px">
 
           <div style="text-align: center; margin: 5px; padding: 5px; background-color: rgba(78, 78, 78, 0.137);">
             <span style="margin-left: 10px; margin-right: 10px;">
-              ${patreonIcon.link("https://www.patreon.com/bePatron?u=30258550")}
+              ${renderLink(discordIcon, discordInviteUrl)}
             </span>
             <span style="margin-left: 10px; margin-right: 10px;">
-              ${discordIcon.link("https://discord.gg/pBRJwy3Ec5")}
-            </span>
-            <span style="margin-left: 10px; margin-right: 10px;">
-              ${gitLabIcon.link("https://gitlab.com/DogBoneZone/uesrpg-3e")}
+              ${renderLink(githubIcon, githubUrl)}
             </span>
           </div>
 
@@ -153,15 +150,8 @@ Hooks.once("init", async function() {
               <label>
                 Hey adventurer! Thanks for taking the time to check out the UESRPG system on Foundry. UESRPG is
                 an incredible game developed by a team of dedicated and talented designers. You can find out more about the game,
-                download the free rulebooks, and interact with our lively community on the ${discordLink.link("https://discord.gg/pBRJwy3Ec5")}.
+                download the free rulebooks, and interact with our lively community on the ${renderLink("Discord Server", discordInviteUrl)}.
               </label>
-
-              <p></p>
-
-              <label>
-                If you want to support further development of this system, please consider supporting me on ${patreonLink.link("https://www.patreon.com/bePatron?u=30258550")}.
-                Thank you, and enjoy the UESRPG System!
-              </<label>
 
               <p></p>
 
@@ -171,7 +161,7 @@ Hooks.once("init", async function() {
                 as they provide hundreds of pre-built items, NPC's, and much more.
               </label>
               <ul>
-                <li>${contentModLink.link("https://github.com/95Gman/UESRPG-revised")}</li>
+                <li>${renderLink('UESRPG-Revised', "https://github.com/95Gman/UESRPG-revised")}</li>
               </ul>
           </div>
 
