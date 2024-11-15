@@ -124,10 +124,8 @@ Hooks.once("init", async function() {
   const startUpFunction = () => {
     const discordIcon = `<i class="fab fa-discord fa-2x"></i>`;
     const githubIcon = `<i class="fab fa-github fa-2x"></i>`;
-    const patreonLink = "Patreon";
     const discordInviteUrl = "https://discord.gg/pBRJwy3Ec5";
     const githubUrl = "https://github.com/jamesjtb/uesrpg-3ev4"
-    const contentModLink = "https://github.com/95Gman/UESRPG-revised";
 
     const renderLink = (content, url) => `<a href="${url}">${content}</a>`;
 
@@ -161,7 +159,7 @@ Hooks.once("init", async function() {
                 as they provide hundreds of pre-built items, NPC's, and much more.
               </label>
               <ul>
-                <li>${renderLink('UESRPG-Revised', "https://github.com/95Gman/UESRPG-revised")}</li>
+                <li>${renderLink('UESRPG-Revised', contentModLink)}</li>
               </ul>
           </div>
 
