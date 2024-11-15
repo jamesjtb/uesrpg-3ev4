@@ -3,10 +3,10 @@
   "description": "A system used to play the UESRPG (Unofficial Elder Scrolls Roleplaying Game) 3ev4 d100 system.",
   "version": "1.0-RC.4",
   "esmodules": [
-    "module/simple.js"
+    "module/entrypoint.js"
   ],
   "styles": [
-    "styles/simple.css"
+    "styles/main.css"
   ],
   "packs": [
     {
