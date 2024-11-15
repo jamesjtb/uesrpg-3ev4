@@ -238,24 +238,26 @@ export class SimpleActor extends Actor {
     data.speed.value = this._addHalfSpeed(actorData);
 
     //ENC Burden Calculations
-    if (data.carry_rating.current > data.carry_rating.max * 3) {
-      data.carry_rating.label = 'Crushing'
-      data.carry_rating.penalty = -40
-      data.speed.value = 0;
-      data.stamina.max = data.stamina.max - 5;
-    } else if (data.carry_rating.current > data.carry_rating.max * 2) {
-      data.carry_rating.label = 'Severe'
-      data.carry_rating.penalty = -20
-      data.speed.value = Math.floor(data.speed.base / 2);
-      data.stamina.max = data.stamina.max - 3;
-    } else if (data.carry_rating.current > data.carry_rating.max) {
-      data.carry_rating.label = 'Moderate'
-      data.carry_rating.penalty = -10
-      data.speed.value = data.speed.value - 1;
-      data.stamina.max = data.stamina.max - 1;
-    } else if (data.carry_rating.current <= data.carry_rating.max) {
-      data.carry_rating.label = "Minimal"
-      data.carry_rating.penalty = 0
+    if (game.settings.get('uesrpg-3ev4', 'pcENCPenalty')) {
+      if (data.carry_rating.current > data.carry_rating.max * 3) {
+        data.carry_rating.label = 'Crushing'
+        data.carry_rating.penalty = -40
+        data.speed.value = 0;
+        data.stamina.max = data.stamina.max - 5;
+      } else if (data.carry_rating.current > data.carry_rating.max * 2) {
+        data.carry_rating.label = 'Severe'
+        data.carry_rating.penalty = -20
+        data.speed.value = Math.floor(data.speed.base / 2);
+        data.stamina.max = data.stamina.max - 3;
+      } else if (data.carry_rating.current > data.carry_rating.max) {
+        data.carry_rating.label = 'Moderate'
+        data.carry_rating.penalty = -10
+        data.speed.value = data.speed.value - 1;
+        data.stamina.max = data.stamina.max - 1;
+      } else if (data.carry_rating.current <= data.carry_rating.max) {
+        data.carry_rating.label = "Minimal"
+        data.carry_rating.penalty = 0
+      }
     }
 
     //Armor Weight Class Calculations

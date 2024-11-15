@@ -8,10 +8,83 @@ import { SimpleItem } from "./item.js";
 import { SimpleItemSheet } from "./item-sheet.js";
 import { SystemCombat } from "./combat.js";
 
+const systemModuleRootPath = 'systems/uesrpg-3ev4/';
+
 
 /* -------------------------------------------- */
 /*  Foundry VTT Initialization                  */
 /* -------------------------------------------- */
+
+const startUpFunction = async () => {
+  const changelogTemplatePath = `${systemModuleRootPath}/templates/changelog.html`;
+  const changelogHtml = await renderTemplate(changelogTemplatePath);
+
+  const discordIcon = `<i class="fab fa-discord fa-2x"></i>`;
+  const githubIcon = `<i class="fab fa-github fa-2x"></i>`;
+  const discordInviteUrl = "https://discord.gg/pBRJwy3Ec5";
+  const githubUrl = "https://github.com/jamesjtb/uesrpg-3ev4"
+  const contentModLink = "https://github.com/95Gman/UESRPG-revised";
+
+  const renderLink = (content, url) => `<a href="${url}">${content}</a>`;
+
+  const popup = new Dialog({
+    title: "Welcome to the UESRPG Foundry System!",
+    content: `<form style="height: 100%;"">
+        <div class="dialogForm" style="padding: 5px">
+
+          <div style="text-align: center; margin: 5px; padding: 5px; background-color: rgba(78, 78, 78, 0.137);">
+            <span style="margin-left: 10px; margin-right: 10px;">
+              ${renderLink(discordIcon, discordInviteUrl)}
+            </span>
+            <span style="margin-left: 10px; margin-right: 10px;">
+              ${renderLink(githubIcon, githubUrl)}
+            </span>
+          </div>
+
+          <div style="margin: 5px; padding: 5px; background-color: rgba(78, 78, 78, 0.137);">
+              <h2 style="text-align: center;">Join the Community!</h2>
+              <label>
+                Hey adventurer! Thanks for taking the time to check out the UESRPG system on Foundry. UESRPG is
+                an incredible game developed by a team of dedicated and talented designers. You can find out more about the game,
+                download the free rulebooks, and interact with our lively community on the ${renderLink("Discord Server", discordInviteUrl)}.
+              </label>
+
+              <p></p>
+
+            <h2 style="text-align: center;">Recommended Game Content</h2>
+              <label>
+                The following modules/content were created by some dedicated community members and are <b>highly recommended</b>
+                as they provide hundreds of pre-built items, NPC's, and much more.
+              </label>
+              <ul>
+                <li>${renderLink('UESRPG-Revised', contentModLink)}</li>
+              </ul>
+          </div>
+
+          <div style="overflow-y: scroll; height: 300px; margin: 5px; padding: 5px; background-color: rgba(78, 78, 78, 0.137);">
+            ${changelogHtml}
+          </div>
+          <div style="margin: 5px; padding: 5px; background-color: rgba(78, 78, 78, 0.137);">
+            <i>You can disable this popup message in the System Settings and checking the box to not show this again.</i>
+          </div>
+        </div>
+    </form>`,
+    buttons: {
+          one: {
+            label: "Close"
+          }
+        },
+    default: "one",
+    close: html => console.log()
+  });
+  popup.position.width = 650;
+  popup.position.height = 750;
+  popup.render(true);
+}
+
+Hooks.once('ready', async function () {
+  if (game.settings.get('uesrpg-3ev4', 'startUpDialog') === false) {startUpFunction()}
+});
 
 Hooks.once("init", async function() {
   console.log(`Initializing UESRPG System`);
@@ -91,6 +164,16 @@ Hooks.once("init", async function() {
     onChange: delayedReload
   });
 
+  game.settings.register("uesrpg-3ev4", "pcENCPenalty", {
+    name: "Player Characters Suffer Encumbrance Penalties",
+    hint: "If checked, player characters suffer from the same overencumbrance penalties as written in the Rules Compendium. Otherwise, they suffer no ENC Penalties.",
+    scope: "world",
+    config: true,
+    default: true,
+    type: Boolean,
+    onChange: delayedReload
+  });
+
   game.settings.register("uesrpg-3ev4", "sortAlpha", {
     name: "Sort Actor Items Alphabetically",
     hint: "If checked, Actor items are automatically sorted alphabetically. Otherwise, items are not sorted and are organized manually.",
@@ -124,72 +207,4 @@ Hooks.once("init", async function() {
     makeDefault: false,
     label: "Default UESRPG Merchant Sheet"
   });
-
-  const startUpFunction = () => {
-    const discordIcon = `<i class="fab fa-discord fa-2x"></i>`;
-    const githubIcon = `<i class="fab fa-github fa-2x"></i>`;
-    const discordInviteUrl = "https://discord.gg/pBRJwy3Ec5";
-    const githubUrl = "https://github.com/jamesjtb/uesrpg-3ev4"
-    const contentModLink = "https://github.com/95Gman/UESRPG-revised";
-
-    const renderLink = (content, url) => `<a href="${url}">${content}</a>`;
-
-    const popup = new Dialog({
-      title: "Welcome to the UESRPG Foundry System!",
-      content: `<form style="height: 100%;>
-        <div class="dialogForm" style="padding: 5px">
-
-          <div style="text-align: center; margin: 5px; padding: 5px; background-color: rgba(78, 78, 78, 0.137);">
-            <span style="margin-left: 10px; margin-right: 10px;">
-              ${renderLink(discordIcon, discordInviteUrl)}
-            </span>
-            <span style="margin-left: 10px; margin-right: 10px;">
-              ${renderLink(githubIcon, githubUrl)}
-            </span>
-          </div>
-
-          <div style="margin: 5px; padding: 5px; background-color: rgba(78, 78, 78, 0.137);">
-              <h2 style="text-align: center;">Join the Community!</h2>
-              <label>
-                Hey adventurer! Thanks for taking the time to check out the UESRPG system on Foundry. UESRPG is
-                an incredible game developed by a team of dedicated and talented designers. You can find out more about the game,
-                download the free rulebooks, and interact with our lively community on the ${renderLink("Discord Server", discordInviteUrl)}.
-              </label>
-
-              <p></p>
-
-            <h2 style="text-align: center;">Recommended Game Content</h2>
-              <label>
-                The following modules/content were created by some dedicated community members and are <b>highly recommended</b>
-                as they provide hundreds of pre-built items, NPC's, and much more.
-              </label>
-              <ul>
-                <li>${renderLink('UESRPG-Revised', contentModLink)}</li>
-              </ul>
-          </div>
-
-          <div style="overflow-y: scroll; height: 300px; margin: 5px; padding: 5px; background-color: rgba(78, 78, 78, 0.137);">
-            <h2 style="text-align: center;">v${game.system.version}</h2>
-          </div>
-
-          <div style="padding: 5px;">
-            <i>You can disable this popup message in the System Settings and checking the box to not show this again.</i>
-          </div>
-        </div>
-        </form>`,
-      buttons: {
-            one: {
-              label: "Close"
-            }
-          },
-      default: "one",
-      close: html => console.log()
-    });
-    popup.position.width = 650;
-    popup.position.height = 750;
-    popup.render(true);
-  }
-
-  if (game.settings.get('uesrpg-3ev4', 'startUpDialog') === false) {startUpFunction()}
-
 });
