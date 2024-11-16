@@ -1247,6 +1247,7 @@
 .worldbuilding .item-description-container {
   display: grid;
   grid-template-columns: 35% 65%;
+  height: 100%;
 }
 
 .worldbuilding .basic-padding {

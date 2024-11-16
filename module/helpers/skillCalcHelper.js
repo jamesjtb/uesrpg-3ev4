@@ -1,5 +1,5 @@
 export function skillHelper(actorData, characteristic) {
-    let bonusItems = actorData.items.filter(item => item.system.hasOwnProperty('characteristicBonus'))
+    let bonusItems = actorData.items?.filter(item => item.system.hasOwnProperty('characteristicBonus'))
     let totalBonus = 0
     for (let bonusItem of bonusItems) {
         let bonusValue = bonusItem.system.characteristicBonus[characteristic + 'ChaBonus']
@@ -11,7 +11,7 @@ export function skillHelper(actorData, characteristic) {
 }
 
 export function skillModHelper(actorData, skillName) {
-    let bonusItems = actorData.items.filter(item => item.system.hasOwnProperty("skillArray") && item.system.hasOwnProperty("equipped"))
+    let bonusItems = actorData.items?.filter(item => item.system.hasOwnProperty("skillArray") && item.system.hasOwnProperty("equipped"))
     if (bonusItems.length == 0) {return 0}
     let totalBonus = 0
     for (let bonusItem of bonusItems) {

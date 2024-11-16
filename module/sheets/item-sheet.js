@@ -40,7 +40,7 @@ export class SimpleItemSheet extends ItemSheet {
   setPosition(options={}) {
     const position = super.setPosition(options);
     const sheetBody = this.element.find(".sheet-body");
-    const bodyHeight = position.height - 192;
+    const bodyHeight = position.height - 210;
     sheetBody.css("height", bodyHeight);
     return position;
   }
@@ -67,7 +67,7 @@ export class SimpleItemSheet extends ItemSheet {
     html.find('.item-name').click( async (ev) => {
       if (!this.actor) return ui.notifications.info("Containers must be on Actor Sheets in order to open the contents.")
       const li = ev.currentTarget.closest(".item");
-      const item = this.actor.items.get(li.dataset.itemId);
+      const item = this.actor?.items?.get(li.dataset.itemId);
       item.sheet.render(true);
       await item.update({"system.value" : item.system.value})
     });
@@ -89,14 +89,13 @@ export class SimpleItemSheet extends ItemSheet {
 
   _onModifierCreate(event) {
     event.preventDefault()
-
     // Return if not embedded onto Actor
     if (!this.document.isEmbedded) {return}
 
     // Create Options for Dropdown
     let modifierOptions = []
     if (this.actor.type === 'character') {
-      for (let skill of this.actor.items.filter(i => i.type === 'skill'||i.type === 'magicSkill'||i.type === 'combatStyle')) {
+      for (let skill of this.actor?.items?.filter(i => i.type === 'skill'||i.type === 'magicSkill'||i.type === 'combatStyle')) {
         modifierOptions.push(`<option value="${skill.name}">${skill.name}</option>`)
       }
     }
@@ -148,7 +147,7 @@ export class SimpleItemSheet extends ItemSheet {
 
   _createModifierEntries() {
     for (let entry of this.item.system.skillArray) {
-      let modItem = this.actor.items.find(i => i.name === entry.name) || entry.name
+      let modItem = this.actor?.items?.find(i => i.name === entry.name) || entry.name
 
       let entryElement = document.createElement('div')
       entryElement.classList.add('grid-container')
@@ -265,7 +264,7 @@ export class SimpleItemSheet extends ItemSheet {
             let containedItemsList = []
 
                 for (let i of selectedItems) {
-                  let thisItem = this.item.isOwned ? this.actor.items.filter(item => item._id == i.dataset.itemId)[0] : {}
+                  let thisItem = this.item.isOwned ? this.actor?.items?.filter(item => item._id == i.dataset.itemId)[0] : {}
 
                   // Escapes iteration if item is not found on actor
                   if (!thisItem) continue
@@ -277,7 +276,7 @@ export class SimpleItemSheet extends ItemSheet {
 
                     // If the item has an existing container, need to access that container and rewrite it's contained_items array
                     if (thisItem.system.containerStats.container_id != "") {
-                      let oldContainer = this.actor.items.get(thisItem.system.containerStats.container_id)
+                      let oldContainer = this.actor?.items?.get(thisItem.system.containerStats.container_id)
                       let indexToRemove = oldContainer.system.contained_items.indexOf(oldContainer.system.contained_items.find(i => i._id == thisItem._id))
                       oldContainer.system.contained_items.splice(indexToRemove, 1)
                       oldContainer.update({'system.contained_items': oldContainer.system.contained_items})
@@ -334,7 +333,7 @@ export class SimpleItemSheet extends ItemSheet {
       return ui.notifications.info("Containers must be owned by Actors in order to add items. This will be updated in the future.")
     }
 
-    itemList = this.actor.items;
+    itemList = this.actor?.items;
 
     for (let i of itemList) {
       if (
@@ -365,7 +364,7 @@ export class SimpleItemSheet extends ItemSheet {
     this.item.update({'system.contained_items': this.item.system.contained_items})
 
     // Update the contained item's status
-    this.actor.items.find(i => i._id == removedItemId).update({
+    this.actor?.items?.find(i => i._id == removedItemId).update({
       'system.containerStats.contained': false,
       'system.containerStats.container_id': "",
       'system.containerStats.container_name': ""
@@ -378,7 +377,7 @@ export class SimpleItemSheet extends ItemSheet {
 
     let wasChanged = false;
     for (let item of this.item.system.contained_items) {
-      let sourceItem = this.actor.items.find(i => i._id == item._id)
+      let sourceItem = this.actor?.items?.find(i => i._id == item._id)
       if (!sourceItem) continue
 
       const diff = foundry.utils.diffObject(item.item, sourceItem);
@@ -395,7 +394,7 @@ export class SimpleItemSheet extends ItemSheet {
 
   _pushContainedItemData() {
     // this refreshes content from a stored item to the container item on stored item refresh
-    let containerItem = this.actor.items.find(i => i._id == this.item.system.containerStats.container_id)
+    let containerItem = this.actor?.items?.find(i => i._id == this.item.system.containerStats.container_id)
     if (!containerItem || containerItem != null || containerItem != undefined) return
     let indexOfStoredItem = containerItem.system.contained_items.indexOf(containerItem.system.contained_items.find(i => i._id == this.item._id))
     let refreshedData = {_id: this.item._id, item: this.item}

@@ -135,7 +135,7 @@ export class SimpleItem extends Item {
   _prepareModSkillItems(actorData, itemData) {
     if (itemData.skillArray.length == 0) {return}
     for (let entry of itemData.skillArray) {
-      let moddedSkill = actorData.items.find(i => i.name === entry.name)
+      let moddedSkill = actorData.items?.find(i => i.name === entry.name)
       if (itemData.equipped) {
         moddedSkill.updateSource({'system.value': moddedSkill.system.value + Number(entry.value)})
       }
@@ -194,7 +194,7 @@ export class SimpleItem extends Item {
    */
 
   _untrainedException(actorData) {
-    let attribute = actorData.items.filter(item => item.system.untrainedException == true);
+    let attribute = actorData.items?.filter(item => item.system.untrainedException == true);
     const legacyUntrained = game.settings.get("uesrpg-3ev4", "legacyUntrainedPenalty");
     let x = 0;
     if (this.type === "combatStyle"){
