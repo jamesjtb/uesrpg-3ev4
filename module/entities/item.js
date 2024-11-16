@@ -2,8 +2,8 @@
  * Extend the base Actor entity by defining a custom roll data structure which is ideal for the Simple system.
  * @extends {Item}
  */
-import { skillHelper } from "./skillCalcHelper.js";
-import { skillModHelper } from "./skillCalcHelper.js";
+import { skillHelper } from "../helpers/skillCalcHelper.js";
+import { skillModHelper } from "../helpers/skillCalcHelper.js";
 
 export class SimpleItem extends Item {
   async _preCreate(data, options, user) {

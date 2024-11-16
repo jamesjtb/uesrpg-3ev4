@@ -2,8 +2,8 @@
  * Extend the basic ActorSheet with some very simple modifications
  * @extends {ActorSheet}
  */
-import { isLucky } from "./skillCalcHelper.js";
-import { isUnlucky } from "./skillCalcHelper.js";
+import { isLucky } from "../helpers/skillCalcHelper.js";
+import { isUnlucky } from "../helpers/skillCalcHelper.js";
 
 export class SimpleActorSheet extends ActorSheet {
   /** @override */

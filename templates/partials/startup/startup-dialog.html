@@ -1,0 +1,72 @@
+<form style="height: 100%">
+  <div class="dialogForm" style="padding: 5px">
+    <div
+      style="
+        text-align: center;
+        margin: 5px;
+        padding: 5px;
+        background-color: rgba(78, 78, 78, 0.137);
+      "
+    >
+      <span style="margin-left: 10px; margin-right: 10px">
+        <a href="{{discordInviteUrl}}"><i class="fab fa-discord fa-2x"></i></a>
+      </span>
+      <span style="margin-left: 10px; margin-right: 10px">
+        <a href="{{githubUrl}}"><i class="fab fa-github fa-2x"></i></a>
+      </span>
+    </div>
+
+    <div
+      style="
+        margin: 5px;
+        padding: 5px;
+        background-color: rgba(78, 78, 78, 0.137);
+      "
+    >
+      <h2 style="text-align: center">Join the Community!</h2>
+      <label>
+        Hey adventurer! Thanks for taking the time to check out the UESRPG
+        system on Foundry. UESRPG is an incredible game developed by a team of
+        dedicated and talented designers. You can find out more about the game,
+        download the free rulebooks, and interact with our lively community on
+        the ${renderLink("Discord Server", discordInviteUrl)}.
+      </label>
+
+      <p></p>
+
+      <h2 style="text-align: center">Recommended Game Content</h2>
+      <label>
+        The following modules/content were created by some dedicated community
+        members and are <b>highly recommended</b>
+        as they provide hundreds of pre-built items, NPC's, and much more.
+      </label>
+      <ul>
+        <li><a href="{{contentModLink}}">UESRPG-Revised</a></li>
+      </ul>
+    </div>
+
+    <div
+      style="
+        overflow-y: scroll;
+        height: 300px;
+        margin: 5px;
+        padding: 5px;
+        background-color: rgba(78, 78, 78, 0.137);
+      "
+    >
+      {{{changelogHtml}}}
+    </div>
+    <div
+      style="
+        margin: 5px;
+        padding: 5px;
+        background-color: rgba(78, 78, 78, 0.137);
+      "
+    >
+      <i
+        >You can disable this popup message in the System Settings and checking
+        the box to not show this again.</i
+      >
+    </div>
+  </div>
+</form>
