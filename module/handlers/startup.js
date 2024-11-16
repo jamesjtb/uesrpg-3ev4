@@ -25,7 +25,7 @@ export default async function startupHandler() {
       close: () => console.log()
     });
     popup.position.width = 650;
-    popup.position.height = 750;
+    popup.position.height = 760;
     popup.render(true);
   }
 }
