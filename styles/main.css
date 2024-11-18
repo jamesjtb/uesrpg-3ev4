@@ -213,6 +213,10 @@
   border: none;
 }
 
+.sheet nav.sheet-tabs > [data-tab] {
+  padding: 5px;
+}
+
 
 /*----------------------------
   Items Lists & Tables
@@ -964,8 +968,8 @@
 }
 
 .worldbuilding .encContainer .encLabel {
-  font-size: 20px;
-  height: 26px;
+  font-size: 16px;
+  height: 20px;
 }
 
 .worldbuilding .itemListContainer {
