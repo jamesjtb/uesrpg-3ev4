@@ -90,7 +90,7 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding: 0 5px;
+  padding: 0;
 }
 
 .worldbuilding .resourceButton i:hover {

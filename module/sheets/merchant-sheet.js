@@ -290,7 +290,7 @@ export class merchantSheet extends ActorSheet {
       const li = ev.currentTarget.dataset.containerId;
       const item = this.actor.items.get(li);
       item.sheet.render(true);
-      await item.update({ "data.value": item.system.value });
+      await item.update({ "system.value": item.system.value });
     });
 
     // Delete Inventory Item
@@ -390,8 +390,8 @@ export class merchantSheet extends ActorSheet {
         item.system.price * (this.actor.system.priceMod / 100)
       ).toFixed(0);
       item.update({
-        "data.modPrice": item.system.modPrice,
-        "data.price": item.system.price,
+        "system.modPrice": item.system.modPrice,
+        "system.price": item.system.price,
       });
     }
   }
@@ -482,8 +482,8 @@ export class merchantSheet extends ActorSheet {
       } else {
         //Create Purchased Item and Update Buyer Wealth
         const itemDuplicate = merchantItem.toObject();
-        itemDuplicate.data.quantity = 1;
-        itemDuplicate.data.equipped = false;
+        itemDuplicate.system.quantity = 1;
+        itemDuplicate.system.equipped = false;
         const qtyUpdateItem = game.user.character.items.find(
           (i) => i.name === itemDuplicate.name
         );
@@ -497,20 +497,20 @@ export class merchantSheet extends ActorSheet {
         } else {
           qtyUpdateItem.system.quantity = qtyUpdateItem.system.quantity + 1;
           qtyUpdateItem.update({
-            "data.quantity": qtyUpdateItem.system.quantity,
+            "system.quantity": qtyUpdateItem.system.quantity,
           });
         }
 
         //Update Transaction Values on Merchant/Buyer
         merchantItem.system.quantity = merchantItem.system.quantity - 1;
-        merchantItem.update({ "data.quantity": merchantItem.system.quantity });
+        merchantItem.update({ "system.quantity": merchantItem.system.quantity });
 
         merchant.wealth = merchant.wealth + itemPrice;
-        this.actor.update({ "data.wealth": merchant.wealth });
+        this.actor.update({ "system.wealth": merchant.wealth });
 
         buyerData.wealth = buyerData.wealth - itemPrice;
         game.user.character.update({
-          "data.wealth": game.user.character.system.wealth,
+          "system.wealth": game.user.character.system.wealth,
         });
 
         //Output Chat Message
@@ -531,14 +531,14 @@ export class merchantSheet extends ActorSheet {
       item.system.hasOwnProperty("modPrice")
     );
     this.actor.system.priceMod = Number(this.actor.system.priceMod + 5);
-    this.actor.update({ "data.priceMod": this.actor.system.priceMod });
+    this.actor.update({ "system.priceMod": this.actor.system.priceMod });
 
     for (let item of merchantItems) {
       item.system.modPrice = (
         item.system.price +
         item.system.price * (this.actor.system.priceMod / 100)
       ).toFixed(0);
-      await item.update({ "data.modPrice": item.system.modPrice });
+      await item.update({ "system.modPrice": item.system.modPrice });
     }
   }
 
@@ -548,14 +548,14 @@ export class merchantSheet extends ActorSheet {
       item.system.hasOwnProperty("modPrice")
     );
     this.actor.system.priceMod = Number(this.actor.system.priceMod - 5);
-    this.actor.update({ "data.priceMod": this.actor.system.priceMod });
+    this.actor.update({ "system.priceMod": this.actor.system.priceMod });
 
     for (let item of merchantItems) {
       item.system.modPrice = (
         item.system.price +
         item.system.price * (this.actor.system.priceMod / 100)
       ).toFixed(0);
-      await item.update({ "data.modPrice": item.system.modPrice });
+      await item.update({ "system.modPrice": item.system.modPrice });
     }
   }
 
@@ -729,57 +729,57 @@ export class merchantSheet extends ActorSheet {
             chaPath.str.base = strInput;
             chaPath.str.total = strInput + chaPath.str.bonus;
             await this.actor.update({
-              "data.characteristics.str.base": strInput,
-              "data.characteristics.str.total": chaPath.str.total,
+              "system.characteristics.str.base": strInput,
+              "system.characteristics.str.total": chaPath.str.total,
             });
 
             chaPath.end.base = endInput;
             chaPath.end.total = endInput + chaPath.end.bonus;
             await this.actor.update({
-              "data.characteristics.end.base": endInput,
-              "data.characteristics.end.total": chaPath.end.total,
+              "system.characteristics.end.base": endInput,
+              "system.characteristics.end.total": chaPath.end.total,
             });
 
             chaPath.agi.base = agiInput;
             chaPath.agi.total = agiInput + chaPath.agi.bonus;
             await this.actor.update({
-              "data.characteristics.agi.base": agiInput,
-              "data.characteristics.agi.total": chaPath.agi.total,
+              "system.characteristics.agi.base": agiInput,
+              "system.characteristics.agi.total": chaPath.agi.total,
             });
 
             chaPath.int.base = intInput;
             chaPath.int.total = intInput + chaPath.int.bonus;
             await this.actor.update({
-              "data.characteristics.int.base": intInput,
-              "data.characteristics.int.total": chaPath.int.total,
+              "system.characteristics.int.base": intInput,
+              "system.characteristics.int.total": chaPath.int.total,
             });
 
             chaPath.wp.base = wpInput;
             chaPath.wp.total = wpInput + chaPath.wp.bonus;
             await this.actor.update({
-              "data.characteristics.wp.base": wpInput,
-              "data.characteristics.wp.total": chaPath.wp.total,
+              "system.characteristics.wp.base": wpInput,
+              "system.characteristics.wp.total": chaPath.wp.total,
             });
 
             chaPath.prc.base = prcInput;
             chaPath.prc.total = prcInput + chaPath.prc.bonus;
             await this.actor.update({
-              "data.characteristics.prc.base": prcInput,
-              "data.characteristics.prc.total": chaPath.prc.total,
+              "system.characteristics.prc.base": prcInput,
+              "system.characteristics.prc.total": chaPath.prc.total,
             });
 
             chaPath.prs.base = prsInput;
             chaPath.prs.total = prsInput + chaPath.prs.bonus;
             await this.actor.update({
-              "data.characteristics.prs.base": prsInput,
-              "data.characteristics.prs.total": chaPath.prs.total,
+              "system.characteristics.prs.base": prsInput,
+              "system.characteristics.prs.total": chaPath.prs.total,
             });
 
             chaPath.lck.base = lckInput;
             chaPath.lck.total = lckInput + chaPath.lck.bonus;
             await this.actor.update({
-              "data.characteristics.lck.base": lckInput,
-              "data.characteristics.lck.total": chaPath.lck.total,
+              "system.characteristics.lck.base": lckInput,
+              "system.characteristics.lck.total": chaPath.lck.total,
             });
           },
         },
@@ -1543,7 +1543,7 @@ export class merchantSheet extends ActorSheet {
             // If Automate Magicka Setting is on, reduce the character's magicka by the calculated output cost
             if (game.settings.get("uesrpg-3ev4", "automateMagicka")) {
               this.actor.update({
-                "data.magicka.value":
+                "system.magicka.value":
                   this.actor.system.magicka.value - displayCost,
               });
             }
@@ -1682,7 +1682,7 @@ export class merchantSheet extends ActorSheet {
       item.system.quantity = 0;
       ui.notifications.info("Out of Ammunition!");
     }
-    item.update({ "data.quantity": item.system.quantity });
+    item.update({ "system.quantity": item.system.quantity });
   }
 
   _onToggle2H(event) {
@@ -1696,7 +1696,7 @@ export class merchantSheet extends ActorSheet {
     } else if (item.system.weapon2H === true) {
       item.system.weapon2H = false;
     }
-    item.update({ "data.weapon2H": item.system.weapon2H });
+    item.update({ "system.weapon2H": item.system.weapon2H });
   }
 
   _onPlusQty(event) {
@@ -1707,7 +1707,7 @@ export class merchantSheet extends ActorSheet {
 
     item.system.quantity = item.system.quantity + 1;
 
-    item.update({ "data.quantity": item.system.quantity });
+    item.update({ "system.quantity": item.system.quantity });
   }
 
   async _onMinusQty(event) {
@@ -1722,7 +1722,7 @@ export class merchantSheet extends ActorSheet {
       ui.notifications.info(`You have used your last ${item.name}!`);
     }
 
-    await item.update({ "data.quantity": item.system.quantity });
+    await item.update({ "system.quantity": item.system.quantity });
   }
 
   _onItemEquip(event) {
@@ -1736,7 +1736,7 @@ export class merchantSheet extends ActorSheet {
     } else if (item.system.equipped === true) {
       item.system.equipped = false;
     }
-    item.update({ "data.equipped": item.system.equipped });
+    item.update({ "system.equipped": item.system.equipped });
   }
 
   async _onItemCreate(event) {
@@ -1858,7 +1858,7 @@ export class merchantSheet extends ActorSheet {
             let wealth = this.actor.system.wealth;
 
             wealth = wealth + playerInput;
-            this.actor.update({ "data.wealth": wealth });
+            this.actor.update({ "system.wealth": wealth });
           },
         },
       },
