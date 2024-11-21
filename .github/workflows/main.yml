@@ -21,6 +21,10 @@ jobs:
           echo "creating release for tag $tag" && 
           gh release create "$tag" --repo="$GITHUB_REPOSITORY" --title="$tag" --generate-notes
 
+      - name: checkout repo
+        uses: actions/checkout@v4
+          ref: ${{ $tag }}
+
       - name: get system.json properties
         id: foundry_system_properties
         uses: ActionsTools/read-json-action@main
