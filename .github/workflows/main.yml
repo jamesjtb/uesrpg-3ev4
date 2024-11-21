@@ -43,7 +43,6 @@ jobs:
           data: >
             {
               "id": "uesrpg-3ev4",
-              "dry-run": true,
               "release": {
                 "version": "${{ github.ref_name }}",
                 "manifest": "https://raw.githubusercontent.com/jamesjtb/uesrpg-3ev4/refs/tags/${{ github.ref_name }}/system.json",
