@@ -5,7 +5,7 @@
   "main": "module/entrypoint.js",
   "scripts": {
     "preversion": "node ./automation/pre-version.js",
-    "postversion": "git pull; git push; git push --tags"
+    "postversion": "git pull && git push && git push --tags"
   },
   "repository": {
     "type": "git",
