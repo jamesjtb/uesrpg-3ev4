@@ -27,8 +27,8 @@ jobs:
       - name: get system compatibility
         id: foundry_compatibility
         run: > 
-          node ./automation/echo-compatibility-version minimum >> "$GITHUB_ENV" &&
-          node ./automation/echo-compatibility-version verified >> "$GITHUB_ENV"
+          node ./automation/echo-compatibility-version minimum >> $GITHUB_OUTPUT &&
+          node ./automation/echo-compatibility-version verified >> $GITHUB_OUTPUT
 
       - name: release to foundry
         uses: fjogeleit/http-request-action@v1
@@ -49,8 +49,8 @@ jobs:
                 "manifest": "https://raw.githubusercontent.com/jamesjtb/uesrpg-3ev4/refs/tags/$tag/system.json",
                 "notes": "https://github.com/jamesjtb/uesrpg-3ev4/releases/tag/$tag",
                 "compatibility": {
-                  "minimum": "$minimumVersion",
-                  "verified": "$verifiedVersion",
+                  "minimum": "${{ steps.foundry_compatibility.outputs.minimum }}",
+                  "verified": "${{ steps.foundry_compatibility.outputs.verified }}",
                   "maximum": ""
                 }
               }
