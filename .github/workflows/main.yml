@@ -27,7 +27,7 @@ jobs:
       - name: get system compatibility
         id: foundry_compatibility
         run: > 
-          node ./automation/echo-compatibility-version minimum >> $GITHUB_OUTPUT
+          node ./automation/echo-compatibility-version minimum >> $GITHUB_OUTPUT &&
           node ./automation/echo-compatibility-version verified >> $GITHUB_OUTPUT
 
       - name: release to foundry
