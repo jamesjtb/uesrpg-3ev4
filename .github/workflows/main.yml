@@ -21,6 +21,5 @@ jobs:
           tag: ${{ github.ref_name }}
         run:
           gh release create "$GITHUB_REF_NAME" \
-            --repo="$GITHUB_REPOSITORY" \
             --title="${GITHUB_REPOSITORY#*/} ${tag#v}" \
             --generate-notes
