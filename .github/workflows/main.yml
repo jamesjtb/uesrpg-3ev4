@@ -24,11 +24,11 @@ jobs:
       - name: checkout repo
         uses: actions/checkout@v4
 
-      - name: get system.json properties
-        id: foundry_system_properties
-        uses: ActionsTools/read-json-action@main
-        with:
-          file_path: system.json
+      - name: get system compatibility
+        id: foundry_compatibility
+        run: > 
+          node ./automation/echo-compatibility-version minimum >> $GITHUB_OUTPUT
+          node ./automation/echo-compatibility-version verified >> $GITHUB_OUTPUT
 
       - name: release to foundry
         uses: fjogeleit/http-request-action@v1
@@ -49,8 +49,8 @@ jobs:
                 "manifest": "https://raw.githubusercontent.com/jamesjtb/uesrpg-3ev4/refs/tags/$tag/system.json",
                 "notes": "https://github.com/jamesjtb/uesrpg-3ev4/releases/tag/$tag",
                 "compatibility": {
-                  "minimum": "12",
-                  "verified": "12",
+                  "minimum": "${{ steps.foundry_compatibility.minimum }}",
+                  "verified": "${{ steps.foundry_compatibility.verified }}",
                   "maximum": ""
                 }
               }
