@@ -600,57 +600,57 @@ export class npcSheet extends ActorSheet {
             chaPath.str.base = strInput;
             chaPath.str.total = strInput + chaPath.str.bonus;
             await this.actor.update({
-              "data.characteristics.str.base": strInput,
-              "data.characteristics.str.total": chaPath.str.total,
+              "system.characteristics.str.base": strInput,
+              "system.characteristics.str.total": chaPath.str.total,
             });
 
             chaPath.end.base = endInput;
             chaPath.end.total = endInput + chaPath.end.bonus;
             await this.actor.update({
-              "data.characteristics.end.base": endInput,
-              "data.characteristics.end.total": chaPath.end.total,
+              "system.characteristics.end.base": endInput,
+              "system.characteristics.end.total": chaPath.end.total,
             });
 
             chaPath.agi.base = agiInput;
             chaPath.agi.total = agiInput + chaPath.agi.bonus;
             await this.actor.update({
-              "data.characteristics.agi.base": agiInput,
-              "data.characteristics.agi.total": chaPath.agi.total,
+              "system.characteristics.agi.base": agiInput,
+              "system.characteristics.agi.total": chaPath.agi.total,
             });
 
             chaPath.int.base = intInput;
             chaPath.int.total = intInput + chaPath.int.bonus;
             await this.actor.update({
-              "data.characteristics.int.base": intInput,
-              "data.characteristics.int.total": chaPath.int.total,
+              "system.characteristics.int.base": intInput,
+              "system.characteristics.int.total": chaPath.int.total,
             });
 
             chaPath.wp.base = wpInput;
             chaPath.wp.total = wpInput + chaPath.wp.bonus;
             await this.actor.update({
-              "data.characteristics.wp.base": wpInput,
-              "data.characteristics.wp.total": chaPath.wp.total,
+              "system.characteristics.wp.base": wpInput,
+              "system.characteristics.wp.total": chaPath.wp.total,
             });
 
             chaPath.prc.base = prcInput;
             chaPath.prc.total = prcInput + chaPath.prc.bonus;
             await this.actor.update({
-              "data.characteristics.prc.base": prcInput,
-              "data.characteristics.prc.total": chaPath.prc.total,
+              "system.characteristics.prc.base": prcInput,
+              "system.characteristics.prc.total": chaPath.prc.total,
             });
 
             chaPath.prs.base = prsInput;
             chaPath.prs.total = prsInput + chaPath.prs.bonus;
             await this.actor.update({
-              "data.characteristics.prs.base": prsInput,
-              "data.characteristics.prs.total": chaPath.prs.total,
+              "system.characteristics.prs.base": prsInput,
+              "system.characteristics.prs.total": chaPath.prs.total,
             });
 
             chaPath.lck.base = lckInput;
             chaPath.lck.total = lckInput + chaPath.lck.bonus;
             await this.actor.update({
-              "data.characteristics.lck.base": lckInput,
-              "data.characteristics.lck.total": chaPath.lck.total,
+              "system.characteristics.lck.base": lckInput,
+              "system.characteristics.lck.total": chaPath.lck.total,
             });
           },
         },
@@ -1370,7 +1370,7 @@ export class npcSheet extends ActorSheet {
             // If Automate Magicka Setting is on, reduce the character's magicka by the calculated output cost
             if (game.settings.get("uesrpg-3ev4", "automateMagicka")) {
               this.actor.update({
-                "data.magicka.value":
+                "system.magicka.value":
                   this.actor.system.magicka.value - displayCost,
               });
             }
@@ -1490,7 +1490,7 @@ export class npcSheet extends ActorSheet {
       item.system.quantity = 0;
       ui.notifications.info("Out of Ammunition!");
     }
-    item.update({ "data.quantity": item.system.quantity });
+    item.update({ "system.quantity": item.system.quantity });
   }
 
   _onToggle2H(event) {
@@ -1543,7 +1543,7 @@ export class npcSheet extends ActorSheet {
     } else if (item.system.equipped === true) {
       item.system.equipped = false;
     }
-    await item.update({ "data.equipped": item.system.equipped });
+    await item.update({ "system.equipped": item.system.equipped });
   }
 
   async _onItemCreate(event) {
@@ -1665,7 +1665,7 @@ export class npcSheet extends ActorSheet {
             let wealth = this.actor.system.wealth;
 
             wealth = wealth + playerInput;
-            this.actor.update({ "data.wealth": wealth });
+            this.actor.update({ "system.wealth": wealth });
           },
         },
       },
@@ -1704,7 +1704,7 @@ export class npcSheet extends ActorSheet {
             const playerInput = parseInt(html.find('[id="playerInput"]').val());
             this.actor.system.carry_rating.bonus = playerInput;
             this.actor.update({
-              "data.carry_rating.bonus": this.actor.system.carry_rating.bonus,
+              "system.carry_rating.bonus": this.actor.system.carry_rating.bonus,
             });
           },
         },
@@ -1743,7 +1743,7 @@ export class npcSheet extends ActorSheet {
     event.preventDefault();
     const resource = this.actor.system[event.currentTarget.dataset.resource];
     const action = event.currentTarget.dataset.action;
-    let dataPath = `data.${event.currentTarget.dataset.resource}.value`;
+    let dataPath = `system.${event.currentTarget.dataset.resource}.value`;
 
     // Update and increment resource
     action == "increase"
@@ -1755,7 +1755,7 @@ export class npcSheet extends ActorSheet {
     event.preventDefault();
     const resourceLabel = event.currentTarget.dataset.resource;
     const resource = this.actor.system[resourceLabel];
-    let dataPath = `data.${resourceLabel}.value`;
+    let dataPath = `system.${resourceLabel}.value`;
 
     this.actor.update({ [dataPath]: (resource.value = resource.max) });
   }
@@ -1897,9 +1897,9 @@ export class npcSheet extends ActorSheet {
     let fatigueBonus = this.actor.system.fatigue.bonus;
 
     if (action === "increase" && fatigueLevel < 5) {
-      this.actor.update({ "data.fatigue.bonus": fatigueBonus + 1 });
+      this.actor.update({ "system.fatigue.bonus": fatigueBonus + 1 });
     } else if (action === "decrease" && fatigueLevel > 0) {
-      this.actor.update({ "data.fatigue.bonus": fatigueBonus - 1 });
+      this.actor.update({ "system.fatigue.bonus": fatigueBonus - 1 });
     }
   }
 
@@ -2106,8 +2106,8 @@ export class npcSheet extends ActorSheet {
                 (item) => item.id == armorItem.dataset.itemId
               )[0];
               armorItem.checked
-                ? await thisArmor.update({ "data.equipped": true })
-                : await thisArmor.update({ "data.equipped": false });
+                ? await thisArmor.update({ "system.equipped": true })
+                : await thisArmor.update({ "system.equipped": false });
             }
           },
         },
