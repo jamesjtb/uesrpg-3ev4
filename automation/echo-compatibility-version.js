@@ -6,4 +6,4 @@ const validVersionTypes = ['minimum', 'verified', 'maximum']
 if (!validVersionTypes.includes(requestedVersionType)) {
     throw new Error(`Invalid version type request: ${requestedVersionType}. Must be one of: ${validVersionTypes.join(', ')}`);
 }
-console.log(`${requestedVersionType}=${systemObj.compatibility[requestedVersionType]}`);
+console.log(`${requestedVersionType}Version=${systemObj.compatibility[requestedVersionType]}`);
