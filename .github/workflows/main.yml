@@ -50,7 +50,7 @@ jobs:
                 "notes": "https://github.com/jamesjtb/uesrpg-3ev4/releases/tag/$tag",
                 "compatibility": {
                   "minimum": "$minimumVersion",
-                  "verified": "verifiedVersion",
+                  "verified": "$verifiedVersion",
                   "maximum": ""
                 }
               }
