@@ -21,7 +21,7 @@ systemObj.download = splitDownloadPath.join('/');
 
 writeFileSync(systemFilePath, JSON.stringify(systemObj, null, 2), systemFileEncoding);
 
-exec(`git add . && git commit -m "update system.json for ${packageVersion}"`, (error, stdout, stderr) => {
+exec(`git add . && git commit -m "update system.json for ${packageVersion}" && git push`, (error, stdout, stderr) => {
     if (error) {
         console.log(`error: ${error.message}`);
         return;
