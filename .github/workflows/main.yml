@@ -49,8 +49,8 @@ jobs:
                 "manifest": "https://raw.githubusercontent.com/jamesjtb/uesrpg-3ev4/refs/tags/$tag/system.json",
                 "notes": "https://github.com/jamesjtb/uesrpg-3ev4/releases/tag/$tag",
                 "compatibility": {
-                  "minimum": "${{steps.foundry_system_properties}}.outputs.compatibility.minimum",
-                  "verified": "${{steps.foundry_system_properties}}.outputs.compatibility.verified",
+                  "minimum": "12",
+                  "verified": "12",
                   "maximum": ""
                 }
               }
