@@ -45,9 +45,9 @@ jobs:
               "id": "uesrpg-3ev4",
               "dry-run": true,
               "release": {
-                "version": "$tag",
-                "manifest": "https://raw.githubusercontent.com/jamesjtb/uesrpg-3ev4/refs/tags/$tag/system.json",
-                "notes": "https://github.com/jamesjtb/uesrpg-3ev4/releases/tag/$tag",
+                "version": "${{ github.ref_name }}",
+                "manifest": "https://raw.githubusercontent.com/jamesjtb/uesrpg-3ev4/refs/tags/${{ github.ref_name }}/system.json",
+                "notes": "https://github.com/jamesjtb/uesrpg-3ev4/releases/tag/${{ github.ref_name }}",
                 "compatibility": {
                   "minimum": "${{ steps.foundry_compatibility.outputs.minimum }}",
                   "verified": "${{ steps.foundry_compatibility.outputs.verified }}",
