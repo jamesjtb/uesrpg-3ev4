@@ -13,8 +13,9 @@ jobs:
     name: create release for pushed tag
     runs-on: ubuntu-latest
     steps:
+      - name: checkout repo
+        uses: actions/checkpoint@v4
       - name: create release
-        uses: actions/checkout@v4
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           tag: ${{ github.ref_name }}
