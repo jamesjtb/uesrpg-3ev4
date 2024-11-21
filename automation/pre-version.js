@@ -1,10 +1,12 @@
 const {writeFileSync, readFileSync} = require('fs');
 const {exec} = require('child_process');
-const packageObj = require('../package.json');
+const {argv} = require('node:process');
+
+const versionArg = argv[2];
 
 const systemFilePath = './system.json';
 const systemFileEncoding = 'utf-8';
-const packageVersion = packageObj.version;
+const packageVersion = `v${versionArg}`;
 
 console.log(`Updating system.json with version '${packageVersion}'`);
 const systemJson = readFileSync(systemFilePath, systemFileEncoding);
