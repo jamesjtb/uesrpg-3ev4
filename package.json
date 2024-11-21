@@ -4,7 +4,8 @@
   "description": "A system used to play the UESRPG (Unofficial Elder Scrolls Roleplaying Game) 3ev4 d100 system.",
   "main": "module/entrypoint.js",
   "scripts": {
-    "postversion": "node ./automation/post-version.js"
+    "preversion": "node ./automation/pre-version.js",
+    "postversion": "git pull; git push; git push --tags"
   },
   "repository": {
     "type": "git",
