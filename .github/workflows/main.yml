@@ -23,8 +23,6 @@ jobs:
 
       - name: checkout repo
         uses: actions/checkout@v4
-        with:
-          ref: $tag
 
       - name: get system.json properties
         id: foundry_system_properties
