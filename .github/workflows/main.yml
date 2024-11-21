@@ -12,11 +12,43 @@ jobs:
   release:
     name: create release for pushed tag
     runs-on: ubuntu-latest
+    env:
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      tag: ${{ github.ref_name }}
     steps:
       - name: create release
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          tag: ${{ github.ref_name }}
         run:
           echo "creating release for tag $tag" && 
           gh release create "$tag" --repo="$GITHUB_REPOSITORY" --title="$tag" --generate-notes
+
+      - name: get system.json properties
+        id: foundry_system_properties
+        uses: ActionsTools/read-json-action@main
+        with:
+          file_path: system.json
+
+      - name: release to foundry
+        uses: fjogeleit/http-request-action@v1
+        with:
+          url: https://api.foundryvtt.com/_api/packages/release_version/
+          method: POST
+          customHeaders: >
+            {
+              "Content-Type": "application/json",
+              "Authorization": "${{ secrets.FOUNDRY_RELEASE_TOKEN }}"
+            }
+          data: >
+            {
+              "id": "uesrpg-3ev4",
+              "dry-run": true,
+              "release": {
+                "version": "$tag",
+                "manifest": "https://raw.githubusercontent.com/jamesjtb/uesrpg-3ev4/refs/tags/$tag/system.json",
+                "notes": "https://github.com/jamesjtb/uesrpg-3ev4/releases/tag/$tag",
+                "compatibility": {
+                  "minimum": "${{steps.foundry_system_properties}}.outputs.compatibility.minimum",
+                  "verified": "${{steps.foundry_system_properties}}.outputs.compatibility.verified",
+                  "maximum": ""
+                }
+              }
+            }
