@@ -5,7 +5,9 @@
   "main": "module/entrypoint.js",
   "scripts": {
     "version": "node ./automation/version.js %npm_package_version%",
-    "postversion": "git pull && git push && git push --tags"
+    "postversion": "git pull && git push && git push --tags",
+    "compile-packs": "node ./automation/ldb-packager.mjs compile",
+    "extract-packs": "node ./automation/ldb-packager.mjs extract"
   },
   "repository": {
     "type": "git",

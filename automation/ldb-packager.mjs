@@ -21,10 +21,19 @@ const packsPath = 'packs';
 
 if (command === commands.extract) {
   const packsContents = readdirSync(packsPath);
-  const packs = packsContents.filter(pack => pack !== 'src' && pack !== '.gitignore');
+  const packs = packsContents.filter(pack => pack !== 'src');
   console.log(`Extracting ${packs.length} packs...`);
   for (const pack of packs) {
     console.log(`Extracting ${pack}`);
     await extractPack(`${packsPath}/${pack}`, `${packsSrcPath}/${pack}`, {yaml: true});
+  }
+}
+
+if (command === commands.compile) {
+  const packsSrcContents = readdirSync(packsSrcPath);
+  console.log(`Compiling ${packsSrcContents.length} packs...`);
+  for (const pack of packsSrcContents) {
+    console.log(`Compiling ${pack}`);
+    await compilePack(`${packsSrcPath}/${pack}`, `${packsPath}/${pack}`, {yaml: true});
   }
 }
