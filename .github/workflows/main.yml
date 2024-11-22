@@ -31,7 +31,7 @@ jobs:
           node ./automation/echo-compatibility-version verified >> $GITHUB_OUTPUT
 
       - name: compile compendium packs
-        run: node ./automation/ldb-packager.mjs compile
+        run: npm install && node ./automation/ldb-packager.mjs compile
 
       - name: create system bundle
         run: zip uesrpg-bundle_${{ github.ref_name }}.zip -r . -x .git/\* .github/\* automation/\* .gitignore node_modules packs/src .editorconfig .gitattributes package.json package-lock.json
