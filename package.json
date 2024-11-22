@@ -16,5 +16,8 @@
   "bugs": {
     "url": "https://github.com/jamesjtb/uesrpg-3ev4/issues"
   },
-  "homepage": "https://github.com/jamesjtb/uesrpg-3ev4#readme"
+  "homepage": "https://github.com/jamesjtb/uesrpg-3ev4#readme",
+  "dependencies": {
+    "@foundryvtt/foundryvtt-cli": "^1.0.3"
+  }
 }
