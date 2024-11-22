@@ -34,7 +34,7 @@ jobs:
         run: npm install && node ./automation/ldb-packager.mjs compile
 
       - name: create system bundle
-        run: zip uesrpg-bundle_${{ github.ref_name }}.zip -r . -x .git/\* .github/\* automation/\* .gitignore node_modules packs/src .editorconfig .gitattributes package.json package-lock.json
+        run: zip uesrpg-bundle_${{ github.ref_name }}.zip -r . -x .git/\* .github/\* automation/\* .gitignore node_modules packs/src\* .editorconfig .gitattributes package.json package-lock.json
 
       - name: upload system bundle
         run: gh release upload "$tag" uesrpg-bundle_${{ github.ref_name }}.zip
