@@ -18,7 +18,7 @@ jobs:
     steps:
       - name: create release
         run:
-          echo "creating release for tag $tag" && 
+          echo "creating release for tag $tag" &&
           gh release create "$tag" --repo="$GITHUB_REPOSITORY" --title="$tag" --generate-notes
 
       - name: checkout repo
@@ -26,24 +26,24 @@ jobs:
 
       - name: get system compatibility
         id: foundry_compatibility
-        run: > 
+        run: >
           node ./automation/echo-compatibility-version minimum >> $GITHUB_OUTPUT &&
           node ./automation/echo-compatibility-version verified >> $GITHUB_OUTPUT
 
-      - name: release to foundry
-        run: > 
-          curl -X POST https://api.foundryvtt.com/_api/packages/release_version/
-            -H 'Content-Type: application/json'
-            -H 'Authorization: ${{ secrets.FOUNDRY_RELEASE_TOKEN }}'
-            -d '{
-                  "release": {
-                  "version": "${{ github.ref_name }}",
-                  "manifest": "https://raw.githubusercontent.com/jamesjtb/uesrpg-3ev4/refs/tags/${{ github.ref_name }}/system.json",
-                  "notes": "https://github.com/jamesjtb/uesrpg-3ev4/releases/tag/${{ github.ref_name }}",
-                  "compatibility": {
-                    "minimum": "${{ steps.foundry_compatibility.outputs.minimum }}",
-                    "verified": "${{ steps.foundry_compatibility.outputs.verified }}",
-                    "maximum": ""
-                  }
-                }
-              }'
+      # - name: release to foundry
+      #   run: >
+      #     curl -X POST https://api.foundryvtt.com/_api/packages/release_version/
+      #       -H 'Content-Type: application/json'
+      #       -H 'Authorization: ${{ secrets.FOUNDRY_RELEASE_TOKEN }}'
+      #       -d '{
+      #             "release": {
+      #             "version": "${{ github.ref_name }}",
+      #             "manifest": "https://raw.githubusercontent.com/jamesjtb/uesrpg-3ev4/refs/tags/${{ github.ref_name }}/system.json",
+      #             "notes": "https://github.com/jamesjtb/uesrpg-3ev4/releases/tag/${{ github.ref_name }}",
+      #             "compatibility": {
+      #               "minimum": "${{ steps.foundry_compatibility.outputs.minimum }}",
+      #               "verified": "${{ steps.foundry_compatibility.outputs.verified }}",
+      #               "maximum": ""
+      #             }
+      #           }
+      #         }'

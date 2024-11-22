@@ -4,3 +4,4 @@ LOG*
 *.log
 *.ldb
 MANIFEST*
+node_modules
