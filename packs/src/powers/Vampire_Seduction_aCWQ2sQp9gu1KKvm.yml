@@ -1,0 +1,81 @@
+name: Vampire Seduction
+type: power
+flags: {}
+img: systems/uesrpg-3ev4/images/Icons/bigWords.webp
+effects: []
+_id: aCWQ2sQp9gu1KKvm
+_stats:
+  coreVersion: '12.331'
+  systemId: null
+  systemVersion: null
+  createdTime: null
+  modifiedTime: null
+  lastModifiedBy: null
+  compendiumSource: null
+  duplicateSource: null
+ownership:
+  default: 0
+  inSimu0FutxmlwqN: 3
+system:
+  mpBonus: 0
+  hpBonus: 0
+  spBonus: 0
+  lpBonus: 0
+  wtBonus: 0
+  iniBonus: 0
+  speedBonus: 0
+  flyBonus: 0
+  swimBonus: 0
+  diseaseR: 0
+  fireR: 0
+  frostR: 0
+  shockR: 0
+  poisonR: 0
+  magicR: 0
+  natToughnessR: 0
+  silverR: 0
+  sunlightR: 0
+  characteristics:
+    none: None
+    str: STR
+    end: END
+    agi: AGI
+    int: INT
+    wp: WP
+    prc: PRC
+    prs: PRS
+    lck: LCK
+  characteristicBonus:
+    strChaBonus: 0
+    endChaBonus: 0
+    agiChaBonus: 0
+    intChaBonus: 0
+    wpChaBonus: 0
+    prcChaBonus: 0
+    prsChaBonus: 0
+    lckChaBonus: 0
+  skillArray: []
+  description: >-
+    <p><strong>(Vampire, 1 AP): </strong>Target within 1m must make a Willpower
+    +20 test or be Charmed by this character for 3 rounds when in combat.
+    Outside of combat, this effect lasts for 3 hours. A Charmed character loses
+    the will to fight. While charmed, the target becomes exceptionally docile
+    towards the vampire. This ability can be used 1 time per Long Rest.</p>
+  dailyUse: false
+  source: Vampirism
+  shiftForm: false
+  shiftFormStyle: shiftFormNone
+  shiftStyles:
+    shiftFormNone: Regular Form
+    shiftFormVampireLord: Vampire Lord
+    shiftFormWereWolf: Werewolf
+    shiftFormWereBat: Werebat
+    shiftFormWereBoar: Wereboar
+    shiftFormWereBear: Werebear
+    shiftFormWereCrocodile: Werecrocodile
+    shiftFormWereVulture: Werevulture
+    shiftFormWereLion: Werelion
+folder: null
+sort: 0
+_key: '!items!aCWQ2sQp9gu1KKvm'
+

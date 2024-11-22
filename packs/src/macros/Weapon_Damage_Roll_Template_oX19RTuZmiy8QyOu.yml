@@ -1,0 +1,116 @@
+_id: oX19RTuZmiy8QyOu
+name: Weapon Damage Roll Template
+type: script
+author: KoTybT0dunV5wS6T
+img: icons/weapons/axes/axe-battle-black.webp
+scope: global
+command: >-
+  // Change "Your Weapon" to any weapon name from your character sheet's
+  "Combat" tab (Leave the quotes in)
+
+
+  const weapon_name = "Your Weapon"
+
+
+  // DO NOT EDIT BELOW THIS LINE (Unless you want to)
+
+
+  const weapon_data = token.actor.items.find((item) => item.name ===
+  weapon_name)
+
+
+  const weapon_damage = weapon_data._data.data.damage
+
+  const weapon_damage2 = weapon_data._data.data.damage2
+
+  const superior = weapon_data._data.data.superior
+
+  const twoHand = weapon_data._data.data.weapon2H
+
+  const weapon_qualities = weapon_data._data.data.qualities
+
+
+  let hit_loc = "";
+
+      let hit = new Roll("1d10");
+      hit.roll();
+
+      if (hit.total <= 5) {
+        hit_loc = "Body"
+      } else if (hit.total == 6) {
+        hit_loc = "Right Leg"
+      } else if (hit.total == 7) {
+        hit_loc = "Left Leg"
+      } else if (hit.total == 8) {
+        hit_loc = "Right Arm"
+      } else if (hit.total == 9) {
+        hit_loc = "Left Arm"
+      } else if (hit.total == 10) {
+        hit_loc = "Head"
+      }
+
+      let roll = new Roll(weapon_damage);
+      let supRoll = new Roll(weapon_damage);
+      let roll2H = new Roll(weapon_damage2);
+      let supRoll2H = new Roll(weapon_damage2);
+      roll.roll();
+      supRoll.roll();
+      roll2H.roll();
+      supRoll2H.roll();
+
+      if (twoHand === true) {
+        if (superior === true) {
+          const content = `Rolls damage for their <b>${weapon_name}!</b>
+            <p></p>
+            <b>Damage:</b> <b> [[${roll2H.total}]] [[${supRoll2H.total}]]</b> ${roll2H._formula}<p></p>
+            <b>Hit Location:</b> <b> [[${hit.total}]] </b> ${hit_loc}<p></p>
+            <b>Qualities:</b> ${weapon_qualities}`
+            roll.toMessage({ user: game.user._id, speaker: ChatMessage.getSpeaker(), content: content});
+
+        } else {
+            const content = `Rolls damage for their <b>${weapon_name}!</b>
+              <p></p>
+              <b>Damage:</b> <b> [[${roll2H.total}]]</b> ${roll2H._formula}<p></p>
+              <b>Hit Location:</b> <b> [[${hit.total}]] </b> ${hit_loc}<p></p>
+              <b>Qualities:</b> ${weapon_qualities}`
+              roll.toMessage({ user: game.user._id, speaker: ChatMessage.getSpeaker(), content: content});
+          }
+
+      } else {
+          if (superior == true) {
+            const content = `Rolls damage for their <b>${weapon_name}!</b>
+              <p></p>
+              <b>Damage:</b> <b> [[${roll.total}]] [[${supRoll.total}]]</b> ${roll._formula}<p></p>
+              <b>Hit Location:</b> <b> [[${hit.total}]] </b> ${hit_loc}<p></p>
+              <b>Qualities:</b> ${weapon_qualities}`
+              roll.toMessage({ user: game.user._id, speaker: ChatMessage.getSpeaker(), content: content});
+
+        } else {
+            const content = `Rolls damage for their <b>${weapon_name}!</b>
+              <p></p>
+              <b>Damage:</b> <b> [[${roll.total}]]</b> ${roll._formula}<p></p>
+              <b>Hit Location:</b> <b> [[${hit.total}]] </b> ${hit_loc}<p></p>
+              <b>Qualities:</b> ${weapon_qualities}`
+              roll.toMessage({ user: game.user._id, speaker: ChatMessage.getSpeaker(), content: content});
+            }
+          }
+folder: null
+sort: 0
+flags:
+  core:
+    sourceId: Macro.YMZU30GnDfBOaqrX
+_stats:
+  coreVersion: '12.331'
+  systemId: null
+  systemVersion: null
+  createdTime: null
+  modifiedTime: null
+  lastModifiedBy: null
+  compendiumSource: null
+  duplicateSource: null
+ownership:
+  default: 0
+  inSimu0FutxmlwqN: 3
+  KoTybT0dunV5wS6T: 3
+_key: '!macros!oX19RTuZmiy8QyOu'
+

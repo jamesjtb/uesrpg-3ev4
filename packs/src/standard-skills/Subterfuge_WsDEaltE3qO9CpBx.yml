@@ -1,0 +1,100 @@
+_id: WsDEaltE3qO9CpBx
+name: Subterfuge
+type: skill
+img: icons/skills/social/theft-pickpocket-bribery-brown.webp
+effects: []
+folder: null
+sort: 0
+flags:
+  core:
+    sourceId: Item.pXXlRpjJ9A5pF3A1
+_stats:
+  coreVersion: '12.331'
+  systemId: null
+  systemVersion: null
+  createdTime: null
+  modifiedTime: null
+  lastModifiedBy: null
+  compendiumSource: null
+  duplicateSource: null
+ownership:
+  default: 0
+  zrZomzLbu6XsebKn: 3
+system:
+  characteristics:
+    none: None
+    str: STR
+    end: END
+    agi: AGI
+    int: INT
+    wp: WP
+    prc: PRC
+    prs: PRS
+    lck: LCK
+  characteristicBonus:
+    strChaBonus: 0
+    endChaBonus: 0
+    agiChaBonus: 0
+    intChaBonus: 0
+    wpChaBonus: 0
+    prcChaBonus: 0
+    prsChaBonus: 0
+    lckChaBonus: 0
+  skillRanks:
+    untrained: Untrained
+    novice: (0) Novice
+    apprentice: (1) Apprentice
+    journeyman: (2) Journeyman
+    adept: (3) Adept
+    expert: (4) Expert
+    master: (5) Master
+  value: 0
+  rank: untrained
+  bonus: 0
+  miscValue: 0
+  specialization: ''
+  description: >-
+    <p><em>Example Specializations: Lockpicking, Sleight of Hand, Traps</em></p>
+
+    <p>The Subterfuge skill is a measure of the character&rsquo;s ability to use
+    artifice, guile, and manual dexterity to circumvent normal limits and
+    restrictions. Your GM may ask you to test Subterfuge when you try to
+    accomplish tasks like the following...</p>
+
+    <ul>
+
+    <li>Disguising yourself as someone else</li>
+
+    <li>Picking a lock on a door</li>
+
+    <li>Palming a small object unnoticed</li>
+
+    <li>Disarming a trap</li>
+
+    </ul>
+  baseCha: agi
+  governingCha: AGI, INT, PRS
+  trainedItems: ''
+  data:
+    description: >-
+      <p><em>Example Specializations: Lockpicking, Sleight of Hand,
+      Traps</em></p>
+
+      <p>The Subterfuge skill is a measure of the character&rsquo;s ability to
+      use artifice, guile, and manual dexterity to circumvent normal limits and
+      restrictions. Your GM may ask you to test Subterfuge when you try to
+      accomplish tasks like the following...</p>
+
+      <ul>
+
+      <li>Disguising yourself as someone else</li>
+
+      <li>Picking a lock on a door</li>
+
+      <li>Palming a small object unnoticed</li>
+
+      <li>Disarming a trap</li>
+
+      </ul>
+_key: '!items!WsDEaltE3qO9CpBx'
+

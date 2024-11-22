@@ -1,0 +1,93 @@
+_id: O03dQJZCtowesg6e
+name: Grandmaster (Skill)
+type: talent
+flags:
+  core:
+    sourceId: Item.DYVazRNO2caSDMGE
+img: systems/uesrpg-3ev4/images/Icons/expert.webp
+effects: []
+_stats:
+  coreVersion: '12.331'
+  systemId: null
+  systemVersion: null
+  createdTime: null
+  modifiedTime: null
+  lastModifiedBy: null
+  compendiumSource: null
+  duplicateSource: null
+ownership:
+  default: 0
+  xvA5SwRGJiyPsnxH: 3
+system:
+  mpBonus: 0
+  hpBonus: 0
+  spBonus: 0
+  lpBonus: 0
+  wtBonus: 0
+  iniBonus: 0
+  speedBonus: 0
+  flyBonus: 0
+  swimBonus: 0
+  diseaseR: 0
+  fireR: 0
+  frostR: 0
+  shockR: 0
+  poisonR: 0
+  magicR: 0
+  natToughnessR: 0
+  silverR: 0
+  sunlightR: 0
+  replace:
+    ini:
+      iniToggle: false
+      value: 0
+      characteristic: null
+    wt:
+      wtToggle: false
+      value: 0
+      characteristic: null
+  characteristics:
+    none: None
+    str: STR
+    end: END
+    agi: AGI
+    int: INT
+    wp: WP
+    prc: PRC
+    prs: PRS
+    lck: LCK
+  characteristicBonus:
+    strChaBonus: 0
+    endChaBonus: 0
+    agiChaBonus: 0
+    intChaBonus: 0
+    wpChaBonus: 0
+    prcChaBonus: 0
+    prsChaBonus: 0
+    lckChaBonus: 0
+  skillArray: []
+  description: >-
+    <p>The character chooses one of their existing Master rank skills when they
+    purchase this talent. The character may reroll failed skill tests for that
+    skill (but only once per test). This talent can be purchased multiple times
+    for different skills. Does not stack with other talents that would allow
+    rerolls.</p>
+
+    <p>If this talent is taken with a spellcasting skill, then it increases the
+    effective skill rank from a +1 to a +2, which allows for the casting of
+    Grandmaster spells without penalty.</p>
+  xpCost: 800
+  level: 6
+  talentReq: ''
+  miscReq: Master in Chosen Skill
+  halfFatiguePenalty: false
+  halfWoundPenalty: false
+  untrainedException: false
+  fatigueException: false
+  addIntToMP: false
+  armorAcrobaticsException: false
+  addHalfSpeed: false
+folder: null
+sort: 0
+_key: '!items!O03dQJZCtowesg6e'
+

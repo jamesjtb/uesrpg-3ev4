@@ -1,0 +1,100 @@
+_id: EZuO9cRbZ12sdLCj
+name: Command
+type: skill
+img: icons/sundries/flags/banner-pink.webp
+effects: []
+folder: null
+sort: 0
+flags:
+  core:
+    sourceId: Item.pXXlRpjJ9A5pF3A1
+_stats:
+  coreVersion: '12.331'
+  systemId: null
+  systemVersion: null
+  createdTime: null
+  modifiedTime: null
+  lastModifiedBy: null
+  compendiumSource: null
+  duplicateSource: null
+ownership:
+  default: 0
+  zrZomzLbu6XsebKn: 3
+system:
+  characteristics:
+    none: None
+    str: STR
+    end: END
+    agi: AGI
+    int: INT
+    wp: WP
+    prc: PRC
+    prs: PRS
+    lck: LCK
+  characteristicBonus:
+    strChaBonus: 0
+    endChaBonus: 0
+    agiChaBonus: 0
+    intChaBonus: 0
+    wpChaBonus: 0
+    prcChaBonus: 0
+    prsChaBonus: 0
+    lckChaBonus: 0
+  skillRanks:
+    untrained: Untrained
+    novice: (0) Novice
+    apprentice: (1) Apprentice
+    journeyman: (2) Journeyman
+    adept: (3) Adept
+    expert: (4) Expert
+    master: (5) Master
+  value: 0
+  rank: untrained
+  bonus: 0
+  miscValue: 0
+  specialization: ''
+  description: >-
+    <p><em>Example Specializations: Battlefield Commander, Inspiration</em></p>
+
+    <p>Command measures a character&rsquo;s skill at coordinating allies,
+    inspiring them and, if necessary, instilling fear in order to motivate them.
+    Your GM may ask you to test Command when you try to accomplish tasks like
+    the following...</p>
+
+    <ul>
+
+    <li>Giving effective orders during a battle</li>
+
+    <li>Organizing civilians to defend their homes</li>
+
+    <li>Riling up a crowd with an inspiring speech</li>
+
+    <li>Convincing cowards to stand and fight</li>
+
+    </ul>
+  baseCha: str
+  governingCha: STR, INT, PRS
+  trainedItems: ''
+  data:
+    description: >-
+      <p><em>Example Specializations: Battlefield Commander,
+      Inspiration</em></p>
+
+      <p>Command measures a character&rsquo;s skill at coordinating allies,
+      inspiring them and, if necessary, instilling fear in order to motivate
+      them. Your GM may ask you to test Command when you try to accomplish tasks
+      like the following...</p>
+
+      <ul>
+
+      <li>Giving effective orders during a battle</li>
+
+      <li>Organizing civilians to defend their homes</li>
+
+      <li>Riling up a crowd with an inspiring speech</li>
+
+      <li>Convincing cowards to stand and fight</li>
+
+      </ul>
+_key: '!items!EZuO9cRbZ12sdLCj'
+

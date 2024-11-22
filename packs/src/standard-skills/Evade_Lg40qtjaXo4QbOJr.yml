@@ -1,0 +1,101 @@
+_id: Lg40qtjaXo4QbOJr
+name: Evade
+type: skill
+img: icons/skills/movement/feet-winged-boots-brown.webp
+effects: []
+folder: null
+sort: 0
+flags:
+  core:
+    sourceId: Item.pXXlRpjJ9A5pF3A1
+_stats:
+  coreVersion: '12.331'
+  systemId: null
+  systemVersion: null
+  createdTime: null
+  modifiedTime: null
+  lastModifiedBy: null
+  compendiumSource: null
+  duplicateSource: null
+ownership:
+  default: 0
+  zrZomzLbu6XsebKn: 3
+system:
+  characteristics:
+    none: None
+    str: STR
+    end: END
+    agi: AGI
+    int: INT
+    wp: WP
+    prc: PRC
+    prs: PRS
+    lck: LCK
+  characteristicBonus:
+    strChaBonus: 0
+    endChaBonus: 0
+    agiChaBonus: 0
+    intChaBonus: 0
+    wpChaBonus: 0
+    prcChaBonus: 0
+    prsChaBonus: 0
+    lckChaBonus: 0
+  skillRanks:
+    untrained: Untrained
+    novice: (0) Novice
+    apprentice: (1) Apprentice
+    journeyman: (2) Journeyman
+    adept: (3) Adept
+    expert: (4) Expert
+    master: (5) Master
+  value: 0
+  rank: untrained
+  bonus: 0
+  miscValue: 0
+  specialization: ''
+  description: >-
+    <p><em>Characters may not acquire specializations for this skill.</em></p>
+
+    <p>Evade measures a character&rsquo;s ability to escape from observed,
+    impending danger through the use of fluid movement and quick reaction times.
+    This skill is most often used to defend against attacks in combat, or to
+    avoid other physical dangers. Your GM may ask you to test Evade when you try
+    to accomplish tasks like the following...</p>
+
+    <ul>
+
+    <li>Duck beneath an incoming spell</li>
+
+    <li>Dodge a sword swing</li>
+
+    <li>Avoid falling debris</li>
+
+    <li>Stay out of reach of multiple attackers</li>
+
+    </ul>
+  baseCha: agi
+  governingCha: AGI
+  trainedItems: ''
+  data:
+    description: >-
+      <p><em>Characters may not acquire specializations for this skill.</em></p>
+
+      <p>Evade measures a character&rsquo;s ability to escape from observed,
+      impending danger through the use of fluid movement and quick reaction
+      times. This skill is most often used to defend against attacks in combat,
+      or to avoid other physical dangers. Your GM may ask you to test Evade when
+      you try to accomplish tasks like the following...</p>
+
+      <ul>
+
+      <li>Duck beneath an incoming spell</li>
+
+      <li>Dodge a sword swing</li>
+
+      <li>Avoid falling debris</li>
+
+      <li>Stay out of reach of multiple attackers</li>
+
+      </ul>
+_key: '!items!Lg40qtjaXo4QbOJr'
+
