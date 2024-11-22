@@ -30,6 +30,15 @@ jobs:
           node ./automation/echo-compatibility-version minimum >> $GITHUB_OUTPUT &&
           node ./automation/echo-compatibility-version verified >> $GITHUB_OUTPUT
 
+      - name: compile compendium packs
+        run: node ./automation/ldb-packager.js compile
+
+      - name: create system bundle
+        run: zip uesrpg-bundle_${{ github.ref_name }}.zip -r . -x .git/\* .github/\* automation/\* .gitignore node_modules packs/src .editorconfig .gitattributes package.json package-lock.json
+
+      - name: upload system bundle
+        run: gh release upload "$tag" uesrpg-bundle_${{ github.ref_name }}.zip
+
       # - name: release to foundry
       #   run: >
       #     curl -X POST https://api.foundryvtt.com/_api/packages/release_version/
