@@ -13,7 +13,7 @@
       "name": "roll-tables",
       "label": "Loot Tables",
       "system": "uesrpg-3ev4",
-      "path": "packs/roll-tables.db",
+      "path": "packs/roll-tables",
       "type": "RollTable",
       "private": false,
       "flags": {}
@@ -22,7 +22,7 @@
       "name": "macros",
       "label": "Macros",
       "system": "uesrpg-3ev4",
-      "path": "packs/macros.db",
+      "path": "packs/macros",
       "type": "Macro",
       "private": false,
       "flags": {}
@@ -31,7 +31,7 @@
       "name": "powers",
       "label": "Powers",
       "system": "uesrpg-3ev4",
-      "path": "packs/powers.db",
+      "path": "packs/powers",
       "type": "Item",
       "private": false,
       "flags": {}
@@ -40,7 +40,7 @@
       "name": "traits",
       "label": "Traits",
       "system": "uesrpg-3ev4",
-      "path": "packs/traits.db",
+      "path": "packs/traits",
       "type": "Item",
       "private": false,
       "flags": {}
@@ -49,7 +49,7 @@
       "name": "talents",
       "label": "Talents",
       "system": "uesrpg-3ev4",
-      "path": "packs/talents.db",
+      "path": "packs/talents",
       "type": "Item",
       "private": false,
       "flags": {}
@@ -58,7 +58,7 @@
       "name": "standard-skills",
       "label": "Standard Skills",
       "system": "uesrpg-3ev4",
-      "path": "packs/standard-skills.db",
+      "path": "packs/standard-skills",
       "type": "Item",
       "private": false,
       "flags": {}
@@ -67,7 +67,7 @@
       "name": "signs",
       "label": "Birth Signs",
       "system": "uesrpg-3ev4",
-      "path": "packs/signs.db",
+      "path": "packs/signs",
       "type": "Item",
       "private": false,
       "flags": {}
