@@ -41,18 +41,18 @@ jobs:
 
       - name: release to foundry
         run: >
-          "curl -X POST https://api.foundryvtt.com/_api/packages/release_version/
-            -H 'Content-Type: application/json'
-            -H 'Authorization: ${{ secrets.FOUNDRY_RELEASE_TOKEN }}'
-            -d '{
-                  "release": {
-                  "version": "${{ github.ref_name }}",
-                  "manifest": "https://raw.githubusercontent.com/jamesjtb/uesrpg-3ev4/refs/tags/${{ github.ref_name }}/system.json",
-                  "notes": "https://github.com/jamesjtb/uesrpg-3ev4/releases/tag/${{ github.ref_name }}",
-                  "compatibility": {
-                    "minimum": "${{ steps.foundry_compatibility.outputs.minimum }}",
-                    "verified": "${{ steps.foundry_compatibility.outputs.verified }}",
-                    "maximum": ""
-                  }
-                }
-              }'"
+          "curl -X POST https://api.foundryvtt.com/_api/packages/release_version/\
+            -H 'Content-Type: application/json'\
+            -H 'Authorization: ${{ secrets.FOUNDRY_RELEASE_TOKEN }}'\
+            -d '{\
+                  "release": {\
+                  "version": "${{ github.ref_name }}",\
+                  "manifest": "https://raw.githubusercontent.com/jamesjtb/uesrpg-3ev4/refs/tags/${{ github.ref_name }}/system.json",\
+                  "notes": "https://github.com/jamesjtb/uesrpg-3ev4/releases/tag/${{ github.ref_name }}",\
+                  "compatibility": {\
+                    "minimum": "${{ steps.foundry_compatibility.outputs.minimum }}",\
+                    "verified": "${{ steps.foundry_compatibility.outputs.verified }}",\
+                    "maximum": ""\
+                  }\
+                }\
+            }'"
