@@ -1,0 +1,2091 @@
+name: Dragon Priest
+type: npc
+img: icons/svg/cowled.svg
+items:
+  - _id: MauMtoxNaREc2SnF
+    name: Consume Thralls
+    type: power
+    sort: 100000
+    flags:
+      core:
+        sourceId: Item.MyWjMeVAtBCJa8Bt
+    img: systems/uesrpg-d100/images/Icons/masterOfTheHordes.webp
+    effects: []
+    folder: null
+    _stats:
+      compendiumSource: null
+      duplicateSource: null
+      coreVersion: '12.331'
+      systemId: uesrpg-3ev4
+      systemVersion: v1.0.0-RC.59
+      createdTime: null
+      modifiedTime: null
+      lastModifiedBy: null
+    ownership:
+      default: 0
+    system:
+      mpBonus: 0
+      hpBonus: 0
+      spBonus: 0
+      lpBonus: 0
+      wtBonus: 0
+      iniBonus: 0
+      speedBonus: 0
+      flyBonus: 0
+      swimBonus: 0
+      diseaseR: 0
+      fireR: 0
+      frostR: 0
+      shockR: 0
+      poisonR: 0
+      magicR: 0
+      natToughnessR: 0
+      silverR: 0
+      sunlightR: 0
+      characteristics:
+        none: None
+        str: STR
+        end: END
+        agi: AGI
+        int: INT
+        wp: WP
+        prc: PRC
+        prs: PRS
+        lck: LCK
+      characteristicBonus:
+        strChaBonus: 0
+        endChaBonus: 0
+        agiChaBonus: 0
+        intChaBonus: 0
+        wpChaBonus: 0
+        prcChaBonus: 0
+        prsChaBonus: 0
+        lckChaBonus: 0
+      skillArray: []
+      description: >-
+        <p><strong>Cost:</strong> 1 SP</p>
+
+        <p>On this character's turn, it can consume the life of any nearby
+        thralls/allies it chooses within 30m. The consumed characters
+        immediately die and are unable to be revivified because they are
+        stripped of their essence.&nbsp;</p>
+
+        <p>The characer then gains temporary HP equal to the total remaining HP
+        of the thralls/allies he consumed that last until they are depleted or
+        until the end of the combat encounter.</p>
+      dailyUse: false
+      source: ''
+      shiftForm: false
+      shiftFormStyle: ''
+      shiftStyles:
+        shiftFormNone: Regular Form
+        shiftFormVampireLord: Vampire Lord
+        shiftFormWereWolf: Werewolf
+        shiftFormWereBat: Werebat
+        shiftFormWereBoar: Wereboar
+        shiftFormWereBear: Werebear
+        shiftFormWereCrocodile: Werecrocodile
+        shiftFormWereVulture: Werevulture
+        shiftFormWereLion: Werelion
+    _key: '!actors.items!ZFeldzF3may2Qk6o.MauMtoxNaREc2SnF'
+  - _id: SPmw2BN5NBYcm24k
+    name: Bend Reality
+    type: trait
+    sort: 200000
+    flags:
+      core:
+        sourceId: Item.Hx4NHRgycp4DR0cQ
+    img: systems/uesrpg-d100/images/Icons/bendReality.webp
+    effects: []
+    folder: null
+    _stats:
+      compendiumSource: null
+      duplicateSource: null
+      coreVersion: '12.331'
+      systemId: uesrpg-3ev4
+      systemVersion: v1.0.0-RC.59
+      createdTime: null
+      modifiedTime: null
+      lastModifiedBy: null
+    ownership:
+      default: 0
+    system:
+      mpBonus: 0
+      hpBonus: 0
+      spBonus: 0
+      lpBonus: 0
+      wtBonus: 0
+      iniBonus: 0
+      speedBonus: 0
+      flyBonus: 0
+      swimBonus: 0
+      diseaseR: 0
+      fireR: 0
+      frostR: 0
+      shockR: 0
+      poisonR: 0
+      magicR: 0
+      natToughnessR: 0
+      silverR: 0
+      sunlightR: 0
+      replace:
+        ini:
+          iniToggle: false
+          value: 0
+          characteristic: ''
+        wt:
+          wtToggle: false
+          value: 0
+          characteristic: ''
+      characteristics:
+        none: None
+        str: STR
+        end: END
+        agi: AGI
+        int: INT
+        wp: WP
+        prc: PRC
+        prs: PRS
+        lck: LCK
+      characteristicBonus:
+        strChaBonus: 0
+        endChaBonus: 0
+        agiChaBonus: 0
+        intChaBonus: 0
+        wpChaBonus: 0
+        prcChaBonus: 0
+        prsChaBonus: 0
+        lckChaBonus: 0
+      skillArray: []
+      description: <p>This character can test Magic instead of Physical.</p>
+      halfSpeed: false
+      addHalfSpeed: false
+      halfFatiguePenalty: false
+      mechanical: false
+      crpCost: 0
+      halfWoundPenalty: false
+      painIntolerant: false
+    _key: '!actors.items!ZFeldzF3may2Qk6o.SPmw2BN5NBYcm24k'
+  - _id: 5WR5tXThLADCH4MM
+    name: Lord of Sorcery
+    type: trait
+    sort: 300000
+    flags:
+      core:
+        sourceId: Item.Hx4NHRgycp4DR0cQ
+    img: systems/uesrpg-d100/images/Icons/questioning.webp
+    effects: []
+    folder: null
+    _stats:
+      compendiumSource: null
+      duplicateSource: null
+      coreVersion: '12.331'
+      systemId: uesrpg-3ev4
+      systemVersion: v1.0.0-RC.59
+      createdTime: null
+      modifiedTime: null
+      lastModifiedBy: null
+    ownership:
+      default: 0
+    system:
+      mpBonus: 0
+      hpBonus: 0
+      spBonus: 0
+      lpBonus: 0
+      wtBonus: 0
+      iniBonus: 0
+      speedBonus: 0
+      flyBonus: 0
+      swimBonus: 0
+      diseaseR: 0
+      fireR: 0
+      frostR: 0
+      shockR: 0
+      poisonR: 0
+      magicR: 0
+      natToughnessR: 0
+      silverR: 0
+      sunlightR: 0
+      replace:
+        ini:
+          iniToggle: false
+          value: 0
+          characteristic: ''
+        wt:
+          wtToggle: false
+          value: 0
+          characteristic: ''
+      characteristics:
+        none: None
+        str: STR
+        end: END
+        agi: AGI
+        int: INT
+        wp: WP
+        prc: PRC
+        prs: PRS
+        lck: LCK
+      characteristicBonus:
+        strChaBonus: 0
+        endChaBonus: 0
+        agiChaBonus: 0
+        intChaBonus: 0
+        wpChaBonus: 0
+        prcChaBonus: 0
+        prsChaBonus: 0
+        lckChaBonus: 0
+      skillArray: []
+      description: >-
+        <p>This character's spells never backfire and they can cast spells at
+        any level without penalty.</p>
+      halfSpeed: false
+      addHalfSpeed: false
+      halfFatiguePenalty: false
+      mechanical: false
+      crpCost: 0
+      halfWoundPenalty: false
+      painIntolerant: false
+    _key: '!actors.items!ZFeldzF3may2Qk6o.5WR5tXThLADCH4MM'
+  - _id: 1vvpQxhYoNxeobWd
+    name: Resistance (Frost, 3)
+    type: trait
+    sort: 400000
+    flags:
+      core:
+        sourceId: Item.wtEFksGPcojtDLTj
+    img: systems/uesrpg-d100/images/Icons/cryomancer.webp
+    effects: []
+    folder: null
+    _stats:
+      compendiumSource: null
+      duplicateSource: null
+      coreVersion: '12.331'
+      systemId: uesrpg-3ev4
+      systemVersion: v1.0.0-RC.59
+      createdTime: null
+      modifiedTime: null
+      lastModifiedBy: null
+    ownership:
+      default: 0
+    system:
+      mpBonus: 0
+      hpBonus: 0
+      spBonus: 0
+      lpBonus: 0
+      wtBonus: 0
+      iniBonus: 0
+      speedBonus: 0
+      flyBonus: 0
+      swimBonus: 0
+      diseaseR: 0
+      fireR: 0
+      frostR: 3
+      shockR: 0
+      poisonR: 0
+      magicR: 0
+      natToughnessR: 0
+      silverR: 0
+      sunlightR: 0
+      replace:
+        ini:
+          iniToggle: false
+          value: 0
+          characteristic: ''
+        wt:
+          wtToggle: false
+          value: 0
+          characteristic: ''
+      characteristics:
+        none: None
+        str: STR
+        end: END
+        agi: AGI
+        int: INT
+        wp: WP
+        prc: PRC
+        prs: PRS
+        lck: LCK
+      characteristicBonus:
+        strChaBonus: 0
+        endChaBonus: 0
+        agiChaBonus: 0
+        intChaBonus: 0
+        wpChaBonus: 0
+        prcChaBonus: 0
+        prsChaBonus: 0
+        lckChaBonus: 0
+      skillArray: []
+      description: >-
+        <p>Characters with this trait are resistant to a certain damage type.
+        They reduce damage of * type by X after any other mitigation, and gain a
+        +10 bonus per X to tests made to resist non-damaging effects of this
+        type. This trait can stack.</p>
+      halfSpeed: false
+      addHalfSpeed: false
+      halfFatiguePenalty: false
+      mechanical: false
+      crpCost: 0
+      halfWoundPenalty: false
+      painIntolerant: false
+    _key: '!actors.items!ZFeldzF3may2Qk6o.1vvpQxhYoNxeobWd'
+  - _id: lwLezF36nZPsNCr0
+    name: Resist Normal Weapons (3)
+    type: trait
+    sort: 500000
+    flags:
+      core:
+        sourceId: Item.wtEFksGPcojtDLTj
+    img: systems/uesrpg-d100/images/Icons/resistNormalWeapons.webp
+    effects: []
+    folder: null
+    _stats:
+      compendiumSource: null
+      duplicateSource: null
+      coreVersion: '12.331'
+      systemId: uesrpg-3ev4
+      systemVersion: v1.0.0-RC.59
+      createdTime: null
+      modifiedTime: null
+      lastModifiedBy: null
+    ownership:
+      default: 0
+    system:
+      mpBonus: 0
+      hpBonus: 0
+      spBonus: 0
+      lpBonus: 0
+      wtBonus: 0
+      iniBonus: 0
+      speedBonus: 0
+      flyBonus: 0
+      swimBonus: 0
+      diseaseR: 0
+      fireR: 0
+      frostR: 0
+      shockR: 0
+      poisonR: 0
+      magicR: 0
+      natToughnessR: 0
+      silverR: 0
+      sunlightR: 0
+      replace:
+        ini:
+          iniToggle: false
+          value: 0
+          characteristic: ''
+        wt:
+          wtToggle: false
+          value: 0
+          characteristic: ''
+      characteristics:
+        none: None
+        str: STR
+        end: END
+        agi: AGI
+        int: INT
+        wp: WP
+        prc: PRC
+        prs: PRS
+        lck: LCK
+      characteristicBonus:
+        strChaBonus: 0
+        endChaBonus: 0
+        agiChaBonus: 0
+        intChaBonus: 0
+        wpChaBonus: 0
+        prcChaBonus: 0
+        prsChaBonus: 0
+        lckChaBonus: 0
+      skillArray: []
+      description: >-
+        <p>Characters with this trait are resistant to mundane weapons. If the
+        character suffers damage from a weapon/attack without the Magic quality
+        reduce that damage by X after any other mitigation.</p>
+      halfSpeed: false
+      addHalfSpeed: false
+      halfFatiguePenalty: false
+      mechanical: false
+      crpCost: null
+      halfWoundPenalty: false
+      painIntolerant: false
+    _key: '!actors.items!ZFeldzF3may2Qk6o.lwLezF36nZPsNCr0'
+  - _id: mojXRuKxnrJAditj
+    name: Resistance (Magic, 3)
+    type: trait
+    sort: 600000
+    flags:
+      core:
+        sourceId: Item.wtEFksGPcojtDLTj
+    img: systems/uesrpg-d100/images/Icons/creative.webp
+    effects: []
+    folder: null
+    _stats:
+      compendiumSource: null
+      duplicateSource: null
+      coreVersion: '12.331'
+      systemId: uesrpg-3ev4
+      systemVersion: v1.0.0-RC.59
+      createdTime: null
+      modifiedTime: null
+      lastModifiedBy: null
+    ownership:
+      default: 0
+    system:
+      mpBonus: 0
+      hpBonus: 0
+      spBonus: 0
+      lpBonus: 0
+      wtBonus: 0
+      iniBonus: 0
+      speedBonus: 0
+      flyBonus: 0
+      swimBonus: 0
+      diseaseR: 0
+      fireR: 0
+      frostR: 0
+      shockR: 0
+      poisonR: 0
+      magicR: 3
+      natToughnessR: 0
+      silverR: 0
+      sunlightR: 0
+      replace:
+        ini:
+          iniToggle: false
+          value: 0
+          characteristic: ''
+        wt:
+          wtToggle: false
+          value: 0
+          characteristic: ''
+      characteristics:
+        none: None
+        str: STR
+        end: END
+        agi: AGI
+        int: INT
+        wp: WP
+        prc: PRC
+        prs: PRS
+        lck: LCK
+      characteristicBonus:
+        strChaBonus: 0
+        endChaBonus: 0
+        agiChaBonus: 0
+        intChaBonus: 0
+        wpChaBonus: 0
+        prcChaBonus: 0
+        prsChaBonus: 0
+        lckChaBonus: 0
+      skillArray: []
+      description: >-
+        <p>Characters with this trait are resistant to a certain damage type.
+        They reduce damage of * type by X after any other mitigation, and gain a
+        +10 bonus per X to tests made to resist non-damaging effects of this
+        type. This trait can stack.</p>
+      halfSpeed: false
+      addHalfSpeed: false
+      halfFatiguePenalty: false
+      mechanical: false
+      crpCost: 0
+      halfWoundPenalty: false
+      painIntolerant: false
+    _key: '!actors.items!ZFeldzF3may2Qk6o.mojXRuKxnrJAditj'
+  - _id: GvPPucuQFBjOJJKy
+    name: Undead
+    type: trait
+    sort: 700000
+    flags:
+      core:
+        sourceId: Item.wtEFksGPcojtDLTj
+    img: icons/commodities/bones/skull-white-purple.webp
+    effects: []
+    folder: null
+    _stats:
+      compendiumSource: null
+      duplicateSource: null
+      coreVersion: '12.331'
+      systemId: uesrpg-3ev4
+      systemVersion: v1.0.0-RC.59
+      createdTime: null
+      modifiedTime: null
+      lastModifiedBy: null
+    ownership:
+      default: 0
+    system:
+      mpBonus: 0
+      hpBonus: 0
+      spBonus: 0
+      lpBonus: 0
+      wtBonus: 0
+      iniBonus: 0
+      speedBonus: 0
+      flyBonus: 0
+      swimBonus: 0
+      diseaseR: 100
+      fireR: 0
+      frostR: 0
+      shockR: 0
+      poisonR: 100
+      magicR: 0
+      natToughnessR: 0
+      silverR: 0
+      sunlightR: 0
+      replace:
+        ini:
+          iniToggle: false
+          value: 0
+          characteristic: ''
+        wt:
+          wtToggle: false
+          value: 0
+          characteristic: ''
+      characteristics:
+        none: None
+        str: STR
+        end: END
+        agi: AGI
+        int: INT
+        wp: WP
+        prc: PRC
+        prs: PRS
+        lck: LCK
+      characteristicBonus:
+        strChaBonus: 0
+        endChaBonus: 0
+        agiChaBonus: 0
+        intChaBonus: 0
+        wpChaBonus: 0
+        prcChaBonus: 0
+        prsChaBonus: 0
+        lckChaBonus: 0
+      skillArray: []
+      description: >-
+        <p>Characters with this trait are mere walking corpses. They do not
+        breathe, or require organs or correct pressures to function. They are
+        immune to things such as disease, poison, passive wound effects, aging,
+        fatigue, and a number of conditions including but not limited to: dazed,
+        deafened, and organ damage. Use common sense when deciding what can and
+        cannot affect characters with this trait.</p>
+      halfSpeed: false
+      addHalfSpeed: false
+      halfFatiguePenalty: false
+      mechanical: false
+      crpCost: null
+      halfWoundPenalty: false
+      painIntolerant: false
+    _key: '!actors.items!ZFeldzF3may2Qk6o.GvPPucuQFBjOJJKy'
+  - _id: Mm51y2QRr5br9r6s
+    name: Imbued with Magicka
+    type: trait
+    sort: 100001
+    flags:
+      core:
+        sourceId: Item.ovcwuSIzO62mJKIO
+    img: systems/uesrpg-d100/images/Icons/magicalExertion.webp
+    effects: []
+    folder: null
+    _stats:
+      compendiumSource: null
+      duplicateSource: null
+      coreVersion: '12.331'
+      systemId: uesrpg-3ev4
+      systemVersion: v1.0.0-RC.59
+      createdTime: null
+      modifiedTime: null
+      lastModifiedBy: null
+    ownership:
+      default: 0
+    system:
+      mpBonus: 0
+      hpBonus: 0
+      spBonus: 0
+      lpBonus: 0
+      wtBonus: 0
+      iniBonus: 0
+      speedBonus: 0
+      flyBonus: 0
+      swimBonus: 0
+      diseaseR: 0
+      fireR: 0
+      frostR: 0
+      shockR: 0
+      poisonR: 0
+      magicR: 0
+      natToughnessR: 0
+      silverR: 0
+      sunlightR: 0
+      replace:
+        ini:
+          iniToggle: false
+          value: 0
+          characteristic: ''
+        wt:
+          wtToggle: false
+          value: 0
+          characteristic: ''
+      characteristics:
+        none: None
+        str: STR
+        end: END
+        agi: AGI
+        int: INT
+        wp: WP
+        prc: PRC
+        prs: PRS
+        lck: LCK
+      characteristicBonus:
+        strChaBonus: 0
+        endChaBonus: 0
+        agiChaBonus: 0
+        intChaBonus: 0
+        wpChaBonus: 0
+        prcChaBonus: 0
+        prsChaBonus: 0
+        lckChaBonus: 0
+      skillArray: []
+      description: >-
+        <p>This character does not spend Magicka to cast spells. Instead, they
+        may cast spells for free.</p>
+      halfSpeed: false
+      addHalfSpeed: false
+      halfFatiguePenalty: false
+      mechanical: false
+      crpCost: 0
+      halfWoundPenalty: false
+      painIntolerant: false
+    _key: '!actors.items!ZFeldzF3may2Qk6o.Mm51y2QRr5br9r6s'
+  - _id: kvYusHMeRTWquL5e
+    name: Master of the Voice
+    type: trait
+    sort: 100001
+    flags:
+      core:
+        sourceId: Item.ovcwuSIzO62mJKIO
+    img: systems/uesrpg-d100/images/Icons/magicalExertion.webp
+    effects: []
+    folder: null
+    _stats:
+      compendiumSource: null
+      duplicateSource: null
+      coreVersion: '12.331'
+      systemId: uesrpg-3ev4
+      systemVersion: v1.0.0-RC.59
+      createdTime: null
+      modifiedTime: null
+      lastModifiedBy: null
+    ownership:
+      default: 0
+    system:
+      mpBonus: 0
+      hpBonus: 0
+      spBonus: 0
+      lpBonus: 0
+      wtBonus: 0
+      iniBonus: 0
+      speedBonus: 0
+      flyBonus: 0
+      swimBonus: 0
+      diseaseR: 0
+      fireR: 0
+      frostR: 0
+      shockR: 0
+      poisonR: 0
+      magicR: 0
+      natToughnessR: 0
+      silverR: 0
+      sunlightR: 0
+      replace:
+        ini:
+          iniToggle: false
+          value: 0
+          characteristic: ''
+        wt:
+          wtToggle: false
+          value: 0
+          characteristic: ''
+      characteristics:
+        none: None
+        str: STR
+        end: END
+        agi: AGI
+        int: INT
+        wp: WP
+        prc: PRC
+        prs: PRS
+        lck: LCK
+      characteristicBonus:
+        strChaBonus: 0
+        endChaBonus: 0
+        agiChaBonus: 0
+        intChaBonus: 0
+        wpChaBonus: 0
+        prcChaBonus: 0
+        prsChaBonus: 0
+        lckChaBonus: 0
+      skillArray: []
+      description: >-
+        <p>This character can use two word shouts without spending Stamina. They
+        may also test +0 Endurance to avoid spending Stamina on three word
+        shouts.</p>
+      halfSpeed: false
+      addHalfSpeed: false
+      halfFatiguePenalty: false
+      mechanical: false
+      crpCost: 0
+      halfWoundPenalty: false
+      painIntolerant: false
+    _key: '!actors.items!ZFeldzF3may2Qk6o.kvYusHMeRTWquL5e'
+  - _id: j0IfhEhcHh4vJ9jt
+    name: Dragon Priest Mask
+    type: armor
+    img: icons/equipment/head/mask-carved-wood-pink.webp
+    effects: []
+    folder: null
+    sort: 0
+    flags:
+      core:
+        sourceId: Item.bonkO89RqJjN4m5k
+    _stats:
+      compendiumSource: null
+      duplicateSource: null
+      coreVersion: '12.331'
+      systemId: uesrpg-3ev4
+      systemVersion: v1.0.0-RC.59
+      createdTime: null
+      modifiedTime: null
+      lastModifiedBy: null
+    ownership:
+      default: 0
+      eeXhsDlbzUBZOXZT: 3
+    system:
+      mpBonus: 0
+      hpBonus: 0
+      spBonus: 0
+      lpBonus: 0
+      wtBonus: 0
+      iniBonus: 0
+      speedBonus: 0
+      flyBonus: 0
+      swimBonus: 0
+      diseaseR: 0
+      fireR: 0
+      frostR: 0
+      shockR: 0
+      poisonR: 0
+      magicR: 0
+      natToughnessR: 0
+      silverR: 0
+      sunlightR: 0
+      characteristics:
+        none: None
+        str: STR
+        end: END
+        agi: AGI
+        int: INT
+        wp: WP
+        prc: PRC
+        prs: PRS
+        lck: LCK
+      characteristicBonus:
+        strChaBonus: 0
+        endChaBonus: 0
+        agiChaBonus: 0
+        intChaBonus: 0
+        wpChaBonus: 0
+        prcChaBonus: 0
+        prsChaBonus: 0
+        lckChaBonus: 0
+      replace:
+        ini:
+          iniToggle: false
+          value: 0
+          characteristic: ''
+        wt:
+          wtToggle: false
+          value: 0
+          characteristic: ''
+      skillArray: []
+      isPhysicalObject: true
+      containerStats:
+        contained: false
+        container_id: ''
+        container_name: ''
+      description: >-
+        <p><em>Treat as Full armor.&nbsp;</em></p>
+
+        <p><em>This mask should have a unique enchantment or effect to make the
+        Dragon Priest powerful, interesting, or thematic. GM's are encouraged to
+        design their own enchantments to suit their needs.</em></p>
+      quantity: 1
+      enc: 2
+      totalENC: 0
+      reach: ''
+      damage: ''
+      equipped: true
+      carried: true
+      hands: 0
+      price: 0
+      modPrice: 0
+      armor: 7
+      blockRating: 0
+      excludeENC: false
+      magic_ar: 7 Magic
+      enchant_level: 5
+      qualities: >-
+        @Compendium[uesrpg-revision.journal.aN3hsvyJGDAMPW2n]{Light},
+        @Compendium[uesrpg-revision.journal.m7HXbo12Aeel3Jlk]{Magic}
+      category: head
+      item_cat:
+        none: None
+        head: Helmet
+        l_arm: Left Gauntlet
+        r_arm: Right Gauntlet
+        l_leg: Left Leg
+        r_leg: Right Leg
+        body: Chestplate
+        shield: Shield
+      charge:
+        value: 0
+        max: 0
+        reduction: 1
+    _key: '!actors.items!ZFeldzF3may2Qk6o.j0IfhEhcHh4vJ9jt'
+  - _id: ECwSFHDiQZ0bzpCx
+    name: Dragon Priest Staff
+    type: weapon
+    img: icons/weapons/staves/staff-spiked.webp
+    effects: []
+    folder: null
+    sort: 0
+    flags:
+      core:
+        sourceId: Item.BNGDUeifTJZuA8sX
+    _stats:
+      compendiumSource: null
+      duplicateSource: null
+      coreVersion: '12.331'
+      systemId: uesrpg-3ev4
+      systemVersion: v1.0.0-RC.59
+      createdTime: null
+      modifiedTime: null
+      lastModifiedBy: null
+    ownership:
+      default: 0
+      eeXhsDlbzUBZOXZT: 3
+    system:
+      mpBonus: 0
+      hpBonus: 0
+      spBonus: 0
+      lpBonus: 0
+      wtBonus: 0
+      iniBonus: 0
+      speedBonus: 0
+      flyBonus: 0
+      swimBonus: 0
+      diseaseR: 0
+      fireR: 0
+      frostR: 0
+      shockR: 0
+      poisonR: 0
+      magicR: 0
+      natToughnessR: 0
+      silverR: 0
+      sunlightR: 0
+      characteristics:
+        none: None
+        str: STR
+        end: END
+        agi: AGI
+        int: INT
+        wp: WP
+        prc: PRC
+        prs: PRS
+        lck: LCK
+      characteristicBonus:
+        strChaBonus: 0
+        endChaBonus: 0
+        agiChaBonus: 0
+        intChaBonus: 0
+        wpChaBonus: 0
+        prcChaBonus: 0
+        prsChaBonus: 0
+        lckChaBonus: 0
+      replace:
+        ini:
+          iniToggle: false
+          value: 0
+          characteristic: ''
+        wt:
+          wtToggle: false
+          value: 0
+          characteristic: ''
+      skillArray: []
+      isPhysicalObject: true
+      containerStats:
+        contained: false
+        container_id: ''
+        container_name: ''
+      description: >-
+        <p><em>This weapon is infused with one of the following effects that may
+        be cast indefinitely for 0 Magicka and always succeeds with 1
+        DoS.&nbsp;</em></p>
+
+        <ul>
+
+        <li><strong><em>Frost Bolt III:</em></strong><em> Deals 1d8 Frost
+        damage</em></li>
+
+        <li><strong><em>Fire Bolt III:&nbsp;</em></strong><em>Deals 1d8 Fire
+        damage</em></li>
+
+        <li><strong><em>Shock Bolt III:</em></strong><em> Deals 1d8 Shock
+        damage</em></li>
+
+        </ul>
+      quantity: 1
+      enc: 4
+      totalENC: 0
+      reach: 2
+      damage: 1d6
+      damage2: 1d8
+      damage3: 0
+      weapon2H: false
+      equippped: false
+      carried: false
+      excludeENC: false
+      superior: false
+      hands: 0
+      price: 0
+      modPrice: 0
+      armor: 0
+      magic_ar: 0
+      enchant_level: 1
+      qualities: >-
+        @Compendium[uesrpg-revision.journal.21g3rtqdszsKc9jv]{Unwieldy},
+        @Compendium[uesrpg-revision.journal.H74ao7uTiZrIVyUW]{Focus},
+        @Compendium[uesrpg-revision.journal.6urnr7lIlWIINHiL]{Magic}
+      charge:
+        value: 0
+        max: 0
+        reduction: 1
+      item_cat:
+        none: None
+        weapon1: Weapon 1
+        weapon2: Weapon 2
+        weapon3: Weapon 3
+    _key: '!actors.items!ZFeldzF3may2Qk6o.ECwSFHDiQZ0bzpCx'
+  - _id: oo9j8YY1UpEr70C0
+    name: Full Dragon Priest Boot
+    type: armor
+    img: icons/equipment/feet/boots-plate-pointed.webp
+    effects: []
+    folder: null
+    sort: 0
+    flags:
+      core:
+        sourceId: Item.bonkO89RqJjN4m5k
+    _stats:
+      compendiumSource: null
+      duplicateSource: null
+      coreVersion: '12.331'
+      systemId: uesrpg-3ev4
+      systemVersion: v1.0.0-RC.59
+      createdTime: null
+      modifiedTime: null
+      lastModifiedBy: null
+    ownership:
+      default: 0
+      eeXhsDlbzUBZOXZT: 3
+    system:
+      mpBonus: 0
+      hpBonus: 0
+      spBonus: 0
+      lpBonus: 0
+      wtBonus: 0
+      iniBonus: 0
+      speedBonus: 0
+      flyBonus: 0
+      swimBonus: 0
+      diseaseR: 0
+      fireR: 0
+      frostR: 0
+      shockR: 0
+      poisonR: 0
+      magicR: 0
+      natToughnessR: 0
+      silverR: 0
+      sunlightR: 0
+      characteristics:
+        none: None
+        str: STR
+        end: END
+        agi: AGI
+        int: INT
+        wp: WP
+        prc: PRC
+        prs: PRS
+        lck: LCK
+      characteristicBonus:
+        strChaBonus: 0
+        endChaBonus: 0
+        agiChaBonus: 0
+        intChaBonus: 0
+        wpChaBonus: 0
+        prcChaBonus: 0
+        prsChaBonus: 0
+        lckChaBonus: 0
+      replace:
+        ini:
+          iniToggle: false
+          value: 0
+          characteristic: ''
+        wt:
+          wtToggle: false
+          value: 0
+          characteristic: ''
+      skillArray: []
+      isPhysicalObject: true
+      containerStats:
+        contained: false
+        container_id: ''
+        container_name: ''
+      description: <p><em>Partial armor covered in tattered heavy robes.</em></p>
+      quantity: 1
+      enc: 4
+      totalENC: 0
+      reach: ''
+      damage: ''
+      equipped: true
+      carried: true
+      hands: 0
+      price: 0
+      modPrice: 0
+      armor: 6
+      blockRating: 0
+      excludeENC: false
+      magic_ar: 6 Magic
+      enchant_level: 1
+      qualities: >-
+        @Compendium[uesrpg-revision.journal.2QEgtXVs9q5qjcOW]{Heavy},
+        @Compendium[uesrpg-revision.journal.m7HXbo12Aeel3Jlk]{Magic}
+      category: l_leg
+      item_cat:
+        none: None
+        head: Helmet
+        l_arm: Left Gauntlet
+        r_arm: Right Gauntlet
+        l_leg: Left Leg
+        r_leg: Right Leg
+        body: Chestplate
+        shield: Shield
+      charge:
+        value: 0
+        max: 0
+        reduction: 1
+    _key: '!actors.items!ZFeldzF3may2Qk6o.oo9j8YY1UpEr70C0'
+  - _id: PcN25XQIShy2Liq9
+    name: Full Dragon Priest Boot
+    type: armor
+    img: icons/equipment/feet/boots-plate-pointed.webp
+    effects: []
+    folder: null
+    sort: 0
+    flags:
+      core:
+        sourceId: Item.bonkO89RqJjN4m5k
+    _stats:
+      compendiumSource: null
+      duplicateSource: null
+      coreVersion: '12.331'
+      systemId: uesrpg-3ev4
+      systemVersion: v1.0.0-RC.59
+      createdTime: null
+      modifiedTime: null
+      lastModifiedBy: null
+    ownership:
+      default: 0
+      eeXhsDlbzUBZOXZT: 3
+    system:
+      mpBonus: 0
+      hpBonus: 0
+      spBonus: 0
+      lpBonus: 0
+      wtBonus: 0
+      iniBonus: 0
+      speedBonus: 0
+      flyBonus: 0
+      swimBonus: 0
+      diseaseR: 0
+      fireR: 0
+      frostR: 0
+      shockR: 0
+      poisonR: 0
+      magicR: 0
+      natToughnessR: 0
+      silverR: 0
+      sunlightR: 0
+      characteristics:
+        none: None
+        str: STR
+        end: END
+        agi: AGI
+        int: INT
+        wp: WP
+        prc: PRC
+        prs: PRS
+        lck: LCK
+      characteristicBonus:
+        strChaBonus: 0
+        endChaBonus: 0
+        agiChaBonus: 0
+        intChaBonus: 0
+        wpChaBonus: 0
+        prcChaBonus: 0
+        prsChaBonus: 0
+        lckChaBonus: 0
+      replace:
+        ini:
+          iniToggle: false
+          value: 0
+          characteristic: ''
+        wt:
+          wtToggle: false
+          value: 0
+          characteristic: ''
+      skillArray: []
+      isPhysicalObject: true
+      containerStats:
+        contained: false
+        container_id: ''
+        container_name: ''
+      description: <p><em>Partial armor covered in tattered heavy robes.</em></p>
+      quantity: 1
+      enc: 4
+      totalENC: 0
+      reach: ''
+      damage: ''
+      equipped: true
+      carried: true
+      hands: 0
+      price: 0
+      modPrice: 0
+      armor: 6
+      blockRating: 0
+      excludeENC: false
+      magic_ar: 6 Magic
+      enchant_level: 1
+      qualities: >-
+        @Compendium[uesrpg-revision.journal.2QEgtXVs9q5qjcOW]{Heavy},
+        @Compendium[uesrpg-revision.journal.m7HXbo12Aeel3Jlk]{Magic}
+      category: l_leg
+      item_cat:
+        none: None
+        head: Helmet
+        l_arm: Left Gauntlet
+        r_arm: Right Gauntlet
+        l_leg: Left Leg
+        r_leg: Right Leg
+        body: Chestplate
+        shield: Shield
+      charge:
+        value: 0
+        max: 0
+        reduction: 1
+    _key: '!actors.items!ZFeldzF3may2Qk6o.PcN25XQIShy2Liq9'
+  - _id: lgTDubLoFT5FOq34
+    name: Full Dragon Priest Gauntlet
+    type: armor
+    img: icons/equipment/hand/gauntlet-tooled-leather-grey.webp
+    effects: []
+    folder: null
+    sort: 0
+    flags:
+      core:
+        sourceId: Item.bonkO89RqJjN4m5k
+    _stats:
+      compendiumSource: null
+      duplicateSource: null
+      coreVersion: '12.331'
+      systemId: uesrpg-3ev4
+      systemVersion: v1.0.0-RC.59
+      createdTime: null
+      modifiedTime: null
+      lastModifiedBy: null
+    ownership:
+      default: 0
+      eeXhsDlbzUBZOXZT: 3
+    system:
+      mpBonus: 0
+      hpBonus: 0
+      spBonus: 0
+      lpBonus: 0
+      wtBonus: 0
+      iniBonus: 0
+      speedBonus: 0
+      flyBonus: 0
+      swimBonus: 0
+      diseaseR: 0
+      fireR: 0
+      frostR: 0
+      shockR: 0
+      poisonR: 0
+      magicR: 0
+      natToughnessR: 0
+      silverR: 0
+      sunlightR: 0
+      characteristics:
+        none: None
+        str: STR
+        end: END
+        agi: AGI
+        int: INT
+        wp: WP
+        prc: PRC
+        prs: PRS
+        lck: LCK
+      characteristicBonus:
+        strChaBonus: 0
+        endChaBonus: 0
+        agiChaBonus: 0
+        intChaBonus: 0
+        wpChaBonus: 0
+        prcChaBonus: 0
+        prsChaBonus: 0
+        lckChaBonus: 0
+      replace:
+        ini:
+          iniToggle: false
+          value: 0
+          characteristic: ''
+        wt:
+          wtToggle: false
+          value: 0
+          characteristic: ''
+      skillArray: []
+      isPhysicalObject: true
+      containerStats:
+        contained: false
+        container_id: ''
+        container_name: ''
+      description: <p><em>Partial armor covered in tattered heavy robes.</em></p>
+      quantity: 1
+      enc: 4
+      totalENC: 0
+      reach: ''
+      damage: ''
+      equipped: true
+      carried: true
+      hands: 0
+      price: 0
+      modPrice: 0
+      armor: 6
+      blockRating: 0
+      excludeENC: false
+      magic_ar: 6 Magic
+      enchant_level: 1
+      qualities: >-
+        @Compendium[uesrpg-revision.journal.2QEgtXVs9q5qjcOW]{Heavy},
+        @Compendium[uesrpg-revision.journal.m7HXbo12Aeel3Jlk]{Magic}
+      category: l_arm
+      item_cat:
+        none: None
+        head: Helmet
+        l_arm: Left Gauntlet
+        r_arm: Right Gauntlet
+        l_leg: Left Leg
+        r_leg: Right Leg
+        body: Chestplate
+        shield: Shield
+      charge:
+        value: 0
+        max: 0
+        reduction: 1
+    _key: '!actors.items!ZFeldzF3may2Qk6o.lgTDubLoFT5FOq34'
+  - _id: 3a3kcr3ZO32Rk8rQ
+    name: Full Dragon Priest Gauntlet
+    type: armor
+    img: icons/equipment/hand/gauntlet-tooled-leather-grey.webp
+    effects: []
+    folder: null
+    sort: 0
+    flags:
+      core:
+        sourceId: Item.bonkO89RqJjN4m5k
+    _stats:
+      compendiumSource: null
+      duplicateSource: null
+      coreVersion: '12.331'
+      systemId: uesrpg-3ev4
+      systemVersion: v1.0.0-RC.59
+      createdTime: null
+      modifiedTime: null
+      lastModifiedBy: null
+    ownership:
+      default: 0
+      eeXhsDlbzUBZOXZT: 3
+    system:
+      mpBonus: 0
+      hpBonus: 0
+      spBonus: 0
+      lpBonus: 0
+      wtBonus: 0
+      iniBonus: 0
+      speedBonus: 0
+      flyBonus: 0
+      swimBonus: 0
+      diseaseR: 0
+      fireR: 0
+      frostR: 0
+      shockR: 0
+      poisonR: 0
+      magicR: 0
+      natToughnessR: 0
+      silverR: 0
+      sunlightR: 0
+      characteristics:
+        none: None
+        str: STR
+        end: END
+        agi: AGI
+        int: INT
+        wp: WP
+        prc: PRC
+        prs: PRS
+        lck: LCK
+      characteristicBonus:
+        strChaBonus: 0
+        endChaBonus: 0
+        agiChaBonus: 0
+        intChaBonus: 0
+        wpChaBonus: 0
+        prcChaBonus: 0
+        prsChaBonus: 0
+        lckChaBonus: 0
+      replace:
+        ini:
+          iniToggle: false
+          value: 0
+          characteristic: ''
+        wt:
+          wtToggle: false
+          value: 0
+          characteristic: ''
+      skillArray: []
+      isPhysicalObject: true
+      containerStats:
+        contained: false
+        container_id: ''
+        container_name: ''
+      description: <p><em>Partial armor covered in tattered heavy robes.</em></p>
+      quantity: 1
+      enc: 4
+      totalENC: 0
+      reach: ''
+      damage: ''
+      equipped: true
+      carried: true
+      hands: 0
+      price: 0
+      modPrice: 0
+      armor: 6
+      blockRating: 0
+      excludeENC: false
+      magic_ar: 6 Magic
+      enchant_level: 1
+      qualities: >-
+        @Compendium[uesrpg-revision.journal.2QEgtXVs9q5qjcOW]{Heavy},
+        @Compendium[uesrpg-revision.journal.m7HXbo12Aeel3Jlk]{Magic}
+      category: l_arm
+      item_cat:
+        none: None
+        head: Helmet
+        l_arm: Left Gauntlet
+        r_arm: Right Gauntlet
+        l_leg: Left Leg
+        r_leg: Right Leg
+        body: Chestplate
+        shield: Shield
+      charge:
+        value: 0
+        max: 0
+        reduction: 1
+    _key: '!actors.items!ZFeldzF3may2Qk6o.3a3kcr3ZO32Rk8rQ'
+  - _id: MTWNPaJK5BqvhLLQ
+    name: Full Dragon Priest Robes
+    type: armor
+    img: icons/equipment/chest/breastplate-rivited-red.webp
+    effects: []
+    folder: null
+    sort: 0
+    flags:
+      core:
+        sourceId: Item.bonkO89RqJjN4m5k
+    _stats:
+      compendiumSource: null
+      duplicateSource: null
+      coreVersion: '12.331'
+      systemId: uesrpg-3ev4
+      systemVersion: v1.0.0-RC.59
+      createdTime: null
+      modifiedTime: null
+      lastModifiedBy: null
+    ownership:
+      default: 0
+      eeXhsDlbzUBZOXZT: 3
+    system:
+      mpBonus: 0
+      hpBonus: 0
+      spBonus: 0
+      lpBonus: 0
+      wtBonus: 0
+      iniBonus: 0
+      speedBonus: 0
+      flyBonus: 0
+      swimBonus: 0
+      diseaseR: 0
+      fireR: 0
+      frostR: 0
+      shockR: 0
+      poisonR: 0
+      magicR: 0
+      natToughnessR: 0
+      silverR: 0
+      sunlightR: 0
+      characteristics:
+        none: None
+        str: STR
+        end: END
+        agi: AGI
+        int: INT
+        wp: WP
+        prc: PRC
+        prs: PRS
+        lck: LCK
+      characteristicBonus:
+        strChaBonus: 0
+        endChaBonus: 0
+        agiChaBonus: 0
+        intChaBonus: 0
+        wpChaBonus: 0
+        prcChaBonus: 0
+        prsChaBonus: 0
+        lckChaBonus: 0
+      replace:
+        ini:
+          iniToggle: false
+          value: 0
+          characteristic: ''
+        wt:
+          wtToggle: false
+          value: 0
+          characteristic: ''
+      skillArray: []
+      isPhysicalObject: true
+      containerStats:
+        contained: false
+        container_id: ''
+        container_name: ''
+      description: <p><em>Partial armor covered in tattered heavy robes.</em></p>
+      quantity: 1
+      enc: 4
+      totalENC: 0
+      reach: ''
+      damage: ''
+      equipped: true
+      carried: true
+      hands: 0
+      price: 0
+      modPrice: 0
+      armor: 6
+      blockRating: 0
+      excludeENC: false
+      magic_ar: 6 Magic
+      enchant_level: 1
+      qualities: >-
+        @Compendium[uesrpg-revision.journal.2QEgtXVs9q5qjcOW]{Heavy},
+        @Compendium[uesrpg-revision.journal.m7HXbo12Aeel3Jlk]{Magic}
+      category: body
+      item_cat:
+        none: None
+        head: Helmet
+        l_arm: Left Gauntlet
+        r_arm: Right Gauntlet
+        l_leg: Left Leg
+        r_leg: Right Leg
+        body: Chestplate
+        shield: Shield
+      charge:
+        value: 0
+        max: 0
+        reduction: 1
+    _key: '!actors.items!ZFeldzF3may2Qk6o.MTWNPaJK5BqvhLLQ'
+effects: []
+folder: x2NylrVFQ3iBXUHB
+flags: {}
+_stats:
+  compendiumSource: null
+  duplicateSource: null
+  coreVersion: '12.331'
+  systemId: uesrpg-3ev4
+  systemVersion: v1.0.0-RC.59
+  createdTime: 1732339366537
+  modifiedTime: 1732339428995
+  lastModifiedBy: 7bDMesNjX54nzN9S
+ownership:
+  default: 0
+  WcwhQU1nz94WaD5n: 3
+  7bDMesNjX54nzN9S: 3
+system:
+  equippedWeapons:
+    primaryWeapon:
+      name: 'None: Right click to bind weapon'
+      img: icons/skills/melee/unarmed-punch-fist.webp
+      id: ''
+    secondaryWeapon:
+      name: 'None: Right click to bind weapon'
+      img: icons/skills/melee/unarmed-punch-fist.webp
+      id: ''
+  favorites:
+    '1':
+      name: Hotkey 1
+      img: icons/svg/combat.svg
+      id: ''
+      value: 0
+    '2':
+      name: Hotkey 2
+      img: icons/svg/combat.svg
+      id: ''
+      value: 0
+    '3':
+      name: Hotkey 3
+      img: icons/svg/combat.svg
+      id: ''
+      value: 0
+    '4':
+      name: Hotkey 4
+      img: icons/svg/combat.svg
+      id: ''
+      value: 0
+    '5':
+      name: Hotkey 5
+      img: icons/svg/combat.svg
+      id: ''
+      value: 0
+  race: Draugr, Leader, Undead
+  birthsign: ''
+  age: null
+  height: ''
+  weight: ''
+  elite_adv: ''
+  wounded: false
+  woundPenalty: 0
+  woundNotes: ''
+  bio: >-
+    <h2>Encountering Dragon Priests</h2>
+
+    <p>Dragon Priests are so diverse and characterful, it would be a disservice
+    to rigidly describe them here. Instead, it is up to GMs to develop their own
+    Dragon Priests, since if one is included it is likely going to be a major
+    villain for a campaign and deserves special attention.</p>
+
+    <p>Dragon Priests are both sorcerers, and Tongues, and combine the use of
+    profane magicks with the reality bending potency of the Thu'um. A Dragon
+    Priest, being a creature of the Merethic Era, knows as many Shouts as the GM
+    determines appropriate, up to the full power of the Shout. Additionally, a
+    Dragon Priest is equally proficient in all Schools of magic, and as a result
+    can take spells from any school. The GM is encouraged to create a creative
+    and powerful spell list, and really take advantage of the Imbued with
+    Magicka trait to really go crazy with spells. For example, while a Dragon
+    Priest does not innately have the Fly trait, because it is able to cast
+    without spending Magicka it can effectively have a level 7 Levitate at all
+    times.</p>
+
+    <p>A party needs to be prepared with sufficient antimagic, because a Dragon
+    Priest has no reason to hold back its awe-inspiring destructive powers,
+    because it is not confined to the mortal understandings of magic. Even if a
+    party somehow negates its sorceries, it still has a very powerful Thu'um to
+    reckon with.</p>
+
+    <h2>Dragon Priest Loot</h2>
+
+    <ul>
+
+    <li>GMs should consider the treasure a Dragon Priest has in his sanctum.
+    Additionally, they should design a unique enchantment for his Mask.</li>
+
+    </ul>
+  paperDoll: systems/uesrpg-3ev4/images/paperDoll_Male_Outline_White.png
+  soul_energy: '1200'
+  journal: ''
+  notes: ''
+  threat: deadlyGroup
+  threatCategory:
+    minorSolo: Minor Solo
+    minorGroup: Minor Group
+    majorSolo: Major Solo
+    majorGroup: Major Group
+    deadlySolo: Deadly Solo
+    deadlyGroup: Deadly Group
+    legendarySolo: Legendary Solo
+    legendaryGroup: Legendary Group
+  resistance:
+    fireR: 0
+    frostR: 3
+    shockR: 0
+    magicR: 3
+    poisonR: 100
+    diseaseR: 100
+    natToughness: 0
+    silverR: 0
+    sunlightR: 0
+  fatigue:
+    level: 0
+    penalty: 0
+    bonus: 0
+  lucky_numbers:
+    ln1: 1
+    ln2: 2
+    ln3: 3
+    ln4: 4
+    ln5: 5
+    ln6: 0
+    ln7: 0
+    ln8: 0
+    ln9: 0
+    ln10: 0
+  unlucky_numbers:
+    ul1: 0
+    ul2: 0
+    ul3: 0
+    ul4: 0
+    ul5: 0
+    ul6: 100
+  supply: 1d2
+  supply_cat:
+    1d2: 1d2
+    1d4: 1d4
+    1d6: 1d6
+    1d8: 1d8
+    1d10: 1d10
+  wealth: 0
+  current_enc: '26.0'
+  carry_rating:
+    current: 0
+    max: 26
+    bonus: 0
+    penalty: 0
+    label: Minimal
+  characteristics:
+    str:
+      value: 40
+      total: 40
+      base: 40
+      favored: false
+    end:
+      value: 55
+      total: 55
+      base: 55
+      favored: false
+    agi:
+      value: 40
+      total: 40
+      base: 40
+      favored: false
+    int:
+      value: 50
+      total: 50
+      base: 50
+      favored: false
+    wp:
+      value: 60
+      total: 60
+      base: 60
+      favored: false
+    prc:
+      value: 40
+      total: 40
+      base: 40
+      favored: false
+    prs:
+      value: 5
+      total: 5
+      base: 5
+      favored: false
+    lck:
+      value: 0
+      total: 0
+      base: 0
+      favored: false
+  professions:
+    combat: 60
+    magic: 90
+    evade: 50
+    observe: 60
+    stealth: 30
+    knowledge: 90
+    social: 5
+    physical: 40
+    commerce: 0
+    profession1: 0
+    profession2: 0
+    profession3: 0
+  professionsWound:
+    combat: 0
+    magic: 0
+    evade: 0
+    observe: 0
+    stealth: 0
+    knowledge: 0
+    social: 0
+    physical: 0
+    commerce: 0
+    profession1: 0
+    profession2: 0
+    profession3: 0
+  hp:
+    base: 28
+    value: 28
+    max: 28
+    temp: 0
+    bonus: 0
+  action_points:
+    value: 0
+    max: 3
+  luck_points:
+    value: 0
+    max: 0
+    bonus: 0
+  stamina:
+    value: 5
+    max: 5
+    bonus: 0
+  magicka:
+    value: 50
+    max: 50
+    bonus: 0
+  xp: 0
+  wound_threshold:
+    value: '15'
+    base: 15
+    bonus: 0
+  initiative:
+    value: '13'
+    base: 13
+    bonus: 0
+  speed:
+    value: '12'
+    base: 12
+    bonus: 0
+  size: puny
+  size_cat:
+    puny: Puny
+    tiny: Tiny
+    small: Small
+    standard: Standard
+    large: Large
+    huge: Huge
+    enormous: Enormous
+  skill_ranks:
+    untrained:
+      name: Untrained
+      rank: ''
+      bonus: ''
+      specialization: ''
+    novice:
+      name: ' (0) Novice'
+      rank: ''
+      bonus: ''
+      specialization: ''
+    apprentice:
+      name: (1) Apprentice
+      rank: ''
+      bonus: ''
+      specialization: ''
+    journeyman:
+      name: (2) Journeyman
+      rank: ''
+      bonus: ''
+      specialization: ''
+    adept:
+      name: (3) Adept
+      rank: ''
+      bonus: ''
+      specialization: ''
+    expert:
+      name: (4) Expert
+      rank: ''
+      bonus: ''
+      specialization: ''
+    master:
+      name: (5) Master
+      rank: ''
+      bonus: ''
+      specialization: ''
+  skills:
+    profession1:
+      rank: ''
+      bonus: 0
+      specialization: ''
+      characteristic: ''
+      tn: 0
+      name: ''
+    profession2:
+      rank: ''
+      bonus: 0
+      specialization: ''
+      characteristic: ''
+      tn: 0
+      name: ''
+    profession3:
+      rank: ''
+      bonus: 0
+      specialization: ''
+      characteristic: ''
+      tn: 0
+      name: ''
+    commerce:
+      bonus: 0
+      specialization: ''
+      characteristic: ''
+      tn: 0
+  talents: null
+  traits: ''
+  powers: ''
+  spells: ''
+  armor_class: none
+  armor_class_cat:
+    none: None
+    super_light: Super Light
+    light: Light
+    medium: Medium
+    heavy: Heavy
+    super_heavy: Super Heavy
+  storeName: ''
+  priceMod: 0
+  fatigueLevel: 0
+  weapons:
+    w1:
+      name: ''
+      dmg: ''
+      hands: ''
+      reach: ''
+      qualities: ''
+    w2:
+      name: ''
+      dmg: ''
+      hands: ''
+      reach: ''
+      qualities: ''
+    w3:
+      name: ''
+      dmg: ''
+      hands: ''
+      reach: ''
+      qualities: ''
+    w4:
+      name: ''
+      dmg: ''
+      hands: ''
+      reach: ''
+      qualities: ''
+    w5:
+      name: ''
+      dmg: ''
+      hands: ''
+      reach: ''
+      qualities: ''
+  prep_spells:
+    s1:
+      name: ''
+      dmg: ''
+      cost: ''
+      school: ''
+      form: ''
+      attributes: ''
+      level: ''
+    s2:
+      name: ''
+      dmg: ''
+      cost: ''
+      school: ''
+      form: ''
+      attributes: ''
+      level: ''
+    s3:
+      name: ''
+      dmg: ''
+      cost: ''
+      school: ''
+      form: ''
+      attributes: ''
+      level: ''
+    s4:
+      name: ''
+      dmg: ''
+      cost: ''
+      school: ''
+      form: ''
+      attributes: ''
+      level: ''
+    s5:
+      name: ''
+      dmg: ''
+      cost: ''
+      school: ''
+      form: ''
+      attributes: ''
+      level: ''
+    s6:
+      name: ''
+      dmg: ''
+      cost: ''
+      school: ''
+      form: ''
+      attributes: ''
+      level: ''
+    s7:
+      name: ''
+      dmg: ''
+      cost: ''
+      school: ''
+      form: ''
+      attributes: ''
+      level: ''
+  shield:
+    name: ''
+    br: ''
+    magic_br: ''
+    class: ''
+    qualities: ''
+  armor:
+    head:
+      name: ''
+      enc: 0
+      ar: 7
+      magic_ar: 7 Magic
+      class: ''
+    body:
+      name: ''
+      enc: 0
+      ar: 6
+      magic_ar: 6 Magic
+      class: ''
+    r_leg:
+      name: ''
+      enc: 0
+      ar: 6
+      magic_ar: 6 Magic
+      class: ''
+    l_leg:
+      name: ''
+      enc: 0
+      ar: 6
+      magic_ar: 6 Magic
+      class: ''
+    r_arm:
+      name: ''
+      enc: 0
+      ar: 6
+      magic_ar: 6 Magic
+      class: ''
+    l_arm:
+      name: ''
+      enc: 0
+      ar: 6
+      magic_ar: 6 Magic
+      class: ''
+prototypeToken:
+  flags:
+    token-hud-wildcard:
+      default: ''
+    token-auras:
+      aura1:
+        permission: all
+        colour: '#ffffff'
+        opacity: 0.5
+        distance: null
+        square: false
+      aura2:
+        permission: all
+        colour: '#ffffff'
+        opacity: 0.5
+        distance: null
+        square: false
+  name: Dragon Priest
+  displayName: 0
+  width: 1
+  height: 1
+  lockRotation: false
+  rotation: 0
+  actorLink: false
+  disposition: -1
+  displayBars: 20
+  bar1:
+    attribute: hp
+  bar2:
+    attribute: action_points
+  randomImg: false
+  alpha: 1
+  light:
+    dim: 0
+    bright: 0
+    angle: 360
+    color: null
+    alpha: 1
+    animation:
+      speed: 5
+      intensity: 5
+      type: null
+      reverse: false
+    negative: false
+    priority: 0
+    coloration: 1
+    attenuation: 0.5
+    luminosity: 0.5
+    saturation: 0
+    contrast: 0
+    shadows: 0
+    darkness:
+      min: 0
+      max: 1
+  texture:
+    src: icons/svg/cowled.svg
+    tint: '#ffffff'
+    scaleX: 1
+    scaleY: 1
+    anchorX: 0.5
+    anchorY: 0.5
+    offsetX: 0
+    offsetY: 0
+    fit: contain
+    rotation: 0
+    alphaThreshold: 0.75
+  sight:
+    angle: 360
+    enabled: true
+    range: 0
+    brightness: 1
+    visionMode: basic
+    color: null
+    attenuation: 0.1
+    saturation: 0
+    contrast: 0
+  appendNumber: false
+  prependAdjective: false
+  hexagonalShape: 0
+  detectionModes: []
+  occludable:
+    radius: 0
+  ring:
+    enabled: false
+    colors:
+      ring: null
+      background: null
+    effects: 1
+    subject:
+      scale: 1
+      texture: null
+_id: ZFeldzF3may2Qk6o
+sort: 2200000
+_key: '!actors!ZFeldzF3may2Qk6o'
+
