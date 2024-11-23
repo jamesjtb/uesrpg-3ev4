@@ -40,7 +40,7 @@ jobs:
         run: gh release upload "$tag" uesrpg-bundle_${{ github.ref_name }}.zip
 
       - name: release to foundry
-        run: >-
+        run: |
           curl -X POST https://api.foundryvtt.com/_api/packages/release_version/
             -H "Content-Type: application/json"
             -H "Authorization: ${{ secrets.FOUNDRY_RELEASE_TOKEN }}"
