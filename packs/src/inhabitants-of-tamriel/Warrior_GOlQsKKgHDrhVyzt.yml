@@ -9,7 +9,7 @@ items:
     flags:
       core:
         sourceId: Item.DYVazRNO2caSDMGE
-    img: systems/uesrpg-d100/images/Icons/brawler.webp
+    img: systems/uesrpg-3ev4/images/Icons/brawler.webp
     effects: []
     folder: null
     _stats:
@@ -93,7 +93,7 @@ items:
     flags:
       core:
         sourceId: Item.DYVazRNO2caSDMGE
-    img: systems/uesrpg-d100/images/Icons/armsMaster.webp
+    img: systems/uesrpg-3ev4/images/Icons/armsMaster.webp
     effects: []
     folder: null
     _stats:
@@ -177,7 +177,7 @@ items:
     flags:
       core:
         sourceId: Item.JX5ttPQSa94C9UKX
-    img: systems/uesrpg-d100/images/Icons/backToBack.webp
+    img: systems/uesrpg-3ev4/images/Icons/backToBack.webp
     effects: []
     folder: null
     _stats:

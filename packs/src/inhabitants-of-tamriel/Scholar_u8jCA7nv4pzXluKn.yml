@@ -9,7 +9,7 @@ items:
     flags:
       core:
         sourceId: Item.DYVazRNO2caSDMGE
-    img: systems/uesrpg-d100/images/Icons/bigWords.webp
+    img: systems/uesrpg-3ev4/images/Icons/bigWords.webp
     effects: []
     folder: null
     _stats:
@@ -93,7 +93,7 @@ items:
     flags:
       core:
         sourceId: Item.DYVazRNO2caSDMGE
-    img: systems/uesrpg-d100/images/Icons/attentionToDetail.webp
+    img: systems/uesrpg-3ev4/images/Icons/attentionToDetail.webp
     effects: []
     folder: null
     _stats:

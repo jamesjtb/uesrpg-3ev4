@@ -9,7 +9,7 @@ items:
     flags:
       core:
         sourceId: Item.MyWjMeVAtBCJa8Bt
-    img: systems/uesrpg-d100/images/Icons/lightProtects.webp
+    img: systems/uesrpg-3ev4/images/Icons/lightProtects.webp
     effects: []
     folder: null
     _stats:
@@ -90,7 +90,7 @@ items:
     flags:
       core:
         sourceId: Item.DYVazRNO2caSDMGE
-    img: systems/uesrpg-d100/images/Icons/brawler.webp
+    img: systems/uesrpg-3ev4/images/Icons/brawler.webp
     effects: []
     folder: null
     _stats:
@@ -174,7 +174,7 @@ items:
     flags:
       core:
         sourceId: Item.wtEFksGPcojtDLTj
-    img: systems/uesrpg-d100/images/Icons/powerWell.webp
+    img: systems/uesrpg-3ev4/images/Icons/powerWell.webp
     effects: []
     folder: null
     _stats:
@@ -255,7 +255,7 @@ items:
     flags:
       core:
         sourceId: Item.DYVazRNO2caSDMGE
-    img: systems/uesrpg-d100/images/Icons/spellSword.webp
+    img: systems/uesrpg-3ev4/images/Icons/spellSword.webp
     effects: []
     folder: null
     _stats:
@@ -339,7 +339,7 @@ items:
     flags:
       core:
         sourceId: Item.DYVazRNO2caSDMGE
-    img: systems/uesrpg-d100/images/Icons/healer.webp
+    img: systems/uesrpg-3ev4/images/Icons/healer.webp
     effects: []
     folder: null
     _stats:
@@ -3710,7 +3710,7 @@ items:
   - _id: zDiD7RhMdmF5naRU
     name: Spellcaster
     type: talent
-    img: systems/uesrpg-d100/images/Icons/questioning.webp
+    img: systems/uesrpg-3ev4/images/Icons/questioning.webp
     effects: []
     folder: null
     sort: 0

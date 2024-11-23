@@ -9,7 +9,7 @@ items:
     flags:
       core:
         sourceId: Item.wtEFksGPcojtDLTj
-    img: systems/uesrpg-d100/images/Icons/catfall.webp
+    img: systems/uesrpg-3ev4/images/Icons/catfall.webp
     effects: []
     folder: null
     _stats:
@@ -167,7 +167,7 @@ items:
     flags:
       core:
         sourceId: Item.wtEFksGPcojtDLTj
-    img: systems/uesrpg-d100/images/Icons/darkSight.webp
+    img: systems/uesrpg-3ev4/images/Icons/darkSight.webp
     effects: []
     folder: null
     _stats:
@@ -248,7 +248,7 @@ items:
     flags:
       core:
         sourceId: Item.wtEFksGPcojtDLTj
-    img: systems/uesrpg-d100/images/Icons/immunity.webp
+    img: systems/uesrpg-3ev4/images/Icons/immunity.webp
     effects: []
     folder: null
     _stats:
@@ -329,7 +329,7 @@ items:
     flags:
       core:
         sourceId: Item.wtEFksGPcojtDLTj
-    img: systems/uesrpg-d100/images/Icons/gallop.webp
+    img: systems/uesrpg-3ev4/images/Icons/gallop.webp
     effects: []
     folder: null
     _stats:
@@ -409,7 +409,7 @@ items:
     flags:
       core:
         sourceId: Item.wtEFksGPcojtDLTj
-    img: systems/uesrpg-d100/images/Icons/fire.webp
+    img: systems/uesrpg-3ev4/images/Icons/fire.webp
     effects: []
     folder: null
     _stats:
@@ -491,7 +491,7 @@ items:
     flags:
       core:
         sourceId: Item.Hx4NHRgycp4DR0cQ
-    img: systems/uesrpg-d100/images/Icons/ratLeap.webp
+    img: systems/uesrpg-3ev4/images/Icons/ratLeap.webp
     effects: []
     folder: null
     _stats:
@@ -571,7 +571,7 @@ items:
     flags:
       core:
         sourceId: Item.MyWjMeVAtBCJa8Bt
-    img: systems/uesrpg-d100/images/Icons/beastAbility.webp
+    img: systems/uesrpg-3ev4/images/Icons/beastAbility.webp
     effects: []
     folder: null
     _stats:
@@ -652,7 +652,7 @@ items:
     flags:
       core:
         sourceId: Item.MyWjMeVAtBCJa8Bt
-    img: systems/uesrpg-d100/images/Icons/poison.webp
+    img: systems/uesrpg-3ev4/images/Icons/poison.webp
     effects: []
     folder: null
     _stats:

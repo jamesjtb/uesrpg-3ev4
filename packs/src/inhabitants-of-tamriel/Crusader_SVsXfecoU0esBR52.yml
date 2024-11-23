@@ -1122,7 +1122,7 @@ items:
   - _id: VPpEKHAc2uKUBZGd
     name: Searing Radiance
     type: power
-    img: systems/uesrpg-d100/images/Icons/searingRadiance.webp
+    img: systems/uesrpg-3ev4/images/Icons/searingRadiance.webp
     effects: []
     folder: null
     sort: 0
@@ -1205,7 +1205,7 @@ items:
   - _id: alG6WCFFV1gaQIpo
     name: Spell Sword
     type: talent
-    img: systems/uesrpg-d100/images/Icons/spellSword.webp
+    img: systems/uesrpg-3ev4/images/Icons/spellSword.webp
     effects: []
     folder: null
     sort: 0
@@ -1291,7 +1291,7 @@ items:
   - _id: JrAZ845EbeNbFcF4
     name: Brawler
     type: talent
-    img: systems/uesrpg-d100/images/Icons/brawler.webp
+    img: systems/uesrpg-3ev4/images/Icons/brawler.webp
     effects: []
     folder: null
     sort: 0
@@ -1377,7 +1377,7 @@ items:
   - _id: sMwaAWP99JgvhqD8
     name: Spellcaster
     type: talent
-    img: systems/uesrpg-d100/images/Icons/questioning.webp
+    img: systems/uesrpg-3ev4/images/Icons/questioning.webp
     effects: []
     folder: null
     sort: 0

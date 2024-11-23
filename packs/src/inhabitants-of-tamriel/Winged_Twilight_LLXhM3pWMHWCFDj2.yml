@@ -9,7 +9,7 @@ items:
     flags:
       core:
         sourceId: Item.wtEFksGPcojtDLTj
-    img: systems/uesrpg-d100/images/Icons/flyer.webp
+    img: systems/uesrpg-3ev4/images/Icons/flyer.webp
     effects: []
     folder: null
     _stats:
@@ -87,7 +87,7 @@ items:
     flags:
       core:
         sourceId: Item.wtEFksGPcojtDLTj
-    img: systems/uesrpg-d100/images/Icons/resistNormalWeapons.webp
+    img: systems/uesrpg-3ev4/images/Icons/resistNormalWeapons.webp
     effects: []
     folder: null
     _stats:
@@ -168,7 +168,7 @@ items:
     flags:
       core:
         sourceId: Item.wtEFksGPcojtDLTj
-    img: systems/uesrpg-d100/images/Icons/cryomancer.webp
+    img: systems/uesrpg-3ev4/images/Icons/cryomancer.webp
     effects: []
     folder: null
     _stats:
@@ -250,7 +250,7 @@ items:
     flags:
       core:
         sourceId: Item.wtEFksGPcojtDLTj
-    img: systems/uesrpg-d100/images/Icons/fire.webp
+    img: systems/uesrpg-3ev4/images/Icons/fire.webp
     effects: []
     folder: null
     _stats:
@@ -332,7 +332,7 @@ items:
     flags:
       core:
         sourceId: Item.wtEFksGPcojtDLTj
-    img: systems/uesrpg-d100/images/Icons/electromancer.webp
+    img: systems/uesrpg-3ev4/images/Icons/electromancer.webp
     effects: []
     folder: null
     _stats:
@@ -414,7 +414,7 @@ items:
     flags:
       core:
         sourceId: Item.wtEFksGPcojtDLTj
-    img: systems/uesrpg-d100/images/Icons/poison.webp
+    img: systems/uesrpg-3ev4/images/Icons/poison.webp
     effects: []
     folder: null
     _stats:
@@ -496,7 +496,7 @@ items:
     flags:
       core:
         sourceId: Item.wtEFksGPcojtDLTj
-    img: systems/uesrpg-d100/images/Icons/spellReflect.webp
+    img: systems/uesrpg-3ev4/images/Icons/spellReflect.webp
     effects: []
     folder: null
     _stats:
@@ -577,7 +577,7 @@ items:
     flags:
       core:
         sourceId: Item.Hx4NHRgycp4DR0cQ
-    img: systems/uesrpg-d100/images/Icons/beastAbility.webp
+    img: systems/uesrpg-3ev4/images/Icons/beastAbility.webp
     effects: []
     folder: null
     _stats:
@@ -658,7 +658,7 @@ items:
     flags:
       core:
         sourceId: Item.7fKKFs3JVM7UgiPU
-    img: systems/uesrpg-d100/images/Icons/questioning.webp
+    img: systems/uesrpg-3ev4/images/Icons/questioning.webp
     effects: []
     folder: null
     _stats:
@@ -742,7 +742,7 @@ items:
     flags:
       core:
         sourceId: Item.MyWjMeVAtBCJa8Bt
-    img: systems/uesrpg-d100/images/Icons/flyer.webp
+    img: systems/uesrpg-3ev4/images/Icons/flyer.webp
     effects: []
     folder: null
     _stats:
@@ -826,7 +826,7 @@ items:
     flags:
       core:
         sourceId: Item.MyWjMeVAtBCJa8Bt
-    img: systems/uesrpg-d100/images/Icons/stuntedMagicka.webp
+    img: systems/uesrpg-3ev4/images/Icons/stuntedMagicka.webp
     effects: []
     folder: null
     _stats:
@@ -906,7 +906,7 @@ items:
     flags:
       core:
         sourceId: Item.MyWjMeVAtBCJa8Bt
-    img: systems/uesrpg-d100/images/Icons/flyer.webp
+    img: systems/uesrpg-3ev4/images/Icons/flyer.webp
     effects: []
     folder: null
     _stats:
@@ -986,7 +986,7 @@ items:
     flags:
       core:
         sourceId: Item.wtEFksGPcojtDLTj
-    img: systems/uesrpg-d100/images/Icons/powerWell.webp
+    img: systems/uesrpg-3ev4/images/Icons/powerWell.webp
     effects: []
     folder: null
     _stats:
@@ -1067,7 +1067,7 @@ items:
     flags:
       core:
         sourceId: Item.kvW5ifNkSp73Lor0
-    img: systems/uesrpg-d100/images/Icons/poison.webp
+    img: systems/uesrpg-3ev4/images/Icons/poison.webp
     effects: []
     folder: null
     _stats:

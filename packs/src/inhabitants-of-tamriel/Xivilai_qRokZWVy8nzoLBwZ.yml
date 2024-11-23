@@ -9,7 +9,7 @@ items:
     flags:
       core:
         sourceId: Item.wtEFksGPcojtDLTj
-    img: systems/uesrpg-d100/images/Icons/creative.webp
+    img: systems/uesrpg-3ev4/images/Icons/creative.webp
     effects: []
     folder: null
     _stats:
@@ -87,7 +87,7 @@ items:
     flags:
       core:
         sourceId: Item.wtEFksGPcojtDLTj
-    img: systems/uesrpg-d100/images/Icons/unarmedProwess.webp
+    img: systems/uesrpg-3ev4/images/Icons/unarmedProwess.webp
     effects: []
     folder: null
     _stats:
@@ -168,7 +168,7 @@ items:
     flags:
       core:
         sourceId: Item.wtEFksGPcojtDLTj
-    img: systems/uesrpg-d100/images/Icons/fire.webp
+    img: systems/uesrpg-3ev4/images/Icons/fire.webp
     effects: []
     folder: null
     _stats:
@@ -250,7 +250,7 @@ items:
     flags:
       core:
         sourceId: Item.wtEFksGPcojtDLTj
-    img: systems/uesrpg-d100/images/Icons/cryomancer.webp
+    img: systems/uesrpg-3ev4/images/Icons/cryomancer.webp
     effects: []
     folder: null
     _stats:
@@ -332,7 +332,7 @@ items:
     flags:
       core:
         sourceId: Item.wtEFksGPcojtDLTj
-    img: systems/uesrpg-d100/images/Icons/berserker.webp
+    img: systems/uesrpg-3ev4/images/Icons/berserker.webp
     effects: []
     folder: null
     _stats:
@@ -412,7 +412,7 @@ items:
     flags:
       core:
         sourceId: Item.wtEFksGPcojtDLTj
-    img: systems/uesrpg-d100/images/Icons/manifoldEnchanter.webp
+    img: systems/uesrpg-3ev4/images/Icons/manifoldEnchanter.webp
     effects: []
     folder: null
     _stats:
@@ -495,7 +495,7 @@ items:
     flags:
       core:
         sourceId: Item.MyWjMeVAtBCJa8Bt
-    img: systems/uesrpg-d100/images/Icons/followUpStrike.webp
+    img: systems/uesrpg-3ev4/images/Icons/followUpStrike.webp
     effects: []
     folder: null
     _stats:
@@ -577,7 +577,7 @@ items:
     flags:
       core:
         sourceId: Item.MyWjMeVAtBCJa8Bt
-    img: systems/uesrpg-d100/images/Icons/killingBlow.webp
+    img: systems/uesrpg-3ev4/images/Icons/killingBlow.webp
     effects: []
     folder: null
     _stats:
@@ -658,7 +658,7 @@ items:
     flags:
       core:
         sourceId: Item.MyWjMeVAtBCJa8Bt
-    img: systems/uesrpg-d100/images/Icons/stuntedMagicka.webp
+    img: systems/uesrpg-3ev4/images/Icons/stuntedMagicka.webp
     effects: []
     folder: null
     _stats:
@@ -738,7 +738,7 @@ items:
     flags:
       core:
         sourceId: Item.wtEFksGPcojtDLTj
-    img: systems/uesrpg-d100/images/Icons/enduring.webp
+    img: systems/uesrpg-3ev4/images/Icons/enduring.webp
     effects: []
     folder: null
     _stats:
@@ -819,7 +819,7 @@ items:
     flags:
       core:
         sourceId: Item.wtEFksGPcojtDLTj
-    img: systems/uesrpg-d100/images/Icons/unarmedProwess.webp
+    img: systems/uesrpg-3ev4/images/Icons/unarmedProwess.webp
     effects: []
     folder: null
     _stats:
@@ -900,7 +900,7 @@ items:
     flags:
       core:
         sourceId: Item.wtEFksGPcojtDLTj
-    img: systems/uesrpg-d100/images/Icons/powerWell.webp
+    img: systems/uesrpg-3ev4/images/Icons/powerWell.webp
     effects: []
     folder: null
     _stats:
@@ -2559,7 +2559,7 @@ items:
   - _id: IwdYf3qwk9Vwvd9c
     name: Spellcaster
     type: talent
-    img: systems/uesrpg-d100/images/Icons/questioning.webp
+    img: systems/uesrpg-3ev4/images/Icons/questioning.webp
     effects: []
     folder: null
     sort: 0

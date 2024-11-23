@@ -9,7 +9,7 @@ items:
     flags:
       core:
         sourceId: Item.wtEFksGPcojtDLTj
-    img: systems/uesrpg-d100/images/Icons/darkSight.webp
+    img: systems/uesrpg-3ev4/images/Icons/darkSight.webp
     effects: []
     folder: null
     _stats:
@@ -90,7 +90,7 @@ items:
     flags:
       core:
         sourceId: Item.wtEFksGPcojtDLTj
-    img: systems/uesrpg-d100/images/Icons/creative.webp
+    img: systems/uesrpg-3ev4/images/Icons/creative.webp
     effects: []
     folder: null
     _stats:
@@ -170,7 +170,7 @@ items:
     flags:
       core:
         sourceId: Item.wtEFksGPcojtDLTj
-    img: systems/uesrpg-d100/images/Icons/resistNormalWeapons.webp
+    img: systems/uesrpg-3ev4/images/Icons/resistNormalWeapons.webp
     effects: []
     folder: null
     _stats:
@@ -251,7 +251,7 @@ items:
     flags:
       core:
         sourceId: Item.wtEFksGPcojtDLTj
-    img: systems/uesrpg-d100/images/Icons/creative.webp
+    img: systems/uesrpg-3ev4/images/Icons/creative.webp
     effects: []
     folder: null
     _stats:
@@ -333,7 +333,7 @@ items:
     flags:
       core:
         sourceId: Item.wtEFksGPcojtDLTj
-    img: systems/uesrpg-d100/images/Icons/spellReflect.webp
+    img: systems/uesrpg-3ev4/images/Icons/spellReflect.webp
     effects: []
     folder: null
     _stats:
@@ -414,7 +414,7 @@ items:
     flags:
       core:
         sourceId: Item.wtEFksGPcojtDLTj
-    img: systems/uesrpg-d100/images/Icons/teamwork.webp
+    img: systems/uesrpg-3ev4/images/Icons/teamwork.webp
     effects: []
     folder: null
     _stats:
@@ -494,7 +494,7 @@ items:
     flags:
       core:
         sourceId: Item.MyWjMeVAtBCJa8Bt
-    img: systems/uesrpg-d100/images/Icons/daedricFury.webp
+    img: systems/uesrpg-3ev4/images/Icons/daedricFury.webp
     effects: []
     folder: null
     _stats:
@@ -576,7 +576,7 @@ items:
     flags:
       core:
         sourceId: Item.MyWjMeVAtBCJa8Bt
-    img: systems/uesrpg-d100/images/Icons/killingBlow.webp
+    img: systems/uesrpg-3ev4/images/Icons/killingBlow.webp
     effects: []
     folder: null
     _stats:
@@ -657,7 +657,7 @@ items:
     flags:
       core:
         sourceId: Item.MyWjMeVAtBCJa8Bt
-    img: systems/uesrpg-d100/images/Icons/cleaverOfMen.webp
+    img: systems/uesrpg-3ev4/images/Icons/cleaverOfMen.webp
     effects: []
     folder: null
     _stats:
@@ -2362,7 +2362,7 @@ prototypeToken:
       min: 0
       max: 1
   texture:
-    src: systems/uesrpg-d100/creature-compendium/dremora_caitiff.webp
+    src: systems/uesrpg-3ev4/creature-compendium/dremora_caitiff.webp
     tint: '#ffffff'
     scaleX: 1
     scaleY: 1

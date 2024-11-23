@@ -4,7 +4,7 @@ type: talent
 flags:
   core:
     sourceId: Item.JX5ttPQSa94C9UKX
-img: systems/uesrpg-d100/images/Icons/ancestorGuardian.webp
+img: systems/uesrpg-3ev4/images/Icons/ancestorGuardian.webp
 effects: []
 _stats:
   coreVersion: '12.331'

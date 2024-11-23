@@ -4,7 +4,7 @@ type: talent
 flags:
   core:
     sourceId: Item.DYVazRNO2caSDMGE
-img: systems/uesrpg-d100/images/Icons/strongWilled.webp
+img: systems/uesrpg-3ev4/images/Icons/strongWilled.webp
 effects: []
 _stats:
   coreVersion: '12.331'

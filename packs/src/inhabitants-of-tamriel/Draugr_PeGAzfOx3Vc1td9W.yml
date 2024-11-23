@@ -9,7 +9,7 @@ items:
     flags:
       core:
         sourceId: Item.MyWjMeVAtBCJa8Bt
-    img: systems/uesrpg-d100/images/Icons/cleaverOfMen.webp
+    img: systems/uesrpg-3ev4/images/Icons/cleaverOfMen.webp
     effects: []
     folder: null
     _stats:
@@ -89,7 +89,7 @@ items:
     flags:
       core:
         sourceId: Item.MyWjMeVAtBCJa8Bt
-    img: systems/uesrpg-d100/images/Icons/firingLine.webp
+    img: systems/uesrpg-3ev4/images/Icons/firingLine.webp
     effects: []
     folder: null
     _stats:
@@ -253,7 +253,7 @@ items:
     flags:
       core:
         sourceId: Item.wtEFksGPcojtDLTj
-    img: systems/uesrpg-d100/images/Icons/cryomancer.webp
+    img: systems/uesrpg-3ev4/images/Icons/cryomancer.webp
     effects: []
     folder: null
     _stats:

@@ -62,7 +62,7 @@ items:
     flags:
       core:
         sourceId: Item.MyWjMeVAtBCJa8Bt
-    img: systems/uesrpg-d100/images/Icons/overcharge.webp
+    img: systems/uesrpg-3ev4/images/Icons/overcharge.webp
     effects: []
     folder: null
     _stats:
@@ -143,7 +143,7 @@ items:
     flags:
       core:
         sourceId: Item.MyWjMeVAtBCJa8Bt
-    img: systems/uesrpg-d100/images/Icons/magicalExertion.webp
+    img: systems/uesrpg-3ev4/images/Icons/magicalExertion.webp
     effects: []
     folder: null
     _stats:
@@ -225,7 +225,7 @@ items:
     flags:
       core:
         sourceId: Item.MyWjMeVAtBCJa8Bt
-    img: systems/uesrpg-d100/images/Icons/magickaCycling.webp
+    img: systems/uesrpg-3ev4/images/Icons/magickaCycling.webp
     effects: []
     folder: null
     _stats:
@@ -306,7 +306,7 @@ items:
     flags:
       core:
         sourceId: Item.7fKKFs3JVM7UgiPU
-    img: systems/uesrpg-d100/images/Icons/questioning.webp
+    img: systems/uesrpg-3ev4/images/Icons/questioning.webp
     effects: []
     folder: null
     _stats:
@@ -390,7 +390,7 @@ items:
     flags:
       core:
         sourceId: Item.DYVazRNO2caSDMGE
-    img: systems/uesrpg-d100/images/Icons/control.webp
+    img: systems/uesrpg-3ev4/images/Icons/control.webp
     effects: []
     folder: null
     _stats:

@@ -739,7 +739,7 @@ items:
   - _id: SvtizPJ2fYb9M0yP
     name: Power Attack
     type: power
-    img: systems/uesrpg-d100/images/Icons/cleaverOfMen.webp
+    img: systems/uesrpg-3ev4/images/Icons/cleaverOfMen.webp
     effects: []
     folder: null
     sort: 0
@@ -821,7 +821,7 @@ items:
   - _id: fWgXzHf8pxwJUHXf
     name: Power Draw
     type: power
-    img: systems/uesrpg-d100/images/Icons/firingLine.webp
+    img: systems/uesrpg-3ev4/images/Icons/firingLine.webp
     effects: []
     folder: null
     sort: 0
@@ -995,7 +995,7 @@ items:
   - _id: kOrR9gRvyodWDwlw
     name: From Beyond
     type: trait
-    img: systems/uesrpg-d100/images/Icons/fromBeyond.webp
+    img: systems/uesrpg-3ev4/images/Icons/fromBeyond.webp
     effects: []
     folder: null
     sort: 0
@@ -1077,7 +1077,7 @@ items:
   - _id: Oc6DP1U4EX24xGBE
     name: Resistance (Frost, 3)
     type: trait
-    img: systems/uesrpg-d100/images/Icons/cryomancer.webp
+    img: systems/uesrpg-3ev4/images/Icons/cryomancer.webp
     effects: []
     folder: null
     sort: 0
@@ -1161,7 +1161,7 @@ items:
   - _id: XHUyQ47by56UhFI4
     name: Summoned
     type: trait
-    img: systems/uesrpg-d100/images/Icons/summoned.webp
+    img: systems/uesrpg-3ev4/images/Icons/summoned.webp
     effects: []
     folder: null
     sort: 0

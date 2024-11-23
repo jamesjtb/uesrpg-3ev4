@@ -9,7 +9,7 @@ items:
     flags:
       core:
         sourceId: Item.MyWjMeVAtBCJa8Bt
-    img: systems/uesrpg-d100/images/Icons/lightProtects.webp
+    img: systems/uesrpg-3ev4/images/Icons/lightProtects.webp
     effects: []
     folder: null
     _stats:
@@ -90,7 +90,7 @@ items:
     flags:
       core:
         sourceId: Item.DYVazRNO2caSDMGE
-    img: systems/uesrpg-d100/images/Icons/brawler.webp
+    img: systems/uesrpg-3ev4/images/Icons/brawler.webp
     effects: []
     folder: null
     _stats:
@@ -174,7 +174,7 @@ items:
     flags:
       core:
         sourceId: Item.wtEFksGPcojtDLTj
-    img: systems/uesrpg-d100/images/Icons/powerWell.webp
+    img: systems/uesrpg-3ev4/images/Icons/powerWell.webp
     effects: []
     folder: null
     _stats:
@@ -255,7 +255,7 @@ items:
     flags:
       core:
         sourceId: Item.DYVazRNO2caSDMGE
-    img: systems/uesrpg-d100/images/Icons/spellSword.webp
+    img: systems/uesrpg-3ev4/images/Icons/spellSword.webp
     effects: []
     folder: null
     _stats:
@@ -2699,7 +2699,7 @@ items:
   - _id: BkZ7CvSTXeClqJsX
     name: Spellcaster
     type: talent
-    img: systems/uesrpg-d100/images/Icons/questioning.webp
+    img: systems/uesrpg-3ev4/images/Icons/questioning.webp
     effects: []
     folder: null
     sort: 0
@@ -2785,7 +2785,7 @@ items:
   - _id: pj3zyk6Jy3dJcPGl
     name: Seasoned Conjurer
     type: talent
-    img: systems/uesrpg-d100/images/Icons/seasonedConjurer.webp
+    img: systems/uesrpg-3ev4/images/Icons/seasonedConjurer.webp
     effects: []
     folder: null
     sort: 0
@@ -2869,7 +2869,7 @@ items:
   - _id: AvEomk3Pa0MPCORJ
     name: Taskmaster
     type: talent
-    img: systems/uesrpg-d100/images/Icons/taskmaster.webp
+    img: systems/uesrpg-3ev4/images/Icons/taskmaster.webp
     effects: []
     folder: null
     sort: 0

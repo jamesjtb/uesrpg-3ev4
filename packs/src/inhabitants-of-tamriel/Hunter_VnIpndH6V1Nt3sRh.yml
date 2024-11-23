@@ -9,7 +9,7 @@ items:
     flags:
       core:
         sourceId: Item.MyWjMeVAtBCJa8Bt
-    img: systems/uesrpg-d100/images/Icons/pointBlank.webp
+    img: systems/uesrpg-3ev4/images/Icons/pointBlank.webp
     effects: []
     folder: null
     _stats:
@@ -91,7 +91,7 @@ items:
     flags:
       core:
         sourceId: Item.DYVazRNO2caSDMGE
-    img: systems/uesrpg-d100/images/Icons/precise.webp
+    img: systems/uesrpg-3ev4/images/Icons/precise.webp
     effects: []
     folder: null
     _stats:
@@ -173,7 +173,7 @@ items:
     flags:
       core:
         sourceId: Item.MyWjMeVAtBCJa8Bt
-    img: systems/uesrpg-d100/images/Icons/expertTracking.webp
+    img: systems/uesrpg-3ev4/images/Icons/expertTracking.webp
     effects: []
     folder: null
     _stats:
@@ -253,7 +253,7 @@ items:
     flags:
       core:
         sourceId: Item.DYVazRNO2caSDMGE
-    img: systems/uesrpg-d100/images/Icons/invisible.webp
+    img: systems/uesrpg-3ev4/images/Icons/invisible.webp
     effects: []
     folder: null
     _stats:

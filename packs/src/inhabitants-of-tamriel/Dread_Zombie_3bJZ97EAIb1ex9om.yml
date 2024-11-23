@@ -9,7 +9,7 @@ items:
     flags:
       core:
         sourceId: Item.MyWjMeVAtBCJa8Bt
-    img: systems/uesrpg-d100/images/Icons/darkCeremony.webp
+    img: systems/uesrpg-3ev4/images/Icons/darkCeremony.webp
     effects: []
     folder: null
     _stats:
@@ -91,7 +91,7 @@ items:
     flags:
       core:
         sourceId: Item.wtEFksGPcojtDLTj
-    img: systems/uesrpg-d100/images/Icons/diseased.webp
+    img: systems/uesrpg-3ev4/images/Icons/diseased.webp
     effects: []
     folder: null
     _stats:
@@ -175,7 +175,7 @@ items:
     flags:
       core:
         sourceId: Item.wtEFksGPcojtDLTj
-    img: systems/uesrpg-d100/images/Icons/darkSight.webp
+    img: systems/uesrpg-3ev4/images/Icons/darkSight.webp
     effects: []
     folder: null
     _stats:
@@ -256,7 +256,7 @@ items:
     flags:
       core:
         sourceId: Item.Hx4NHRgycp4DR0cQ
-    img: systems/uesrpg-d100/images/Icons/martialRevenge.webp
+    img: systems/uesrpg-3ev4/images/Icons/martialRevenge.webp
     effects: []
     folder: null
     _stats:
@@ -336,7 +336,7 @@ items:
     flags:
       core:
         sourceId: Item.wtEFksGPcojtDLTj
-    img: systems/uesrpg-d100/images/Icons/cryomancer.webp
+    img: systems/uesrpg-3ev4/images/Icons/cryomancer.webp
     effects: []
     folder: null
     _stats:
@@ -418,7 +418,7 @@ items:
     flags:
       core:
         sourceId: Item.wtEFksGPcojtDLTj
-    img: systems/uesrpg-d100/images/Icons/creative.webp
+    img: systems/uesrpg-3ev4/images/Icons/creative.webp
     effects: []
     folder: null
     _stats:
@@ -500,7 +500,7 @@ items:
     flags:
       core:
         sourceId: Item.Hx4NHRgycp4DR0cQ
-    img: systems/uesrpg-d100/images/Icons/ratLeap.webp
+    img: systems/uesrpg-3ev4/images/Icons/ratLeap.webp
     effects: []
     folder: null
     _stats:
@@ -664,7 +664,7 @@ items:
     flags:
       core:
         sourceId: Item.wtEFksGPcojtDLTj
-    img: systems/uesrpg-d100/images/Icons/fire.webp
+    img: systems/uesrpg-3ev4/images/Icons/fire.webp
     effects: []
     folder: null
     _stats:
@@ -746,7 +746,7 @@ items:
     flags:
       core:
         sourceId: Item.wtEFksGPcojtDLTj
-    img: systems/uesrpg-d100/images/Icons/unarmedProwess.webp
+    img: systems/uesrpg-3ev4/images/Icons/unarmedProwess.webp
     effects: []
     folder: null
     _stats:
@@ -938,7 +938,7 @@ items:
     flags:
       core:
         sourceId: Item.wtEFksGPcojtDLTj
-    img: systems/uesrpg-d100/images/Icons/regeneration.webp
+    img: systems/uesrpg-3ev4/images/Icons/regeneration.webp
     effects: []
     folder: null
     _stats:

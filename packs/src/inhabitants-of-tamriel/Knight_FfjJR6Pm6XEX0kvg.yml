@@ -9,7 +9,7 @@ items:
     flags:
       core:
         sourceId: Item.MyWjMeVAtBCJa8Bt
-    img: systems/uesrpg-d100/images/Icons/thunderCharge.webp
+    img: systems/uesrpg-3ev4/images/Icons/thunderCharge.webp
     effects: []
     folder: null
     _stats:
@@ -89,7 +89,7 @@ items:
     flags:
       core:
         sourceId: Item.MyWjMeVAtBCJa8Bt
-    img: systems/uesrpg-d100/images/Icons/inspireHeroism.webp
+    img: systems/uesrpg-3ev4/images/Icons/inspireHeroism.webp
     effects: []
     folder: null
     _stats:
@@ -169,7 +169,7 @@ items:
     flags:
       core:
         sourceId: Item.DYVazRNO2caSDMGE
-    img: systems/uesrpg-d100/images/Icons/duelist.webp
+    img: systems/uesrpg-3ev4/images/Icons/duelist.webp
     effects: []
     folder: null
     _stats:

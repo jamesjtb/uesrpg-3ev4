@@ -9,7 +9,7 @@ items:
     flags:
       core:
         sourceId: Item.wtEFksGPcojtDLTj
-    img: systems/uesrpg-d100/images/Icons/catfall.webp
+    img: systems/uesrpg-3ev4/images/Icons/catfall.webp
     effects: []
     folder: null
     _stats:
@@ -167,7 +167,7 @@ items:
     flags:
       core:
         sourceId: Item.wtEFksGPcojtDLTj
-    img: systems/uesrpg-d100/images/Icons/darkSight.webp
+    img: systems/uesrpg-3ev4/images/Icons/darkSight.webp
     effects: []
     folder: null
     _stats:
@@ -248,7 +248,7 @@ items:
     flags:
       core:
         sourceId: Item.wtEFksGPcojtDLTj
-    img: systems/uesrpg-d100/images/Icons/immunity.webp
+    img: systems/uesrpg-3ev4/images/Icons/immunity.webp
     effects: []
     folder: null
     _stats:
@@ -329,7 +329,7 @@ items:
     flags:
       core:
         sourceId: Item.wtEFksGPcojtDLTj
-    img: systems/uesrpg-d100/images/Icons/gallop.webp
+    img: systems/uesrpg-3ev4/images/Icons/gallop.webp
     effects: []
     folder: null
     _stats:
@@ -409,7 +409,7 @@ items:
     flags:
       core:
         sourceId: Item.wtEFksGPcojtDLTj
-    img: systems/uesrpg-d100/images/Icons/resistNormalWeapons.webp
+    img: systems/uesrpg-3ev4/images/Icons/resistNormalWeapons.webp
     effects: []
     folder: null
     _stats:
@@ -490,7 +490,7 @@ items:
     flags:
       core:
         sourceId: Item.wtEFksGPcojtDLTj
-    img: systems/uesrpg-d100/images/Icons/cryomancer.webp
+    img: systems/uesrpg-3ev4/images/Icons/cryomancer.webp
     effects: []
     folder: null
     _stats:
@@ -572,7 +572,7 @@ items:
     flags:
       core:
         sourceId: Item.wtEFksGPcojtDLTj
-    img: systems/uesrpg-d100/images/Icons/electromancer.webp
+    img: systems/uesrpg-3ev4/images/Icons/electromancer.webp
     effects: []
     folder: null
     _stats:
@@ -654,7 +654,7 @@ items:
     flags:
       core:
         sourceId: Item.7fKKFs3JVM7UgiPU
-    img: systems/uesrpg-d100/images/Icons/questioning.webp
+    img: systems/uesrpg-3ev4/images/Icons/questioning.webp
     effects: []
     folder: null
     _stats:
@@ -738,7 +738,7 @@ items:
     flags:
       core:
         sourceId: Item.MyWjMeVAtBCJa8Bt
-    img: systems/uesrpg-d100/images/Icons/stuntedMagicka.webp
+    img: systems/uesrpg-3ev4/images/Icons/stuntedMagicka.webp
     effects: []
     folder: null
     _stats:
@@ -818,7 +818,7 @@ items:
     flags:
       core:
         sourceId: Item.MyWjMeVAtBCJa8Bt
-    img: systems/uesrpg-d100/images/Icons/beastAbility.webp
+    img: systems/uesrpg-3ev4/images/Icons/beastAbility.webp
     effects: []
     folder: null
     _stats:
@@ -899,7 +899,7 @@ items:
     flags:
       core:
         sourceId: Item.MyWjMeVAtBCJa8Bt
-    img: systems/uesrpg-d100/images/Icons/spiderling.webp
+    img: systems/uesrpg-3ev4/images/Icons/spiderling.webp
     effects: []
     folder: null
     _stats:
@@ -979,7 +979,7 @@ items:
     flags:
       core:
         sourceId: Item.MyWjMeVAtBCJa8Bt
-    img: systems/uesrpg-d100/images/Icons/poison.webp
+    img: systems/uesrpg-3ev4/images/Icons/poison.webp
     effects: []
     folder: null
     _stats:
@@ -1063,7 +1063,7 @@ items:
     flags:
       core:
         sourceId: Item.wtEFksGPcojtDLTj
-    img: systems/uesrpg-d100/images/Icons/enduring.webp
+    img: systems/uesrpg-3ev4/images/Icons/enduring.webp
     effects: []
     folder: null
     _stats:
@@ -1144,7 +1144,7 @@ items:
     flags:
       core:
         sourceId: Item.wtEFksGPcojtDLTj
-    img: systems/uesrpg-d100/images/Icons/powerWell.webp
+    img: systems/uesrpg-3ev4/images/Icons/powerWell.webp
     effects: []
     folder: null
     _stats:
@@ -1225,7 +1225,7 @@ items:
     flags:
       core:
         sourceId: Item.wtEFksGPcojtDLTj
-    img: systems/uesrpg-d100/images/Icons/meditation.webp
+    img: systems/uesrpg-3ev4/images/Icons/meditation.webp
     effects: []
     folder: null
     _stats:
@@ -1612,7 +1612,7 @@ items:
   - _id: 5Wb6PCP0y97UMkri
     name: Partial Spider Hide
     type: armor
-    img: systems/uesrpg-d100/item-compendium/item_tokens/carapace.png
+    img: systems/uesrpg-3ev4/item-compendium/item_tokens/carapace.png
     effects: []
     folder: null
     sort: 0
@@ -1721,7 +1721,7 @@ items:
   - _id: tuijPwz2WzV6XrCl
     name: Heal 6
     type: spell
-    img: systems/uesrpg-d100/spell-compendium/restoration_spellbook.webp
+    img: systems/uesrpg-3ev4/spell-compendium/restoration_spellbook.webp
     effects: []
     folder: null
     sort: 0
@@ -2469,7 +2469,7 @@ items:
   - _id: gETgWfajVKVFDvmI
     name: Resistance (Fire, 5)
     type: trait
-    img: systems/uesrpg-d100/images/Icons/fire.webp
+    img: systems/uesrpg-3ev4/images/Icons/fire.webp
     effects: []
     folder: null
     sort: 0

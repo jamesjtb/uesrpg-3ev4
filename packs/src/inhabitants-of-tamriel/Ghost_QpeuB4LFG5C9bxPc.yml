@@ -123,7 +123,7 @@ items:
     flags:
       core:
         sourceId: Item.MyWjMeVAtBCJa8Bt
-    img: systems/uesrpg-d100/images/Icons/taskmaster.webp
+    img: systems/uesrpg-3ev4/images/Icons/taskmaster.webp
     effects: []
     folder: null
     _stats:
@@ -204,7 +204,7 @@ items:
     flags:
       core:
         sourceId: Item.MyWjMeVAtBCJa8Bt
-    img: systems/uesrpg-d100/images/Icons/stuntedMagicka.webp
+    img: systems/uesrpg-3ev4/images/Icons/stuntedMagicka.webp
     effects: []
     folder: null
     _stats:
@@ -284,7 +284,7 @@ items:
     flags:
       core:
         sourceId: Item.wtEFksGPcojtDLTj
-    img: systems/uesrpg-d100/images/Icons/darkSight.webp
+    img: systems/uesrpg-3ev4/images/Icons/darkSight.webp
     effects: []
     folder: null
     _stats:
@@ -365,7 +365,7 @@ items:
     flags:
       core:
         sourceId: Item.wtEFksGPcojtDLTj
-    img: systems/uesrpg-d100/images/Icons/fearsome.webp
+    img: systems/uesrpg-3ev4/images/Icons/fearsome.webp
     effects: []
     folder: null
     _stats:
@@ -445,7 +445,7 @@ items:
     flags:
       core:
         sourceId: Item.wtEFksGPcojtDLTj
-    img: systems/uesrpg-d100/images/Icons/incorporeal.webp
+    img: systems/uesrpg-3ev4/images/Icons/incorporeal.webp
     effects: []
     folder: null
     _stats:
@@ -532,7 +532,7 @@ items:
     flags:
       core:
         sourceId: Item.wtEFksGPcojtDLTj
-    img: systems/uesrpg-d100/images/Icons/electromancer.webp
+    img: systems/uesrpg-3ev4/images/Icons/electromancer.webp
     effects: []
     folder: null
     _stats:
@@ -614,7 +614,7 @@ items:
     flags:
       core:
         sourceId: Item.wtEFksGPcojtDLTj
-    img: systems/uesrpg-d100/images/Icons/cryomancer.webp
+    img: systems/uesrpg-3ev4/images/Icons/cryomancer.webp
     effects: []
     folder: null
     _stats:
@@ -696,7 +696,7 @@ items:
     flags:
       core:
         sourceId: Item.7fKKFs3JVM7UgiPU
-    img: systems/uesrpg-d100/images/Icons/questioning.webp
+    img: systems/uesrpg-3ev4/images/Icons/questioning.webp
     effects: []
     folder: null
     _stats:
@@ -864,7 +864,7 @@ items:
     flags:
       core:
         sourceId: Item.wtEFksGPcojtDLTj
-    img: systems/uesrpg-d100/images/Icons/sunScarred.webp
+    img: systems/uesrpg-3ev4/images/Icons/sunScarred.webp
     effects: []
     folder: null
     _stats:

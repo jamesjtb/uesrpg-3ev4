@@ -9,7 +9,7 @@ items:
     flags:
       core:
         sourceId: Item.wtEFksGPcojtDLTj
-    img: systems/uesrpg-d100/images/Icons/darkSight.webp
+    img: systems/uesrpg-3ev4/images/Icons/darkSight.webp
     effects: []
     folder: null
     _stats:
@@ -90,7 +90,7 @@ items:
     flags:
       core:
         sourceId: Item.wtEFksGPcojtDLTj
-    img: systems/uesrpg-d100/images/Icons/blessedTouch.webp
+    img: systems/uesrpg-3ev4/images/Icons/blessedTouch.webp
     effects: []
     folder: null
     _stats:
@@ -170,7 +170,7 @@ items:
     flags:
       core:
         sourceId: Item.wtEFksGPcojtDLTj
-    img: systems/uesrpg-d100/images/Icons/unarmedProwess.webp
+    img: systems/uesrpg-3ev4/images/Icons/unarmedProwess.webp
     effects: []
     folder: null
     _stats:
@@ -251,7 +251,7 @@ items:
     flags:
       core:
         sourceId: Item.wtEFksGPcojtDLTj
-    img: systems/uesrpg-d100/images/Icons/resistNormalWeapons.webp
+    img: systems/uesrpg-3ev4/images/Icons/resistNormalWeapons.webp
     effects: []
     folder: null
     _stats:
@@ -332,7 +332,7 @@ items:
     flags:
       core:
         sourceId: Item.wtEFksGPcojtDLTj
-    img: systems/uesrpg-d100/images/Icons/electromancer.webp
+    img: systems/uesrpg-3ev4/images/Icons/electromancer.webp
     effects: []
     folder: null
     _stats:
@@ -414,7 +414,7 @@ items:
     flags:
       core:
         sourceId: Item.MyWjMeVAtBCJa8Bt
-    img: systems/uesrpg-d100/images/Icons/killingBlow.webp
+    img: systems/uesrpg-3ev4/images/Icons/killingBlow.webp
     effects: []
     folder: null
     _stats:
@@ -495,7 +495,7 @@ items:
     flags:
       core:
         sourceId: Item.MyWjMeVAtBCJa8Bt
-    img: systems/uesrpg-d100/images/Icons/blessedTouch.webp
+    img: systems/uesrpg-3ev4/images/Icons/blessedTouch.webp
     effects: []
     folder: null
     _stats:
@@ -577,7 +577,7 @@ items:
     flags:
       core:
         sourceId: Item.MyWjMeVAtBCJa8Bt
-    img: systems/uesrpg-d100/images/Icons/lightProtects.webp
+    img: systems/uesrpg-3ev4/images/Icons/lightProtects.webp
     effects: []
     folder: null
     _stats:
@@ -657,7 +657,7 @@ items:
     flags:
       core:
         sourceId: Item.wtEFksGPcojtDLTj
-    img: systems/uesrpg-d100/images/Icons/powerWell.webp
+    img: systems/uesrpg-3ev4/images/Icons/powerWell.webp
     effects: []
     folder: null
     _stats:
@@ -1626,7 +1626,7 @@ items:
   - _id: uB24QKYcqIj7azSc
     name: Resistance (Magic, 2)
     type: trait
-    img: systems/uesrpg-d100/images/Icons/creative.webp
+    img: systems/uesrpg-3ev4/images/Icons/creative.webp
     effects: []
     folder: null
     sort: 0
@@ -1710,7 +1710,7 @@ items:
   - _id: WFnaZpFpvgx4Ifut
     name: Weakness (Shadow, 5)
     type: trait
-    img: systems/uesrpg-d100/images/Icons/creative.webp
+    img: systems/uesrpg-3ev4/images/Icons/creative.webp
     effects: []
     folder: null
     sort: 0

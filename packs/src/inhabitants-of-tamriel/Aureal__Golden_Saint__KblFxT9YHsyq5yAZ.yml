@@ -9,7 +9,7 @@ items:
     flags:
       core:
         sourceId: Item.wtEFksGPcojtDLTj
-    img: systems/uesrpg-d100/images/Icons/darkSight.webp
+    img: systems/uesrpg-3ev4/images/Icons/darkSight.webp
     effects: []
     folder: null
     _stats:
@@ -90,7 +90,7 @@ items:
     flags:
       core:
         sourceId: Item.wtEFksGPcojtDLTj
-    img: systems/uesrpg-d100/images/Icons/creative.webp
+    img: systems/uesrpg-3ev4/images/Icons/creative.webp
     effects: []
     folder: null
     _stats:
@@ -168,7 +168,7 @@ items:
     flags:
       core:
         sourceId: Item.wtEFksGPcojtDLTj
-    img: systems/uesrpg-d100/images/Icons/resistNormalWeapons.webp
+    img: systems/uesrpg-3ev4/images/Icons/resistNormalWeapons.webp
     effects: []
     folder: null
     _stats:
@@ -249,7 +249,7 @@ items:
     flags:
       core:
         sourceId: Item.wtEFksGPcojtDLTj
-    img: systems/uesrpg-d100/images/Icons/spellReflect.webp
+    img: systems/uesrpg-3ev4/images/Icons/spellReflect.webp
     effects: []
     folder: null
     _stats:
@@ -330,7 +330,7 @@ items:
     flags:
       core:
         sourceId: Item.wtEFksGPcojtDLTj
-    img: systems/uesrpg-d100/images/Icons/poison.webp
+    img: systems/uesrpg-3ev4/images/Icons/poison.webp
     effects: []
     folder: null
     _stats:
@@ -412,7 +412,7 @@ items:
     flags:
       core:
         sourceId: Item.7fKKFs3JVM7UgiPU
-    img: systems/uesrpg-d100/images/Icons/questioning.webp
+    img: systems/uesrpg-3ev4/images/Icons/questioning.webp
     effects: []
     folder: null
     _stats:
@@ -496,7 +496,7 @@ items:
     flags:
       core:
         sourceId: Item.MyWjMeVAtBCJa8Bt
-    img: systems/uesrpg-d100/images/Icons/sunderWeapon.webp
+    img: systems/uesrpg-3ev4/images/Icons/sunderWeapon.webp
     effects: []
     folder: null
     _stats:
@@ -576,7 +576,7 @@ items:
     flags:
       core:
         sourceId: Item.MyWjMeVAtBCJa8Bt
-    img: systems/uesrpg-d100/images/Icons/hyperAwareness.webp
+    img: systems/uesrpg-3ev4/images/Icons/hyperAwareness.webp
     effects: []
     folder: null
     _stats:
@@ -657,7 +657,7 @@ items:
     flags:
       core:
         sourceId: Item.MyWjMeVAtBCJa8Bt
-    img: systems/uesrpg-d100/images/Icons/killingBlow.webp
+    img: systems/uesrpg-3ev4/images/Icons/killingBlow.webp
     effects: []
     folder: null
     _stats:
@@ -738,7 +738,7 @@ items:
     flags:
       core:
         sourceId: Item.MyWjMeVAtBCJa8Bt
-    img: systems/uesrpg-d100/images/Icons/stuntedMagicka.webp
+    img: systems/uesrpg-3ev4/images/Icons/stuntedMagicka.webp
     effects: []
     folder: null
     _stats:
@@ -818,7 +818,7 @@ items:
     flags:
       core:
         sourceId: Item.wtEFksGPcojtDLTj
-    img: systems/uesrpg-d100/images/Icons/powerWell.webp
+    img: systems/uesrpg-3ev4/images/Icons/powerWell.webp
     effects: []
     folder: null
     _stats:
@@ -1009,7 +1009,7 @@ items:
   - _id: TDTbNPqzJHqSYWBk
     name: Burden 3
     type: spell
-    img: systems/uesrpg-d100/spell-compendium/alteration_spellbook.webp
+    img: systems/uesrpg-3ev4/spell-compendium/alteration_spellbook.webp
     effects: []
     folder: null
     sort: 0
@@ -1141,7 +1141,7 @@ items:
   - _id: iaFklMvmzaNuE5bx
     name: '[Shock] Shield 3'
     type: spell
-    img: systems/uesrpg-d100/spell-compendium/alteration_spellbook.webp
+    img: systems/uesrpg-3ev4/spell-compendium/alteration_spellbook.webp
     effects: []
     folder: null
     sort: 0
@@ -1279,7 +1279,7 @@ items:
   - _id: arqzaowaeqdKfJcD
     name: '[Frost] Shield 3'
     type: spell
-    img: systems/uesrpg-d100/spell-compendium/alteration_spellbook.webp
+    img: systems/uesrpg-3ev4/spell-compendium/alteration_spellbook.webp
     effects: []
     folder: null
     sort: 0
@@ -1417,7 +1417,7 @@ items:
   - _id: 4vMfjIlwuApqMCPp
     name: '[Fire] Shield 3'
     type: spell
-    img: systems/uesrpg-d100/spell-compendium/alteration_spellbook.webp
+    img: systems/uesrpg-3ev4/spell-compendium/alteration_spellbook.webp
     effects: []
     folder: null
     sort: 0
@@ -1555,7 +1555,7 @@ items:
   - _id: jNdlhTSkJvc8NWPq
     name: '[Fire] Armor 3'
     type: spell
-    img: systems/uesrpg-d100/spell-compendium/alteration_spellbook.webp
+    img: systems/uesrpg-3ev4/spell-compendium/alteration_spellbook.webp
     effects: []
     folder: null
     sort: 0
@@ -1687,7 +1687,7 @@ items:
   - _id: mGOZC0esJUzYw53G
     name: Armor 3
     type: spell
-    img: systems/uesrpg-d100/spell-compendium/alteration_spellbook.webp
+    img: systems/uesrpg-3ev4/spell-compendium/alteration_spellbook.webp
     effects: []
     folder: null
     sort: 0

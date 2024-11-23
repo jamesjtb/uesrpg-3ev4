@@ -9,7 +9,7 @@ items:
     flags:
       core:
         sourceId: Item.MyWjMeVAtBCJa8Bt
-    img: systems/uesrpg-d100/images/Icons/pointBlank.webp
+    img: systems/uesrpg-3ev4/images/Icons/pointBlank.webp
     effects: []
     folder: null
     _stats:
@@ -90,7 +90,7 @@ items:
     flags:
       core:
         sourceId: Item.JX5ttPQSa94C9UKX
-    img: systems/uesrpg-d100/images/Icons/blending.webp
+    img: systems/uesrpg-3ev4/images/Icons/blending.webp
     effects: []
     folder: null
     _stats:

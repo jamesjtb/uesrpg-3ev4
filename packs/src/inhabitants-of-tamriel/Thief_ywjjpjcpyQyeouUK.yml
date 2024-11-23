@@ -9,7 +9,7 @@ items:
     flags:
       core:
         sourceId: Item.DYVazRNO2caSDMGE
-    img: systems/uesrpg-d100/images/Icons/slashAndStash.webp
+    img: systems/uesrpg-3ev4/images/Icons/slashAndStash.webp
     effects: []
     folder: null
     _stats:
@@ -96,7 +96,7 @@ items:
     flags:
       core:
         sourceId: Item.MyWjMeVAtBCJa8Bt
-    img: systems/uesrpg-d100/images/Icons/lightningReflexes.webp
+    img: systems/uesrpg-3ev4/images/Icons/lightningReflexes.webp
     effects: []
     folder: null
     _stats:
@@ -178,7 +178,7 @@ items:
     flags:
       core:
         sourceId: Item.DYVazRNO2caSDMGE
-    img: systems/uesrpg-d100/images/Icons/ghost.webp
+    img: systems/uesrpg-3ev4/images/Icons/ghost.webp
     effects: []
     folder: null
     _stats:
@@ -260,7 +260,7 @@ items:
     flags:
       core:
         sourceId: Item.DYVazRNO2caSDMGE
-    img: systems/uesrpg-d100/images/Icons/sneakAttack.webp
+    img: systems/uesrpg-3ev4/images/Icons/sneakAttack.webp
     effects: []
     folder: null
     _stats:

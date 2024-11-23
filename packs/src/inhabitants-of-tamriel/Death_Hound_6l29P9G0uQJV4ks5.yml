@@ -9,7 +9,7 @@ items:
     flags:
       core:
         sourceId: Item.MyWjMeVAtBCJa8Bt
-    img: systems/uesrpg-d100/images/Icons/bestial.webp
+    img: systems/uesrpg-3ev4/images/Icons/bestial.webp
     effects: []
     folder: null
     _stats:
@@ -90,7 +90,7 @@ items:
     flags:
       core:
         sourceId: Item.MyWjMeVAtBCJa8Bt
-    img: systems/uesrpg-d100/images/Icons/drinkBlood.webp
+    img: systems/uesrpg-3ev4/images/Icons/drinkBlood.webp
     effects: []
     folder: null
     _stats:
@@ -170,7 +170,7 @@ items:
     flags:
       core:
         sourceId: Item.wtEFksGPcojtDLTj
-    img: systems/uesrpg-d100/images/Icons/bite.webp
+    img: systems/uesrpg-3ev4/images/Icons/bite.webp
     effects: []
     folder: null
     _stats:
@@ -252,7 +252,7 @@ items:
     flags:
       core:
         sourceId: Item.wtEFksGPcojtDLTj
-    img: systems/uesrpg-d100/images/Icons/darkSight.webp
+    img: systems/uesrpg-3ev4/images/Icons/darkSight.webp
     effects: []
     folder: null
     _stats:
@@ -333,7 +333,7 @@ items:
     flags:
       core:
         sourceId: Item.wtEFksGPcojtDLTj
-    img: systems/uesrpg-d100/images/Icons/diseased.webp
+    img: systems/uesrpg-3ev4/images/Icons/diseased.webp
     effects: []
     folder: null
     _stats:
@@ -414,7 +414,7 @@ items:
     flags:
       core:
         sourceId: Item.wtEFksGPcojtDLTj
-    img: systems/uesrpg-d100/images/Icons/gallop.webp
+    img: systems/uesrpg-3ev4/images/Icons/gallop.webp
     effects: []
     folder: null
     _stats:
@@ -494,7 +494,7 @@ items:
     flags:
       core:
         sourceId: Item.wtEFksGPcojtDLTj
-    img: systems/uesrpg-d100/images/Icons/teamwork.webp
+    img: systems/uesrpg-3ev4/images/Icons/teamwork.webp
     effects: []
     folder: null
     _stats:
@@ -658,7 +658,7 @@ items:
     flags:
       core:
         sourceId: Item.wtEFksGPcojtDLTj
-    img: systems/uesrpg-d100/images/Icons/unrelenting.webp
+    img: systems/uesrpg-3ev4/images/Icons/unrelenting.webp
     effects: []
     folder: null
     _stats:
@@ -849,7 +849,7 @@ items:
     flags:
       core:
         sourceId: Item.5u1148QtN654sdyv
-    img: systems/uesrpg-d100/item-compendium/item_tokens/meat.webp
+    img: systems/uesrpg-3ev4/item-compendium/item_tokens/meat.webp
     effects: []
     folder: null
     _stats:

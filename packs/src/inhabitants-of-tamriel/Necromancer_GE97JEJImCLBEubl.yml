@@ -9,7 +9,7 @@ items:
     flags:
       core:
         sourceId: Item.MyWjMeVAtBCJa8Bt
-    img: systems/uesrpg-d100/images/Icons/heroicSpell.webp
+    img: systems/uesrpg-3ev4/images/Icons/heroicSpell.webp
     effects: []
     folder: null
     _stats:
@@ -87,7 +87,7 @@ items:
     flags:
       core:
         sourceId: Item.Hx4NHRgycp4DR0cQ
-    img: systems/uesrpg-d100/images/Icons/bendReality.webp
+    img: systems/uesrpg-3ev4/images/Icons/bendReality.webp
     effects: []
     folder: null
     _stats:
@@ -165,7 +165,7 @@ items:
     flags:
       core:
         sourceId: Item.7fKKFs3JVM7UgiPU
-    img: systems/uesrpg-d100/images/Icons/questioning.webp
+    img: systems/uesrpg-3ev4/images/Icons/questioning.webp
     effects: []
     folder: null
     _stats:
@@ -354,7 +354,7 @@ items:
   - _id: 2itpgCS6mRnK4Xde
     name: Reanimation Target 4
     type: spell
-    img: systems/uesrpg-d100/spell-compendium/necromancy_spellbook.webp
+    img: systems/uesrpg-3ev4/spell-compendium/necromancy_spellbook.webp
     effects: []
     folder: null
     sort: 0
@@ -495,7 +495,7 @@ items:
   - _id: VilubRL2LHIiITWP
     name: Reanimation Target 3
     type: spell
-    img: systems/uesrpg-d100/spell-compendium/necromancy_spellbook.webp
+    img: systems/uesrpg-3ev4/spell-compendium/necromancy_spellbook.webp
     effects: []
     folder: null
     sort: 0
@@ -636,7 +636,7 @@ items:
   - _id: aGX5O8qMeMR7UoiM
     name: Reanimation Storm 4
     type: spell
-    img: systems/uesrpg-d100/spell-compendium/necromancy_spellbook.webp
+    img: systems/uesrpg-3ev4/spell-compendium/necromancy_spellbook.webp
     effects: []
     folder: null
     sort: 0

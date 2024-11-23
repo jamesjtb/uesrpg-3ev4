@@ -9,7 +9,7 @@ items:
     flags:
       core:
         sourceId: Item.MyWjMeVAtBCJa8Bt
-    img: systems/uesrpg-d100/images/Icons/magicalExertion.webp
+    img: systems/uesrpg-3ev4/images/Icons/magicalExertion.webp
     effects: []
     folder: null
     _stats:
@@ -91,7 +91,7 @@ items:
     flags:
       core:
         sourceId: Item.MyWjMeVAtBCJa8Bt
-    img: systems/uesrpg-d100/images/Icons/pyromancer.webp
+    img: systems/uesrpg-3ev4/images/Icons/pyromancer.webp
     effects: []
     folder: null
     _stats:
@@ -171,7 +171,7 @@ items:
     flags:
       core:
         sourceId: Item.DYVazRNO2caSDMGE
-    img: systems/uesrpg-d100/images/Icons/pyromancer.webp
+    img: systems/uesrpg-3ev4/images/Icons/pyromancer.webp
     effects: []
     folder: null
     _stats:
@@ -255,7 +255,7 @@ items:
     flags:
       core:
         sourceId: Item.7fKKFs3JVM7UgiPU
-    img: systems/uesrpg-d100/images/Icons/questioning.webp
+    img: systems/uesrpg-3ev4/images/Icons/questioning.webp
     effects: []
     folder: null
     _stats:
@@ -335,7 +335,7 @@ items:
   - _id: I1z8QKOiuRV3QgX9
     name: Healing Touch 1
     type: spell
-    img: systems/uesrpg-d100/spell-compendium/restoration_spellbook.webp
+    img: systems/uesrpg-3ev4/spell-compendium/restoration_spellbook.webp
     effects: []
     folder: null
     sort: 0
@@ -463,7 +463,7 @@ items:
   - _id: huhAxwucvunwQQ7F
     name: Heal 2
     type: spell
-    img: systems/uesrpg-d100/spell-compendium/restoration_spellbook.webp
+    img: systems/uesrpg-3ev4/spell-compendium/restoration_spellbook.webp
     effects: []
     folder: null
     sort: 0
