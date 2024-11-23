@@ -1,0 +1,32 @@
+name: '#[CF_tempEntity]'
+folder: null
+sort: 0
+flags:
+  cf:
+    id: temp_h4s9iq5zk1
+    path: References#/CF_SEP/Arcane Items#/CF_SEP/Enchantment Categories
+    color: '#000000'
+    name: Enchantment Categories
+    children:
+      - 1wBdEK0Ef3immXJ0
+      - zffUVvQ0SjHnRKcl
+      - 6ZImNZ2jXfK3nkTb
+    folderPath:
+      - temp_590lo3nu4qu
+      - temp_vqvknh6et3l
+_id: ysY7lrFYeeK0Ziu3
+pages: []
+_stats:
+  coreVersion: '12.331'
+  systemId: null
+  systemVersion: null
+  createdTime: null
+  modifiedTime: null
+  lastModifiedBy: null
+  compendiumSource: null
+  duplicateSource: null
+ownership:
+  default: 0
+  eeXhsDlbzUBZOXZT: 3
+_key: '!journal!ysY7lrFYeeK0Ziu3'
+

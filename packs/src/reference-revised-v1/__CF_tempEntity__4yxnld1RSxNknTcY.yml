@@ -1,0 +1,32 @@
+name: '#[CF_tempEntity]'
+folder: null
+sort: 0
+flags:
+  cf:
+    id: temp_mszr8m82wq8
+    path: References#/CF_SEP/Pricing & Acquisition
+    color: '#000000'
+    name: Pricing & Acquisition
+    children:
+      - ZmxkCNSqvR5tui7r
+      - VqFLZn0M8UfhsaP5
+      - hA7Zh2WFqFBExMK9
+      - cT1DulXv1SrNMb8r
+    folderPath:
+      - temp_590lo3nu4qu
+_id: 4yxnld1RSxNknTcY
+pages: []
+_stats:
+  coreVersion: '12.331'
+  systemId: null
+  systemVersion: null
+  createdTime: null
+  modifiedTime: null
+  lastModifiedBy: null
+  compendiumSource: null
+  duplicateSource: null
+ownership:
+  default: 0
+  eeXhsDlbzUBZOXZT: 3
+_key: '!journal!4yxnld1RSxNknTcY'
+

@@ -1,0 +1,3901 @@
+_id: dArhAObJ09fcNvSm
+name: Dremora Warlock
+type: npc
+img: icons/svg/cowled.svg
+items:
+  - _id: xd3sUYsgNncqjoAh
+    name: Killing Blow
+    type: power
+    sort: 200001
+    flags:
+      core:
+        sourceId: Item.MyWjMeVAtBCJa8Bt
+    img: systems/uesrpg-d100/images/Icons/killingBlow.webp
+    effects: []
+    folder: null
+    _stats:
+      coreVersion: '12.331'
+      systemId: null
+      systemVersion: null
+      createdTime: null
+      modifiedTime: null
+      lastModifiedBy: null
+      compendiumSource: null
+      duplicateSource: null
+    ownership:
+      default: 0
+    system:
+      mpBonus: 0
+      hpBonus: 0
+      spBonus: 0
+      lpBonus: 0
+      wtBonus: 0
+      iniBonus: 0
+      speedBonus: 0
+      flyBonus: 0
+      swimBonus: 0
+      diseaseR: 0
+      fireR: 0
+      frostR: 0
+      shockR: 0
+      poisonR: 0
+      magicR: 0
+      natToughnessR: 0
+      silverR: 0
+      sunlightR: 0
+      characteristics:
+        none: None
+        str: STR
+        end: END
+        agi: AGI
+        int: INT
+        wp: WP
+        prc: PRC
+        prs: PRS
+        lck: LCK
+      characteristicBonus:
+        strChaBonus: 0
+        endChaBonus: 0
+        agiChaBonus: 0
+        intChaBonus: 0
+        wpChaBonus: 0
+        prcChaBonus: 0
+        prsChaBonus: 0
+        lckChaBonus: 0
+      skillArray: []
+      description: >-
+        <p><strong>Cost:</strong> 1 - 3 SP</p>
+
+        <p>After this character rolls for damage, they may spend 1 - 3 Stamina
+        Points to increase their damage by +3 for each SP spent, to a maximum of
+        3 SP for +9 damage.</p>
+      dailyUse: false
+      source: ''
+      shiftForm: false
+      shiftFormStyle: ''
+      shiftStyles:
+        shiftFormNone: Regular Form
+        shiftFormVampireLord: Vampire Lord
+        shiftFormWereWolf: Werewolf
+        shiftFormWereBat: Werebat
+        shiftFormWereBoar: Wereboar
+        shiftFormWereBear: Werebear
+        shiftFormWereCrocodile: Werecrocodile
+        shiftFormWereVulture: Werevulture
+        shiftFormWereLion: Werelion
+    _key: '!actors.items!dArhAObJ09fcNvSm.xd3sUYsgNncqjoAh'
+  - _id: 1SUgOszLdLeg9Bzi
+    name: Dark Sight
+    type: trait
+    sort: 300001
+    flags:
+      core:
+        sourceId: Item.wtEFksGPcojtDLTj
+    img: systems/uesrpg-d100/images/Icons/darkSight.webp
+    effects: []
+    folder: null
+    _stats:
+      coreVersion: '12.331'
+      systemId: null
+      systemVersion: null
+      createdTime: null
+      modifiedTime: null
+      lastModifiedBy: null
+      compendiumSource: null
+      duplicateSource: null
+    ownership:
+      default: 0
+    system:
+      mpBonus: 0
+      hpBonus: 0
+      spBonus: 0
+      lpBonus: 0
+      wtBonus: 0
+      iniBonus: 0
+      speedBonus: 0
+      flyBonus: 0
+      swimBonus: 0
+      diseaseR: 0
+      fireR: 0
+      frostR: 0
+      shockR: 0
+      poisonR: 0
+      magicR: 0
+      natToughnessR: 0
+      silverR: 0
+      sunlightR: 0
+      replace:
+        ini:
+          iniToggle: false
+          value: 0
+          characteristic: ''
+        wt:
+          wtToggle: false
+          value: 0
+          characteristic: ''
+      characteristics:
+        none: None
+        str: STR
+        end: END
+        agi: AGI
+        int: INT
+        wp: WP
+        prc: PRC
+        prs: PRS
+        lck: LCK
+      characteristicBonus:
+        strChaBonus: 0
+        endChaBonus: 0
+        agiChaBonus: 0
+        intChaBonus: 0
+        wpChaBonus: 0
+        prcChaBonus: 0
+        prsChaBonus: 0
+        lckChaBonus: 0
+      skillArray: []
+      description: >-
+        <p>A character with this trait can see normally even in areas with total
+        darkness, and never takes penalties for acting in areas with dim or no
+        lighting.</p>
+      halfSpeed: false
+      addHalfSpeed: false
+      halfFatiguePenalty: false
+      mechanical: false
+      crpCost: null
+      halfWoundPenalty: false
+      painIntolerant: false
+    _key: '!actors.items!dArhAObJ09fcNvSm.1SUgOszLdLeg9Bzi'
+  - _id: 4lultTKZA4y1DbQj
+    name: Power Block
+    type: power
+    sort: 400001
+    flags:
+      core:
+        sourceId: Item.MyWjMeVAtBCJa8Bt
+    img: systems/uesrpg-d100/images/Icons/immunity.webp
+    effects: []
+    folder: null
+    _stats:
+      coreVersion: '12.331'
+      systemId: null
+      systemVersion: null
+      createdTime: null
+      modifiedTime: null
+      lastModifiedBy: null
+      compendiumSource: null
+      duplicateSource: null
+    ownership:
+      default: 0
+    system:
+      mpBonus: 0
+      hpBonus: 0
+      spBonus: 0
+      lpBonus: 0
+      wtBonus: 0
+      iniBonus: 0
+      speedBonus: 0
+      flyBonus: 0
+      swimBonus: 0
+      diseaseR: 0
+      fireR: 0
+      frostR: 0
+      shockR: 0
+      poisonR: 0
+      magicR: 0
+      natToughnessR: 0
+      silverR: 0
+      sunlightR: 0
+      characteristics:
+        none: None
+        str: STR
+        end: END
+        agi: AGI
+        int: INT
+        wp: WP
+        prc: PRC
+        prs: PRS
+        lck: LCK
+      characteristicBonus:
+        strChaBonus: 0
+        endChaBonus: 0
+        agiChaBonus: 0
+        intChaBonus: 0
+        wpChaBonus: 0
+        prcChaBonus: 0
+        prsChaBonus: 0
+        lckChaBonus: 0
+      skillArray: []
+      description: >-
+        <p><strong>Cost:</strong> 1 SP</p>
+
+        <p>This character can double its Shield BR against physical damage as
+        part of the Block Action.</p>
+      dailyUse: false
+      source: ''
+      shiftForm: false
+      shiftFormStyle: ''
+      shiftStyles:
+        shiftFormNone: Regular Form
+        shiftFormVampireLord: Vampire Lord
+        shiftFormWereWolf: Werewolf
+        shiftFormWereBat: Werebat
+        shiftFormWereBoar: Wereboar
+        shiftFormWereBear: Werebear
+        shiftFormWereCrocodile: Werecrocodile
+        shiftFormWereVulture: Werevulture
+        shiftFormWereLion: Werelion
+    _key: '!actors.items!dArhAObJ09fcNvSm.4lultTKZA4y1DbQj'
+  - _id: VutwNrW8ncGKWQeb
+    name: Cleave (3)
+    type: power
+    sort: 500001
+    flags:
+      core:
+        sourceId: Item.MyWjMeVAtBCJa8Bt
+    img: systems/uesrpg-d100/images/Icons/cleaverOfMen.webp
+    effects: []
+    folder: null
+    _stats:
+      coreVersion: '12.331'
+      systemId: null
+      systemVersion: null
+      createdTime: null
+      modifiedTime: null
+      lastModifiedBy: null
+      compendiumSource: null
+      duplicateSource: null
+    ownership:
+      default: 0
+    system:
+      mpBonus: 0
+      hpBonus: 0
+      spBonus: 0
+      lpBonus: 0
+      wtBonus: 0
+      iniBonus: 0
+      speedBonus: 0
+      flyBonus: 0
+      swimBonus: 0
+      diseaseR: 0
+      fireR: 0
+      frostR: 0
+      shockR: 0
+      poisonR: 0
+      magicR: 0
+      natToughnessR: 0
+      silverR: 0
+      sunlightR: 0
+      characteristics:
+        none: None
+        str: STR
+        end: END
+        agi: AGI
+        int: INT
+        wp: WP
+        prc: PRC
+        prs: PRS
+        lck: LCK
+      characteristicBonus:
+        strChaBonus: 0
+        endChaBonus: 0
+        agiChaBonus: 0
+        intChaBonus: 0
+        wpChaBonus: 0
+        prcChaBonus: 0
+        prsChaBonus: 0
+        lckChaBonus: 0
+      skillArray: []
+      description: >-
+        <p><strong>Cost:</strong> 1 SP</p>
+
+        <p>As part of an All Out Attack, this character can strike up to 3
+        targets within reach as a single attack. Roll once for the attack and
+        resolve damage seperately for each target.</p>
+      dailyUse: false
+      source: ''
+      shiftForm: false
+      shiftFormStyle: ''
+      shiftStyles:
+        shiftFormNone: Regular Form
+        shiftFormVampireLord: Vampire Lord
+        shiftFormWereWolf: Werewolf
+        shiftFormWereBat: Werebat
+        shiftFormWereBoar: Wereboar
+        shiftFormWereBear: Werebear
+        shiftFormWereCrocodile: Werecrocodile
+        shiftFormWereVulture: Werevulture
+        shiftFormWereLion: Werelion
+    _key: '!actors.items!dArhAObJ09fcNvSm.VutwNrW8ncGKWQeb'
+  - _id: dS2EhgBMDqLq2U7U
+    name: Kynmarch
+    type: power
+    sort: 600001
+    flags:
+      core:
+        sourceId: Item.MyWjMeVAtBCJa8Bt
+    img: systems/uesrpg-d100/images/Icons/masterOfTheHordes.webp
+    effects: []
+    folder: null
+    _stats:
+      coreVersion: '12.331'
+      systemId: null
+      systemVersion: null
+      createdTime: null
+      modifiedTime: null
+      lastModifiedBy: null
+      compendiumSource: null
+      duplicateSource: null
+    ownership:
+      default: 0
+    system:
+      mpBonus: 0
+      hpBonus: 0
+      spBonus: 0
+      lpBonus: 0
+      wtBonus: 0
+      iniBonus: 0
+      speedBonus: 0
+      flyBonus: 0
+      swimBonus: 0
+      diseaseR: 0
+      fireR: 0
+      frostR: 0
+      shockR: 0
+      poisonR: 0
+      magicR: 0
+      natToughnessR: 0
+      silverR: 0
+      sunlightR: 0
+      characteristics:
+        none: None
+        str: STR
+        end: END
+        agi: AGI
+        int: INT
+        wp: WP
+        prc: PRC
+        prs: PRS
+        lck: LCK
+      characteristicBonus:
+        strChaBonus: 0
+        endChaBonus: 0
+        agiChaBonus: 0
+        intChaBonus: 0
+        wpChaBonus: 0
+        prcChaBonus: 0
+        prsChaBonus: 0
+        lckChaBonus: 0
+      skillArray: []
+      description: >-
+        <p><strong>Cost:</strong> 1 SP +1 AP</p>
+
+        <p>This character can bark orders and command all allied Dremora within
+        10m to make a free Attack Action that does not count toward the usual
+        attack per round limit.</p>
+      dailyUse: false
+      source: ''
+      shiftForm: false
+      shiftFormStyle: ''
+      shiftStyles:
+        shiftFormNone: Regular Form
+        shiftFormVampireLord: Vampire Lord
+        shiftFormWereWolf: Werewolf
+        shiftFormWereBat: Werebat
+        shiftFormWereBoar: Wereboar
+        shiftFormWereBear: Werebear
+        shiftFormWereCrocodile: Werecrocodile
+        shiftFormWereVulture: Werevulture
+        shiftFormWereLion: Werelion
+    _key: '!actors.items!dArhAObJ09fcNvSm.dS2EhgBMDqLq2U7U'
+  - _id: lOpX330cYXsmDYym
+    name: Teamwork
+    type: trait
+    sort: 700001
+    flags:
+      core:
+        sourceId: Item.wtEFksGPcojtDLTj
+    img: systems/uesrpg-d100/images/Icons/teamwork.webp
+    effects: []
+    folder: null
+    _stats:
+      coreVersion: '12.331'
+      systemId: null
+      systemVersion: null
+      createdTime: null
+      modifiedTime: null
+      lastModifiedBy: null
+      compendiumSource: null
+      duplicateSource: null
+    ownership:
+      default: 0
+    system:
+      mpBonus: 0
+      hpBonus: 0
+      spBonus: 0
+      lpBonus: 0
+      wtBonus: 0
+      iniBonus: 0
+      speedBonus: 0
+      flyBonus: 0
+      swimBonus: 0
+      diseaseR: 0
+      fireR: 0
+      frostR: 0
+      shockR: 0
+      poisonR: 0
+      magicR: 0
+      natToughnessR: 0
+      silverR: 0
+      sunlightR: 0
+      replace:
+        ini:
+          iniToggle: false
+          value: 0
+          characteristic: ''
+        wt:
+          wtToggle: false
+          value: 0
+          characteristic: ''
+      characteristics:
+        none: None
+        str: STR
+        end: END
+        agi: AGI
+        int: INT
+        wp: WP
+        prc: PRC
+        prs: PRS
+        lck: LCK
+      characteristicBonus:
+        strChaBonus: 0
+        endChaBonus: 0
+        agiChaBonus: 0
+        intChaBonus: 0
+        wpChaBonus: 0
+        prcChaBonus: 0
+        prsChaBonus: 0
+        lckChaBonus: 0
+      skillArray: []
+      description: >-
+        <p>Characters with this trait gain a bonus DoS on attack rolls made
+        while an ally with this trait is in Reach of the same target.</p>
+      halfSpeed: false
+      addHalfSpeed: false
+      halfFatiguePenalty: false
+      mechanical: false
+      crpCost: null
+      halfWoundPenalty: false
+      painIntolerant: false
+    _key: '!actors.items!dArhAObJ09fcNvSm.lOpX330cYXsmDYym'
+  - _id: cUjPAFlEbEvfXnWu
+    name: Magic Resistant
+    type: trait
+    sort: 800001
+    flags:
+      core:
+        sourceId: Item.wtEFksGPcojtDLTj
+    img: systems/uesrpg-d100/images/Icons/creative.webp
+    effects: []
+    folder: null
+    _stats:
+      coreVersion: '12.331'
+      systemId: null
+      systemVersion: null
+      createdTime: null
+      modifiedTime: null
+      lastModifiedBy: null
+      compendiumSource: null
+      duplicateSource: null
+    ownership:
+      default: 0
+    system:
+      mpBonus: 0
+      hpBonus: 0
+      spBonus: 0
+      lpBonus: 0
+      wtBonus: 0
+      iniBonus: 0
+      speedBonus: 0
+      flyBonus: 0
+      swimBonus: 0
+      diseaseR: 0
+      fireR: 0
+      frostR: 0
+      shockR: 0
+      poisonR: 0
+      magicR: 0
+      natToughnessR: 0
+      silverR: 0
+      sunlightR: 0
+      replace:
+        ini:
+          iniToggle: false
+          value: 0
+          characteristic: ''
+        wt:
+          wtToggle: false
+          value: 0
+          characteristic: ''
+      characteristics:
+        none: None
+        str: STR
+        end: END
+        agi: AGI
+        int: INT
+        wp: WP
+        prc: PRC
+        prs: PRS
+        lck: LCK
+      characteristicBonus:
+        strChaBonus: 0
+        endChaBonus: 0
+        agiChaBonus: 0
+        intChaBonus: 0
+        wpChaBonus: 0
+        prcChaBonus: 0
+        prsChaBonus: 0
+        lckChaBonus: 0
+      skillArray: []
+      description: >-
+        <p>This character can re-roll failed tests to resist magic effects once
+        per test.</p>
+      halfSpeed: false
+      addHalfSpeed: false
+      halfFatiguePenalty: false
+      mechanical: false
+      crpCost: null
+      halfWoundPenalty: false
+      painIntolerant: false
+    _key: '!actors.items!dArhAObJ09fcNvSm.cUjPAFlEbEvfXnWu'
+  - _id: zKTTOJk9IXbvBehU
+    name: Resist Normal Weapons (5)
+    type: trait
+    sort: 900001
+    flags:
+      core:
+        sourceId: Item.wtEFksGPcojtDLTj
+    img: systems/uesrpg-d100/images/Icons/resistNormalWeapons.webp
+    effects: []
+    folder: null
+    _stats:
+      coreVersion: '12.331'
+      systemId: null
+      systemVersion: null
+      createdTime: null
+      modifiedTime: null
+      lastModifiedBy: null
+      compendiumSource: null
+      duplicateSource: null
+    ownership:
+      default: 0
+    system:
+      mpBonus: 0
+      hpBonus: 0
+      spBonus: 0
+      lpBonus: 0
+      wtBonus: 0
+      iniBonus: 0
+      speedBonus: 0
+      flyBonus: 0
+      swimBonus: 0
+      diseaseR: 0
+      fireR: 0
+      frostR: 0
+      shockR: 0
+      poisonR: 0
+      magicR: 0
+      natToughnessR: 0
+      silverR: 0
+      sunlightR: 0
+      replace:
+        ini:
+          iniToggle: false
+          value: 0
+          characteristic: ''
+        wt:
+          wtToggle: false
+          value: 0
+          characteristic: ''
+      characteristics:
+        none: None
+        str: STR
+        end: END
+        agi: AGI
+        int: INT
+        wp: WP
+        prc: PRC
+        prs: PRS
+        lck: LCK
+      characteristicBonus:
+        strChaBonus: 0
+        endChaBonus: 0
+        agiChaBonus: 0
+        intChaBonus: 0
+        wpChaBonus: 0
+        prcChaBonus: 0
+        prsChaBonus: 0
+        lckChaBonus: 0
+      skillArray: []
+      description: >-
+        <p>Characters with this trait are resistant to mundane weapons. If the
+        character suffers damage from a weapon/attack without the Magic quality
+        reduce that damage by X after any other mitigation.</p>
+      halfSpeed: false
+      addHalfSpeed: false
+      halfFatiguePenalty: false
+      mechanical: false
+      crpCost: null
+      halfWoundPenalty: false
+      painIntolerant: false
+    _key: '!actors.items!dArhAObJ09fcNvSm.zKTTOJk9IXbvBehU'
+  - _id: 6JoxcbN2to2CnYce
+    name: Resistance (Magic, 3)
+    type: trait
+    sort: 1000001
+    flags:
+      core:
+        sourceId: Item.wtEFksGPcojtDLTj
+    img: systems/uesrpg-d100/images/Icons/creative.webp
+    effects: []
+    folder: null
+    _stats:
+      coreVersion: '12.331'
+      systemId: null
+      systemVersion: null
+      createdTime: null
+      modifiedTime: null
+      lastModifiedBy: null
+      compendiumSource: null
+      duplicateSource: null
+    ownership:
+      default: 0
+    system:
+      mpBonus: 0
+      hpBonus: 0
+      spBonus: 0
+      lpBonus: 0
+      wtBonus: 0
+      iniBonus: 0
+      speedBonus: 0
+      flyBonus: 0
+      swimBonus: 0
+      diseaseR: 0
+      fireR: 0
+      frostR: 0
+      shockR: 0
+      poisonR: 0
+      magicR: 3
+      natToughnessR: 0
+      silverR: 0
+      sunlightR: 0
+      replace:
+        ini:
+          iniToggle: false
+          value: 0
+          characteristic: ''
+        wt:
+          wtToggle: false
+          value: 0
+          characteristic: ''
+      characteristics:
+        none: None
+        str: STR
+        end: END
+        agi: AGI
+        int: INT
+        wp: WP
+        prc: PRC
+        prs: PRS
+        lck: LCK
+      characteristicBonus:
+        strChaBonus: 0
+        endChaBonus: 0
+        agiChaBonus: 0
+        intChaBonus: 0
+        wpChaBonus: 0
+        prcChaBonus: 0
+        prsChaBonus: 0
+        lckChaBonus: 0
+      skillArray: []
+      description: >-
+        <p>Characters with this trait are resistant to a certain damage type.
+        They reduce damage of * type by X after any other mitigation, and gain a
+        +10 bonus per X to tests made to resist non-damaging effects of this
+        type. This trait can stack.</p>
+      halfSpeed: false
+      addHalfSpeed: false
+      halfFatiguePenalty: false
+      mechanical: false
+      crpCost: 0
+      halfWoundPenalty: false
+      painIntolerant: false
+    _key: '!actors.items!dArhAObJ09fcNvSm.6JoxcbN2to2CnYce'
+  - _id: 77FEAfxBHmzmPLGS
+    name: Spell Reflect (2)
+    type: trait
+    sort: 1100001
+    flags:
+      core:
+        sourceId: Item.wtEFksGPcojtDLTj
+    img: systems/uesrpg-d100/images/Icons/spellReflect.webp
+    effects: []
+    folder: null
+    _stats:
+      coreVersion: '12.331'
+      systemId: null
+      systemVersion: null
+      createdTime: null
+      modifiedTime: null
+      lastModifiedBy: null
+      compendiumSource: null
+      duplicateSource: null
+    ownership:
+      default: 0
+    system:
+      mpBonus: 0
+      hpBonus: 0
+      spBonus: 0
+      lpBonus: 0
+      wtBonus: 0
+      iniBonus: 0
+      speedBonus: 0
+      flyBonus: 0
+      swimBonus: 0
+      diseaseR: 0
+      fireR: 0
+      frostR: 0
+      shockR: 0
+      poisonR: 0
+      magicR: 0
+      natToughnessR: 0
+      silverR: 0
+      sunlightR: 0
+      replace:
+        ini:
+          iniToggle: false
+          value: 0
+          characteristic: ''
+        wt:
+          wtToggle: false
+          value: 0
+          characteristic: ''
+      characteristics:
+        none: None
+        str: STR
+        end: END
+        agi: AGI
+        int: INT
+        wp: WP
+        prc: PRC
+        prs: PRS
+        lck: LCK
+      characteristicBonus:
+        strChaBonus: 0
+        endChaBonus: 0
+        agiChaBonus: 0
+        intChaBonus: 0
+        wpChaBonus: 0
+        prcChaBonus: 0
+        prsChaBonus: 0
+        lckChaBonus: 0
+      skillArray: []
+      description: >-
+        <p>Whenever this character would be affected by a magic spell, roll
+        1d10. If the result is less than or equal to 2, then the spell is
+        resolved against the original caster instead.</p>
+      halfSpeed: false
+      addHalfSpeed: false
+      halfFatiguePenalty: false
+      mechanical: false
+      crpCost: null
+      halfWoundPenalty: false
+      painIntolerant: false
+    _key: '!actors.items!dArhAObJ09fcNvSm.77FEAfxBHmzmPLGS'
+  - _id: yqfxIUqgDeaDkQYZ
+    name: Ring of the Iron Heart
+    type: item
+    sort: 100001
+    flags:
+      core:
+        sourceId: Item.wQ6d02EVzI8HGMTM
+    img: systems/uesrpg-d100/item-compendium/item_tokens/ring.webp
+    effects: []
+    folder: null
+    _stats:
+      coreVersion: '12.331'
+      systemId: null
+      systemVersion: null
+      createdTime: null
+      modifiedTime: null
+      lastModifiedBy: null
+      compendiumSource: null
+      duplicateSource: null
+    ownership:
+      default: 0
+    system:
+      characteristics:
+        none: None
+        str: STR
+        end: END
+        agi: AGI
+        int: INT
+        wp: WP
+        prc: PRC
+        prs: PRS
+        lck: LCK
+      characteristicBonus:
+        strChaBonus: 0
+        endChaBonus: 0
+        agiChaBonus: 0
+        intChaBonus: 0
+        wpChaBonus: 0
+        prcChaBonus: 0
+        prsChaBonus: 0
+        lckChaBonus: 0
+      replace:
+        ini:
+          iniToggle: false
+          value: 0
+          characteristic: ''
+        wt:
+          wtToggle: false
+          value: 0
+          characteristic: ''
+      mpBonus: 0
+      hpBonus: 0
+      spBonus: 0
+      lpBonus: 0
+      wtBonus: 0
+      iniBonus: 0
+      speedBonus: 0
+      flyBonus: 0
+      swimBonus: 0
+      diseaseR: 0
+      fireR: 0
+      frostR: 0
+      shockR: 0
+      poisonR: 0
+      magicR: 0
+      natToughnessR: 0
+      silverR: 0
+      sunlightR: 0
+      skillArray: []
+      isPhysicalObject: true
+      containerStats:
+        contained: false
+        container_id: ''
+        container_name: ''
+      description: <p><strong>Constant Effect:</strong> Adds +2 AR to all Hit Locations</p>
+      quantity: 1
+      enc: 0
+      totalENC: 0
+      reach: ''
+      damage: ''
+      equipped: false
+      hands: 0
+      price: 0
+      modPrice: 0
+      armor: 0
+      magic_ar: 0
+      blockRating: 0
+      enchant_level: 0
+      excludeENC: false
+      consumable: false
+      qualities: ''
+      wearable: false
+      charge:
+        value: 0
+        max: 0
+        reduction: 1
+      carried: false
+      item_cat:
+        none: None
+        head: Helmet
+        l_arm: Left Gauntlet
+        r_arm: Right Gauntlet
+        l_leg: Left Leg
+        r_leg: Right Leg
+        body: Chestplate
+        shield: Shield
+        weapon1: Primary Weapon
+        weapon2: Secondary Weapon
+        weapon3: Sidearm
+      attributes: {}
+    _key: '!actors.items!dArhAObJ09fcNvSm.yqfxIUqgDeaDkQYZ'
+  - _id: 6pXB6ZjgMVqBhGA9
+    name: Ring of the War Mind
+    type: item
+    sort: 100001
+    flags:
+      core:
+        sourceId: Item.wQ6d02EVzI8HGMTM
+    img: systems/uesrpg-d100/item-compendium/item_tokens/ring.webp
+    effects: []
+    folder: null
+    _stats:
+      coreVersion: '12.331'
+      systemId: null
+      systemVersion: null
+      createdTime: null
+      modifiedTime: null
+      lastModifiedBy: null
+      compendiumSource: null
+      duplicateSource: null
+    ownership:
+      default: 0
+    system:
+      characteristics:
+        none: None
+        str: STR
+        end: END
+        agi: AGI
+        int: INT
+        wp: WP
+        prc: PRC
+        prs: PRS
+        lck: LCK
+      characteristicBonus:
+        strChaBonus: 0
+        endChaBonus: 0
+        agiChaBonus: 0
+        intChaBonus: 0
+        wpChaBonus: 0
+        prcChaBonus: 0
+        prsChaBonus: 0
+        lckChaBonus: 0
+      replace:
+        ini:
+          iniToggle: false
+          value: 0
+          characteristic: ''
+        wt:
+          wtToggle: false
+          value: 0
+          characteristic: ''
+      mpBonus: 0
+      hpBonus: 0
+      spBonus: 0
+      lpBonus: 0
+      wtBonus: 0
+      iniBonus: 0
+      speedBonus: 0
+      flyBonus: 0
+      swimBonus: 0
+      diseaseR: 0
+      fireR: 0
+      frostR: 0
+      shockR: 0
+      poisonR: 0
+      magicR: 0
+      natToughnessR: 0
+      silverR: 0
+      sunlightR: 0
+      skillArray: []
+      isPhysicalObject: true
+      containerStats:
+        contained: false
+        container_id: ''
+        container_name: ''
+      description: <p><strong>Constant Effect:</strong> Adds +10 to Willpower</p>
+      quantity: 1
+      enc: 0
+      totalENC: 0
+      reach: ''
+      damage: ''
+      equipped: false
+      hands: 0
+      price: 0
+      modPrice: 0
+      armor: 0
+      magic_ar: 0
+      blockRating: 0
+      enchant_level: 0
+      excludeENC: false
+      consumable: false
+      qualities: ''
+      wearable: false
+      charge:
+        value: 0
+        max: 0
+        reduction: 1
+      carried: false
+      item_cat:
+        none: None
+        head: Helmet
+        l_arm: Left Gauntlet
+        r_arm: Right Gauntlet
+        l_leg: Left Leg
+        r_leg: Right Leg
+        body: Chestplate
+        shield: Shield
+        weapon1: Primary Weapon
+        weapon2: Secondary Weapon
+        weapon3: Sidearm
+      attributes: {}
+    _key: '!actors.items!dArhAObJ09fcNvSm.6pXB6ZjgMVqBhGA9'
+  - _id: d3pmsjvi7sTtcWRO
+    name: Ring of the Spell Drinker
+    type: item
+    sort: 100001
+    flags:
+      core:
+        sourceId: Item.wQ6d02EVzI8HGMTM
+    img: systems/uesrpg-d100/item-compendium/item_tokens/ring.webp
+    effects: []
+    folder: null
+    _stats:
+      coreVersion: '12.331'
+      systemId: null
+      systemVersion: null
+      createdTime: null
+      modifiedTime: null
+      lastModifiedBy: null
+      compendiumSource: null
+      duplicateSource: null
+    ownership:
+      default: 0
+    system:
+      characteristics:
+        none: None
+        str: STR
+        end: END
+        agi: AGI
+        int: INT
+        wp: WP
+        prc: PRC
+        prs: PRS
+        lck: LCK
+      characteristicBonus:
+        strChaBonus: 0
+        endChaBonus: 0
+        agiChaBonus: 0
+        intChaBonus: 0
+        wpChaBonus: 0
+        prcChaBonus: 0
+        prsChaBonus: 0
+        lckChaBonus: 0
+      replace:
+        ini:
+          iniToggle: false
+          value: 0
+          characteristic: ''
+        wt:
+          wtToggle: false
+          value: 0
+          characteristic: ''
+      mpBonus: 0
+      hpBonus: 0
+      spBonus: 0
+      lpBonus: 0
+      wtBonus: 0
+      iniBonus: 0
+      speedBonus: 0
+      flyBonus: 0
+      swimBonus: 0
+      diseaseR: 0
+      fireR: 0
+      frostR: 0
+      shockR: 0
+      poisonR: 0
+      magicR: 0
+      natToughnessR: 0
+      silverR: 0
+      sunlightR: 0
+      skillArray: []
+      isPhysicalObject: true
+      containerStats:
+        contained: false
+        container_id: ''
+        container_name: ''
+      description: >-
+        <p><strong>Constant Effect:</strong> Wearer gains Absorb Magicka (2)
+        trait.</p>
+      quantity: 1
+      enc: 0
+      totalENC: 0
+      reach: ''
+      damage: ''
+      equipped: false
+      hands: 0
+      price: 0
+      modPrice: 0
+      armor: 0
+      magic_ar: 0
+      blockRating: 0
+      enchant_level: 0
+      excludeENC: false
+      consumable: false
+      qualities: ''
+      wearable: false
+      charge:
+        value: 0
+        max: 0
+        reduction: 1
+      carried: false
+      item_cat:
+        none: None
+        head: Helmet
+        l_arm: Left Gauntlet
+        r_arm: Right Gauntlet
+        l_leg: Left Leg
+        r_leg: Right Leg
+        body: Chestplate
+        shield: Shield
+        weapon1: Primary Weapon
+        weapon2: Secondary Weapon
+        weapon3: Sidearm
+      attributes: {}
+    _key: '!actors.items!dArhAObJ09fcNvSm.d3pmsjvi7sTtcWRO'
+  - _id: pfiuzVjOnJwwmIVC
+    name: Spellcaster
+    type: talent
+    sort: 1800001
+    flags:
+      core:
+        sourceId: Item.7fKKFs3JVM7UgiPU
+    img: systems/uesrpg-d100/images/Icons/questioning.webp
+    effects: []
+    folder: null
+    _stats:
+      coreVersion: '12.331'
+      systemId: null
+      systemVersion: null
+      createdTime: null
+      modifiedTime: null
+      lastModifiedBy: null
+      compendiumSource: null
+      duplicateSource: null
+    ownership:
+      default: 0
+    system:
+      mpBonus: 0
+      hpBonus: 0
+      spBonus: 0
+      lpBonus: 0
+      wtBonus: 0
+      iniBonus: 0
+      speedBonus: 0
+      flyBonus: 0
+      swimBonus: 0
+      diseaseR: 0
+      fireR: 0
+      frostR: 0
+      shockR: 0
+      poisonR: 0
+      magicR: 0
+      natToughnessR: 0
+      silverR: 0
+      sunlightR: 0
+      replace:
+        ini:
+          iniToggle: false
+          value: 0
+          characteristic: str
+        wt:
+          wtToggle: false
+          value: 0
+          characteristic: str
+      characteristics:
+        none: None
+        str: STR
+        end: END
+        agi: AGI
+        int: INT
+        wp: WP
+        prc: PRC
+        prs: PRS
+        lck: LCK
+      characteristicBonus:
+        strChaBonus: 0
+        endChaBonus: 0
+        agiChaBonus: 0
+        intChaBonus: 0
+        wpChaBonus: 0
+        prcChaBonus: 0
+        prsChaBonus: 0
+        lckChaBonus: 0
+      skillArray: []
+      description: >-
+        <p><span style="color: #191813;">This character does not track magicka,
+        and can instead cast each spell it knows once.</span></p>
+      xpCost: 0
+      level: 0
+      talentReq: ''
+      miscReq: ''
+      halfFatiguePenalty: false
+      halfWoundPenalty: false
+      untrainedException: false
+      fatigueException: false
+      addIntToMP: false
+      armorAcrobaticsException: false
+      addHalfSpeed: false
+    _key: '!actors.items!dArhAObJ09fcNvSm.pfiuzVjOnJwwmIVC'
+  - _id: jvO6hXuVyCMPD4xE
+    name: Innate Magic
+    type: trait
+    sort: 1900001
+    flags:
+      core:
+        sourceId: Item.wtEFksGPcojtDLTj
+    img: systems/uesrpg-d100/images/Icons/creative.webp
+    effects: []
+    folder: null
+    _stats:
+      coreVersion: '12.331'
+      systemId: null
+      systemVersion: null
+      createdTime: null
+      modifiedTime: null
+      lastModifiedBy: null
+      compendiumSource: null
+      duplicateSource: null
+    ownership:
+      default: 0
+    system:
+      mpBonus: 0
+      hpBonus: 0
+      spBonus: 0
+      lpBonus: 0
+      wtBonus: 0
+      iniBonus: 0
+      speedBonus: 0
+      flyBonus: 0
+      swimBonus: 0
+      diseaseR: 0
+      fireR: 0
+      frostR: 0
+      shockR: 0
+      poisonR: 0
+      magicR: 0
+      natToughnessR: 0
+      silverR: 0
+      sunlightR: 0
+      replace:
+        ini:
+          iniToggle: false
+          value: 0
+          characteristic: ''
+        wt:
+          wtToggle: false
+          value: 0
+          characteristic: ''
+      characteristics:
+        none: None
+        str: STR
+        end: END
+        agi: AGI
+        int: INT
+        wp: WP
+        prc: PRC
+        prs: PRS
+        lck: LCK
+      characteristicBonus:
+        strChaBonus: 0
+        endChaBonus: 0
+        agiChaBonus: 0
+        intChaBonus: 0
+        wpChaBonus: 0
+        prcChaBonus: 0
+        prsChaBonus: 0
+        lckChaBonus: 0
+      skillArray: []
+      description: <p>This character can cast spells even if their hands are occupied.</p>
+      halfSpeed: false
+      addHalfSpeed: false
+      halfFatiguePenalty: false
+      mechanical: false
+      crpCost: null
+      halfWoundPenalty: false
+      painIntolerant: false
+    _key: '!actors.items!dArhAObJ09fcNvSm.jvO6hXuVyCMPD4xE'
+  - _id: XpPQBwOKBNbIfsyA
+    name: Daedra Heart
+    type: item
+    sort: 100001
+    flags:
+      core:
+        sourceId: Item.kvW5ifNkSp73Lor0
+    img: icons/commodities/biological/organ-heart-red.webp
+    effects: []
+    folder: null
+    _stats:
+      coreVersion: '12.331'
+      systemId: null
+      systemVersion: null
+      createdTime: null
+      modifiedTime: null
+      lastModifiedBy: null
+      compendiumSource: null
+      duplicateSource: null
+    ownership:
+      default: 0
+    system:
+      characteristics:
+        none: None
+        str: STR
+        end: END
+        agi: AGI
+        int: INT
+        wp: WP
+        prc: PRC
+        prs: PRS
+        lck: LCK
+      characteristicBonus:
+        strChaBonus: 0
+        endChaBonus: 0
+        agiChaBonus: 0
+        intChaBonus: 0
+        wpChaBonus: 0
+        prcChaBonus: 0
+        prsChaBonus: 0
+        lckChaBonus: 0
+      replace:
+        ini:
+          iniToggle: false
+          value: 0
+          characteristic: ''
+        wt:
+          wtToggle: false
+          value: 0
+          characteristic: ''
+      mpBonus: 0
+      hpBonus: 0
+      spBonus: 0
+      lpBonus: 0
+      wtBonus: 0
+      iniBonus: 0
+      speedBonus: 0
+      flyBonus: 0
+      swimBonus: 0
+      diseaseR: 0
+      fireR: 0
+      frostR: 0
+      shockR: 0
+      poisonR: 0
+      magicR: 0
+      natToughnessR: 0
+      silverR: 0
+      sunlightR: 0
+      skillArray: []
+      isPhysicalObject: true
+      containerStats:
+        contained: false
+        container_id: ''
+        container_name: ''
+      description: |-
+        <p><strong>Legendary Restoration Ingredient</strong></p>
+        <p><strong>Strength</strong>: 200</p>
+        <p><strong>Depth</strong>: 8</p>
+      quantity: 1
+      enc: 1
+      totalENC: 0
+      reach: ''
+      damage: ''
+      equipped: false
+      hands: 0
+      price: 1000
+      modPrice: 0
+      armor: 0
+      magic_ar: 0
+      blockRating: 0
+      enchant_level: 0
+      excludeENC: false
+      consumable: false
+      qualities: ''
+      wearable: false
+      charge:
+        value: 0
+        max: 0
+        reduction: 1
+      carried: false
+      item_cat:
+        none: None
+        head: Helmet
+        l_arm: Left Gauntlet
+        r_arm: Right Gauntlet
+        l_leg: Left Leg
+        r_leg: Right Leg
+        body: Chestplate
+        shield: Shield
+        weapon1: Primary Weapon
+        weapon2: Secondary Weapon
+        weapon3: Sidearm
+      attributes: {}
+    _key: '!actors.items!dArhAObJ09fcNvSm.XpPQBwOKBNbIfsyA'
+  - _id: IaK6NyX5mSeqngQ5
+    name: Dremora Field Bow
+    type: weapon
+    img: icons/weapons/bows/bow-recurve-black.webp
+    effects: []
+    folder: null
+    sort: 0
+    flags:
+      core:
+        sourceId: Item.Bgz0UXTz4D4GRaKV
+    _stats:
+      coreVersion: '12.331'
+      systemId: null
+      systemVersion: null
+      createdTime: null
+      modifiedTime: null
+      lastModifiedBy: null
+      compendiumSource: null
+      duplicateSource: null
+    ownership:
+      default: 0
+      eeXhsDlbzUBZOXZT: 3
+    system:
+      mpBonus: 0
+      hpBonus: 0
+      spBonus: 0
+      lpBonus: 0
+      wtBonus: 0
+      iniBonus: 0
+      speedBonus: 0
+      flyBonus: 0
+      swimBonus: 0
+      diseaseR: 0
+      fireR: 0
+      frostR: 0
+      shockR: 0
+      poisonR: 0
+      magicR: 0
+      natToughnessR: 0
+      silverR: 0
+      sunlightR: 0
+      characteristics:
+        none: None
+        str: STR
+        end: END
+        agi: AGI
+        int: INT
+        wp: WP
+        prc: PRC
+        prs: PRS
+        lck: LCK
+      characteristicBonus:
+        strChaBonus: 0
+        endChaBonus: 0
+        agiChaBonus: 0
+        intChaBonus: 0
+        wpChaBonus: 0
+        prcChaBonus: 0
+        prsChaBonus: 0
+        lckChaBonus: 0
+      replace:
+        ini:
+          iniToggle: false
+          value: 0
+          characteristic: ''
+        wt:
+          wtToggle: false
+          value: 0
+          characteristic: ''
+      skillArray: []
+      isPhysicalObject: true
+      containerStats:
+        contained: false
+        container_id: ''
+        container_name: ''
+      description: >-
+        <p><em style="box-sizing: border-box; user-select: text; color:
+        #191813;">Enchantments, modifications, notes, etc...</em></p>
+      quantity: 1
+      enc: 2
+      totalENC: 0
+      reach: null
+      damage: '0'
+      damage2: 1d6
+      damage3: 0
+      weapon2H: true
+      equippped: false
+      carried: false
+      excludeENC: true
+      superior: false
+      hands: 0
+      price: 0
+      modPrice: 0
+      armor: 0
+      magic_ar: 0
+      enchant_level: 5
+      qualities: >-
+        @Compendium[uesrpg-revision.journal.m6FZ2DuL1SSGOqr2]{Reload} (1),
+        @Compendium[uesrpg-revision.journal.6urnr7lIlWIINHiL]{Magic}
+      charge:
+        value: 0
+        max: 0
+        reduction: 1
+      item_cat:
+        none: None
+        weapon1: Weapon 1
+        weapon2: Weapon 2
+        weapon3: Weapon 3
+    _key: '!actors.items!dArhAObJ09fcNvSm.IaK6NyX5mSeqngQ5'
+  - _id: 1oSJnBnAzxyxpnHY
+    name: Dremora Great Mace
+    type: weapon
+    img: icons/weapons/maces/mace-spiked-steel-grey.webp
+    effects: []
+    folder: null
+    sort: 0
+    flags:
+      core:
+        sourceId: Item.Bgz0UXTz4D4GRaKV
+    _stats:
+      coreVersion: '12.331'
+      systemId: null
+      systemVersion: null
+      createdTime: null
+      modifiedTime: null
+      lastModifiedBy: null
+      compendiumSource: null
+      duplicateSource: null
+    ownership:
+      default: 0
+      eeXhsDlbzUBZOXZT: 3
+    system:
+      mpBonus: 0
+      hpBonus: 0
+      spBonus: 0
+      lpBonus: 0
+      wtBonus: 0
+      iniBonus: 0
+      speedBonus: 0
+      flyBonus: 0
+      swimBonus: 0
+      diseaseR: 0
+      fireR: 0
+      frostR: 0
+      shockR: 0
+      poisonR: 0
+      magicR: 0
+      natToughnessR: 0
+      silverR: 0
+      sunlightR: 0
+      characteristics:
+        none: None
+        str: STR
+        end: END
+        agi: AGI
+        int: INT
+        wp: WP
+        prc: PRC
+        prs: PRS
+        lck: LCK
+      characteristicBonus:
+        strChaBonus: 0
+        endChaBonus: 0
+        agiChaBonus: 0
+        intChaBonus: 0
+        wpChaBonus: 0
+        prcChaBonus: 0
+        prsChaBonus: 0
+        lckChaBonus: 0
+      replace:
+        ini:
+          iniToggle: false
+          value: 0
+          characteristic: ''
+        wt:
+          wtToggle: false
+          value: 0
+          characteristic: ''
+      skillArray: []
+      isPhysicalObject: true
+      containerStats:
+        contained: false
+        container_id: ''
+        container_name: ''
+      description: >-
+        <p><em style="box-sizing: border-box; user-select: text; color:
+        #191813;">Enchantments, modifications, notes, etc...</em></p>
+      quantity: 1
+      enc: 5
+      totalENC: 0
+      reach: 3
+      damage: '0'
+      damage2: 1d12+3
+      damage3: 0
+      weapon2H: true
+      equippped: false
+      carried: false
+      excludeENC: true
+      superior: false
+      hands: 0
+      price: 0
+      modPrice: 0
+      armor: 0
+      magic_ar: 0
+      enchant_level: 5
+      qualities: >-
+        @Compendium[uesrpg-revision.journal.mnfUeIEQkOInlwPK]{Crushing},
+        @Compendium[uesrpg-revision.journal.21g3rtqdszsKc9jv]{Unwieldy},
+        @Compendium[uesrpg-revision.journal.Q21irFmSziioerAo]{Shield Splitter},
+        @Compendium[uesrpg-revision.journal.CJUeJP5xJPjyhuya]{Concussive},
+        @Compendium[uesrpg-revision.journal.6urnr7lIlWIINHiL]{Magic}
+      charge:
+        value: 0
+        max: 0
+        reduction: 1
+      item_cat:
+        none: None
+        weapon1: Weapon 1
+        weapon2: Weapon 2
+        weapon3: Weapon 3
+    _key: '!actors.items!dArhAObJ09fcNvSm.1oSJnBnAzxyxpnHY'
+  - _id: 7POZ3dm53jFHpofk
+    name: Dremora Longsword
+    type: weapon
+    img: icons/weapons/swords/sword-guard-worn.webp
+    effects: []
+    folder: null
+    sort: 0
+    flags:
+      core:
+        sourceId: Item.Bgz0UXTz4D4GRaKV
+    _stats:
+      coreVersion: '12.331'
+      systemId: null
+      systemVersion: null
+      createdTime: null
+      modifiedTime: null
+      lastModifiedBy: null
+      compendiumSource: null
+      duplicateSource: null
+    ownership:
+      default: 0
+      eeXhsDlbzUBZOXZT: 3
+    system:
+      mpBonus: 0
+      hpBonus: 0
+      spBonus: 0
+      lpBonus: 0
+      wtBonus: 0
+      iniBonus: 0
+      speedBonus: 0
+      flyBonus: 0
+      swimBonus: 0
+      diseaseR: 0
+      fireR: 0
+      frostR: 0
+      shockR: 0
+      poisonR: 0
+      magicR: 0
+      natToughnessR: 0
+      silverR: 0
+      sunlightR: 0
+      characteristics:
+        none: None
+        str: STR
+        end: END
+        agi: AGI
+        int: INT
+        wp: WP
+        prc: PRC
+        prs: PRS
+        lck: LCK
+      characteristicBonus:
+        strChaBonus: 0
+        endChaBonus: 0
+        agiChaBonus: 0
+        intChaBonus: 0
+        wpChaBonus: 0
+        prcChaBonus: 0
+        prsChaBonus: 0
+        lckChaBonus: 0
+      replace:
+        ini:
+          iniToggle: false
+          value: 0
+          characteristic: ''
+        wt:
+          wtToggle: false
+          value: 0
+          characteristic: ''
+      skillArray: []
+      isPhysicalObject: true
+      containerStats:
+        contained: false
+        container_id: ''
+        container_name: ''
+      description: >-
+        <p><em style="box-sizing: border-box; user-select: text; color:
+        #191813;">Enchantments, modifications, notes, etc...</em></p>
+      quantity: 1
+      enc: 3
+      totalENC: 0
+      reach: 2
+      damage: 1d8+3
+      damage2: 1d10+3
+      damage3: 0
+      weapon2H: false
+      equippped: false
+      carried: false
+      excludeENC: true
+      superior: false
+      hands: 0
+      price: 0
+      modPrice: 0
+      armor: 0
+      magic_ar: 0
+      enchant_level: 5
+      qualities: >-
+        @Compendium[uesrpg-revision.journal.8QrUeG8YXaLx1BqW]{Slashing},
+        @Compendium[uesrpg-revision.journal.ooDJyrEPhbUeWoZl]{Versatile},
+        @Compendium[uesrpg-revision.journal.6urnr7lIlWIINHiL]{Magic}
+      charge:
+        value: 0
+        max: 0
+        reduction: 1
+      item_cat:
+        none: None
+        weapon1: Weapon 1
+        weapon2: Weapon 2
+        weapon3: Weapon 3
+    _key: '!actors.items!dArhAObJ09fcNvSm.7POZ3dm53jFHpofk'
+  - _id: 7ZL57Ynx8cuvAtzf
+    name: Dremora Bodkin Ammunition
+    type: ammunition
+    img: icons/weapons/ammunition/arrows-bodkin-yellow-red.webp
+    effects: []
+    folder: null
+    sort: 0
+    flags:
+      core:
+        sourceId: Item.hYSbMeD2VQN12EmJ
+    _stats:
+      coreVersion: '12.331'
+      systemId: null
+      systemVersion: null
+      createdTime: null
+      modifiedTime: null
+      lastModifiedBy: null
+      compendiumSource: null
+      duplicateSource: null
+    ownership:
+      default: 0
+      eeXhsDlbzUBZOXZT: 3
+    system:
+      mpBonus: 0
+      hpBonus: 0
+      spBonus: 0
+      lpBonus: 0
+      wtBonus: 0
+      iniBonus: 0
+      speedBonus: 0
+      flyBonus: 0
+      swimBonus: 0
+      diseaseR: 0
+      fireR: 0
+      frostR: 0
+      shockR: 0
+      poisonR: 0
+      magicR: 0
+      natToughnessR: 0
+      silverR: 0
+      sunlightR: 0
+      characteristics:
+        none: None
+        str: STR
+        end: END
+        agi: AGI
+        int: INT
+        wp: WP
+        prc: PRC
+        prs: PRS
+        lck: LCK
+      characteristicBonus:
+        strChaBonus: 0
+        endChaBonus: 0
+        agiChaBonus: 0
+        intChaBonus: 0
+        wpChaBonus: 0
+        prcChaBonus: 0
+        prsChaBonus: 0
+        lckChaBonus: 0
+      replace:
+        ini:
+          iniToggle: false
+          value: 0
+          characteristic: ''
+        wt:
+          wtToggle: false
+          value: 0
+          characteristic: ''
+      isPhysicalObject: true
+      containerStats:
+        contained: false
+        container_id: ''
+        container_name: ''
+      description: >-
+        <p><em style="box-sizing: border-box; user-select: text; color:
+        #191813;">Enchantments, modifications, notes, etc...</em></p>
+
+        <p>Replace 'Ammunition' with Bolts or Arrows.</p>
+      quantity: 12
+      enc: 0.1
+      totalENC: 0
+      damage: '3'
+      carried: false
+      equipped: false
+      excludeENC: false
+      superior: false
+      price: 0
+      modPrice: 0
+      armor: 0
+      magic_ar: 0
+      enchant_level: 5
+      qualities: '@Compendium[uesrpg-revision.journal.wra9K7hRoVnZarja]{Splitting}'
+      charge:
+        value: 0
+        max: 0
+    _key: '!actors.items!dArhAObJ09fcNvSm.7ZL57Ynx8cuvAtzf'
+  - _id: yOWpbgS0fs3g2dSw
+    name: Dremora Broad-head Ammunition
+    type: ammunition
+    img: icons/weapons/ammunition/arrows-war-white.webp
+    effects: []
+    folder: null
+    sort: 0
+    flags:
+      core:
+        sourceId: Item.hYSbMeD2VQN12EmJ
+    _stats:
+      coreVersion: '12.331'
+      systemId: null
+      systemVersion: null
+      createdTime: null
+      modifiedTime: null
+      lastModifiedBy: null
+      compendiumSource: null
+      duplicateSource: null
+    ownership:
+      default: 0
+      eeXhsDlbzUBZOXZT: 3
+    system:
+      mpBonus: 0
+      hpBonus: 0
+      spBonus: 0
+      lpBonus: 0
+      wtBonus: 0
+      iniBonus: 0
+      speedBonus: 0
+      flyBonus: 0
+      swimBonus: 0
+      diseaseR: 0
+      fireR: 0
+      frostR: 0
+      shockR: 0
+      poisonR: 0
+      magicR: 0
+      natToughnessR: 0
+      silverR: 0
+      sunlightR: 0
+      characteristics:
+        none: None
+        str: STR
+        end: END
+        agi: AGI
+        int: INT
+        wp: WP
+        prc: PRC
+        prs: PRS
+        lck: LCK
+      characteristicBonus:
+        strChaBonus: 0
+        endChaBonus: 0
+        agiChaBonus: 0
+        intChaBonus: 0
+        wpChaBonus: 0
+        prcChaBonus: 0
+        prsChaBonus: 0
+        lckChaBonus: 0
+      replace:
+        ini:
+          iniToggle: false
+          value: 0
+          characteristic: ''
+        wt:
+          wtToggle: false
+          value: 0
+          characteristic: ''
+      isPhysicalObject: true
+      containerStats:
+        contained: false
+        container_id: ''
+        container_name: ''
+      description: >-
+        <p><em style="box-sizing: border-box; user-select: text; color:
+        #191813;">Enchantments, modifications, notes, etc...</em></p>
+
+        <p>Replace 'Ammunition' with Bolts or Arrows.</p>
+      quantity: 12
+      enc: 0.1
+      totalENC: 0
+      damage: '3'
+      carried: false
+      equipped: false
+      excludeENC: false
+      superior: false
+      price: 0
+      modPrice: 0
+      armor: 0
+      magic_ar: 0
+      enchant_level: 5
+      qualities: '@Compendium[uesrpg-revision.journal.8QrUeG8YXaLx1BqW]{Slashing}'
+      charge:
+        value: 0
+        max: 0
+    _key: '!actors.items!dArhAObJ09fcNvSm.yOWpbgS0fs3g2dSw'
+  - _id: zL8hNMh9icBYHQji
+    name: Dremora Robes
+    type: armor
+    img: icons/equipment/chest/breastplate-layered-grey.webp
+    effects: []
+    folder: null
+    sort: 0
+    flags:
+      core:
+        sourceId: Item.bonkO89RqJjN4m5k
+    _stats:
+      coreVersion: '12.331'
+      systemId: null
+      systemVersion: null
+      createdTime: null
+      modifiedTime: null
+      lastModifiedBy: null
+      compendiumSource: null
+      duplicateSource: null
+    ownership:
+      default: 0
+      eeXhsDlbzUBZOXZT: 3
+    system:
+      mpBonus: 0
+      hpBonus: 0
+      spBonus: 0
+      lpBonus: 0
+      wtBonus: 0
+      iniBonus: 0
+      speedBonus: 0
+      flyBonus: 0
+      swimBonus: 0
+      diseaseR: 0
+      fireR: 0
+      frostR: 0
+      shockR: 0
+      poisonR: 0
+      magicR: 0
+      natToughnessR: 0
+      silverR: 0
+      sunlightR: 0
+      characteristics:
+        none: None
+        str: STR
+        end: END
+        agi: AGI
+        int: INT
+        wp: WP
+        prc: PRC
+        prs: PRS
+        lck: LCK
+      characteristicBonus:
+        strChaBonus: 0
+        endChaBonus: 0
+        agiChaBonus: 0
+        intChaBonus: 0
+        wpChaBonus: 0
+        prcChaBonus: 0
+        prsChaBonus: 0
+        lckChaBonus: 0
+      replace:
+        ini:
+          iniToggle: false
+          value: 0
+          characteristic: ''
+        wt:
+          wtToggle: false
+          value: 0
+          characteristic: ''
+      skillArray: []
+      isPhysicalObject: true
+      containerStats:
+        contained: false
+        container_id: ''
+        container_name: ''
+      description: >-
+        <p><em style="box-sizing: border-box; user-select: text; color:
+        #191813;">Enchantments, modifications, notes, etc...</em></p>
+      quantity: 1
+      enc: 0
+      totalENC: 0
+      reach: ''
+      damage: ''
+      equipped: true
+      carried: true
+      hands: 0
+      price: 0
+      modPrice: 0
+      armor: 0
+      blockRating: 0
+      excludeENC: false
+      magic_ar: '0'
+      enchant_level: 5
+      qualities: '-'
+      category: body
+      item_cat:
+        none: None
+        head: Helmet
+        l_arm: Left Gauntlet
+        r_arm: Right Gauntlet
+        l_leg: Left Leg
+        r_leg: Right Leg
+        body: Chestplate
+        shield: Shield
+      charge:
+        value: 0
+        max: 0
+        reduction: 1
+    _key: '!actors.items!dArhAObJ09fcNvSm.zL8hNMh9icBYHQji'
+  - _id: jierZGR9Dsl3bIW7
+    name: Summon Scamp
+    type: spell
+    img: icons/magic/symbols/rune-sigil-white-pink.webp
+    effects: []
+    folder: null
+    sort: 0
+    flags:
+      core:
+        sourceId: Item.Dvncp3T7Nn3WBpgy
+    _stats:
+      coreVersion: '12.331'
+      systemId: null
+      systemVersion: null
+      createdTime: null
+      modifiedTime: null
+      lastModifiedBy: null
+      compendiumSource: null
+      duplicateSource: null
+    ownership:
+      default: 0
+      qwt9o1cuKYitvD9G: 3
+      eeXhsDlbzUBZOXZT: 3
+    system:
+      description: >-
+        <p>Summons a Daedra with the Summoned trait, which appears within five
+        meters of the caster. Immediately after being summoned, the Daedra must
+        make a Willpower test against the DoS of the Conjuration test. If the
+        Conjurer wins the test, the Daedra gains the Bound trait and persists
+        for 1 minute, If the Daedra wins the Opposed test, it is not Bound and
+        can act as it pleases, typically murdering its summoner. The unbound
+        Daedra can test Willpower at the end of each minute to maintain itself
+        in Mundus. Keeping the Daedra in line imposes [Spell Str] Mindlock on
+        the caster. Roll initiative for the Daedra when it&rsquo;s summoned, as
+        it acts on its own turn.</p>
+
+        <p>For each time the spell is bought, pick one spell profile from the
+        table below and mark it on your sheet.</p>
+
+        <table style="width: 98.5447%; height: 374px;" border="2"
+        cellspacing="2" cellpadding="1">
+
+        <tbody>
+
+        <tr style="height: 17px;">
+
+        <td style="width: 27.1325%; height: 17px; text-align:
+        left;"><strong>Daedra</strong></td>
+
+        <td style="width: 9.79739%; height: 17px; text-align:
+        center;"><strong>Level</strong></td>
+
+        <td style="width: 8.94093%; height: 17px; text-align:
+        center;"><strong>Cost</strong></td>
+
+        <td style="width: 15.9126%; height: 17px; text-align:
+        center;"><strong>Spell Strength</strong></td>
+
+        </tr>
+
+        <tr style="height: 17px;">
+
+        <td style="width: 27.1325%; height: 17px; text-align:
+        left;">Daedrat</td>
+
+        <td style="width: 9.79739%; height: 17px; text-align: center;">1</td>
+
+        <td style="width: 8.94093%; height: 17px; text-align: center;">14</td>
+
+        <td style="width: 15.9126%; height: 17px; text-align: center;">1</td>
+
+        </tr>
+
+        <tr style="height: 17px;">
+
+        <td style="width: 27.1325%; height: 17px; text-align: left;">Scamp</td>
+
+        <td style="width: 9.79739%; height: 17px; text-align: center;">1</td>
+
+        <td style="width: 8.94093%; height: 17px; text-align: center;">15</td>
+
+        <td style="width: 15.9126%; height: 17px; text-align: center;">1</td>
+
+        </tr>
+
+        <tr style="height: 17px;">
+
+        <td style="width: 27.1325%; text-align: left; height:
+        17px;">Banekin</td>
+
+        <td style="width: 9.79739%; text-align: center; height: 17px;">1</td>
+
+        <td style="width: 8.94093%; text-align: center; height: 17px;">17</td>
+
+        <td style="width: 15.9126%; text-align: center; height: 17px;">1</td>
+
+        </tr>
+
+        <tr style="height: 17px;">
+
+        <td style="width: 27.1325%; text-align: left; height: 17px;">Hell
+        Hound</td>
+
+        <td style="width: 9.79739%; text-align: center; height: 17px;">2</td>
+
+        <td style="width: 8.94093%; text-align: center; height: 17px;">23</td>
+
+        <td style="width: 15.9126%; text-align: center; height: 17px;">1</td>
+
+        </tr>
+
+        <tr style="height: 17px;">
+
+        <td style="width: 27.1325%; text-align: left; height:
+        17px;">Clannfear</td>
+
+        <td style="width: 9.79739%; text-align: center; height: 17px;">2</td>
+
+        <td style="width: 8.94093%; text-align: center; height: 17px;">25</td>
+
+        <td style="width: 15.9126%; text-align: center; height: 17px;">1</td>
+
+        </tr>
+
+        <tr style="height: 17px;">
+
+        <td style="width: 27.1325%; text-align: left; height: 17px;">Hunger</td>
+
+        <td style="width: 9.79739%; text-align: center; height: 17px;">3</td>
+
+        <td style="width: 8.94093%; text-align: center; height: 17px;">32</td>
+
+        <td style="width: 15.9126%; text-align: center; height: 17px;">1</td>
+
+        </tr>
+
+        <tr style="height: 17px;">
+
+        <td style="width: 27.1325%; text-align: left; height: 17px;">Dremora
+        Churl</td>
+
+        <td style="width: 9.79739%; text-align: center; height: 17px;">3</td>
+
+        <td style="width: 8.94093%; text-align: center; height: 17px;">33</td>
+
+        <td style="width: 15.9126%; text-align: center; height: 17px;">1</td>
+
+        </tr>
+
+        <tr style="height: 17px;">
+
+        <td style="width: 27.1325%; text-align: left; height: 17px;">Flame
+        Atronach</td>
+
+        <td style="width: 9.79739%; text-align: center; height: 17px;">3</td>
+
+        <td style="width: 8.94093%; text-align: center; height: 17px;">31</td>
+
+        <td style="width: 15.9126%; text-align: center; height: 17px;">2</td>
+
+        </tr>
+
+        <tr style="height: 17px;">
+
+        <td style="width: 27.1325%; text-align: left; height: 17px;">Spider
+        Daedra</td>
+
+        <td style="width: 9.79739%; text-align: center; height: 17px;">4</td>
+
+        <td style="width: 8.94093%; text-align: center; height: 17px;">40</td>
+
+        <td style="width: 15.9126%; text-align: center; height: 17px;">2</td>
+
+        </tr>
+
+        <tr style="height: 17px;">
+
+        <td style="width: 27.1325%; text-align: left; height: 17px;">Dremora
+        Caitiff</td>
+
+        <td style="width: 9.79739%; text-align: center; height: 17px;">4</td>
+
+        <td style="width: 8.94093%; text-align: center; height: 17px;">36</td>
+
+        <td style="width: 15.9126%; text-align: center; height: 17px;">1</td>
+
+        </tr>
+
+        <tr style="height: 17px;">
+
+        <td style="width: 27.1325%; text-align: left; height: 17px;">Ogrim</td>
+
+        <td style="width: 9.79739%; text-align: center; height: 17px;">4</td>
+
+        <td style="width: 8.94093%; text-align: center; height: 17px;">39</td>
+
+        <td style="width: 15.9126%; text-align: center; height: 17px;">2</td>
+
+        </tr>
+
+        <tr style="height: 17px;">
+
+        <td style="width: 27.1325%; text-align: left; height: 17px;">Frost
+        Atronach</td>
+
+        <td style="width: 9.79739%; text-align: center; height: 17px;">4</td>
+
+        <td style="width: 8.94093%; text-align: center; height: 17px;">37</td>
+
+        <td style="width: 15.9126%; text-align: center; height: 17px;">2</td>
+
+        </tr>
+
+        <tr style="height: 17px;">
+
+        <td style="width: 27.1325%; text-align: left; height:
+        17px;">Auroran</td>
+
+        <td style="width: 9.79739%; text-align: center; height: 17px;">5</td>
+
+        <td style="width: 8.94093%; text-align: center; height: 17px;">47</td>
+
+        <td style="width: 15.9126%; text-align: center; height: 17px;">2</td>
+
+        </tr>
+
+        <tr style="height: 17px;">
+
+        <td style="width: 27.1325%; text-align: left; height: 17px;">Storm
+        Atronach</td>
+
+        <td style="width: 9.79739%; text-align: center; height: 17px;">5</td>
+
+        <td style="width: 8.94093%; text-align: center; height: 17px;">44</td>
+
+        <td style="width: 15.9126%; text-align: center; height: 17px;">3</td>
+
+        </tr>
+
+        <tr style="height: 17px;">
+
+        <td style="width: 27.1325%; text-align: left; height: 17px;">Dremora
+        Kynmarcher</td>
+
+        <td style="width: 9.79739%; text-align: center; height: 17px;">5</td>
+
+        <td style="width: 8.94093%; text-align: center; height: 17px;">46</td>
+
+        <td style="width: 15.9126%; text-align: center; height: 17px;">2</td>
+
+        </tr>
+
+        <tr style="height: 17px;">
+
+        <td style="width: 27.1325%; text-align: left; height: 17px;">Winged
+        Twilight</td>
+
+        <td style="width: 9.79739%; text-align: center; height: 17px;">6</td>
+
+        <td style="width: 8.94093%; text-align: center; height: 17px;">53</td>
+
+        <td style="width: 15.9126%; text-align: center; height: 17px;">3</td>
+
+        </tr>
+
+        <tr style="height: 17px;">
+
+        <td style="width: 27.1325%; text-align: left; height: 17px;">Aureal
+        (Golden Saint)</td>
+
+        <td style="width: 9.79739%; text-align: center; height: 17px;">6</td>
+
+        <td style="width: 8.94093%; text-align: center; height: 17px;">55</td>
+
+        <td style="width: 15.9126%; text-align: center; height: 17px;">3</td>
+
+        </tr>
+
+        <tr style="height: 17px;">
+
+        <td style="width: 27.1325%; text-align: left; height: 17px;">Mazken
+        (Dark Seducer)</td>
+
+        <td style="width: 9.79739%; text-align: center; height: 17px;">6</td>
+
+        <td style="width: 8.94093%; text-align: center; height: 17px;">55</td>
+
+        <td style="width: 15.9126%; text-align: center; height: 17px;">3</td>
+
+        </tr>
+
+        <tr style="height: 17px;">
+
+        <td style="width: 27.1325%; text-align: left; height: 17px;">Dremora
+        Lord</td>
+
+        <td style="width: 9.79739%; text-align: center; height: 17px;">7</td>
+
+        <td style="width: 8.94093%; text-align: center; height: 17px;">65</td>
+
+        <td style="width: 15.9126%; text-align: center; height: 17px;">3</td>
+
+        </tr>
+
+        <tr style="height: 17px;">
+
+        <td style="width: 27.1325%; text-align: left; height:
+        17px;">Xivilai</td>
+
+        <td style="width: 9.79739%; text-align: center; height: 17px;">7</td>
+
+        <td style="width: 8.94093%; text-align: center; height: 17px;">64</td>
+
+        <td style="width: 15.9126%; text-align: center; height: 17px;">3</td>
+
+        </tr>
+
+        <tr style="height: 17px;">
+
+        <td style="width: 27.1325%; text-align: left; height:
+        17px;">Daedroth</td>
+
+        <td style="width: 9.79739%; text-align: center; height: 17px;">7</td>
+
+        <td style="width: 8.94093%; text-align: center; height: 17px;">68</td>
+
+        <td style="width: 15.9126%; text-align: center; height: 17px;">3</td>
+
+        </tr>
+
+        </tbody>
+
+        </table>
+
+        <p>&nbsp;</p>
+      damage: '0'
+      level: 1
+      cost: 15
+      spell_str: ''
+      attributes: >-
+        @Compendium[uesrpg-revision.journal.etuR7vddrnv3ot2J]{Upkeep},
+        @Compendium[uesrpg-revision.journal.DyA3yhRJDDDu8cTw]{Mindlock}(Spell
+        Strength)
+      form: Target
+      school: conjuration
+      school_cat:
+        alteration: Alteration
+        conjuration: Conjuration
+        destruction: Destruction
+        illusion: Illusion
+        mysticism: Mysticism
+        necromancy: Necromancy
+        restoration: Restoration
+        none: Select School
+      spellType: ''
+      spellTypes:
+        conventional: Conventional
+        unconventional: Unconventional
+    _key: '!actors.items!dArhAObJ09fcNvSm.jierZGR9Dsl3bIW7'
+  - _id: RoIC9yEEwajmEzTG
+    name: '[Fire] Bolt 3'
+    type: spell
+    img: icons/magic/fire/projectile-fireball-red-yellow.webp
+    effects: []
+    folder: null
+    sort: 0
+    flags:
+      core:
+        sourceId: Item.Dvncp3T7Nn3WBpgy
+    _stats:
+      coreVersion: '12.331'
+      systemId: null
+      systemVersion: null
+      createdTime: null
+      modifiedTime: null
+      lastModifiedBy: null
+      compendiumSource: null
+      duplicateSource: null
+    ownership:
+      default: 0
+      qwt9o1cuKYitvD9G: 3
+      eeXhsDlbzUBZOXZT: 3
+    system:
+      description: >-
+        <p>Fires a bolt of elemental energy at target character within 100m.
+        Deals [Spell Strength] [type] damage.</p>
+
+        <table style="width: 98.5447%; height: 51px;" border="2" cellspacing="2"
+        cellpadding="1">
+
+        <tbody>
+
+        <tr style="height: 17px;">
+
+        <td style="width: 24.9539%; height: 17px; text-align:
+        left;"><strong>Level</strong></td>
+
+        <td style="width: 11.5403%; height: 17px; text-align:
+        center;"><strong>1</strong></td>
+
+        <td style="width: 10.9017%; height: 17px; text-align:
+        center;"><strong>2</strong></td>
+
+        <td style="width: 10.2483%; height: 17px; text-align:
+        center;"><strong>3</strong></td>
+
+        <td style="width: 10.8979%; height: 17px; text-align:
+        center;"><strong>4</strong></td>
+
+        <td style="width: 9.94024%; height: 17px; text-align:
+        center;"><strong>5</strong></td>
+
+        <td style="width: 9.50831%; height: 17px; text-align:
+        center;"><strong>6</strong></td>
+
+        <td style="width: 10.0805%; height: 17px; text-align:
+        center;"><strong>7</strong></td>
+
+        </tr>
+
+        <tr style="height: 17px;">
+
+        <td style="width: 24.9539%; height: 17px; text-align:
+        left;"><strong>Cost</strong></td>
+
+        <td style="width: 11.5403%; height: 17px; text-align: center;">4</td>
+
+        <td style="width: 10.9017%; height: 17px; text-align: center;">6</td>
+
+        <td style="width: 10.2483%; height: 17px; text-align: center;">8</td>
+
+        <td style="width: 10.8979%; height: 17px; text-align: center;">10</td>
+
+        <td style="width: 9.94024%; height: 17px; text-align: center;">12</td>
+
+        <td style="width: 9.50831%; height: 17px; text-align: center;">14</td>
+
+        <td style="width: 10.0805%; height: 17px; text-align: center;">16</td>
+
+        </tr>
+
+        <tr style="height: 17px;">
+
+        <td style="width: 24.9539%; height: 17px; text-align:
+        left;"><strong>Spell Strength</strong></td>
+
+        <td style="width: 11.5403%; height: 17px; text-align: center;">1d4</td>
+
+        <td style="width: 10.9017%; height: 17px; text-align: center;">1d6</td>
+
+        <td style="width: 10.2483%; height: 17px; text-align: center;">1d8</td>
+
+        <td style="width: 10.8979%; height: 17px; text-align: center;">1d10</td>
+
+        <td style="width: 9.94024%; height: 17px; text-align: center;">2d6</td>
+
+        <td style="width: 9.50831%; height: 17px; text-align: center;">2d8</td>
+
+        <td style="width: 10.0805%; height: 17px; text-align: center;">2d10</td>
+
+        </tr>
+
+        </tbody>
+
+        </table>
+
+        <p>&nbsp;</p>
+      damage: 1d8
+      level: 3
+      cost: 8
+      spell_str: ''
+      attributes: >-
+        [Fire], @Compendium[uesrpg-revision.journal.XtV9n7rHuDGDbW2j]{R Attack}
+        (100m), @Compendium[uesrpg-revision.journal.ELRN5yhwQUASYJXL]{Overload}
+        (+WpB to Dmg)
+      form: Bolt
+      school: destruction
+      school_cat:
+        alteration: Alteration
+        conjuration: Conjuration
+        destruction: Destruction
+        illusion: Illusion
+        mysticism: Mysticism
+        necromancy: Necromancy
+        restoration: Restoration
+        none: Select School
+      spellType: ''
+      spellTypes:
+        conventional: Conventional
+        unconventional: Unconventional
+    _key: '!actors.items!dArhAObJ09fcNvSm.RoIC9yEEwajmEzTG'
+  - _id: 4PebbLJWAikJrQgs
+    name: '[Frost] Bolt 3'
+    type: spell
+    img: icons/magic/fire/projectile-fireball-red-yellow.webp
+    effects: []
+    folder: null
+    sort: 0
+    flags:
+      core:
+        sourceId: Item.Dvncp3T7Nn3WBpgy
+    _stats:
+      coreVersion: '12.331'
+      systemId: null
+      systemVersion: null
+      createdTime: null
+      modifiedTime: null
+      lastModifiedBy: null
+      compendiumSource: null
+      duplicateSource: null
+    ownership:
+      default: 0
+      qwt9o1cuKYitvD9G: 3
+      eeXhsDlbzUBZOXZT: 3
+    system:
+      description: >-
+        <p>Fires a bolt of elemental energy at target character within 100m.
+        Deals [Spell Strength] [type] damage.</p>
+
+        <table style="width: 98.5447%; height: 51px;" border="2" cellspacing="2"
+        cellpadding="1">
+
+        <tbody>
+
+        <tr style="height: 17px;">
+
+        <td style="width: 24.9539%; height: 17px; text-align:
+        left;"><strong>Level</strong></td>
+
+        <td style="width: 11.5403%; height: 17px; text-align:
+        center;"><strong>1</strong></td>
+
+        <td style="width: 10.9017%; height: 17px; text-align:
+        center;"><strong>2</strong></td>
+
+        <td style="width: 10.2483%; height: 17px; text-align:
+        center;"><strong>3</strong></td>
+
+        <td style="width: 10.8979%; height: 17px; text-align:
+        center;"><strong>4</strong></td>
+
+        <td style="width: 9.94024%; height: 17px; text-align:
+        center;"><strong>5</strong></td>
+
+        <td style="width: 9.50831%; height: 17px; text-align:
+        center;"><strong>6</strong></td>
+
+        <td style="width: 10.0805%; height: 17px; text-align:
+        center;"><strong>7</strong></td>
+
+        </tr>
+
+        <tr style="height: 17px;">
+
+        <td style="width: 24.9539%; height: 17px; text-align:
+        left;"><strong>Cost</strong></td>
+
+        <td style="width: 11.5403%; height: 17px; text-align: center;">4</td>
+
+        <td style="width: 10.9017%; height: 17px; text-align: center;">6</td>
+
+        <td style="width: 10.2483%; height: 17px; text-align: center;">8</td>
+
+        <td style="width: 10.8979%; height: 17px; text-align: center;">10</td>
+
+        <td style="width: 9.94024%; height: 17px; text-align: center;">12</td>
+
+        <td style="width: 9.50831%; height: 17px; text-align: center;">14</td>
+
+        <td style="width: 10.0805%; height: 17px; text-align: center;">16</td>
+
+        </tr>
+
+        <tr style="height: 17px;">
+
+        <td style="width: 24.9539%; height: 17px; text-align:
+        left;"><strong>Spell Strength</strong></td>
+
+        <td style="width: 11.5403%; height: 17px; text-align: center;">1d4</td>
+
+        <td style="width: 10.9017%; height: 17px; text-align: center;">1d6</td>
+
+        <td style="width: 10.2483%; height: 17px; text-align: center;">1d8</td>
+
+        <td style="width: 10.8979%; height: 17px; text-align: center;">1d10</td>
+
+        <td style="width: 9.94024%; height: 17px; text-align: center;">2d6</td>
+
+        <td style="width: 9.50831%; height: 17px; text-align: center;">2d8</td>
+
+        <td style="width: 10.0805%; height: 17px; text-align: center;">2d10</td>
+
+        </tr>
+
+        </tbody>
+
+        </table>
+
+        <p>&nbsp;</p>
+      damage: 1d8
+      level: 3
+      cost: 8
+      spell_str: ''
+      attributes: >-
+        [Frost], @Compendium[uesrpg-revision.journal.XtV9n7rHuDGDbW2j]{R Attack}
+        (100m), @Compendium[uesrpg-revision.journal.ELRN5yhwQUASYJXL]{Overload}
+        (+WpB to Dmg)
+      form: Bolt
+      school: destruction
+      school_cat:
+        alteration: Alteration
+        conjuration: Conjuration
+        destruction: Destruction
+        illusion: Illusion
+        mysticism: Mysticism
+        necromancy: Necromancy
+        restoration: Restoration
+        none: Select School
+      spellType: ''
+      spellTypes:
+        conventional: Conventional
+        unconventional: Unconventional
+    _key: '!actors.items!dArhAObJ09fcNvSm.4PebbLJWAikJrQgs'
+  - _id: iPnywP2wRCic6ssQ
+    name: '[Shock] Bolt 3'
+    type: spell
+    img: icons/magic/fire/projectile-fireball-red-yellow.webp
+    effects: []
+    folder: null
+    sort: 0
+    flags:
+      core:
+        sourceId: Item.Dvncp3T7Nn3WBpgy
+    _stats:
+      coreVersion: '12.331'
+      systemId: null
+      systemVersion: null
+      createdTime: null
+      modifiedTime: null
+      lastModifiedBy: null
+      compendiumSource: null
+      duplicateSource: null
+    ownership:
+      default: 0
+      qwt9o1cuKYitvD9G: 3
+      eeXhsDlbzUBZOXZT: 3
+    system:
+      description: >-
+        <p>Fires a bolt of elemental energy at target character within 100m.
+        Deals [Spell Strength] [type] damage.</p>
+
+        <table style="width: 98.5447%; height: 51px;" border="2" cellspacing="2"
+        cellpadding="1">
+
+        <tbody>
+
+        <tr style="height: 17px;">
+
+        <td style="width: 24.9539%; height: 17px; text-align:
+        left;"><strong>Level</strong></td>
+
+        <td style="width: 11.5403%; height: 17px; text-align:
+        center;"><strong>1</strong></td>
+
+        <td style="width: 10.9017%; height: 17px; text-align:
+        center;"><strong>2</strong></td>
+
+        <td style="width: 10.2483%; height: 17px; text-align:
+        center;"><strong>3</strong></td>
+
+        <td style="width: 10.8979%; height: 17px; text-align:
+        center;"><strong>4</strong></td>
+
+        <td style="width: 9.94024%; height: 17px; text-align:
+        center;"><strong>5</strong></td>
+
+        <td style="width: 9.50831%; height: 17px; text-align:
+        center;"><strong>6</strong></td>
+
+        <td style="width: 10.0805%; height: 17px; text-align:
+        center;"><strong>7</strong></td>
+
+        </tr>
+
+        <tr style="height: 17px;">
+
+        <td style="width: 24.9539%; height: 17px; text-align:
+        left;"><strong>Cost</strong></td>
+
+        <td style="width: 11.5403%; height: 17px; text-align: center;">4</td>
+
+        <td style="width: 10.9017%; height: 17px; text-align: center;">6</td>
+
+        <td style="width: 10.2483%; height: 17px; text-align: center;">8</td>
+
+        <td style="width: 10.8979%; height: 17px; text-align: center;">10</td>
+
+        <td style="width: 9.94024%; height: 17px; text-align: center;">12</td>
+
+        <td style="width: 9.50831%; height: 17px; text-align: center;">14</td>
+
+        <td style="width: 10.0805%; height: 17px; text-align: center;">16</td>
+
+        </tr>
+
+        <tr style="height: 17px;">
+
+        <td style="width: 24.9539%; height: 17px; text-align:
+        left;"><strong>Spell Strength</strong></td>
+
+        <td style="width: 11.5403%; height: 17px; text-align: center;">1d4</td>
+
+        <td style="width: 10.9017%; height: 17px; text-align: center;">1d6</td>
+
+        <td style="width: 10.2483%; height: 17px; text-align: center;">1d8</td>
+
+        <td style="width: 10.8979%; height: 17px; text-align: center;">1d10</td>
+
+        <td style="width: 9.94024%; height: 17px; text-align: center;">2d6</td>
+
+        <td style="width: 9.50831%; height: 17px; text-align: center;">2d8</td>
+
+        <td style="width: 10.0805%; height: 17px; text-align: center;">2d10</td>
+
+        </tr>
+
+        </tbody>
+
+        </table>
+
+        <p>&nbsp;</p>
+      damage: 1d8
+      level: 3
+      cost: 8
+      spell_str: ''
+      attributes: >-
+        [Shock], @Compendium[uesrpg-revision.journal.XtV9n7rHuDGDbW2j]{R Attack}
+        (100m), @Compendium[uesrpg-revision.journal.ELRN5yhwQUASYJXL]{Overload}
+        (+WpB to Dmg)
+      form: Bolt
+      school: destruction
+      school_cat:
+        alteration: Alteration
+        conjuration: Conjuration
+        destruction: Destruction
+        illusion: Illusion
+        mysticism: Mysticism
+        necromancy: Necromancy
+        restoration: Restoration
+        none: Select School
+      spellType: ''
+      spellTypes:
+        conventional: Conventional
+        unconventional: Unconventional
+    _key: '!actors.items!dArhAObJ09fcNvSm.iPnywP2wRCic6ssQ'
+  - _id: 6Kh7D7YnDKKeXh6k
+    name: Detect [Life] 3
+    type: spell
+    img: icons/magic/perception/eye-ringed-green.webp
+    effects: []
+    folder: null
+    sort: 0
+    flags:
+      core:
+        sourceId: Item.Dvncp3T7Nn3WBpgy
+    _stats:
+      coreVersion: '12.331'
+      systemId: null
+      systemVersion: null
+      createdTime: null
+      modifiedTime: null
+      lastModifiedBy: null
+      compendiumSource: null
+      duplicateSource: null
+    ownership:
+      default: 0
+      qwt9o1cuKYitvD9G: 3
+      eeXhsDlbzUBZOXZT: 3
+    system:
+      description: >-
+        <p>Caster gains the ability to see objects/effects of the chosen [type]
+        within [Spell Strength] meters as a faint, shimmering outline even in
+        the dark and through objects, even if blind, for 1 minute</p>
+
+        <table style="width: 98.5447%; height: 51px;" border="2" cellspacing="2"
+        cellpadding="1">
+
+        <tbody>
+
+        <tr style="height: 17px;">
+
+        <td style="width: 24.9539%; height: 17px; text-align:
+        left;"><strong>Level</strong></td>
+
+        <td style="width: 11.5403%; height: 17px; text-align:
+        center;"><strong>1</strong></td>
+
+        <td style="width: 10.9017%; height: 17px; text-align:
+        center;"><strong>2</strong></td>
+
+        <td style="width: 10.2483%; height: 17px; text-align:
+        center;"><strong>3</strong></td>
+
+        <td style="width: 10.8979%; height: 17px; text-align:
+        center;"><strong>4</strong></td>
+
+        <td style="width: 9.94024%; height: 17px; text-align:
+        center;"><strong>5</strong></td>
+
+        <td style="width: 9.50831%; height: 17px; text-align:
+        center;"><strong>6</strong></td>
+
+        <td style="width: 10.0805%; height: 17px; text-align:
+        center;"><strong>7</strong></td>
+
+        </tr>
+
+        <tr style="height: 17px;">
+
+        <td style="width: 24.9539%; height: 17px; text-align:
+        left;"><strong>Cost</strong></td>
+
+        <td style="width: 11.5403%; height: 17px; text-align: center;">6</td>
+
+        <td style="width: 10.9017%; height: 17px; text-align: center;">11</td>
+
+        <td style="width: 10.2483%; height: 17px; text-align: center;">16</td>
+
+        <td style="width: 10.8979%; height: 17px; text-align: center;">21</td>
+
+        <td style="width: 9.94024%; height: 17px; text-align: center;">26</td>
+
+        <td style="width: 9.50831%; height: 17px; text-align: center;">31</td>
+
+        <td style="width: 10.0805%; height: 17px; text-align: center;">36</td>
+
+        </tr>
+
+        <tr style="height: 17px;">
+
+        <td style="width: 24.9539%; height: 17px; text-align:
+        left;"><strong>Spell Strength</strong></td>
+
+        <td style="width: 11.5403%; height: 17px; text-align: center;">10</td>
+
+        <td style="width: 10.9017%; height: 17px; text-align: center;">20</td>
+
+        <td style="width: 10.2483%; height: 17px; text-align: center;">30</td>
+
+        <td style="width: 10.8979%; height: 17px; text-align: center;">40</td>
+
+        <td style="width: 9.94024%; height: 17px; text-align: center;">50</td>
+
+        <td style="width: 9.50831%; height: 17px; text-align: center;">60</td>
+
+        <td style="width: 10.0805%; height: 17px; text-align: center;">70</td>
+
+        </tr>
+
+        </tbody>
+
+        </table>
+
+        <p>&nbsp;</p>
+      damage: '0'
+      level: 3
+      cost: 16
+      spell_str: ''
+      attributes: '[Life], @Compendium[uesrpg-revision.journal.etuR7vddrnv3ot2J]{Upkeep}'
+      form: Self
+      school: mysticism
+      school_cat:
+        alteration: Alteration
+        conjuration: Conjuration
+        destruction: Destruction
+        illusion: Illusion
+        mysticism: Mysticism
+        necromancy: Necromancy
+        restoration: Restoration
+        none: Select School
+      spellType: ''
+      spellTypes:
+        conventional: Conventional
+        unconventional: Unconventional
+    _key: '!actors.items!dArhAObJ09fcNvSm.6Kh7D7YnDKKeXh6k'
+  - _id: 6tej0rZpyrHWhI37
+    name: Absorb Magicka
+    type: spell
+    img: icons/magic/perception/eye-ringed-green.webp
+    effects: []
+    folder: null
+    sort: 0
+    flags:
+      core:
+        sourceId: Item.VFpLofeTcfbOjRxo
+    _stats:
+      coreVersion: '12.331'
+      systemId: null
+      systemVersion: null
+      createdTime: null
+      modifiedTime: null
+      lastModifiedBy: null
+      compendiumSource: null
+      duplicateSource: null
+    ownership:
+      default: 0
+      qwt9o1cuKYitvD9G: 3
+      eeXhsDlbzUBZOXZT: 3
+    system:
+      description: >-
+        <p>Target character within 50m must make a Willpower test or lose 2d10
+        magicka. The caster regenerates MP equal to the magicka lost.</p>
+
+        <table style="width: 28.855%; height: 51px;" border="2" cellspacing="2"
+        cellpadding="1">
+
+        <tbody>
+
+        <tr style="height: 17px;">
+
+        <td style="width: 23.4878%; height: 17px; text-align:
+        left;"><strong>Level</strong></td>
+
+        <td style="width: 19.9782%; height: 17px; text-align:
+        center;"><strong>4</strong></td>
+
+        </tr>
+
+        <tr style="height: 17px;">
+
+        <td style="width: 23.4878%; height: 17px; text-align:
+        left;"><strong>Cost</strong></td>
+
+        <td style="width: 19.9782%; height: 17px; text-align: center;">22</td>
+
+        </tr>
+
+        </tbody>
+
+        </table>
+
+        <p>&nbsp;</p>
+      damage: '0'
+      level: 4
+      cost: 22
+      spell_str: ''
+      attributes: '@Compendium[uesrpg-revision.journal.lvno9sPj405BCHon]{Direct Attack}'
+      form: Target
+      school: mysticism
+      school_cat:
+        alteration: Alteration
+        conjuration: Conjuration
+        destruction: Destruction
+        illusion: Illusion
+        mysticism: Mysticism
+        necromancy: Necromancy
+        restoration: Restoration
+        none: Select School
+      spellType: ''
+      spellTypes:
+        conventional: Conventional
+        unconventional: Unconventional
+    _key: '!actors.items!dArhAObJ09fcNvSm.6tej0rZpyrHWhI37'
+  - _id: 0dE4RgV7u0EqSh0s
+    name: Ring of the Iron-Heart
+    type: armor
+    img: icons/equipment/finger/ring-eye-purple-red.webp
+    effects: []
+    folder: null
+    sort: 0
+    flags:
+      core:
+        sourceId: Item.4oJwgfNW69zHsL0e
+    _stats:
+      coreVersion: '12.331'
+      systemId: null
+      systemVersion: null
+      createdTime: null
+      modifiedTime: null
+      lastModifiedBy: null
+      compendiumSource: null
+      duplicateSource: null
+    ownership:
+      default: 0
+      eeXhsDlbzUBZOXZT: 3
+    system:
+      mpBonus: 0
+      hpBonus: 0
+      spBonus: 0
+      lpBonus: 0
+      wtBonus: 0
+      iniBonus: 0
+      speedBonus: 0
+      flyBonus: 0
+      swimBonus: 0
+      diseaseR: 0
+      fireR: 0
+      frostR: 0
+      shockR: 0
+      poisonR: 0
+      magicR: 0
+      natToughnessR: 0
+      silverR: 0
+      sunlightR: 0
+      characteristics:
+        none: None
+        str: STR
+        end: END
+        agi: AGI
+        int: INT
+        wp: WP
+        prc: PRC
+        prs: PRS
+        lck: LCK
+      characteristicBonus:
+        strChaBonus: 0
+        endChaBonus: 0
+        agiChaBonus: 0
+        intChaBonus: 0
+        wpChaBonus: 0
+        prcChaBonus: 0
+        prsChaBonus: 0
+        lckChaBonus: 0
+      replace:
+        ini:
+          iniToggle: false
+          value: 0
+          characteristic: ''
+        wt:
+          wtToggle: false
+          value: 0
+          characteristic: ''
+      skillArray: []
+      isPhysicalObject: true
+      containerStats:
+        contained: false
+        container_id: ''
+        container_name: ''
+      description: <p><em>This ring grants a constant +2 AR to all body locations.</em></p>
+      quantity: 1
+      enc: 0
+      totalENC: 0
+      reach: ''
+      damage: ''
+      equipped: false
+      carried: false
+      hands: 0
+      price: 0
+      modPrice: 0
+      armor: 2
+      blockRating: 0
+      excludeENC: false
+      magic_ar: '0'
+      enchant_level: 0
+      qualities: ''
+      category: ''
+      item_cat:
+        none: None
+        head: Helmet
+        l_arm: Left Gauntlet
+        r_arm: Right Gauntlet
+        l_leg: Left Leg
+        r_leg: Right Leg
+        body: Chestplate
+        shield: Shield
+      charge:
+        value: 0
+        max: 0
+        reduction: 1
+    _key: '!actors.items!dArhAObJ09fcNvSm.0dE4RgV7u0EqSh0s'
+  - _id: kgYSElN7pTe1CmLy
+    name: Ring of the War-Mind
+    type: armor
+    img: icons/equipment/finger/ring-shield-silver.webp
+    effects: []
+    folder: null
+    sort: 0
+    flags:
+      core:
+        sourceId: Item.05IwXNylVWLvSZ9L
+    _stats:
+      coreVersion: '12.331'
+      systemId: null
+      systemVersion: null
+      createdTime: null
+      modifiedTime: null
+      lastModifiedBy: null
+      compendiumSource: null
+      duplicateSource: null
+    ownership:
+      default: 0
+      eeXhsDlbzUBZOXZT: 3
+    system:
+      mpBonus: 0
+      hpBonus: 0
+      spBonus: 0
+      lpBonus: 0
+      wtBonus: 0
+      iniBonus: 0
+      speedBonus: 0
+      flyBonus: 0
+      swimBonus: 0
+      diseaseR: 0
+      fireR: 0
+      frostR: 0
+      shockR: 0
+      poisonR: 0
+      magicR: 0
+      natToughnessR: 0
+      silverR: 0
+      sunlightR: 0
+      characteristics:
+        none: None
+        str: STR
+        end: END
+        agi: AGI
+        int: INT
+        wp: WP
+        prc: PRC
+        prs: PRS
+        lck: LCK
+      characteristicBonus:
+        strChaBonus: 0
+        endChaBonus: 0
+        agiChaBonus: 0
+        intChaBonus: 0
+        wpChaBonus: 0
+        prcChaBonus: 0
+        prsChaBonus: 0
+        lckChaBonus: 0
+      replace:
+        ini:
+          iniToggle: false
+          value: 0
+          characteristic: ''
+        wt:
+          wtToggle: false
+          value: 0
+          characteristic: ''
+      skillArray: []
+      isPhysicalObject: true
+      containerStats:
+        contained: false
+        container_id: ''
+        container_name: ''
+      description: <p><em>This ring grants a constant +10 to Willpower</em></p>
+      quantity: 1
+      enc: 0
+      totalENC: 0
+      reach: ''
+      damage: ''
+      equipped: false
+      carried: false
+      hands: 0
+      price: 0
+      modPrice: 0
+      armor: 0
+      blockRating: 0
+      excludeENC: false
+      magic_ar: '0'
+      enchant_level: 0
+      qualities: ''
+      category: ''
+      item_cat:
+        none: None
+        head: Helmet
+        l_arm: Left Gauntlet
+        r_arm: Right Gauntlet
+        l_leg: Left Leg
+        r_leg: Right Leg
+        body: Chestplate
+        shield: Shield
+      charge:
+        value: 0
+        max: 0
+        reduction: 1
+    _key: '!actors.items!dArhAObJ09fcNvSm.kgYSElN7pTe1CmLy'
+  - _id: j9qYWQ7NYzsVh8cv
+    name: Ring of the Spell-Drinker
+    type: armor
+    img: icons/equipment/finger/ring-cabochon-silver.webp
+    effects: []
+    folder: null
+    sort: 0
+    flags:
+      core:
+        sourceId: Item.4Dx5FXMD4TDU043t
+    _stats:
+      coreVersion: '12.331'
+      systemId: null
+      systemVersion: null
+      createdTime: null
+      modifiedTime: null
+      lastModifiedBy: null
+      compendiumSource: null
+      duplicateSource: null
+    ownership:
+      default: 0
+      eeXhsDlbzUBZOXZT: 3
+    system:
+      mpBonus: 0
+      hpBonus: 0
+      spBonus: 0
+      lpBonus: 0
+      wtBonus: 0
+      iniBonus: 0
+      speedBonus: 0
+      flyBonus: 0
+      swimBonus: 0
+      diseaseR: 0
+      fireR: 0
+      frostR: 0
+      shockR: 0
+      poisonR: 0
+      magicR: 0
+      natToughnessR: 0
+      silverR: 0
+      sunlightR: 0
+      characteristics:
+        none: None
+        str: STR
+        end: END
+        agi: AGI
+        int: INT
+        wp: WP
+        prc: PRC
+        prs: PRS
+        lck: LCK
+      characteristicBonus:
+        strChaBonus: 0
+        endChaBonus: 0
+        agiChaBonus: 0
+        intChaBonus: 0
+        wpChaBonus: 0
+        prcChaBonus: 0
+        prsChaBonus: 0
+        lckChaBonus: 0
+      replace:
+        ini:
+          iniToggle: false
+          value: 0
+          characteristic: ''
+        wt:
+          wtToggle: false
+          value: 0
+          characteristic: ''
+      skillArray: []
+      isPhysicalObject: true
+      containerStats:
+        contained: false
+        container_id: ''
+        container_name: ''
+      description: >-
+        <p>This ring grants a constant
+        @Compendium[uesrpg-d100.npc-build-reference.fpm12SwT8lPGcxBc]{Spell
+        Absorption (X)} 2.</p>
+      quantity: 1
+      enc: 0
+      totalENC: 0
+      reach: ''
+      damage: ''
+      equipped: false
+      carried: false
+      hands: 0
+      price: 0
+      modPrice: 0
+      armor: 0
+      blockRating: 0
+      excludeENC: false
+      magic_ar: '0'
+      enchant_level: 0
+      qualities: ''
+      category: ''
+      item_cat:
+        none: None
+        head: Helmet
+        l_arm: Left Gauntlet
+        r_arm: Right Gauntlet
+        l_leg: Left Leg
+        r_leg: Right Leg
+        body: Chestplate
+        shield: Shield
+      charge:
+        value: 0
+        max: 0
+        reduction: 1
+    _key: '!actors.items!dArhAObJ09fcNvSm.j9qYWQ7NYzsVh8cv'
+effects: []
+folder: null
+sort: 100001
+flags: {}
+_stats:
+  coreVersion: '12.331'
+  systemId: null
+  systemVersion: null
+  createdTime: null
+  modifiedTime: null
+  lastModifiedBy: null
+  compendiumSource: null
+  duplicateSource: null
+ownership:
+  default: 0
+  WcwhQU1nz94WaD5n: 3
+system:
+  equippedWeapons:
+    primaryWeapon:
+      name: 'None: Right click to bind weapon'
+      img: icons/skills/melee/unarmed-punch-fist.webp
+      id: ''
+    secondaryWeapon:
+      name: 'None: Right click to bind weapon'
+      img: icons/skills/melee/unarmed-punch-fist.webp
+      id: ''
+  favorites:
+    '1':
+      name: Hotkey 1
+      img: icons/svg/combat.svg
+      id: ''
+      value: 0
+    '2':
+      name: Hotkey 2
+      img: icons/svg/combat.svg
+      id: ''
+      value: 0
+    '3':
+      name: Hotkey 3
+      img: icons/svg/combat.svg
+      id: ''
+      value: 0
+    '4':
+      name: Hotkey 4
+      img: icons/svg/combat.svg
+      id: ''
+      value: 0
+    '5':
+      name: Hotkey 5
+      img: icons/svg/combat.svg
+      id: ''
+      value: 0
+  race: Dremora, Daedra
+  birthsign: ''
+  age: null
+  height: ''
+  weight: ''
+  elite_adv: ''
+  wounded: false
+  woundPenalty: 0
+  woundNotes: ''
+  bio: >-
+    <h2>Encountering Dremora</h2>
+
+    <p>Dremora Kynmarchers are the nobles of the Dremora caste system, and
+    command much respect from their inferiors, if begrudgingly or solely out of
+    fear, it makes no difference. Where a Kynmarcher is found, an army is to
+    follow.</p>
+
+    <h2>Dremora Kynmarcher Loot</h2>
+
+    <ul>
+
+    <li>If slain while permanently bound to Mundus, a Dremora Kynmarcher&rsquo;s
+    weapons and armour will be recoverable, otherwise the Dremora&rsquo;s body
+    and equipment vanish back to Oblivion. Dremora arms and armour have the same
+    enchant value and weight as Daedric.</li>
+
+    <li>Additionally, if slain while permanently bound to Mundus, a character
+    can make a -40 Alchemy test to salvage the Daedra&rsquo;s Heart, which is a
+    Legendary Restoration ingredient.</li>
+
+    </ul>
+  paperDoll: systems/uesrpg-3ev4/images/paperDoll_Male_Outline_White.png
+  soul_energy: '1000'
+  journal: ''
+  notes: ''
+  threat: majorGroup
+  threatCategory:
+    minorSolo: Minor Solo
+    minorGroup: Minor Group
+    majorSolo: Major Solo
+    majorGroup: Major Group
+    deadlySolo: Deadly Solo
+    deadlyGroup: Deadly Group
+    legendarySolo: Legendary Solo
+    legendaryGroup: Legendary Group
+  resistance:
+    fireR: 0
+    frostR: 0
+    shockR: 0
+    magicR: 3
+    poisonR: 0
+    diseaseR: 0
+    natToughness: 0
+    silverR: 0
+    sunlightR: 0
+  fatigue:
+    level: 0
+    penalty: 0
+    bonus: 0
+  lucky_numbers:
+    ln1: 1
+    ln2: 2
+    ln3: 3
+    ln4: 0
+    ln5: 0
+    ln6: 0
+    ln7: 0
+    ln8: 0
+    ln9: 0
+    ln10: 0
+  unlucky_numbers:
+    ul1: 0
+    ul2: 0
+    ul3: 0
+    ul4: 98
+    ul5: 99
+    ul6: 100
+  supply: 1d2
+  supply_cat:
+    1d2: 1d2
+    1d4: 1d4
+    1d6: 1d6
+    1d8: 1d8
+    1d10: 1d10
+  wealth: 0
+  current_enc: '2.2'
+  carry_rating:
+    current: 0
+    max: 30
+    bonus: 0
+    penalty: 0
+    label: Minimal
+  characteristics:
+    str:
+      value: 50
+      total: null
+      base: 50
+      favored: false
+    end:
+      value: 50
+      total: null
+      base: 50
+      favored: false
+    agi:
+      value: 45
+      total: null
+      base: 45
+      favored: false
+    int:
+      value: 40
+      total: null
+      base: 40
+      favored: false
+    wp:
+      value: 55
+      total: null
+      base: 55
+      favored: false
+    prc:
+      value: 40
+      total: null
+      base: 40
+      favored: false
+    prs:
+      value: 35
+      total: null
+      base: 35
+      favored: false
+    lck:
+      value: 0
+      total: null
+      base: 0
+      favored: false
+  professions:
+    combat: 80
+    magic: 75
+    evade: 65
+    observe: 60
+    stealth: 55
+    knowledge: 60
+    social: 65
+    physical: 70
+    commerce: 0
+    profession1: 0
+    profession2: 0
+    profession3: 0
+  professionsWound:
+    combat: 0
+    magic: 0
+    evade: 0
+    observe: 0
+    stealth: 0
+    knowledge: 0
+    social: 0
+    physical: 0
+    commerce: 0
+    profession1: 0
+    profession2: 0
+    profession3: 0
+  hp:
+    base: 25
+    value: 25
+    max: 25
+    temp: 0
+    bonus: 0
+  action_points:
+    value: 3
+    max: 3
+  luck_points:
+    value: 0
+    max: 0
+    bonus: 0
+  stamina:
+    value: 5
+    max: 5
+    bonus: 0
+  magicka:
+    value: 40
+    max: 40
+    bonus: 0
+  xp: 0
+  wound_threshold:
+    value: '15'
+    base: 15
+    bonus: 0
+  initiative:
+    value: '12'
+    base: 12
+    bonus: 0
+  speed:
+    value: '13'
+    base: 13
+    bonus: 0
+  size: standard
+  size_cat:
+    puny: Puny
+    tiny: Tiny
+    small: Small
+    standard: Standard
+    large: Large
+    huge: Huge
+    enormous: Enormous
+  skill_ranks:
+    untrained:
+      name: Untrained
+      rank: ''
+      bonus: ''
+      specialization: ''
+    novice:
+      name: ' (0) Novice'
+      rank: ''
+      bonus: ''
+      specialization: ''
+    apprentice:
+      name: (1) Apprentice
+      rank: ''
+      bonus: ''
+      specialization: ''
+    journeyman:
+      name: (2) Journeyman
+      rank: ''
+      bonus: ''
+      specialization: ''
+    adept:
+      name: (3) Adept
+      rank: ''
+      bonus: ''
+      specialization: ''
+    expert:
+      name: (4) Expert
+      rank: ''
+      bonus: ''
+      specialization: ''
+    master:
+      name: (5) Master
+      rank: ''
+      bonus: ''
+      specialization: ''
+  skills:
+    profession1:
+      rank: ''
+      bonus: 0
+      specialization: ''
+      characteristic: ''
+      tn: 0
+      name: ''
+    profession2:
+      rank: ''
+      bonus: 0
+      specialization: ''
+      characteristic: ''
+      tn: 0
+      name: ''
+    profession3:
+      rank: ''
+      bonus: 0
+      specialization: ''
+      characteristic: ''
+      tn: 0
+      name: ''
+    commerce:
+      bonus: 0
+      specialization: ''
+      characteristic: ''
+      tn: 0
+  talents: null
+  traits: ''
+  powers: ''
+  spells: ''
+  armor_class: none
+  armor_class_cat:
+    none: None
+    super_light: Super Light
+    light: Light
+    medium: Medium
+    heavy: Heavy
+    super_heavy: Super Heavy
+  storeName: ''
+  priceMod: 0
+  fatigueLevel: 0
+  weapons:
+    w1:
+      name: ''
+      dmg: ''
+      hands: ''
+      reach: ''
+      qualities: ''
+    w2:
+      name: ''
+      dmg: ''
+      hands: ''
+      reach: ''
+      qualities: ''
+    w3:
+      name: ''
+      dmg: ''
+      hands: ''
+      reach: ''
+      qualities: ''
+    w4:
+      name: ''
+      dmg: ''
+      hands: ''
+      reach: ''
+      qualities: ''
+    w5:
+      name: ''
+      dmg: ''
+      hands: ''
+      reach: ''
+      qualities: ''
+  prep_spells:
+    s1:
+      name: ''
+      dmg: ''
+      cost: ''
+      school: ''
+      form: ''
+      attributes: ''
+      level: ''
+    s2:
+      name: ''
+      dmg: ''
+      cost: ''
+      school: ''
+      form: ''
+      attributes: ''
+      level: ''
+    s3:
+      name: ''
+      dmg: ''
+      cost: ''
+      school: ''
+      form: ''
+      attributes: ''
+      level: ''
+    s4:
+      name: ''
+      dmg: ''
+      cost: ''
+      school: ''
+      form: ''
+      attributes: ''
+      level: ''
+    s5:
+      name: ''
+      dmg: ''
+      cost: ''
+      school: ''
+      form: ''
+      attributes: ''
+      level: ''
+    s6:
+      name: ''
+      dmg: ''
+      cost: ''
+      school: ''
+      form: ''
+      attributes: ''
+      level: ''
+    s7:
+      name: ''
+      dmg: ''
+      cost: ''
+      school: ''
+      form: ''
+      attributes: ''
+      level: ''
+  shield:
+    name: ''
+    br: ''
+    magic_br: ''
+    class: ''
+    qualities: ''
+  armor:
+    head:
+      name: ''
+      enc: 0
+      ar: ''
+      magic_ar: ''
+      class: ''
+    body:
+      name: ''
+      enc: 0
+      ar: 0
+      magic_ar: '0'
+      class: ''
+    r_leg:
+      name: ''
+      enc: 0
+      ar: ''
+      magic_ar: ''
+      class: ''
+    l_leg:
+      name: ''
+      enc: 0
+      ar: ''
+      magic_ar: ''
+      class: ''
+    r_arm:
+      name: ''
+      enc: 0
+      ar: ''
+      magic_ar: ''
+      class: ''
+    l_arm:
+      name: ''
+      enc: 0
+      ar: ''
+      magic_ar: ''
+      class: ''
+prototypeToken:
+  flags:
+    token-hud-wildcard:
+      default: ''
+    token-auras:
+      aura1:
+        permission: all
+        colour: '#ffffff'
+        opacity: 0.5
+        distance: null
+        square: false
+      aura2:
+        permission: all
+        colour: '#ffffff'
+        opacity: 0.5
+        distance: null
+        square: false
+  name: Dremora Kynmarcher
+  displayName: 0
+  width: 1
+  height: 1
+  lockRotation: false
+  rotation: 0
+  actorLink: false
+  disposition: -1
+  displayBars: 20
+  bar1:
+    attribute: hp
+  bar2:
+    attribute: action_points
+  randomImg: false
+  alpha: 1
+  light:
+    dim: 0
+    bright: 0
+    angle: 360
+    color: null
+    alpha: 1
+    animation:
+      speed: 5
+      intensity: 5
+      type: null
+      reverse: false
+    negative: false
+    priority: 0
+    coloration: 1
+    attenuation: 0.5
+    luminosity: 0.5
+    saturation: 0
+    contrast: 0
+    shadows: 0
+    darkness:
+      min: 0
+      max: 1
+  texture:
+    src: icons/svg/cowled.svg
+    tint: '#ffffff'
+    scaleX: 1
+    scaleY: 1
+    anchorX: 0.5
+    anchorY: 0.5
+    offsetX: 0
+    offsetY: 0
+    fit: contain
+    rotation: 0
+    alphaThreshold: 0.75
+  sight:
+    angle: 360
+    enabled: true
+    range: 20
+    brightness: 0
+    visionMode: basic
+    color: null
+    attenuation: 0.1
+    saturation: 0
+    contrast: 0
+  appendNumber: false
+  prependAdjective: false
+  hexagonalShape: 0
+  detectionModes: []
+  occludable:
+    radius: 0
+  ring:
+    enabled: false
+    colors:
+      ring: null
+      background: null
+    effects: 1
+    subject:
+      scale: 1
+      texture: null
+_key: '!actors!dArhAObJ09fcNvSm'
+

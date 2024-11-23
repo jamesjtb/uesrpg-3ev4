@@ -1,0 +1,53 @@
+_id: n0AT30VurCbh0I3l
+name: Basket Hilt
+folder: null
+sort: 0
+flags:
+  cf:
+    id: temp_qtm3mdw5kon
+    path: References#/CF_SEP/Qualities#/CF_SEP/Weapon Qualities
+    color: '#000000'
+pages:
+  - name: Basket Hilt
+    type: text
+    title:
+      show: false
+      level: 1
+    text:
+      format: 1
+      content: "<p>+20 to resist Disarm attempts, +5 to Parrying, -5 to Offensive Combat Style tests.\_</p>"
+    _stats:
+      coreVersion: '12.331'
+      systemId: null
+      systemVersion: null
+      createdTime: null
+      modifiedTime: null
+      lastModifiedBy: null
+      compendiumSource: null
+      duplicateSource: null
+    _id: Oq3IwdySd2V0rzR5
+    system: {}
+    image: {}
+    video:
+      controls: true
+      volume: 0.5
+    src: null
+    sort: 0
+    ownership:
+      default: -1
+    flags: {}
+    _key: '!journal.pages!n0AT30VurCbh0I3l.Oq3IwdySd2V0rzR5'
+_stats:
+  coreVersion: '12.331'
+  systemId: null
+  systemVersion: null
+  createdTime: null
+  modifiedTime: null
+  lastModifiedBy: null
+  compendiumSource: null
+  duplicateSource: null
+ownership:
+  default: 0
+  eeXhsDlbzUBZOXZT: 3
+_key: '!journal!n0AT30VurCbh0I3l'
+

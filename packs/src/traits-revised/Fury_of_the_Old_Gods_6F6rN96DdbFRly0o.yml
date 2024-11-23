@@ -1,0 +1,89 @@
+_id: 6F6rN96DdbFRly0o
+name: Fury of the Old Gods
+type: trait
+img: systems/uesrpg-d100/images/Icons/berserker.webp
+effects: []
+folder: null
+sort: 0
+flags:
+  core:
+    sourceId: Item.Hx4NHRgycp4DR0cQ
+_stats:
+  coreVersion: '12.331'
+  systemId: null
+  systemVersion: null
+  createdTime: null
+  modifiedTime: null
+  lastModifiedBy: null
+  compendiumSource: null
+  duplicateSource: null
+ownership:
+  default: 0
+  eeXhsDlbzUBZOXZT: 3
+system:
+  mpBonus: 0
+  hpBonus: 0
+  spBonus: 0
+  lpBonus: 0
+  wtBonus: 0
+  iniBonus: 0
+  speedBonus: 0
+  flyBonus: 0
+  swimBonus: 0
+  diseaseR: 0
+  fireR: 0
+  frostR: 0
+  shockR: 0
+  poisonR: 0
+  magicR: 0
+  natToughnessR: 0
+  silverR: 0
+  sunlightR: 0
+  replace:
+    ini:
+      iniToggle: false
+      value: 0
+      characteristic: ''
+    wt:
+      wtToggle: false
+      value: 0
+      characteristic: ''
+  characteristics:
+    none: None
+    str: STR
+    end: END
+    agi: AGI
+    int: INT
+    wp: WP
+    prc: PRC
+    prs: PRS
+    lck: LCK
+  characteristicBonus:
+    strChaBonus: 0
+    endChaBonus: 0
+    agiChaBonus: 0
+    intChaBonus: 0
+    wpChaBonus: 0
+    prcChaBonus: 0
+    prsChaBonus: 0
+    lckChaBonus: 0
+  skillArray: []
+  description: >-
+    <p>The witch-men of the reach are blessed by the Old Gods with a righteous
+    fury towards any and all invaders, and will not helm until every last one of
+    them are dead at their feet. Any social interaction test except Intimidation
+    with people not sympathetic with the Reachmen suffers a -10 penalty as they
+    are surrounded by rumors and superstitions. However, the Reachmen gain a +10
+    bonus to all Combat Style tests made while
+    @Compendium[uesrpg-revision.journal.1yYaEZKzCWMWCgNn]{Frenzied} or using the
+    All- Out Attack action as they fight with the fervor of the Old Gods
+    themselves.</p>
+  halfSpeed: false
+  addHalfSpeed: false
+  halfFatiguePenalty: false
+  mechanical: false
+  crpCost: 0
+  halfWoundPenalty: false
+  painIntolerant: false
+_key: '!items!6F6rN96DdbFRly0o'
+

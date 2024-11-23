@@ -71,6 +71,110 @@
       "type": "Item",
       "private": false,
       "flags": {}
+    },
+    {
+      "name": "items-revised",
+      "label": "Items Revised",
+      "path": "./packs/items-revised.db",
+      "private": false,
+      "entity": "Item",
+      "system": "uesrpg-3ev4"
+    },
+    {
+      "name": "exotic-skills",
+      "label": "Exotic Skills",
+      "path": "./packs/exotic-skills.db",
+      "private": false,
+      "entity": "Item",
+      "system": "uesrpg-3ev4"
+    },
+    {
+      "name": "traits-revised",
+      "label": "Traits Revised",
+      "path": "./packs/traits-revised.db",
+      "private": false,
+      "entity": "Item",
+      "system": "uesrpg-3ev4"
+    },
+    {
+      "name": "powers-revised",
+      "label": "Powers Revised",
+      "path": "./packs/powers-revised.db",
+      "private": false,
+      "entity": "Item",
+      "system": "uesrpg-3ev4"
+    },
+    {
+      "name": "talents-revised",
+      "label": "Talents Revised",
+      "path": "./packs/talents-revised.db",
+      "private": false,
+      "entity": "Item",
+      "system": "uesrpg-3ev4"
+    },
+    {
+      "name": "spells-revised",
+      "label": "Spells Revised",
+      "path": "./packs/spells-revised.db",
+      "private": false,
+      "entity": "Item",
+      "system": "uesrpg-3ev4"
+    },
+    {
+      "name": "journal",
+      "label": "Reference Revised",
+      "path": "./packs/reference-revised-v1.db",
+      "private": false,
+      "entity": "JournalEntry",
+      "system": "uesrpg-3ev4"
+    },
+    {
+      "name": "npc-build-reference-items-revised",
+      "label": "NPC Items Revised",
+      "path": "./packs/npc-build-reference-items-revised.db",
+      "private": false,
+      "entity": "Item",
+      "system": "uesrpg-3ev4"
+    },
+    {
+      "name": "scroll-of-beasts-revised",
+      "label": "Scroll of Beasts Revised",
+      "path": "./packs/scroll-of-beasts-revised.db",
+      "private": false,
+      "entity": "Actor",
+      "system": "uesrpg-3ev4"
+    },
+    {
+      "name": "scroll-of-dwemer-revised",
+      "label": "Scroll of Dwemer Revised",
+      "path": "./packs/scroll-of-dwemer-revised.db",
+      "private": false,
+      "entity": "Actor",
+      "system": "uesrpg-3ev4"
+    },
+    {
+      "name": "scroll-of-oblivion-revised",
+      "label": "Scroll of Oblivion revised",
+      "path": "./packs/scroll-of-oblivion-revised.db",
+      "private": false,
+      "entity": "Actor",
+      "system": "uesrpg-3ev4"
+    },
+    {
+      "name": "scroll-of-people-revised",
+      "label": "Scroll of People Revised",
+      "path": "./packs/scroll-of-people-revised.db",
+      "private": false,
+      "entity": "Actor",
+      "system": "uesrpg-3ev4"
+    },
+    {
+      "name": "scroll-of-undeath-revised",
+      "label": "Scroll of Undeath Revised",
+      "path": "./packs/scroll-of-undeath-revised.db",
+      "private": false,
+      "entity": "Actor",
+      "system": "uesrpg-3ev4"
     }
   ],
   "grid": {
@@ -86,12 +190,20 @@
   "id": "uesrpg-3ev4",
   "authors": [
     {
-      "name": "SupaBeardyMan",
-      "flags": {}
+      "name": "SupaBeardyMan"
     },
     {
-      "name": "DogBoneZone",
-      "flags": {}
+      "name": "DogBoneZone"
+    },
+    {
+      "name": "GMan95"
+    }
+  ],
+  "dependencies": [
+    {
+      "name": "gm-notes",
+      "manifest": "https://raw.githubusercontent.com/syl3r86/gm-notes/master/module.json",
+      "type": "module"
     }
   ],
   "compatibility": {

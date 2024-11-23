@@ -1,0 +1,3408 @@
+_id: 6nZUp0EY6OoS50Vo
+name: Destroyer
+type: npc
+img: icons/svg/cowled.svg
+items:
+  - _id: LXQC9w9th3B2ZBFQ
+    name: Aetheric Judgement
+    type: power
+    sort: 800000
+    flags:
+      core:
+        sourceId: Item.MyWjMeVAtBCJa8Bt
+    img: systems/uesrpg-d100/images/Icons/lightProtects.webp
+    effects: []
+    folder: null
+    _stats:
+      coreVersion: '12.331'
+      systemId: null
+      systemVersion: null
+      createdTime: null
+      modifiedTime: null
+      lastModifiedBy: null
+      compendiumSource: null
+      duplicateSource: null
+    ownership:
+      default: 0
+    system:
+      mpBonus: 0
+      hpBonus: 0
+      spBonus: 0
+      lpBonus: 0
+      wtBonus: 0
+      iniBonus: 0
+      speedBonus: 0
+      flyBonus: 0
+      swimBonus: 0
+      diseaseR: 0
+      fireR: 0
+      frostR: 0
+      shockR: 0
+      poisonR: 0
+      magicR: 0
+      natToughnessR: 0
+      silverR: 0
+      sunlightR: 0
+      characteristics:
+        none: None
+        str: STR
+        end: END
+        agi: AGI
+        int: INT
+        wp: WP
+        prc: PRC
+        prs: PRS
+        lck: LCK
+      characteristicBonus:
+        strChaBonus: 0
+        endChaBonus: 0
+        agiChaBonus: 0
+        intChaBonus: 0
+        wpChaBonus: 0
+        prcChaBonus: 0
+        prsChaBonus: 0
+        lckChaBonus: 0
+      skillArray: []
+      description: >-
+        <p><strong>Cost:</strong> 1 SP</p>
+
+        <p>When casting a spell, this character may choose to either add 1 round
+        to the duration, or add 1m to the AoE range of a spell, but risks
+        backfire upon failure.</p>
+      dailyUse: false
+      source: ''
+      shiftForm: false
+      shiftFormStyle: ''
+      shiftStyles:
+        shiftFormNone: Regular Form
+        shiftFormVampireLord: Vampire Lord
+        shiftFormWereWolf: Werewolf
+        shiftFormWereBat: Werebat
+        shiftFormWereBoar: Wereboar
+        shiftFormWereBear: Werebear
+        shiftFormWereCrocodile: Werecrocodile
+        shiftFormWereVulture: Werevulture
+        shiftFormWereLion: Werelion
+    _key: '!actors.items!6nZUp0EY6OoS50Vo.LXQC9w9th3B2ZBFQ'
+  - _id: fCJphUIOag9jteMg
+    name: Brawler
+    type: talent
+    sort: 900000
+    flags:
+      core:
+        sourceId: Item.DYVazRNO2caSDMGE
+    img: systems/uesrpg-d100/images/Icons/brawler.webp
+    effects: []
+    folder: null
+    _stats:
+      coreVersion: '12.331'
+      systemId: null
+      systemVersion: null
+      createdTime: null
+      modifiedTime: null
+      lastModifiedBy: null
+      compendiumSource: null
+      duplicateSource: null
+    ownership:
+      default: 0
+    system:
+      mpBonus: 0
+      hpBonus: 0
+      spBonus: 0
+      lpBonus: 0
+      wtBonus: 0
+      iniBonus: 0
+      speedBonus: 0
+      flyBonus: 0
+      swimBonus: 0
+      diseaseR: 0
+      fireR: 0
+      frostR: 0
+      shockR: 0
+      poisonR: 0
+      magicR: 0
+      natToughnessR: 0
+      silverR: 0
+      sunlightR: 0
+      replace:
+        ini:
+          iniToggle: false
+          value: 0
+          characteristic: str
+        wt:
+          wtToggle: false
+          value: 0
+          characteristic: str
+      characteristics:
+        none: None
+        str: STR
+        end: END
+        agi: AGI
+        int: INT
+        wp: WP
+        prc: PRC
+        prs: PRS
+        lck: LCK
+      characteristicBonus:
+        strChaBonus: 0
+        endChaBonus: 0
+        agiChaBonus: 0
+        intChaBonus: 0
+        wpChaBonus: 0
+        prcChaBonus: 0
+        prsChaBonus: 0
+        lckChaBonus: 0
+      skillArray: []
+      description: >-
+        <p>This character adds +1 DoS on all Combat tests made when engaged in
+        melee with 2 or more opponents.</p>
+      xpCost: 0
+      level: 0
+      talentReq: ''
+      miscReq: ''
+      halfFatiguePenalty: false
+      halfWoundPenalty: false
+      untrainedException: false
+      fatigueException: false
+      addIntToMP: false
+      armorAcrobaticsException: false
+      addHalfSpeed: false
+    _key: '!actors.items!6nZUp0EY6OoS50Vo.fCJphUIOag9jteMg'
+  - _id: XWKGdXpRt9pjrz9y
+    name: Power Well (10)
+    type: trait
+    sort: 1000000
+    flags:
+      core:
+        sourceId: Item.wtEFksGPcojtDLTj
+    img: systems/uesrpg-d100/images/Icons/powerWell.webp
+    effects: []
+    folder: null
+    _stats:
+      coreVersion: '12.331'
+      systemId: null
+      systemVersion: null
+      createdTime: null
+      modifiedTime: null
+      lastModifiedBy: null
+      compendiumSource: null
+      duplicateSource: null
+    ownership:
+      default: 0
+    system:
+      mpBonus: 10
+      hpBonus: 0
+      spBonus: 0
+      lpBonus: 0
+      wtBonus: 0
+      iniBonus: 0
+      speedBonus: 0
+      flyBonus: 0
+      swimBonus: 0
+      diseaseR: 0
+      fireR: 0
+      frostR: 0
+      shockR: 0
+      poisonR: 0
+      magicR: 0
+      natToughnessR: 0
+      silverR: 0
+      sunlightR: 0
+      replace:
+        ini:
+          iniToggle: false
+          value: 0
+          characteristic: ''
+        wt:
+          wtToggle: false
+          value: 0
+          characteristic: ''
+      characteristics:
+        none: None
+        str: STR
+        end: END
+        agi: AGI
+        int: INT
+        wp: WP
+        prc: PRC
+        prs: PRS
+        lck: LCK
+      characteristicBonus:
+        strChaBonus: 0
+        endChaBonus: 0
+        agiChaBonus: 0
+        intChaBonus: 0
+        wpChaBonus: 0
+        prcChaBonus: 0
+        prsChaBonus: 0
+        lckChaBonus: 0
+      skillArray: []
+      description: >-
+        <p>Characters with this trait have more magicka than usual. The size of
+        their Magicka Pool is increased by X. If the character would receive
+        this trait more than once, combine the X values.</p>
+      halfSpeed: false
+      addHalfSpeed: false
+      halfFatiguePenalty: false
+      mechanical: false
+      crpCost: 0
+      halfWoundPenalty: false
+      painIntolerant: false
+    _key: '!actors.items!6nZUp0EY6OoS50Vo.XWKGdXpRt9pjrz9y'
+  - _id: bEmvkPNo0qHkkpBX
+    name: Spell Sword
+    type: talent
+    sort: 1100000
+    flags:
+      core:
+        sourceId: Item.DYVazRNO2caSDMGE
+    img: systems/uesrpg-d100/images/Icons/spellSword.webp
+    effects: []
+    folder: null
+    _stats:
+      coreVersion: '12.331'
+      systemId: null
+      systemVersion: null
+      createdTime: null
+      modifiedTime: null
+      lastModifiedBy: null
+      compendiumSource: null
+      duplicateSource: null
+    ownership:
+      default: 0
+    system:
+      mpBonus: 0
+      hpBonus: 0
+      spBonus: 0
+      lpBonus: 0
+      wtBonus: 0
+      iniBonus: 0
+      speedBonus: 0
+      flyBonus: 0
+      swimBonus: 0
+      diseaseR: 0
+      fireR: 0
+      frostR: 0
+      shockR: 0
+      poisonR: 0
+      magicR: 0
+      natToughnessR: 0
+      silverR: 0
+      sunlightR: 0
+      replace:
+        ini:
+          iniToggle: false
+          value: 0
+          characteristic: str
+        wt:
+          wtToggle: false
+          value: 0
+          characteristic: str
+      characteristics:
+        none: None
+        str: STR
+        end: END
+        agi: AGI
+        int: INT
+        wp: WP
+        prc: PRC
+        prs: PRS
+        lck: LCK
+      characteristicBonus:
+        strChaBonus: 0
+        endChaBonus: 0
+        agiChaBonus: 0
+        intChaBonus: 0
+        wpChaBonus: 0
+        prcChaBonus: 0
+        prsChaBonus: 0
+        lckChaBonus: 0
+      skillArray: []
+      description: >-
+        <p>The character only needs one free hand to cast spells without penalty
+        instead of two.</p>
+      xpCost: 0
+      level: 0
+      talentReq: ''
+      miscReq: ''
+      halfFatiguePenalty: false
+      halfWoundPenalty: false
+      untrainedException: false
+      fatigueException: false
+      addIntToMP: false
+      armorAcrobaticsException: false
+      addHalfSpeed: false
+    _key: '!actors.items!6nZUp0EY6OoS50Vo.bEmvkPNo0qHkkpBX'
+  - _id: fOHsw6nIdC2ogZyU
+    name: Destruction Incarnate
+    type: talent
+    sort: 2400000
+    flags:
+      core:
+        sourceId: Item.7fKKFs3JVM7UgiPU
+    img: systems/uesrpg-d100/images/Icons/salvageEnergy.webp
+    effects: []
+    folder: null
+    _stats:
+      coreVersion: '12.331'
+      systemId: null
+      systemVersion: null
+      createdTime: null
+      modifiedTime: null
+      lastModifiedBy: null
+      compendiumSource: null
+      duplicateSource: null
+    ownership:
+      default: 0
+    system:
+      mpBonus: 0
+      hpBonus: 0
+      spBonus: 0
+      lpBonus: 0
+      wtBonus: 0
+      iniBonus: 0
+      speedBonus: 0
+      flyBonus: 0
+      swimBonus: 0
+      diseaseR: 0
+      fireR: 0
+      frostR: 0
+      shockR: 0
+      poisonR: 0
+      magicR: 0
+      natToughnessR: 0
+      silverR: 0
+      sunlightR: 0
+      replace:
+        ini:
+          iniToggle: false
+          value: 0
+          characteristic: str
+        wt:
+          wtToggle: false
+          value: 0
+          characteristic: str
+      characteristics:
+        none: None
+        str: STR
+        end: END
+        agi: AGI
+        int: INT
+        wp: WP
+        prc: PRC
+        prs: PRS
+        lck: LCK
+      characteristicBonus:
+        strChaBonus: 0
+        endChaBonus: 0
+        agiChaBonus: 0
+        intChaBonus: 0
+        wpChaBonus: 0
+        prcChaBonus: 0
+        prsChaBonus: 0
+        lckChaBonus: 0
+      skillArray: []
+      description: >-
+        <p><span style="color: #191813;">This character increases all damage
+        done by harmful destruction spells by 1.</span></p>
+      xpCost: 0
+      level: 0
+      talentReq: ''
+      miscReq: ''
+      halfFatiguePenalty: false
+      halfWoundPenalty: false
+      untrainedException: false
+      fatigueException: false
+      addIntToMP: false
+      armorAcrobaticsException: false
+      addHalfSpeed: false
+    _key: '!actors.items!6nZUp0EY6OoS50Vo.fOHsw6nIdC2ogZyU'
+  - _id: 8W0Lj1kWlXqbs4GK
+    name: Steel Battle Axe
+    type: weapon
+    img: icons/weapons/axes/axe-battle-black.webp
+    effects: []
+    folder: null
+    sort: 0
+    flags:
+      core:
+        sourceId: Item.YRcAUe6XBzbY6zXd
+    _stats:
+      coreVersion: '12.331'
+      systemId: null
+      systemVersion: null
+      createdTime: null
+      modifiedTime: null
+      lastModifiedBy: null
+      compendiumSource: null
+      duplicateSource: null
+    ownership:
+      default: 0
+      qwt9o1cuKYitvD9G: 3
+      eeXhsDlbzUBZOXZT: 3
+    system:
+      mpBonus: 0
+      hpBonus: 0
+      spBonus: 0
+      lpBonus: 0
+      wtBonus: 0
+      iniBonus: 0
+      speedBonus: 0
+      flyBonus: 0
+      swimBonus: 0
+      diseaseR: 0
+      fireR: 0
+      frostR: 0
+      shockR: 0
+      poisonR: 0
+      magicR: 0
+      natToughnessR: 0
+      silverR: 0
+      sunlightR: 0
+      characteristics:
+        none: None
+        str: STR
+        end: END
+        agi: AGI
+        int: INT
+        wp: WP
+        prc: PRC
+        prs: PRS
+        lck: LCK
+      characteristicBonus:
+        strChaBonus: 0
+        endChaBonus: 0
+        agiChaBonus: 0
+        intChaBonus: 0
+        wpChaBonus: 0
+        prcChaBonus: 0
+        prsChaBonus: 0
+        lckChaBonus: 0
+      replace:
+        ini:
+          iniToggle: false
+          value: 0
+          characteristic: ''
+        wt:
+          wtToggle: false
+          value: 0
+          characteristic: ''
+      skillArray: []
+      isPhysicalObject: true
+      containerStats:
+        contained: false
+        container_id: ''
+        container_name: ''
+      description: >-
+        <p><em style="box-sizing: border-box; user-select: text; color:
+        #191813;">Enchantments, modifications, notes, etc...</em></p>
+      quantity: 1
+      enc: 2
+      totalENC: 0
+      reach: 2
+      damage: 1d8+1
+      damage2: 1d10+1
+      damage3: 0
+      weapon2H: false
+      equippped: false
+      carried: false
+      excludeENC: false
+      superior: false
+      hands: 0
+      price: 125
+      modPrice: 0
+      armor: 0
+      magic_ar: 0
+      enchant_level: 2
+      qualities: >-
+        @Compendium[uesrpg-revision.journal.wra9K7hRoVnZarja]{Splitting},
+        @Compendium[uesrpg-revision.journal.21g3rtqdszsKc9jv]{Unwieldy}
+      charge:
+        value: 0
+        max: 0
+        reduction: 1
+      item_cat:
+        none: None
+        weapon1: Primary Weapon
+        weapon2: Secondary Weapon
+        weapon3: Sidearm
+    _key: '!actors.items!6nZUp0EY6OoS50Vo.8W0Lj1kWlXqbs4GK'
+  - _id: x4YYIEDQF6Gtxbua
+    name: Steel Longsword
+    type: weapon
+    img: icons/weapons/swords/sword-guard-engraved-worn.webp
+    effects: []
+    folder: null
+    sort: 0
+    flags:
+      core:
+        sourceId: Item.izgGo4PHM60MidTj
+    _stats:
+      coreVersion: '12.331'
+      systemId: null
+      systemVersion: null
+      createdTime: null
+      modifiedTime: null
+      lastModifiedBy: null
+      compendiumSource: null
+      duplicateSource: null
+    ownership:
+      default: 0
+      qwt9o1cuKYitvD9G: 3
+      eeXhsDlbzUBZOXZT: 3
+    system:
+      mpBonus: 0
+      hpBonus: 0
+      spBonus: 0
+      lpBonus: 0
+      wtBonus: 0
+      iniBonus: 0
+      speedBonus: 0
+      flyBonus: 0
+      swimBonus: 0
+      diseaseR: 0
+      fireR: 0
+      frostR: 0
+      shockR: 0
+      poisonR: 0
+      magicR: 0
+      natToughnessR: 0
+      silverR: 0
+      sunlightR: 0
+      characteristics:
+        none: None
+        str: STR
+        end: END
+        agi: AGI
+        int: INT
+        wp: WP
+        prc: PRC
+        prs: PRS
+        lck: LCK
+      characteristicBonus:
+        strChaBonus: 0
+        endChaBonus: 0
+        agiChaBonus: 0
+        intChaBonus: 0
+        wpChaBonus: 0
+        prcChaBonus: 0
+        prsChaBonus: 0
+        lckChaBonus: 0
+      replace:
+        ini:
+          iniToggle: false
+          value: 0
+          characteristic: ''
+        wt:
+          wtToggle: false
+          value: 0
+          characteristic: ''
+      skillArray: []
+      isPhysicalObject: true
+      containerStats:
+        contained: false
+        container_id: ''
+        container_name: ''
+      description: >-
+        <p><em style="box-sizing: border-box; user-select: text; color:
+        #191813;">Enchantments, modifications, notes, etc...</em></p>
+      quantity: 1
+      enc: 2
+      totalENC: 0
+      reach: 2
+      damage: 1d8+1
+      damage2: 1d10+1
+      damage3: 0
+      weapon2H: false
+      equippped: false
+      carried: false
+      excludeENC: false
+      superior: false
+      hands: 0
+      price: 175
+      modPrice: 0
+      armor: 0
+      magic_ar: 0
+      enchant_level: 2
+      qualities: >-
+        @Compendium[uesrpg-revision.journal.8QrUeG8YXaLx1BqW]{Slashing},
+        @Compendium[uesrpg-revision.journal.ooDJyrEPhbUeWoZl]{Versatile}
+      charge:
+        value: 0
+        max: 0
+        reduction: 1
+      item_cat:
+        none: None
+        weapon1: Primary Weapon
+        weapon2: Secondary Weapon
+        weapon3: Sidearm
+    _key: '!actors.items!6nZUp0EY6OoS50Vo.x4YYIEDQF6Gtxbua'
+  - _id: kwaTqYtTz2oxAuYE
+    name: Steel Warhammer
+    type: weapon
+    img: icons/weapons/hammers/hammer-war-rounding.webp
+    effects: []
+    folder: null
+    sort: 0
+    flags:
+      core:
+        sourceId: Item.PdQvEaU1RhVjXpij
+    _stats:
+      coreVersion: '12.331'
+      systemId: null
+      systemVersion: null
+      createdTime: null
+      modifiedTime: null
+      lastModifiedBy: null
+      compendiumSource: null
+      duplicateSource: null
+    ownership:
+      default: 0
+      qwt9o1cuKYitvD9G: 3
+      eeXhsDlbzUBZOXZT: 3
+    system:
+      mpBonus: 0
+      hpBonus: 0
+      spBonus: 0
+      lpBonus: 0
+      wtBonus: 0
+      iniBonus: 0
+      speedBonus: 0
+      flyBonus: 0
+      swimBonus: 0
+      diseaseR: 0
+      fireR: 0
+      frostR: 0
+      shockR: 0
+      poisonR: 0
+      magicR: 0
+      natToughnessR: 0
+      silverR: 0
+      sunlightR: 0
+      characteristics:
+        none: None
+        str: STR
+        end: END
+        agi: AGI
+        int: INT
+        wp: WP
+        prc: PRC
+        prs: PRS
+        lck: LCK
+      characteristicBonus:
+        strChaBonus: 0
+        endChaBonus: 0
+        agiChaBonus: 0
+        intChaBonus: 0
+        wpChaBonus: 0
+        prcChaBonus: 0
+        prsChaBonus: 0
+        lckChaBonus: 0
+      replace:
+        ini:
+          iniToggle: false
+          value: 0
+          characteristic: ''
+        wt:
+          wtToggle: false
+          value: 0
+          characteristic: ''
+      skillArray: []
+      isPhysicalObject: true
+      containerStats:
+        contained: false
+        container_id: ''
+        container_name: ''
+      description: >-
+        <p><em style="box-sizing: border-box; user-select: text; color:
+        #191813;">Enchantments, modifications, notes, etc...</em></p>
+      quantity: 1
+      enc: 2
+      totalENC: 0
+      reach: 2
+      damage: 1d8+1
+      damage2: 1d10+1
+      damage3: 0
+      weapon2H: false
+      equippped: false
+      carried: false
+      excludeENC: false
+      superior: false
+      hands: 0
+      price: 175
+      modPrice: 0
+      armor: 0
+      magic_ar: 0
+      enchant_level: 2
+      qualities: >-
+        @Compendium[uesrpg-revision.journal.mnfUeIEQkOInlwPK]{Crushing},
+        @Compendium[uesrpg-revision.journal.21g3rtqdszsKc9jv]{Unwieldy}
+      charge:
+        value: 0
+        max: 0
+        reduction: 1
+      item_cat:
+        none: None
+        weapon1: Primary Weapon
+        weapon2: Secondary Weapon
+        weapon3: Sidearm
+    _key: '!actors.items!6nZUp0EY6OoS50Vo.kwaTqYtTz2oxAuYE'
+  - _id: Ojoma4zj3eOsnoh1
+    name: Full Steel Armor
+    type: armor
+    img: icons/equipment/chest/breastplate-layered-steel-grey.webp
+    effects: []
+    folder: null
+    sort: 0
+    flags:
+      core:
+        sourceId: Item.DZ2uV1a0hnTWi4I8
+    _stats:
+      coreVersion: '12.331'
+      systemId: null
+      systemVersion: null
+      createdTime: null
+      modifiedTime: null
+      lastModifiedBy: null
+      compendiumSource: null
+      duplicateSource: null
+    ownership:
+      default: 0
+      qwt9o1cuKYitvD9G: 3
+      eeXhsDlbzUBZOXZT: 3
+    system:
+      mpBonus: 0
+      hpBonus: 0
+      spBonus: 0
+      lpBonus: 0
+      wtBonus: 0
+      iniBonus: 0
+      speedBonus: 0
+      flyBonus: 0
+      swimBonus: 0
+      diseaseR: 0
+      fireR: 0
+      frostR: 0
+      shockR: 0
+      poisonR: 0
+      magicR: 0
+      natToughnessR: 0
+      silverR: 0
+      sunlightR: 0
+      characteristics:
+        none: None
+        str: STR
+        end: END
+        agi: AGI
+        int: INT
+        wp: WP
+        prc: PRC
+        prs: PRS
+        lck: LCK
+      characteristicBonus:
+        strChaBonus: 0
+        endChaBonus: 0
+        agiChaBonus: 0
+        intChaBonus: 0
+        wpChaBonus: 0
+        prcChaBonus: 0
+        prsChaBonus: 0
+        lckChaBonus: 0
+      replace:
+        ini:
+          iniToggle: false
+          value: 0
+          characteristic: ''
+        wt:
+          wtToggle: false
+          value: 0
+          characteristic: ''
+      skillArray: []
+      isPhysicalObject: true
+      containerStats:
+        contained: false
+        container_id: ''
+        container_name: ''
+      description: >-
+        <p><em>Steel armor is commonly used by professional militaries,
+        mercenary groups, among others. The metal is often associated with the
+        races of men, who pride themselves on the quality of their steel-work as
+        weaponry, armors, and everyday tools for its reliability and
+        craftsmanship.</em></p>
+      quantity: 1
+      enc: 4
+      totalENC: 0
+      reach: ''
+      damage: ''
+      equipped: true
+      carried: false
+      hands: 0
+      price: 300
+      modPrice: 0
+      armor: 6
+      blockRating: 0
+      excludeENC: false
+      magic_ar: '0'
+      enchant_level: 2
+      qualities: '@Compendium[uesrpg-revision.journal.2QEgtXVs9q5qjcOW]{Heavy}'
+      category: none
+      item_cat:
+        none: None
+        head: Helmet
+        l_arm: Left Gauntlet
+        r_arm: Right Gauntlet
+        l_leg: Left Leg
+        r_leg: Right Leg
+        body: Chestplate
+        shield: Shield
+      charge:
+        value: 0
+        max: 0
+        reduction: 1
+    _key: '!actors.items!6nZUp0EY6OoS50Vo.Ojoma4zj3eOsnoh1'
+  - _id: wvFBS3K2HgSJ0dib
+    name: Full Steel Boot
+    type: armor
+    img: icons/equipment/feet/boots-armored-layered-steel.webp
+    effects: []
+    folder: null
+    sort: 0
+    flags:
+      core:
+        sourceId: Item.DZ2uV1a0hnTWi4I8
+    _stats:
+      coreVersion: '12.331'
+      systemId: null
+      systemVersion: null
+      createdTime: null
+      modifiedTime: null
+      lastModifiedBy: null
+      compendiumSource: null
+      duplicateSource: null
+    ownership:
+      default: 0
+      qwt9o1cuKYitvD9G: 3
+      eeXhsDlbzUBZOXZT: 3
+    system:
+      mpBonus: 0
+      hpBonus: 0
+      spBonus: 0
+      lpBonus: 0
+      wtBonus: 0
+      iniBonus: 0
+      speedBonus: 0
+      flyBonus: 0
+      swimBonus: 0
+      diseaseR: 0
+      fireR: 0
+      frostR: 0
+      shockR: 0
+      poisonR: 0
+      magicR: 0
+      natToughnessR: 0
+      silverR: 0
+      sunlightR: 0
+      characteristics:
+        none: None
+        str: STR
+        end: END
+        agi: AGI
+        int: INT
+        wp: WP
+        prc: PRC
+        prs: PRS
+        lck: LCK
+      characteristicBonus:
+        strChaBonus: 0
+        endChaBonus: 0
+        agiChaBonus: 0
+        intChaBonus: 0
+        wpChaBonus: 0
+        prcChaBonus: 0
+        prsChaBonus: 0
+        lckChaBonus: 0
+      replace:
+        ini:
+          iniToggle: false
+          value: 0
+          characteristic: ''
+        wt:
+          wtToggle: false
+          value: 0
+          characteristic: ''
+      skillArray: []
+      isPhysicalObject: true
+      containerStats:
+        contained: false
+        container_id: ''
+        container_name: ''
+      description: >-
+        <p><em>Steel armor is commonly used by professional militaries,
+        mercenary groups, among others. The metal is often associated with the
+        races of men, who pride themselves on the quality of their steel-work as
+        weaponry, armors, and everyday tools for its reliability and
+        craftsmanship.</em></p>
+      quantity: 1
+      enc: 4
+      totalENC: 0
+      reach: ''
+      damage: ''
+      equipped: true
+      carried: false
+      hands: 0
+      price: 150
+      modPrice: 0
+      armor: 6
+      blockRating: 0
+      excludeENC: false
+      magic_ar: '0'
+      enchant_level: 2
+      qualities: '@Compendium[uesrpg-revision.journal.2QEgtXVs9q5qjcOW]{Heavy}'
+      category: none
+      item_cat:
+        none: None
+        head: Helmet
+        l_arm: Left Gauntlet
+        r_arm: Right Gauntlet
+        l_leg: Left Leg
+        r_leg: Right Leg
+        body: Chestplate
+        shield: Shield
+      charge:
+        value: 0
+        max: 0
+        reduction: 1
+    _key: '!actors.items!6nZUp0EY6OoS50Vo.wvFBS3K2HgSJ0dib'
+  - _id: z2KYGPxXNkjoaHVu
+    name: Full Steel Boot
+    type: armor
+    img: icons/equipment/feet/boots-armored-layered-steel.webp
+    effects: []
+    folder: null
+    sort: 0
+    flags:
+      core:
+        sourceId: Item.DZ2uV1a0hnTWi4I8
+    _stats:
+      coreVersion: '12.331'
+      systemId: null
+      systemVersion: null
+      createdTime: null
+      modifiedTime: null
+      lastModifiedBy: null
+      compendiumSource: null
+      duplicateSource: null
+    ownership:
+      default: 0
+      qwt9o1cuKYitvD9G: 3
+      eeXhsDlbzUBZOXZT: 3
+    system:
+      mpBonus: 0
+      hpBonus: 0
+      spBonus: 0
+      lpBonus: 0
+      wtBonus: 0
+      iniBonus: 0
+      speedBonus: 0
+      flyBonus: 0
+      swimBonus: 0
+      diseaseR: 0
+      fireR: 0
+      frostR: 0
+      shockR: 0
+      poisonR: 0
+      magicR: 0
+      natToughnessR: 0
+      silverR: 0
+      sunlightR: 0
+      characteristics:
+        none: None
+        str: STR
+        end: END
+        agi: AGI
+        int: INT
+        wp: WP
+        prc: PRC
+        prs: PRS
+        lck: LCK
+      characteristicBonus:
+        strChaBonus: 0
+        endChaBonus: 0
+        agiChaBonus: 0
+        intChaBonus: 0
+        wpChaBonus: 0
+        prcChaBonus: 0
+        prsChaBonus: 0
+        lckChaBonus: 0
+      replace:
+        ini:
+          iniToggle: false
+          value: 0
+          characteristic: ''
+        wt:
+          wtToggle: false
+          value: 0
+          characteristic: ''
+      skillArray: []
+      isPhysicalObject: true
+      containerStats:
+        contained: false
+        container_id: ''
+        container_name: ''
+      description: >-
+        <p><em>Steel armor is commonly used by professional militaries,
+        mercenary groups, among others. The metal is often associated with the
+        races of men, who pride themselves on the quality of their steel-work as
+        weaponry, armors, and everyday tools for its reliability and
+        craftsmanship.</em></p>
+      quantity: 1
+      enc: 4
+      totalENC: 0
+      reach: ''
+      damage: ''
+      equipped: true
+      carried: false
+      hands: 0
+      price: 150
+      modPrice: 0
+      armor: 6
+      blockRating: 0
+      excludeENC: false
+      magic_ar: '0'
+      enchant_level: 2
+      qualities: '@Compendium[uesrpg-revision.journal.2QEgtXVs9q5qjcOW]{Heavy}'
+      category: none
+      item_cat:
+        none: None
+        head: Helmet
+        l_arm: Left Gauntlet
+        r_arm: Right Gauntlet
+        l_leg: Left Leg
+        r_leg: Right Leg
+        body: Chestplate
+        shield: Shield
+      charge:
+        value: 0
+        max: 0
+        reduction: 1
+    _key: '!actors.items!6nZUp0EY6OoS50Vo.z2KYGPxXNkjoaHVu'
+  - _id: rQrNtuccvJAJLFPa
+    name: Full Steel Gauntlet
+    type: armor
+    img: icons/equipment/hand/gauntlet-cuffed-steel-grey.webp
+    effects: []
+    folder: null
+    sort: 0
+    flags:
+      core:
+        sourceId: Item.DZ2uV1a0hnTWi4I8
+    _stats:
+      coreVersion: '12.331'
+      systemId: null
+      systemVersion: null
+      createdTime: null
+      modifiedTime: null
+      lastModifiedBy: null
+      compendiumSource: null
+      duplicateSource: null
+    ownership:
+      default: 0
+      qwt9o1cuKYitvD9G: 3
+      eeXhsDlbzUBZOXZT: 3
+    system:
+      mpBonus: 0
+      hpBonus: 0
+      spBonus: 0
+      lpBonus: 0
+      wtBonus: 0
+      iniBonus: 0
+      speedBonus: 0
+      flyBonus: 0
+      swimBonus: 0
+      diseaseR: 0
+      fireR: 0
+      frostR: 0
+      shockR: 0
+      poisonR: 0
+      magicR: 0
+      natToughnessR: 0
+      silverR: 0
+      sunlightR: 0
+      characteristics:
+        none: None
+        str: STR
+        end: END
+        agi: AGI
+        int: INT
+        wp: WP
+        prc: PRC
+        prs: PRS
+        lck: LCK
+      characteristicBonus:
+        strChaBonus: 0
+        endChaBonus: 0
+        agiChaBonus: 0
+        intChaBonus: 0
+        wpChaBonus: 0
+        prcChaBonus: 0
+        prsChaBonus: 0
+        lckChaBonus: 0
+      replace:
+        ini:
+          iniToggle: false
+          value: 0
+          characteristic: ''
+        wt:
+          wtToggle: false
+          value: 0
+          characteristic: ''
+      skillArray: []
+      isPhysicalObject: true
+      containerStats:
+        contained: false
+        container_id: ''
+        container_name: ''
+      description: >-
+        <p><em>Steel armor is commonly used by professional militaries,
+        mercenary groups, among others. The metal is often associated with the
+        races of men, who pride themselves on the quality of their steel-work as
+        weaponry, armors, and everyday tools for its reliability and
+        craftsmanship.</em></p>
+      quantity: 1
+      enc: 4
+      totalENC: 0
+      reach: ''
+      damage: ''
+      equipped: true
+      carried: false
+      hands: 0
+      price: 150
+      modPrice: 0
+      armor: 6
+      blockRating: 0
+      excludeENC: false
+      magic_ar: '0'
+      enchant_level: 2
+      qualities: '@Compendium[uesrpg-revision.journal.2QEgtXVs9q5qjcOW]{Heavy}'
+      category: none
+      item_cat:
+        none: None
+        head: Helmet
+        l_arm: Left Gauntlet
+        r_arm: Right Gauntlet
+        l_leg: Left Leg
+        r_leg: Right Leg
+        body: Chestplate
+        shield: Shield
+      charge:
+        value: 0
+        max: 0
+        reduction: 1
+    _key: '!actors.items!6nZUp0EY6OoS50Vo.rQrNtuccvJAJLFPa'
+  - _id: mHjbwZixdnYlM2Jn
+    name: Full Steel Gauntlet
+    type: armor
+    img: icons/equipment/hand/gauntlet-cuffed-steel-grey.webp
+    effects: []
+    folder: null
+    sort: 0
+    flags:
+      core:
+        sourceId: Item.DZ2uV1a0hnTWi4I8
+    _stats:
+      coreVersion: '12.331'
+      systemId: null
+      systemVersion: null
+      createdTime: null
+      modifiedTime: null
+      lastModifiedBy: null
+      compendiumSource: null
+      duplicateSource: null
+    ownership:
+      default: 0
+      qwt9o1cuKYitvD9G: 3
+      eeXhsDlbzUBZOXZT: 3
+    system:
+      mpBonus: 0
+      hpBonus: 0
+      spBonus: 0
+      lpBonus: 0
+      wtBonus: 0
+      iniBonus: 0
+      speedBonus: 0
+      flyBonus: 0
+      swimBonus: 0
+      diseaseR: 0
+      fireR: 0
+      frostR: 0
+      shockR: 0
+      poisonR: 0
+      magicR: 0
+      natToughnessR: 0
+      silverR: 0
+      sunlightR: 0
+      characteristics:
+        none: None
+        str: STR
+        end: END
+        agi: AGI
+        int: INT
+        wp: WP
+        prc: PRC
+        prs: PRS
+        lck: LCK
+      characteristicBonus:
+        strChaBonus: 0
+        endChaBonus: 0
+        agiChaBonus: 0
+        intChaBonus: 0
+        wpChaBonus: 0
+        prcChaBonus: 0
+        prsChaBonus: 0
+        lckChaBonus: 0
+      replace:
+        ini:
+          iniToggle: false
+          value: 0
+          characteristic: ''
+        wt:
+          wtToggle: false
+          value: 0
+          characteristic: ''
+      skillArray: []
+      isPhysicalObject: true
+      containerStats:
+        contained: false
+        container_id: ''
+        container_name: ''
+      description: >-
+        <p><em>Steel armor is commonly used by professional militaries,
+        mercenary groups, among others. The metal is often associated with the
+        races of men, who pride themselves on the quality of their steel-work as
+        weaponry, armors, and everyday tools for its reliability and
+        craftsmanship.</em></p>
+      quantity: 1
+      enc: 4
+      totalENC: 0
+      reach: ''
+      damage: ''
+      equipped: true
+      carried: false
+      hands: 0
+      price: 150
+      modPrice: 0
+      armor: 6
+      blockRating: 0
+      excludeENC: false
+      magic_ar: '0'
+      enchant_level: 2
+      qualities: '@Compendium[uesrpg-revision.journal.2QEgtXVs9q5qjcOW]{Heavy}'
+      category: none
+      item_cat:
+        none: None
+        head: Helmet
+        l_arm: Left Gauntlet
+        r_arm: Right Gauntlet
+        l_leg: Left Leg
+        r_leg: Right Leg
+        body: Chestplate
+        shield: Shield
+      charge:
+        value: 0
+        max: 0
+        reduction: 1
+    _key: '!actors.items!6nZUp0EY6OoS50Vo.mHjbwZixdnYlM2Jn'
+  - _id: 7EXQbQAV5mSsw7Gl
+    name: Full Steel Helmet
+    type: armor
+    img: icons/equipment/head/greathelm-slotted-steel.webp
+    effects: []
+    folder: null
+    sort: 0
+    flags:
+      core:
+        sourceId: Item.DZ2uV1a0hnTWi4I8
+    _stats:
+      coreVersion: '12.331'
+      systemId: null
+      systemVersion: null
+      createdTime: null
+      modifiedTime: null
+      lastModifiedBy: null
+      compendiumSource: null
+      duplicateSource: null
+    ownership:
+      default: 0
+      qwt9o1cuKYitvD9G: 3
+      eeXhsDlbzUBZOXZT: 3
+    system:
+      mpBonus: 0
+      hpBonus: 0
+      spBonus: 0
+      lpBonus: 0
+      wtBonus: 0
+      iniBonus: 0
+      speedBonus: 0
+      flyBonus: 0
+      swimBonus: 0
+      diseaseR: 0
+      fireR: 0
+      frostR: 0
+      shockR: 0
+      poisonR: 0
+      magicR: 0
+      natToughnessR: 0
+      silverR: 0
+      sunlightR: 0
+      characteristics:
+        none: None
+        str: STR
+        end: END
+        agi: AGI
+        int: INT
+        wp: WP
+        prc: PRC
+        prs: PRS
+        lck: LCK
+      characteristicBonus:
+        strChaBonus: 0
+        endChaBonus: 0
+        agiChaBonus: 0
+        intChaBonus: 0
+        wpChaBonus: 0
+        prcChaBonus: 0
+        prsChaBonus: 0
+        lckChaBonus: 0
+      replace:
+        ini:
+          iniToggle: false
+          value: 0
+          characteristic: ''
+        wt:
+          wtToggle: false
+          value: 0
+          characteristic: ''
+      skillArray: []
+      isPhysicalObject: true
+      containerStats:
+        contained: false
+        container_id: ''
+        container_name: ''
+      description: >-
+        <p><em>Steel armor is commonly used by professional militaries,
+        mercenary groups, among others. The metal is often associated with the
+        races of men, who pride themselves on the quality of their steel-work as
+        weaponry, armors, and everyday tools for its reliability and
+        craftsmanship.</em></p>
+      quantity: 1
+      enc: 4
+      totalENC: 0
+      reach: ''
+      damage: ''
+      equipped: true
+      carried: false
+      hands: 0
+      price: 150
+      modPrice: 0
+      armor: 6
+      blockRating: 0
+      excludeENC: false
+      magic_ar: '0'
+      enchant_level: 2
+      qualities: '@Compendium[uesrpg-revision.journal.2QEgtXVs9q5qjcOW]{Heavy}'
+      category: none
+      item_cat:
+        none: None
+        head: Helmet
+        l_arm: Left Gauntlet
+        r_arm: Right Gauntlet
+        l_leg: Left Leg
+        r_leg: Right Leg
+        body: Chestplate
+        shield: Shield
+      charge:
+        value: 0
+        max: 0
+        reduction: 1
+    _key: '!actors.items!6nZUp0EY6OoS50Vo.7EXQbQAV5mSsw7Gl'
+  - _id: EqcbEWdpTc3oCoc3
+    name: Armor 3
+    type: spell
+    img: icons/magic/symbols/cross-circle-blue.webp
+    effects: []
+    folder: null
+    sort: 0
+    flags:
+      core:
+        sourceId: Item.9OVY9WPZDs4GMAz7
+    _stats:
+      coreVersion: '12.331'
+      systemId: null
+      systemVersion: null
+      createdTime: null
+      modifiedTime: null
+      lastModifiedBy: null
+      compendiumSource: null
+      duplicateSource: null
+    ownership:
+      default: 0
+      qwt9o1cuKYitvD9G: 3
+      eeXhsDlbzUBZOXZT: 3
+    system:
+      description: >-
+        <p>Caster gains [Spell Strength] AR for 1 minute.</p>
+
+        <table style="width: 98.5447%; height: 51px;" border="2" cellspacing="2"
+        cellpadding="1">
+
+        <tbody>
+
+        <tr style="height: 17px;">
+
+        <td style="width: 33.4506%; height: 17px; text-align:
+        left;"><strong>Level</strong></td>
+
+        <td style="width: 10.0153%; height: 17px; text-align:
+        center;"><strong>1</strong></td>
+
+        <td style="width: 9.15877%; height: 17px; text-align:
+        center;"><strong>2</strong></td>
+
+        <td style="width: 9.15881%; height: 17px; text-align:
+        center;"><strong>3</strong></td>
+
+        <td style="width: 9.37287%; height: 17px; text-align:
+        center;"><strong>4</strong></td>
+
+        <td style="width: 8.85101%; height: 17px; text-align:
+        center;"><strong>5</strong></td>
+
+        <td style="width: 8.63689%; height: 17px; text-align:
+        center;"><strong>6</strong></td>
+
+        <td style="width: 9.4269%; height: 17px; text-align:
+        center;"><strong>7</strong></td>
+
+        </tr>
+
+        <tr style="height: 17px;">
+
+        <td style="width: 33.4506%; height: 17px; text-align:
+        left;"><strong>Cost</strong></td>
+
+        <td style="width: 10.0153%; height: 17px; text-align: center;">6</td>
+
+        <td style="width: 9.15877%; height: 17px; text-align: center;">11</td>
+
+        <td style="width: 9.15881%; height: 17px; text-align: center;">16</td>
+
+        <td style="width: 9.37287%; height: 17px; text-align: center;">21</td>
+
+        <td style="width: 8.85101%; height: 17px; text-align: center;">26</td>
+
+        <td style="width: 8.63689%; height: 17px; text-align: center;">31</td>
+
+        <td style="width: 9.4269%; height: 17px; text-align: center;">36</td>
+
+        </tr>
+
+        <tr style="height: 17px;">
+
+        <td style="width: 33.4506%; height: 17px; text-align:
+        left;"><strong>Spell Strength</strong></td>
+
+        <td style="width: 10.0153%; height: 17px; text-align: center;">1</td>
+
+        <td style="width: 9.15877%; height: 17px; text-align: center;">2</td>
+
+        <td style="width: 9.15881%; height: 17px; text-align: center;">3</td>
+
+        <td style="width: 9.37287%; height: 17px; text-align: center;">4</td>
+
+        <td style="width: 8.85101%; height: 17px; text-align: center;">5</td>
+
+        <td style="width: 8.63689%; height: 17px; text-align: center;">6</td>
+
+        <td style="width: 9.4269%; height: 17px; text-align: center;">7</td>
+
+        </tr>
+
+        </tbody>
+
+        </table>
+
+        <p>&nbsp;</p>
+      damage: '0'
+      level: 3
+      cost: 16
+      spell_str: ''
+      attributes: >-
+        @Compendium[uesrpg-revision.journal.etuR7vddrnv3ot2J]{Upkeep},
+        @Compendium[uesrpg-revision.journal.SJHXIArl88ADTmmG]{Potion}, Mage
+        Guard - @Compendium[uesrpg-revision.journal.9zeXPQHlQmScThA4]{Mage
+        Guard}(+WpB to magic AR)
+      form: Self
+      school: alteration
+      school_cat:
+        alteration: Alteration
+        conjuration: Conjuration
+        destruction: Destruction
+        illusion: Illusion
+        mysticism: Mysticism
+        necromancy: Necromancy
+        restoration: Restoration
+        none: Select School
+      spellType: ''
+      spellTypes:
+        conventional: Conventional
+        unconventional: Unconventional
+    _key: '!actors.items!6nZUp0EY6OoS50Vo.EqcbEWdpTc3oCoc3'
+  - _id: LeRveYeLp0bDuycG
+    name: Magic Armor 3
+    type: spell
+    img: icons/magic/symbols/cross-circle-blue.webp
+    effects: []
+    folder: null
+    sort: 0
+    flags:
+      core:
+        sourceId: Item.Dvncp3T7Nn3WBpgy
+    _stats:
+      coreVersion: '12.331'
+      systemId: null
+      systemVersion: null
+      createdTime: null
+      modifiedTime: null
+      lastModifiedBy: null
+      compendiumSource: null
+      duplicateSource: null
+    ownership:
+      default: 0
+      qwt9o1cuKYitvD9G: 3
+      eeXhsDlbzUBZOXZT: 3
+    system:
+      description: >-
+        <p>Caster gains [Spell Strength] magic AR for 1 minute.</p>
+
+        <table style="width: 98.5447%; height: 51px;" border="2" cellspacing="2"
+        cellpadding="1">
+
+        <tbody>
+
+        <tr style="height: 17px;">
+
+        <td style="width: 33.4506%; height: 17px; text-align:
+        left;"><strong>Level</strong></td>
+
+        <td style="width: 10.0153%; height: 17px; text-align:
+        center;"><strong>1</strong></td>
+
+        <td style="width: 9.15877%; height: 17px; text-align:
+        center;"><strong>2</strong></td>
+
+        <td style="width: 9.15881%; height: 17px; text-align:
+        center;"><strong>3</strong></td>
+
+        <td style="width: 9.37287%; height: 17px; text-align:
+        center;"><strong>4</strong></td>
+
+        <td style="width: 8.85101%; height: 17px; text-align:
+        center;"><strong>5</strong></td>
+
+        <td style="width: 8.63689%; height: 17px; text-align:
+        center;"><strong>6</strong></td>
+
+        <td style="width: 9.4269%; height: 17px; text-align:
+        center;"><strong>7</strong></td>
+
+        </tr>
+
+        <tr style="height: 17px;">
+
+        <td style="width: 33.4506%; height: 17px; text-align:
+        left;"><strong>Cost</strong></td>
+
+        <td style="width: 10.0153%; height: 17px; text-align: center;">7</td>
+
+        <td style="width: 9.15877%; height: 17px; text-align: center;">13</td>
+
+        <td style="width: 9.15881%; height: 17px; text-align: center;">19</td>
+
+        <td style="width: 9.37287%; height: 17px; text-align: center;">25</td>
+
+        <td style="width: 8.85101%; height: 17px; text-align: center;">31</td>
+
+        <td style="width: 8.63689%; height: 17px; text-align: center;">37</td>
+
+        <td style="width: 9.4269%; height: 17px; text-align: center;">43</td>
+
+        </tr>
+
+        <tr style="height: 17px;">
+
+        <td style="width: 33.4506%; height: 17px; text-align:
+        left;"><strong>Spell Strength</strong></td>
+
+        <td style="width: 10.0153%; height: 17px; text-align: center;">1</td>
+
+        <td style="width: 9.15877%; height: 17px; text-align: center;">2</td>
+
+        <td style="width: 9.15881%; height: 17px; text-align: center;">3</td>
+
+        <td style="width: 9.37287%; height: 17px; text-align: center;">4</td>
+
+        <td style="width: 8.85101%; height: 17px; text-align: center;">5</td>
+
+        <td style="width: 8.63689%; height: 17px; text-align: center;">6</td>
+
+        <td style="width: 9.4269%; height: 17px; text-align: center;">7</td>
+
+        </tr>
+
+        </tbody>
+
+        </table>
+
+        <p>&nbsp;</p>
+      damage: '0'
+      level: 3
+      cost: 19
+      spell_str: ''
+      attributes: >-
+        @Compendium[uesrpg-revision.journal.etuR7vddrnv3ot2J]{Upkeep},
+        @Compendium[uesrpg-revision.journal.SJHXIArl88ADTmmG]{Potion},
+        @JournalEntry[1PXTGzdWIyIOgj4L]{Upkeep},
+        @Compendium[uesrpg-revision.journal.9zeXPQHlQmScThA4]{Mage Guard}(+WpB
+        to magic AR)
+      form: Self
+      school: alteration
+      school_cat:
+        alteration: Alteration
+        conjuration: Conjuration
+        destruction: Destruction
+        illusion: Illusion
+        mysticism: Mysticism
+        necromancy: Necromancy
+        restoration: Restoration
+        none: Select School
+      spellType: ''
+      spellTypes:
+        conventional: Conventional
+        unconventional: Unconventional
+    _key: '!actors.items!6nZUp0EY6OoS50Vo.LeRveYeLp0bDuycG'
+  - _id: W0CaJ2iXQ0m2Jyo5
+    name: Magic Shield 3
+    type: spell
+    img: icons/magic/symbols/cross-circle-blue.webp
+    effects: []
+    folder: null
+    sort: 0
+    flags:
+      core:
+        sourceId: Item.Dvncp3T7Nn3WBpgy
+    _stats:
+      coreVersion: '12.331'
+      systemId: null
+      systemVersion: null
+      createdTime: null
+      modifiedTime: null
+      lastModifiedBy: null
+      compendiumSource: null
+      duplicateSource: null
+    ownership:
+      default: 0
+      qwt9o1cuKYitvD9G: 3
+      eeXhsDlbzUBZOXZT: 3
+    system:
+      description: >-
+        <p>Caster gains [Spell Strength] temporary bonus HP against magic damage
+        for 1 round. Any damage the caster takes of that type reduces this HP
+        first.</p>
+
+        <table style="width: 98.5447%; height: 51px;" border="2" cellspacing="2"
+        cellpadding="1">
+
+        <tbody>
+
+        <tr style="height: 17px;">
+
+        <td style="width: 33.4506%; height: 17px; text-align:
+        left;"><strong>Level</strong></td>
+
+        <td style="width: 10.0153%; height: 17px; text-align:
+        center;"><strong>1</strong></td>
+
+        <td style="width: 9.15877%; height: 17px; text-align:
+        center;"><strong>2</strong></td>
+
+        <td style="width: 9.15881%; height: 17px; text-align:
+        center;"><strong>3</strong></td>
+
+        <td style="width: 9.37287%; height: 17px; text-align:
+        center;"><strong>4</strong></td>
+
+        <td style="width: 8.85101%; height: 17px; text-align:
+        center;"><strong>5</strong></td>
+
+        <td style="width: 8.63689%; height: 17px; text-align:
+        center;"><strong>6</strong></td>
+
+        <td style="width: 9.4269%; height: 17px; text-align:
+        center;"><strong>7</strong></td>
+
+        </tr>
+
+        <tr style="height: 17px;">
+
+        <td style="width: 33.4506%; height: 17px; text-align:
+        left;"><strong>Cost</strong></td>
+
+        <td style="width: 10.0153%; height: 17px; text-align: center;">4</td>
+
+        <td style="width: 9.15877%; height: 17px; text-align: center;">7</td>
+
+        <td style="width: 9.15881%; height: 17px; text-align: center;">10</td>
+
+        <td style="width: 9.37287%; height: 17px; text-align: center;">13</td>
+
+        <td style="width: 8.85101%; height: 17px; text-align: center;">16</td>
+
+        <td style="width: 8.63689%; height: 17px; text-align: center;">19</td>
+
+        <td style="width: 9.4269%; height: 17px; text-align: center;">22</td>
+
+        </tr>
+
+        <tr style="height: 17px;">
+
+        <td style="width: 33.4506%; height: 17px; text-align:
+        left;"><strong>Spell Strength</strong></td>
+
+        <td style="width: 10.0153%; height: 17px; text-align: center;">1</td>
+
+        <td style="width: 9.15877%; height: 17px; text-align: center;">2</td>
+
+        <td style="width: 9.15881%; height: 17px; text-align: center;">3</td>
+
+        <td style="width: 9.37287%; height: 17px; text-align: center;">4</td>
+
+        <td style="width: 8.85101%; height: 17px; text-align: center;">5</td>
+
+        <td style="width: 8.63689%; height: 17px; text-align: center;">6</td>
+
+        <td style="width: 9.4269%; height: 17px; text-align: center;">7</td>
+
+        </tr>
+
+        </tbody>
+
+        </table>
+
+        <p>This bonus HP can exceed their HP max, and if any remains at the end
+        of 1 round then the spell is free to upkeep (the bonus HP refreshes
+        entirely), unless the Caster decides to use Mage Guard, in which case
+        the spell still costs MP to upkeep. If all of the bonus HP is lost by
+        the end of the round then the spell cannot be refreshed via upkeep and
+        must be cast again.</p>
+      damage: '0'
+      level: 3
+      cost: 10
+      spell_str: ''
+      attributes: >-
+        @Compendium[uesrpg-revision.journal.etuR7vddrnv3ot2J]{Upkeep},
+        @Compendium[uesrpg-revision.journal.SJHXIArl88ADTmmG]{Potion},
+        @Compendium[uesrpg-revision.journal.9zeXPQHlQmScThA4]{Mage Guard}(+WpB
+        to bonus HP, loses free Upkeep)
+      form: Self
+      school: alteration
+      school_cat:
+        alteration: Alteration
+        conjuration: Conjuration
+        destruction: Destruction
+        illusion: Illusion
+        mysticism: Mysticism
+        necromancy: Necromancy
+        restoration: Restoration
+        none: Select School
+      spellType: ''
+      spellTypes:
+        conventional: Conventional
+        unconventional: Unconventional
+    _key: '!actors.items!6nZUp0EY6OoS50Vo.W0CaJ2iXQ0m2Jyo5'
+  - _id: iaHC8RIygz9k8DUc
+    name: Shield 3
+    type: spell
+    img: icons/magic/symbols/cross-circle-blue.webp
+    effects: []
+    folder: null
+    sort: 0
+    flags:
+      core:
+        sourceId: Item.Dvncp3T7Nn3WBpgy
+    _stats:
+      coreVersion: '12.331'
+      systemId: null
+      systemVersion: null
+      createdTime: null
+      modifiedTime: null
+      lastModifiedBy: null
+      compendiumSource: null
+      duplicateSource: null
+    ownership:
+      default: 0
+      qwt9o1cuKYitvD9G: 3
+      eeXhsDlbzUBZOXZT: 3
+    system:
+      description: >-
+        <p>Caster gains [Spell Strength] temporary bonus HP against physical
+        damage for 1 round. Any damage the caster takes reduces this HP
+        first.</p>
+
+        <table style="width: 98.5447%; height: 51px;" border="2" cellspacing="2"
+        cellpadding="1">
+
+        <tbody>
+
+        <tr style="height: 17px;">
+
+        <td style="width: 33.4506%; height: 17px; text-align:
+        left;"><strong>Level</strong></td>
+
+        <td style="width: 10.0153%; height: 17px; text-align:
+        center;"><strong>1</strong></td>
+
+        <td style="width: 9.15877%; height: 17px; text-align:
+        center;"><strong>2</strong></td>
+
+        <td style="width: 9.15881%; height: 17px; text-align:
+        center;"><strong>3</strong></td>
+
+        <td style="width: 9.37287%; height: 17px; text-align:
+        center;"><strong>4</strong></td>
+
+        <td style="width: 8.85101%; height: 17px; text-align:
+        center;"><strong>5</strong></td>
+
+        <td style="width: 8.63689%; height: 17px; text-align:
+        center;"><strong>6</strong></td>
+
+        <td style="width: 9.4269%; height: 17px; text-align:
+        center;"><strong>7</strong></td>
+
+        </tr>
+
+        <tr style="height: 17px;">
+
+        <td style="width: 33.4506%; height: 17px; text-align:
+        left;"><strong>Cost</strong></td>
+
+        <td style="width: 10.0153%; height: 17px; text-align: center;">4</td>
+
+        <td style="width: 9.15877%; height: 17px; text-align: center;">7</td>
+
+        <td style="width: 9.15881%; height: 17px; text-align: center;">10</td>
+
+        <td style="width: 9.37287%; height: 17px; text-align: center;">13</td>
+
+        <td style="width: 8.85101%; height: 17px; text-align: center;">16</td>
+
+        <td style="width: 8.63689%; height: 17px; text-align: center;">19</td>
+
+        <td style="width: 9.4269%; height: 17px; text-align: center;">22</td>
+
+        </tr>
+
+        <tr style="height: 17px;">
+
+        <td style="width: 33.4506%; height: 17px; text-align:
+        left;"><strong>Spell Strength</strong></td>
+
+        <td style="width: 10.0153%; height: 17px; text-align: center;">1</td>
+
+        <td style="width: 9.15877%; height: 17px; text-align: center;">2</td>
+
+        <td style="width: 9.15881%; height: 17px; text-align: center;">3</td>
+
+        <td style="width: 9.37287%; height: 17px; text-align: center;">4</td>
+
+        <td style="width: 8.85101%; height: 17px; text-align: center;">5</td>
+
+        <td style="width: 8.63689%; height: 17px; text-align: center;">6</td>
+
+        <td style="width: 9.4269%; height: 17px; text-align: center;">7</td>
+
+        </tr>
+
+        </tbody>
+
+        </table>
+
+        <p>This bonus HP can exceed their HP max, and if any remains at the end
+        of 1 round then the spell is free to upkeep (the bonus HP refreshes
+        entirely), unless the Caster decides to use Mage Guard, in which case
+        the spell still costs MP to upkeep. If all of the bonus HP is lost by
+        the end of the round then the spell cannot be refreshed via upkeep and
+        must be cast again.</p>
+      damage: '0'
+      level: 3
+      cost: 10
+      spell_str: ''
+      attributes: >-
+        @Compendium[uesrpg-revision.journal.etuR7vddrnv3ot2J]{Upkeep},
+        @Compendium[uesrpg-revision.journal.SJHXIArl88ADTmmG]{Potion},
+        @Compendium[uesrpg-revision.journal.9zeXPQHlQmScThA4]{Mage Guard}(+WpB
+        to bonus HP, loses free Upkeep)
+      form: Self
+      school: alteration
+      school_cat:
+        alteration: Alteration
+        conjuration: Conjuration
+        destruction: Destruction
+        illusion: Illusion
+        mysticism: Mysticism
+        necromancy: Necromancy
+        restoration: Restoration
+        none: Select School
+      spellType: ''
+      spellTypes:
+        conventional: Conventional
+        unconventional: Unconventional
+    _key: '!actors.items!6nZUp0EY6OoS50Vo.iaHC8RIygz9k8DUc'
+  - _id: 3t2uaVzNerzAY6AF
+    name: Ward 4
+    type: spell
+    img: icons/magic/symbols/cross-circle-blue.webp
+    effects: []
+    folder: null
+    sort: 0
+    flags:
+      core:
+        sourceId: Item.Dvncp3T7Nn3WBpgy
+    _stats:
+      coreVersion: '12.331'
+      systemId: null
+      systemVersion: null
+      createdTime: null
+      modifiedTime: null
+      lastModifiedBy: null
+      compendiumSource: null
+      duplicateSource: null
+    ownership:
+      default: 0
+      qwt9o1cuKYitvD9G: 3
+      eeXhsDlbzUBZOXZT: 3
+    system:
+      description: >-
+        <p>May be cast as a reaction to an attack in place of the
+        character&rsquo;s normal defense. Caster generates a magical ward that
+        acts as a shield for all damage, gaining [Spell Strength] Magical and
+        Physical BR. Power Block is incompatible with this shield.</p>
+
+        <table style="width: 98.5447%; height: 51px;" border="2" cellspacing="2"
+        cellpadding="1">
+
+        <tbody>
+
+        <tr style="height: 17px;">
+
+        <td style="width: 33.4506%; height: 17px; text-align:
+        left;"><strong>Level</strong></td>
+
+        <td style="width: 10.0153%; height: 17px; text-align:
+        center;"><strong>1</strong></td>
+
+        <td style="width: 9.15877%; height: 17px; text-align:
+        center;"><strong>2</strong></td>
+
+        <td style="width: 9.15881%; height: 17px; text-align:
+        center;"><strong>3</strong></td>
+
+        <td style="width: 9.37287%; height: 17px; text-align:
+        center;"><strong>4</strong></td>
+
+        <td style="width: 8.85101%; height: 17px; text-align:
+        center;"><strong>5</strong></td>
+
+        <td style="width: 8.63689%; height: 17px; text-align:
+        center;"><strong>6</strong></td>
+
+        <td style="width: 9.4269%; height: 17px; text-align:
+        center;"><strong>7</strong></td>
+
+        </tr>
+
+        <tr style="height: 17px;">
+
+        <td style="width: 33.4506%; height: 17px; text-align:
+        left;"><strong>Cost</strong></td>
+
+        <td style="width: 10.0153%; height: 17px; text-align: center;">3</td>
+
+        <td style="width: 9.15877%; height: 17px; text-align: center;">5</td>
+
+        <td style="width: 9.15881%; height: 17px; text-align: center;">7</td>
+
+        <td style="width: 9.37287%; height: 17px; text-align: center;">9</td>
+
+        <td style="width: 8.85101%; height: 17px; text-align: center;">11</td>
+
+        <td style="width: 8.63689%; height: 17px; text-align: center;">13</td>
+
+        <td style="width: 9.4269%; height: 17px; text-align: center;">15</td>
+
+        </tr>
+
+        <tr style="height: 17px;">
+
+        <td style="width: 33.4506%; height: 17px; text-align:
+        left;"><strong>Spell Strength</strong></td>
+
+        <td style="width: 10.0153%; height: 17px; text-align: center;">6</td>
+
+        <td style="width: 9.15877%; height: 17px; text-align: center;">7</td>
+
+        <td style="width: 9.15881%; height: 17px; text-align: center;">8</td>
+
+        <td style="width: 9.37287%; height: 17px; text-align: center;">9</td>
+
+        <td style="width: 8.85101%; height: 17px; text-align: center;">10</td>
+
+        <td style="width: 8.63689%; height: 17px; text-align: center;">11</td>
+
+        <td style="width: 9.4269%; height: 17px; text-align: center;">12</td>
+
+        </tr>
+
+        </tbody>
+
+        </table>
+
+        <p>&nbsp;</p>
+      damage: '0'
+      level: 4
+      cost: 9
+      spell_str: ''
+      attributes: '@Compendium[uesrpg-revision.journal.jEt3B1IRSFSeii8z]{Reaction}'
+      form: Self
+      school: alteration
+      school_cat:
+        alteration: Alteration
+        conjuration: Conjuration
+        destruction: Destruction
+        illusion: Illusion
+        mysticism: Mysticism
+        necromancy: Necromancy
+        restoration: Restoration
+        none: Select School
+      spellType: ''
+      spellTypes:
+        conventional: Conventional
+        unconventional: Unconventional
+    _key: '!actors.items!6nZUp0EY6OoS50Vo.3t2uaVzNerzAY6AF'
+  - _id: B44puTu61uuCmrXY
+    name: '[Type] Bolt 4'
+    type: spell
+    img: icons/magic/fire/projectile-fireball-red-yellow.webp
+    effects: []
+    folder: null
+    sort: 0
+    flags:
+      core:
+        sourceId: Item.Dvncp3T7Nn3WBpgy
+    _stats:
+      coreVersion: '12.331'
+      systemId: null
+      systemVersion: null
+      createdTime: null
+      modifiedTime: null
+      lastModifiedBy: null
+      compendiumSource: null
+      duplicateSource: null
+    ownership:
+      default: 0
+      qwt9o1cuKYitvD9G: 3
+      eeXhsDlbzUBZOXZT: 3
+    system:
+      description: >-
+        <p>Fires a bolt of elemental energy at target character within 100m.
+        Deals [Spell Strength] [type] damage.</p>
+
+        <table style="width: 98.5447%; height: 51px;" border="2" cellspacing="2"
+        cellpadding="1">
+
+        <tbody>
+
+        <tr style="height: 17px;">
+
+        <td style="width: 24.9539%; height: 17px; text-align:
+        left;"><strong>Level</strong></td>
+
+        <td style="width: 11.5403%; height: 17px; text-align:
+        center;"><strong>1</strong></td>
+
+        <td style="width: 10.9017%; height: 17px; text-align:
+        center;"><strong>2</strong></td>
+
+        <td style="width: 10.2483%; height: 17px; text-align:
+        center;"><strong>3</strong></td>
+
+        <td style="width: 10.8979%; height: 17px; text-align:
+        center;"><strong>4</strong></td>
+
+        <td style="width: 9.94024%; height: 17px; text-align:
+        center;"><strong>5</strong></td>
+
+        <td style="width: 9.50831%; height: 17px; text-align:
+        center;"><strong>6</strong></td>
+
+        <td style="width: 10.0805%; height: 17px; text-align:
+        center;"><strong>7</strong></td>
+
+        </tr>
+
+        <tr style="height: 17px;">
+
+        <td style="width: 24.9539%; height: 17px; text-align:
+        left;"><strong>Cost</strong></td>
+
+        <td style="width: 11.5403%; height: 17px; text-align: center;">4</td>
+
+        <td style="width: 10.9017%; height: 17px; text-align: center;">6</td>
+
+        <td style="width: 10.2483%; height: 17px; text-align: center;">8</td>
+
+        <td style="width: 10.8979%; height: 17px; text-align: center;">10</td>
+
+        <td style="width: 9.94024%; height: 17px; text-align: center;">12</td>
+
+        <td style="width: 9.50831%; height: 17px; text-align: center;">14</td>
+
+        <td style="width: 10.0805%; height: 17px; text-align: center;">16</td>
+
+        </tr>
+
+        <tr style="height: 17px;">
+
+        <td style="width: 24.9539%; height: 17px; text-align:
+        left;"><strong>Spell Strength</strong></td>
+
+        <td style="width: 11.5403%; height: 17px; text-align: center;">1d4</td>
+
+        <td style="width: 10.9017%; height: 17px; text-align: center;">1d6</td>
+
+        <td style="width: 10.2483%; height: 17px; text-align: center;">1d8</td>
+
+        <td style="width: 10.8979%; height: 17px; text-align: center;">1d10</td>
+
+        <td style="width: 9.94024%; height: 17px; text-align: center;">2d6</td>
+
+        <td style="width: 9.50831%; height: 17px; text-align: center;">2d8</td>
+
+        <td style="width: 10.0805%; height: 17px; text-align: center;">2d10</td>
+
+        </tr>
+
+        </tbody>
+
+        </table>
+
+        <p>&nbsp;</p>
+      damage: 1d10
+      level: 4
+      cost: 10
+      spell_str: ''
+      attributes: >-
+        [Fire, Frost, Shock],
+        @Compendium[uesrpg-revision.journal.XtV9n7rHuDGDbW2j]{R Attack} (100m),
+        @Compendium[uesrpg-revision.journal.ELRN5yhwQUASYJXL]{Overload} (+WpB to
+        Dmg)
+      form: Bolt
+      school: destruction
+      school_cat:
+        alteration: Alteration
+        conjuration: Conjuration
+        destruction: Destruction
+        illusion: Illusion
+        mysticism: Mysticism
+        necromancy: Necromancy
+        restoration: Restoration
+        none: Select School
+      spellType: ''
+      spellTypes:
+        conventional: Conventional
+        unconventional: Unconventional
+    _key: '!actors.items!6nZUp0EY6OoS50Vo.B44puTu61uuCmrXY'
+  - _id: Yu227RAjAmYTGjTM
+    name: '[Type] Bite 4'
+    type: spell
+    img: icons/magic/fire/projectile-fireball-red-yellow.webp
+    effects: []
+    folder: null
+    sort: 0
+    flags:
+      core:
+        sourceId: Item.Dvncp3T7Nn3WBpgy
+    _stats:
+      coreVersion: '12.331'
+      systemId: null
+      systemVersion: null
+      createdTime: null
+      modifiedTime: null
+      lastModifiedBy: null
+      compendiumSource: null
+      duplicateSource: null
+    ownership:
+      default: 0
+      qwt9o1cuKYitvD9G: 3
+      eeXhsDlbzUBZOXZT: 3
+    system:
+      description: >-
+        <p>Fires a burst of elemental energy at target character within 1m.
+        Deals [Spell Strength] [type] damage.</p>
+
+        <table style="width: 98.5447%; height: 51px;" border="2" cellspacing="2"
+        cellpadding="1">
+
+        <tbody>
+
+        <tr style="height: 17px;">
+
+        <td style="width: 24.9539%; height: 17px; text-align:
+        left;"><strong>Level</strong></td>
+
+        <td style="width: 11.5403%; height: 17px; text-align:
+        center;"><strong>1</strong></td>
+
+        <td style="width: 10.9017%; height: 17px; text-align:
+        center;"><strong>2</strong></td>
+
+        <td style="width: 10.2483%; height: 17px; text-align:
+        center;"><strong>3</strong></td>
+
+        <td style="width: 10.8979%; height: 17px; text-align:
+        center;"><strong>4</strong></td>
+
+        <td style="width: 9.94024%; height: 17px; text-align:
+        center;"><strong>5</strong></td>
+
+        <td style="width: 9.50831%; height: 17px; text-align:
+        center;"><strong>6</strong></td>
+
+        <td style="width: 10.0805%; height: 17px; text-align:
+        center;"><strong>7</strong></td>
+
+        </tr>
+
+        <tr style="height: 17px;">
+
+        <td style="width: 24.9539%; height: 17px; text-align:
+        left;"><strong>Cost</strong></td>
+
+        <td style="width: 11.5403%; height: 17px; text-align: center;">3</td>
+
+        <td style="width: 10.9017%; height: 17px; text-align: center;">5</td>
+
+        <td style="width: 10.2483%; height: 17px; text-align: center;">7</td>
+
+        <td style="width: 10.8979%; height: 17px; text-align: center;">9</td>
+
+        <td style="width: 9.94024%; height: 17px; text-align: center;">11</td>
+
+        <td style="width: 9.50831%; height: 17px; text-align: center;">13</td>
+
+        <td style="width: 10.0805%; height: 17px; text-align: center;">15</td>
+
+        </tr>
+
+        <tr style="height: 17px;">
+
+        <td style="width: 24.9539%; height: 17px; text-align:
+        left;"><strong>Spell Strength</strong></td>
+
+        <td style="width: 11.5403%; height: 17px; text-align: center;">1d4</td>
+
+        <td style="width: 10.9017%; height: 17px; text-align: center;">1d6</td>
+
+        <td style="width: 10.2483%; height: 17px; text-align: center;">1d8</td>
+
+        <td style="width: 10.8979%; height: 17px; text-align: center;">1d10</td>
+
+        <td style="width: 9.94024%; height: 17px; text-align: center;">2d6</td>
+
+        <td style="width: 9.50831%; height: 17px; text-align: center;">2d8</td>
+
+        <td style="width: 10.0805%; height: 17px; text-align: center;">2d10</td>
+
+        </tr>
+
+        </tbody>
+
+        </table>
+
+        <p>&nbsp;</p>
+      damage: 1d10
+      level: 4
+      cost: 9
+      spell_str: ''
+      attributes: >-
+        [Fire, Frost, Shock],
+        @Compendium[uesrpg-revision.journal.VZqOQcTn7rP3rJ2F]{M Attack}
+        (1m)@Compendium[uesrpg-revision.journal.ELRN5yhwQUASYJXL]{Overload}
+        (+WpB to Dmg)
+      form: Touch
+      school: destruction
+      school_cat:
+        alteration: Alteration
+        conjuration: Conjuration
+        destruction: Destruction
+        illusion: Illusion
+        mysticism: Mysticism
+        necromancy: Necromancy
+        restoration: Restoration
+        none: Select School
+      spellType: ''
+      spellTypes:
+        conventional: Conventional
+        unconventional: Unconventional
+    _key: '!actors.items!6nZUp0EY6OoS50Vo.Yu227RAjAmYTGjTM'
+  - _id: BU7DmOk8zxX2cYQJ
+    name: '[Type] Ball 4'
+    type: spell
+    img: icons/magic/fire/projectile-fireball-red-yellow.webp
+    effects: []
+    folder: null
+    sort: 0
+    flags:
+      core:
+        sourceId: Item.Dvncp3T7Nn3WBpgy
+    _stats:
+      coreVersion: '12.331'
+      systemId: null
+      systemVersion: null
+      createdTime: null
+      modifiedTime: null
+      lastModifiedBy: null
+      compendiumSource: null
+      duplicateSource: null
+    ownership:
+      default: 0
+      qwt9o1cuKYitvD9G: 3
+      eeXhsDlbzUBZOXZT: 3
+    system:
+      description: >-
+        <p>Target point within 100m explodes with elemental energy. Deals [Spell
+        Strength] [type] damage to all targets caught within 2m.</p>
+
+        <table style="width: 98.5447%; height: 51px;" border="2" cellspacing="2"
+        cellpadding="1">
+
+        <tbody>
+
+        <tr style="height: 17px;">
+
+        <td style="width: 24.9539%; height: 17px; text-align:
+        left;"><strong>Level</strong></td>
+
+        <td style="width: 11.5403%; height: 17px; text-align:
+        center;"><strong>1</strong></td>
+
+        <td style="width: 10.9017%; height: 17px; text-align:
+        center;"><strong>2</strong></td>
+
+        <td style="width: 10.2483%; height: 17px; text-align:
+        center;"><strong>3</strong></td>
+
+        <td style="width: 10.8979%; height: 17px; text-align:
+        center;"><strong>4</strong></td>
+
+        <td style="width: 9.94024%; height: 17px; text-align:
+        center;"><strong>5</strong></td>
+
+        <td style="width: 9.50831%; height: 17px; text-align:
+        center;"><strong>6</strong></td>
+
+        <td style="width: 10.0805%; height: 17px; text-align:
+        center;"><strong>7</strong></td>
+
+        </tr>
+
+        <tr style="height: 17px;">
+
+        <td style="width: 24.9539%; height: 17px; text-align:
+        left;"><strong>Cost</strong></td>
+
+        <td style="width: 11.5403%; height: 17px; text-align: center;">8</td>
+
+        <td style="width: 10.9017%; height: 17px; text-align: center;">10</td>
+
+        <td style="width: 10.2483%; height: 17px; text-align: center;">12</td>
+
+        <td style="width: 10.8979%; height: 17px; text-align: center;">14</td>
+
+        <td style="width: 9.94024%; height: 17px; text-align: center;">16</td>
+
+        <td style="width: 9.50831%; height: 17px; text-align: center;">18</td>
+
+        <td style="width: 10.0805%; height: 17px; text-align: center;">20</td>
+
+        </tr>
+
+        <tr style="height: 17px;">
+
+        <td style="width: 24.9539%; height: 17px; text-align:
+        left;"><strong>Spell Strength</strong></td>
+
+        <td style="width: 11.5403%; height: 17px; text-align: center;">1d4</td>
+
+        <td style="width: 10.9017%; height: 17px; text-align: center;">1d6</td>
+
+        <td style="width: 10.2483%; height: 17px; text-align: center;">1d8</td>
+
+        <td style="width: 10.8979%; height: 17px; text-align: center;">1d10</td>
+
+        <td style="width: 9.94024%; height: 17px; text-align: center;">2d6</td>
+
+        <td style="width: 9.50831%; height: 17px; text-align: center;">2d8</td>
+
+        <td style="width: 10.0805%; height: 17px; text-align: center;">2d10</td>
+
+        </tr>
+
+        </tbody>
+
+        </table>
+
+        <p>&nbsp;</p>
+      damage: 1d10
+      level: 4
+      cost: 14
+      spell_str: ''
+      attributes: >-
+        [Fire, Frost, Shock],
+        @Compendium[uesrpg-revision.journal.XtV9n7rHuDGDbW2j]{R Attack} (100m),
+        @Compendium[uesrpg-revision.journal.nsLri17F6nvgG4uC]{AoE} (2m, sphere),
+        @Compendium[uesrpg-revision.journal.ELRN5yhwQUASYJXL]{Overload} (+WpB to
+        Dmg)
+      form: Ball
+      school: destruction
+      school_cat:
+        alteration: Alteration
+        conjuration: Conjuration
+        destruction: Destruction
+        illusion: Illusion
+        mysticism: Mysticism
+        necromancy: Necromancy
+        restoration: Restoration
+        none: Select School
+      spellType: ''
+      spellTypes:
+        conventional: Conventional
+        unconventional: Unconventional
+    _key: '!actors.items!6nZUp0EY6OoS50Vo.BU7DmOk8zxX2cYQJ'
+  - _id: AK6DJ4wn8387AicT
+    name: '[Type] Cone 4'
+    type: spell
+    img: icons/magic/fire/projectile-fireball-red-yellow.webp
+    effects: []
+    folder: null
+    sort: 0
+    flags:
+      core:
+        sourceId: Item.Dvncp3T7Nn3WBpgy
+    _stats:
+      coreVersion: '12.331'
+      systemId: null
+      systemVersion: null
+      createdTime: null
+      modifiedTime: null
+      lastModifiedBy: null
+      compendiumSource: null
+      duplicateSource: null
+    ownership:
+      default: 0
+      qwt9o1cuKYitvD9G: 3
+      eeXhsDlbzUBZOXZT: 3
+    system:
+      description: >-
+        <p>A stream of elemental energy hits all targets within a 5m cone
+        originating from the caster, dealing [Spell Strength] [type] damage to
+        all targets caught within it.</p>
+
+        <table style="width: 98.5447%; height: 51px;" border="2" cellspacing="2"
+        cellpadding="1">
+
+        <tbody>
+
+        <tr style="height: 17px;">
+
+        <td style="width: 24.9539%; height: 17px; text-align:
+        left;"><strong>Level</strong></td>
+
+        <td style="width: 11.5403%; height: 17px; text-align:
+        center;"><strong>1</strong></td>
+
+        <td style="width: 10.9017%; height: 17px; text-align:
+        center;"><strong>2</strong></td>
+
+        <td style="width: 10.2483%; height: 17px; text-align:
+        center;"><strong>3</strong></td>
+
+        <td style="width: 10.8979%; height: 17px; text-align:
+        center;"><strong>4</strong></td>
+
+        <td style="width: 9.94024%; height: 17px; text-align:
+        center;"><strong>5</strong></td>
+
+        <td style="width: 9.50831%; height: 17px; text-align:
+        center;"><strong>6</strong></td>
+
+        <td style="width: 10.0805%; height: 17px; text-align:
+        center;"><strong>7</strong></td>
+
+        </tr>
+
+        <tr style="height: 17px;">
+
+        <td style="width: 24.9539%; height: 17px; text-align:
+        left;"><strong>Cost</strong></td>
+
+        <td style="width: 11.5403%; height: 17px; text-align: center;">9</td>
+
+        <td style="width: 10.9017%; height: 17px; text-align: center;">11</td>
+
+        <td style="width: 10.2483%; height: 17px; text-align: center;">13</td>
+
+        <td style="width: 10.8979%; height: 17px; text-align: center;">15</td>
+
+        <td style="width: 9.94024%; height: 17px; text-align: center;">17</td>
+
+        <td style="width: 9.50831%; height: 17px; text-align: center;">19</td>
+
+        <td style="width: 10.0805%; height: 17px; text-align: center;">21</td>
+
+        </tr>
+
+        <tr style="height: 17px;">
+
+        <td style="width: 24.9539%; height: 17px; text-align:
+        left;"><strong>Spell Strength</strong></td>
+
+        <td style="width: 11.5403%; height: 17px; text-align: center;">1d4</td>
+
+        <td style="width: 10.9017%; height: 17px; text-align: center;">1d6</td>
+
+        <td style="width: 10.2483%; height: 17px; text-align: center;">1d8</td>
+
+        <td style="width: 10.8979%; height: 17px; text-align: center;">1d10</td>
+
+        <td style="width: 9.94024%; height: 17px; text-align: center;">2d6</td>
+
+        <td style="width: 9.50831%; height: 17px; text-align: center;">2d8</td>
+
+        <td style="width: 10.0805%; height: 17px; text-align: center;">2d10</td>
+
+        </tr>
+
+        </tbody>
+
+        </table>
+
+        <p>&nbsp;</p>
+      damage: 1d10
+      level: 4
+      cost: 15
+      spell_str: ''
+      attributes: >-
+        [Fire, Frost, Shock],
+        @Compendium[uesrpg-revision.journal.XtV9n7rHuDGDbW2j]{R Attack},
+        @Compendium[uesrpg-revision.journal.nsLri17F6nvgG4uC]{AoE} (5m, cone),
+        @Compendium[uesrpg-revision.journal.ELRN5yhwQUASYJXL]{Overload} (+WpB to
+        Dmg)
+      form: Cone
+      school: destruction
+      school_cat:
+        alteration: Alteration
+        conjuration: Conjuration
+        destruction: Destruction
+        illusion: Illusion
+        mysticism: Mysticism
+        necromancy: Necromancy
+        restoration: Restoration
+        none: Select School
+      spellType: ''
+      spellTypes:
+        conventional: Conventional
+        unconventional: Unconventional
+    _key: '!actors.items!6nZUp0EY6OoS50Vo.AK6DJ4wn8387AicT'
+  - _id: 9eUYadYWFa8yjwzH
+    name: '[Type] Wall 4'
+    type: spell
+    img: icons/magic/fire/projectile-fireball-red-yellow.webp
+    effects: []
+    folder: null
+    sort: 0
+    flags:
+      core:
+        sourceId: Item.Dvncp3T7Nn3WBpgy
+    _stats:
+      coreVersion: '12.331'
+      systemId: null
+      systemVersion: null
+      createdTime: null
+      modifiedTime: null
+      lastModifiedBy: null
+      compendiumSource: null
+      duplicateSource: null
+    ownership:
+      default: 0
+      qwt9o1cuKYitvD9G: 3
+      eeXhsDlbzUBZOXZT: 3
+    system:
+      description: >-
+        <p>Creates a wall 1m wide and 1 + (2 x Z) meters long within 100m, with
+        an orientation chosen by the caster. Affects all targets within the area
+        of the wall. Leaves behind a persistent zone in this area for 1 round
+        that causes the same effect to any characters who pass through it (or
+        end their turn in it if they started there). Upkeeping the spell does
+        not let the caster move the wall, it merely refreshes the effect and
+        duration.</p>
+
+        <table style="width: 98.5447%; height: 51px;" border="2" cellspacing="2"
+        cellpadding="1">
+
+        <tbody>
+
+        <tr style="height: 17px;">
+
+        <td style="width: 24.9539%; height: 17px; text-align:
+        left;"><strong>Level</strong></td>
+
+        <td style="width: 11.5403%; height: 17px; text-align:
+        center;"><strong>1</strong></td>
+
+        <td style="width: 10.9017%; height: 17px; text-align:
+        center;"><strong>2</strong></td>
+
+        <td style="width: 10.2483%; height: 17px; text-align:
+        center;"><strong>3</strong></td>
+
+        <td style="width: 10.8979%; height: 17px; text-align:
+        center;"><strong>4</strong></td>
+
+        <td style="width: 9.94024%; height: 17px; text-align:
+        center;"><strong>5</strong></td>
+
+        <td style="width: 9.50831%; height: 17px; text-align:
+        center;"><strong>6</strong></td>
+
+        <td style="width: 10.0805%; height: 17px; text-align:
+        center;"><strong>7</strong></td>
+
+        </tr>
+
+        <tr style="height: 17px;">
+
+        <td style="width: 24.9539%; height: 17px; text-align:
+        left;"><strong>Cost</strong></td>
+
+        <td style="width: 11.5403%; height: 17px; text-align: center;">9</td>
+
+        <td style="width: 10.9017%; height: 17px; text-align: center;">11</td>
+
+        <td style="width: 10.2483%; height: 17px; text-align: center;">13</td>
+
+        <td style="width: 10.8979%; height: 17px; text-align: center;">15</td>
+
+        <td style="width: 9.94024%; height: 17px; text-align: center;">17</td>
+
+        <td style="width: 9.50831%; height: 17px; text-align: center;">19</td>
+
+        <td style="width: 10.0805%; height: 17px; text-align: center;">21</td>
+
+        </tr>
+
+        <tr style="height: 17px;">
+
+        <td style="width: 24.9539%; height: 17px; text-align:
+        left;"><strong>Spell Strength</strong></td>
+
+        <td style="width: 11.5403%; height: 17px; text-align: center;">1d4</td>
+
+        <td style="width: 10.9017%; height: 17px; text-align: center;">1d6</td>
+
+        <td style="width: 10.2483%; height: 17px; text-align: center;">1d8</td>
+
+        <td style="width: 10.8979%; height: 17px; text-align: center;">1d10</td>
+
+        <td style="width: 9.94024%; height: 17px; text-align: center;">2d6</td>
+
+        <td style="width: 9.50831%; height: 17px; text-align: center;">2d8</td>
+
+        <td style="width: 10.0805%; height: 17px; text-align: center;">2d10</td>
+
+        </tr>
+
+        </tbody>
+
+        </table>
+
+        <p>&nbsp;</p>
+      damage: 1d10
+      level: 1
+      cost: 15
+      spell_str: ''
+      attributes: >-
+        [Fire, Frost, Shock],
+        @Compendium[uesrpg-revision.journal.etuR7vddrnv3ot2J]{Upkeep},
+        @Compendium[uesrpg-revision.journal.XtV9n7rHuDGDbW2j]{R Attack} (100m),
+        @Compendium[uesrpg-revision.journal.nsLri17F6nvgG4uC]{AoE} (Z, wall)
+      form: Wall
+      school: destruction
+      school_cat:
+        alteration: Alteration
+        conjuration: Conjuration
+        destruction: Destruction
+        illusion: Illusion
+        mysticism: Mysticism
+        necromancy: Necromancy
+        restoration: Restoration
+        none: Select School
+      spellType: ''
+      spellTypes:
+        conventional: Conventional
+        unconventional: Unconventional
+      spell_cat:
+        none: None
+        spell1: Spell 1
+        spell2: Spell 2
+        spell3: Spell 3
+        spell4: Spell 4
+        spell5: Spell 5
+        spell6: Spell 6
+        spell7: Spell 7
+    _key: '!actors.items!6nZUp0EY6OoS50Vo.9eUYadYWFa8yjwzH'
+  - _id: pOZit6IPVGWtpnRd
+    name: Spellcaster
+    type: talent
+    img: systems/uesrpg-d100/images/Icons/questioning.webp
+    effects: []
+    folder: null
+    sort: 0
+    flags:
+      core:
+        sourceId: Item.7fKKFs3JVM7UgiPU
+    _stats:
+      coreVersion: '12.331'
+      systemId: null
+      systemVersion: null
+      createdTime: null
+      modifiedTime: null
+      lastModifiedBy: null
+      compendiumSource: null
+      duplicateSource: null
+    ownership:
+      default: 0
+      xvA5SwRGJiyPsnxH: 3
+      eeXhsDlbzUBZOXZT: 3
+    system:
+      mpBonus: 0
+      hpBonus: 0
+      spBonus: 0
+      lpBonus: 0
+      wtBonus: 0
+      iniBonus: 0
+      speedBonus: 0
+      flyBonus: 0
+      swimBonus: 0
+      diseaseR: 0
+      fireR: 0
+      frostR: 0
+      shockR: 0
+      poisonR: 0
+      magicR: 0
+      natToughnessR: 0
+      silverR: 0
+      sunlightR: 0
+      replace:
+        ini:
+          iniToggle: false
+          value: 0
+          characteristic: str
+        wt:
+          wtToggle: false
+          value: 0
+          characteristic: str
+      characteristics:
+        none: None
+        str: STR
+        end: END
+        agi: AGI
+        int: INT
+        wp: WP
+        prc: PRC
+        prs: PRS
+        lck: LCK
+      characteristicBonus:
+        strChaBonus: 0
+        endChaBonus: 0
+        agiChaBonus: 0
+        intChaBonus: 0
+        wpChaBonus: 0
+        prcChaBonus: 0
+        prsChaBonus: 0
+        lckChaBonus: 0
+      skillArray: []
+      description: >-
+        <p><span style="color: #191813;">This character does not track magicka,
+        and can instead cast each spell it knows once.</span></p>
+      xpCost: 0
+      level: 0
+      talentReq: ''
+      miscReq: ''
+      halfFatiguePenalty: false
+      halfWoundPenalty: false
+      untrainedException: false
+      fatigueException: false
+      addIntToMP: false
+      armorAcrobaticsException: false
+      addHalfSpeed: false
+    _key: '!actors.items!6nZUp0EY6OoS50Vo.pOZit6IPVGWtpnRd'
+effects: []
+folder: null
+sort: 100001
+flags: {}
+_stats:
+  coreVersion: '12.331'
+  systemId: null
+  systemVersion: null
+  createdTime: null
+  modifiedTime: null
+  lastModifiedBy: null
+  compendiumSource: null
+  duplicateSource: null
+ownership:
+  default: 0
+  WcwhQU1nz94WaD5n: 3
+system:
+  equippedWeapons:
+    primaryWeapon:
+      name: 'None: Right click to bind weapon'
+      img: icons/skills/melee/unarmed-punch-fist.webp
+      id: ''
+    secondaryWeapon:
+      name: 'None: Right click to bind weapon'
+      img: icons/skills/melee/unarmed-punch-fist.webp
+      id: ''
+  favorites:
+    '1':
+      name: Hotkey 1
+      img: icons/svg/combat.svg
+      id: ''
+      value: 0
+    '2':
+      name: Hotkey 2
+      img: icons/svg/combat.svg
+      id: ''
+      value: 0
+    '3':
+      name: Hotkey 3
+      img: icons/svg/combat.svg
+      id: ''
+      value: 0
+    '4':
+      name: Hotkey 4
+      img: icons/svg/combat.svg
+      id: ''
+      value: 0
+    '5':
+      name: Hotkey 5
+      img: icons/svg/combat.svg
+      id: ''
+      value: 0
+  race: Altmer
+  birthsign: ''
+  age: null
+  height: ''
+  weight: ''
+  elite_adv: ''
+  wounded: false
+  woundPenalty: 0
+  woundNotes: ''
+  bio: >-
+    <p><span style="font-style: italic;">Battlemages are wizard-warriors,
+    trained in both lethal spellcasting and heavily armored combat. They
+    sacrifice mobility and versatility for the ability to supplement melee and
+    ranged attacks with summoned creatures.</span></p>
+  paperDoll: systems/uesrpg-3ev4/images/paperDoll_Male_Outline_White.png
+  soul_energy: '1500'
+  journal: ''
+  notes: ''
+  threat: majorSolo
+  threatCategory:
+    minorSolo: Minor Solo
+    minorGroup: Minor Group
+    majorSolo: Major Solo
+    majorGroup: Major Group
+    deadlySolo: Deadly Solo
+    deadlyGroup: Deadly Group
+    legendarySolo: Legendary Solo
+    legendaryGroup: Legendary Group
+  resistance:
+    fireR: 0
+    frostR: 0
+    shockR: 0
+    magicR: 0
+    poisonR: 0
+    diseaseR: 0
+    natToughness: 0
+    silverR: 0
+    sunlightR: 0
+  fatigue:
+    level: 0
+    penalty: 0
+    bonus: 0
+  lucky_numbers:
+    ln1: 1
+    ln2: 2
+    ln3: 0
+    ln4: 0
+    ln5: 0
+    ln6: 0
+    ln7: 0
+    ln8: 0
+    ln9: 0
+    ln10: 0
+  unlucky_numbers:
+    ul1: 0
+    ul2: 0
+    ul3: 97
+    ul4: 98
+    ul5: 99
+    ul6: 100
+  supply: 1d2
+  supply_cat:
+    1d2: 1d2
+    1d4: 1d4
+    1d6: 1d6
+    1d8: 1d8
+    1d10: 1d10
+  wealth: 0
+  current_enc: '30.0'
+  carry_rating:
+    current: 0
+    max: 24
+    bonus: 0
+    penalty: 0
+    label: Minimal
+  characteristics:
+    str:
+      value: 45
+      total: 45
+      base: 45
+      favored: false
+    end:
+      value: 40
+      total: 40
+      base: 40
+      favored: false
+    agi:
+      value: 40
+      total: 40
+      base: 40
+      favored: false
+    int:
+      value: 40
+      total: 40
+      base: 40
+      favored: false
+    wp:
+      value: 45
+      total: 45
+      base: 45
+      favored: false
+    prc:
+      value: 35
+      total: 35
+      base: 35
+      favored: false
+    prs:
+      value: 35
+      total: 35
+      base: 35
+      favored: false
+    lck:
+      value: null
+      total: 0
+      base: null
+      favored: false
+  professions:
+    combat: 75
+    magic: 65
+    evade: 50
+    observe: 55
+    stealth: 20
+    knowledge: 70
+    social: 65
+    physical: 75
+    commerce: 0
+    profession1: 0
+    profession2: 0
+    profession3: 0
+  professionsWound:
+    combat: 0
+    magic: 0
+    evade: 0
+    observe: 0
+    stealth: 0
+    knowledge: 0
+    social: 0
+    physical: 0
+    commerce: 0
+    profession1: 0
+    profession2: 0
+    profession3: 0
+  hp:
+    base: 20
+    value: 20
+    max: 20
+    temp: 0
+    bonus: 0
+  action_points:
+    value: 3
+    max: 3
+  luck_points:
+    value: 0
+    max: 0
+    bonus: 0
+  stamina:
+    value: 4
+    max: 4
+    bonus: 0
+  magicka:
+    value: 50
+    max: 50
+    bonus: 10
+  xp: 0
+  wound_threshold:
+    value: '12'
+    base: 12
+    bonus: 0
+  initiative:
+    value: '11'
+    base: 11
+    bonus: 0
+  speed:
+    value: '12'
+    base: 11
+    bonus: 0
+  size: standard
+  size_cat:
+    puny: Puny
+    tiny: Tiny
+    small: Small
+    standard: Standard
+    large: Large
+    huge: Huge
+    enormous: Enormous
+  skill_ranks:
+    untrained:
+      name: Untrained
+      rank: ''
+      bonus: ''
+      specialization: ''
+    novice:
+      name: ' (0) Novice'
+      rank: ''
+      bonus: ''
+      specialization: ''
+    apprentice:
+      name: (1) Apprentice
+      rank: ''
+      bonus: ''
+      specialization: ''
+    journeyman:
+      name: (2) Journeyman
+      rank: ''
+      bonus: ''
+      specialization: ''
+    adept:
+      name: (3) Adept
+      rank: ''
+      bonus: ''
+      specialization: ''
+    expert:
+      name: (4) Expert
+      rank: ''
+      bonus: ''
+      specialization: ''
+    master:
+      name: (5) Master
+      rank: ''
+      bonus: ''
+      specialization: ''
+  skills:
+    profession1:
+      rank: ''
+      bonus: 70
+      specialization: ''
+      characteristic: ''
+      tn: 0
+      name: Command (Int)
+    profession2:
+      rank: ''
+      bonus: 95
+      specialization: ''
+      characteristic: ''
+      tn: 0
+      name: Destruction (Wp)
+    profession3:
+      rank: ''
+      bonus: null
+      specialization: ''
+      characteristic: ''
+      tn: 0
+      name: ''
+    commerce:
+      bonus: 0
+      specialization: ''
+      characteristic: ''
+      tn: 0
+  talents: null
+  traits: ''
+  powers: ''
+  spells: ''
+  armor_class: none
+  armor_class_cat:
+    none: None
+    super_light: Super Light
+    light: Light
+    medium: Medium
+    heavy: Heavy
+    super_heavy: Super Heavy
+  storeName: ''
+  priceMod: 0
+  fatigueLevel: 0
+  weapons:
+    w1:
+      name: ''
+      dmg: ''
+      hands: ''
+      reach: ''
+      qualities: ''
+    w2:
+      name: ''
+      dmg: ''
+      hands: ''
+      reach: ''
+      qualities: ''
+    w3:
+      name: ''
+      dmg: ''
+      hands: ''
+      reach: ''
+      qualities: ''
+    w4:
+      name: ''
+      dmg: ''
+      hands: ''
+      reach: ''
+      qualities: ''
+    w5:
+      name: ''
+      dmg: ''
+      hands: ''
+      reach: ''
+      qualities: ''
+  prep_spells:
+    s1:
+      name: ''
+      dmg: ''
+      cost: ''
+      school: ''
+      form: ''
+      attributes: ''
+      level: ''
+    s2:
+      name: ''
+      dmg: ''
+      cost: ''
+      school: ''
+      form: ''
+      attributes: ''
+      level: ''
+    s3:
+      name: ''
+      dmg: ''
+      cost: ''
+      school: ''
+      form: ''
+      attributes: ''
+      level: ''
+    s4:
+      name: ''
+      dmg: ''
+      cost: ''
+      school: ''
+      form: ''
+      attributes: ''
+      level: ''
+    s5:
+      name: ''
+      dmg: ''
+      cost: ''
+      school: ''
+      form: ''
+      attributes: ''
+      level: ''
+    s6:
+      name: ''
+      dmg: ''
+      cost: ''
+      school: ''
+      form: ''
+      attributes: ''
+      level: ''
+    s7:
+      name: ''
+      dmg: ''
+      cost: ''
+      school: ''
+      form: ''
+      attributes: ''
+      level: ''
+  shield:
+    name: ''
+    br: ''
+    magic_br: ''
+    class: ''
+    qualities: ''
+  armor:
+    head:
+      name: ''
+      enc: 0
+      ar: 6
+      magic_ar: '0'
+      class: ''
+    body:
+      name: ''
+      enc: 0
+      ar: 6
+      magic_ar: '0'
+      class: ''
+    r_leg:
+      name: ''
+      enc: 0
+      ar: 6
+      magic_ar: '0'
+      class: ''
+    l_leg:
+      name: ''
+      enc: 0
+      ar: 6
+      magic_ar: '0'
+      class: ''
+    r_arm:
+      name: ''
+      enc: 0
+      ar: 6
+      magic_ar: '0'
+      class: ''
+    l_arm:
+      name: ''
+      enc: 0
+      ar: 6
+      magic_ar: '0'
+      class: ''
+prototypeToken:
+  flags:
+    token-hud-wildcard:
+      default: ''
+    token-auras:
+      aura1:
+        permission: all
+        colour: '#ffffff'
+        opacity: 0.5
+        distance: null
+        square: false
+      aura2:
+        permission: all
+        colour: '#ffffff'
+        opacity: 0.5
+        distance: null
+        square: false
+  name: Destroyer
+  displayName: 0
+  width: 1
+  height: 1
+  lockRotation: false
+  rotation: 0
+  actorLink: false
+  disposition: -1
+  displayBars: 0
+  bar1:
+    attribute: hp
+  bar2:
+    attribute: action_points
+  randomImg: true
+  alpha: 1
+  light:
+    dim: 0
+    bright: 0
+    angle: 360
+    color: null
+    alpha: 1
+    animation:
+      speed: 5
+      intensity: 5
+      type: null
+      reverse: false
+    negative: false
+    priority: 0
+    coloration: 1
+    attenuation: 0.5
+    luminosity: 0.5
+    saturation: 0
+    contrast: 0
+    shadows: 0
+    darkness:
+      min: 0
+      max: 1
+  texture:
+    src: icons/svg/cowled.svg
+    tint: '#ffffff'
+    scaleX: 1
+    scaleY: 1
+    anchorX: 0.5
+    anchorY: 0.5
+    offsetX: 0
+    offsetY: 0
+    fit: contain
+    rotation: 0
+    alphaThreshold: 0.75
+  sight:
+    angle: 360
+    enabled: false
+    range: 0
+    brightness: 1
+    visionMode: basic
+    color: null
+    attenuation: 0.1
+    saturation: 0
+    contrast: 0
+  appendNumber: false
+  prependAdjective: false
+  hexagonalShape: 0
+  detectionModes: []
+  occludable:
+    radius: 0
+  ring:
+    enabled: false
+    colors:
+      ring: null
+      background: null
+    effects: 1
+    subject:
+      scale: 1
+      texture: null
+_key: '!actors!6nZUp0EY6OoS50Vo'
+

@@ -1,0 +1,30 @@
+name: '#[CF_tempEntity]'
+folder: null
+sort: 0
+flags:
+  cf:
+    id: temp_yenmwpdmemc
+    path: References#/CF_SEP/Healing
+    color: '#000000'
+    name: Healing
+    children:
+      - Um1yDR65lvrCvFMH
+      - vsAVcNONXLowyogJ
+    folderPath:
+      - temp_590lo3nu4qu
+_id: KfvCm6bw4MHT4dbd
+pages: []
+_stats:
+  coreVersion: '12.331'
+  systemId: null
+  systemVersion: null
+  createdTime: null
+  modifiedTime: null
+  lastModifiedBy: null
+  compendiumSource: null
+  duplicateSource: null
+ownership:
+  default: 0
+  eeXhsDlbzUBZOXZT: 3
+_key: '!journal!KfvCm6bw4MHT4dbd'
+

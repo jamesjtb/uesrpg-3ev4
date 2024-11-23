@@ -1,0 +1,58 @@
+_id: m7HXbo12Aeel3Jlk
+name: Magic
+folder: null
+sort: 0
+flags:
+  core:
+    sourceId: JournalEntry.9k6RYDMz22epHvno
+  cf:
+    id: temp_u0ce34u73r
+    path: References#/CF_SEP/Qualities#/CF_SEP/Armour Qualities
+    color: '#000000'
+pages:
+  - name: Magic
+    type: text
+    title:
+      show: false
+      level: 1
+    text:
+      format: 1
+      content: >-
+        <p>Armor with this quality is magical and provides protection against
+        certain attacks, such as those of incorporeal beings. Shields with this
+        quality can be used to block such attacks.</p>
+    _stats:
+      coreVersion: '12.331'
+      systemId: null
+      systemVersion: null
+      createdTime: null
+      modifiedTime: null
+      lastModifiedBy: null
+      compendiumSource: null
+      duplicateSource: null
+    _id: 2b6PtpRf2oLJ3ujB
+    system: {}
+    image: {}
+    video:
+      controls: true
+      volume: 0.5
+    src: null
+    sort: 0
+    ownership:
+      default: -1
+    flags: {}
+    _key: '!journal.pages!m7HXbo12Aeel3Jlk.2b6PtpRf2oLJ3ujB'
+_stats:
+  coreVersion: '12.331'
+  systemId: null
+  systemVersion: null
+  createdTime: null
+  modifiedTime: null
+  lastModifiedBy: null
+  compendiumSource: null
+  duplicateSource: null
+ownership:
+  default: 0
+  eeXhsDlbzUBZOXZT: 3
+_key: '!journal!m7HXbo12Aeel3Jlk'
+

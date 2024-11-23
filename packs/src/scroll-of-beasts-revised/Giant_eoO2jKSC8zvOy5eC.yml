@@ -1,0 +1,1921 @@
+_id: eoO2jKSC8zvOy5eC
+name: Giant
+type: npc
+img: icons/svg/cowled.svg
+items:
+  - _id: PmWskuPpd1oe2udx
+    name: Natural Toughness (2)
+    type: trait
+    sort: 100000
+    flags:
+      core:
+        sourceId: Item.wtEFksGPcojtDLTj
+    img: systems/uesrpg-3ev4/images/Icons/enduring.webp
+    effects: []
+    folder: null
+    _stats:
+      coreVersion: '12.331'
+      systemId: null
+      systemVersion: null
+      createdTime: null
+      modifiedTime: null
+      lastModifiedBy: null
+      compendiumSource: null
+      duplicateSource: null
+    ownership:
+      default: 0
+    system:
+      mpBonus: 0
+      hpBonus: 90
+      spBonus: 0
+      lpBonus: 0
+      wtBonus: 0
+      iniBonus: -2
+      speedBonus: -5
+      flyBonus: 0
+      swimBonus: 0
+      diseaseR: 0
+      fireR: 0
+      frostR: 0
+      shockR: 0
+      poisonR: 0
+      magicR: 0
+      natToughnessR: 2
+      silverR: 0
+      sunlightR: 0
+      replace:
+        ini:
+          iniToggle: false
+          value: 0
+          characteristic: ''
+        wt:
+          wtToggle: false
+          value: 0
+          characteristic: ''
+      characteristics:
+        none: None
+        str: STR
+        end: END
+        agi: AGI
+        int: INT
+        wp: WP
+        prc: PRC
+        prs: PRS
+        lck: LCK
+      characteristicBonus:
+        strChaBonus: 0
+        endChaBonus: 0
+        agiChaBonus: 0
+        intChaBonus: 0
+        wpChaBonus: 0
+        prcChaBonus: 0
+        prsChaBonus: 0
+        lckChaBonus: 0
+      skillArray: []
+      description: >-
+        <p>The character with this trait is naturally tough, and reduces
+        incoming damage by X. This functions like AR, and reduces all damage
+        types, but it does not count as armor.</p>
+      halfSpeed: false
+      addHalfSpeed: false
+      halfFatiguePenalty: false
+      mechanical: false
+      crpCost: 0
+      halfWoundPenalty: false
+      painIntolerant: false
+    _key: '!actors.items!eoO2jKSC8zvOy5eC.PmWskuPpd1oe2udx'
+  - _id: trUNZouS08wdThn9
+    name: Overhead Slam
+    type: power
+    sort: 200000
+    flags:
+      core:
+        sourceId: Item.MyWjMeVAtBCJa8Bt
+    img: systems/uesrpg-3ev4/images/Icons/exploitAdvantage.webp
+    effects: []
+    folder: null
+    _stats:
+      coreVersion: '12.331'
+      systemId: null
+      systemVersion: null
+      createdTime: null
+      modifiedTime: null
+      lastModifiedBy: null
+      compendiumSource: null
+      duplicateSource: null
+    ownership:
+      default: 0
+    system:
+      mpBonus: 0
+      hpBonus: 0
+      spBonus: 0
+      lpBonus: 0
+      wtBonus: 0
+      iniBonus: 0
+      speedBonus: 0
+      flyBonus: 0
+      swimBonus: 0
+      diseaseR: 0
+      fireR: 0
+      frostR: 0
+      shockR: 0
+      poisonR: 0
+      magicR: 0
+      natToughnessR: 0
+      silverR: 0
+      sunlightR: 0
+      characteristics:
+        none: None
+        str: STR
+        end: END
+        agi: AGI
+        int: INT
+        wp: WP
+        prc: PRC
+        prs: PRS
+        lck: LCK
+      characteristicBonus:
+        strChaBonus: 0
+        endChaBonus: 0
+        agiChaBonus: 0
+        intChaBonus: 0
+        wpChaBonus: 0
+        prcChaBonus: 0
+        prsChaBonus: 0
+        lckChaBonus: 0
+      skillArray: []
+      description: >-
+        <p><strong>Cost:</strong> 3 SP</p>
+
+        <p><span style="color: #191813;">As part of a melee attack, this
+        character can slam a 4m line originating from themselves. Any target
+        that is hit is thrown vertically a number of meters equal to the damage
+        they receive. They then suffer the consequences of falling as usual.
+        This attack is resolved as an AoE.</span></p>
+      dailyUse: false
+      source: ''
+      shiftForm: false
+      shiftFormStyle: ''
+      shiftStyles:
+        shiftFormNone: Regular Form
+        shiftFormVampireLord: Vampire Lord
+        shiftFormWereWolf: Werewolf
+        shiftFormWereBat: Werebat
+        shiftFormWereBoar: Wereboar
+        shiftFormWereBear: Werebear
+        shiftFormWereCrocodile: Werecrocodile
+        shiftFormWereVulture: Werevulture
+        shiftFormWereLion: Werelion
+    _key: '!actors.items!eoO2jKSC8zvOy5eC.trUNZouS08wdThn9'
+  - _id: UPBR8vphdCSxniTD
+    name: Sweeping Strike (5)
+    type: power
+    sort: 300000
+    flags:
+      core:
+        sourceId: Item.MyWjMeVAtBCJa8Bt
+    img: systems/uesrpg-3ev4/images/Icons/mightyCleave.webp
+    effects: []
+    folder: null
+    _stats:
+      coreVersion: '12.331'
+      systemId: null
+      systemVersion: null
+      createdTime: null
+      modifiedTime: null
+      lastModifiedBy: null
+      compendiumSource: null
+      duplicateSource: null
+    ownership:
+      default: 0
+    system:
+      mpBonus: 0
+      hpBonus: 0
+      spBonus: 0
+      lpBonus: 0
+      wtBonus: 0
+      iniBonus: 0
+      speedBonus: 0
+      flyBonus: 0
+      swimBonus: 0
+      diseaseR: 0
+      fireR: 0
+      frostR: 0
+      shockR: 0
+      poisonR: 0
+      magicR: 0
+      natToughnessR: 0
+      silverR: 0
+      sunlightR: 0
+      characteristics:
+        none: None
+        str: STR
+        end: END
+        agi: AGI
+        int: INT
+        wp: WP
+        prc: PRC
+        prs: PRS
+        lck: LCK
+      characteristicBonus:
+        strChaBonus: 0
+        endChaBonus: 0
+        agiChaBonus: 0
+        intChaBonus: 0
+        wpChaBonus: 0
+        prcChaBonus: 0
+        prsChaBonus: 0
+        lckChaBonus: 0
+      skillArray: []
+      description: >-
+        <p><strong>Cost:</strong> 1 SP</p>
+
+        <p>As part of an All-Out Attack, this character can strike up to 5
+        targets with its melee attack as a single attack. Roll once for the
+        attack, and resolve damage separately against all struck targets. This
+        counts as an AoE.</p>
+      dailyUse: false
+      source: ''
+      shiftForm: false
+      shiftFormStyle: ''
+      shiftStyles:
+        shiftFormNone: Regular Form
+        shiftFormVampireLord: Vampire Lord
+        shiftFormWereWolf: Werewolf
+        shiftFormWereBat: Werebat
+        shiftFormWereBoar: Wereboar
+        shiftFormWereBear: Werebear
+        shiftFormWereCrocodile: Werecrocodile
+        shiftFormWereVulture: Werevulture
+        shiftFormWereLion: Werelion
+    _key: '!actors.items!eoO2jKSC8zvOy5eC.UPBR8vphdCSxniTD'
+  - _id: rPdElfKXEoKViFYg
+    name: Colossal Strikes
+    type: trait
+    sort: 400000
+    flags:
+      core:
+        sourceId: Item.wtEFksGPcojtDLTj
+    img: systems/uesrpg-3ev4/images/Icons/colossalStrikes.webp
+    effects: []
+    folder: null
+    _stats:
+      coreVersion: '12.331'
+      systemId: null
+      systemVersion: null
+      createdTime: null
+      modifiedTime: null
+      lastModifiedBy: null
+      compendiumSource: null
+      duplicateSource: null
+    ownership:
+      default: 0
+    system:
+      mpBonus: 0
+      hpBonus: 0
+      spBonus: 0
+      lpBonus: 0
+      wtBonus: 0
+      iniBonus: 0
+      speedBonus: 0
+      flyBonus: 0
+      swimBonus: 0
+      diseaseR: 0
+      fireR: 0
+      frostR: 0
+      shockR: 0
+      poisonR: 0
+      magicR: 0
+      natToughnessR: 0
+      silverR: 0
+      sunlightR: 0
+      replace:
+        ini:
+          iniToggle: false
+          value: 0
+          characteristic: ''
+        wt:
+          wtToggle: false
+          value: 0
+          characteristic: ''
+      characteristics:
+        none: None
+        str: STR
+        end: END
+        agi: AGI
+        int: INT
+        wp: WP
+        prc: PRC
+        prs: PRS
+        lck: LCK
+      characteristicBonus:
+        strChaBonus: 0
+        endChaBonus: 0
+        agiChaBonus: 0
+        intChaBonus: 0
+        wpChaBonus: 0
+        prcChaBonus: 0
+        prsChaBonus: 0
+        lckChaBonus: 0
+      skillArray: []
+      description: >-
+        <p>Characters with this trait make attacks that cannot be parried, but
+        all Evade tests made against their melee attacks gain a +10 bonus.</p>
+      halfSpeed: false
+      addHalfSpeed: false
+      halfFatiguePenalty: false
+      mechanical: false
+      crpCost: null
+      halfWoundPenalty: false
+      painIntolerant: false
+    _key: '!actors.items!eoO2jKSC8zvOy5eC.rPdElfKXEoKViFYg'
+  - _id: vU7lX6malkmHbWsZ
+    name: Magic Resistant
+    type: trait
+    sort: 500000
+    flags:
+      core:
+        sourceId: Item.wtEFksGPcojtDLTj
+    img: systems/uesrpg-3ev4/images/Icons/creative.webp
+    effects: []
+    folder: null
+    _stats:
+      coreVersion: '12.331'
+      systemId: null
+      systemVersion: null
+      createdTime: null
+      modifiedTime: null
+      lastModifiedBy: null
+      compendiumSource: null
+      duplicateSource: null
+    ownership:
+      default: 0
+    system:
+      mpBonus: 0
+      hpBonus: 0
+      spBonus: 0
+      lpBonus: 0
+      wtBonus: 0
+      iniBonus: 0
+      speedBonus: 0
+      flyBonus: 0
+      swimBonus: 0
+      diseaseR: 0
+      fireR: 0
+      frostR: 0
+      shockR: 0
+      poisonR: 0
+      magicR: 0
+      natToughnessR: 0
+      silverR: 0
+      sunlightR: 0
+      replace:
+        ini:
+          iniToggle: false
+          value: 0
+          characteristic: ''
+        wt:
+          wtToggle: false
+          value: 0
+          characteristic: ''
+      characteristics:
+        none: None
+        str: STR
+        end: END
+        agi: AGI
+        int: INT
+        wp: WP
+        prc: PRC
+        prs: PRS
+        lck: LCK
+      characteristicBonus:
+        strChaBonus: 0
+        endChaBonus: 0
+        agiChaBonus: 0
+        intChaBonus: 0
+        wpChaBonus: 0
+        prcChaBonus: 0
+        prsChaBonus: 0
+        lckChaBonus: 0
+      skillArray: []
+      description: >-
+        <p>This character can re-roll failed tests to resist magic effects once
+        per test.</p>
+      halfSpeed: false
+      addHalfSpeed: false
+      halfFatiguePenalty: false
+      mechanical: false
+      crpCost: null
+      halfWoundPenalty: false
+      painIntolerant: false
+    _key: '!actors.items!eoO2jKSC8zvOy5eC.vU7lX6malkmHbWsZ'
+  - _id: 4WxbKEmmhm150HYf
+    name: Stubborn
+    type: trait
+    sort: 600000
+    flags:
+      core:
+        sourceId: Item.wtEFksGPcojtDLTj
+    img: systems/uesrpg-3ev4/images/Icons/stubborn.webp
+    effects: []
+    folder: null
+    _stats:
+      coreVersion: '12.331'
+      systemId: null
+      systemVersion: null
+      createdTime: null
+      modifiedTime: null
+      lastModifiedBy: null
+      compendiumSource: null
+      duplicateSource: null
+    ownership:
+      default: 0
+    system:
+      mpBonus: 0
+      hpBonus: 0
+      spBonus: 0
+      lpBonus: 0
+      wtBonus: 0
+      iniBonus: 0
+      speedBonus: 0
+      flyBonus: 0
+      swimBonus: 0
+      diseaseR: 0
+      fireR: 0
+      frostR: 0
+      shockR: 0
+      poisonR: 0
+      magicR: 0
+      natToughnessR: 0
+      silverR: 0
+      sunlightR: 0
+      replace:
+        ini:
+          iniToggle: false
+          value: 0
+          characteristic: ''
+        wt:
+          wtToggle: false
+          value: 0
+          characteristic: ''
+      characteristics:
+        none: None
+        str: STR
+        end: END
+        agi: AGI
+        int: INT
+        wp: WP
+        prc: PRC
+        prs: PRS
+        lck: LCK
+      characteristicBonus:
+        strChaBonus: 0
+        endChaBonus: 0
+        agiChaBonus: 0
+        intChaBonus: 0
+        wpChaBonus: 0
+        prcChaBonus: 0
+        prsChaBonus: 0
+        lckChaBonus: 0
+      skillArray: []
+      description: <p>This character re-roll failed Fear tests.</p>
+      halfSpeed: false
+      addHalfSpeed: false
+      halfFatiguePenalty: false
+      mechanical: false
+      crpCost: null
+      halfWoundPenalty: false
+      painIntolerant: false
+    _key: '!actors.items!eoO2jKSC8zvOy5eC.4WxbKEmmhm150HYf'
+  - _id: 8hyzJDfmEuDwGqCK
+    name: Thick Skull
+    type: trait
+    sort: 700000
+    flags:
+      core:
+        sourceId: Item.wtEFksGPcojtDLTj
+    img: icons/commodities/bones/skull-hollow-brown.webp
+    effects: []
+    folder: null
+    _stats:
+      coreVersion: '12.331'
+      systemId: null
+      systemVersion: null
+      createdTime: null
+      modifiedTime: null
+      lastModifiedBy: null
+      compendiumSource: null
+      duplicateSource: null
+    ownership:
+      default: 0
+    system:
+      mpBonus: 0
+      hpBonus: 0
+      spBonus: 0
+      lpBonus: 0
+      wtBonus: 0
+      iniBonus: 0
+      speedBonus: 0
+      flyBonus: 0
+      swimBonus: 0
+      diseaseR: 0
+      fireR: 0
+      frostR: 0
+      shockR: 0
+      poisonR: 0
+      magicR: 0
+      natToughnessR: 0
+      silverR: 0
+      sunlightR: 0
+      replace:
+        ini:
+          iniToggle: false
+          value: 0
+          characteristic: ''
+        wt:
+          wtToggle: false
+          value: 0
+          characteristic: ''
+      characteristics:
+        none: None
+        str: STR
+        end: END
+        agi: AGI
+        int: INT
+        wp: WP
+        prc: PRC
+        prs: PRS
+        lck: LCK
+      characteristicBonus:
+        strChaBonus: 0
+        endChaBonus: 0
+        agiChaBonus: 0
+        intChaBonus: 0
+        wpChaBonus: 0
+        prcChaBonus: 0
+        prsChaBonus: 0
+        lckChaBonus: 0
+      skillArray: []
+      description: >-
+        <p>Characters with this trait are immune to the Stun and Dazed
+        conditions.</p>
+      halfSpeed: false
+      addHalfSpeed: false
+      halfFatiguePenalty: false
+      mechanical: false
+      crpCost: null
+      halfWoundPenalty: false
+      painIntolerant: false
+    _key: '!actors.items!eoO2jKSC8zvOy5eC.8hyzJDfmEuDwGqCK'
+  - _id: W3fiNiFX3Y2NOLxO
+    name: Mammoth Cheese
+    type: item
+    sort: 700001
+    flags:
+      core:
+        sourceId: Item.hGrR8Q8cTrOeU3pb
+    img: systems/uesrpg-3ev4/item-compendium/item_tokens/cheese.webp
+    effects: []
+    folder: null
+    _stats:
+      coreVersion: '12.331'
+      systemId: null
+      systemVersion: null
+      createdTime: null
+      modifiedTime: null
+      lastModifiedBy: null
+      compendiumSource: null
+      duplicateSource: null
+    ownership:
+      default: 0
+    system:
+      characteristics:
+        none: None
+        str: STR
+        end: END
+        agi: AGI
+        int: INT
+        wp: WP
+        prc: PRC
+        prs: PRS
+        lck: LCK
+      characteristicBonus:
+        strChaBonus: 0
+        endChaBonus: 0
+        agiChaBonus: 0
+        intChaBonus: 0
+        wpChaBonus: 0
+        prcChaBonus: 0
+        prsChaBonus: 0
+        lckChaBonus: 0
+      replace:
+        ini:
+          iniToggle: false
+          value: 0
+          characteristic: ''
+        wt:
+          wtToggle: false
+          value: 0
+          characteristic: ''
+      mpBonus: 0
+      hpBonus: 0
+      spBonus: 0
+      lpBonus: 0
+      wtBonus: 0
+      iniBonus: 0
+      speedBonus: 0
+      flyBonus: 0
+      swimBonus: 0
+      diseaseR: 0
+      fireR: 0
+      frostR: 0
+      shockR: 0
+      poisonR: 0
+      magicR: 0
+      natToughnessR: 0
+      silverR: 0
+      sunlightR: 0
+      skillArray: []
+      isPhysicalObject: true
+      containerStats:
+        contained: false
+        container_id: ''
+        container_name: ''
+      description: <p><em>&nbsp;It requires a +0 Endurance test to keep down.</em></p>
+      quantity: 1
+      enc: 0
+      totalENC: 0
+      reach: ''
+      damage: ''
+      equipped: false
+      hands: 0
+      price: 2
+      modPrice: 0
+      armor: 0
+      magic_ar: 0
+      blockRating: 0
+      enchant_level: 0
+      excludeENC: false
+      consumable: false
+      qualities: ''
+      wearable: false
+      charge:
+        value: 0
+        max: 0
+        reduction: 1
+      carried: false
+      item_cat:
+        none: None
+        head: Helmet
+        l_arm: Left Gauntlet
+        r_arm: Right Gauntlet
+        l_leg: Left Leg
+        r_leg: Right Leg
+        body: Chestplate
+        shield: Shield
+        weapon1: Primary Weapon
+        weapon2: Secondary Weapon
+        weapon3: Sidearm
+      attributes: {}
+    _key: '!actors.items!eoO2jKSC8zvOy5eC.W3fiNiFX3Y2NOLxO'
+  - _id: MEEKu7xCLZT77o3i
+    name: Giant Toes
+    type: item
+    sort: 1100000
+    flags:
+      core:
+        sourceId: Item.9HprpbkgIr54vcPt
+    img: systems/uesrpg-3ev4/item-compendium/item_tokens/ingredient.webp
+    effects: []
+    folder: null
+    _stats:
+      coreVersion: '12.331'
+      systemId: null
+      systemVersion: null
+      createdTime: null
+      modifiedTime: null
+      lastModifiedBy: null
+      compendiumSource: null
+      duplicateSource: null
+    ownership:
+      default: 0
+    system:
+      characteristics:
+        none: None
+        str: STR
+        end: END
+        agi: AGI
+        int: INT
+        wp: WP
+        prc: PRC
+        prs: PRS
+        lck: LCK
+      characteristicBonus:
+        strChaBonus: 0
+        endChaBonus: 0
+        agiChaBonus: 0
+        intChaBonus: 0
+        wpChaBonus: 0
+        prcChaBonus: 0
+        prsChaBonus: 0
+        lckChaBonus: 0
+      replace:
+        ini:
+          iniToggle: false
+          value: 0
+          characteristic: ''
+        wt:
+          wtToggle: false
+          value: 0
+          characteristic: ''
+      mpBonus: 0
+      hpBonus: 0
+      spBonus: 0
+      lpBonus: 0
+      wtBonus: 0
+      iniBonus: 0
+      speedBonus: 0
+      flyBonus: 0
+      swimBonus: 0
+      diseaseR: 0
+      fireR: 0
+      frostR: 0
+      shockR: 0
+      poisonR: 0
+      magicR: 0
+      natToughnessR: 0
+      silverR: 0
+      sunlightR: 0
+      skillArray: []
+      isPhysicalObject: true
+      containerStats:
+        contained: false
+        container_id: ''
+        container_name: ''
+      description: |-
+        <p>Very Rare Restoration Ingredients.</p>
+        <p><strong>Strength</strong>: 50</p>
+        <p><strong>Depth</strong>: 6</p>
+      quantity: 1
+      enc: 0.01
+      totalENC: 0
+      reach: ''
+      damage: ''
+      equipped: false
+      hands: 0
+      price: 250
+      modPrice: 0
+      armor: 0
+      magic_ar: 0
+      blockRating: 0
+      enchant_level: 0
+      excludeENC: false
+      consumable: false
+      qualities: ''
+      wearable: false
+      charge:
+        value: 0
+        max: 0
+        reduction: 1
+      carried: false
+      item_cat:
+        none: None
+        head: Helmet
+        l_arm: Left Gauntlet
+        r_arm: Right Gauntlet
+        l_leg: Left Leg
+        r_leg: Right Leg
+        body: Chestplate
+        shield: Shield
+        weapon1: Primary Weapon
+        weapon2: Secondary Weapon
+        weapon3: Sidearm
+      attributes: {}
+    _key: '!actors.items!eoO2jKSC8zvOy5eC.MEEKu7xCLZT77o3i'
+  - _id: GSOdlNlt8YzqwGOP
+    name: Giant Club
+    type: weapon
+    img: icons/weapons/clubs/club-heavy-barbed-black.webp
+    effects: []
+    folder: null
+    sort: 0
+    flags:
+      core:
+        sourceId: Item.BZkhyPetgsgwMDZs
+    _stats:
+      coreVersion: '12.331'
+      systemId: null
+      systemVersion: null
+      createdTime: null
+      modifiedTime: null
+      lastModifiedBy: null
+      compendiumSource: null
+      duplicateSource: null
+    ownership:
+      default: 0
+      eeXhsDlbzUBZOXZT: 3
+    system:
+      mpBonus: 0
+      hpBonus: 0
+      spBonus: 0
+      lpBonus: 0
+      wtBonus: 0
+      iniBonus: 0
+      speedBonus: 0
+      flyBonus: 0
+      swimBonus: 0
+      diseaseR: 0
+      fireR: 0
+      frostR: 0
+      shockR: 0
+      poisonR: 0
+      magicR: 0
+      natToughnessR: 0
+      silverR: 0
+      sunlightR: 0
+      characteristics:
+        none: None
+        str: STR
+        end: END
+        agi: AGI
+        int: INT
+        wp: WP
+        prc: PRC
+        prs: PRS
+        lck: LCK
+      characteristicBonus:
+        strChaBonus: 0
+        endChaBonus: 0
+        agiChaBonus: 0
+        intChaBonus: 0
+        wpChaBonus: 0
+        prcChaBonus: 0
+        prsChaBonus: 0
+        lckChaBonus: 0
+      replace:
+        ini:
+          iniToggle: false
+          value: 0
+          characteristic: ''
+        wt:
+          wtToggle: false
+          value: 0
+          characteristic: ''
+      skillArray: []
+      isPhysicalObject: true
+      containerStats:
+        contained: false
+        container_id: ''
+        container_name: ''
+      description: >-
+        <p><em style="box-sizing: border-box; user-select: text; color:
+        #191813;">Use by a regular PC requires at least 50 Strength, must be
+        used in two hands, and requires a Stamina Point each time it
+        swings.</em></p>
+      quantity: 1
+      enc: 10
+      totalENC: 0
+      reach: null
+      damage: '0'
+      damage2: 3d10
+      damage3: 0
+      weapon2H: true
+      equippped: false
+      carried: false
+      excludeENC: false
+      superior: false
+      hands: 0
+      price: 200
+      modPrice: 0
+      armor: 0
+      magic_ar: 0
+      enchant_level: 1
+      qualities: >-
+        @Compendium[uesrpg-revision.journal.mnfUeIEQkOInlwPK]{Crushing},
+        @Compendium[uesrpg-revision.journal.21g3rtqdszsKc9jv]{Unwieldy},
+        @Compendium[uesrpg-revision.journal.Q21irFmSziioerAo]{Shield Splitter},
+        @Compendium[uesrpg-revision.journal.CJUeJP5xJPjyhuya]{Concussive}
+      charge:
+        value: 0
+        max: 0
+        reduction: 1
+      item_cat:
+        none: None
+        weapon1: Primary Weapon
+        weapon2: Secondary Weapon
+        weapon3: Sidearm
+    _key: '!actors.items!eoO2jKSC8zvOy5eC.GSOdlNlt8YzqwGOP'
+  - _id: O1hWgIhtYstEk890
+    name: Full Mammoth Fur Armor
+    type: armor
+    img: icons/commodities/leather/fur-beige.webp
+    effects: []
+    folder: null
+    sort: 0
+    flags:
+      core:
+        sourceId: Item.6b1mvr4mBvaaDjOQ
+    _stats:
+      coreVersion: '12.331'
+      systemId: null
+      systemVersion: null
+      createdTime: null
+      modifiedTime: null
+      lastModifiedBy: null
+      compendiumSource: null
+      duplicateSource: null
+    ownership:
+      default: 0
+      eeXhsDlbzUBZOXZT: 3
+    system:
+      mpBonus: 0
+      hpBonus: 0
+      spBonus: 0
+      lpBonus: 0
+      wtBonus: 0
+      iniBonus: 0
+      speedBonus: 0
+      flyBonus: 0
+      swimBonus: 0
+      diseaseR: 0
+      fireR: 0
+      frostR: 0
+      shockR: 0
+      poisonR: 0
+      magicR: 0
+      natToughnessR: 0
+      silverR: 0
+      sunlightR: 0
+      characteristics:
+        none: None
+        str: STR
+        end: END
+        agi: AGI
+        int: INT
+        wp: WP
+        prc: PRC
+        prs: PRS
+        lck: LCK
+      characteristicBonus:
+        strChaBonus: 0
+        endChaBonus: 0
+        agiChaBonus: 0
+        intChaBonus: 0
+        wpChaBonus: 0
+        prcChaBonus: 0
+        prsChaBonus: 0
+        lckChaBonus: 0
+      replace:
+        ini:
+          iniToggle: false
+          value: 0
+          characteristic: ''
+        wt:
+          wtToggle: false
+          value: 0
+          characteristic: ''
+      skillArray: []
+      isPhysicalObject: true
+      containerStats:
+        contained: false
+        container_id: ''
+        container_name: ''
+      description: >-
+        <p><em>Fur armor is made from the fur and skins of animals. The material
+        is a bit heavier than armor of this level of protection, but doubles as
+        an insulating material to keep the wearer warm in colder
+        climates.&nbsp;</em></p>
+      quantity: 1
+      enc: 3
+      totalENC: 0
+      reach: ''
+      damage: ''
+      equipped: true
+      carried: true
+      hands: 0
+      price: 80
+      modPrice: 0
+      armor: 3
+      blockRating: 0
+      excludeENC: false
+      magic_ar: 2 Frost
+      enchant_level: 1
+      qualities: '@Compendium[uesrpg-revision.journal.dfIZDLRGKnnc5kty]{Medium}'
+      category: body
+      item_cat:
+        none: None
+        head: Helmet
+        l_arm: Left Gauntlet
+        r_arm: Right Gauntlet
+        l_leg: Left Leg
+        r_leg: Right Leg
+        body: Chestplate
+        shield: Shield
+      charge:
+        value: 0
+        max: 0
+        reduction: 1
+    _key: '!actors.items!eoO2jKSC8zvOy5eC.O1hWgIhtYstEk890'
+  - _id: GHdiDAVuaPPNUVZ8
+    name: Full Mammoth Fur Boot
+    type: armor
+    img: icons/equipment/feet/boots-leather-furred.webp
+    effects: []
+    folder: null
+    sort: 0
+    flags:
+      core:
+        sourceId: Item.ZFD4S7vZtu9RxfOw
+    _stats:
+      coreVersion: '12.331'
+      systemId: null
+      systemVersion: null
+      createdTime: null
+      modifiedTime: null
+      lastModifiedBy: null
+      compendiumSource: null
+      duplicateSource: null
+    ownership:
+      default: 0
+      eeXhsDlbzUBZOXZT: 3
+    system:
+      mpBonus: 0
+      hpBonus: 0
+      spBonus: 0
+      lpBonus: 0
+      wtBonus: 0
+      iniBonus: 0
+      speedBonus: 0
+      flyBonus: 0
+      swimBonus: 0
+      diseaseR: 0
+      fireR: 0
+      frostR: 0
+      shockR: 0
+      poisonR: 0
+      magicR: 0
+      natToughnessR: 0
+      silverR: 0
+      sunlightR: 0
+      characteristics:
+        none: None
+        str: STR
+        end: END
+        agi: AGI
+        int: INT
+        wp: WP
+        prc: PRC
+        prs: PRS
+        lck: LCK
+      characteristicBonus:
+        strChaBonus: 0
+        endChaBonus: 0
+        agiChaBonus: 0
+        intChaBonus: 0
+        wpChaBonus: 0
+        prcChaBonus: 0
+        prsChaBonus: 0
+        lckChaBonus: 0
+      replace:
+        ini:
+          iniToggle: false
+          value: 0
+          characteristic: ''
+        wt:
+          wtToggle: false
+          value: 0
+          characteristic: ''
+      skillArray: []
+      isPhysicalObject: true
+      containerStats:
+        contained: false
+        container_id: ''
+        container_name: ''
+      description: >-
+        <p><em>Fur armor is made from the fur and skins of animals. The material
+        is a bit heavier than armor of this level of protection, but doubles as
+        an insulating material to keep the wearer warm in colder
+        climates.&nbsp;</em></p>
+      quantity: 1
+      enc: 2
+      totalENC: 0
+      reach: ''
+      damage: ''
+      equipped: true
+      carried: true
+      hands: 0
+      price: 20
+      modPrice: 0
+      armor: 3
+      blockRating: 0
+      excludeENC: false
+      magic_ar: 2 Frost
+      enchant_level: 1
+      qualities: '@Compendium[uesrpg-revision.journal.dfIZDLRGKnnc5kty]{Medium}'
+      category: l_leg
+      item_cat:
+        none: None
+        head: Helmet
+        l_arm: Left Gauntlet
+        r_arm: Right Gauntlet
+        l_leg: Left Leg
+        r_leg: Right Leg
+        body: Chestplate
+        shield: Shield
+      charge:
+        value: 0
+        max: 0
+        reduction: 1
+    _key: '!actors.items!eoO2jKSC8zvOy5eC.GHdiDAVuaPPNUVZ8'
+  - _id: MjdJRs5l10DnJSPH
+    name: Full Mammoth Fur Boot
+    type: armor
+    img: icons/equipment/feet/boots-leather-furred.webp
+    effects: []
+    folder: null
+    sort: 0
+    flags:
+      core:
+        sourceId: Item.ZFD4S7vZtu9RxfOw
+    _stats:
+      coreVersion: '12.331'
+      systemId: null
+      systemVersion: null
+      createdTime: null
+      modifiedTime: null
+      lastModifiedBy: null
+      compendiumSource: null
+      duplicateSource: null
+    ownership:
+      default: 0
+      eeXhsDlbzUBZOXZT: 3
+    system:
+      mpBonus: 0
+      hpBonus: 0
+      spBonus: 0
+      lpBonus: 0
+      wtBonus: 0
+      iniBonus: 0
+      speedBonus: 0
+      flyBonus: 0
+      swimBonus: 0
+      diseaseR: 0
+      fireR: 0
+      frostR: 0
+      shockR: 0
+      poisonR: 0
+      magicR: 0
+      natToughnessR: 0
+      silverR: 0
+      sunlightR: 0
+      characteristics:
+        none: None
+        str: STR
+        end: END
+        agi: AGI
+        int: INT
+        wp: WP
+        prc: PRC
+        prs: PRS
+        lck: LCK
+      characteristicBonus:
+        strChaBonus: 0
+        endChaBonus: 0
+        agiChaBonus: 0
+        intChaBonus: 0
+        wpChaBonus: 0
+        prcChaBonus: 0
+        prsChaBonus: 0
+        lckChaBonus: 0
+      replace:
+        ini:
+          iniToggle: false
+          value: 0
+          characteristic: ''
+        wt:
+          wtToggle: false
+          value: 0
+          characteristic: ''
+      skillArray: []
+      isPhysicalObject: true
+      containerStats:
+        contained: false
+        container_id: ''
+        container_name: ''
+      description: >-
+        <p><em>Fur armor is made from the fur and skins of animals. The material
+        is a bit heavier than armor of this level of protection, but doubles as
+        an insulating material to keep the wearer warm in colder
+        climates.&nbsp;</em></p>
+      quantity: 1
+      enc: 2
+      totalENC: 0
+      reach: ''
+      damage: ''
+      equipped: true
+      carried: true
+      hands: 0
+      price: 20
+      modPrice: 0
+      armor: 3
+      blockRating: 0
+      excludeENC: false
+      magic_ar: 2 Frost
+      enchant_level: 1
+      qualities: '@Compendium[uesrpg-revision.journal.dfIZDLRGKnnc5kty]{Medium}'
+      category: l_leg
+      item_cat:
+        none: None
+        head: Helmet
+        l_arm: Left Gauntlet
+        r_arm: Right Gauntlet
+        l_leg: Left Leg
+        r_leg: Right Leg
+        body: Chestplate
+        shield: Shield
+      charge:
+        value: 0
+        max: 0
+        reduction: 1
+    _key: '!actors.items!eoO2jKSC8zvOy5eC.MjdJRs5l10DnJSPH'
+effects: []
+folder: null
+sort: 100001
+flags: {}
+_stats:
+  coreVersion: '12.331'
+  systemId: null
+  systemVersion: null
+  createdTime: null
+  modifiedTime: null
+  lastModifiedBy: null
+  compendiumSource: null
+  duplicateSource: null
+ownership:
+  default: 0
+  WcwhQU1nz94WaD5n: 3
+system:
+  equippedWeapons:
+    primaryWeapon:
+      name: 'None: Right click to bind weapon'
+      img: icons/skills/melee/unarmed-punch-fist.webp
+      id: ''
+    secondaryWeapon:
+      name: 'None: Right click to bind weapon'
+      img: icons/skills/melee/unarmed-punch-fist.webp
+      id: ''
+  favorites:
+    '1':
+      name: Hotkey 1
+      img: icons/svg/combat.svg
+      id: ''
+      value: 0
+    '2':
+      name: Hotkey 2
+      img: icons/svg/combat.svg
+      id: ''
+      value: 0
+    '3':
+      name: Hotkey 3
+      img: icons/svg/combat.svg
+      id: ''
+      value: 0
+    '4':
+      name: Hotkey 4
+      img: icons/svg/combat.svg
+      id: ''
+      value: 0
+    '5':
+      name: Hotkey 5
+      img: icons/svg/combat.svg
+      id: ''
+      value: 0
+  race: Giant, Beast
+  birthsign: ''
+  age: null
+  height: ''
+  weight: ''
+  elite_adv: ''
+  wounded: false
+  woundPenalty: 0
+  woundNotes: ''
+  bio: >-
+    <h2>Encountering Giants</h2>
+
+    <p>Giants are a semi-intelligent nomadic race native to Skyrim and High
+    Rock. Giants speak in a deep, gutteral language that no one since the days
+    of Atmora remembers how to speak. They wear clothing made of furs and bones.
+    A giant&rsquo;s tools and weapons are often made from oversized rock, logs,
+    and scrimshawed mammoth bones.</p>
+
+    <p>Giants stand 11-12 feet tall, and female giants are rarely, if ever,
+    seen. It is speculated that female giants are kept living in the mountains
+    while the nomadic males range about during the summer months, only to return
+    to the mountaintops in winter after having grazed their mammoth herds for
+    the season, which they have domesticated and shepherd. Giants are highly
+    territorial and protective of their mammoths, and will often attack those
+    who stray too near their encampments. In combat, giants use their massive
+    strength to crush their enemies.</p>
+
+    <p>Giants have demonstrated complex beliefs concerning death. When a giant
+    is sick or dying, they make pilgrimage to one of their sacred burial grounds
+    to die alone.</p>
+
+    <h2>Giant Loot&nbsp;</h2>
+
+    <ul>
+
+    <li>A character can salvage Mammoth Cheese from the giant's pouch. The
+    character searching can salvage up to d4 rations of the rancid cheese. It
+    requires a +0 Endurance test to keep down.</li>
+
+    <li>A character can remove Giant Toes, which are Very Rare Restoration
+    Ingredients. The character salvages up to two toes. The rest are simply too
+    small!</li>
+
+    <li>A character can ransack the Giant's pouch for treasure and roll three
+    times on the Treasure Table.</li>
+
+    <li>A character can wield the Giant's Club using the stats presented in its
+    profile. Use by a regular PC requires at least 50 Strength, must be used in
+    two hands, and requires a Stamina Point each time it swings. It has ENC
+    10.</li>
+
+    <li>On a +10 Survival test, a character can turn giant bones into weapons or
+    armour. Giant bones are exactly like regular Bone equipment, but lose the
+    Primitive trait. Additionally, Giant Bone armour increases its AR and ENC by
+    1.</li>
+
+    </ul>
+  paperDoll: systems/uesrpg-3ev4/images/paperDoll_Male_Outline_White.png
+  soul_energy: '700'
+  journal: ''
+  notes: ''
+  threat: deadlyGroup
+  threatCategory:
+    minorSolo: Minor Solo
+    minorGroup: Minor Group
+    majorSolo: Major Solo
+    majorGroup: Major Group
+    deadlySolo: Deadly Solo
+    deadlyGroup: Deadly Group
+    legendarySolo: Legendary Solo
+    legendaryGroup: Legendary Group
+  resistance:
+    fireR: 0
+    frostR: 0
+    shockR: 0
+    magicR: 0
+    poisonR: 0
+    diseaseR: 0
+    natToughness: 2
+    silverR: 0
+    sunlightR: 0
+  fatigue:
+    level: 0
+    penalty: 0
+    bonus: 0
+  lucky_numbers:
+    ln1: 1
+    ln2: 2
+    ln3: 3
+    ln4: 4
+    ln5: 5
+    ln6: 0
+    ln7: 0
+    ln8: 0
+    ln9: 0
+    ln10: 0
+  unlucky_numbers:
+    ul1: 0
+    ul2: 0
+    ul3: 0
+    ul4: 0
+    ul5: 0
+    ul6: 100
+  supply: 1d2
+  supply_cat:
+    1d2: 1d2
+    1d4: 1d4
+    1d6: 1d6
+    1d8: 1d8
+    1d10: 1d10
+  wealth: 0
+  current_enc: '17.0'
+  carry_rating:
+    current: 0
+    max: 40
+    bonus: 0
+    penalty: 0
+    label: Minimal
+  characteristics:
+    str:
+      value: 70
+      total: null
+      base: 70
+      favored: false
+    end:
+      value: 60
+      total: null
+      base: 60
+      favored: false
+    agi:
+      value: 30
+      total: null
+      base: 30
+      favored: false
+    int:
+      value: 20
+      total: null
+      base: 20
+      favored: false
+    wp:
+      value: 45
+      total: null
+      base: 45
+      favored: false
+    prc:
+      value: 30
+      total: null
+      base: 30
+      favored: false
+    prs:
+      value: 20
+      total: null
+      base: 20
+      favored: false
+    lck:
+      value: null
+      total: null
+      base: 0
+      favored: false
+  professions:
+    combat: 80
+    magic: null
+    evade: 10
+    observe: 40
+    stealth: 5
+    knowledge: 30
+    social: 20
+    physical: 70
+    commerce: 0
+    profession1: 0
+    profession2: 0
+    profession3: 0
+  professionsWound:
+    combat: 0
+    magic: 0
+    evade: 0
+    observe: 0
+    stealth: 0
+    knowledge: 0
+    social: 0
+    physical: 0
+    commerce: 0
+    profession1: 0
+    profession2: 0
+    profession3: 0
+  hp:
+    base: 30
+    value: 120
+    max: 120
+    temp: 0
+    bonus: 90
+  action_points:
+    value: 3
+    max: 3
+  luck_points:
+    value: 0
+    max: 0
+    bonus: 0
+  stamina:
+    value: 6
+    max: 6
+    bonus: 0
+  magicka:
+    value: 20
+    max: 20
+    bonus: 0
+  xp: 0
+  wound_threshold:
+    value: '17'
+    base: 17
+    bonus: 0
+  initiative:
+    value: '6'
+    base: 6
+    bonus: -2
+  speed:
+    value: '8'
+    base: 8
+    bonus: -5
+  size: huge
+  size_cat:
+    puny: Puny
+    tiny: Tiny
+    small: Small
+    standard: Standard
+    large: Large
+    huge: Huge
+    enormous: Enormous
+  skill_ranks:
+    untrained:
+      name: Untrained
+      rank: ''
+      bonus: ''
+      specialization: ''
+    novice:
+      name: ' (0) Novice'
+      rank: ''
+      bonus: ''
+      specialization: ''
+    apprentice:
+      name: (1) Apprentice
+      rank: ''
+      bonus: ''
+      specialization: ''
+    journeyman:
+      name: (2) Journeyman
+      rank: ''
+      bonus: ''
+      specialization: ''
+    adept:
+      name: (3) Adept
+      rank: ''
+      bonus: ''
+      specialization: ''
+    expert:
+      name: (4) Expert
+      rank: ''
+      bonus: ''
+      specialization: ''
+    master:
+      name: (5) Master
+      rank: ''
+      bonus: ''
+      specialization: ''
+  skills:
+    profession1:
+      rank: ''
+      bonus: null
+      specialization: ''
+      characteristic: ''
+      tn: 0
+      name: ''
+    profession2:
+      rank: ''
+      bonus: null
+      specialization: ''
+      characteristic: ''
+      tn: 0
+      name: ''
+    profession3:
+      rank: ''
+      bonus: null
+      specialization: ''
+      characteristic: ''
+      tn: 0
+      name: ''
+    commerce:
+      bonus: 0
+      specialization: ''
+      characteristic: ''
+      tn: 0
+  talents: >-
+    <p>&nbsp;</p>
+
+    <table style="height: 119px; width: 98.7273%;" border="1">
+
+    <tbody>
+
+    <tr style="height: 17px;">
+
+    <td style="height: 17px; width: 38.095%; text-align: center;"><strong>Melee
+    Hit Location</strong></td>
+
+    <td style="height: 17px; width: 12.2315%; text-align:
+    center;"><strong>Roll</strong></td>
+
+    <td style="height: 17px; width: 38.1162%; text-align:
+    center;"><strong>Ranged Hit Location</strong></td>
+
+    <td style="height: 17px; width: 10.7418%; text-align:
+    center;"><strong>Roll</strong></td>
+
+    </tr>
+
+    <tr style="height: 17px;">
+
+    <td style="height: 17px; width: 38.095%; text-align: center;">Left Leg</td>
+
+    <td style="height: 17px; width: 12.2315%; text-align: center;">1-3</td>
+
+    <td style="height: 17px; width: 38.1162%; text-align: center;">Left Leg</td>
+
+    <td style="height: 17px; width: 10.7418%; text-align: center;">1-2</td>
+
+    </tr>
+
+    <tr style="height: 17px;">
+
+    <td style="height: 17px; width: 38.095%; text-align: center;">Right Leg</td>
+
+    <td style="height: 17px; width: 12.2315%; text-align: center;">4-6</td>
+
+    <td style="height: 17px; width: 38.1162%; text-align: center;">Right
+    LegBody</td>
+
+    <td style="height: 17px; width: 10.7418%; text-align: center;">3-4</td>
+
+    </tr>
+
+    <tr style="height: 17px;">
+
+    <td style="height: 17px; width: 38.095%; text-align: center;">Body</td>
+
+    <td style="height: 17px; width: 12.2315%; text-align: center;">7-8</td>
+
+    <td style="height: 17px; width: 38.1162%; text-align: center;">Body</td>
+
+    <td style="height: 17px; width: 10.7418%; text-align: center;">5-7</td>
+
+    </tr>
+
+    <tr style="height: 17px;">
+
+    <td style="height: 17px; width: 38.095%; text-align: center;">Left Arm</td>
+
+    <td style="height: 17px; width: 12.2315%; text-align: center;">9</td>
+
+    <td style="height: 17px; width: 38.1162%; text-align: center;">Left Arm</td>
+
+    <td style="height: 17px; width: 10.7418%; text-align: center;">8</td>
+
+    </tr>
+
+    <tr style="height: 17px;">
+
+    <td style="height: 17px; width: 38.095%; text-align: center;">Right Arm</td>
+
+    <td style="height: 17px; width: 12.2315%; text-align: center;">0</td>
+
+    <td style="height: 17px; width: 38.1162%; text-align: center;">Right
+    Arm</td>
+
+    <td style="height: 17px; width: 10.7418%; text-align: center;">9</td>
+
+    </tr>
+
+    <tr style="height: 17px;">
+
+    <td style="width: 38.095%; height: 17px; text-align: center;">Head</td>
+
+    <td style="width: 12.2315%; height: 17px; text-align: center;">-</td>
+
+    <td style="width: 38.1162%; height: 17px; text-align: center;">Head</td>
+
+    <td style="width: 10.7418%; height: 17px; text-align: center;">0</td>
+
+    </tr>
+
+    </tbody>
+
+    </table>
+  traits: ''
+  powers: ''
+  spells: ''
+  armor_class: light
+  armor_class_cat:
+    none: None
+    super_light: Super Light
+    light: Light
+    medium: Medium
+    heavy: Heavy
+    super_heavy: Super Heavy
+  storeName: ''
+  priceMod: 0
+  fatigueLevel: 0
+  weapons:
+    w1:
+      name: ''
+      dmg: ''
+      hands: ''
+      reach: ''
+      qualities: ''
+    w2:
+      name: ''
+      dmg: ''
+      hands: ''
+      reach: ''
+      qualities: ''
+    w3:
+      name: ''
+      dmg: ''
+      hands: ''
+      reach: ''
+      qualities: ''
+    w4:
+      name: ''
+      dmg: ''
+      hands: ''
+      reach: ''
+      qualities: ''
+    w5:
+      name: ''
+      dmg: ''
+      hands: ''
+      reach: ''
+      qualities: ''
+  prep_spells:
+    s1:
+      name: ''
+      dmg: ''
+      cost: ''
+      school: ''
+      form: ''
+      attributes: ''
+      level: ''
+    s2:
+      name: ''
+      dmg: ''
+      cost: ''
+      school: ''
+      form: ''
+      attributes: ''
+      level: ''
+    s3:
+      name: ''
+      dmg: ''
+      cost: ''
+      school: ''
+      form: ''
+      attributes: ''
+      level: ''
+    s4:
+      name: ''
+      dmg: ''
+      cost: ''
+      school: ''
+      form: ''
+      attributes: ''
+      level: ''
+    s5:
+      name: ''
+      dmg: ''
+      cost: ''
+      school: ''
+      form: ''
+      attributes: ''
+      level: ''
+    s6:
+      name: ''
+      dmg: ''
+      cost: ''
+      school: ''
+      form: ''
+      attributes: ''
+      level: ''
+    s7:
+      name: ''
+      dmg: ''
+      cost: ''
+      school: ''
+      form: ''
+      attributes: ''
+      level: ''
+  shield:
+    name: ''
+    br: ''
+    magic_br: ''
+    class: ''
+    qualities: ''
+  armor:
+    head:
+      name: ''
+      enc: 0
+      ar: ''
+      magic_ar: ''
+      class: ''
+    body:
+      name: ''
+      enc: 0
+      ar: 3
+      magic_ar: 2 Frost
+      class: ''
+    r_leg:
+      name: ''
+      enc: 0
+      ar: 3
+      magic_ar: 2 Frost
+      class: ''
+    l_leg:
+      name: ''
+      enc: 0
+      ar: 3
+      magic_ar: 2 Frost
+      class: ''
+    r_arm:
+      name: ''
+      enc: 0
+      ar: ''
+      magic_ar: ''
+      class: ''
+    l_arm:
+      name: ''
+      enc: 0
+      ar: ''
+      magic_ar: ''
+      class: ''
+prototypeToken:
+  flags:
+    token-hud-wildcard:
+      default: ''
+    token-auras:
+      aura1:
+        permission: all
+        colour: '#ffffff'
+        opacity: 0.5
+        distance: null
+        square: false
+      aura2:
+        permission: all
+        colour: '#ffffff'
+        opacity: 0.5
+        distance: null
+        square: false
+  name: Giant
+  displayName: 0
+  width: 3
+  height: 3
+  lockRotation: false
+  rotation: 0
+  actorLink: false
+  disposition: -1
+  displayBars: 20
+  bar1:
+    attribute: hp
+  bar2:
+    attribute: action_points
+  randomImg: false
+  alpha: 1
+  light:
+    dim: 0
+    bright: 0
+    angle: 360
+    color: null
+    alpha: 1
+    animation:
+      speed: 5
+      intensity: 5
+      type: null
+      reverse: false
+    negative: false
+    priority: 0
+    coloration: 1
+    attenuation: 0.5
+    luminosity: 0.5
+    saturation: 0
+    contrast: 0
+    shadows: 0
+    darkness:
+      min: 0
+      max: 1
+  texture:
+    src: icons/svg/cowled.svg
+    tint: '#ffffff'
+    scaleX: 1
+    scaleY: 1
+    anchorX: 0.5
+    anchorY: 0.5
+    offsetX: 0
+    offsetY: 0
+    fit: contain
+    rotation: 0
+    alphaThreshold: 0.75
+  sight:
+    angle: 360
+    enabled: true
+    range: 0
+    brightness: 1
+    visionMode: basic
+    color: null
+    attenuation: 0.1
+    saturation: 0
+    contrast: 0
+  appendNumber: false
+  prependAdjective: false
+  hexagonalShape: 0
+  detectionModes: []
+  occludable:
+    radius: 0
+  ring:
+    enabled: false
+    colors:
+      ring: null
+      background: null
+    effects: 1
+    subject:
+      scale: 1
+      texture: null
+_key: '!actors!eoO2jKSC8zvOy5eC'
+

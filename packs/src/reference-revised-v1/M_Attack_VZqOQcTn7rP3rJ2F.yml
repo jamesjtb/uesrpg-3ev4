@@ -1,0 +1,55 @@
+name: M Attack
+folder: null
+sort: 0
+flags:
+  cf:
+    id: temp_ysrtxwqxmu
+    path: References#/CF_SEP/Qualities#/CF_SEP/Spell Attributes
+    color: '#000000'
+_id: VZqOQcTn7rP3rJ2F
+pages:
+  - name: M Attack
+    type: text
+    title:
+      show: false
+      level: 1
+    text:
+      format: 1
+      content: >-
+        <p>Spell counts as a melee, with the listed range. Direct attacks cannot
+        do damage.</p>
+    _stats:
+      coreVersion: '12.331'
+      systemId: null
+      systemVersion: null
+      createdTime: null
+      modifiedTime: null
+      lastModifiedBy: null
+      compendiumSource: null
+      duplicateSource: null
+    _id: mUL9uPw1vulfgQUR
+    system: {}
+    image: {}
+    video:
+      controls: true
+      volume: 0.5
+    src: null
+    sort: 0
+    ownership:
+      default: -1
+    flags: {}
+    _key: '!journal.pages!VZqOQcTn7rP3rJ2F.mUL9uPw1vulfgQUR'
+_stats:
+  coreVersion: '12.331'
+  systemId: null
+  systemVersion: null
+  createdTime: null
+  modifiedTime: null
+  lastModifiedBy: null
+  compendiumSource: null
+  duplicateSource: null
+ownership:
+  default: 0
+  eeXhsDlbzUBZOXZT: 3
+_key: '!journal!VZqOQcTn7rP3rJ2F'
+

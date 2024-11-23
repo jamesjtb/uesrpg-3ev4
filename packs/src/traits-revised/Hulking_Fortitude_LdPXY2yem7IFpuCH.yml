@@ -1,0 +1,92 @@
+_id: LdPXY2yem7IFpuCH
+name: Hulking Fortitude
+type: power
+img: systems/uesrpg-d100/images/Icons/enduring.webp
+effects: []
+folder: null
+sort: 0
+flags:
+  core:
+    sourceId: Item.MyWjMeVAtBCJa8Bt
+_stats:
+  coreVersion: '12.331'
+  systemId: null
+  systemVersion: null
+  createdTime: null
+  modifiedTime: null
+  lastModifiedBy: null
+  compendiumSource: null
+  duplicateSource: null
+ownership:
+  default: 0
+  xvA5SwRGJiyPsnxH: 3
+system:
+  mpBonus: 0
+  hpBonus: 0
+  spBonus: 0
+  lpBonus: 0
+  wtBonus: 0
+  iniBonus: 0
+  speedBonus: 0
+  flyBonus: 0
+  swimBonus: 0
+  diseaseR: 0
+  fireR: 0
+  frostR: 0
+  shockR: 0
+  poisonR: 0
+  magicR: 0
+  natToughnessR: 0
+  silverR: 0
+  sunlightR: 0
+  characteristics:
+    none: None
+    str: STR
+    end: END
+    agi: AGI
+    int: INT
+    wp: WP
+    prc: PRC
+    prs: PRS
+    lck: LCK
+  characteristicBonus:
+    strChaBonus: 0
+    endChaBonus: 0
+    agiChaBonus: 0
+    intChaBonus: 0
+    wpChaBonus: 0
+    prcChaBonus: 0
+    prsChaBonus: 0
+    lckChaBonus: 0
+  skillArray: []
+  description: >-
+    <p><strong>Cost:</strong> 2 SP</p>
+
+    <p>Upon taking damage, the Ogrim can negate all damage from the attack. If
+    the attacking weapon has the
+    @Compendium[uesrpg-revision.journal.Q8ED7VzyqBKpfxEo]{Impaling} quality, the
+    damage is only halved instead. When a creature's melee attack is affected by
+    this, they become
+    @Compendium[uesrpg-revision.journal.JRXHJW251nVbRubN]{Dazed} for one round
+    as they stagger back. If the weapon has the Impaling quality, the wielder
+    must immediately pass a +30 Luck test or else the weapon is stuck in the
+    Ogrim's rolling mounds of fat, and the character is disarmed. Retrieving the
+    stuck weapon requires a Take Weapon special action that the Ogrim does not
+    oppose, but the character must still succeed on their Unarmed or Athletics
+    test.</p>
+  dailyUse: false
+  source: ''
+  shiftForm: false
+  shiftFormStyle: shiftFormNone
+  shiftStyles:
+    shiftFormNone: Regular Form
+    shiftFormVampireLord: Vampire Lord
+    shiftFormWereWolf: Werewolf
+    shiftFormWereBat: Werebat
+    shiftFormWereBoar: Wereboar
+    shiftFormWereBear: Werebear
+    shiftFormWereCrocodile: Werecrocodile
+    shiftFormWereVulture: Werevulture
+    shiftFormWereLion: Werelion
+_key: '!items!LdPXY2yem7IFpuCH'
+

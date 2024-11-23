@@ -1,0 +1,53 @@
+name: Alchemy & Poisons
+folder: null
+sort: 0
+flags:
+  cf:
+    id: temp_vqvknh6et3l
+    path: References#/CF_SEP/Arcane Items
+    color: '#000000'
+_id: e5xgO2nLMYJEQaIV
+pages:
+  - name: Alchemy & Poisons
+    type: text
+    title:
+      show: false
+      level: 1
+    text:
+      format: 1
+      content: "<p>\_</p>\n<p><strong>Alchemical Ingredients</strong></p>\n<p>Potions are created using alchemical ingredients. Higher quality ingredients have higher strength, allowing for more powerful effects. The following table lists the various quality levels and costs of alchemical ingredients of any given type, and their corresponding strength and depth values:</p>\n<table style=\"width:99.1549%\" border=\"1\">\n<tbody>\n<tr>\n<td style=\"width:31.0214%\"><strong>\_ \_ \_ \_ \_ \_ \_ \_ \_ \_ \_ \_ \_ \_ Type</strong></td>\n<td style=\"width:19.0782%\"><strong>\_ \_ \_ \_ \_ \_ Strength</strong></td>\n<td style=\"width:20.0811%\"><strong>\_ \_ \_ \_ \_ \_ \_ \_Depth</strong></td>\n<td style=\"width:28.8249%\"><strong>\_ \_ \_ \_ \_ \_ \_ \_ \_ \_ \_ \_ \_ \_ \_Price</strong></td>\n</tr>\n<tr>\n<td style=\"width:31.0214%\">Ubiquitous</td>\n<td style=\"width:19.0782%\">2</td>\n<td style=\"width:20.0811%\">1</td>\n<td style=\"width:28.8249%\">1</td>\n</tr>\n<tr>\n<td style=\"width:31.0214%\">Plentiful</td>\n<td style=\"width:19.0782%\">5</td>\n<td style=\"width:20.0811%\">2</td>\n<td style=\"width:28.8249%\">5</td>\n</tr>\n<tr>\n<td style=\"width:31.0214%\">Common</td>\n<td style=\"width:19.0782%\">10</td>\n<td style=\"width:20.0811%\">3</td>\n<td style=\"width:28.8249%\">10</td>\n</tr>\n<tr>\n<td style=\"width:31.0214%\">Uncommon</td>\n<td style=\"width:19.0782%\">15</td>\n<td style=\"width:20.0811%\">4</td>\n<td style=\"width:28.8249%\">25</td>\n</tr>\n<tr>\n<td style=\"width:31.0214%\">Rare</td>\n<td style=\"width:19.0782%\">25</td>\n<td style=\"width:20.0811%\">5</td>\n<td style=\"width:28.8249%\">100</td>\n</tr>\n<tr>\n<td style=\"width:31.0214%\">Very Rare</td>\n<td style=\"width:19.0782%\">50</td>\n<td style=\"width:20.0811%\">6</td>\n<td style=\"width:28.8249%\">250</td>\n</tr>\n<tr>\n<td style=\"width:31.0214%\">Extremely Rare</td>\n<td style=\"width:19.0782%\">100</td>\n<td style=\"width:20.0811%\">7</td>\n<td style=\"width:28.8249%\">500</td>\n</tr>\n<tr>\n<td style=\"width:31.0214%\">Legendary</td>\n<td style=\"width:19.0782%\">200</td>\n<td style=\"width:20.0811%\">8</td>\n<td style=\"width:28.8249%\">1000</td>\n</tr>\n</tbody>\n</table>\n<p>The School of an ingredient determines which types of effects\_it can be used to produce. For each effect a character wishes\_to include within a potion they must use an ingredient corresponding\_to the school of that effect.</p>\n<p>The Strength of an ingredient determines the amount of stored\_magicka within it. The cost of the effect an alchemist wishes to\_create with those ingredients is limited by the strength of those\_ingredients. Higher quality ingredients have higher strength\_values, allowing for more powerful effects to be stored.</p>\n<p>The Depth of an ingredient determines the complexity and\_power of effects it can be used to produce. Effects created with\_this ingredient may not have a spell level above this value.</p>\n<p>\_</p>\n<p><strong>Gathering Ingredients</strong></p>\n<p>Anyone with a cursory knowledge of Alchemy can identify the most common ingredients, but more skilled alchemists know where to look for higher quality ingredients. To search for ingredients of any type, a character must make an Alchemy skill test for every four hours they spend searching (a maximum of 2 tests per day of downtime spent gathering). Compare their degrees of success to the table below to determine what they find. Characters may choose any school they wish for any ingredients that they gather.</p>\n<p>\_</p>\n<table style=\"width:58.0272%\" border=\"1\">\n<tbody>\n<tr>\n<td style=\"width:33.2778%\"><strong>DoS</strong></td>\n<td style=\"width:66.0059%\"><strong>Max. Result (any school)</strong></td>\n</tr>\n<tr>\n<td style=\"width:33.2778%\">1-5</td>\n<td style=\"width:66.0059%\">8 Ubiquitous OR 4 Plentiful OR 2 Common</td>\n</tr>\n<tr>\n<td style=\"width:33.2778%\">6-7</td>\n<td style=\"width:66.0059%\">1 Uncommon</td>\n</tr>\n<tr>\n<td style=\"width:33.2778%\">8</td>\n<td style=\"width:66.0059%\">1 Rare</td>\n</tr>\n<tr>\n<td style=\"width:33.2778%\">9</td>\n<td style=\"width:66.0059%\">1 Very rare</td>\n</tr>\n<tr>\n<td style=\"width:33.2778%\">10+</td>\n<td style=\"width:66.0059%\">1 Legendary</td>\n</tr>\n</tbody>\n</table>\n<p>A character may also choose to “downgrade” a result to a lower roll. If a character rolls a critical success when gathering ingredients, they count as having rolled the highest possible degrees of success for their target number.</p>\n<p>\_</p>\n<p><strong>Alchemist Services</strong></p>\n<p>Potions can be quite useful when employed correctly. Characters can hire alchemists to create potions or poisons with effects of all types. Their cost is determined by the following formula: <strong>Potion/Poison Price: Ingredient + Fee</strong></p>\n<p>Determine the effects of the created potion using the normal potion or poison creation rules found in the Alchemy section. The formula above assumes the character is paying for the ingredient and the alchemy service. If the character is providing the ingredients, then ignore that portion of the cost. The fee the alchemist charges should be based on the total spell level of the potion. The table below provides a guideline for the GM’s use:</p>\n<table style=\"width:49.8604%;height:136px\" border=\"1\">\n<tbody>\n<tr style=\"height:17px\">\n<td style=\"width:57.8144%;height:17px\"><strong>\_ \_ \_Spell Level/Duration mod</strong></td>\n<td style=\"width:41.4693%;height:17px\"><strong>\_ \_ \_ \_ \_ \_ \_ \_ \_ \_Cost</strong></td>\n</tr>\n<tr style=\"height:17px\">\n<td style=\"width:57.8144%;height:17px\">1</td>\n<td style=\"width:41.4693%;height:17px\">5</td>\n</tr>\n<tr style=\"height:17px\">\n<td style=\"width:57.8144%;height:17px\">2</td>\n<td style=\"width:41.4693%;height:17px\">10</td>\n</tr>\n<tr style=\"height:17px\">\n<td style=\"width:57.8144%;height:17px\">3</td>\n<td style=\"width:41.4693%;height:17px\">25</td>\n</tr>\n<tr style=\"height:17px\">\n<td style=\"width:57.8144%;height:17px\">4</td>\n<td style=\"width:41.4693%;height:17px\">50</td>\n</tr>\n<tr style=\"height:17px\">\n<td style=\"width:57.8144%;height:17px\">5</td>\n<td style=\"width:41.4693%;height:17px\">100</td>\n</tr>\n<tr style=\"height:17px\">\n<td style=\"width:57.8144%;height:17px\">6</td>\n<td style=\"width:41.4693%;height:17px\">250</td>\n</tr>\n<tr style=\"height:17px\">\n<td style=\"width:57.8144%;height:17px\">7+</td>\n<td style=\"width:41.4693%;height:17px\">500</td>\n</tr>\n</tbody>\n</table>\n<p>\_</p>\n<p><strong>Creating Poisons</strong></p>\n<p>Alchemists can also create poisons which can be applied to weapons in order to give one’s weapon an extra bite. This requires a single unit of destruction ingredients, 1 hour, and an Alchemy test to create (this test suffers a -10 penalty for each level by which the poison exceeds the character’s Alchemy skill rank). Poisons can be applied to weapons using the Ready Weapon action, and last for 1 minute (10 rounds). Characters who take damage from a poisoned weapon must make an Endurance test or suffer poison damage that ignores armor.</p>\n<table style=\"width:63.9016%\" border=\"1\">\n<tbody>\n<tr>\n<td style=\"width:25.6675%\"><strong>Level</strong></td>\n<td style=\"width:35.4337%\"><strong>Ingredients Used</strong></td>\n<td style=\"width:38.0393%\"><strong>Damage</strong></td>\n</tr>\n<tr>\n<td style=\"width:25.6675%\">1</td>\n<td style=\"width:35.4337%\">Ubiquitous</td>\n<td style=\"width:38.0393%\">1D4</td>\n</tr>\n<tr>\n<td style=\"width:25.6675%\">2</td>\n<td style=\"width:35.4337%\">Plentiful</td>\n<td style=\"width:38.0393%\">1D6</td>\n</tr>\n<tr>\n<td style=\"width:25.6675%\">3</td>\n<td style=\"width:35.4337%\">Common</td>\n<td style=\"width:38.0393%\">1D8</td>\n</tr>\n<tr>\n<td style=\"width:25.6675%\">4</td>\n<td style=\"width:35.4337%\">Uncommon</td>\n<td style=\"width:38.0393%\">1D10</td>\n</tr>\n<tr>\n<td style=\"width:25.6675%\">5</td>\n<td style=\"width:35.4337%\">Rare</td>\n<td style=\"width:38.0393%\">1D12</td>\n</tr>\n<tr>\n<td style=\"width:25.6675%\">6</td>\n<td style=\"width:35.4337%\">Very Rare</td>\n<td style=\"width:38.0393%\">2D8</td>\n</tr>\n<tr>\n<td style=\"width:25.6675%\">7</td>\n<td style=\"width:35.4337%\">Extremely Rare</td>\n<td style=\"width:38.0393%\">2D10</td>\n</tr>\n<tr>\n<td style=\"width:25.6675%\">8</td>\n<td style=\"width:35.4337%\">Legendary</td>\n<td style=\"width:38.0393%\">2D12</td>\n</tr>\n</tbody>\n</table>\n<p>\_</p>\n<p><strong>Non Damaging Poisons</strong></p>\n<p>Creating a poison with a non-damaging effects does not follow the rules for normal poisons, but are rather brewn like a normal potion, except only the spell-effects with the Toxin attribute can be used when brewing the poison in question. However, these more complicated compounds lose their bite much quicker than their simpler counterparts when applied to weapons, lasting for 1 minute (10 rounds) or 3 successful hits with the weapon/ammo, whichever comes first. Characters that take damage from a poisoned weapon with a non-damaging effect must make a test as specified by the effect in question to resist, but replaces any listed characteristic with Endurance.</p>"
+    _stats:
+      coreVersion: '12.331'
+      systemId: null
+      systemVersion: null
+      createdTime: null
+      modifiedTime: null
+      lastModifiedBy: null
+      compendiumSource: null
+      duplicateSource: null
+    _id: IazEPdHJzS7DDE54
+    system: {}
+    image: {}
+    video:
+      controls: true
+      volume: 0.5
+    src: null
+    sort: 0
+    ownership:
+      default: -1
+    flags: {}
+    _key: '!journal.pages!e5xgO2nLMYJEQaIV.IazEPdHJzS7DDE54'
+_stats:
+  coreVersion: '12.331'
+  systemId: null
+  systemVersion: null
+  createdTime: null
+  modifiedTime: null
+  lastModifiedBy: null
+  compendiumSource: null
+  duplicateSource: null
+ownership:
+  default: 0
+  eeXhsDlbzUBZOXZT: 3
+_key: '!journal!e5xgO2nLMYJEQaIV'
+

@@ -1,0 +1,88 @@
+_id: gJsXQanqg8zGOzDP
+name: Consume Thralls
+type: power
+img: systems/uesrpg-d100/images/Icons/masterOfTheHordes.webp
+effects: []
+folder: null
+sort: 0
+flags:
+  core:
+    sourceId: Item.MyWjMeVAtBCJa8Bt
+_stats:
+  coreVersion: '12.331'
+  systemId: null
+  systemVersion: null
+  createdTime: null
+  modifiedTime: null
+  lastModifiedBy: null
+  compendiumSource: null
+  duplicateSource: null
+ownership:
+  default: 0
+  xvA5SwRGJiyPsnxH: 3
+system:
+  mpBonus: 0
+  hpBonus: 0
+  spBonus: 0
+  lpBonus: 0
+  wtBonus: 0
+  iniBonus: 0
+  speedBonus: 0
+  flyBonus: 0
+  swimBonus: 0
+  diseaseR: 0
+  fireR: 0
+  frostR: 0
+  shockR: 0
+  poisonR: 0
+  magicR: 0
+  natToughnessR: 0
+  silverR: 0
+  sunlightR: 0
+  characteristics:
+    none: None
+    str: STR
+    end: END
+    agi: AGI
+    int: INT
+    wp: WP
+    prc: PRC
+    prs: PRS
+    lck: LCK
+  characteristicBonus:
+    strChaBonus: 0
+    endChaBonus: 0
+    agiChaBonus: 0
+    intChaBonus: 0
+    wpChaBonus: 0
+    prcChaBonus: 0
+    prsChaBonus: 0
+    lckChaBonus: 0
+  skillArray: []
+  description: >-
+    <p><strong>Cost:</strong> 1 SP</p>
+
+    <p>On this character's turn, it can consume the life of any nearby
+    thralls/allies it chooses within 30m. The consumed characters immediately
+    die and are unable to be revivified because they are stripped of their
+    essence.&nbsp;</p>
+
+    <p>The characer then gains temporary HP equal to the total remaining HP of
+    the thralls/allies he consumed that last until they are depleted or until
+    the end of the combat encounter.</p>
+  dailyUse: false
+  source: ''
+  shiftForm: false
+  shiftFormStyle: shiftFormNone
+  shiftStyles:
+    shiftFormNone: Regular Form
+    shiftFormVampireLord: Vampire Lord
+    shiftFormWereWolf: Werewolf
+    shiftFormWereBat: Werebat
+    shiftFormWereBoar: Wereboar
+    shiftFormWereBear: Werebear
+    shiftFormWereCrocodile: Werecrocodile
+    shiftFormWereVulture: Werevulture
+    shiftFormWereLion: Werelion
+_key: '!items!gJsXQanqg8zGOzDP'
+

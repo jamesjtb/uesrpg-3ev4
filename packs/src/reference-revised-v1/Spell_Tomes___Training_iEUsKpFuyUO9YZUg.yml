@@ -1,0 +1,140 @@
+name: Spell Tomes & Training
+folder: null
+sort: 0
+flags:
+  cf:
+    id: temp_vqvknh6et3l
+    path: References#/CF_SEP/Arcane Items
+    color: '#000000'
+_id: iEUsKpFuyUO9YZUg
+pages:
+  - name: Spell Tomes & Training
+    type: text
+    title:
+      show: false
+      level: 1
+    text:
+      format: 1
+      content: >-
+        <p>Spell tomes are one of the ways that characters can learn
+        conventional spells. Spell tomes are books (despite their name, they can
+        be fairly small) that contain the knowledge necessary to use a given
+        spell. They not only contain practical instructions for using the spell,
+        but a history of the evolution of the spell, alternative forms of
+        casting, mnemonic devices, and other information that can help a
+        character attain a full understanding of the magic they are learning to
+        use.</p>
+
+        <p>Learning a spell takes a number of days equal to the spell level.
+        This time must be spent in practice and study.</p>
+
+        <table style="width:48.2989%;height:119px" border="1">
+
+        <tbody>
+
+        <tr style="height:17px">
+
+        <td style="width:36.6095%;height:17px"><strong>Spell Level</strong></td>
+
+        <td style="width:62.6802%;height:17px"><strong>Cost</strong></td>
+
+        </tr>
+
+        <tr style="height:17px">
+
+        <td style="width:36.6095%;height:17px">1</td>
+
+        <td style="width:62.6802%;height:17px">25</td>
+
+        </tr>
+
+        <tr style="height:17px">
+
+        <td style="width:36.6095%;height:17px">2</td>
+
+        <td style="width:62.6802%;height:17px">50</td>
+
+        </tr>
+
+        <tr style="height:17px">
+
+        <td style="width:36.6095%;height:17px">3</td>
+
+        <td style="width:62.6802%;height:17px">100</td>
+
+        </tr>
+
+        <tr style="height:17px">
+
+        <td style="width:36.6095%;height:17px">4</td>
+
+        <td style="width:62.6802%;height:17px">250</td>
+
+        </tr>
+
+        <tr style="height:17px">
+
+        <td style="width:36.6095%;height:17px">5</td>
+
+        <td style="width:62.6802%;height:17px">500</td>
+
+        </tr>
+
+        <tr style="height:17px">
+
+        <td style="width:36.6095%;height:17px">6</td>
+
+        <td style="width:62.6802%;height:17px">1000</td>
+
+        </tr>
+
+        <tr>
+
+        <td style="width:36.6095%">7+</td>
+
+        <td style="width:62.6802%">5000</td>
+
+        </tr>
+
+        </tbody>
+
+        </table>
+
+        <p>Alternatively, a character can be taught a spell. This takes just as
+        long as it would take to learn the spell normally, but also requires a
+        teacher. Use the costs above as the training cost.</p>
+    _stats:
+      coreVersion: '12.331'
+      systemId: null
+      systemVersion: null
+      createdTime: null
+      modifiedTime: null
+      lastModifiedBy: null
+      compendiumSource: null
+      duplicateSource: null
+    _id: Jw7IOJDZ6B2QxQvG
+    system: {}
+    image: {}
+    video:
+      controls: true
+      volume: 0.5
+    src: null
+    sort: 0
+    ownership:
+      default: -1
+    flags: {}
+    _key: '!journal.pages!iEUsKpFuyUO9YZUg.Jw7IOJDZ6B2QxQvG'
+_stats:
+  coreVersion: '12.331'
+  systemId: null
+  systemVersion: null
+  createdTime: null
+  modifiedTime: null
+  lastModifiedBy: null
+  compendiumSource: null
+  duplicateSource: null
+ownership:
+  default: 0
+  eeXhsDlbzUBZOXZT: 3
+_key: '!journal!iEUsKpFuyUO9YZUg'
+

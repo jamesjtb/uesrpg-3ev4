@@ -1,0 +1,142 @@
+_id: I4a697RMUzsnePhX
+name: Yellow Tick
+type: trait
+img: icons/skills/wounds/illness-disease-glowing-green.webp
+effects: []
+folder: null
+sort: 0
+flags:
+  gm-notes:
+    notes: >-
+      <table style="margin-left: auto; margin-right: auto;" border="1">
+
+      <tbody>
+
+      <tr>
+
+      <td><strong>Stage One Symptoms</strong></td>
+
+      </tr>
+
+      <tr>
+
+      <td>
+
+      <p>Str -5</p>
+
+      <p>Speed -2</p>
+
+      <p>Diseased -20 (Skin contact)</p>
+
+      </td>
+
+      </tr>
+
+      </tbody>
+
+      </table>
+
+      <p><span style="text-decoration:
+      underline;"><strong>Carriers</strong></span></p>
+
+      <p>Bears; Zombies; Kagouti; Wolves; Dogs;</p>
+
+      <p><span style="text-decoration: underline;"><strong>Disease
+      Progression</strong></span></p>
+
+      <p>None</p>
+
+      <p style="box-sizing: border-box; user-select: text; color: #191813;"><em
+      style="box-sizing: border-box; user-select: text;"><strong
+      style="box-sizing: border-box; user-select: text;">Date of disease
+      caught:</strong>&nbsp;</em>{Date} of {Month}, {Era}</p>
+
+      <p style="box-sizing: border-box; user-select: text; color: #191813;"><em
+      style="box-sizing: border-box; user-select: text;"><strong
+      style="box-sizing: border-box; user-select: text;">Current
+      Stage:&nbsp;</strong></em>{One, Two, Three}</p>
+  core:
+    sourceId: Item.Cy32kdbtkHraCRrL
+  cf:
+    id: temp_kg76x9jbadm
+    color: '#000000'
+_stats:
+  coreVersion: '12.331'
+  systemId: null
+  systemVersion: null
+  createdTime: null
+  modifiedTime: null
+  lastModifiedBy: null
+  compendiumSource: null
+  duplicateSource: null
+ownership:
+  default: 0
+  eeXhsDlbzUBZOXZT: 3
+system:
+  mpBonus: 0
+  hpBonus: 0
+  spBonus: 0
+  lpBonus: 0
+  wtBonus: 0
+  iniBonus: 0
+  speedBonus: 0
+  flyBonus: 0
+  swimBonus: 0
+  diseaseR: 0
+  fireR: 0
+  frostR: 0
+  shockR: 0
+  poisonR: 0
+  magicR: 0
+  natToughnessR: 0
+  silverR: 0
+  sunlightR: 0
+  replace:
+    ini:
+      iniToggle: false
+      value: 0
+      characteristic: ''
+    wt:
+      wtToggle: false
+      value: 0
+      characteristic: ''
+  characteristics:
+    none: None
+    str: STR
+    end: END
+    agi: AGI
+    int: INT
+    wp: WP
+    prc: PRC
+    prs: PRS
+    lck: LCK
+  characteristicBonus:
+    strChaBonus: 0
+    endChaBonus: 0
+    agiChaBonus: 0
+    intChaBonus: 0
+    wpChaBonus: 0
+    prcChaBonus: 0
+    prsChaBonus: 0
+    lckChaBonus: 0
+  skillArray: []
+  description: >-
+    <p>Yellow Tick is a parasite that burrows deep into the victim&rsquo;s skin.
+    It is a relatively mild Disease, but its symptoms include dark, bruised and
+    painfully sensitive and itchy swellings where the ticks bury themselves. The
+    Yellow Tick causes anemia and muscle atrophy as they feed on the
+    victim&rsquo;s life forces. Yellow Tick is notably contagious during skin
+    contact.</p>
+
+    <p style="box-sizing: border-box; user-select: text; color: #191813;"><em
+    style="box-sizing: border-box; user-select: text;">Note: Apply negative
+    values manually in Attributes</em></p>
+  halfSpeed: false
+  addHalfSpeed: false
+  halfFatiguePenalty: false
+  mechanical: false
+  crpCost: 0
+  halfWoundPenalty: false
+  painIntolerant: false
+_key: '!items!I4a697RMUzsnePhX'
+

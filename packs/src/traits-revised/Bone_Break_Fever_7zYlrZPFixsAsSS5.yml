@@ -1,0 +1,156 @@
+_id: 7zYlrZPFixsAsSS5
+name: Bone Break Fever
+type: trait
+img: icons/skills/wounds/bone-broken-knee-beam.webp
+effects: []
+folder: null
+sort: 0
+flags:
+  gm-notes:
+    notes: >-
+      <table style="width: 96.6736%; margin-left: auto; margin-right: auto;"
+      border="1">
+
+      <tbody>
+
+      <tr>
+
+      <td style="width: 41.8995%;"><strong>Stage One Symptoms</strong></td>
+
+      <td style="width: 57.0252%;"><strong>Stage Two Symptoms</strong></td>
+
+      </tr>
+
+      <tr>
+
+      <td style="width: 41.8995%;">
+
+      <p>Str -5</p>
+
+      <p>End -5</p>
+
+      </td>
+
+      <td style="width: 57.0252%;">
+
+      <p>Str -10</p>
+
+      <p>End -10</p>
+
+      <p>Shock tests -10</p>
+
+      </td>
+
+      </tr>
+
+      </tbody>
+
+      </table>
+
+      <p><span style="text-decoration:
+      underline;"><strong>Carriers</strong></span></p>
+
+      <p>Cave Rats; Bears; Wolves</p>
+
+      <p><span style="text-decoration: underline;"><strong>Disease
+      Progression</strong></span></p>
+
+      <p>The disease incubates for three days. After three days, the character
+      is afflicted with Stage One. After one more week, the character must pass
+      a (+0) Endurance test every day until cured, or the disease progresses to
+      Stage Two.</p>
+
+      <p style="box-sizing: border-box; user-select: text; color: #191813;"><em
+      style="box-sizing: border-box; user-select: text;"><strong
+      style="box-sizing: border-box; user-select: text;">Date of disease
+      caught:</strong>&nbsp;</em><span style="box-sizing: border-box;
+      user-select: text;">{Date} of {Month}, {Era}</span></p>
+
+      <p style="box-sizing: border-box; user-select: text; color: #191813;"><em
+      style="box-sizing: border-box; user-select: text;"><strong
+      style="box-sizing: border-box; user-select: text;">Current
+      Stage:&nbsp;</strong></em>{One, Two, Three}</p>
+  core:
+    sourceId: Item.wqV3Uz9c1Txj39PF
+  cf:
+    id: temp_kg76x9jbadm
+    color: '#000000'
+_stats:
+  coreVersion: '12.331'
+  systemId: null
+  systemVersion: null
+  createdTime: null
+  modifiedTime: null
+  lastModifiedBy: null
+  compendiumSource: null
+  duplicateSource: null
+ownership:
+  default: 0
+  eeXhsDlbzUBZOXZT: 3
+system:
+  mpBonus: 0
+  hpBonus: 0
+  spBonus: 0
+  lpBonus: 0
+  wtBonus: 0
+  iniBonus: 0
+  speedBonus: 0
+  flyBonus: 0
+  swimBonus: 0
+  diseaseR: 0
+  fireR: 0
+  frostR: 0
+  shockR: 0
+  poisonR: 0
+  magicR: 0
+  natToughnessR: 0
+  silverR: 0
+  sunlightR: 0
+  replace:
+    ini:
+      iniToggle: false
+      value: 0
+      characteristic: ''
+    wt:
+      wtToggle: false
+      value: 0
+      characteristic: ''
+  characteristics:
+    none: None
+    str: STR
+    end: END
+    agi: AGI
+    int: INT
+    wp: WP
+    prc: PRC
+    prs: PRS
+    lck: LCK
+  characteristicBonus:
+    strChaBonus: 0
+    endChaBonus: 0
+    agiChaBonus: 0
+    intChaBonus: 0
+    wpChaBonus: 0
+    prcChaBonus: 0
+    prsChaBonus: 0
+    lckChaBonus: 0
+  skillArray: []
+  description: >-
+    <p>Bone Break Fever is a particularly cruel disease. Carried primarily by
+    rats and bears, the disease aggressively attacks the victim&rsquo;s bones
+    until they are vulnerable and prone to breakage. Untreated Bone Break Fever
+    often results in crippled, or outright severed limbs because of the
+    fragility it causes in its victims.</p>
+
+    <p style="box-sizing: border-box; user-select: text; color: #191813;"><em
+    style="box-sizing: border-box; user-select: text;">Note: Apply negative
+    values manually in Attributes</em></p>
+  halfSpeed: false
+  addHalfSpeed: false
+  halfFatiguePenalty: false
+  mechanical: false
+  crpCost: 0
+  halfWoundPenalty: false
+  painIntolerant: false
+_key: '!items!7zYlrZPFixsAsSS5'
+

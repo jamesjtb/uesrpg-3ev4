@@ -1,0 +1,53 @@
+name: Soul Gems and Enchanting
+folder: null
+sort: 0
+flags:
+  cf:
+    id: temp_vqvknh6et3l
+    path: References#/CF_SEP/Arcane Items
+    color: '#000000'
+_id: RudTVYuvVdeYuqhp
+pages:
+  - name: Soul Gems and Enchanting
+    type: text
+    title:
+      show: false
+      level: 1
+    text:
+      format: 1
+      content: "<p>Soul Energy reflects the amount of magicka stored within the soul that can be used for enchanting. Once a soul gem has been filled with any amount of soul energy, it cannot have any more added to it. Black souls always have a soul energy of 1500.</p>\n<p>Soul gems are gems that can be used to capture the souls of men and beasts. There are a number of different soul gems, each of which has its own maximum soul energy and can only hold certain types of souls. Black souls are the souls of men, mer, and the beast races. All other creatures have white souls.</p>\n<p>\_</p>\n<table style=\"height:119px;width:99.1549%;margin-left:auto;margin-right:auto\" border=\"1\">\n<tbody>\n<tr style=\"height:17px\">\n<td style=\"width:19.8767%;height:17px\"><strong>\_ \_ \_ \_ \_ \_ \_ Type</strong></td>\n<td style=\"width:23.0049%;height:17px\"><strong>\_ \_ \_ \_ \_ \_ \_Soul Types</strong></td>\n<td style=\"width:18.1375%;height:17px\"><strong>\_ \_Max. Soul Energy</strong></td>\n<td style=\"width:15.9812%;height:17px\"><strong>\_ \_ \_ \_ \_ \_ \_ \_ ES</strong></td>\n<td style=\"width:21.8633%;height:17px\"><strong>\_ \_ \_ \_ \_ \_ \_ \_ \_ \_ Price</strong></td>\n</tr>\n<tr style=\"height:17px\">\n<td style=\"width:19.8767%;height:17px\">Petty</td>\n<td style=\"width:23.0049%;height:17px\">White</td>\n<td style=\"width:18.1375%;height:17px\">100</td>\n<td style=\"width:15.9812%;height:17px\">1</td>\n<td style=\"width:21.8633%;height:17px;vertical-align:middle\">25</td>\n</tr>\n<tr style=\"height:17px\">\n<td style=\"width:19.8767%;height:17px\">Lesser</td>\n<td style=\"width:23.0049%;height:17px\">White</td>\n<td style=\"width:18.1375%;height:17px\">250</td>\n<td style=\"width:15.9812%;height:17px\">2</td>\n<td style=\"width:21.8633%;height:17px;vertical-align:middle\">100</td>\n</tr>\n<tr style=\"height:17px\">\n<td style=\"width:19.8767%;height:17px\">Common</td>\n<td style=\"width:23.0049%;height:17px\">White</td>\n<td style=\"width:18.1375%;height:17px\">500</td>\n<td style=\"width:15.9812%;height:17px\">3</td>\n<td style=\"width:21.8633%;height:17px;vertical-align:middle\">250</td>\n</tr>\n<tr style=\"height:17px\">\n<td style=\"width:19.8767%;height:17px\">Greater</td>\n<td style=\"width:23.0049%;height:17px\">White</td>\n<td style=\"width:18.1375%;height:17px\">1000</td>\n<td style=\"width:15.9812%;height:17px\">4</td>\n<td style=\"width:21.8633%;height:17px;vertical-align:middle\">1000</td>\n</tr>\n<tr style=\"height:17px\">\n<td style=\"width:19.8767%;height:17px\">Grand</td>\n<td style=\"width:23.0049%;height:17px\">White</td>\n<td style=\"width:18.1375%;height:17px\">1500</td>\n<td style=\"width:15.9812%;height:17px\">5</td>\n<td style=\"width:21.8633%;height:17px;vertical-align:middle\">2500</td>\n</tr>\n<tr style=\"height:17px\">\n<td style=\"width:19.8767%;height:17px\">Black</td>\n<td style=\"width:23.0049%;height:17px\">Any</td>\n<td style=\"width:18.1375%;height:17px\">1500</td>\n<td style=\"width:15.9812%;height:17px\">5</td>\n<td style=\"width:21.8633%;height:17px;vertical-align:middle\">5000</td>\n</tr>\n</tbody>\n</table>\n<p><strong>Enchantment Strength</strong></p>\n<p>Each soul gem has a specified Enchantment Strength (ES). This is a number that represents the strength of the soul gem when it’s used to enchant an object. Enchantment strength is used in differing ways based on what type of enchantment is being done. This is described in each of the enchantment type However much soul energy contained in a soul gem does not have any effect on the enchantment strength of the soul gem.</p>\n<p>Characters can also purchase soul gems that are completely, or only partially, full. The price of filled soul gems can be determined with the following formula: <strong>Gem Price * 2</strong></p>\n<p>\_</p>\n<p><strong>Enchanted Items</strong></p>\n<p>Finding an enchanted item for sale can be difficult, and when they are for sale they are often extraordinarily expensive due to how rare skilled enchanters are. Only mages regularly traffic in these items, and they know their true value. The price of the item should incorporate the price of the base item, and the strength of the enchantment. The GM should feel free to select from the prices below based on what they feel is appropriate, but note that these prices are just estimates and are not as accurate as pricing the items using the rules in the next section.</p>\n<p>\_</p>\n<table style=\"width:55.7348%;margin-left:auto;margin-right:auto\" border=\"1\">\n<tbody>\n<tr>\n<td style=\"width:39.7807%\"><strong>\_ \_ \_ \_ \_ \_ \_ \_ Spell Level</strong></td>\n<td style=\"width:59.503%\"><strong>\_ \_ \_ \_ \_ \_ \_ \_ \_ \_ \_ \_ Estimated Cost</strong></td>\n</tr>\n<tr>\n<td style=\"width:39.7807%\">1</td>\n<td style=\"width:59.503%\">100-250</td>\n</tr>\n<tr>\n<td style=\"width:39.7807%\">2</td>\n<td style=\"width:59.503%\">250-1000</td>\n</tr>\n<tr>\n<td style=\"width:39.7807%\">3</td>\n<td style=\"width:59.503%\">1000-2500</td>\n</tr>\n<tr>\n<td style=\"width:39.7807%\">4</td>\n<td style=\"width:59.503%\">2500-5000</td>\n</tr>\n<tr>\n<td style=\"width:39.7807%\">5</td>\n<td style=\"width:59.503%\">5000-10,000</td>\n</tr>\n</tbody>\n</table>\n<p><strong>Item &amp; Material Enchantment Level</strong></p>\n<p>The soul energy stored within a soul gem is not the only limiting factor on the strength of an enchantment: different items can all support enchantments of different strengths. Enchantable items have an assigned Enchantment Level (EL). This represents a certain potency with which an item can accept an enchantment. The EL’s function differs based on what type of enchantment may be placed upon it. This is further detailed in each enchantment type’s description.</p>\n<p>Treat all items without a listed enchantment level as having an EL of 1. See Chapter 7 for details.</p>\n<p>\_</p>\n<p><strong>Enchantment Services</strong></p>\n<p>Enchanted items can be extremely powerful, and extremely expensive. Characters can hire enchanters to create items with enchantments of all types. Their cost is determined by the following formula: Enchanted Item Price:</p>\n<p><strong>Soul Gem + Item + Fee</strong></p>\n<p>The formula above assumes the character is paying for the soul gem, the base item, and the enchanting service. If the character is providing either the soul gem, the base item, or both, then ignore that portion of the cost. The fee the enchanter charges should be based on the total spell level of the enchantment. The table below provides a guideline for the GM’s use:</p>\n<table style=\"width:389.016px;margin-right:auto;margin-left:auto\" border=\"1\">\n<tbody>\n<tr>\n<td style=\"width:152.453px\"><strong>\_ \_ \_ \_ \_ \_ \_ \_ Spell Level</strong></td>\n<td style=\"width:231.562px\"><strong>\_ \_ \_ \_ \_ \_ \_ \_ \_ \_ \_ \_ Cost</strong></td>\n</tr>\n<tr>\n<td style=\"width:152.453px\">1</td>\n<td style=\"width:231.562px\">100</td>\n</tr>\n<tr>\n<td style=\"width:152.453px\">2</td>\n<td style=\"width:231.562px\">250</td>\n</tr>\n<tr>\n<td style=\"width:152.453px\">3</td>\n<td style=\"width:231.562px\">500</td>\n</tr>\n<tr>\n<td style=\"width:152.453px\">4</td>\n<td style=\"width:231.562px\">1000</td>\n</tr>\n<tr>\n<td style=\"width:152.453px\">5</td>\n<td style=\"width:231.562px\">2500</td>\n</tr>\n</tbody>\n</table>\n<p>All of these prices assume a Binding Strength of 3 for the purposes of cast enchantments. Higher/lower binding strengths require more/less skilled enchanters, which increase/decrease the total price by 20% for each step (max 5).</p>\n<p>\_</p>\n<p><strong>Carried Enchanted Gear</strong></p>\n<p>Any single character can only wear 1 enchanted item per hit location (left/right arm, left/right leg, body, head) or 1 set of clothes/robes, 1 necklace and 2 rings, and one wielded item (weapon/shield) in each of their hands.</p>\n<p><strong>Enchanted Weapons and Armour</strong></p>\n<p>Any weapon or armour that is enchanted gains the Magic Quality in addition to the listed effect of any enchantment added to it.</p>\n<p>\_</p>"
+    _stats:
+      coreVersion: '12.331'
+      systemId: null
+      systemVersion: null
+      createdTime: null
+      modifiedTime: null
+      lastModifiedBy: null
+      compendiumSource: null
+      duplicateSource: null
+    _id: CSeyPVLQVKUNdsju
+    system: {}
+    image: {}
+    video:
+      controls: true
+      volume: 0.5
+    src: null
+    sort: 0
+    ownership:
+      default: -1
+    flags: {}
+    _key: '!journal.pages!RudTVYuvVdeYuqhp.CSeyPVLQVKUNdsju'
+_stats:
+  coreVersion: '12.331'
+  systemId: null
+  systemVersion: null
+  createdTime: null
+  modifiedTime: null
+  lastModifiedBy: null
+  compendiumSource: null
+  duplicateSource: null
+ownership:
+  default: 0
+  eeXhsDlbzUBZOXZT: 3
+_key: '!journal!RudTVYuvVdeYuqhp'
+

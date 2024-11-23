@@ -1,0 +1,33 @@
+name: '#[CF_tempEntity]'
+folder: null
+sort: 0
+flags:
+  cf:
+    id: temp_vqvknh6et3l
+    path: References#/CF_SEP/Arcane Items
+    color: '#000000'
+    name: Arcane Items
+    children:
+      - e5xgO2nLMYJEQaIV
+      - 7SzULcLexomqDOEy
+      - RudTVYuvVdeYuqhp
+      - gLlkJz7qkASBsaLj
+      - iEUsKpFuyUO9YZUg
+    folderPath:
+      - temp_590lo3nu4qu
+_id: 5vEEUpLKpTVa5O9F
+pages: []
+_stats:
+  coreVersion: '12.331'
+  systemId: null
+  systemVersion: null
+  createdTime: null
+  modifiedTime: null
+  lastModifiedBy: null
+  compendiumSource: null
+  duplicateSource: null
+ownership:
+  default: 0
+  eeXhsDlbzUBZOXZT: 3
+_key: '!journal!5vEEUpLKpTVa5O9F'
+

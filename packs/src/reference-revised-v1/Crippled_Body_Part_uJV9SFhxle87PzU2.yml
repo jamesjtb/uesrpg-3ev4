@@ -1,0 +1,60 @@
+name: Crippled Body Part
+folder: null
+sort: 0
+flags:
+  cf:
+    id: temp_hw0xe1g9xxt
+    path: References#/CF_SEP/Conditions
+    color: '#000000'
+_id: uJV9SFhxle87PzU2
+pages:
+  - name: Crippled Body Part
+    type: text
+    title:
+      show: false
+      level: 1
+    text:
+      format: 1
+      content: >-
+        <p>A piece of the character’s body has been rendered temporarily
+        useless. Multiple instances of this condition can affect a character at
+        once as long as each affects a different hit location and/or the body
+        parts associated with that hit location. Any body part that has been
+        crippled suffers all the same penalties as if it had been lost, using
+        lost eye if the head location has been crippled, and the organ damage
+        condition if the body location has been crippled.</p>
+    _stats:
+      coreVersion: '12.331'
+      systemId: null
+      systemVersion: null
+      createdTime: null
+      modifiedTime: null
+      lastModifiedBy: null
+      compendiumSource: null
+      duplicateSource: null
+    _id: o0hTRPyqjgQ9l7uu
+    system: {}
+    image: {}
+    video:
+      controls: true
+      volume: 0.5
+    src: null
+    sort: 0
+    ownership:
+      default: -1
+    flags: {}
+    _key: '!journal.pages!uJV9SFhxle87PzU2.o0hTRPyqjgQ9l7uu'
+_stats:
+  coreVersion: '12.331'
+  systemId: null
+  systemVersion: null
+  createdTime: null
+  modifiedTime: null
+  lastModifiedBy: null
+  compendiumSource: null
+  duplicateSource: null
+ownership:
+  default: 0
+  eeXhsDlbzUBZOXZT: 3
+_key: '!journal!uJV9SFhxle87PzU2'
+

@@ -1,0 +1,55 @@
+_id: Q9KA3kwbKdsLbovZ
+name: Electrifying
+folder: null
+sort: 0
+flags:
+  cf:
+    id: temp_sn2172bakil
+    color: '#000000'
+pages:
+  - name: Electrifying
+    type: text
+    title:
+      show: false
+      level: 1
+    text:
+      format: 1
+      content: >-
+        <p><span style="color:#191813">The character can, as a free action,
+        change the composition of his Shehai. When he does this, hits with the
+        Shehai deal shock damage.</span></p>
+    _stats:
+      coreVersion: '12.331'
+      systemId: null
+      systemVersion: null
+      createdTime: null
+      modifiedTime: null
+      lastModifiedBy: null
+      compendiumSource: null
+      duplicateSource: null
+    _id: VMOkHDtTpHTaxJ9q
+    system: {}
+    image: {}
+    video:
+      controls: true
+      volume: 0.5
+    src: null
+    sort: 0
+    ownership:
+      default: -1
+    flags: {}
+    _key: '!journal.pages!Q9KA3kwbKdsLbovZ.VMOkHDtTpHTaxJ9q'
+_stats:
+  coreVersion: '12.331'
+  systemId: null
+  systemVersion: null
+  createdTime: null
+  modifiedTime: null
+  lastModifiedBy: null
+  compendiumSource: null
+  duplicateSource: null
+ownership:
+  default: 0
+  eeXhsDlbzUBZOXZT: 3
+_key: '!journal!Q9KA3kwbKdsLbovZ'
+

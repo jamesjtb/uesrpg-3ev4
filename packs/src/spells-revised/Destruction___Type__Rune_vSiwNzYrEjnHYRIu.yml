@@ -1,0 +1,151 @@
+_id: vSiwNzYrEjnHYRIu
+name: 'Destruction: [Type] Rune'
+type: spell
+img: icons/magic/fire/projectile-fireball-red-yellow.webp
+effects: []
+folder: null
+sort: 0
+flags:
+  core:
+    sourceId: Item.Dvncp3T7Nn3WBpgy
+_stats:
+  coreVersion: '12.331'
+  systemId: null
+  systemVersion: null
+  createdTime: null
+  modifiedTime: null
+  lastModifiedBy: null
+  compendiumSource: null
+  duplicateSource: null
+ownership:
+  default: 0
+  qwt9o1cuKYitvD9G: 3
+system:
+  description: >-
+    <p>Creates a magical rune on target surface within 1 meter. After a 1 round
+    delay the rune becomes barely visible (-20 to any vision based tests to spot
+    it). The caster chooses one or more conditions upon which the rune
+    detonates. The rune persists indefinitely.</p>
+
+    <ul>
+
+    <li>Proximity: The rune detonates whenever a character comes within a
+    certain distance (chosen by the caster).</li>
+
+    <li>Time: The rune detonates after a set amount of time.</li>
+
+    <li>Manual: The caster can detonate the rune manually from any distance by
+    using the Cast Magic action.</li>
+
+    </ul>
+
+    <p>When the rune detonates it does so in a burst of elemental energy,
+    dealing [Spell Strength] [type] damage to all targets within 3 meters. This
+    counts as an area of effect attack and can be evaded, but only if a
+    character is aware of the rune.</p>
+
+    <table style="width: 98.5447%; height: 51px;" border="2" cellspacing="2"
+    cellpadding="1">
+
+    <tbody>
+
+    <tr style="height: 17px;">
+
+    <td style="width: 24.9539%; height: 17px; text-align:
+    left;"><strong>Level</strong></td>
+
+    <td style="width: 11.5403%; height: 17px; text-align:
+    center;"><strong>1</strong></td>
+
+    <td style="width: 10.9017%; height: 17px; text-align:
+    center;"><strong>2</strong></td>
+
+    <td style="width: 10.2483%; height: 17px; text-align:
+    center;"><strong>3</strong></td>
+
+    <td style="width: 10.8979%; height: 17px; text-align:
+    center;"><strong>4</strong></td>
+
+    <td style="width: 9.94024%; height: 17px; text-align:
+    center;"><strong>5</strong></td>
+
+    <td style="width: 9.50831%; height: 17px; text-align:
+    center;"><strong>6</strong></td>
+
+    <td style="width: 10.0805%; height: 17px; text-align:
+    center;"><strong>7</strong></td>
+
+    </tr>
+
+    <tr style="height: 17px;">
+
+    <td style="width: 24.9539%; height: 17px; text-align:
+    left;"><strong>Cost</strong></td>
+
+    <td style="width: 11.5403%; height: 17px; text-align: center;">9</td>
+
+    <td style="width: 10.9017%; height: 17px; text-align: center;">11</td>
+
+    <td style="width: 10.2483%; height: 17px; text-align: center;">13</td>
+
+    <td style="width: 10.8979%; height: 17px; text-align: center;">15</td>
+
+    <td style="width: 9.94024%; height: 17px; text-align: center;">17</td>
+
+    <td style="width: 9.50831%; height: 17px; text-align: center;">19</td>
+
+    <td style="width: 10.0805%; height: 17px; text-align: center;">21</td>
+
+    </tr>
+
+    <tr style="height: 17px;">
+
+    <td style="width: 24.9539%; height: 17px; text-align: left;"><strong>Spell
+    Strength</strong></td>
+
+    <td style="width: 11.5403%; height: 17px; text-align: center;">1d4</td>
+
+    <td style="width: 10.9017%; height: 17px; text-align: center;">1d6</td>
+
+    <td style="width: 10.2483%; height: 17px; text-align: center;">1d8</td>
+
+    <td style="width: 10.8979%; height: 17px; text-align: center;">1d10</td>
+
+    <td style="width: 9.94024%; height: 17px; text-align: center;">2d6</td>
+
+    <td style="width: 9.50831%; height: 17px; text-align: center;">2d8</td>
+
+    <td style="width: 10.0805%; height: 17px; text-align: center;">2d10</td>
+
+    </tr>
+
+    </tbody>
+
+    </table>
+
+    <p>&nbsp;</p>
+  damage: 1d4
+  level: 1
+  cost: 9
+  spell_str: ''
+  attributes: >-
+    [Fire, Frost, Shock],
+    @Compendium[uesrpg-revision.journal.ELRN5yhwQUASYJXL]{Overload} (+WpB to
+    Dmg)
+  form: Rune
+  school: destruction
+  school_cat:
+    alteration: Alteration
+    conjuration: Conjuration
+    destruction: Destruction
+    illusion: Illusion
+    mysticism: Mysticism
+    necromancy: Necromancy
+    restoration: Restoration
+    none: Select School
+  spellType: ''
+  spellTypes:
+    conventional: Conventional
+    unconventional: Unconventional
+_key: '!items!vSiwNzYrEjnHYRIu'
+

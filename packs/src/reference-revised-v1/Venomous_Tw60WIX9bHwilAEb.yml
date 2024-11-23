@@ -1,0 +1,55 @@
+_id: Tw60WIX9bHwilAEb
+name: Venomous
+folder: null
+sort: 0
+flags:
+  cf:
+    id: temp_sn2172bakil
+    color: '#000000'
+pages:
+  - name: Venomous
+    type: text
+    title:
+      show: false
+      level: 1
+    text:
+      format: 1
+      content: >-
+        <p><span style="color:#191813">The character can, as a free action,
+        change the composition of his Shehai. When he does this, hits with the
+        Shehai deal poison damage.</span></p>
+    _stats:
+      coreVersion: '12.331'
+      systemId: null
+      systemVersion: null
+      createdTime: null
+      modifiedTime: null
+      lastModifiedBy: null
+      compendiumSource: null
+      duplicateSource: null
+    _id: xRnYXCh1Vy9O0Dny
+    system: {}
+    image: {}
+    video:
+      controls: true
+      volume: 0.5
+    src: null
+    sort: 0
+    ownership:
+      default: -1
+    flags: {}
+    _key: '!journal.pages!Tw60WIX9bHwilAEb.xRnYXCh1Vy9O0Dny'
+_stats:
+  coreVersion: '12.331'
+  systemId: null
+  systemVersion: null
+  createdTime: null
+  modifiedTime: null
+  lastModifiedBy: null
+  compendiumSource: null
+  duplicateSource: null
+ownership:
+  default: 0
+  eeXhsDlbzUBZOXZT: 3
+_key: '!journal!Tw60WIX9bHwilAEb'
+

@@ -1,0 +1,56 @@
+name: Upkeep
+folder: null
+sort: 0
+flags:
+  cf:
+    id: temp_ysrtxwqxmu
+    path: References#/CF_SEP/Qualities#/CF_SEP/Spell Attributes
+    color: '#000000'
+_id: etuR7vddrnv3ot2J
+pages:
+  - name: Upkeep
+    type: text
+    title:
+      show: false
+      level: 1
+    text:
+      format: 1
+      content: >-
+        <p>The caster can refresh the effect (including any required tests or
+        rolls, using the original target(s)) and duration of this spell when it
+        ends by paying the original cost that they paid for the spell.</p>
+    _stats:
+      coreVersion: '12.331'
+      systemId: null
+      systemVersion: null
+      createdTime: null
+      modifiedTime: null
+      lastModifiedBy: null
+      compendiumSource: null
+      duplicateSource: null
+    _id: hQRCtT3E043WLi8K
+    system: {}
+    image: {}
+    video:
+      controls: true
+      volume: 0.5
+    src: null
+    sort: 0
+    ownership:
+      default: -1
+    flags: {}
+    _key: '!journal.pages!etuR7vddrnv3ot2J.hQRCtT3E043WLi8K'
+_stats:
+  coreVersion: '12.331'
+  systemId: null
+  systemVersion: null
+  createdTime: null
+  modifiedTime: null
+  lastModifiedBy: null
+  compendiumSource: null
+  duplicateSource: null
+ownership:
+  default: 0
+  eeXhsDlbzUBZOXZT: 3
+_key: '!journal!etuR7vddrnv3ot2J'
+

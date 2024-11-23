@@ -1,0 +1,93 @@
+_id: DRuDyO5u6ybPhpOM
+name: Ancestor Guardian
+type: talent
+img: systems/uesrpg-d100/images/Icons/ancestorGuardian.webp
+effects: []
+folder: null
+sort: 0
+flags:
+  core:
+    sourceId: Item.JX5ttPQSa94C9UKX
+_stats:
+  coreVersion: '12.331'
+  systemId: null
+  systemVersion: null
+  createdTime: null
+  modifiedTime: null
+  lastModifiedBy: null
+  compendiumSource: null
+  duplicateSource: null
+ownership:
+  default: 0
+  xvA5SwRGJiyPsnxH: 3
+system:
+  mpBonus: 0
+  hpBonus: 0
+  spBonus: 0
+  lpBonus: 0
+  wtBonus: 0
+  iniBonus: 0
+  speedBonus: 0
+  flyBonus: 0
+  swimBonus: 0
+  diseaseR: 0
+  fireR: 0
+  frostR: 0
+  shockR: 0
+  poisonR: 0
+  magicR: 0
+  natToughnessR: 0
+  silverR: 0
+  sunlightR: 0
+  replace:
+    ini:
+      iniToggle: false
+      value: 0
+      characteristic: str
+    wt:
+      wtToggle: false
+      value: 0
+      characteristic: str
+  characteristics:
+    none: None
+    str: STR
+    end: END
+    agi: AGI
+    int: INT
+    wp: WP
+    prc: PRC
+    prs: PRS
+    lck: LCK
+  characteristicBonus:
+    strChaBonus: 0
+    endChaBonus: 0
+    agiChaBonus: 0
+    intChaBonus: 0
+    wpChaBonus: 0
+    prcChaBonus: 0
+    prsChaBonus: 0
+    lckChaBonus: 0
+  skillArray: []
+  description: >-
+    <p>The Dunmer can, once per Long Rest, cast Sanctuary (3) on themselves that
+    lasts for 3 Rounds as a free action that costs no Magicka Points, and
+    requires no test. Additionally, the Dunmer can perform a ritual that costs
+    10 drakes worth of incense and powders during a Long Rest to consult with
+    their ancestor, asking up to d4+1 questions. The ancestor replies only with
+    a disembodied voice only the Dunmer can hear, or sends imagery or signs to
+    be interpreted. This is up to GM&rsquo;s arbitration. The ancestor can only
+    share knowledge and wisdom it would reasonably have had while they were
+    alive.</p>
+  xpCost: 300
+  level: 3
+  talentReq: ''
+  miscReq: Any Adept
+  halfFatiguePenalty: false
+  halfWoundPenalty: false
+  untrainedException: false
+  fatigueException: false
+  addIntToMP: false
+  armorAcrobaticsException: false
+  addHalfSpeed: false
+_key: '!items!DRuDyO5u6ybPhpOM'
+

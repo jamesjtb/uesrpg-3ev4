@@ -1,0 +1,60 @@
+_id: fqsGEdQUtPUCVf5H
+name: Ranged
+folder: null
+sort: 0
+flags:
+  core:
+    sourceId: JournalEntry.OR4BkFmmlKqcAKXb
+  cf:
+    id: temp_qtm3mdw5kon
+    path: References#/CF_SEP/Qualities#/CF_SEP/Weapon Qualities
+    color: '#000000'
+pages:
+  - name: Ranged
+    type: text
+    title:
+      show: false
+      level: 1
+    text:
+      format: 1
+      content: >-
+        <p>A ranged weapon’s short, medium, and long ranges.
+        (Short/Medium/Long)</p>
+
+        <p>+10 to Hit at Short range. +0 to Hit at Medium range. -10 to Hit at
+        Long range.</p>
+    _stats:
+      coreVersion: '12.331'
+      systemId: null
+      systemVersion: null
+      createdTime: null
+      modifiedTime: null
+      lastModifiedBy: null
+      compendiumSource: null
+      duplicateSource: null
+    _id: kC3qz7n4dQ2bREcp
+    system: {}
+    image: {}
+    video:
+      controls: true
+      volume: 0.5
+    src: null
+    sort: 0
+    ownership:
+      default: -1
+    flags: {}
+    _key: '!journal.pages!fqsGEdQUtPUCVf5H.kC3qz7n4dQ2bREcp'
+_stats:
+  coreVersion: '12.331'
+  systemId: null
+  systemVersion: null
+  createdTime: null
+  modifiedTime: null
+  lastModifiedBy: null
+  compendiumSource: null
+  duplicateSource: null
+ownership:
+  default: 0
+  eeXhsDlbzUBZOXZT: 3
+_key: '!journal!fqsGEdQUtPUCVf5H'
+
