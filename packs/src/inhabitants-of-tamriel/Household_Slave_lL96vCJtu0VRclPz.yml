@@ -1,5 +1,5 @@
 name: Household Slave
-type: npc
+type: NPC
 img: icons/svg/cowled.svg
 items:
   - _id: U2MKdghClcMA0x91

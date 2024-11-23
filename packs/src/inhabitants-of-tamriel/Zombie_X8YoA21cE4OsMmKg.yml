@@ -1,5 +1,5 @@
 name: Zombie
-type: npc
+type: NPC
 img: icons/svg/cowled.svg
 items:
   - _id: YKruZzgVtF3aqIfY

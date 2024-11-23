@@ -1,5 +1,5 @@
 name: Dragon Priest
-type: npc
+type: NPC
 img: icons/svg/cowled.svg
 items:
   - _id: MauMtoxNaREc2SnF

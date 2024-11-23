@@ -1,6 +1,6 @@
 _id: fM8TgmWKGiqsBqEe
 name: War Durzog
-type: npc
+type: NPC
 img: icons/svg/cowled.svg
 items:
   - _id: G1US0gUInMEnib0r

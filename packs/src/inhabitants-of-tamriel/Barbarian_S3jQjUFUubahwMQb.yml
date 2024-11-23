@@ -1,5 +1,5 @@
 name: Barbarian
-type: npc
+type: NPC
 img: icons/svg/cowled.svg
 items:
   - _id: whvhnphJTZ0Rfvze

@@ -1,5 +1,5 @@
 name: Banekin
-type: npc
+type: NPC
 img: icons/svg/cowled.svg
 items:
   - _id: a2Dji1YhN9PJv7U9

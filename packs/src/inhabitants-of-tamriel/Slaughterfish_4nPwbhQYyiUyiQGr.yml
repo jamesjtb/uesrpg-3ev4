@@ -1,6 +1,6 @@
 _id: 4nPwbhQYyiUyiQGr
 name: Slaughterfish
-type: npc
+type: NPC
 img: icons/svg/cowled.svg
 items:
   - _id: p0W962o2jMJt9bbm

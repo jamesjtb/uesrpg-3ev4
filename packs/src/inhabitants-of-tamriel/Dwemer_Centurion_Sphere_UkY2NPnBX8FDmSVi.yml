@@ -1,5 +1,5 @@
 name: Dwemer Centurion Sphere
-type: npc
+type: NPC
 img: icons/svg/cowled.svg
 items:
   - _id: dQ76X4qGXIi813he

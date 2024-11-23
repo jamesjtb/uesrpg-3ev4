@@ -1,6 +1,6 @@
 _id: 0coWXHxagtgs83Ne
 name: Cave Goblin Berserker
-type: npc
+type: NPC
 img: icons/svg/cowled.svg
 items:
   - _id: 25g1FGdlF2AHwK2f

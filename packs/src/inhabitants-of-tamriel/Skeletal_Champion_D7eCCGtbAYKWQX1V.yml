@@ -1,5 +1,5 @@
 name: Skeletal Champion
-type: npc
+type: NPC
 img: icons/svg/cowled.svg
 items:
   - _id: HHG0mEDu7pCHmRIm

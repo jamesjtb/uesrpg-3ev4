@@ -1,5 +1,5 @@
 name: Sorcerocrat
-type: npc
+type: NPC
 img: icons/svg/cowled.svg
 items:
   - _id: fVitW5KXsc3O8rOa

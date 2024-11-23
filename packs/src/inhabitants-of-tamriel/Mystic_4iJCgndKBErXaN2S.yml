@@ -1,5 +1,5 @@
 name: Mystic
-type: npc
+type: NPC
 img: icons/svg/cowled.svg
 items:
   - _id: LXQC9w9th3B2ZBFQ

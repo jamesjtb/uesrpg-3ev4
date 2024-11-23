@@ -1,5 +1,5 @@
 name: Dremora Lord
-type: npc
+type: NPC
 img: icons/svg/cowled.svg
 items:
   - _id: 1H8vW5v80CjStN8V

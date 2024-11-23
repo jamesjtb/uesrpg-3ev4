@@ -1,6 +1,6 @@
 _id: AkcllYm1IGBhxA0z
 name: Cave Goblin Shaman
-type: npc
+type: NPC
 img: icons/svg/cowled.svg
 items:
   - _id: mhM04lnbXcqTbabs

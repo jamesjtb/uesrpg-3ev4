@@ -1,6 +1,6 @@
 _id: 2zLQGczv1Ymzg87N
 name: Horker
-type: npc
+type: NPC
 img: icons/svg/cowled.svg
 items:
   - _id: UefbbSkZwr3HWKwc

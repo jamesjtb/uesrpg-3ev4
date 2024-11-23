@@ -1,5 +1,5 @@
 name: Spider Daedra
-type: npc
+type: NPC
 img: icons/svg/cowled.svg
 items:
   - _id: BYnCVr2PDWLXndnu

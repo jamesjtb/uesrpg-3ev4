@@ -1,6 +1,6 @@
 _id: ee5NwUBH9Bbd2bDR
 name: Horse
-type: npc
+type: NPC
 img: icons/svg/cowled.svg
 items:
   - _id: BGvWwqUBsvsLlXRx

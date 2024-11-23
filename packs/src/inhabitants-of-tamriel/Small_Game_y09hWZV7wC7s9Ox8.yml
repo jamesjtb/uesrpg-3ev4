@@ -1,6 +1,6 @@
 _id: y09hWZV7wC7s9Ox8
 name: Small Game
-type: npc
+type: NPC
 img: icons/svg/cowled.svg
 items:
   - _id: wHCot45Nzp3jQaYm

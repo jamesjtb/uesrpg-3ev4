@@ -1,6 +1,6 @@
 _id: iKLRemW5NQkM4KOI
 name: Snow Bear
-type: npc
+type: NPC
 img: icons/svg/cowled.svg
 items:
   - _id: 1QunsgQwVVFO4Txx

@@ -1,5 +1,5 @@
 name: Mazken (Dark Seducer)
-type: npc
+type: NPC
 img: icons/svg/cowled.svg
 items:
   - _id: C50FKfyY8zTR33HW

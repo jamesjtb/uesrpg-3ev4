@@ -1,6 +1,6 @@
 _id: NseoTeJ2Krbqr6ou
 name: Cave Goblin Warchief
-type: npc
+type: NPC
 img: icons/svg/cowled.svg
 items:
   - _id: NiMCNY13xy9hIdcg

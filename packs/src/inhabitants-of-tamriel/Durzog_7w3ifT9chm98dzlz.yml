@@ -1,6 +1,6 @@
 _id: 7w3ifT9chm98dzlz
 name: Durzog
-type: npc
+type: NPC
 img: icons/svg/cowled.svg
 items:
   - _id: G1US0gUInMEnib0r

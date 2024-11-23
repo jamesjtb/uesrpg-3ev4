@@ -1,5 +1,5 @@
 name: Warrior
-type: npc
+type: NPC
 img: icons/svg/cowled.svg
 items:
   - _id: inUY1vs77RkAZC1t

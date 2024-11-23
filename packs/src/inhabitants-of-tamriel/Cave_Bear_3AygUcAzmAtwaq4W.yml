@@ -1,6 +1,6 @@
 _id: 3AygUcAzmAtwaq4W
 name: Cave Bear
-type: npc
+type: NPC
 img: icons/svg/cowled.svg
 items:
   - _id: 1QunsgQwVVFO4Txx

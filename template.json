@@ -1,6 +1,6 @@
 {
 "Actor": {
-  "types": ["character", "npc"],
+  "types": ["Player Character", "NPC"],
   "templates": {
     "equippedWeapons": {
       "equippedWeapons": {
@@ -51,7 +51,7 @@
       }
     }
   },
-  "character": {
+  "Player Character": {
     "templates": ["equippedWeapons", "favorites"],
     "race": "",
     "birthsign": "",
@@ -296,7 +296,7 @@
       "super_heavy": "Super Heavy"
     }
   },
-  "npc": {
+  "NPC": {
     "templates": ["equippedWeapons", "favorites"],
     "race": "",
     "birthsign": "",

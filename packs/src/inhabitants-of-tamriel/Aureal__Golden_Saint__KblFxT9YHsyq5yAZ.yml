@@ -1,5 +1,5 @@
 name: Aureal (Golden Saint)
-type: npc
+type: NPC
 img: icons/svg/cowled.svg
 items:
   - _id: iglnuJYafBx3ZwXW

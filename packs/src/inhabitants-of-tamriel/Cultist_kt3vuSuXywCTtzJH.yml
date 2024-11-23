@@ -1,5 +1,5 @@
 name: Cultist
-type: npc
+type: NPC
 img: icons/svg/cowled.svg
 items:
   - _id: P4wQ6hBT7yISjmD5

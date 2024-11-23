@@ -1,5 +1,5 @@
 name: Witchhunter
-type: npc
+type: NPC
 img: icons/svg/cowled.svg
 items:
   - _id: 1xK20bWneeX1xjVw

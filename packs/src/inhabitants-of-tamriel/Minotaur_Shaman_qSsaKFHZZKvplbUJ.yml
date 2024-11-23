@@ -1,6 +1,6 @@
 _id: qSsaKFHZZKvplbUJ
 name: Minotaur Shaman
-type: npc
+type: NPC
 img: icons/svg/cowled.svg
 items:
   - _id: XnL9qHZY0qp6itsZ

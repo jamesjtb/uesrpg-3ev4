@@ -1,6 +1,6 @@
 _id: dKst0xHqico6AtZQ
 name: Goblin Warchief
-type: npc
+type: NPC
 img: icons/svg/cowled.svg
 items:
   - _id: NiMCNY13xy9hIdcg

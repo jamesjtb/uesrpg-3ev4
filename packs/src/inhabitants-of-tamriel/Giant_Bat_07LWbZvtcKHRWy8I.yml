@@ -1,6 +1,6 @@
 _id: 07LWbZvtcKHRWy8I
 name: Giant Bat
-type: npc
+type: NPC
 img: icons/svg/cowled.svg
 items:
   - _id: 75RP4DJLcAv3ySb9

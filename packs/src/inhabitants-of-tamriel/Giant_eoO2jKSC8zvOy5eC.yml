@@ -1,6 +1,6 @@
 _id: eoO2jKSC8zvOy5eC
 name: Giant
-type: npc
+type: NPC
 img: icons/svg/cowled.svg
 items:
   - _id: PmWskuPpd1oe2udx

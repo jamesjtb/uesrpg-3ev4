@@ -1,6 +1,6 @@
 _id: Kf24PckMuNq7a4kC
 name: Dog
-type: npc
+type: NPC
 img: icons/svg/cowled.svg
 items:
   - _id: FD3v106pkCQv8faP

@@ -49,7 +49,7 @@ export class merchantSheet extends ActorSheet {
     const actorData = data.data;
     data.actor = actorData;
     data.data = actorData.system;
-    if (this.actor.type === "npc") {
+    if (this.actor.type === "NPC") {
       //Prepare character items
       this._prepareCharacterItems(data);
     }

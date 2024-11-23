@@ -1,5 +1,5 @@
 name: Draugr Scourge
-type: npc
+type: NPC
 img: icons/svg/cowled.svg
 items:
   - _id: 42sL8WQcTMg9aHe6

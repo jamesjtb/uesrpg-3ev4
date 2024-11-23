@@ -1,6 +1,6 @@
 _id: MxTbtWp1dA4cRYPH
 name: Harpy
-type: npc
+type: NPC
 img: icons/svg/cowled.svg
 items:
   - _id: OggcvVTcDy87e15S

@@ -1,5 +1,5 @@
 name: Bandit Hedge Mage
-type: npc
+type: NPC
 img: icons/svg/cowled.svg
 items:
   - _id: NNZLILhWmSlbkiG8

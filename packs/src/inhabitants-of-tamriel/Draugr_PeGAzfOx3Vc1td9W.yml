@@ -1,5 +1,5 @@
 name: Draugr
-type: npc
+type: NPC
 img: icons/svg/cowled.svg
 items:
   - _id: c9fBL17eVX3bGQyl

@@ -1,5 +1,5 @@
 name: Death Hound
-type: npc
+type: NPC
 img: icons/svg/cowled.svg
 items:
   - _id: Cm0DVy98g95IFDm0

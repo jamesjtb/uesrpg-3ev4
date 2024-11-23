@@ -1,6 +1,6 @@
 _id: bpTZc664JGqERjvd
 name: Ice Wolf
-type: npc
+type: NPC
 img: icons/svg/cowled.svg
 items:
   - _id: 6pb8SGPQGO0w6wHp

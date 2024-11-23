@@ -1,6 +1,6 @@
 _id: PVyCxUqHHMPs4CSw
 name: Frost Troll
-type: npc
+type: NPC
 img: icons/svg/cowled.svg
 items:
   - _id: s3bTpyCxE6L3t1mY

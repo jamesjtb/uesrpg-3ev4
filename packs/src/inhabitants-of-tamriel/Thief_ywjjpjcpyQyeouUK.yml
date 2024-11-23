@@ -1,5 +1,5 @@
 name: Thief
-type: npc
+type: NPC
 img: icons/svg/cowled.svg
 items:
   - _id: d0xhaSVCH84j6yoX

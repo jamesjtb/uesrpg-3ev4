@@ -1,6 +1,6 @@
 _id: 0wcbBL430vxqnx1H
 name: Giant Snake
-type: npc
+type: NPC
 img: icons/svg/cowled.svg
 items:
   - _id: aEGmxA4vfAyOf9hS

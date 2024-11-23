@@ -1,5 +1,5 @@
 name: Dwemer Spider
-type: npc
+type: NPC
 img: icons/svg/cowled.svg
 items:
   - _id: VUX6C6HCssH64q7e

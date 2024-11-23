@@ -1,5 +1,5 @@
 name: Cultist Mage
-type: npc
+type: NPC
 img: icons/svg/cowled.svg
 items:
   - _id: L0N3pwTrsSDOlZFn

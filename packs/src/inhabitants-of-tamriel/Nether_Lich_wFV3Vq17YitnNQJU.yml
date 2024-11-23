@@ -1,5 +1,5 @@
 name: Nether Lich
-type: npc
+type: NPC
 img: icons/svg/cowled.svg
 items:
   - _id: Jcr91tmjCwCjEAlL

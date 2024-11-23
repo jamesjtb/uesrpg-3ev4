@@ -1,5 +1,5 @@
 name: Dremora Churl
-type: npc
+type: NPC
 img: icons/svg/cowled.svg
 items:
   - _id: jYxOu7Up0P3dmTno

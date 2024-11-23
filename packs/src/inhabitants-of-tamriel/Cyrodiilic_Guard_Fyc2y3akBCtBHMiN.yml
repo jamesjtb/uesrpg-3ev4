@@ -1,5 +1,5 @@
 name: Cyrodiilic Guard
-type: npc
+type: NPC
 img: icons/svg/cowled.svg
 items:
   - _id: YA64ber3dtt1BOCN

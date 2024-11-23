@@ -95,7 +95,7 @@ command: >-
           let option = `<option>${spell.name}</option>`;
           restorationOptions.push(option);
           restorationSpells.push(spell);
-      } 
+      }
   }
 
 
@@ -299,12 +299,12 @@ command: >-
                                       //Determine cost mod based on talents and other modifiers
                                       if (hasCreative && castSpell.system.spellType === "unconventional"){
                                           stackCostMod = stackCostMod - 1;
-                                      } 
+                                      }
 
                                       if (hasMethodical && castSpell.system.spellType === "conventional"){
                                           stackCostMod = stackCostMod - 1;
                                       }
-                                      
+
                                       if(hasForceOfWill){
                                           stackCostMod = stackCostMod - 1;
                                       }
@@ -338,7 +338,7 @@ command: >-
 
                                   // console.log(`Wound Penalty: ${woundPenalty}`)
 
-                                  if (token.actor.type === "npc"){
+                                  if (token.actor.type === "NPC"){
                                       magicSkill = token.actor.system.professions.magic;
                                       magicSkillName = "Magic Roll";
                                       magicSkillTarget = magicSkill + skillModifier + woundPenalty;
@@ -432,7 +432,7 @@ command: >-
                                                       </div>
                                                    </div></b>
 
-                                                   <hr>    
+                                                   <hr>
 
                                                    <div>
                                                       ${damageEntry}
@@ -455,7 +455,7 @@ command: >-
                                   ChatMessage.create({
                                       user: game.user.id,
                                       speaker: ChatMessage.getSpeaker(),
-                                      
+
                                       flavor: tags.join(""),
                                       content: contentString,
                                       roll: magicSkillRoll

@@ -1,5 +1,5 @@
 name: Knight
-type: npc
+type: NPC
 img: icons/svg/cowled.svg
 items:
   - _id: UOGeMr6WR1jsFA8q

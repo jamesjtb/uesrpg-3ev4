@@ -1,6 +1,6 @@
 _id: iyVEQh8uRJDb9ypL
 name: Mudcrab
-type: npc
+type: NPC
 img: icons/svg/cowled.svg
 items:
   - _id: xiiaDqAvCF0H13d7

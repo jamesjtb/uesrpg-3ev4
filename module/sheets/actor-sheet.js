@@ -58,7 +58,7 @@ export class SimpleActorSheet extends ActorSheet {
     let user = this.user;
 
     // Prepare Items
-    if (this.actor.type === "character") {
+    if (this.actor.type === 'Player Character') {
       this._prepareCharacterItems(data);
     }
 

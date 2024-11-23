@@ -1,5 +1,5 @@
 name: Dwemer Gas Spider
-type: npc
+type: NPC
 img: icons/svg/cowled.svg
 items:
   - _id: eDSkvB8rykH8Vh4n

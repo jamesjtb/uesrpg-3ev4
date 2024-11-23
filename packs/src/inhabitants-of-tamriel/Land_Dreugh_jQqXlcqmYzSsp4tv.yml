@@ -1,6 +1,6 @@
 _id: jQqXlcqmYzSsp4tv
 name: Land Dreugh
-type: npc
+type: NPC
 img: icons/svg/cowled.svg
 items:
   - _id: 2mJ9NC1sCuFWjH7n

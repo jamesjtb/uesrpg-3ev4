@@ -1,5 +1,5 @@
 name: Greater Hero of Sovngarde
-type: npc
+type: NPC
 img: icons/svg/mystery-man.svg
 items:
   - _id: lGN9mJSCl4tACz4t

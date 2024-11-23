@@ -1,6 +1,6 @@
 _id: WbAyKnTdFvvV4VIb
 name: Crocodile
-type: npc
+type: NPC
 img: icons/svg/cowled.svg
 items:
   - _id: iojeub4A0vMADdtd

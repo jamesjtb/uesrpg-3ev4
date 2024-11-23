@@ -6,7 +6,7 @@ export class npcSheet extends ActorSheet {
   /** @override */
   static get defaultOptions() {
     return foundry.utils.mergeObject(super.defaultOptions, {
-      classes: ["worldbuilding", "sheet", "actor", "npc"],
+      classes: ["worldbuilding", "sheet", "actor", "NPC"],
       width: 780,
       height: 860,
       tabs: [
@@ -51,7 +51,7 @@ export class npcSheet extends ActorSheet {
     data.data = actorData.system;
 
     // Prepare Items
-    if (this.actor.type === "npc") {
+    if (this.actor.type === "NPC") {
       this._prepareCharacterItems(data);
     }
 

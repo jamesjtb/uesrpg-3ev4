@@ -1,6 +1,6 @@
 _id: lrxv6ilVGWbiYx38
 name: War Horse
-type: npc
+type: NPC
 img: icons/svg/cowled.svg
 items:
   - _id: BGvWwqUBsvsLlXRx

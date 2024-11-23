@@ -7,7 +7,7 @@ command: >-
   // Select Combat Style and Roll For It + Damage Roll Option
 
 
-  if (token.actor.type === 'character') {
+  if (token.actor.type === 'Player Character') {
       const combatStyles = token.actor.items.filter(i => i.type === 'combatStyle')
 
       // Sort Combat Styles List
@@ -162,7 +162,7 @@ command: >-
                             } else if (hitLocRoll.result  == 10) {
                               hitLoc = "Head"
                             }
-                          
+
                           hitLocDiv = `${hitLoc}`
 
                           // Weapon Damage Div Creation
@@ -213,13 +213,13 @@ command: >-
                       ChatMessage.create({
                           user: game.user.id,
                           speaker: ChatMessage.getSpeaker(),
-                          
+
                           flavor: `Modifier: ${modifier} ${rollDamage ? damageFlavor : `<span></span>`}`,
                           content: content,
                           roll: combatRoll
                       })
 
-                      
+
                   }
               },
               two: {

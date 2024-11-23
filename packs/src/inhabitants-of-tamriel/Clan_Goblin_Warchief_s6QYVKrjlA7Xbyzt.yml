@@ -1,6 +1,6 @@
 _id: s6QYVKrjlA7Xbyzt
 name: Clan Goblin Warchief
-type: npc
+type: NPC
 img: icons/svg/cowled.svg
 items:
   - _id: NiMCNY13xy9hIdcg

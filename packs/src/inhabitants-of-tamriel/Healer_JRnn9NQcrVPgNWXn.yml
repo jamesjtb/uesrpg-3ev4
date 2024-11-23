@@ -1,5 +1,5 @@
 name: Healer
-type: npc
+type: NPC
 img: icons/svg/cowled.svg
 items:
   - _id: B7wqdX20kGTnneXC

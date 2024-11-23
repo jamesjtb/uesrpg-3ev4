@@ -1,5 +1,5 @@
 name: Flesh Atronach
-type: npc
+type: NPC
 img: icons/svg/cowled.svg
 items:
   - _id: 606yiDHEfLo9OisK

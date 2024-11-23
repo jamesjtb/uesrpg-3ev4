@@ -94,13 +94,13 @@ export class SimpleItemSheet extends ItemSheet {
 
     // Create Options for Dropdown
     let modifierOptions = []
-    if (this.actor.type === 'character') {
+    if (this.actor.type === 'Player Character') {
       for (let skill of this.actor?.items?.filter(i => i.type === 'skill'||i.type === 'magicSkill'||i.type === 'combatStyle')) {
         modifierOptions.push(`<option value="${skill.name}">${skill.name}</option>`)
       }
     }
 
-    if (this.actor.type === 'npc') {
+    if (this.actor.type === 'NPC') {
       for (let profession in this.actor.system.professions) {
         modifierOptions.push(`<option value="${profession}">${profession}</option>`)
       }

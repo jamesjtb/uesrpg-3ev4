@@ -1,5 +1,5 @@
 name: Winged Twilight
-type: npc
+type: NPC
 img: icons/svg/cowled.svg
 items:
   - _id: Ibpvjm3AniWqPdZh

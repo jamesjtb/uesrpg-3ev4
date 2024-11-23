@@ -93,7 +93,7 @@ async function registerSheets () {
     Actors.unregisterSheet("core", ActorSheet);
     Items.unregisterSheet("core", ItemSheet);
     Actors.registerSheet("uesrpg-3ev4", SimpleActorSheet, {
-      types: ["character"],
+      types: ['Player Character'],
       makeDefault: true,
       label: "Default UESRPG Character Sheet",
     });
@@ -102,12 +102,12 @@ async function registerSheets () {
       label: "Default UESRPG Item Sheet",
     });
     Actors.registerSheet("uesrpg-3ev4", npcSheet, {
-      types: ["npc"],
+      types: ["NPC"],
       makeDefault: true,
       label: "Default UESRPG NPC Sheet",
     });
     Actors.registerSheet("uesrpg-3ev4", merchantSheet, {
-      types: ["npc"],
+      types: ["NPC"],
       makeDefault: false,
       label: "Default UESRPG Merchant Sheet",
     });

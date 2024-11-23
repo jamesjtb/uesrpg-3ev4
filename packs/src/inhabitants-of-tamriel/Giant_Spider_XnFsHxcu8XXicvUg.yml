@@ -1,6 +1,6 @@
 _id: XnFsHxcu8XXicvUg
 name: Giant Spider
-type: npc
+type: NPC
 img: icons/svg/cowled.svg
 items:
   - _id: 0Vdpu8rE4dkZY2HA

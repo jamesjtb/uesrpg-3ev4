@@ -1,6 +1,6 @@
 _id: 6qdrpZfVd1Z9JRDz
 name: Lamia
-type: npc
+type: NPC
 img: icons/svg/cowled.svg
 items:
   - _id: Tup5bUCcKveg6sn4

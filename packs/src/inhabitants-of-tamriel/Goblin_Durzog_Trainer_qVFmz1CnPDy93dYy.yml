@@ -1,6 +1,6 @@
 _id: qVFmz1CnPDy93dYy
 name: Goblin Durzog Trainer
-type: npc
+type: NPC
 img: icons/svg/cowled.svg
 items:
   - _id: 25g1FGdlF2AHwK2f

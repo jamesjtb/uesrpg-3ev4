@@ -1,6 +1,6 @@
 _id: Is5pzo9aFz44j6ik
 name: Ogre
-type: npc
+type: NPC
 img: icons/svg/cowled.svg
 items:
   - _id: tk5nXHhS2eyBtFA1

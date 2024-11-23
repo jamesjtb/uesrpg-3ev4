@@ -39,7 +39,7 @@ export class SimpleItem extends Item {
       if (this.system.hasOwnProperty('damaged')) {this._prepareArmorItem(actorData, itemData)}
       if (this.type === 'item') {this._prepareNormalItem(actorData, itemData)}
       if (this.type === 'weapon') {this._prepareWeaponItem(actorData, itemData)}
-      if (this.system.hasOwnProperty('skillArray') && actorData.type === 'character') {this._prepareModSkillItems(actorData, itemData)}
+      if (this.system.hasOwnProperty('skillArray') && actorData.type === 'Player Character') {this._prepareModSkillItems(actorData, itemData)}
       if (this.system.hasOwnProperty('baseCha')) {this._prepareCombatStyleData(actorData, itemData)}
       if (this.type == 'container') {this._prepareContainerItem(actorData, itemData)}
     }

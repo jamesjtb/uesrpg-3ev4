@@ -1,5 +1,5 @@
 name: Hunger
-type: npc
+type: NPC
 img: icons/svg/cowled.svg
 items:
   - _id: tIiOaQ9G18HYkrkr

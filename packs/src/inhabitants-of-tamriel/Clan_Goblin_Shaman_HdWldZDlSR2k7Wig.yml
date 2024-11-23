@@ -1,6 +1,6 @@
 _id: HdWldZDlSR2k7Wig
 name: Clan Goblin Shaman
-type: npc
+type: NPC
 img: icons/svg/cowled.svg
 items:
   - _id: mhM04lnbXcqTbabs

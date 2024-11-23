@@ -6,7 +6,7 @@
 export class SimpleActor extends Actor {
   async _preCreate(data, options, user) {
 
-    if (this.type === 'character') {
+    if (this.type === 'Player Character') {
       // Updates token default settings for Character types
       this.prototypeToken.updateSource({
         'sight.enabled': true,
@@ -17,7 +17,7 @@ export class SimpleActor extends Actor {
 
     // Preps and adds standard skill items to Character types
     await super._preCreate(data, options, user);
-    if (this.type === "character") {
+    if (this.type === 'Player Character') {
       let skillPack = game.packs.get("uesrpg-3ev4.standard-skills");
       let collection = await skillPack.getDocuments();
       collection.sort(function (a, b) {
@@ -48,8 +48,8 @@ export class SimpleActor extends Actor {
 
     // Make separate methods for each Actor type (character, npc, etc.) to keep
     // things organized.
-    if (actorData.type === 'character') this._prepareCharacterData(actorData);
-    if (actorData.type === 'npc') this._prepareNPCData(actorData);
+    if (actorData.type === 'Player Character') this._prepareCharacterData(actorData);
+    if (actorData.type === 'NPC') this._prepareNPCData(actorData);
   }
 
   /**

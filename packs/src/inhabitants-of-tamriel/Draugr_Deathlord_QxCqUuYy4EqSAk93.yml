@@ -1,5 +1,5 @@
 name: Draugr Deathlord
-type: npc
+type: NPC
 img: icons/svg/cowled.svg
 items:
   - _id: TgfFPQMOQQNGIAyn

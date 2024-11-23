@@ -1,6 +1,6 @@
 _id: 4YAW2sVnQN0p3lpP
 name: Large Game
-type: npc
+type: NPC
 img: icons/svg/cowled.svg
 items:
   - _id: HOjc7RnXa9ObnNcM

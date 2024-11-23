@@ -1,5 +1,5 @@
 name: Crusader
-type: npc
+type: NPC
 img: icons/svg/mystery-man.svg
 items:
   - _id: oQUguhBksY0i8XVt

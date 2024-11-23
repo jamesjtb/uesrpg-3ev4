@@ -1,5 +1,5 @@
 name: Bandit Ringleader
-type: npc
+type: NPC
 img: icons/svg/cowled.svg
 items:
   - _id: 6yiHeYXyPkRNYpW1
