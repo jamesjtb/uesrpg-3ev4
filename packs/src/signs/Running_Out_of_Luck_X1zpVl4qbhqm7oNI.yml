@@ -10,11 +10,11 @@ flags:
 _id: X1zpVl4qbhqm7oNI
 _stats:
   coreVersion: '12.331'
-  systemId: null
-  systemVersion: null
+  systemId: uesrpg-3ev4
+  systemVersion: v1.0.0-RC.58
   createdTime: null
-  modifiedTime: null
-  lastModifiedBy: null
+  modifiedTime: 1732328268002
+  lastModifiedBy: 7bDMesNjX54nzN9S
   compendiumSource: null
   duplicateSource: null
 ownership:
@@ -69,9 +69,9 @@ system:
     lckChaBonus: 0
   skillArray: []
   description: >-
-    <p>The character&rsquo;s luck is running out. Whenever they would burn any
-    amount of Luck, burn twice that amount. If the character does not have this
-    much Luck remaining, just burn all remaining Luck.</p>
+    <p>The character’s luck is running out. Whenever they would burn any amount
+    of Luck, burn twice that amount. If the character does not have this much
+    Luck remaining, just burn all remaining Luck.</p>
   halfSpeed: false
   addHalfSpeed: false
   halfFatiguePenalty: false

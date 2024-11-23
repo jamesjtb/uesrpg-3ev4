@@ -10,11 +10,11 @@ flags:
     sourceId: Item.7PWqlj7CsH2BIbg8
 _stats:
   coreVersion: '12.331'
-  systemId: null
-  systemVersion: null
+  systemId: uesrpg-3ev4
+  systemVersion: v1.0.0-RC.58
   createdTime: null
-  modifiedTime: null
-  lastModifiedBy: null
+  modifiedTime: 1732332200619
+  lastModifiedBy: 7bDMesNjX54nzN9S
   compendiumSource: null
   duplicateSource: null
 ownership:
@@ -60,11 +60,11 @@ system:
     lckChaBonus: 0
   skillArray: []
   description: >-
-    <p>The character has a knack for finding treasure, and overcoming the
+    <p>The character has a knack for finding treasure and overcoming the
     obstacles that protect it. At any time the character can choose to reroll a
     failed Subterfuge test made to pick a lock or disarm a trap, but only once
-    for a given test. This power may only be used once until after the
-    character&rsquo;s next long rest.</p>
+    for a given test. This power may only be 60 used once until after the
+    character’s next long rest.</p>
   dailyUse: false
   source: ''
   shiftForm: false

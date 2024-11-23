@@ -10,11 +10,11 @@ flags:
     sourceId: Item.rJsPUPqP5FyTYKHs
 _stats:
   coreVersion: '12.331'
-  systemId: null
-  systemVersion: null
+  systemId: uesrpg-3ev4
+  systemVersion: v1.0.0-RC.58
   createdTime: null
-  modifiedTime: null
-  lastModifiedBy: null
+  modifiedTime: 1732330244628
+  lastModifiedBy: 7bDMesNjX54nzN9S
   compendiumSource: null
   duplicateSource: null
 ownership:
@@ -69,9 +69,11 @@ system:
     lckChaBonus: 0
   skillArray: []
   description: >-
-    <p>Those born under the sign of The Star-Cursed Lord double their natural
-    healing rate and receive +5 Endurance, but suffer from Weakness (Fire,
-    2).</p>
+    <p><em>“The Lord’s Season is First Seed and he oversees all of Tamriel
+    during the planting. Those born under the sign of the Lord are stronger and
+    healthier than those born under other signs.”</em></p><p><strong>Those born
+    under the sign of the Star-Cursed Lord double their natural healing rate.
+    They also gain 5 Endurance and the Weakness (fire, 2) trait.</strong></p>
   halfSpeed: false
   addHalfSpeed: false
   halfFatiguePenalty: false

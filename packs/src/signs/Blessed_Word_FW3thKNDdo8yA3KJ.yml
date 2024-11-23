@@ -10,11 +10,11 @@ flags:
 _id: FW3thKNDdo8yA3KJ
 _stats:
   coreVersion: '12.331'
-  systemId: null
-  systemVersion: null
+  systemId: uesrpg-3ev4
+  systemVersion: v1.0.0-RC.58
   createdTime: null
-  modifiedTime: null
-  lastModifiedBy: null
+  modifiedTime: 1732328142691
+  lastModifiedBy: 7bDMesNjX54nzN9S
   compendiumSource: null
   duplicateSource: null
 ownership:
@@ -61,15 +61,19 @@ system:
   skillArray: []
   description: >-
     <p>The character may begin speaking the word of the divines through the use
-    of the Cast Magic action. This creates a circle with a radius equal to their
-    Willpower bonus in meters. Characters with the Undead or Undying traits must
-    flee the circle and no characters with those traits may willingly enter it
-    unless they can pass a -40 Willpower test (which may be attempted once per
-    round).</p>
+    of the Cast Magic action. This has the effect of creating a circle with a
+    radius equal to their Willpower bonus in meters. Characters with the Undead
+    or Undying traits must flee the circle and no characters with those traits
+    may willingly enter it unless they can pass a -40 Willpower test (which may
+    only be attempted once per round). </p><p>The circle follows the character,
+    but it only remains as long as they continue to speak the words and take the
+    Cast Magic action each turn. Blessed Word can be sustained for at most 1
+    minute (10 rounds). This power can only be used once until after the
+    character’s next long rest.</p>
   dailyUse: false
   source: ''
   shiftForm: false
-  shiftFormStyle: ''
+  shiftFormStyle: shiftFormNone
   shiftStyles:
     shiftFormNone: Regular Form
     shiftFormVampireLord: Vampire Lord

@@ -10,11 +10,11 @@ flags:
 _id: sRy9dPLIRLD60wGC
 _stats:
   coreVersion: '12.331'
-  systemId: null
-  systemVersion: null
+  systemId: uesrpg-3ev4
+  systemVersion: v1.0.0-RC.58
   createdTime: null
-  modifiedTime: null
-  lastModifiedBy: null
+  modifiedTime: 1732329748192
+  lastModifiedBy: 7bDMesNjX54nzN9S
   compendiumSource: null
   duplicateSource: null
 ownership:
@@ -69,19 +69,15 @@ system:
     lckChaBonus: 0
   skillArray: []
   description: >-
-    <p>Those born under the sign of The Ritual may choose to gain one of the
-    following Powers at the start of each day, replacing their previous choice
-    with the newest:</p>
-
-    <ul>
-
-    <li>Blessed Touch</li>
-
-    <li>Blessed Word</li>
-
-    <li>Mara's Gift</li>
-
-    </ul>
+    <p><em>“The Ritual is one of the Mage’s Charges and its Season is Morning
+    Star. Those born under this sign have a variety of abilities depending on
+    the aspects of the moons and the Divines.”</em></p><p><strong>Those born
+    under the sign of the Ritual may choose to gain one of the following powers
+    at the beginning of each day:</strong></p><ul><li><p><strong>Blessed
+    Touch</strong></p></li><li><p><strong>Blessed
+    Word</strong></p></li><li><p><strong>Mara’s
+    Gift</strong></p></li></ul><p><strong>They have this power until their next
+    long rest, when they can make another choice if they wish.</strong></p>
   halfSpeed: false
   addHalfSpeed: false
   halfFatiguePenalty: false

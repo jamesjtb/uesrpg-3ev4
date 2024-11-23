@@ -10,11 +10,11 @@ flags:
 _id: 7nnrw6agzg2Lg0ZS
 _stats:
   coreVersion: '12.331'
-  systemId: null
-  systemVersion: null
+  systemId: uesrpg-3ev4
+  systemVersion: v1.0.0-RC.58
   createdTime: null
-  modifiedTime: null
-  lastModifiedBy: null
+  modifiedTime: 1732328185779
+  lastModifiedBy: 7bDMesNjX54nzN9S
   compendiumSource: null
   duplicateSource: null
 ownership:
@@ -64,12 +64,13 @@ system:
     remove a single wound and all of its effects (not including lost limbs) from
     themselves. This also restores an amount of HP equal to the amount of damage
     dealt to cause the wound. The character may choose to burn 2d6 Luck in order
-    to allow this power to also restore lost limbs. This power can only be used
-    once until after the character&rsquo;s next long rest.</p>
+    to allow this power to also restore lost limbs. The character must remain
+    still for the entire duration while they perform the ritual. This power can
+    only be used once until after the character’s next long rest.</p>
   dailyUse: false
   source: ''
   shiftForm: false
-  shiftFormStyle: ''
+  shiftFormStyle: shiftFormNone
   shiftStyles:
     shiftFormNone: Regular Form
     shiftFormVampireLord: Vampire Lord

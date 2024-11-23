@@ -10,11 +10,11 @@ flags:
 _id: 1VMWP1tbtpowTI4O
 _stats:
   coreVersion: '12.331'
-  systemId: null
-  systemVersion: null
+  systemId: uesrpg-3ev4
+  systemVersion: v1.0.0-RC.58
   createdTime: null
-  modifiedTime: null
-  lastModifiedBy: null
+  modifiedTime: 1732332176529
+  lastModifiedBy: 7bDMesNjX54nzN9S
   compendiumSource: null
   duplicateSource: null
 ownership:
@@ -69,9 +69,13 @@ system:
     lckChaBonus: 0
   skillArray: []
   description: >-
-    <p>Those born under the sign of The Warrior increase their max Stamina
-    Points by +1 and gain +5 Strength. However, they receive a -5 to
-    Willpower.</p>
+    <p><em>“The Warrior is the first Guardian Constellation and he protects his
+    charges during their Seasons. The Warrior’s own season is Last Seed when his
+    Strength is needed for the harvest. His Charges are the Lady, the Steed, and
+    the Lord. Those born under the sign of the Warrior are skilled with weapons
+    of all kinds, but prone to short tempers.”</em></p><p><strong>Those born
+    under the sign of the Warrior increase their SP maximum by 1. They also gain
+    5 Strength and lose 5 Willpower.</strong></p>
   halfSpeed: false
   addHalfSpeed: false
   halfFatiguePenalty: false

@@ -10,11 +10,11 @@ flags:
 _id: eTR6ngEkDEcFU0TX
 _stats:
   coreVersion: '12.331'
-  systemId: null
-  systemVersion: null
+  systemId: uesrpg-3ev4
+  systemVersion: v1.0.0-RC.58
   createdTime: null
-  modifiedTime: null
-  lastModifiedBy: null
+  modifiedTime: 1732327950707
+  lastModifiedBy: 7bDMesNjX54nzN9S
   compendiumSource: null
   duplicateSource: null
 ownership:
@@ -62,17 +62,16 @@ system:
   description: >-
     <p>This character can speak the word of the divines for an hour in order to
     remove a single wound and all of its effects (not including lost limbs) from
-    another character.</p>
-
-    <p>This also restores an amount of HP equal to the damage dealt to cause the
-    wound. The character may choose to burn 2d6 Luck in order to allow this
-    power to also restore lost limbs. The target character must remain still for
-    the entire duration while the character performs the ritual. This power can
-    only be used once until the character&rsquo;s next long rest.</p>
+    another character.</p><p>This also restores an amount of HP equal to the
+    amount of damage dealt to cause the wound. This character may choose to burn
+    2d6 Luck to allow this power to also restore lost limbs. The target
+    character must remain still for the entire duration while the character
+    performs the ritual. This power can only be used once until after the
+    character’s next long rest.</p>
   dailyUse: false
   source: ''
   shiftForm: false
-  shiftFormStyle: ''
+  shiftFormStyle: shiftFormNone
   shiftStyles:
     shiftFormNone: Regular Form
     shiftFormVampireLord: Vampire Lord

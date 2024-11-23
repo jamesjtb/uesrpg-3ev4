@@ -11,10 +11,10 @@ _id: UsUEXLx8KRkopr9d
 _stats:
   coreVersion: '12.331'
   systemId: uesrpg-3ev4
-  systemVersion: 1.0-RC.7
+  systemVersion: v1.0.0-RC.58
   createdTime: null
-  modifiedTime: 1731907896913
-  lastModifiedBy: rPO3rOkS9gKTk44u
+  modifiedTime: 1732329277977
+  lastModifiedBy: 7bDMesNjX54nzN9S
   compendiumSource: null
   duplicateSource: null
 ownership:
@@ -59,9 +59,7 @@ system:
     prsChaBonus: 0
     lckChaBonus: 0
   skillArray: []
-  description: >-
-    <p>The character may make a Luck test in order to avoid
-    surprise.</p><p>Test</p>
+  description: <p>The character may make a Luck test in order to avoid surprise.</p>
   dailyUse: false
   source: ''
   shiftForm: false

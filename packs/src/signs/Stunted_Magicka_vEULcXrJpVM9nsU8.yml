@@ -10,11 +10,11 @@ flags:
 _id: vEULcXrJpVM9nsU8
 _stats:
   coreVersion: '12.331'
-  systemId: null
-  systemVersion: null
+  systemId: uesrpg-3ev4
+  systemVersion: v1.0.0-RC.58
   createdTime: null
-  modifiedTime: null
-  lastModifiedBy: null
+  modifiedTime: 1732328436548
+  lastModifiedBy: 7bDMesNjX54nzN9S
   compendiumSource: null
   duplicateSource: null
 ownership:
@@ -69,8 +69,8 @@ system:
     lckChaBonus: 0
   skillArray: []
   description: >-
-    <p>Characters with this trait do not regenerate magicka naturally, and
-    cannot benefit from spell restraint.</p>
+    <p>Characters with this trait do not regenerate magicka naturally and halve
+    the benefits (round down) gained from Spell Restraint.</p>
   halfSpeed: false
   addHalfSpeed: false
   halfFatiguePenalty: false

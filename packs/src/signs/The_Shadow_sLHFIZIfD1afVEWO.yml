@@ -10,11 +10,11 @@ flags:
 _id: sLHFIZIfD1afVEWO
 _stats:
   coreVersion: '12.331'
-  systemId: null
-  systemVersion: null
+  systemId: uesrpg-3ev4
+  systemVersion: v1.0.0-RC.58
   createdTime: null
-  modifiedTime: null
-  lastModifiedBy: null
+  modifiedTime: 1732329827391
+  lastModifiedBy: 7bDMesNjX54nzN9S
   compendiumSource: null
   duplicateSource: null
 ownership:
@@ -69,8 +69,9 @@ system:
     lckChaBonus: 0
   skillArray: []
   description: >-
-    <p>Those born under the sign of The Shadow gain the power to hide in the
-    shadows with the Moonshadow power.</p>
+    <p><em>“The Shadow’s Season is Second Seed. The Shadow grants those born
+    under her sign the ability to hide in shadows.”</em></p><p><strong>Those
+    born under the sign of the Shadow gain the Moonshadow power.</strong></p>
   halfSpeed: false
   addHalfSpeed: false
   halfFatiguePenalty: false
