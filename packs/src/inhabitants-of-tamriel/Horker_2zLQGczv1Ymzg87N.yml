@@ -331,7 +331,7 @@ items:
     flags:
       core:
         sourceId: Item.UuK7DCRPgd0L3QZB
-    img: systems/uesrpg-3ev4/item-compendium/item_tokens/pelt.webp
+    img: systems/uesrpg-3ev4/images/item-compendium/item_tokens/pelt.webp
     effects: []
     folder: null
     _stats:
@@ -449,7 +449,7 @@ items:
     flags:
       core:
         sourceId: Item.NgM2QJP4U3KPV3Bx
-    img: systems/uesrpg-3ev4/item-compendium/item_tokens/meat.webp
+    img: systems/uesrpg-3ev4/images/item-compendium/item_tokens/meat.webp
     effects: []
     folder: null
     _stats:
@@ -562,7 +562,7 @@ items:
     flags:
       core:
         sourceId: Item.UuK7DCRPgd0L3QZB
-    img: systems/uesrpg-3ev4/item-compendium/item_tokens/bones.webp
+    img: systems/uesrpg-3ev4/images/item-compendium/item_tokens/bones.webp
     effects: []
     folder: null
     _stats:
@@ -675,7 +675,7 @@ items:
     flags:
       core:
         sourceId: Item.9HprpbkgIr54vcPt
-    img: systems/uesrpg-3ev4/item-compendium/item_tokens/ingredient.webp
+    img: systems/uesrpg-3ev4/images/item-compendium/item_tokens/ingredient.webp
     effects: []
     folder: null
     _stats:
@@ -785,7 +785,7 @@ items:
   - _id: liHb6LqZJw9Wultj
     name: Horker Tusks
     type: weapon
-    img: systems/uesrpg-3ev4/item-compendium/weapon_tokens/bite.png
+    img: systems/uesrpg-3ev4/images/item-compendium/weapon_tokens/bite.png
     effects: []
     folder: null
     sort: 0

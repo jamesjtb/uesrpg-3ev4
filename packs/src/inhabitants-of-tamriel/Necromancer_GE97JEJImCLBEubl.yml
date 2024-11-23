@@ -354,7 +354,7 @@ items:
   - _id: 2itpgCS6mRnK4Xde
     name: Reanimation Target 4
     type: spell
-    img: systems/uesrpg-3ev4/spell-compendium/necromancy_spellbook.webp
+    img: systems/uesrpg-3ev4/images/spell-compendium/necromancy_spellbook.webp
     effects: []
     folder: null
     sort: 0
@@ -495,7 +495,7 @@ items:
   - _id: VilubRL2LHIiITWP
     name: Reanimation Target 3
     type: spell
-    img: systems/uesrpg-3ev4/spell-compendium/necromancy_spellbook.webp
+    img: systems/uesrpg-3ev4/images/spell-compendium/necromancy_spellbook.webp
     effects: []
     folder: null
     sort: 0
@@ -636,7 +636,7 @@ items:
   - _id: aGX5O8qMeMR7UoiM
     name: Reanimation Storm 4
     type: spell
-    img: systems/uesrpg-3ev4/spell-compendium/necromancy_spellbook.webp
+    img: systems/uesrpg-3ev4/images/spell-compendium/necromancy_spellbook.webp
     effects: []
     folder: null
     sort: 0

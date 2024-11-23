@@ -1612,7 +1612,7 @@ items:
   - _id: 5Wb6PCP0y97UMkri
     name: Partial Spider Hide
     type: armor
-    img: systems/uesrpg-3ev4/item-compendium/item_tokens/carapace.png
+    img: systems/uesrpg-3ev4/images/item-compendium/item_tokens/carapace.png
     effects: []
     folder: null
     sort: 0
@@ -1721,7 +1721,7 @@ items:
   - _id: tuijPwz2WzV6XrCl
     name: Heal 6
     type: spell
-    img: systems/uesrpg-3ev4/spell-compendium/restoration_spellbook.webp
+    img: systems/uesrpg-3ev4/images/spell-compendium/restoration_spellbook.webp
     effects: []
     folder: null
     sort: 0

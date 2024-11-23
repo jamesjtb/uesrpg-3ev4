@@ -9,7 +9,7 @@ items:
     flags:
       core:
         sourceId: Item.EEQo4cu5BFNVNsgE
-    img: systems/uesrpg-3ev4/item-compendium/item_tokens/pickaxe.webp
+    img: systems/uesrpg-3ev4/images/item-compendium/item_tokens/pickaxe.webp
     effects: []
     folder: null
     _stats:
@@ -120,7 +120,7 @@ items:
     flags:
       core:
         sourceId: Item.1F7yBGksEz9zoPVU
-    img: systems/uesrpg-3ev4/item-compendium/item_tokens/manacles.webp
+    img: systems/uesrpg-3ev4/images/item-compendium/item_tokens/manacles.webp
     effects: []
     folder: null
     _stats:

@@ -855,7 +855,7 @@ items:
     flags:
       core:
         sourceId: Item.kvW5ifNkSp73Lor0
-    img: systems/uesrpg-3ev4/item-compendium/item_tokens/carapace.png
+    img: systems/uesrpg-3ev4/images/item-compendium/item_tokens/carapace.png
     effects: []
     folder: null
     _stats:
@@ -1079,7 +1079,7 @@ items:
   - _id: xTctweXqHprvmN0Q
     name: Gnashing Beak
     type: weapon
-    img: systems/dnd5e/icons/skills/red_29.jpg
+    img: systems/uesrpg-3ev4/images/Icons/bite.webp
     effects: []
     folder: null
     sort: 0
@@ -1089,10 +1089,10 @@ items:
       duplicateSource: null
       coreVersion: '12.331'
       systemId: uesrpg-3ev4
-      systemVersion: v1.0.0-RC.59
+      systemVersion: v1.0.0-RC.60
       createdTime: null
-      modifiedTime: null
-      lastModifiedBy: null
+      modifiedTime: 1732343073672
+      lastModifiedBy: 7bDMesNjX54nzN9S
     ownership:
       default: 0
       eeXhsDlbzUBZOXZT: 3
@@ -1155,7 +1155,7 @@ items:
       quantity: 1
       enc: 0
       totalENC: 0
-      reach: 2
+      reach: '2'
       damage: 1d8
       damage2: '0'
       damage3: 0
@@ -1178,6 +1178,7 @@ items:
         value: 0
         max: 0
         reduction: 1
+      equipped: false
     _key: '!actors.items!ska1GDQlJKnCn9TN.xTctweXqHprvmN0Q'
   - _id: BsxTtipbE9WdcrX2
     name: Clannfear Claws
@@ -1515,9 +1516,9 @@ _stats:
   duplicateSource: null
   coreVersion: '12.331'
   systemId: uesrpg-3ev4
-  systemVersion: v1.0.0-RC.59
+  systemVersion: v1.0.0-RC.60
   createdTime: 1732338803770
-  modifiedTime: 1732338847856
+  modifiedTime: 1732343080928
   lastModifiedBy: 7bDMesNjX54nzN9S
 ownership:
   default: 0
@@ -1603,7 +1604,7 @@ system:
 
     </ul>
   paperDoll: systems/uesrpg-3ev4/images/paperDoll_Male_Outline_White.png
-  soul_energy: 400
+  soul_energy: '400'
   journal: ''
   notes: ''
   threat: minorSolo
@@ -1982,6 +1983,7 @@ system:
       ar: 4
       magic_ar: '0'
       class: ''
+  equipped: true
 prototypeToken:
   flags:
     token-hud-wildcard:

@@ -490,7 +490,7 @@ items:
     flags:
       core:
         sourceId: Item.UuK7DCRPgd0L3QZB
-    img: systems/uesrpg-3ev4/item-compendium/item_tokens/carapace.png
+    img: systems/uesrpg-3ev4/images/item-compendium/item_tokens/carapace.png
     effects: []
     folder: null
     _stats:
@@ -611,7 +611,7 @@ items:
     flags:
       core:
         sourceId: Item.x0iqGHxN8sQuZOvs
-    img: systems/uesrpg-3ev4/item-compendium/item_tokens/meat.webp
+    img: systems/uesrpg-3ev4/images/item-compendium/item_tokens/meat.webp
     effects: []
     folder: null
     _stats:
@@ -724,7 +724,7 @@ items:
     flags:
       core:
         sourceId: Item.9HprpbkgIr54vcPt
-    img: systems/uesrpg-3ev4/item-compendium/item_tokens/ingredient.webp
+    img: systems/uesrpg-3ev4/images/item-compendium/item_tokens/ingredient.webp
     effects: []
     folder: null
     _stats:

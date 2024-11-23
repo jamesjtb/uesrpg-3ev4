@@ -817,7 +817,7 @@ items:
     flags:
       core:
         sourceId: Item.wQ6d02EVzI8HGMTM
-    img: systems/uesrpg-3ev4/item-compendium/item_tokens/ring.webp
+    img: systems/uesrpg-3ev4/images/item-compendium/item_tokens/ring.webp
     effects: []
     folder: null
     _stats:
@@ -928,7 +928,7 @@ items:
     flags:
       core:
         sourceId: Item.wQ6d02EVzI8HGMTM
-    img: systems/uesrpg-3ev4/item-compendium/item_tokens/ring.webp
+    img: systems/uesrpg-3ev4/images/item-compendium/item_tokens/ring.webp
     effects: []
     folder: null
     _stats:
@@ -1039,7 +1039,7 @@ items:
     flags:
       core:
         sourceId: Item.wQ6d02EVzI8HGMTM
-    img: systems/uesrpg-3ev4/item-compendium/item_tokens/ring.webp
+    img: systems/uesrpg-3ev4/images/item-compendium/item_tokens/ring.webp
     effects: []
     folder: null
     _stats:

@@ -936,7 +936,7 @@ items:
   - _id: 1HPWQLsG4XbM0JRR
     name: '[Fire] Cone 3'
     type: spell
-    img: systems/uesrpg-3ev4/spell-compendium/destruction_spellbook.webp
+    img: systems/uesrpg-3ev4/images/spell-compendium/destruction_spellbook.webp
     effects: []
     folder: null
     sort: 0

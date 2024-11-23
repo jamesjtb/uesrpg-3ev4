@@ -573,7 +573,7 @@ items:
     flags:
       core:
         sourceId: Item.UuK7DCRPgd0L3QZB
-    img: systems/uesrpg-3ev4/item-compendium/item_tokens/carapace.png
+    img: systems/uesrpg-3ev4/images/item-compendium/item_tokens/carapace.png
     effects: []
     folder: null
     _stats:

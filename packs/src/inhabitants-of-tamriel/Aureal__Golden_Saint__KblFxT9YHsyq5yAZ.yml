@@ -1009,7 +1009,7 @@ items:
   - _id: TDTbNPqzJHqSYWBk
     name: Burden 3
     type: spell
-    img: systems/uesrpg-3ev4/spell-compendium/alteration_spellbook.webp
+    img: systems/uesrpg-3ev4/images/spell-compendium/alteration_spellbook.webp
     effects: []
     folder: null
     sort: 0
@@ -1141,7 +1141,7 @@ items:
   - _id: iaFklMvmzaNuE5bx
     name: '[Shock] Shield 3'
     type: spell
-    img: systems/uesrpg-3ev4/spell-compendium/alteration_spellbook.webp
+    img: systems/uesrpg-3ev4/images/spell-compendium/alteration_spellbook.webp
     effects: []
     folder: null
     sort: 0
@@ -1279,7 +1279,7 @@ items:
   - _id: arqzaowaeqdKfJcD
     name: '[Frost] Shield 3'
     type: spell
-    img: systems/uesrpg-3ev4/spell-compendium/alteration_spellbook.webp
+    img: systems/uesrpg-3ev4/images/spell-compendium/alteration_spellbook.webp
     effects: []
     folder: null
     sort: 0
@@ -1417,7 +1417,7 @@ items:
   - _id: 4vMfjIlwuApqMCPp
     name: '[Fire] Shield 3'
     type: spell
-    img: systems/uesrpg-3ev4/spell-compendium/alteration_spellbook.webp
+    img: systems/uesrpg-3ev4/images/spell-compendium/alteration_spellbook.webp
     effects: []
     folder: null
     sort: 0
@@ -1555,7 +1555,7 @@ items:
   - _id: jNdlhTSkJvc8NWPq
     name: '[Fire] Armor 3'
     type: spell
-    img: systems/uesrpg-3ev4/spell-compendium/alteration_spellbook.webp
+    img: systems/uesrpg-3ev4/images/spell-compendium/alteration_spellbook.webp
     effects: []
     folder: null
     sort: 0
@@ -1687,7 +1687,7 @@ items:
   - _id: mGOZC0esJUzYw53G
     name: Armor 3
     type: spell
-    img: systems/uesrpg-3ev4/spell-compendium/alteration_spellbook.webp
+    img: systems/uesrpg-3ev4/images/spell-compendium/alteration_spellbook.webp
     effects: []
     folder: null
     sort: 0

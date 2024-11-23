@@ -1024,7 +1024,7 @@ items:
     flags:
       core:
         sourceId: Item.kvW5ifNkSp73Lor0
-    img: systems/uesrpg-3ev4/item-compendium/item_tokens/amulet.webp
+    img: systems/uesrpg-3ev4/images/item-compendium/item_tokens/amulet.webp
     effects: []
     folder: null
     _stats:

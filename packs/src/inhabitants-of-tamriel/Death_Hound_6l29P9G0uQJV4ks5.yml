@@ -849,7 +849,7 @@ items:
     flags:
       core:
         sourceId: Item.5u1148QtN654sdyv
-    img: systems/uesrpg-3ev4/item-compendium/item_tokens/meat.webp
+    img: systems/uesrpg-3ev4/images/item-compendium/item_tokens/meat.webp
     effects: []
     folder: null
     _stats:

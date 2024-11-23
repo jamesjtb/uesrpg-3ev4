@@ -335,7 +335,7 @@ items:
   - _id: I1z8QKOiuRV3QgX9
     name: Healing Touch 1
     type: spell
-    img: systems/uesrpg-3ev4/spell-compendium/restoration_spellbook.webp
+    img: systems/uesrpg-3ev4/images/spell-compendium/restoration_spellbook.webp
     effects: []
     folder: null
     sort: 0
@@ -463,7 +463,7 @@ items:
   - _id: huhAxwucvunwQQ7F
     name: Heal 2
     type: spell
-    img: systems/uesrpg-3ev4/spell-compendium/restoration_spellbook.webp
+    img: systems/uesrpg-3ev4/images/spell-compendium/restoration_spellbook.webp
     effects: []
     folder: null
     sort: 0

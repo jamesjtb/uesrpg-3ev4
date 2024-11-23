@@ -2362,7 +2362,7 @@ prototypeToken:
       min: 0
       max: 1
   texture:
-    src: systems/uesrpg-3ev4/creature-compendium/dremora_caitiff.webp
+    src: systems/uesrpg-3ev4/images/creature-compendium/dremora_caitiff.webp
     tint: '#ffffff'
     scaleX: 1
     scaleY: 1
