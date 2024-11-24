@@ -1630,8 +1630,10 @@ export class SimpleActorSheet extends ActorSheet {
       if (element.id === "magicSkill") {
         itemData = [
           {
-            name: element.id,
+            name: "Magic School Name",
             type: element.id,
+            img: 'systems/uesrpg-3ev4/images/spell-compendium/mysticism_spellbook.webp',
+            "system.governingCha": "Wp",
             "system.baseCha":
               this.actor.system.characteristics.int.total >=
               this.actor.system.characteristics.wp.total
