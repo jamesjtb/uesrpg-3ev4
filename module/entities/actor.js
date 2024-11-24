@@ -56,645 +56,645 @@ export class SimpleActor extends Actor {
    * Prepare Character type specific data
    */
   _prepareCharacterData(actorData) {
-    const data = actorData.system;
+    const actorSystemData = actorData.system;
 
     //Add bonuses from items to Characteristics
-    data.characteristics.str.total = data.characteristics.str.base + this._strBonusCalc(actorData);
-    data.characteristics.end.total = data.characteristics.end.base + this._endBonusCalc(actorData);
-    data.characteristics.agi.total = data.characteristics.agi.base + this._agiBonusCalc(actorData);
-    data.characteristics.int.total = data.characteristics.int.base + this._intBonusCalc(actorData);
-    data.characteristics.wp.total = data.characteristics.wp.base + this._wpBonusCalc(actorData);
-    data.characteristics.prc.total = data.characteristics.prc.base + this._prcBonusCalc(actorData);
-    data.characteristics.prs.total = data.characteristics.prs.base + this._prsBonusCalc(actorData);
-    data.characteristics.lck.total = data.characteristics.lck.base + this._lckBonusCalc(actorData);
+    actorSystemData.characteristics.str.total = actorSystemData.characteristics.str.base + this._strBonusCalc(actorData);
+    actorSystemData.characteristics.end.total = actorSystemData.characteristics.end.base + this._endBonusCalc(actorData);
+    actorSystemData.characteristics.agi.total = actorSystemData.characteristics.agi.base + this._agiBonusCalc(actorData);
+    actorSystemData.characteristics.int.total = actorSystemData.characteristics.int.base + this._intBonusCalc(actorData);
+    actorSystemData.characteristics.wp.total = actorSystemData.characteristics.wp.base + this._wpBonusCalc(actorData);
+    actorSystemData.characteristics.prc.total = actorSystemData.characteristics.prc.base + this._prcBonusCalc(actorData);
+    actorSystemData.characteristics.prs.total = actorSystemData.characteristics.prs.base + this._prsBonusCalc(actorData);
+    actorSystemData.characteristics.lck.total = actorSystemData.characteristics.lck.base + this._lckBonusCalc(actorData);
 
 
     //Characteristic Bonuses
-    var strBonus = Math.floor(data.characteristics.str.total / 10);
-    var endBonus = Math.floor(data.characteristics.end.total / 10);
-    var agiBonus = Math.floor(data.characteristics.agi.total / 10);
-    var intBonus = Math.floor(data.characteristics.int.total / 10);
-    var wpBonus = Math.floor(data.characteristics.wp.total / 10);
-    var prcBonus = Math.floor(data.characteristics.prc.total / 10);
-    var prsBonus = Math.floor(data.characteristics.prs.total / 10);
-    var lckBonus = Math.floor(data.characteristics.lck.total / 10);
+    var strBonus = Math.floor(actorSystemData.characteristics.str.total / 10);
+    var endBonus = Math.floor(actorSystemData.characteristics.end.total / 10);
+    var agiBonus = Math.floor(actorSystemData.characteristics.agi.total / 10);
+    var intBonus = Math.floor(actorSystemData.characteristics.int.total / 10);
+    var wpBonus = Math.floor(actorSystemData.characteristics.wp.total / 10);
+    var prcBonus = Math.floor(actorSystemData.characteristics.prc.total / 10);
+    var prsBonus = Math.floor(actorSystemData.characteristics.prs.total / 10);
+    var lckBonus = Math.floor(actorSystemData.characteristics.lck.total / 10);
 
   //Set Campaign Rank
-  if (data.xpTotal >= 5000) {
-    data.campaignRank = "Master"
-  } else if (data.xpTotal >= 4000) {
-    data.campaignRank = "Expert"
-  } else if (data.xpTotal >= 3000) {
-    data.campaignRank = "Adept"
-  } else if (data.xpTotal >= 2000) {
-    data.campaignRank = "Journeyman"
+  if (actorSystemData.xpTotal >= 5000) {
+    actorSystemData.campaignRank = "Master"
+  } else if (actorSystemData.xpTotal >= 4000) {
+    actorSystemData.campaignRank = "Expert"
+  } else if (actorSystemData.xpTotal >= 3000) {
+    actorSystemData.campaignRank = "Adept"
+  } else if (actorSystemData.xpTotal >= 2000) {
+    actorSystemData.campaignRank = "Journeyman"
   } else {
-    data.campaignRank = "Apprentice"
+    actorSystemData.campaignRank = "Apprentice"
   }
 
     //Talent/Power/Trait Resource Bonuses
-    data.hp.bonus = this._hpBonus(actorData);
-    data.magicka.bonus = this._mpBonus(actorData);
-    data.stamina.bonus = this._spBonus(actorData);
-    data.luck_points.bonus = this._lpBonus(actorData);
-    data.wound_threshold.bonus = this._wtBonus(actorData);
-    data.speed.bonus = this._speedBonus(actorData);
-    data.initiative.bonus = this._iniBonus(actorData);
+    actorSystemData.hp.bonus = this._hpBonus(actorData);
+    actorSystemData.magicka.bonus = this._mpBonus(actorData);
+    actorSystemData.stamina.bonus = this._spBonus(actorData);
+    actorSystemData.luck_points.bonus = this._lpBonus(actorData);
+    actorSystemData.wound_threshold.bonus = this._wtBonus(actorData);
+    actorSystemData.speed.bonus = this._speedBonus(actorData);
+    actorSystemData.initiative.bonus = this._iniBonus(actorData);
 
     //Talent/Power/Trait Resistance Bonuses
-    data.resistance.diseaseR = this._diseaseR(actorData);
-    data.resistance.fireR = this._fireR(actorData);
-    data.resistance.frostR = this._frostR(actorData);
-    data.resistance.shockR = this._shockR(actorData);
-    data.resistance.poisonR = this._poisonR(actorData);
-    data.resistance.magicR = this._magicR(actorData);
-    data.resistance.natToughness = this._natToughnessR(actorData);
-    data.resistance.silverR = this._silverR(actorData);
-    data.resistance.sunlightR = this._sunlightR(actorData);
+    actorSystemData.resistance.diseaseR = this._diseaseR(actorData);
+    actorSystemData.resistance.fireR = this._fireR(actorData);
+    actorSystemData.resistance.frostR = this._frostR(actorData);
+    actorSystemData.resistance.shockR = this._shockR(actorData);
+    actorSystemData.resistance.poisonR = this._poisonR(actorData);
+    actorSystemData.resistance.magicR = this._magicR(actorData);
+    actorSystemData.resistance.natToughness = this._natToughnessR(actorData);
+    actorSystemData.resistance.silverR = this._silverR(actorData);
+    actorSystemData.resistance.sunlightR = this._sunlightR(actorData);
 
     //Derived Calculations
     if (this._isMechanical(actorData) == true) {
-      data.wound_threshold.base = strBonus + (endBonus * 2);
+      actorSystemData.wound_threshold.base = strBonus + (endBonus * 2);
     } else {
-      data.wound_threshold.base = strBonus + endBonus + wpBonus + (data.wound_threshold.bonus);
+      actorSystemData.wound_threshold.base = strBonus + endBonus + wpBonus + (actorSystemData.wound_threshold.bonus);
     }
-    data.wound_threshold.value = data.wound_threshold.base;
-    data.wound_threshold.value = this._woundThresholdCalc(actorData);
+    actorSystemData.wound_threshold.value = actorSystemData.wound_threshold.base;
+    actorSystemData.wound_threshold.value = this._woundThresholdCalc(actorData);
 
-    data.speed.base = strBonus + (2 * agiBonus) + (data.speed.bonus);
-    data.speed.value = this._speedCalc(actorData);
-    data.speed.swimSpeed = parseFloat(this._swimCalc(actorData)) + parseFloat((data.speed.value/2).toFixed(0));
-    data.speed.flySpeed = this._flyCalc(actorData);
+    actorSystemData.speed.base = strBonus + (2 * agiBonus) + (actorSystemData.speed.bonus);
+    actorSystemData.speed.value = this._speedCalc(actorData);
+    actorSystemData.speed.swimSpeed = parseFloat(this._swimCalc(actorData)) + parseFloat((actorSystemData.speed.value/2).toFixed(0));
+    actorSystemData.speed.flySpeed = this._flyCalc(actorData);
 
-    data.initiative.base = agiBonus + intBonus + prcBonus + (data.initiative.bonus);
-    data.initiative.value = data.initiative.base;
-    data.initiative.value = this._iniCalc(actorData);
+    actorSystemData.initiative.base = agiBonus + intBonus + prcBonus + (actorSystemData.initiative.bonus);
+    actorSystemData.initiative.value = actorSystemData.initiative.base;
+    actorSystemData.initiative.value = this._iniCalc(actorData);
 
-    data.hp.base = Math.ceil(data.characteristics.end.total / 2);
-    data.hp.max = data.hp.base + data.hp.bonus;
+    actorSystemData.hp.base = Math.ceil(actorSystemData.characteristics.end.total / 2);
+    actorSystemData.hp.max = actorSystemData.hp.base + actorSystemData.hp.bonus;
 
-    data.magicka.max = data.characteristics.int.total + data.magicka.bonus + this._addIntToMP(actorData);
+    actorSystemData.magicka.max = actorSystemData.characteristics.int.total + actorSystemData.magicka.bonus + this._addIntToMP(actorData);
 
-    data.stamina.max = endBonus + data.stamina.bonus;
+    actorSystemData.stamina.max = endBonus + actorSystemData.stamina.bonus;
 
-    data.luck_points.max = lckBonus + data.luck_points.bonus;
+    actorSystemData.luck_points.max = lckBonus + actorSystemData.luck_points.bonus;
 
-    data.carry_rating.max = Math.floor((4 * strBonus) + (2 * endBonus)) + data.carry_rating.bonus;
-    data.carry_rating.current = (this._calculateENC(actorData) - this._armorWeight(actorData) - this._excludeENC(actorData)).toFixed(1);
+    actorSystemData.carry_rating.max = Math.floor((4 * strBonus) + (2 * endBonus)) + actorSystemData.carry_rating.bonus;
+    actorSystemData.carry_rating.current = (this._calculateENC(actorData) - this._armorWeight(actorData) - this._excludeENC(actorData)).toFixed(1);
 
     //Form Shift Calcs
     if (this._wereWolfForm(actorData) === true) {
-      data.resistance.silverR = data.resistance.silverR - 5;
-      data.resistance.diseaseR = data.resistance.diseaseR + 200;
-      data.hp.max = data.hp.max + 5;
-      data.stamina.max = data.stamina.max + 1;
-      data.speed.base = data.speed.base + 9;
-      data.speed.value = this._speedCalc(actorData);
-      data.speed.swimSpeed = (data.speed.value/2).toFixed(0);
-      data.resistance.natToughness = 5;
-      data.wound_threshold.value = data.wound_threshold.value + 5;
-      data.action_points.max = data.action_points.max - 1;
+      actorSystemData.resistance.silverR = actorSystemData.resistance.silverR - 5;
+      actorSystemData.resistance.diseaseR = actorSystemData.resistance.diseaseR + 200;
+      actorSystemData.hp.max = actorSystemData.hp.max + 5;
+      actorSystemData.stamina.max = actorSystemData.stamina.max + 1;
+      actorSystemData.speed.base = actorSystemData.speed.base + 9;
+      actorSystemData.speed.value = this._speedCalc(actorData);
+      actorSystemData.speed.swimSpeed = (actorSystemData.speed.value/2).toFixed(0);
+      actorSystemData.resistance.natToughness = 5;
+      actorSystemData.wound_threshold.value = actorSystemData.wound_threshold.value + 5;
+      actorSystemData.action_points.max = actorSystemData.action_points.max - 1;
       actorData.items.find(i => i.name === 'Survival').system.miscValue = 30;
       actorData.items.find(i => i.name === 'Navigate').system.miscValue = 30;
       actorData.items.find(i => i.name === 'Observe').system.miscValue = 30;
     } else if (this._wereBatForm(actorData) === true) {
-        data.resistance.silverR = data.resistance.silverR - 5;
-        data.resistance.diseaseR = data.resistance.diseaseR + 200;
-        data.hp.max = data.hp.max + 5;
-        data.stamina.max = data.stamina.max + 1;
-        data.speed.value = (this._speedCalc(actorData)/2).toFixed(0);
-        data.speed.flySpeed = data.speed.base + 9;
-        data.speed.swimSpeed = (data.speed.value/2).toFixed(0);
-        data.resistance.natToughness = 5;
-        data.wound_threshold.value = data.wound_threshold.value + 3;
-        data.action_points.max = data.action_points.max - 1;
+        actorSystemData.resistance.silverR = actorSystemData.resistance.silverR - 5;
+        actorSystemData.resistance.diseaseR = actorSystemData.resistance.diseaseR + 200;
+        actorSystemData.hp.max = actorSystemData.hp.max + 5;
+        actorSystemData.stamina.max = actorSystemData.stamina.max + 1;
+        actorSystemData.speed.value = (this._speedCalc(actorData)/2).toFixed(0);
+        actorSystemData.speed.flySpeed = actorSystemData.speed.base + 9;
+        actorSystemData.speed.swimSpeed = (actorSystemData.speed.value/2).toFixed(0);
+        actorSystemData.resistance.natToughness = 5;
+        actorSystemData.wound_threshold.value = actorSystemData.wound_threshold.value + 3;
+        actorSystemData.action_points.max = actorSystemData.action_points.max - 1;
         actorData.items.find(i => i.name === 'Survival').system.miscValue = 30;
       actorData.items.find(i => i.name === 'Navigate').system.miscValue = 30;
       actorData.items.find(i => i.name === 'Observe').system.miscValue = 30;
     } else if (this._wereBoarForm(actorData) === true) {
-        data.resistance.silverR = data.resistance.silverR - 5;
-        data.resistance.diseaseR = data.resistance.diseaseR + 200;
-        data.hp.max = data.hp.max + 5;
-        data.speed.base = data.speed.base + 9;
-        data.speed.value = this._speedCalc(actorData);
-        data.speed.swimSpeed = (data.speed.value/2).toFixed(0);
-        data.resistance.natToughness = 7;
-        data.wound_threshold.value = data.wound_threshold.value + 5;
-        data.action_points.max = data.action_points.max - 1;
+        actorSystemData.resistance.silverR = actorSystemData.resistance.silverR - 5;
+        actorSystemData.resistance.diseaseR = actorSystemData.resistance.diseaseR + 200;
+        actorSystemData.hp.max = actorSystemData.hp.max + 5;
+        actorSystemData.speed.base = actorSystemData.speed.base + 9;
+        actorSystemData.speed.value = this._speedCalc(actorData);
+        actorSystemData.speed.swimSpeed = (actorSystemData.speed.value/2).toFixed(0);
+        actorSystemData.resistance.natToughness = 7;
+        actorSystemData.wound_threshold.value = actorSystemData.wound_threshold.value + 5;
+        actorSystemData.action_points.max = actorSystemData.action_points.max - 1;
         actorData.items.find(i => i.name === 'Survival').system.miscValue = 30;
         actorData.items.find(i => i.name === 'Navigate').system.miscValue = 30;
         actorData.items.find(i => i.name === 'Observe').system.miscValue = 30;
     } else if (this._wereBearForm(actorData) === true) {
-        data.resistance.silverR = data.resistance.silverR - 5;
-        data.resistance.diseaseR = data.resistance.diseaseR + 200;
-        data.hp.max = data.hp.max + 10;
-        data.stamina.max = data.stamina.max + 1;
-        data.speed.base = data.speed.base + 5;
-        data.speed.value = this._speedCalc(actorData);
-        data.speed.swimSpeed = (data.speed.value/2).toFixed(0);
-        data.resistance.natToughness = 5;
-        data.wound_threshold.value = data.wound_threshold.value + 5;
-        data.action_points.max = data.action_points.max - 1;
+        actorSystemData.resistance.silverR = actorSystemData.resistance.silverR - 5;
+        actorSystemData.resistance.diseaseR = actorSystemData.resistance.diseaseR + 200;
+        actorSystemData.hp.max = actorSystemData.hp.max + 10;
+        actorSystemData.stamina.max = actorSystemData.stamina.max + 1;
+        actorSystemData.speed.base = actorSystemData.speed.base + 5;
+        actorSystemData.speed.value = this._speedCalc(actorData);
+        actorSystemData.speed.swimSpeed = (actorSystemData.speed.value/2).toFixed(0);
+        actorSystemData.resistance.natToughness = 5;
+        actorSystemData.wound_threshold.value = actorSystemData.wound_threshold.value + 5;
+        actorSystemData.action_points.max = actorSystemData.action_points.max - 1;
         actorData.items.find(i => i.name === 'Survival').system.miscValue = 30;
         actorData.items.find(i => i.name === 'Navigate').system.miscValue = 30;
         actorData.items.find(i => i.name === 'Observe').system.miscValue = 30;
     } else if (this._wereCrocodileForm(actorData) === true) {
-        data.resistance.silverR = data.resistance.silverR - 5;
-        data.resistance.diseaseR = data.resistance.diseaseR + 200;
-        data.hp.max = data.hp.max + 5;
-        data.stamina.max = data.stamina.max + 1;
-        data.speed.value = (this._addHalfSpeed(actorData)).toFixed(0);
-        data.speed.swimSpeed = parseFloat(this._speedCalc(actorData)) + 9;
-        data.resistance.natToughness = 5;
-        data.wound_threshold.value = data.wound_threshold.value + 5;
-        data.action_points.max = data.action_points.max - 1;
+        actorSystemData.resistance.silverR = actorSystemData.resistance.silverR - 5;
+        actorSystemData.resistance.diseaseR = actorSystemData.resistance.diseaseR + 200;
+        actorSystemData.hp.max = actorSystemData.hp.max + 5;
+        actorSystemData.stamina.max = actorSystemData.stamina.max + 1;
+        actorSystemData.speed.value = (this._addHalfSpeed(actorData)).toFixed(0);
+        actorSystemData.speed.swimSpeed = parseFloat(this._speedCalc(actorData)) + 9;
+        actorSystemData.resistance.natToughness = 5;
+        actorSystemData.wound_threshold.value = actorSystemData.wound_threshold.value + 5;
+        actorSystemData.action_points.max = actorSystemData.action_points.max - 1;
         actorData.items.find(i => i.name === 'Survival').system.miscValue = 30;
         actorData.items.find(i => i.name === 'Navigate').system.miscValue = 30;
         actorData.items.find(i => i.name === 'Observe').system.miscValue = 30;
     } else if (this._wereVultureForm(actorData) === true) {
-        data.resistance.silverR = data.resistance.silverR - 5;
-        data.resistance.diseaseR = data.resistance.diseaseR + 200;
-        data.hp.max = data.hp.max + 5;
-        data.stamina.max = data.stamina.max + 1;
-        data.speed.value = (this._speedCalc(actorData)/2).toFixed(0);
-        data.speed.flySpeed = data.speed.base + 9;
-        data.speed.swimSpeed = (data.speed.value/2).toFixed(0);
-        data.resistance.natToughness = 5;
-        data.wound_threshold.value = data.wound_threshold.value + 3;
-        data.action_points.max = data.action_points.max - 1;
+        actorSystemData.resistance.silverR = actorSystemData.resistance.silverR - 5;
+        actorSystemData.resistance.diseaseR = actorSystemData.resistance.diseaseR + 200;
+        actorSystemData.hp.max = actorSystemData.hp.max + 5;
+        actorSystemData.stamina.max = actorSystemData.stamina.max + 1;
+        actorSystemData.speed.value = (this._speedCalc(actorData)/2).toFixed(0);
+        actorSystemData.speed.flySpeed = actorSystemData.speed.base + 9;
+        actorSystemData.speed.swimSpeed = (actorSystemData.speed.value/2).toFixed(0);
+        actorSystemData.resistance.natToughness = 5;
+        actorSystemData.wound_threshold.value = actorSystemData.wound_threshold.value + 3;
+        actorSystemData.action_points.max = actorSystemData.action_points.max - 1;
         actorData.items.find(i => i.name === 'Survival').system.miscValue = 30;
         actorData.items.find(i => i.name === 'Navigate').system.miscValue = 30;
         actorData.items.find(i => i.name === 'Observe').system.miscValue = 30;
     } else if (this._vampireLordForm(actorData) === true) {
-        data.resistance.fireR = data.resistance.fireR - 1;
-        data.resistance.sunlightR = data.resistance.sunlightR - 1;
-        data.speed.flySpeed = 5;
-        data.hp.max = data.hp.max + 5;
-        data.magicka.max = data.magicka.max + 25;
-        data.resistance.natToughness = 3;
+        actorSystemData.resistance.fireR = actorSystemData.resistance.fireR - 1;
+        actorSystemData.resistance.sunlightR = actorSystemData.resistance.sunlightR - 1;
+        actorSystemData.speed.flySpeed = 5;
+        actorSystemData.hp.max = actorSystemData.hp.max + 5;
+        actorSystemData.magicka.max = actorSystemData.magicka.max + 25;
+        actorSystemData.resistance.natToughness = 3;
     }
 
     //Speed Recalculation
-    data.speed.value = this._addHalfSpeed(actorData);
+    actorSystemData.speed.value = this._addHalfSpeed(actorData);
 
     //ENC Burden Calculations
     if (game.settings.get('uesrpg-3ev4', 'pcENCPenalty')) {
-      if (data.carry_rating.current > data.carry_rating.max * 3) {
-        data.carry_rating.label = 'Crushing'
-        data.carry_rating.penalty = -40
-        data.speed.value = 0;
-        data.stamina.max = data.stamina.max - 5;
-      } else if (data.carry_rating.current > data.carry_rating.max * 2) {
-        data.carry_rating.label = 'Severe'
-        data.carry_rating.penalty = -20
-        data.speed.value = Math.floor(data.speed.base / 2);
-        data.stamina.max = data.stamina.max - 3;
-      } else if (data.carry_rating.current > data.carry_rating.max) {
-        data.carry_rating.label = 'Moderate'
-        data.carry_rating.penalty = -10
-        data.speed.value = data.speed.value - 1;
-        data.stamina.max = data.stamina.max - 1;
-      } else if (data.carry_rating.current <= data.carry_rating.max) {
-        data.carry_rating.label = "Minimal"
-        data.carry_rating.penalty = 0
+      if (actorSystemData.carry_rating.current > actorSystemData.carry_rating.max * 3) {
+        actorSystemData.carry_rating.label = 'Crushing'
+        actorSystemData.carry_rating.penalty = -40
+        actorSystemData.speed.value = 0;
+        actorSystemData.stamina.max = actorSystemData.stamina.max - 5;
+      } else if (actorSystemData.carry_rating.current > actorSystemData.carry_rating.max * 2) {
+        actorSystemData.carry_rating.label = 'Severe'
+        actorSystemData.carry_rating.penalty = -20
+        actorSystemData.speed.value = Math.floor(actorSystemData.speed.base / 2);
+        actorSystemData.stamina.max = actorSystemData.stamina.max - 3;
+      } else if (actorSystemData.carry_rating.current > actorSystemData.carry_rating.max) {
+        actorSystemData.carry_rating.label = 'Moderate'
+        actorSystemData.carry_rating.penalty = -10
+        actorSystemData.speed.value = actorSystemData.speed.value - 1;
+        actorSystemData.stamina.max = actorSystemData.stamina.max - 1;
+      } else if (actorSystemData.carry_rating.current <= actorSystemData.carry_rating.max) {
+        actorSystemData.carry_rating.label = "Minimal"
+        actorSystemData.carry_rating.penalty = 0
       }
     }
 
     //Armor Weight Class Calculations
-    if (data.armor_class == "super_heavy") {
-      data.speed.value = data.speed.value - 3;
-      data.speed.swimSpeed = data.speed.swimSpeed - 3;
-    } else if (data.armor_class == "heavy") {
-      data.speed.value = data.speed.value - 2;
-      data.speed.swimSpeed = data.speed.swimSpeed - 2;
-    } else if (data.armor_class == "medium") {
-      data.speed.value = data.speed.value - 1;
-      data.speed.swimSpeed = data.speed.swimSpeed - 1;
+    if (actorSystemData.armor_class == "super_heavy") {
+      actorSystemData.speed.value = actorSystemData.speed.value - 3;
+      actorSystemData.speed.swimSpeed = actorSystemData.speed.swimSpeed - 3;
+    } else if (actorSystemData.armor_class == "heavy") {
+      actorSystemData.speed.value = actorSystemData.speed.value - 2;
+      actorSystemData.speed.swimSpeed = actorSystemData.speed.swimSpeed - 2;
+    } else if (actorSystemData.armor_class == "medium") {
+      actorSystemData.speed.value = actorSystemData.speed.value - 1;
+      actorSystemData.speed.swimSpeed = actorSystemData.speed.swimSpeed - 1;
     } else {
-      data.speed.value = data.speed.value;
-      data.speed.swimSpeed = data.speed.swimSpeed;
+      actorSystemData.speed.value = actorSystemData.speed.value;
+      actorSystemData.speed.swimSpeed = actorSystemData.speed.swimSpeed;
     }
 
     //Wounded Penalties
-    if (data.wounded == true) {
+    if (actorSystemData.wounded == true) {
       let woundPen = 0
       let woundIni = -2;
       this._painIntolerant(actorData) ? woundPen = -30 : woundPen = -20
 
       if (this._halfWoundPenalty(actorData) === true) {
-        data.woundPenalty = woundPen / 2
-        data.initiative.value = data.initiative.base + (woundIni / 2);
+        actorSystemData.woundPenalty = woundPen / 2
+        actorSystemData.initiative.value = actorSystemData.initiative.base + (woundIni / 2);
 
       } else if (this._halfWoundPenalty(actorData) === false) {
-        data.initiative.value = data.initiative.base + woundIni;
-        data.woundPenalty = woundPen;
+        actorSystemData.initiative.value = actorSystemData.initiative.base + woundIni;
+        actorSystemData.woundPenalty = woundPen;
       }
     }
 
     //Fatigue Penalties
-    data.fatigue.level = data.stamina.value <= 0 ? ((data.stamina.value -1) * -1) + data.fatigue.bonus : 0 + data.fatigue.bonus
+    actorSystemData.fatigue.level = actorSystemData.stamina.value <= 0 ? ((actorSystemData.stamina.value -1) * -1) + actorSystemData.fatigue.bonus : 0 + actorSystemData.fatigue.bonus
 
-    switch (data.fatigue.level > 0) {
+    switch (actorSystemData.fatigue.level > 0) {
       case true:
-        data.fatigue.penalty = this._calcFatiguePenalty(actorData)
+        actorSystemData.fatigue.penalty = this._calcFatiguePenalty(actorData)
         break
 
       case false:
-        data.fatigue.level = 0
-        data.fatigue.penalty = 0
+        actorSystemData.fatigue.level = 0
+        actorSystemData.fatigue.penalty = 0
         break
     }
 
   }
 
   async _prepareNPCData(actorData) {
-    const data = actorData.system;
+    const actorSystemData = actorData.system;
 
     //Add bonuses from items to Characteristics
-    data.characteristics.str.total = data.characteristics.str.base + this._strBonusCalc(actorData);
-    data.characteristics.end.total = data.characteristics.end.base + this._endBonusCalc(actorData);
-    data.characteristics.agi.total = data.characteristics.agi.base + this._agiBonusCalc(actorData);
-    data.characteristics.int.total = data.characteristics.int.base + this._intBonusCalc(actorData);
-    data.characteristics.wp.total = data.characteristics.wp.base + this._wpBonusCalc(actorData);
-    data.characteristics.prc.total = data.characteristics.prc.base + this._prcBonusCalc(actorData);
-    data.characteristics.prs.total = data.characteristics.prs.base + this._prsBonusCalc(actorData);
-    data.characteristics.lck.total = data.characteristics.lck.base + this._lckBonusCalc(actorData);
+    actorSystemData.characteristics.str.total = actorSystemData.characteristics.str.base + this._strBonusCalc(actorData);
+    actorSystemData.characteristics.end.total = actorSystemData.characteristics.end.base + this._endBonusCalc(actorData);
+    actorSystemData.characteristics.agi.total = actorSystemData.characteristics.agi.base + this._agiBonusCalc(actorData);
+    actorSystemData.characteristics.int.total = actorSystemData.characteristics.int.base + this._intBonusCalc(actorData);
+    actorSystemData.characteristics.wp.total = actorSystemData.characteristics.wp.base + this._wpBonusCalc(actorData);
+    actorSystemData.characteristics.prc.total = actorSystemData.characteristics.prc.base + this._prcBonusCalc(actorData);
+    actorSystemData.characteristics.prs.total = actorSystemData.characteristics.prs.base + this._prsBonusCalc(actorData);
+    actorSystemData.characteristics.lck.total = actorSystemData.characteristics.lck.base + this._lckBonusCalc(actorData);
 
 
     //Characteristic Bonuses
-    var strBonus = Math.floor(data.characteristics.str.total / 10);
-    var endBonus = Math.floor(data.characteristics.end.total / 10);
-    var agiBonus = Math.floor(data.characteristics.agi.total / 10);
-    var intBonus = Math.floor(data.characteristics.int.total / 10);
-    var wpBonus = Math.floor(data.characteristics.wp.total / 10);
-    var prcBonus = Math.floor(data.characteristics.prc.total / 10);
-    var prsBonus = Math.floor(data.characteristics.prs.total / 10);
-    var lckBonus = Math.floor(data.characteristics.lck.total / 10);
+    var strBonus = Math.floor(actorSystemData.characteristics.str.total / 10);
+    var endBonus = Math.floor(actorSystemData.characteristics.end.total / 10);
+    var agiBonus = Math.floor(actorSystemData.characteristics.agi.total / 10);
+    var intBonus = Math.floor(actorSystemData.characteristics.int.total / 10);
+    var wpBonus = Math.floor(actorSystemData.characteristics.wp.total / 10);
+    var prcBonus = Math.floor(actorSystemData.characteristics.prc.total / 10);
+    var prsBonus = Math.floor(actorSystemData.characteristics.prs.total / 10);
+    var lckBonus = Math.floor(actorSystemData.characteristics.lck.total / 10);
 
     //Talent/Power/Trait Bonuses
-    data.hp.bonus = this._hpBonus(actorData);
-    data.magicka.bonus = this._mpBonus(actorData);
-    data.stamina.bonus = this._spBonus(actorData);
-    data.luck_points.bonus = this._lpBonus(actorData);
-    data.wound_threshold.bonus = this._wtBonus(actorData);
-    data.speed.bonus = this._speedBonus(actorData);
-    data.initiative.bonus = this._iniBonus(actorData);
+    actorSystemData.hp.bonus = this._hpBonus(actorData);
+    actorSystemData.magicka.bonus = this._mpBonus(actorData);
+    actorSystemData.stamina.bonus = this._spBonus(actorData);
+    actorSystemData.luck_points.bonus = this._lpBonus(actorData);
+    actorSystemData.wound_threshold.bonus = this._wtBonus(actorData);
+    actorSystemData.speed.bonus = this._speedBonus(actorData);
+    actorSystemData.initiative.bonus = this._iniBonus(actorData);
 
     //Talent/Power/Trait Resistance Bonuses
-    data.resistance.diseaseR = this._diseaseR(actorData);
-    data.resistance.fireR = this._fireR(actorData);
-    data.resistance.frostR = this._frostR(actorData);
-    data.resistance.shockR = this._shockR(actorData);
-    data.resistance.poisonR = this._poisonR(actorData);
-    data.resistance.magicR = this._magicR(actorData);
-    data.resistance.natToughness = this._natToughnessR(actorData);
-    data.resistance.silverR = this._silverR(actorData);
-    data.resistance.sunlightR = this._sunlightR(actorData);
+    actorSystemData.resistance.diseaseR = this._diseaseR(actorData);
+    actorSystemData.resistance.fireR = this._fireR(actorData);
+    actorSystemData.resistance.frostR = this._frostR(actorData);
+    actorSystemData.resistance.shockR = this._shockR(actorData);
+    actorSystemData.resistance.poisonR = this._poisonR(actorData);
+    actorSystemData.resistance.magicR = this._magicR(actorData);
+    actorSystemData.resistance.natToughness = this._natToughnessR(actorData);
+    actorSystemData.resistance.silverR = this._silverR(actorData);
+    actorSystemData.resistance.sunlightR = this._sunlightR(actorData);
 
     //Derived Calculations
     if (this._isMechanical(actorData) == true) {
-      data.wound_threshold.base = strBonus + (endBonus * 2);
+      actorSystemData.wound_threshold.base = strBonus + (endBonus * 2);
     } else {
-      data.wound_threshold.base = strBonus + endBonus + wpBonus + (data.wound_threshold.bonus);
+      actorSystemData.wound_threshold.base = strBonus + endBonus + wpBonus + (actorSystemData.wound_threshold.bonus);
     }
-    data.wound_threshold.value = data.wound_threshold.base;
-    data.wound_threshold.value = this._woundThresholdCalc(actorData);
+    actorSystemData.wound_threshold.value = actorSystemData.wound_threshold.base;
+    actorSystemData.wound_threshold.value = this._woundThresholdCalc(actorData);
 
     if (this._dwemerSphere(actorData) == true) {
-      data.speed.base = 16;
-      data.professions.evade = 70;
+      actorSystemData.speed.base = 16;
+      actorSystemData.professions.evade = 70;
     } else {
-        data.speed.base = strBonus + (2 * agiBonus) + (data.speed.bonus);
+        actorSystemData.speed.base = strBonus + (2 * agiBonus) + (actorSystemData.speed.bonus);
     }
-    data.speed.value = this._speedCalc(actorData);
-    data.speed.swimSpeed = parseFloat(this._swimCalc(actorData)) + parseFloat((data.speed.value/2).toFixed(0));
-    data.speed.flySpeed = this._flyCalc(actorData);
+    actorSystemData.speed.value = this._speedCalc(actorData);
+    actorSystemData.speed.swimSpeed = parseFloat(this._swimCalc(actorData)) + parseFloat((actorSystemData.speed.value/2).toFixed(0));
+    actorSystemData.speed.flySpeed = this._flyCalc(actorData);
 
-    data.initiative.base = agiBonus + intBonus + prcBonus + (data.initiative.bonus);
-    data.initiative.value = data.initiative.base;
-    data.initiative.value = this._iniCalc(actorData);
+    actorSystemData.initiative.base = agiBonus + intBonus + prcBonus + (actorSystemData.initiative.bonus);
+    actorSystemData.initiative.value = actorSystemData.initiative.base;
+    actorSystemData.initiative.value = this._iniCalc(actorData);
 
-    data.hp.base = Math.ceil(data.characteristics.end.total / 2);
-    data.hp.max = data.hp.base + data.hp.bonus;
+    actorSystemData.hp.base = Math.ceil(actorSystemData.characteristics.end.total / 2);
+    actorSystemData.hp.max = actorSystemData.hp.base + actorSystemData.hp.bonus;
 
-    data.magicka.max = data.characteristics.int.total + data.magicka.bonus + this._addIntToMP(actorData);
+    actorSystemData.magicka.max = actorSystemData.characteristics.int.total + actorSystemData.magicka.bonus + this._addIntToMP(actorData);
 
-    data.stamina.max = endBonus + data.stamina.bonus;
+    actorSystemData.stamina.max = endBonus + actorSystemData.stamina.bonus;
 
-    data.luck_points.max = lckBonus + data.luck_points.bonus;
+    actorSystemData.luck_points.max = lckBonus + actorSystemData.luck_points.bonus;
 
-    data.carry_rating.max = Math.floor((4 * strBonus) + (2 * endBonus)) + data.carry_rating.bonus;
-    data.carry_rating.current = (this._calculateENC(actorData) - this._armorWeight(actorData) - this._excludeENC(actorData)).toFixed(1)
+    actorSystemData.carry_rating.max = Math.floor((4 * strBonus) + (2 * endBonus)) + actorSystemData.carry_rating.bonus;
+    actorSystemData.carry_rating.current = (this._calculateENC(actorData) - this._armorWeight(actorData) - this._excludeENC(actorData)).toFixed(1)
 
     //Form Shift Calcs
     if (this._wereWolfForm(actorData) === true) {
-      data.resistance.silverR = data.resistance.silverR - 5;
-      data.resistance.diseaseR = data.resistance.diseaseR + 200;
-      data.hp.max = data.hp.max + 5;
-      data.stamina.max = data.stamina.max + 1;
-      data.speed.base = data.speed.base + 9;
-      data.speed.value = this._speedCalc(actorData);
-      data.speed.swimSpeed = (data.speed.value/2).toFixed(0);
-      data.resistance.natToughness = 5;
-      data.wound_threshold.value = data.wound_threshold.value + 5;
-      data.action_points.max = data.action_points.max - 1;
+      actorSystemData.resistance.silverR = actorSystemData.resistance.silverR - 5;
+      actorSystemData.resistance.diseaseR = actorSystemData.resistance.diseaseR + 200;
+      actorSystemData.hp.max = actorSystemData.hp.max + 5;
+      actorSystemData.stamina.max = actorSystemData.stamina.max + 1;
+      actorSystemData.speed.base = actorSystemData.speed.base + 9;
+      actorSystemData.speed.value = this._speedCalc(actorData);
+      actorSystemData.speed.swimSpeed = (actorSystemData.speed.value/2).toFixed(0);
+      actorSystemData.resistance.natToughness = 5;
+      actorSystemData.wound_threshold.value = actorSystemData.wound_threshold.value + 5;
+      actorSystemData.action_points.max = actorSystemData.action_points.max - 1;
     } else if (this._wereBatForm(actorData) === true) {
-        data.resistance.silverR = data.resistance.silverR - 5;
-        data.resistance.diseaseR = data.resistance.diseaseR + 200;
-        data.hp.max = data.hp.max + 5;
-        data.stamina.max = data.stamina.max + 1;
-        data.speed.value = (this._speedCalc(actorData)/2).toFixed(0);
-        data.speed.flySpeed = data.speed.base + 9;
-        data.speed.swimSpeed = (data.speed.value/2).toFixed(0);
-        data.resistance.natToughness = 5;
-        data.wound_threshold.value = data.wound_threshold.value + 3;
-        data.action_points.max = data.action_points.max - 1;
+        actorSystemData.resistance.silverR = actorSystemData.resistance.silverR - 5;
+        actorSystemData.resistance.diseaseR = actorSystemData.resistance.diseaseR + 200;
+        actorSystemData.hp.max = actorSystemData.hp.max + 5;
+        actorSystemData.stamina.max = actorSystemData.stamina.max + 1;
+        actorSystemData.speed.value = (this._speedCalc(actorData)/2).toFixed(0);
+        actorSystemData.speed.flySpeed = actorSystemData.speed.base + 9;
+        actorSystemData.speed.swimSpeed = (actorSystemData.speed.value/2).toFixed(0);
+        actorSystemData.resistance.natToughness = 5;
+        actorSystemData.wound_threshold.value = actorSystemData.wound_threshold.value + 3;
+        actorSystemData.action_points.max = actorSystemData.action_points.max - 1;
     } else if (this._wereBoarForm(actorData) === true) {
-        data.resistance.silverR = data.resistance.silverR - 5;
-        data.resistance.diseaseR = data.resistance.diseaseR + 200;
-        data.hp.max = data.hp.max + 5;
-        data.speed.base = data.speed.base + 9;
-        data.speed.value = this._speedCalc(actorData);
-        data.speed.swimSpeed = (data.speed.value/2).toFixed(0);
-        data.resistance.natToughness = 7;
-        data.wound_threshold.value = data.wound_threshold.value + 5;
-        data.action_points.max = data.action_points.max - 1;
+        actorSystemData.resistance.silverR = actorSystemData.resistance.silverR - 5;
+        actorSystemData.resistance.diseaseR = actorSystemData.resistance.diseaseR + 200;
+        actorSystemData.hp.max = actorSystemData.hp.max + 5;
+        actorSystemData.speed.base = actorSystemData.speed.base + 9;
+        actorSystemData.speed.value = this._speedCalc(actorData);
+        actorSystemData.speed.swimSpeed = (actorSystemData.speed.value/2).toFixed(0);
+        actorSystemData.resistance.natToughness = 7;
+        actorSystemData.wound_threshold.value = actorSystemData.wound_threshold.value + 5;
+        actorSystemData.action_points.max = actorSystemData.action_points.max - 1;
     } else if (this._wereBearForm(actorData) === true) {
-        data.resistance.silverR = data.resistance.silverR - 5;
-        data.resistance.diseaseR = data.resistance.diseaseR + 200;
-        data.hp.max = data.hp.max + 10;
-        data.stamina.max = data.stamina.max + 1;
-        data.speed.base = data.speed.base + 5;
-        data.speed.value = this._speedCalc(actorData);
-        data.speed.swimSpeed = (data.speed.value/2).toFixed(0);
-        data.resistance.natToughness = 5;
-        data.wound_threshold.value = data.wound_threshold.value + 5;
-        data.action_points.max = data.action_points.max - 1;
+        actorSystemData.resistance.silverR = actorSystemData.resistance.silverR - 5;
+        actorSystemData.resistance.diseaseR = actorSystemData.resistance.diseaseR + 200;
+        actorSystemData.hp.max = actorSystemData.hp.max + 10;
+        actorSystemData.stamina.max = actorSystemData.stamina.max + 1;
+        actorSystemData.speed.base = actorSystemData.speed.base + 5;
+        actorSystemData.speed.value = this._speedCalc(actorData);
+        actorSystemData.speed.swimSpeed = (actorSystemData.speed.value/2).toFixed(0);
+        actorSystemData.resistance.natToughness = 5;
+        actorSystemData.wound_threshold.value = actorSystemData.wound_threshold.value + 5;
+        actorSystemData.action_points.max = actorSystemData.action_points.max - 1;
     } else if (this._wereCrocodileForm(actorData) === true) {
-        data.resistance.silverR = data.resistance.silverR - 5;
-        data.resistance.diseaseR = data.resistance.diseaseR + 200;
-        data.hp.max = data.hp.max + 5;
-        data.stamina.max = data.stamina.max + 1;
-        data.speed.value = (this._addHalfSpeed(actorData)).toFixed(0);
-        data.speed.swimSpeed = parseFloat(this._speedCalc(actorData)) + 9;
-        data.resistance.natToughness = 5;
-        data.wound_threshold.value = data.wound_threshold.value + 5;
-        data.action_points.max = data.action_points.max - 1;
+        actorSystemData.resistance.silverR = actorSystemData.resistance.silverR - 5;
+        actorSystemData.resistance.diseaseR = actorSystemData.resistance.diseaseR + 200;
+        actorSystemData.hp.max = actorSystemData.hp.max + 5;
+        actorSystemData.stamina.max = actorSystemData.stamina.max + 1;
+        actorSystemData.speed.value = (this._addHalfSpeed(actorData)).toFixed(0);
+        actorSystemData.speed.swimSpeed = parseFloat(this._speedCalc(actorData)) + 9;
+        actorSystemData.resistance.natToughness = 5;
+        actorSystemData.wound_threshold.value = actorSystemData.wound_threshold.value + 5;
+        actorSystemData.action_points.max = actorSystemData.action_points.max - 1;
 
     } else if (this._wereVultureForm(actorData) === true) {
-        data.resistance.silverR = data.resistance.silverR - 5;
-        data.resistance.diseaseR = data.resistance.diseaseR + 200;
-        data.hp.max = data.hp.max + 5;
-        data.stamina.max = data.stamina.max + 1;
-        data.speed.value = (this._speedCalc(actorData)/2).toFixed(0);
-        data.speed.flySpeed = data.speed.base + 9;
-        data.speed.swimSpeed = (data.speed.value/2).toFixed(0);
-        data.resistance.natToughness = 5;
-        data.wound_threshold.value = data.wound_threshold.value + 3;
-        data.action_points.max = data.action_points.max - 1;
+        actorSystemData.resistance.silverR = actorSystemData.resistance.silverR - 5;
+        actorSystemData.resistance.diseaseR = actorSystemData.resistance.diseaseR + 200;
+        actorSystemData.hp.max = actorSystemData.hp.max + 5;
+        actorSystemData.stamina.max = actorSystemData.stamina.max + 1;
+        actorSystemData.speed.value = (this._speedCalc(actorData)/2).toFixed(0);
+        actorSystemData.speed.flySpeed = actorSystemData.speed.base + 9;
+        actorSystemData.speed.swimSpeed = (actorSystemData.speed.value/2).toFixed(0);
+        actorSystemData.resistance.natToughness = 5;
+        actorSystemData.wound_threshold.value = actorSystemData.wound_threshold.value + 3;
+        actorSystemData.action_points.max = actorSystemData.action_points.max - 1;
     }else if (this._vampireLordForm(actorData) === true) {
-        data.resistance.fireR = data.resistance.fireR - 1;
-        data.resistance.sunlightR = data.resistance.sunlightR - 1;
-        data.speed.flySpeed = 5;
-        data.hp.max = data.hp.max + 5;
-        data.magicka.max = data.magicka.max + 25;
-        data.resistance.natToughness = 3;
+        actorSystemData.resistance.fireR = actorSystemData.resistance.fireR - 1;
+        actorSystemData.resistance.sunlightR = actorSystemData.resistance.sunlightR - 1;
+        actorSystemData.speed.flySpeed = 5;
+        actorSystemData.hp.max = actorSystemData.hp.max + 5;
+        actorSystemData.magicka.max = actorSystemData.magicka.max + 25;
+        actorSystemData.resistance.natToughness = 3;
     }
 
     //Speed Recalculation
-    data.speed.value = this._addHalfSpeed(actorData);
+    actorSystemData.speed.value = this._addHalfSpeed(actorData);
 
     //ENC Burden Calculations
     if (game.settings.get('uesrpg-3ev4', 'npcENCPenalty')) {
-      if (data.carry_rating.current > data.carry_rating.max * 3) {
-        data.carry_rating.label = 'Crushing'
-        data.carry_rating.penalty = -40
-        data.speed.value = 0;
-        data.stamina.max = data.stamina.max - 5;
-      } else if (data.carry_rating.current > data.carry_rating.max * 2) {
-        data.carry_rating.label = 'Severe'
-        data.carry_rating.penalty = -20
-        data.speed.value = Math.floor(data.speed.base / 2);
-        data.stamina.max = data.stamina.max - 3;
-      } else if (data.carry_rating.current > data.carry_rating.max) {
-        data.carry_rating.label = 'Moderate'
-        data.carry_rating.penalty = -10
-        data.speed.value = data.speed.value - 1;
-        data.stamina.max = data.stamina.max - 1;
-      } else if (data.carry_rating.current <= data.carry_rating.max) {
-        data.carry_rating.label = "Minimal"
-        data.carry_rating.penalty = 0
+      if (actorSystemData.carry_rating.current > actorSystemData.carry_rating.max * 3) {
+        actorSystemData.carry_rating.label = 'Crushing'
+        actorSystemData.carry_rating.penalty = -40
+        actorSystemData.speed.value = 0;
+        actorSystemData.stamina.max = actorSystemData.stamina.max - 5;
+      } else if (actorSystemData.carry_rating.current > actorSystemData.carry_rating.max * 2) {
+        actorSystemData.carry_rating.label = 'Severe'
+        actorSystemData.carry_rating.penalty = -20
+        actorSystemData.speed.value = Math.floor(actorSystemData.speed.base / 2);
+        actorSystemData.stamina.max = actorSystemData.stamina.max - 3;
+      } else if (actorSystemData.carry_rating.current > actorSystemData.carry_rating.max) {
+        actorSystemData.carry_rating.label = 'Moderate'
+        actorSystemData.carry_rating.penalty = -10
+        actorSystemData.speed.value = actorSystemData.speed.value - 1;
+        actorSystemData.stamina.max = actorSystemData.stamina.max - 1;
+      } else if (actorSystemData.carry_rating.current <= actorSystemData.carry_rating.max) {
+        actorSystemData.carry_rating.label = "Minimal"
+        actorSystemData.carry_rating.penalty = 0
       }
     }
 
     //Armor Weight Class Calculations
-    if (data.armor_class == "super_heavy") {
-      data.speed.value = data.speed.value - 3;
-      data.speed.swimSpeed = data.speed.swimSpeed - 3;
-    } else if (data.armor_class == "heavy") {
-      data.speed.value = data.speed.value - 2;
-      data.speed.swimSpeed = data.speed.swimSpeed - 2;
-    } else if (data.armor_class == "medium") {
-      data.speed.value = data.speed.value - 1;
-      data.speed.swimSpeed = data.speed.swimSpeed - 1;
+    if (actorSystemData.armor_class == "super_heavy") {
+      actorSystemData.speed.value = actorSystemData.speed.value - 3;
+      actorSystemData.speed.swimSpeed = actorSystemData.speed.swimSpeed - 3;
+    } else if (actorSystemData.armor_class == "heavy") {
+      actorSystemData.speed.value = actorSystemData.speed.value - 2;
+      actorSystemData.speed.swimSpeed = actorSystemData.speed.swimSpeed - 2;
+    } else if (actorSystemData.armor_class == "medium") {
+      actorSystemData.speed.value = actorSystemData.speed.value - 1;
+      actorSystemData.speed.swimSpeed = actorSystemData.speed.swimSpeed - 1;
     } else {
-      data.speed.value = data.speed.value;
-      data.speed.swimSpeed = data.speed.swimSpeed;
+      actorSystemData.speed.value = actorSystemData.speed.value;
+      actorSystemData.speed.swimSpeed = actorSystemData.speed.swimSpeed;
     }
 
 
     // Set Skill professions to regular professions (This is a fucking mess, but it's the way it's done for now...)
-    for (let prof in data.professions) {
+    for (let prof in actorSystemData.professions) {
       if (prof === 'profession1'||prof === 'profession2'||prof === 'profession3'||prof === 'commerce') {
-        data.professions[prof] === 0 ? data.professions[prof] = data.skills[prof].tn : data.professions[prof] = 0
+        actorSystemData.professions[prof] === 0 ? actorSystemData.professions[prof] = actorSystemData.skills[prof].tn : actorSystemData.professions[prof] = 0
       }
     }
 
 
     // Wound Penalties
-    if (data.wounded === true) {
+    if (actorSystemData.wounded === true) {
       let woundPen = 0
       let woundIni = -2;
       this._painIntolerant(actorData) ? woundPen = -30 : woundPen = -20
 
       if (this._halfWoundPenalty(actorData) === true) {
-        for (var skill in data.professionsWound) {
-          data.professionsWound[skill] = data.professions[skill] + (woundPen / 2);
+        for (var skill in actorSystemData.professionsWound) {
+          actorSystemData.professionsWound[skill] = actorSystemData.professions[skill] + (woundPen / 2);
         }
 
-        data.woundPenalty = woundPen / 2
-        data.initiative.value = data.initiative.base + (woundIni / 2);
+        actorSystemData.woundPenalty = woundPen / 2
+        actorSystemData.initiative.value = actorSystemData.initiative.base + (woundIni / 2);
 
       }
 
       else if (this._halfWoundPenalty(actorData) === false) {
-        for (var skill in data.professionsWound) {
-          data.professionsWound[skill] = data.professions[skill] + woundPen;
+        for (var skill in actorSystemData.professionsWound) {
+          actorSystemData.professionsWound[skill] = actorSystemData.professions[skill] + woundPen;
         }
 
-        data.initiative.value = data.initiative.base + woundIni;
-        data.woundPenalty = woundPen;
+        actorSystemData.initiative.value = actorSystemData.initiative.base + woundIni;
+        actorSystemData.woundPenalty = woundPen;
 
         }
       }
 
-      else if (data.wounded === false) {
-          for (var skill in data.professionsWound) {
-           data.professionsWound[skill] = data.professions[skill];
+      else if (actorSystemData.wounded === false) {
+          for (var skill in actorSystemData.professionsWound) {
+           actorSystemData.professionsWound[skill] = actorSystemData.professions[skill];
         }
       }
 
     //Fatigue Penalties
-    data.fatigue.level = data.stamina.value <= 0 ? ((data.stamina.value -1) * -1) + data.fatigue.bonus : 0 + data.fatigue.bonus
+    actorSystemData.fatigue.level = actorSystemData.stamina.value <= 0 ? ((actorSystemData.stamina.value -1) * -1) + actorSystemData.fatigue.bonus : 0 + actorSystemData.fatigue.bonus
 
-    switch (data.fatigue.level > 0) {
+    switch (actorSystemData.fatigue.level > 0) {
       case true:
-        data.fatigue.penalty = this._calcFatiguePenalty(actorData)
+        actorSystemData.fatigue.penalty = this._calcFatiguePenalty(actorData)
         break
 
       case false:
-        data.fatigue.level = 0
-        data.fatigue.penalty = 0
+        actorSystemData.fatigue.level = 0
+        actorSystemData.fatigue.penalty = 0
         break
     }
 
     // Set Lucky/Unlucky Numbers based on Threat Category
-    if (data.threat == "minorSolo") {
-      data.unlucky_numbers.ul1 = 95;
-      data.unlucky_numbers.ul2 = 96;
-      data.unlucky_numbers.ul3 = 97;
-      data.unlucky_numbers.ul4 = 98;
-      data.unlucky_numbers.ul5 = 99;
-      data.unlucky_numbers.ul6 = 100;
-      data.lucky_numbers.ln1 = 0;
-      data.lucky_numbers.ln2 = 0;
-      data.lucky_numbers.ln3 = 0;
-      data.lucky_numbers.ln4 = 0;
-      data.lucky_numbers.ln5 = 0;
-      data.lucky_numbers.ln6 = 0;
-      data.lucky_numbers.ln7 = 0;
-      data.lucky_numbers.ln8 = 0;
-      data.lucky_numbers.ln9 = 0;
-      data.lucky_numbers.ln10 = 0;
-    } else if (data.threat == "minorGroup") {
-      data.unlucky_numbers.ul1 = 0;
-      data.unlucky_numbers.ul2 = 96;
-      data.unlucky_numbers.ul3 = 97;
-      data.unlucky_numbers.ul4 = 98;
-      data.unlucky_numbers.ul5 = 99;
-      data.unlucky_numbers.ul6 = 100;
-      data.lucky_numbers.ln1 = 1;
-      data.lucky_numbers.ln2 = 0;
-      data.lucky_numbers.ln3 = 0;
-      data.lucky_numbers.ln4 = 0;
-      data.lucky_numbers.ln5 = 0;
-      data.lucky_numbers.ln6 = 0;
-      data.lucky_numbers.ln7 = 0;
-      data.lucky_numbers.ln8 = 0;
-      data.lucky_numbers.ln9 = 0;
-      data.lucky_numbers.ln10 = 0;
-    } else if (data.threat == "majorSolo") {
-      data.unlucky_numbers.ul1 = 0;
-      data.unlucky_numbers.ul2 = 0;
-      data.unlucky_numbers.ul3 = 97;
-      data.unlucky_numbers.ul4 = 98;
-      data.unlucky_numbers.ul5 = 99;
-      data.unlucky_numbers.ul6 = 100;
-      data.lucky_numbers.ln1 = 1;
-      data.lucky_numbers.ln2 = 2;
-      data.lucky_numbers.ln3 = 0;
-      data.lucky_numbers.ln4 = 0;
-      data.lucky_numbers.ln5 = 0;
-      data.lucky_numbers.ln6 = 0;
-      data.lucky_numbers.ln7 = 0;
-      data.lucky_numbers.ln8 = 0;
-      data.lucky_numbers.ln9 = 0;
-      data.lucky_numbers.ln10 = 0;
-    } else if (data.threat == "majorGroup") {
-      data.unlucky_numbers.ul1 = 0;
-      data.unlucky_numbers.ul2 = 0;
-      data.unlucky_numbers.ul3 = 0;
-      data.unlucky_numbers.ul4 = 98;
-      data.unlucky_numbers.ul5 = 99;
-      data.unlucky_numbers.ul6 = 100;
-      data.lucky_numbers.ln1 = 1;
-      data.lucky_numbers.ln2 = 2;
-      data.lucky_numbers.ln3 = 3;
-      data.lucky_numbers.ln4 = 0;
-      data.lucky_numbers.ln5 = 0;
-      data.lucky_numbers.ln6 = 0;
-      data.lucky_numbers.ln7 = 0;
-      data.lucky_numbers.ln8 = 0;
-      data.lucky_numbers.ln9 = 0;
-      data.lucky_numbers.ln10 = 0;
-    } else if (data.threat == "deadlySolo") {
-      data.unlucky_numbers.ul1 = 0;
-      data.unlucky_numbers.ul2 = 0;
-      data.unlucky_numbers.ul3 = 0;
-      data.unlucky_numbers.ul4 = 0;
-      data.unlucky_numbers.ul5 = 99;
-      data.unlucky_numbers.ul6 = 100;
-      data.lucky_numbers.ln1 = 1;
-      data.lucky_numbers.ln2 = 2;
-      data.lucky_numbers.ln3 = 3;
-      data.lucky_numbers.ln4 = 4;
-      data.lucky_numbers.ln5 = 0;
-      data.lucky_numbers.ln6 = 0;
-      data.lucky_numbers.ln7 = 0;
-      data.lucky_numbers.ln8 = 0;
-      data.lucky_numbers.ln9 = 0;
-      data.lucky_numbers.ln10 = 0;
-    } else if (data.threat == "deadlyGroup") {
-      data.unlucky_numbers.ul1 = 0;
-      data.unlucky_numbers.ul2 = 0;
-      data.unlucky_numbers.ul3 = 0;
-      data.unlucky_numbers.ul4 = 0;
-      data.unlucky_numbers.ul5 = 0;
-      data.unlucky_numbers.ul6 = 100;
-      data.lucky_numbers.ln1 = 1;
-      data.lucky_numbers.ln2 = 2;
-      data.lucky_numbers.ln3 = 3;
-      data.lucky_numbers.ln4 = 4;
-      data.lucky_numbers.ln5 = 5;
-      data.lucky_numbers.ln6 = 0;
-      data.lucky_numbers.ln7 = 0;
-      data.lucky_numbers.ln8 = 0;
-      data.lucky_numbers.ln9 = 0;
-      data.lucky_numbers.ln10 = 0;
-    } else if (data.threat == "legendarySolo") {
-      data.unlucky_numbers.ul1 = 0;
-      data.unlucky_numbers.ul2 = 0;
-      data.unlucky_numbers.ul3 = 0;
-      data.unlucky_numbers.ul4 = 0;
-      data.unlucky_numbers.ul5 = 0;
-      data.unlucky_numbers.ul6 = 0;
-      data.lucky_numbers.ln1 = 1;
-      data.lucky_numbers.ln2 = 2;
-      data.lucky_numbers.ln3 = 3;
-      data.lucky_numbers.ln4 = 4;
-      data.lucky_numbers.ln5 = 5;
-      data.lucky_numbers.ln6 = 6;
-      data.lucky_numbers.ln7 = 7;
-      data.lucky_numbers.ln8 = 8;
-      data.lucky_numbers.ln9 = 9;
-      data.lucky_numbers.ln10 = 10;
-    } else if (data.threat == "legendaryGroup") {
-      data.unlucky_numbers.ul1 = 0;
-      data.unlucky_numbers.ul2 = 0;
-      data.unlucky_numbers.ul3 = 0;
-      data.unlucky_numbers.ul4 = 0;
-      data.unlucky_numbers.ul5 = 0;
-      data.unlucky_numbers.ul6 = 0;
-      data.lucky_numbers.ln1 = 1;
-      data.lucky_numbers.ln2 = 2;
-      data.lucky_numbers.ln3 = 3;
-      data.lucky_numbers.ln4 = 4;
-      data.lucky_numbers.ln5 = 5;
-      data.lucky_numbers.ln6 = 6;
-      data.lucky_numbers.ln7 = 7;
-      data.lucky_numbers.ln8 = 8;
-      data.lucky_numbers.ln9 = 9;
-      data.lucky_numbers.ln10 = 10;
+    if (actorSystemData.threat == "minorSolo") {
+      actorSystemData.unlucky_numbers.ul1 = 95;
+      actorSystemData.unlucky_numbers.ul2 = 96;
+      actorSystemData.unlucky_numbers.ul3 = 97;
+      actorSystemData.unlucky_numbers.ul4 = 98;
+      actorSystemData.unlucky_numbers.ul5 = 99;
+      actorSystemData.unlucky_numbers.ul6 = 100;
+      actorSystemData.lucky_numbers.ln1 = 0;
+      actorSystemData.lucky_numbers.ln2 = 0;
+      actorSystemData.lucky_numbers.ln3 = 0;
+      actorSystemData.lucky_numbers.ln4 = 0;
+      actorSystemData.lucky_numbers.ln5 = 0;
+      actorSystemData.lucky_numbers.ln6 = 0;
+      actorSystemData.lucky_numbers.ln7 = 0;
+      actorSystemData.lucky_numbers.ln8 = 0;
+      actorSystemData.lucky_numbers.ln9 = 0;
+      actorSystemData.lucky_numbers.ln10 = 0;
+    } else if (actorSystemData.threat == "minorGroup") {
+      actorSystemData.unlucky_numbers.ul1 = 0;
+      actorSystemData.unlucky_numbers.ul2 = 96;
+      actorSystemData.unlucky_numbers.ul3 = 97;
+      actorSystemData.unlucky_numbers.ul4 = 98;
+      actorSystemData.unlucky_numbers.ul5 = 99;
+      actorSystemData.unlucky_numbers.ul6 = 100;
+      actorSystemData.lucky_numbers.ln1 = 1;
+      actorSystemData.lucky_numbers.ln2 = 0;
+      actorSystemData.lucky_numbers.ln3 = 0;
+      actorSystemData.lucky_numbers.ln4 = 0;
+      actorSystemData.lucky_numbers.ln5 = 0;
+      actorSystemData.lucky_numbers.ln6 = 0;
+      actorSystemData.lucky_numbers.ln7 = 0;
+      actorSystemData.lucky_numbers.ln8 = 0;
+      actorSystemData.lucky_numbers.ln9 = 0;
+      actorSystemData.lucky_numbers.ln10 = 0;
+    } else if (actorSystemData.threat == "majorSolo") {
+      actorSystemData.unlucky_numbers.ul1 = 0;
+      actorSystemData.unlucky_numbers.ul2 = 0;
+      actorSystemData.unlucky_numbers.ul3 = 97;
+      actorSystemData.unlucky_numbers.ul4 = 98;
+      actorSystemData.unlucky_numbers.ul5 = 99;
+      actorSystemData.unlucky_numbers.ul6 = 100;
+      actorSystemData.lucky_numbers.ln1 = 1;
+      actorSystemData.lucky_numbers.ln2 = 2;
+      actorSystemData.lucky_numbers.ln3 = 0;
+      actorSystemData.lucky_numbers.ln4 = 0;
+      actorSystemData.lucky_numbers.ln5 = 0;
+      actorSystemData.lucky_numbers.ln6 = 0;
+      actorSystemData.lucky_numbers.ln7 = 0;
+      actorSystemData.lucky_numbers.ln8 = 0;
+      actorSystemData.lucky_numbers.ln9 = 0;
+      actorSystemData.lucky_numbers.ln10 = 0;
+    } else if (actorSystemData.threat == "majorGroup") {
+      actorSystemData.unlucky_numbers.ul1 = 0;
+      actorSystemData.unlucky_numbers.ul2 = 0;
+      actorSystemData.unlucky_numbers.ul3 = 0;
+      actorSystemData.unlucky_numbers.ul4 = 98;
+      actorSystemData.unlucky_numbers.ul5 = 99;
+      actorSystemData.unlucky_numbers.ul6 = 100;
+      actorSystemData.lucky_numbers.ln1 = 1;
+      actorSystemData.lucky_numbers.ln2 = 2;
+      actorSystemData.lucky_numbers.ln3 = 3;
+      actorSystemData.lucky_numbers.ln4 = 0;
+      actorSystemData.lucky_numbers.ln5 = 0;
+      actorSystemData.lucky_numbers.ln6 = 0;
+      actorSystemData.lucky_numbers.ln7 = 0;
+      actorSystemData.lucky_numbers.ln8 = 0;
+      actorSystemData.lucky_numbers.ln9 = 0;
+      actorSystemData.lucky_numbers.ln10 = 0;
+    } else if (actorSystemData.threat == "deadlySolo") {
+      actorSystemData.unlucky_numbers.ul1 = 0;
+      actorSystemData.unlucky_numbers.ul2 = 0;
+      actorSystemData.unlucky_numbers.ul3 = 0;
+      actorSystemData.unlucky_numbers.ul4 = 0;
+      actorSystemData.unlucky_numbers.ul5 = 99;
+      actorSystemData.unlucky_numbers.ul6 = 100;
+      actorSystemData.lucky_numbers.ln1 = 1;
+      actorSystemData.lucky_numbers.ln2 = 2;
+      actorSystemData.lucky_numbers.ln3 = 3;
+      actorSystemData.lucky_numbers.ln4 = 4;
+      actorSystemData.lucky_numbers.ln5 = 0;
+      actorSystemData.lucky_numbers.ln6 = 0;
+      actorSystemData.lucky_numbers.ln7 = 0;
+      actorSystemData.lucky_numbers.ln8 = 0;
+      actorSystemData.lucky_numbers.ln9 = 0;
+      actorSystemData.lucky_numbers.ln10 = 0;
+    } else if (actorSystemData.threat == "deadlyGroup") {
+      actorSystemData.unlucky_numbers.ul1 = 0;
+      actorSystemData.unlucky_numbers.ul2 = 0;
+      actorSystemData.unlucky_numbers.ul3 = 0;
+      actorSystemData.unlucky_numbers.ul4 = 0;
+      actorSystemData.unlucky_numbers.ul5 = 0;
+      actorSystemData.unlucky_numbers.ul6 = 100;
+      actorSystemData.lucky_numbers.ln1 = 1;
+      actorSystemData.lucky_numbers.ln2 = 2;
+      actorSystemData.lucky_numbers.ln3 = 3;
+      actorSystemData.lucky_numbers.ln4 = 4;
+      actorSystemData.lucky_numbers.ln5 = 5;
+      actorSystemData.lucky_numbers.ln6 = 0;
+      actorSystemData.lucky_numbers.ln7 = 0;
+      actorSystemData.lucky_numbers.ln8 = 0;
+      actorSystemData.lucky_numbers.ln9 = 0;
+      actorSystemData.lucky_numbers.ln10 = 0;
+    } else if (actorSystemData.threat == "legendarySolo") {
+      actorSystemData.unlucky_numbers.ul1 = 0;
+      actorSystemData.unlucky_numbers.ul2 = 0;
+      actorSystemData.unlucky_numbers.ul3 = 0;
+      actorSystemData.unlucky_numbers.ul4 = 0;
+      actorSystemData.unlucky_numbers.ul5 = 0;
+      actorSystemData.unlucky_numbers.ul6 = 0;
+      actorSystemData.lucky_numbers.ln1 = 1;
+      actorSystemData.lucky_numbers.ln2 = 2;
+      actorSystemData.lucky_numbers.ln3 = 3;
+      actorSystemData.lucky_numbers.ln4 = 4;
+      actorSystemData.lucky_numbers.ln5 = 5;
+      actorSystemData.lucky_numbers.ln6 = 6;
+      actorSystemData.lucky_numbers.ln7 = 7;
+      actorSystemData.lucky_numbers.ln8 = 8;
+      actorSystemData.lucky_numbers.ln9 = 9;
+      actorSystemData.lucky_numbers.ln10 = 10;
+    } else if (actorSystemData.threat == "legendaryGroup") {
+      actorSystemData.unlucky_numbers.ul1 = 0;
+      actorSystemData.unlucky_numbers.ul2 = 0;
+      actorSystemData.unlucky_numbers.ul3 = 0;
+      actorSystemData.unlucky_numbers.ul4 = 0;
+      actorSystemData.unlucky_numbers.ul5 = 0;
+      actorSystemData.unlucky_numbers.ul6 = 0;
+      actorSystemData.lucky_numbers.ln1 = 1;
+      actorSystemData.lucky_numbers.ln2 = 2;
+      actorSystemData.lucky_numbers.ln3 = 3;
+      actorSystemData.lucky_numbers.ln4 = 4;
+      actorSystemData.lucky_numbers.ln5 = 5;
+      actorSystemData.lucky_numbers.ln6 = 6;
+      actorSystemData.lucky_numbers.ln7 = 7;
+      actorSystemData.lucky_numbers.ln8 = 8;
+      actorSystemData.lucky_numbers.ln9 = 9;
+      actorSystemData.lucky_numbers.ln10 = 10;
     }
 
     // Calculate Item Profession Modifiers

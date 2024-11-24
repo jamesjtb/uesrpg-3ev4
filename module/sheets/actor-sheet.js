@@ -295,7 +295,7 @@ export class SimpleActorSheet extends ActorSheet {
       const li = ev.currentTarget.closest(".item");
       const item = this.actor.items.get(li.dataset.itemId);
       item.sheet.render(true);
-      await item.update({ "data.value": item.system.value });
+      await item.update({ "system.value": item.system.value });
     });
 
     // Open Container of item
@@ -303,7 +303,7 @@ export class SimpleActorSheet extends ActorSheet {
       const li = ev.currentTarget.dataset.containerId;
       const item = this.actor.items.get(li);
       item.sheet.render(true);
-      await item.update({ "data.value": item.system.value });
+      await item.update({ "system.value": item.system.value });
     });
 
     // Delete Inventory Item
@@ -1543,7 +1543,7 @@ export class SimpleActorSheet extends ActorSheet {
     event.preventDefault();
     const element = event.currentTarget;
     let itemData = [
-      { name: element.id, type: element.id, "data.baseCha": "str" },
+      { name: element.id, type: element.id, "system.baseCha": "str" },
     ];
 
     if (element.id === "createSelect") {
@@ -1611,11 +1611,14 @@ export class SimpleActorSheet extends ActorSheet {
       d.render(true);
     } else {
       if (element.id === "combatStyle") {
+
         itemData = [
           {
-            name: element.id,
+            name: 'Combat Style Name',
             type: element.id,
-            "data.baseCha":
+            img: 'systems/uesrpg-3ev4/images/Icons/backToBack.webp',
+            "system.governingCha": "Str, Agi",
+            "system.baseCha":
               this.actor.system.characteristics.str.total >=
               this.actor.system.characteristics.agi.total
                 ? "str"
@@ -1629,7 +1632,7 @@ export class SimpleActorSheet extends ActorSheet {
           {
             name: element.id,
             type: element.id,
-            "data.baseCha":
+            "system.baseCha":
               this.actor.system.characteristics.int.total >=
               this.actor.system.characteristics.wp.total
                 ? "wp"

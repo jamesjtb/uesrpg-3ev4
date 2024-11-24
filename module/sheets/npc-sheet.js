@@ -318,7 +318,7 @@ export class npcSheet extends ActorSheet {
       const li = ev.currentTarget.dataset.containerId;
       const item = this.actor.items.get(li);
       item.sheet.render(true);
-      await item.update({ "data.value": item.system.value });
+      await item.update({ "system.value": item.system.value });
     });
 
     // Delete Inventory Item

@@ -27,7 +27,7 @@ command: |-
                       let maxAP = c.actor.system.action_points.max;
 
                       ap = maxAP;
-                      c.actor.update({"data.action_points.value" : ap});
+                      c.actor.update({"system.action_points.value" : ap});
                   }
                   ChatMessage.create({
                       user: game.user.id,

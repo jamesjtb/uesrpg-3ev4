@@ -29,12 +29,20 @@
                         </div>
                         <div class="item-resource">
                             <div class="stat-value-label">
+                                <input type="text" name="system.governingCha" value="{{item.system.governingCha}}">
+                            </div>
+                            <div class="flex-container">
+                                <div class="small-text-label">Governing Ch.</div>
+                            </div>
+                        </div>
+                        <div class="item-resource">
+                            <div class="stat-value-label">
                                 <select name="system.baseCha" data-type="String">
                                     {{selectOptions item.system.characteristics selected=item.system.baseCha localize=true}}
                                 </select>
                             </div>
                             <div class="flex-container">
-                                <div class="small-text-label">Characteristic</div>
+                                <div class="small-text-label">Selected Char.</div>
                             </div>
                         </div>
                     </div>
