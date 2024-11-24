@@ -2840,10 +2840,10 @@ export class SimpleActorSheet extends ActorSheet {
     // Rank Objects
     const ranks = {
       apprentice: { name: "Apprentice", xp: 1000 },
-      journeyman: { name: "Journeyman", xp: 2000 },
-      adept: { name: "Adept", xp: 3000 },
-      expert: { name: "Expert", xp: 4000 },
-      master: { name: "Master", xp: 5000 },
+      journeyman: { name: "Journeyman", xp: 2500 },
+      adept: { name: "Adept", xp: 4000 },
+      expert: { name: "Expert", xp: 5500 },
+      master: { name: "Master", xp: 7000 },
     };
 
     // Create Rank table rows
@@ -2887,14 +2887,14 @@ export class SimpleActorSheet extends ActorSheet {
 
                         <div style="display: flex; flex-direction: row; justify-content: space-around; align-items: center;">
                             <div style="width: 50%">
-                                <p>Depending on how much CrP or total XP your character has, they may only purchase Ranks appropriate to their Campaign Skill Experience.</p>
-                                <p>Increase your total XP or CrP to select higher Skill Ranks.</p>
+                                <p>Depending on how much total XP your character has, they may only purchase Ranks appropriate to their Campaign Skill Experience.</p>
+                                <p>Increase your total XP to select higher Skill Ranks.</p>
                             </div>
                             <div>
                                 <table style="text-align: center;">
                                     <tr>
                                         <th>Skill Rank</th>
-                                        <th>Total XP/CrP</th>
+                                        <th>Total XP</th>
                                     </tr>
                                     ${rankRows.join("")}
                                 </table>
