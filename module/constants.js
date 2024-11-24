@@ -15,3 +15,5 @@ UESRPG.languages = {
 	"taagra": "Ta'Agra",
 	"yoku": "Yoku"
 }
+
+export const systemRootPath = 'systems/uesrpg-3ev4/';

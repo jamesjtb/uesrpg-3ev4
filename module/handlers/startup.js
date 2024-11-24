@@ -1,11 +1,11 @@
-const systemModuleRootPath = 'systems/uesrpg-3ev4/';
+import { systemRootPath } from '../constants.js';
 
 export default async function startupHandler() {
   if (game.settings.get('uesrpg-3ev4', 'noStartUpDialog') === false) {
-    const changelogTemplatePath = `${systemModuleRootPath}/templates/partials/startup/changelog.html`;
+    const changelogTemplatePath = `${systemRootPath}/templates/partials/startup/changelog.html`;
     const changelogHtml = await renderTemplate(changelogTemplatePath);
 
-    const startupDialogTemplatePath = `${systemModuleRootPath}/templates/partials/startup/startup-dialog.html`;
+    const startupDialogTemplatePath = `${systemRootPath}/templates/partials/startup/startup-dialog.html`;
     const startupDialogHtml = await renderTemplate(startupDialogTemplatePath, {
       discordInviteUrl: "https://discord.gg/pBRJwy3Ec5",
       githubUrl: "https://github.com/jamesjtb/uesrpg-3ev4",

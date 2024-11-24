@@ -4,6 +4,9 @@
  */
 import { isLucky } from "../helpers/skillCalcHelper.js";
 import { isUnlucky } from "../helpers/skillCalcHelper.js";
+import chooseBirthsignPenalty from "../dialogs/choose-birthsign-penalty.js";
+import { characteristicAbbreviations } from "../maps/characteristics.js";
+import renderErrorDialog from '../dialogs/error-dialog.js';
 
 export class SimpleActorSheet extends ActorSheet {
   /** @override */
@@ -2487,7 +2490,7 @@ export class SimpleActorSheet extends ActorSheet {
         description: `The Apprentice’s Season is Sun’s Height. Those born under the sign of the apprentice have a special
                       affinity for magick of all kinds, but are more vulnerable to magick as well.`,
         traits: [
-          "Power Well (25)",
+          "Power Well (25) and Weakness (Magic, 2)",
           "Star-Cursed Apprentice: Gain Power Well (50) instead, and also gain Weakness(Magic, 3)",
         ],
         items: ["The Apprentice"],
@@ -2511,6 +2514,10 @@ export class SimpleActorSheet extends ActorSheet {
           "Spell Absorption (5)",
           "Stunted Magicka",
         ],
+        starCursedChoices: {
+          attributes: ["agility", "endurance"],
+          modifier: -5,
+        }
       },
       lady: {
         name: "Lady",
@@ -2546,6 +2553,10 @@ export class SimpleActorSheet extends ActorSheet {
         ],
         items: ["The Lover"],
         starCursed: ["The Star-Cursed Lover"],
+        starCursedChoices: {
+          attributes: [ "willpower", "strength"],
+          modifier: -5,
+        },
       },
       mage: {
         name: "Mage",
@@ -2559,6 +2570,10 @@ export class SimpleActorSheet extends ActorSheet {
         ],
         items: ["The Mage"],
         starCursed: ["The Star-Cursed Mage"],
+        starCursedChoices: {
+          attributes: ["perception", "strength", "personality"],
+          modifier: -5,
+        },
       },
       ritual: {
         name: "Ritual",
@@ -2578,24 +2593,20 @@ export class SimpleActorSheet extends ActorSheet {
           "Mara's Gift",
         ],
       },
-      // serpent: {
-      //   name: 'The Serpent',
-      //   img: `${imgPath}/sign-serpent.webp}`,
-      //   description: 'Placeholder Description',
-      //   traits: [
-
-      //   ]
-      // },
       shadow: {
         name: "Shadow",
         img: `${imgPath}/sign-shadow.webp`,
         description: `The Shadow’s Season is Second Seed. The Shadow grants those born under her sign the ability to hide in shadows.`,
         traits: [
-          "Moonshadow: See Powers section of Core Rulebook",
+          "Moonshadow Power: See Powers section of the Rules Compendium",
           "Star-Cursed Shadow: As Above, but also gain +5 Perception and -5 Personality OR Strength",
         ],
         items: ["The Shadow", "Moonshadow"],
         starCursed: ["The Star-Cursed Shadow", "Moonshadow"],
+        starCursedChoices: {
+          attributes: ["personality", "strength"],
+          modifier: -5,
+        },
       },
       steed: {
         name: "Steed",
@@ -2608,6 +2619,10 @@ export class SimpleActorSheet extends ActorSheet {
         ],
         items: ["The Steed"],
         starCursed: ["The Star-Cursed Steed"],
+        starCursedChoices: {
+          attributes: ["willpower", "perception"],
+          modifier: -5,
+        },
       },
       thief: {
         name: "Thief",
@@ -2632,12 +2647,16 @@ export class SimpleActorSheet extends ActorSheet {
         description: `The Tower is one of the Thief ’s Charges and its Season is Frostfall. Those born under the sign of the Tower have a knack for finding gold
                       and can open locks of all kinds.`,
         traits: [
-          "Treasure Seeker: See Powers section in the Core Rulebook",
+          "Treasure Seeker: See Powers section in the Rules Compendium",
           "+5 Perception",
           "Star-Cursed Tower: As above, but also gain +5 Agility and -5 Willpower OR Strength",
         ],
         items: ["The Tower", "Treasure Seeker"],
         starCursed: ["The Star-Cursed Tower", "Treasure Seeker"],
+        starCursedChoices: {
+          attributes: ["willpower", "strength"],
+          modifier: -5,
+        },
       },
       warrior: {
         name: "Warrior",
@@ -2666,42 +2685,38 @@ export class SimpleActorSheet extends ActorSheet {
         traitListItems.push(traitItem);
       }
 
-      const card = `<div style="display: flex; flex-direction: column; justify-content: flex-start; align-items: center; width: 49%; height: 510px; border: 1px solid; padding: 5px;">
-                        <div>
-                            <img src="${signObject.img}" alt="${
-        sign.name
-      }" width="175" height="175">
-                        </div>
-                        <h2 style="text-align: center;">${signObject.name}</h2>
-                        <div style="display: flex; flex-direction: row; justify-content: space-between; align-items: center; border-bottom: 1px solid; border-top: 1px solid; width: 100%;">
+      const card =
+        `<div style="display: flex; flex-direction: column; justify-content: flex-start; align-items: center; width: 49%; height: 510px; border: 1px solid; padding: 5px;">
+          <div>
+            <img src="${signObject.img}" alt="${sign.name}" width="175" height="175">
+          </div>
+          <h2 style="text-align: center;">${signObject.name}</h2>
+          <div style="display: flex; flex-direction: row; justify-content: space-between; align-items: center; border-bottom: 1px solid; border-top: 1px solid; width: 100%;">
+            <div style="display: flex; flex-direction: row; align-items: center;">
+              <input type="checkbox" id="${
+                signObject.name
+              }" class="signSelect">
+              <div>${signObject.name}</div>
+            </div>
 
-                              <div style="display: flex; flex-direction: row; align-items: center;">
-                                <input type="checkbox" id="${
-                                  signObject.name
-                                }" class="signSelect">
-                                <div>${signObject.name}</div>
-                              </div>
+            <div>OR</div>
 
-                              <div>OR</div>
-
-                              <div style="display: flex; flex-direction: row; align-items: center;">
-                                  <div>Star-Cursed</div>
-                                  <input type="checkbox" id="${
-                                    signObject.name
-                                  }" class="signSelect cursedSelect">
-                              </div>
-
-                        </div>
-                        <div style="padding: 10px 0 0 0;">
-                            ${signObject.description}
-                        </div>
-                        <div>
-                            <ul>
-                                ${traitListItems.join("")}
-                            </ul>
-                        </div>
-
-                    </div>`;
+            <div style="display: flex; flex-direction: row; align-items: center;">
+                <div>Star-Cursed</div>
+                <input type="checkbox" id="${
+                  signObject.name
+                }" class="signSelect cursedSelect">
+            </div>
+          </div>
+          <div style="padding: 10px 0 0 0;">
+              ${signObject.description}
+          </div>
+          <div>
+              <ul>
+                  ${traitListItems.join("")}
+              </ul>
+          </div>
+      </div>`;
 
       signCards.push(card);
     }
@@ -2710,7 +2725,6 @@ export class SimpleActorSheet extends ActorSheet {
       title: "Birthsign Menu",
       content: `<form style="padding: 10px 0;">
                     <div>
-
                         <div style="border: 1px solid; background: rgba(85, 85, 85, 0.40); font-style:italic; padding: 5px; text-align: center;">
                             Select a birthsign or roll to select using the rules from the Core Rulebook. Alternatively, you may enter in a custom birthsign label below:
                             <div>
@@ -2723,7 +2737,6 @@ export class SimpleActorSheet extends ActorSheet {
                                 ${signCards.join("")}
                             </div>
                         </div>
-
                     </div>
                 </form>`,
       buttons: {
@@ -2763,7 +2776,19 @@ export class SimpleActorSheet extends ActorSheet {
                 if (starCursedSelection.length > 0) {
                   for (let item of signObject.starCursed) {
                     let docItem = signCompendium.find((i) => i.name === item);
-                    Item.create(docItem.toObject(), { parent: this.actor });
+                    const newDocItem = docItem.toObject();
+                    if (signObject.starCursedChoices && docItem.name.includes('Star-Cursed')) {
+                      const penaltyAttribute = await chooseBirthsignPenalty(signObject.starCursedChoices.attributes, signObject.starCursedChoices.modifier);
+                      if (!penaltyAttribute) {
+                        renderErrorDialog(`Choosing a penalty is required for the ${signObject.name} birthsign. Please try again.`);
+                        this.actor.update({ "system.birthsign": "" });
+                        return;
+                      }
+                      const penalty = signObject.starCursedChoices.modifier;
+                      const chaAbbreviation = characteristicAbbreviations[penaltyAttribute];
+                      newDocItem.system.characteristicBonus[`${chaAbbreviation}ChaBonus`] = penalty;
+                    }
+                    Item.create(newDocItem, { parent: this.actor });
                   }
                 } else if (signSelection.length > 0) {
                   for (let item of signObject.items) {
