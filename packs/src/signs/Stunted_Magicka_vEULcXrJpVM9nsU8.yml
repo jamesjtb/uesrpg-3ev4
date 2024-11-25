@@ -2,8 +2,8 @@ name: Stunted Magicka
 type: trait
 img: systems/uesrpg-3ev4/images/Icons/stuntedMagicka.webp
 effects: []
-folder: null
-sort: 0
+folder: e14MqDrjYdgIqhgs
+sort: 101563
 flags:
   core:
     sourceId: Item.wtEFksGPcojtDLTj
@@ -13,8 +13,8 @@ _stats:
   systemId: uesrpg-3ev4
   systemVersion: v1.0.0-RC.58
   createdTime: null
-  modifiedTime: 1732328436548
-  lastModifiedBy: 7bDMesNjX54nzN9S
+  modifiedTime: 1732517147463
+  lastModifiedBy: HcIrULZhA1JFIlrf
   compendiumSource: null
   duplicateSource: null
 ownership:

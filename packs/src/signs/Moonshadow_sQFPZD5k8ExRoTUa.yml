@@ -2,8 +2,8 @@ name: Moonshadow
 type: power
 img: systems/uesrpg-3ev4/images/Icons/invisible.webp
 effects: []
-folder: null
-sort: 0
+folder: e14MqDrjYdgIqhgs
+sort: 112500
 flags:
   core:
     sourceId: Item.7PWqlj7CsH2BIbg8
@@ -13,8 +13,8 @@ _stats:
   systemId: uesrpg-3ev4
   systemVersion: v1.0.0-RC.58
   createdTime: null
-  modifiedTime: 1732328227825
-  lastModifiedBy: 7bDMesNjX54nzN9S
+  modifiedTime: 1732517144778
+  lastModifiedBy: HcIrULZhA1JFIlrf
   compendiumSource: null
   duplicateSource: null
 ownership:

@@ -3,8 +3,8 @@ name: Spell Absorption (5)
 type: trait
 img: systems/uesrpg-3ev4/images/Icons/manifoldEnchanter.webp
 effects: []
-folder: null
-sort: 0
+folder: e14MqDrjYdgIqhgs
+sort: 103125
 flags:
   core:
     sourceId: Item.wtEFksGPcojtDLTj
@@ -13,8 +13,8 @@ _stats:
   systemId: uesrpg-3ev4
   systemVersion: v1.0.0-RC.58
   createdTime: null
-  modifiedTime: 1732328409637
-  lastModifiedBy: 7bDMesNjX54nzN9S
+  modifiedTime: 1732517145923
+  lastModifiedBy: HcIrULZhA1JFIlrf
   compendiumSource: null
   duplicateSource: null
 ownership:
