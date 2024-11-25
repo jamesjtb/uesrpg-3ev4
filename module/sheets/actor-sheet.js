@@ -49,16 +49,13 @@ export class SimpleActorSheet extends ActorSheet {
 
   /** @override */
 
-  getData() {
+  async getData() {
     const data = super.getData();
     data.dtypes = ["String", "Number", "Boolean"];
     data.isGM = game.user.isGM;
     data.editable = data.options.editable;
-    const actorData = data.actor;
-    data.actor = actorData;
-    data.data = actorData.system;
-    let options = 0;
-    let user = this.user;
+
+    data.actor.system.enrichedBio = await TextEditor.enrichHTML(data.actor.system.bio, {async: true});
 
     // Prepare Items
     if (this.actor.type === 'Player Character') {

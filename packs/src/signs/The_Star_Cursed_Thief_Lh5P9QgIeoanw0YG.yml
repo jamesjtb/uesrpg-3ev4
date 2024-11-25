@@ -11,10 +11,10 @@ _id: Lh5P9QgIeoanw0YG
 _stats:
   coreVersion: '12.331'
   systemId: uesrpg-3ev4
-  systemVersion: v1.0.0-RC.58
+  systemVersion: v1.0.0-RC.61
   createdTime: null
-  modifiedTime: 1732331708513
-  lastModifiedBy: 7bDMesNjX54nzN9S
+  modifiedTime: 1732507238086
+  lastModifiedBy: GikQCnLAeu0WrzSO
   compendiumSource: null
   duplicateSource: null
 ownership:
@@ -77,9 +77,10 @@ system:
     under other signs.”</em></p><p><strong>Those born under the sign of the
     Star-Cursed Thief roll an extra lucky number that they never lose regardless
     of their Luck score.</strong></p><p><strong>Additionally, they replace their
-    rolled luck score with 50, gain the power, and gain the Running out of Luck
-    trait.</strong></p><p><strong>Characters cannot spend Luck to choose this
-    birth-sign. Instead, it is available as a choice for any character who
+    rolled luck score with 50, gain the power, and gain the
+    @UUID[Compendium.uesrpg-3ev4.signs.Item.X1zpVl4qbhqm7oNI]{Running out of
+    Luck} trait.</strong></p><p><strong>Characters cannot spend Luck to choose
+    this birth-sign. Instead, it is available as a choice for any character who
     naturally rolled the Thief sign.</strong></p>
   halfSpeed: false
   addHalfSpeed: false

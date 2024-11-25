@@ -11,10 +11,10 @@ _id: iMCvgBy07nmPh3ig
 _stats:
   coreVersion: '12.331'
   systemId: uesrpg-3ev4
-  systemVersion: v1.0.0-RC.58
+  systemVersion: v1.0.0-RC.61
   createdTime: null
-  modifiedTime: 1732332048314
-  lastModifiedBy: 7bDMesNjX54nzN9S
+  modifiedTime: 1732507255574
+  lastModifiedBy: GikQCnLAeu0WrzSO
   compendiumSource: null
   duplicateSource: null
 ownership:
@@ -72,10 +72,11 @@ system:
     <p><em>“The Tower is one of the Thief’s Charges and its Season is Frostfall.
     Those born under the sign of the Tower have a knack for finding gold and can
     open locks of all kinds.”</em></p><p><strong>Those born under the sign of
-    the Star-Cursed Tower gain the Treasure Seeker power. 5 Perception, and 5
-    Agility.</strong></p><p><span style="font-family: Signika,
-    sans-serif"><strong style="box-sizing: border-box; user-select: text;
-    scrollbar-width: thin; scrollbar-color: var(--color-scrollbar)
+    the Star-Cursed Tower gain the
+    @UUID[Compendium.uesrpg-3ev4.signs.Item.FnMPjs6a520OslVD]{Treasure Seeker}
+    power. 5 Perception, and 5 Agility.</strong></p><p><span style="font-family:
+    Signika, sans-serif"><strong style="box-sizing: border-box; user-select:
+    text; scrollbar-width: thin; scrollbar-color: var(--color-scrollbar)
     var(--color-scrollbar-track); color: rgb(25, 24, 19); font-family: Signika,
     sans-serif; font-size: 14px; font-style: normal; font-variant-ligatures:
     normal; font-variant-caps: normal; letter-spacing: normal; orphans: 2;

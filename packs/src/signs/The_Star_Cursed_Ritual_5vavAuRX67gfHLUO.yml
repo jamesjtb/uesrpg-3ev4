@@ -11,10 +11,10 @@ _id: 5vavAuRX67gfHLUO
 _stats:
   coreVersion: '12.331'
   systemId: uesrpg-3ev4
-  systemVersion: v1.0.0-RC.58
+  systemVersion: v1.0.0-RC.61
   createdTime: null
-  modifiedTime: 1732330612293
-  lastModifiedBy: 7bDMesNjX54nzN9S
+  modifiedTime: 1732507161724
+  lastModifiedBy: GikQCnLAeu0WrzSO
   compendiumSource: null
   duplicateSource: null
 ownership:
@@ -73,10 +73,11 @@ system:
     Star. Those born under this sign have a variety of abilities depending on
     the aspects of the moons and the Divines.”</em></p><p><strong>Those born
     under the sign of the Star-Cursed Ritual gain access to each of the
-    following powers permanently:</strong></p><ul><li><p><strong>Blessed
-    Touch</strong></p></li><li><p><strong>Blessed
-    Word</strong></p></li><li><p><strong>Mara’s
-    Gift</strong></p></li></ul><p><strong>Additionally, they lose 5
+    following powers
+    permanently:</strong></p><ul><li><p><strong>@UUID[Compendium.uesrpg-3ev4.signs.Item.eTR6ngEkDEcFU0TX]{Blessed
+    Touch}</strong></p></li><li><p><strong>@UUID[Compendium.uesrpg-3ev4.signs.Item.FW3thKNDdo8yA3KJ]{Blessed
+    Word}</strong></p></li><li><p><strong>@UUID[Compendium.uesrpg-3ev4.signs.Item.7nnrw6agzg2Lg0ZS]{Mara’s
+    Gift}</strong></p></li></ul><p><strong>Additionally, they lose 5
     luck.</strong></p>
   halfSpeed: false
   addHalfSpeed: false

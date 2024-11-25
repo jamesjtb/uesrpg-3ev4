@@ -11,10 +11,10 @@ _id: RBBHJh9SJ52T4FMh
 _stats:
   coreVersion: '12.331'
   systemId: uesrpg-3ev4
-  systemVersion: v1.0.0-RC.58
+  systemVersion: v1.0.0-RC.61
   createdTime: null
-  modifiedTime: 1732331803747
-  lastModifiedBy: 7bDMesNjX54nzN9S
+  modifiedTime: 1732507308768
+  lastModifiedBy: GikQCnLAeu0WrzSO
   compendiumSource: null
   duplicateSource: null
 ownership:
@@ -72,7 +72,9 @@ system:
     <p><em>“The Tower is one of the Thief’s Charges and its Season is Frostfall.
     Those born under the sign of the Tower have a knack for finding gold and can
     open locks of all kinds.”</em></p><p><strong>Those born under the sign of
-    the Tower gain the Treasure Seeker power and 5 Perception.</strong></p>
+    the Tower gain the
+    @UUID[Compendium.uesrpg-3ev4.signs.Item.FnMPjs6a520OslVD]{Treasure Seeker}
+    power and 5 Perception.</strong></p>
   halfSpeed: false
   addHalfSpeed: false
   halfFatiguePenalty: false

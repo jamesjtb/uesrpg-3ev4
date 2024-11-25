@@ -11,10 +11,10 @@ _id: hmwYTUgjaDAJzSMa
 _stats:
   coreVersion: '12.331'
   systemId: uesrpg-3ev4
-  systemVersion: v1.0.0-RC.58
+  systemVersion: v1.0.0-RC.61
   createdTime: null
-  modifiedTime: 1732328640945
-  lastModifiedBy: 7bDMesNjX54nzN9S
+  modifiedTime: 1732506911777
+  lastModifiedBy: GikQCnLAeu0WrzSO
   compendiumSource: null
   duplicateSource: null
 ownership:
@@ -73,8 +73,11 @@ system:
     Its season is Sun’s Dusk. Those born under this sign are natural sorcerers
     with deep reserves of magicka, but they cannot generate magicka of their
     own.”</em></p><p><strong>Those born under the sign of the Atronach gain the
-    Power Well (50) trait, the Spell Absorption (5) trait, and the Stunted
-    Magicka trait.</strong></p>
+    Power Well (50) trait, the
+    @UUID[Compendium.uesrpg-3ev4.signs.Item.nqRF8vGJTN12w4CO]{Spell Absorption
+    (5)} trait, and the
+    @UUID[Compendium.uesrpg-3ev4.signs.Item.vEULcXrJpVM9nsU8]{Stunted Magicka}
+    Stunted Magicka trait.</strong></p>
   halfSpeed: false
   addHalfSpeed: false
   halfFatiguePenalty: false

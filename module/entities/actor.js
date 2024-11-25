@@ -43,9 +43,9 @@ export class SimpleActor extends Actor {
     super.prepareData();
 
     const actorData = this;
-    const data = actorData.system;
+    const actorSystemData = actorData.system;
     const flags = actorData.flags;
-
+    
     // Make separate methods for each Actor type (character, npc, etc.) to keep
     // things organized.
     if (actorData.type === 'Player Character') this._prepareCharacterData(actorData);

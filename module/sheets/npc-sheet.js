@@ -41,19 +41,18 @@ export class npcSheet extends ActorSheet {
   /* -------------------------------------------- */
 
   /** @override */
-  getData() {
+  async getData() {
     const data = super.getData();
     data.dtypes = ["String", "Number", "Boolean"];
     data.isGM = game.user.isGM;
     data.editable = data.options.editable;
-    const actorData = data.data;
-    data.actor = actorData;
-    data.data = actorData.system;
 
     // Prepare Items
     if (this.actor.type === "NPC") {
       this._prepareCharacterItems(data);
     }
+
+    data.actor.system.enrichedBio = await TextEditor.enrichHTML(data.actor.system.bio, {async: true});
 
     return data;
   }

@@ -22,15 +22,14 @@ export class SimpleItemSheet extends ItemSheet {
       return `${path}/${this.item.type}-sheet.html`;
     }
 
-    getData() {
+    async getData() {
       const  data = super.getData();
       data.dtypes = ["String", "Number", "Boolean"];
       data.isGM = game.user.isGM;
       data.editable = data.options.editable;
-      const itemData = data.system;
-      data.actor = itemData;
-      data.data = itemData;
+      const itemData = data.item;
 
+      data.item.system.enrichedDescription = await TextEditor.enrichHTML(itemData.system.description, {async: true});
       return data;
       }
 

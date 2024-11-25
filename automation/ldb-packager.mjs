@@ -7,6 +7,7 @@ const commands = {
 };
 
 const command = process.argv[2];
+const specifiedPack = process.argv[3];
 
 if (!command) {
   throw new Error('No command provided');
@@ -22,8 +23,9 @@ const packsPath = 'packs';
 if (command === commands.extract) {
   const packsContents = readdirSync(packsPath);
   const packs = packsContents.filter(pack => pack !== 'src');
-  console.log(`Extracting ${packs.length} packs...`);
+  console.log(`Found ${packs.filter.length} packs...`);
   for (const pack of packs) {
+    if (specifiedPack && specifiedPack !== pack) continue;
     console.log(`Extracting ${pack}`);
     await extractPack(`${packsPath}/${pack}`, `${packsSrcPath}/${pack}`, {yaml: true});
   }

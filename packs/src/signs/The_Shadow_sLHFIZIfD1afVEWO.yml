@@ -11,10 +11,10 @@ _id: sLHFIZIfD1afVEWO
 _stats:
   coreVersion: '12.331'
   systemId: uesrpg-3ev4
-  systemVersion: v1.0.0-RC.58
+  systemVersion: v1.0.0-RC.61
   createdTime: null
-  modifiedTime: 1732329827391
-  lastModifiedBy: 7bDMesNjX54nzN9S
+  modifiedTime: 1732507043484
+  lastModifiedBy: GikQCnLAeu0WrzSO
   compendiumSource: null
   duplicateSource: null
 ownership:
@@ -71,7 +71,9 @@ system:
   description: >-
     <p><em>“The Shadow’s Season is Second Seed. The Shadow grants those born
     under her sign the ability to hide in shadows.”</em></p><p><strong>Those
-    born under the sign of the Shadow gain the Moonshadow power.</strong></p>
+    born under the sign of the Shadow gain the
+    @UUID[Compendium.uesrpg-3ev4.signs.Item.sQFPZD5k8ExRoTUa]{Moonshadow }
+    power.</strong></p>
   halfSpeed: false
   addHalfSpeed: false
   halfFatiguePenalty: false
