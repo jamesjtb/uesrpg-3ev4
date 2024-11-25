@@ -1897,7 +1897,7 @@ export class SimpleActorSheet extends ActorSheet {
           "Power Well (20)",
           "Weakness (Magic, 2)",
           "Mental Strength: Ignores penalties to Willpower tests made to resist paralysis",
-          "During Character Creation, Altmer can pick one additional magic skill to begin trained at Novice for free",
+          "During character creation, Altmer characters may pick one of the traditional magic skills to begin trained at Novice rank for free.",
         ],
         items: [
           {
@@ -1906,7 +1906,9 @@ export class SimpleActorSheet extends ActorSheet {
             type: "trait",
             dataPath: "system.diseaseR",
             value: 50,
-            desc: "This character has a chance to resist disease.",
+            desc: `This character has a 50% chance to resist disease. Whenever the\
+              character would be infected by a common disease, roll a d100. If the\
+              roll is less than or equal to 50, the character doesn’t get the disease.`,
           },
           {
             name: "Power Well (20) (Racial)",
@@ -2027,7 +2029,7 @@ export class SimpleActorSheet extends ActorSheet {
             name: "Beast Tongue (Racial)",
             img: "systems/uesrpg-3ev4/images/Icons/beastAbility.webp",
             type: "power",
-            desc: "Bosmer can speak to and understand the speech of animals. How exactly this functions is left to the GM's discretion, though it is recommended to call for a Perception test when the Bosmer encounters an unfamiliar creature to determine if they can speak to it.",
+            desc: "Bosmer can speak to, and understand the speech of, animals. How exactly this functions is left to the GM’s discretion, though it is recommended the GM call for a Perception test when the Bosmer encounters the speech of an unfamiliar animal to determine if they can understand it and communicate back. Additionally, the character receives a +20 bonus to any Profession [Animal Training] skill tests they make.",
           },
         ],
       },
@@ -2047,7 +2049,7 @@ export class SimpleActorSheet extends ActorSheet {
         traits: [
           "Resistance (Magic, 2)",
           "Power Well (10)",
-          "During Character Creation, Breton characters may add one extra magic skill to begin at Novice rank for free",
+          "During character creation, Breton characters may pick one of the traditional magic skills to begin trained at Novice rank for free.",
         ],
         items: [
           {
@@ -2083,7 +2085,7 @@ export class SimpleActorSheet extends ActorSheet {
         },
         traits: [
           "Resistance (Fire, 3)",
-          "Ancestor Guardian: See Powers section of Core Rulebook",
+          "Ancestor Guardian: See Powers section of Rules Compendium",
           "During Character Creation, Dunmer may begin with the Destruction skill trained to Novice rank for free",
         ],
         items: [
@@ -2105,20 +2107,20 @@ export class SimpleActorSheet extends ActorSheet {
       },
 
       imperial: {
-        name: "Imperial",
+        name: "Imperial (Colovian)",
         img: `${imgPath}/imperial.webp`,
         baseline: {
           str: 26,
           end: 27,
           agi: 24,
           int: 24,
-          wp: 24,
+          wp: 25,
           prc: 25,
           prs: 25,
         },
         traits: [
           "Star of the West: Increase Stamina Points max by 1",
-          "Voice of the Emperor: Can use Personality in place of Willpower for the purpose of tests and overloading spells",
+          "Voice of the Emperor: They may choose to use Willpower in place of the base characteristic for a Persuade, Command, or Deceive skill test.",
           "During Character Creation, may choose either Commerce, Persuade, or Deceive to begin at Novice rank for free",
         ],
         items: [
@@ -2134,7 +2136,7 @@ export class SimpleActorSheet extends ActorSheet {
             name: "Voice of the Emperor (Racial)",
             img: "icons/skills/social/diplomacy-peace-alliance.webp",
             type: "trait",
-            desc: "Imperaials can replace their spellcasting capability with their natural personality. They can use Personality in place of Willpower for the purpose of tests and overloading spells. This does alter the skills' governed attributes for the purpose of favored attributes when spending XP on skills, but does not alter them when spending XP on talents.",
+            desc: "Imperials speak with a small bit of the power and majesty of the Emperors. They may choose to use Willpower in place of the base characteristic for a Persuade, Command, or Deceive skill test.",
           },
         ],
       },
@@ -2153,7 +2155,7 @@ export class SimpleActorSheet extends ActorSheet {
         },
         traits: [
           "Dark Sight: Can see normally even in areas with total darkness",
-          "Natural Weapons: (Claws - 1d4 Slashing)",
+          "Natural Weapons: (Claws; 1d4; Slashing)",
         ],
         items: [
           {
@@ -2187,10 +2189,10 @@ export class SimpleActorSheet extends ActorSheet {
           prs: 23,
         },
         traits: [
-          "Tough: +10 bonus to Shock Tests",
+          "Tough: Increase the character's Wound Threshold by 1. (If using optional wounds rule, gain +10 bonus to Shock Tests instead)",
           "Resistance (Frost, 2)",
           "Resistance (Shock, 1)",
-          "War Cry: See Powers section of Core Rulebook",
+          "War Cry: See Powers section of the Rules Compendium",
         ],
         items: [
           {
@@ -2199,7 +2201,7 @@ export class SimpleActorSheet extends ActorSheet {
             type: "trait",
             dataPath: "system.wound_threshold",
             value: 1,
-            desc: "A Nord has their Wound Threshold increased by 1. (If using newer rules, gain +10 bonus to Shock Tests instead)",
+            desc: "A Nord has their Wound Threshold increased by 1. (If using optional wounds rule, gain +10 bonus to Shock Tests instead)",
           },
           {
             name: "Resistance (Frost, 2) (Racial)",
@@ -2240,7 +2242,7 @@ export class SimpleActorSheet extends ActorSheet {
         },
         traits: [
           "Resilient: Increase HP max by +3",
-          "Tough: Gain +10 to Shock Tests",
+          "Tough: Increase the character's Wound Threshold by 1. (If using optional wounds rule, gain +10 bonus to Shock Tests instead)",
           "Resistance (Magic, 1)",
           "During Character Creation, may choose to begin with Profession (Smithing) at Novice rank for free",
         ],
@@ -2287,7 +2289,7 @@ export class SimpleActorSheet extends ActorSheet {
         traits: [
           "Disease Resistance (75%)",
           "Resistance (Poison, 3)",
-          "Adrenaline Rush: See Powers section of Core Rulebook",
+          "Adrenaline Rush: See Powers section of the Rules Compendium",
           "During Character Creation, may choose to begin with a Combat Style skill at Novice rank for free",
         ],
         items: [
