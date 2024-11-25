@@ -18,8 +18,9 @@ export class SimpleActor extends Actor {
     // Preps and adds standard skill items to Character types
     await super._preCreate(data, options, user);
     if (this.type === 'Player Character') {
-      let skillPack = game.packs.get("uesrpg-3ev4.standard-skills");
+      let skillPack = game.packs.get("uesrpg-3ev4.skills");
       let collection = await skillPack.getDocuments();
+      console.log(collection);
       collection.sort(function (a, b) {
         let nameA = a.name.toUpperCase();
         let nameB = b.name.toUpperCase();
@@ -45,7 +46,7 @@ export class SimpleActor extends Actor {
     const actorData = this;
     const actorSystemData = actorData.system;
     const flags = actorData.flags;
-    
+
     // Make separate methods for each Actor type (character, npc, etc.) to keep
     // things organized.
     if (actorData.type === 'Player Character') this._prepareCharacterData(actorData);
