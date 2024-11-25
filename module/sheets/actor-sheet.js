@@ -2790,11 +2790,13 @@ export class SimpleActorSheet extends ActorSheet {
                       const chaAbbreviation = characteristicAbbreviations[penaltyAttribute];
                       newDocItem.system.characteristicBonus[`${chaAbbreviation}ChaBonus`] = penalty;
                     }
+                    newDocItem.system.source = `The Star-Cursed ${signObject.name}`;
                     Item.create(newDocItem, { parent: this.actor });
                   }
                 } else if (signSelection.length > 0) {
                   for (let item of signObject.items) {
                     let docItem = signCompendium.find((i) => i.name === item);
+                    newDocItem.system.source = `The ${signObject.name}`;
                     Item.create(docItem.toObject(), { parent: this.actor });
                   }
                 }
