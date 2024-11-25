@@ -1,10 +1,10 @@
-_id: APIH3ShpkNbcJrh1
-name: Restoration
+_id: bh3tusY3KpEHksaP
+name: Alteration
 type: magicSkill
-img: icons/magic/life/heart-red-blue.webp
+img: systems/uesrpg-3ev4/images/Icons/masterOfMagicka.webp
 effects: []
-folder: null
-sort: 0
+folder: M21YZXidaIesxWpe
+sort: 2000000
 flags:
   core:
     sourceId: Item.s1V72XGzOYXo8ddF
@@ -13,8 +13,8 @@ _stats:
   systemId: null
   systemVersion: null
   createdTime: null
-  modifiedTime: null
-  lastModifiedBy: null
+  modifiedTime: 1732510440759
+  lastModifiedBy: GikQCnLAeu0WrzSO
   compendiumSource: null
   duplicateSource: null
 ownership:
@@ -55,25 +55,25 @@ system:
   specialization: ''
   description: >-
     <p style="box-sizing: border-box; user-select: text; color: #191813;"><span
-    style="color: #191813;"><em>Example Specializations: Healing, Wards,
-    Fortification, Spell </em></span><span style="color:
-    #191813;"><em>Creation</em></span></p>
+    style="color: #191813;"><em>Example Specializations: Shields, Flight, Weight
+    Manipulation, </em></span><span style="color: #191813;"><em>Spell
+    Creation</em></span></p>
 
     <p style="box-sizing: border-box; user-select: text; color: #191813;"><span
     style="color: #191813;">This skill influences the use of spells from the
-    school of </span><span style="color: #191813;">Restoration. Restoration is
-    focused on healing and restoring </span><span style="color:
-    #191813;">targets, and harming the undead. Your GM may ask you to test
-    </span><span style="color: #191813;">Restoration when you try to accomplish
+    school of Alteration. </span><span style="color: #191813;">As a school,
+    Alteration focuses on altering the physical and </span><span style="color:
+    #191813;">magical properties of things. Your GM may ask you to test
+    </span><span style="color: #191813;">Alteration when you try to accomplish
     tasks like the following...</span></p>
 
     <ul>
 
     <li style="box-sizing: border-box; user-select: text; color: #191813;"><span
-    style="color: #191813;">Cast a Restoration spell</span></li>
+    style="color: #191813;">Cast an Alteration spell</span></li>
 
     <li style="box-sizing: border-box; user-select: text; color:
-    #191813;">Identify the effects of Restoration magic</li>
+    #191813;">Identify the effects of Alteration magic</li>
 
     </ul>
   baseCha: wp
@@ -83,26 +83,26 @@ system:
     description: >-
       <p style="box-sizing: border-box; user-select: text; color:
       #191813;"><span style="color: #191813;"><em>Example Specializations:
-      Healing, Wards, Fortification, Spell </em></span><span style="color:
-      #191813;"><em>Creation</em></span></p>
+      Shields, Flight, Weight Manipulation, </em></span><span style="color:
+      #191813;"><em>Spell Creation</em></span></p>
 
       <p style="box-sizing: border-box; user-select: text; color:
       #191813;"><span style="color: #191813;">This skill influences the use of
-      spells from the school of </span><span style="color:
-      #191813;">Restoration. Restoration is focused on healing and restoring
-      </span><span style="color: #191813;">targets, and harming the undead. Your
-      GM may ask you to test </span><span style="color: #191813;">Restoration
-      when you try to accomplish tasks like the following...</span></p>
+      spells from the school of Alteration. </span><span style="color:
+      #191813;">As a school, Alteration focuses on altering the physical and
+      </span><span style="color: #191813;">magical properties of things. Your GM
+      may ask you to test </span><span style="color: #191813;">Alteration when
+      you try to accomplish tasks like the following...</span></p>
 
       <ul>
 
       <li style="box-sizing: border-box; user-select: text; color:
-      #191813;"><span style="color: #191813;">Cast a Restoration
+      #191813;"><span style="color: #191813;">Cast an Alteration
       spell</span></li>
 
       <li style="box-sizing: border-box; user-select: text; color:
-      #191813;">Identify the effects of Restoration magic</li>
+      #191813;">Identify the effects of Alteration magic</li>
 
       </ul>
-_key: '!items!APIH3ShpkNbcJrh1'
+_key: '!items!bh3tusY3KpEHksaP'
 

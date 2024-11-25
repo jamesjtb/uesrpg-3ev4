@@ -3,18 +3,18 @@ name: Commerce
 type: skill
 img: icons/skills/social/trading-justice-scale-yellow.webp
 effects: []
-folder: null
-sort: 0
+folder: M21YZXidaIesxWpe
+sort: 1600000
 flags:
   core:
     sourceId: Item.pXXlRpjJ9A5pF3A1
 _stats:
   coreVersion: '12.331'
-  systemId: null
-  systemVersion: null
+  systemId: uesrpg-3ev4
+  systemVersion: v1.0.0-RC.61
   createdTime: null
-  modifiedTime: null
-  lastModifiedBy: null
+  modifiedTime: 1732510440759
+  lastModifiedBy: GikQCnLAeu0WrzSO
   compendiumSource: null
   duplicateSource: null
 ownership:
@@ -73,7 +73,7 @@ system:
 
     </ul>
   baseCha: prs
-  governingCha: PRS
+  governingCha: INT, PRS
   trainedItems: ''
   data:
     description: >-

@@ -1,10 +1,10 @@
-_id: pYh3ORwL5gdO8x9G
-name: Mysticism
+_id: APIH3ShpkNbcJrh1
+name: Restoration
 type: magicSkill
-img: icons/magic/symbols/circled-gem-pink.webp
+img: icons/magic/life/heart-red-blue.webp
 effects: []
-folder: null
-sort: 0
+folder: M21YZXidaIesxWpe
+sort: 150000
 flags:
   core:
     sourceId: Item.s1V72XGzOYXo8ddF
@@ -13,8 +13,8 @@ _stats:
   systemId: null
   systemVersion: null
   createdTime: null
-  modifiedTime: null
-  lastModifiedBy: null
+  modifiedTime: 1732510441253
+  lastModifiedBy: GikQCnLAeu0WrzSO
   compendiumSource: null
   duplicateSource: null
 ownership:
@@ -55,25 +55,25 @@ system:
   specialization: ''
   description: >-
     <p style="box-sizing: border-box; user-select: text; color: #191813;"><span
-    style="color: #191813;"><em>Example Specializations: Telekinesis, Detection,
-    Spell Creation</em></span></p>
+    style="color: #191813;"><em>Example Specializations: Healing, Wards,
+    Fortification, Spell </em></span><span style="color:
+    #191813;"><em>Creation</em></span></p>
 
     <p style="box-sizing: border-box; user-select: text; color: #191813;"><span
     style="color: #191813;">This skill influences the use of spells from the
-    school of Mysticism. </span><span style="color: #191813;">As a school,
-    Mysticism is a rather obscure discipline focused </span><span style="color:
-    #191813;">on manipulating magicka itself to produce a number of exotic
-    </span><span style="color: #191813;">effects. Your GM may ask you to test
-    Mysticism when you try </span><span style="color: #191813;">to accomplish
+    school of </span><span style="color: #191813;">Restoration. Restoration is
+    focused on healing and restoring </span><span style="color:
+    #191813;">targets, and harming the undead. Your GM may ask you to test
+    </span><span style="color: #191813;">Restoration when you try to accomplish
     tasks like the following...</span></p>
 
     <ul>
 
     <li style="box-sizing: border-box; user-select: text; color: #191813;"><span
-    style="color: #191813;">Cast a Mysticism spell</span></li>
+    style="color: #191813;">Cast a Restoration spell</span></li>
 
     <li style="box-sizing: border-box; user-select: text; color:
-    #191813;">Identify the effects of Mysticism magic</li>
+    #191813;">Identify the effects of Restoration magic</li>
 
     </ul>
   baseCha: wp
@@ -83,26 +83,26 @@ system:
     description: >-
       <p style="box-sizing: border-box; user-select: text; color:
       #191813;"><span style="color: #191813;"><em>Example Specializations:
-      Telekinesis, Detection, Spell Creation</em></span></p>
+      Healing, Wards, Fortification, Spell </em></span><span style="color:
+      #191813;"><em>Creation</em></span></p>
 
       <p style="box-sizing: border-box; user-select: text; color:
       #191813;"><span style="color: #191813;">This skill influences the use of
-      spells from the school of Mysticism. </span><span style="color:
-      #191813;">As a school, Mysticism is a rather obscure discipline focused
-      </span><span style="color: #191813;">on manipulating magicka itself to
-      produce a number of exotic </span><span style="color: #191813;">effects.
-      Your GM may ask you to test Mysticism when you try </span><span
-      style="color: #191813;">to accomplish tasks like the
-      following...</span></p>
+      spells from the school of </span><span style="color:
+      #191813;">Restoration. Restoration is focused on healing and restoring
+      </span><span style="color: #191813;">targets, and harming the undead. Your
+      GM may ask you to test </span><span style="color: #191813;">Restoration
+      when you try to accomplish tasks like the following...</span></p>
 
       <ul>
 
       <li style="box-sizing: border-box; user-select: text; color:
-      #191813;"><span style="color: #191813;">Cast a Mysticism spell</span></li>
+      #191813;"><span style="color: #191813;">Cast a Restoration
+      spell</span></li>
 
       <li style="box-sizing: border-box; user-select: text; color:
-      #191813;">Identify the effects of Mysticism magic</li>
+      #191813;">Identify the effects of Restoration magic</li>
 
       </ul>
-_key: '!items!pYh3ORwL5gdO8x9G'
+_key: '!items!APIH3ShpkNbcJrh1'
 

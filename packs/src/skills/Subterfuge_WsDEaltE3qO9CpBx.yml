@@ -3,18 +3,18 @@ name: Subterfuge
 type: skill
 img: icons/skills/social/theft-pickpocket-bribery-brown.webp
 effects: []
-folder: null
-sort: 0
+folder: M21YZXidaIesxWpe
+sort: 106250
 flags:
   core:
     sourceId: Item.pXXlRpjJ9A5pF3A1
 _stats:
   coreVersion: '12.331'
-  systemId: null
-  systemVersion: null
+  systemId: uesrpg-3ev4
+  systemVersion: v1.0.0-RC.61
   createdTime: null
-  modifiedTime: null
-  lastModifiedBy: null
+  modifiedTime: 1732510442739
+  lastModifiedBy: GikQCnLAeu0WrzSO
   compendiumSource: null
   duplicateSource: null
 ownership:
@@ -73,7 +73,7 @@ system:
 
     </ul>
   baseCha: agi
-  governingCha: AGI, INT, PRS
+  governingCha: AGI, INT
   trainedItems: ''
   data:
     description: >-

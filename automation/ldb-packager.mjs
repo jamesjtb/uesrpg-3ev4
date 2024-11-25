@@ -1,9 +1,10 @@
-import { readdirSync } from 'fs';
+import { readdirSync, rmSync } from 'fs';
 import { compilePack, extractPack } from '@foundryvtt/foundryvtt-cli';
 
 const commands = {
   extract: 'extract',
   compile: 'compile',
+  clean: 'clean',
 };
 
 const command = process.argv[2];
@@ -20,10 +21,14 @@ if (!Object.values(commands).includes(command)) {
 const packsSrcPath = 'packs/src';
 const packsPath = 'packs';
 
-if (command === commands.extract) {
+const findCompiledPacks = () => {
   const packsContents = readdirSync(packsPath);
-  const packs = packsContents.filter(pack => pack !== 'src');
-  console.log(`Found ${packs.filter.length} packs...`);
+  return packsContents.filter(pack => pack !== 'src');
+};
+
+if (command === commands.extract) {
+  const packs = findCompiledPacks()
+  console.log(`Found ${packs.length} packs...`);
   for (const pack of packs) {
     if (specifiedPack && specifiedPack !== pack) continue;
     console.log(`Extracting ${pack}`);
@@ -37,5 +42,14 @@ if (command === commands.compile) {
   for (const pack of packsSrcContents) {
     console.log(`Compiling ${pack}`);
     await compilePack(`${packsSrcPath}/${pack}`, `${packsPath}/${pack}`, {yaml: true});
+  }
+}
+
+if (command === commands.clean) {
+  const packs = findCompiledPacks();
+  console.log(`Found ${packs.length} compiled packs...`);
+  for (const pack of packs) {
+    console.log(`Removing ${pack}`);
+    rmSync(`${packsPath}/${pack}`, {recursive: true, force: true});
   }
 }

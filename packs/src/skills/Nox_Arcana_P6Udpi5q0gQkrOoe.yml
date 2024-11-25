@@ -1,0 +1,66 @@
+name: Nox Arcana
+type: magicSkill
+img: icons/magic/unholy/barrier-fire-pink.webp
+effects: []
+folder: Vi7gGvtvAixWbJw9
+flags: {}
+_stats:
+  compendiumSource: null
+  duplicateSource: null
+  coreVersion: '12.331'
+  systemId: uesrpg-3ev4
+  systemVersion: v1.0.0-RC.61
+  createdTime: 1732510467989
+  modifiedTime: 1732510469050
+  lastModifiedBy: GikQCnLAeu0WrzSO
+ownership:
+  default: 0
+  eeXhsDlbzUBZOXZT: 3
+  GikQCnLAeu0WrzSO: 3
+system:
+  characteristics:
+    none: None
+    str: STR
+    end: END
+    agi: AGI
+    int: INT
+    wp: WP
+    prc: PRC
+    prs: PRS
+    lck: LCK
+  characteristicBonus:
+    strChaBonus: 0
+    endChaBonus: 0
+    agiChaBonus: 0
+    intChaBonus: 0
+    wpChaBonus: 0
+    prcChaBonus: 0
+    prsChaBonus: 0
+    lckChaBonus: 0
+  skillRanks:
+    untrained: Untrained
+    novice: (0) Novice
+    apprentice: (1) Apprentice
+    journeyman: (2) Journeyman
+    adept: (3) Adept
+    expert: (4) Expert
+    master: (5) Master
+  value: 0
+  rank: novice
+  bonus: 0
+  miscValue: 0
+  specialization: ''
+  description: >-
+    <p><em>Commonly called Night Magic, Nox Arcana is an ancient power that few
+    Vampires have in the more recent generations.</em></p>
+
+    <p><em>To gain a Nox Arcana spell, you first need to slay a Vampire through
+    the act of Diablerie then you may spend 100xp. To use a Nox Arcana spell
+    requires a passed Nox Arcana skill test. A failed test costs no SP.</em></p>
+  baseCha: wp
+  governingCha: WP
+  trainedItems: ''
+_id: P6Udpi5q0gQkrOoe
+sort: 500000
+_key: '!items!P6Udpi5q0gQkrOoe'
+

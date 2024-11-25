@@ -1,10 +1,10 @@
-_id: 5ylPj9FtdbIgPwSi
-name: Conjuration
+_id: pYh3ORwL5gdO8x9G
+name: Mysticism
 type: magicSkill
-img: icons/magic/unholy/barrier-fire-pink.webp
+img: icons/magic/symbols/circled-gem-pink.webp
 effects: []
-folder: null
-sort: 0
+folder: M21YZXidaIesxWpe
+sort: 600000
 flags:
   core:
     sourceId: Item.s1V72XGzOYXo8ddF
@@ -13,8 +13,8 @@ _stats:
   systemId: null
   systemVersion: null
   createdTime: null
-  modifiedTime: null
-  lastModifiedBy: null
+  modifiedTime: 1732510440759
+  lastModifiedBy: GikQCnLAeu0WrzSO
   compendiumSource: null
   duplicateSource: null
 ownership:
@@ -55,25 +55,25 @@ system:
   specialization: ''
   description: >-
     <p style="box-sizing: border-box; user-select: text; color: #191813;"><span
-    style="color: #191813;"><em>Example Specializations: Atronach Summoning,
-    Spirit Summoning</em></span></p>
+    style="color: #191813;"><em>Example Specializations: Telekinesis, Detection,
+    Spell Creation</em></span></p>
 
     <p style="box-sizing: border-box; user-select: text; color: #191813;"><span
     style="color: #191813;">This skill influences the use of spells from the
-    school of </span><span style="color: #191813;">Conjuration. As a school,
-    Conjuration focuses on calling upon </span><span style="color: #191813;">and
-    and interacting with various otherworldly entities. Your GM </span><span
-    style="color: #191813;">may ask you to test Conjuration when you try to
-    accomplish </span><span style="color: #191813;">tasks like the
-    following...</span></p>
+    school of Mysticism. </span><span style="color: #191813;">As a school,
+    Mysticism is a rather obscure discipline focused </span><span style="color:
+    #191813;">on manipulating magicka itself to produce a number of exotic
+    </span><span style="color: #191813;">effects. Your GM may ask you to test
+    Mysticism when you try </span><span style="color: #191813;">to accomplish
+    tasks like the following...</span></p>
 
     <ul>
 
     <li style="box-sizing: border-box; user-select: text; color: #191813;"><span
-    style="color: #191813;">Cast a Conjuration spell</span></li>
+    style="color: #191813;">Cast a Mysticism spell</span></li>
 
     <li style="box-sizing: border-box; user-select: text; color:
-    #191813;">Identify a summoned entity</li>
+    #191813;">Identify the effects of Mysticism magic</li>
 
     </ul>
   baseCha: wp
@@ -83,26 +83,26 @@ system:
     description: >-
       <p style="box-sizing: border-box; user-select: text; color:
       #191813;"><span style="color: #191813;"><em>Example Specializations:
-      Atronach Summoning, Spirit Summoning</em></span></p>
+      Telekinesis, Detection, Spell Creation</em></span></p>
 
       <p style="box-sizing: border-box; user-select: text; color:
       #191813;"><span style="color: #191813;">This skill influences the use of
-      spells from the school of </span><span style="color:
-      #191813;">Conjuration. As a school, Conjuration focuses on calling upon
-      </span><span style="color: #191813;">and and interacting with various
-      otherworldly entities. Your GM </span><span style="color: #191813;">may
-      ask you to test Conjuration when you try to accomplish </span><span
-      style="color: #191813;">tasks like the following...</span></p>
+      spells from the school of Mysticism. </span><span style="color:
+      #191813;">As a school, Mysticism is a rather obscure discipline focused
+      </span><span style="color: #191813;">on manipulating magicka itself to
+      produce a number of exotic </span><span style="color: #191813;">effects.
+      Your GM may ask you to test Mysticism when you try </span><span
+      style="color: #191813;">to accomplish tasks like the
+      following...</span></p>
 
       <ul>
 
       <li style="box-sizing: border-box; user-select: text; color:
-      #191813;"><span style="color: #191813;">Cast a Conjuration
-      spell</span></li>
+      #191813;"><span style="color: #191813;">Cast a Mysticism spell</span></li>
 
       <li style="box-sizing: border-box; user-select: text; color:
-      #191813;">Identify a summoned entity</li>
+      #191813;">Identify the effects of Mysticism magic</li>
 
       </ul>
-_key: '!items!5ylPj9FtdbIgPwSi'
+_key: '!items!pYh3ORwL5gdO8x9G'
 

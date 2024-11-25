@@ -3,18 +3,18 @@ name: Necromancy
 type: magicSkill
 img: icons/magic/death/skull-flames-white-blue.webp
 effects: []
-folder: null
-sort: 0
+folder: M21YZXidaIesxWpe
+sort: 400000
 flags:
   core:
     sourceId: Item.accrDR52Vb6rfZjr
 _stats:
   coreVersion: '12.331'
-  systemId: null
-  systemVersion: null
+  systemId: uesrpg-3ev4
+  systemVersion: v1.0.0-RC.61
   createdTime: null
-  modifiedTime: null
-  lastModifiedBy: null
+  modifiedTime: 1732510440759
+  lastModifiedBy: GikQCnLAeu0WrzSO
   compendiumSource: null
   duplicateSource: null
 ownership:
@@ -72,7 +72,7 @@ system:
 
     </ul>
   baseCha: int
-  governingCha: ''
+  governingCha: INT
   trainedItems: ''
   data:
     description: >-
