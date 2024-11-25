@@ -55,10 +55,10 @@
       "flags": {}
     },
     {
-      "name": "skills",
-      "label": "Skills",
+      "name": "core-skills",
+      "label": "Core Skills",
       "system": "uesrpg-3ev4",
-      "path": "packs/skills",
+      "path": "packs/core-skills",
       "type": "Item",
       "private": false,
       "flags": {}
@@ -81,9 +81,9 @@
       "system": "uesrpg-3ev4"
     },
     {
-      "name": "exotic-skills",
-      "label": "Exotic Skills",
-      "path": "./packs/exotic-skills",
+      "name": "advanced-skills",
+      "label": "Advanced Skills",
+      "path": "./packs/advanced-skills",
       "private": false,
       "entity": "Item",
       "system": "uesrpg-3ev4"
