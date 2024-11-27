@@ -441,7 +441,7 @@ export const coreRaces = {
 };
 
 // Add variants
-coreRaces.bosmer.variant = {
+coreRaces.bosmer.variants = [{
     name: "Bosmer: The Unglamoured",
     traits: [
         ...coreRaces.bosmer.traits,
@@ -470,13 +470,15 @@ coreRaces.bosmer.variant = {
             desc: "During character creation, the Unglamoured must pick one trait associated with their wild shape: Amphibious, Climber (AB x 2), Crawler, Dark Sight, Natural Toughness (1), Natural Weapons (Horns or Claws, 1d6 Slashing or Crushing, 1m), Natural Weapons (Fangs, 1d4 Slashing, 1m) and Strong Jaws., Quadruped, Regeneration (1), Swimmer However, their altered form is also a curse. They must also select one weakness:, Silver-Scarred (2), Sun-Scarred (2), Weakness (Fire, 2), Weak Bones(1)",
         }
     ]
-};
+}];
 
-coreRaces.breton.variant = {
+coreRaces.breton.variants = [{
     name: "Bretic Reachman",
     traits: [
         "Fury of the Old Gods",
         "Accustomed to the Profane",
+        "During character creation, a Reachman may choose to being with the Survival skill, or one of the traditional hedge magics (Alteration, Destruction, or Mysticism) trained to Novice rank for free.",
+        "Reachmen do not count as their parent race for the purpose of Elite Advances (example: Tongue advance for Nords), but can still take the Racial Talents of their parent race.",
     ],
     items: [
         {
@@ -491,11 +493,35 @@ coreRaces.breton.variant = {
             type: "trait",
             desc: "The men and women of the reach are raised in tribal societies, surrounded by profane practices and dark rites, which has tempered their wills against the petty horrors of the world. They gain a +30 bonus to resist Panic Tests, and a +20 bonus to resist Horror Tests."
         }
-        // not finished yet
     ]
-}
+}];
 
-coreRaces.imperial.variant = {
+coreRaces.dunmer.variants = [{
+    name: "Ashlander",
+    traits: [
+      ...coreRaces.dunmer.traits,
+      "Life in the Wasteland",
+      "Pride and Prejudice",
+      "During character creation, Ashlanders may choose to begin with the Survival skill trained to Novice rank for free instead of Destruction."
+    ],
+    items: [
+      ...coreRaces.dunmer.items,
+      {
+        name: "Life in the Wasteland (Racial)",
+        img: "icons/environment/wilderness/cave-entrance-vulcano.webp",
+        type: "trait",
+        desc: "Ashlanders are adapted to life in the volcanic grasslands and deserts around Red Mountain, and as a result gain a +10 bonus on all Survival tests made in hot climates, and count their Resistance (Fire) trait as being one point higher while in these environments."
+      },
+      {
+        name: "Pride and Prejudice (Racial)",
+        img: "icons/sundries/flags/banner-standard-brown.webp",
+        type: "trait",
+        desc: "Any social test except Intimidation made by or towards an Ashlander suffers a -10 penalty unless the other character is familiar with Ashlander customs and traditions. Additionally, Ashlander characters should keep in mind that most slights are resolved in their society by ritualized duels, often to first blood, but sometimes to the death if the perceived insult is grave enough to warrant it."
+      }
+    ]
+}];
+
+coreRaces.imperial.variants = [{
     name: "Imperial (Nibenese)",
     baseline: {
         str: 24,
@@ -506,4 +532,30 @@ coreRaces.imperial.variant = {
         prc: 25,
         prs: 28,
     }
-}
+}];
+
+coreRaces.nord.variants = [{
+  name: "Bretic Reachman",
+  traits: [
+      "Fury of the Old Gods",
+      "Accustomed to the Profane",
+      "During character creation, a Reachman may choose to being with the Survival skill, or one of the traditional hedge magics (Alteration, Destruction, or Mysticism) trained to Novice rank for free.",
+      "Reachmen do not count as their parent race for the purpose of Elite Advances (example: Tongue advance for Nords), but can still take the Racial Talents of their parent race.",
+  ],
+  items: [
+      {
+          name: "Fury of the Old Gods (Racial)",
+          img: "systems/uesrpg-3ev4/images/Icons/godOfWar.webp",
+          type: "trait",
+          desc: "The witch-men of the reach are blessed by the Old Gods with a righteous fury towards any and all invaders, and will not helm until every last one of them are dead at their feet. Any social interaction test except Intimidation with people not sympathetic with the Reachmen suffers a -10 penalty as their native language and culture is difficult for outsiders to interpret. However, the Reachmen gain a +10 bonus to all Combat Style tests made while Frenzied or using the All Out Attack action as they fight with the fervor of the Old Gods themselves.",
+      },
+      {
+          name: "Accustomed to the Profane (Racial)",
+          img: "icons/magic/control/fear-fright-mask-yellow.webp",
+          type: "trait",
+          desc: "The men and women of the reach are raised in tribal societies, surrounded by profane practices and dark rites, which has tempered their wills against the petty horrors of the world. They gain a +30 bonus to resist Panic Tests, and a +20 bonus to resist Horror Tests."
+      }
+  ]
+}];
+
+//TODO: Finish with crowns and forebears
