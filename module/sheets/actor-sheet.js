@@ -1879,7 +1879,7 @@ export class SimpleActorSheet extends ActorSheet {
   _onRaceMenu(event) {
     event.preventDefault();
 
-    const races = [...coreRaces];
+    const races = {...coreRaces};
 
     const raceCards = [];
     for (let i in races) {
