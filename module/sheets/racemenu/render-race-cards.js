@@ -1,7 +1,8 @@
 export function renderRaceCards(races) {
     const raceCards = [];
     for (const raceKey in races) {
-        raceCards.push(renderRaceCard(races[raceKey]));
+        const race = races[raceKey];
+        raceCards.push(renderRaceCard(race));
     }
     return raceCards;
 }
@@ -20,9 +21,9 @@ function renderRaceCard(race) {
                     <h2 style="text-align: center;">${race.name}</h2>
                     <table style="text-align: center;">
                         <thead>
-                        <tr>
-                            <th colspan="7">Characteristic Baseline</th>
-                        </tr>
+                            <tr>
+                                <th colspan="7">Characteristic Baseline</th>
+                            </tr>
                         </thead>
                         <tbody>
                         <tr>

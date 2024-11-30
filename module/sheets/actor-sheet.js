@@ -7,7 +7,8 @@ import { isUnlucky } from "../helpers/skillCalcHelper.js";
 import chooseBirthsignPenalty from "../dialogs/choose-birthsign-penalty.js";
 import { characteristicAbbreviations } from "../maps/characteristics.js";
 import renderErrorDialog from '../dialogs/error-dialog.js';
-import { coreRaces } from "./racemenu/data/core-races.js";
+import coreRaces from "./racemenu/data/core-races.js";
+import coreVariants from "./racemenu/data/core-variants.js";
 import { renderRaceCards } from "./racemenu/render-race-cards.js";
 
 export class SimpleActorSheet extends ActorSheet {
@@ -57,7 +58,7 @@ export class SimpleActorSheet extends ActorSheet {
     data.isGM = game.user.isGM;
     data.editable = data.options.editable;
 
-    data.actor.system.enrichedBio = await TextEditor.enrichHTML(data.actor.system.bio, {async: true});
+    data.actor.system.enrichedBio = await TextEditor.enrichHTML(data.actor.system.bio, { async: true });
 
     // Prepare Items
     if (this.actor.type === 'Player Character') {
@@ -413,11 +414,9 @@ export class SimpleActorSheet extends ActorSheet {
       for (let key in item.system.characteristicBonus) {
         let itemBonus = item.system.characteristicBonus[key];
         if (itemBonus !== 0) {
-          let itemButton = `<button style="width: auto;" onclick="getItem(this.id, this.dataset.actor)" id="${
-            item.id
-          }" data-actor="${item.actor.id}">${item.name} ${
-            itemBonus >= 0 ? `+${itemBonus}` : itemBonus
-          }</button>`;
+          let itemButton = `<button style="width: auto;" onclick="getItem(this.id, this.dataset.actor)" id="${item.id
+            }" data-actor="${item.actor.id}">${item.name} ${itemBonus >= 0 ? `+${itemBonus}` : itemBonus
+            }</button>`;
           let bonusName = eval([...key].splice(0, 3).join("") + "BonusArray");
           bonusName.push(itemButton);
         }
@@ -455,15 +454,14 @@ export class SimpleActorSheet extends ActorSheet {
                     <div style="margin-bottom: 10px;">
                       <label><b>Points Total (without Luck): </b></label>
                       <label>
-                      ${
-                        this.actor.system.characteristics.str.base +
-                        this.actor.system.characteristics.end.base +
-                        this.actor.system.characteristics.agi.base +
-                        this.actor.system.characteristics.int.base +
-                        this.actor.system.characteristics.wp.base +
-                        this.actor.system.characteristics.prc.base +
-                        this.actor.system.characteristics.prs.base
-                      }
+                      ${this.actor.system.characteristics.str.base +
+        this.actor.system.characteristics.end.base +
+        this.actor.system.characteristics.agi.base +
+        this.actor.system.characteristics.int.base +
+        this.actor.system.characteristics.wp.base +
+        this.actor.system.characteristics.prc.base +
+        this.actor.system.characteristics.prs.base
+        }
                       </label>
                       <table style="table-layout: fixed; text-align: center;">
                         <tr>
@@ -477,30 +475,22 @@ export class SimpleActorSheet extends ActorSheet {
                           <th>LCK</th>
                         </tr>
                         <tr>
-                          <td><input type="number" id="strInput" value="${
-                            this.actor.system.characteristics.str.base
-                          }"></td>
-                          <td><input type="number" id="endInput" value="${
-                            this.actor.system.characteristics.end.base
-                          }"></td>
-                          <td><input type="number" id="agiInput" value="${
-                            this.actor.system.characteristics.agi.base
-                          }"></td>
-                          <td><input type="number" id="intInput" value="${
-                            this.actor.system.characteristics.int.base
-                          }"></td>
-                          <td><input type="number" id="wpInput" value="${
-                            this.actor.system.characteristics.wp.base
-                          }"></td>
-                          <td><input type="number" id="prcInput" value="${
-                            this.actor.system.characteristics.prc.base
-                          }"></td>
-                          <td><input type="number" id="prsInput" value="${
-                            this.actor.system.characteristics.prs.base
-                          }"></td>
-                          <td><input type="number" id="lckInput" value="${
-                            this.actor.system.characteristics.lck.base
-                          }"></td>
+                          <td><input type="number" id="strInput" value="${this.actor.system.characteristics.str.base
+        }"></td>
+                          <td><input type="number" id="endInput" value="${this.actor.system.characteristics.end.base
+        }"></td>
+                          <td><input type="number" id="agiInput" value="${this.actor.system.characteristics.agi.base
+        }"></td>
+                          <td><input type="number" id="intInput" value="${this.actor.system.characteristics.int.base
+        }"></td>
+                          <td><input type="number" id="wpInput" value="${this.actor.system.characteristics.wp.base
+        }"></td>
+                          <td><input type="number" id="prcInput" value="${this.actor.system.characteristics.prc.base
+        }"></td>
+                          <td><input type="number" id="prsInput" value="${this.actor.system.characteristics.prs.base
+        }"></td>
+                          <td><input type="number" id="lckInput" value="${this.actor.system.characteristics.lck.base
+        }"></td>
                         </tr>
                       </table>
                     </div>
@@ -508,57 +498,57 @@ export class SimpleActorSheet extends ActorSheet {
                     <div class="modifierBox">
                       <h2>STR Modifiers</h2>
                       <span style="font-size: small">${strBonusArray.join(
-                        ""
-                      )}</span>
+          ""
+        )}</span>
                     </div>
 
                     <div class="modifierBox">
                       <h2>END Modifiers</h2>
                       <span style="font-size: small">${endBonusArray.join(
-                        ""
-                      )}</span>
+          ""
+        )}</span>
                     </div>
 
                     <div class="modifierBox">
                       <h2>AGI Modifiers</h2>
                       <span style="font-size: small">${agiBonusArray.join(
-                        ""
-                      )}</span>
+          ""
+        )}</span>
                     </div>
 
                     <div class="modifierBox">
                       <h2>INT Modifiers</h2>
                       <span style="font-size: small">${intBonusArray.join(
-                        ""
-                      )}</span>
+          ""
+        )}</span>
                     </div>
 
                     <div class="modifierBox">
                       <h2>WP Modifiers</h2>
                       <span style="font-size: small">${wpCBonusArray.join(
-                        ""
-                      )}</span>
+          ""
+        )}</span>
                     </div>
 
                     <div class="modifierBox">
                       <h2>PRC Modifiers</h2>
                       <span style="font-size: small">${prcBonusArray.join(
-                        ""
-                      )}</span>
+          ""
+        )}</span>
                     </div>
 
                     <div class="modifierBox">
                       <h2>PRS Modifiers</h2>
                       <span style="font-size: small">${prsBonusArray.join(
-                        ""
-                      )}</span>
+          ""
+        )}</span>
                     </div>
 
                     <div class="modifierBox">
                       <h2>LCK Modifiers</h2>
                       <span style="font-size: small">${lckBonusArray.join(
-                        ""
-                      )}</span>
+          ""
+        )}</span>
                     </div>
 
                   </form>`,
@@ -665,8 +655,8 @@ export class SimpleActorSheet extends ActorSheet {
       content: `<form>
                   <div class="dialogForm">
                   <label><b>${element.getAttribute(
-                    "name"
-                  )} Modifier: </b></label><input placeholder="ex. -20, +10" id="playerInput" value="0" style=" text-align: center; width: 50%; border-style: groove; float: right;" type="text"></input></div>
+        "name"
+      )} Modifier: </b></label><input placeholder="ex. -20, +10" id="playerInput" value="0" style=" text-align: center; width: 50%; border-style: groove; float: right;" type="text"></input></div>
                 </form>`,
       buttons: {
         one: {
@@ -693,11 +683,10 @@ export class SimpleActorSheet extends ActorSheet {
                 contentString = `<h2>${element.getAttribute("name")}</h2
           <p></p><b>Target Number: [[${woundedValue + playerInput}]]</b> <p></p>
           <b>Result: [[${roll.result}]]</b><p></p>
-          <b>${
-            roll.total <= woundedValue + playerInput
-              ? "<span style='color:green; font-size: 120%;'> <b>SUCCESS!</b></span>"
-              : " <span style='color:rgb(168, 5, 5); font-size: 120%;'> <b>FAILURE!</b></span>"
-          }`;
+          <b>${roll.total <= woundedValue + playerInput
+                    ? "<span style='color:green; font-size: 120%;'> <b>SUCCESS!</b></span>"
+                    : " <span style='color:rgb(168, 5, 5); font-size: 120%;'> <b>FAILURE!</b></span>"
+                  }`;
               }
             } else {
               if (isLucky(this.actor, roll.result)) {
@@ -714,11 +703,10 @@ export class SimpleActorSheet extends ActorSheet {
                 contentString = `<h2>${element.getAttribute("name")}</h2
         <p></p><b>Target Number: [[${regularValue + playerInput}]]</b> <p></p>
         <b>Result: [[${roll.result}]]</b><p></p>
-        <b>${
-          roll.total <= regularValue + playerInput
-            ? "<span style='color:green; font-size: 120%;'> <b>SUCCESS!</b></span>"
-            : " <span style='color:rgb(168, 5, 5); font-size: 120%;'> <b>FAILURE!</b></span>"
-        }`;
+        <b>${roll.total <= regularValue + playerInput
+                    ? "<span style='color:green; font-size: 120%;'> <b>SUCCESS!</b></span>"
+                    : " <span style='color:rgb(168, 5, 5); font-size: 120%;'> <b>FAILURE!</b></span>"
+                  }`;
               }
             }
 
@@ -793,40 +781,34 @@ export class SimpleActorSheet extends ActorSheet {
 
             if (isLucky(this.actor, roll.result)) {
               contentString = `<h2><img src="${item.img}"</img>${item.name}</h2>
-            <p></p><b>Target Number: [[${regularValue} + ${playerInput} + ${
-                this.actor.system.wounded ? this.actor.system.woundPenalty : 0
-              }]]</b> <p></p>
+            <p></p><b>Target Number: [[${regularValue} + ${playerInput} + ${this.actor.system.wounded ? this.actor.system.woundPenalty : 0
+                }]]</b> <p></p>
             <b>Result: [[${roll.result}]]</b><p></p>
             <span style='color:green; font-size:120%;'> <b>LUCKY NUMBER!</b></span>`;
             } else if (isUnlucky(this.actor, roll.result)) {
               contentString = `<h2><img src="${item.img}"</img>${item.name}</h2>
-            <p></p><b>Target Number: [[${regularValue} + ${playerInput} + ${
-                this.actor.system.wounded ? this.actor.system.woundPenalty : 0
-              }]]</b> <p></p>
+            <p></p><b>Target Number: [[${regularValue} + ${playerInput} + ${this.actor.system.wounded ? this.actor.system.woundPenalty : 0
+                }]]</b> <p></p>
             <b>Result: [[${roll.result}]]</b><p></p>
             <span style='color:rgb(168, 5, 5); font-size:120%;'> <b>UNLUCKY NUMBER!</b></span>`;
             } else if (this.actor.system.wounded === true) {
               contentString = `<h2><img src="${item.img}"</img>${item.name}</h2>
-            <p></p><b>Target Number: [[${
-              woundedValue + playerInput
-            }]]</b> <p></p>
+            <p></p><b>Target Number: [[${woundedValue + playerInput
+                }]]</b> <p></p>
             <b>Result: [[${roll.result}]]</b><p></p>
-            <b>${
-              roll.total <= woundedValue + playerInput
-                ? " <span style='color:green; font-size: 120%;'> <b>SUCCESS!</b></span>"
-                : " <span style='color: rgb(168, 5, 5); font-size: 120%;'> <b>FAILURE!</b></span>"
-            }`;
+            <b>${roll.total <= woundedValue + playerInput
+                  ? " <span style='color:green; font-size: 120%;'> <b>SUCCESS!</b></span>"
+                  : " <span style='color: rgb(168, 5, 5); font-size: 120%;'> <b>FAILURE!</b></span>"
+                }`;
             } else {
               contentString = `<h2><img src="${item.img}"</img>${item.name}</h2>
-            <p></p><b>Target Number: [[${
-              regularValue + playerInput
-            }]]</b> <p></p>
+            <p></p><b>Target Number: [[${regularValue + playerInput
+                }]]</b> <p></p>
             <b>Result: [[${roll.result}]]</b><p></p>
-            <b>${
-              roll.total <= regularValue + playerInput
-                ? " <span style='color:green; font-size: 120%;'> <b>SUCCESS!</b></span>"
-                : " <span style='color: rgb(168, 5, 5); font-size: 120%;'> <b>FAILURE!</b></span>"
-            }`;
+            <b>${roll.total <= regularValue + playerInput
+                  ? " <span style='color:green; font-size: 120%;'> <b>SUCCESS!</b></span>"
+                  : " <span style='color: rgb(168, 5, 5); font-size: 120%;'> <b>FAILURE!</b></span>"
+                }`;
             }
 
             ChatMessage.create({
@@ -934,9 +916,8 @@ export class SimpleActorSheet extends ActorSheet {
 
                         <div>
                             <h2 style="text-align: center; display: flex; flex-direction: row; align-items: center; justify-content: center; gap: 5px; font-size: xx-large;">
-                                <img src="${
-                                  spellToCast.img
-                                }" class="item-img" height=35 width=35>
+                                <img src="${spellToCast.img
+        }" class="item-img" height=35 width=35>
                                 <div>${spellToCast.name}</div>
                             </h2>
 
@@ -952,9 +933,9 @@ export class SimpleActorSheet extends ActorSheet {
                                     <tr>
                                         <td>${spellToCast.system.cost}</td>
                                         <td>${Math.floor(
-                                          this.actor.system.characteristics.wp
-                                            .total / 10
-                                        )}</td>
+          this.actor.system.characteristics.wp
+            .total / 10
+        )}</td>
                                         <td>${spellToCast.system.level}</td>
                                     </tr>
                                 </tbody>
@@ -1226,36 +1207,32 @@ export class SimpleActorSheet extends ActorSheet {
 
             if (isLucky(this.actor, roll.result)) {
               contentString = `<h2><img src="${item.img}"</img>${item.name}</h2>
-            <p></p><b>Target Number: [[${regularValue} + ${playerInput} + ${
-                this.actor.system.wounded ? this.actor.system.woundPenalty : 0
-              }]]</b> <p></p>
+            <p></p><b>Target Number: [[${regularValue} + ${playerInput} + ${this.actor.system.wounded ? this.actor.system.woundPenalty : 0
+                }]]</b> <p></p>
             <b>Result: [[${roll.result}]]</b><p></p>
             <span style='color:green; font-size:120%;'> <b>LUCKY NUMBER!</b></span>`;
             } else if (isUnlucky(this.actor, roll.result)) {
               contentString = `<h2><img src="${item.img}"</img>${item.name}</h2>
-            <p></p><b>Target Number: [[${regularValue} + ${playerInput} + ${
-                this.actor.system.wounded ? this.actor.system.woundPenalty : 0
-              }]]</b> <p></p>
+            <p></p><b>Target Number: [[${regularValue} + ${playerInput} + ${this.actor.system.wounded ? this.actor.system.woundPenalty : 0
+                }]]</b> <p></p>
             <b>Result: [[${roll.result}]]</b><p></p>
             <span style='color:rgb(168, 5, 5); font-size:120%;'> <b>UNLUCKY NUMBER!</b></span>`;
             } else if (this.actor.system.wounded === true) {
               contentString = `<h2><img src="${item.img}"</img>${item.name}</h2>
             <p></p><b>Target Number: [[${woundedValue} + ${playerInput}]]</b> <p></p>
             <b>Result: [[${roll.result}]]</b><p></p>
-            <b>${
-              roll.total <= woundedValue + playerInput
-                ? " <span style='color:green; font-size: 120%;'> <b>SUCCESS!</b></span>"
-                : " <span style='color: rgb(168, 5, 5); font-size: 120%;'> <b>FAILURE!</b></span>"
-            }`;
+            <b>${roll.total <= woundedValue + playerInput
+                  ? " <span style='color:green; font-size: 120%;'> <b>SUCCESS!</b></span>"
+                  : " <span style='color: rgb(168, 5, 5); font-size: 120%;'> <b>FAILURE!</b></span>"
+                }`;
             } else {
               contentString = `<h2><img src="${item.img}"</img>${item.name}</h2>
             <p></p><b>Target Number: [[${regularValue} + ${playerInput}]]</b> <p></p>
             <b>Result: [[${roll.result}]]</b><p></p>
-            <b>${
-              roll.total <= regularValue + playerInput
-                ? " <span style='color:green; font-size: 120%;'> <b>SUCCESS!</b></span>"
-                : " <span style='color: rgb(168, 5, 5); font-size: 120%;'> <b>FAILURE!</b></span>"
-            }`;
+            <b>${roll.total <= regularValue + playerInput
+                  ? " <span style='color:green; font-size: 120%;'> <b>SUCCESS!</b></span>"
+                  : " <span style='color: rgb(168, 5, 5); font-size: 120%;'> <b>FAILURE!</b></span>"
+                }`;
             }
 
             ChatMessage.create({
@@ -1301,30 +1278,26 @@ export class SimpleActorSheet extends ActorSheet {
 
             if (isLucky(this.actor, roll.result)) {
               contentString = `<h2>${element.name} Resistance</h2>
-            <p></p><b>Target Number: [[${
-              this.actor.system.resistance[element.id]
-            } + ${playerInput}]]</b> <p></p>
+            <p></p><b>Target Number: [[${this.actor.system.resistance[element.id]
+                } + ${playerInput}]]</b> <p></p>
             <b>Result: [[${roll.result}]]</b><p></p>
             <span style='color:green; font-size:120%;'> <b>LUCKY NUMBER!</b></span>`;
             } else if (isLucky(this.actor, roll.result)) {
               contentString = `<h2>${element.name} Resistance</h2>
-            <p></p><b>Target Number: [[${
-              this.actor.system.resistance[element.id]
-            } + ${playerInput}]]</b> <p></p>
+            <p></p><b>Target Number: [[${this.actor.system.resistance[element.id]
+                } + ${playerInput}]]</b> <p></p>
             <b>Result: [[${roll.result}]]</b><p></p>
             <span style='color:rgb(168, 5, 5); font-size:120%;'> <b>UNLUCKY NUMBER!</b></span>`;
             } else {
               contentString = `<h2>${element.name} Resistance</h2>
-            <p></p><b>Target Number: [[${
-              this.actor.system.resistance[element.id]
-            } + ${playerInput}]]</b> <p></p>
+            <p></p><b>Target Number: [[${this.actor.system.resistance[element.id]
+                } + ${playerInput}]]</b> <p></p>
             <b>Result: [[${roll.result}]]</b><p></p>
-            <b>${
-              roll.total <=
-              this.actor.system.resistance[element.id] + playerInput
-                ? " <span style='color:green; font-size: 120%;'> <b>SUCCESS!</b></span>"
-                : " <span style='color: rgb(168, 5, 5); font-size: 120%;'> <b>FAILURE!</b></span>"
-            }`;
+            <b>${roll.total <=
+                  this.actor.system.resistance[element.id] + playerInput
+                  ? " <span style='color:green; font-size: 120%;'> <b>SUCCESS!</b></span>"
+                  : " <span style='color: rgb(168, 5, 5); font-size: 120%;'> <b>FAILURE!</b></span>"
+                }`;
             }
             await roll.toMessage({
               async: false,
@@ -1489,7 +1462,7 @@ export class SimpleActorSheet extends ActorSheet {
       ui.notifications.info("Out of Ammunition!");
     }
 
-    await item.update({system: {quantity: item.system.quantity}});
+    await item.update({ system: { quantity: item.system.quantity } });
   }
 
   async _onToggle2H(event) {
@@ -1498,7 +1471,7 @@ export class SimpleActorSheet extends ActorSheet {
     const li = toggle.parents(".item");
     const item = this.actor.getEmbeddedDocument("Item", li.data("itemId"));
 
-    item.update({"system.weapon2H": !item.system.weapon2H});
+    item.update({ "system.weapon2H": !item.system.weapon2H });
   }
 
   async _onPlusQty(event) {
@@ -1508,7 +1481,7 @@ export class SimpleActorSheet extends ActorSheet {
     const item = this.actor.getEmbeddedDocument("Item", li.data("itemId"));
 
     item.system.quantity = item.system.quantity + 1;
-    await item.update({ "system.quantity": item.system.quantity});
+    await item.update({ "system.quantity": item.system.quantity });
   }
 
   async _onMinusQty(event) {
@@ -1619,7 +1592,7 @@ export class SimpleActorSheet extends ActorSheet {
             "system.governingCha": "Str, Agi",
             "system.baseCha":
               this.actor.system.characteristics.str.total >=
-              this.actor.system.characteristics.agi.total
+                this.actor.system.characteristics.agi.total
                 ? "str"
                 : "agi",
           },
@@ -1635,7 +1608,7 @@ export class SimpleActorSheet extends ActorSheet {
             "system.governingCha": "Wp",
             "system.baseCha":
               this.actor.system.characteristics.int.total >=
-              this.actor.system.characteristics.wp.total
+                this.actor.system.characteristics.wp.total
                 ? "wp"
                 : "int",
           },
@@ -1880,13 +1853,13 @@ export class SimpleActorSheet extends ActorSheet {
   _onRaceMenu(event) {
     event.preventDefault();
 
-    const races = {...coreRaces};
-    const raceCards = renderRaceCards(races);
+    const coreRaceCards = renderRaceCards(coreRaces);
+
+    const variantRaceCards = renderRaceCards(coreVariants);
 
     let d = new Dialog({
       title: "Race Menu",
       content: `<form style="padding: 10px;">
-
                   <div style="border: 1px solid; background: rgba(85, 85, 85, 0.40); font-style:italic; padding: 5px; text-align: center;">
                     <div>
                         Select a Race from the cards below or input your own custom race label below. Leave blank if you do NOT want to use a custom race.
@@ -1899,11 +1872,15 @@ export class SimpleActorSheet extends ActorSheet {
                   </div>
 
                   <div style="height: 500px; overflow-y: scroll;">
+                      <h1 style="padding-top: 10px;">Core Races</h1>
                       <div style="display: flex; flex-direction: row; flex-wrap: wrap; justify-content: space-between; align-content: center; width: 100%;">
-                        ${raceCards.join("")}
+                        ${coreRaceCards.join("")}
+                      </div>
+                      <h1 style="padding-top: 10px;">Core Race Variants</h1>
+                      <div style="display: flex; flex-direction: row; flex-wrap: wrap; justify-content: space-between; align-content: center; width: 100%;">
+                        ${variantRaceCards.join("")}
                       </div>
                   </div>
-
                 </form>`,
       buttons: {
         one: {
@@ -1929,11 +1906,13 @@ export class SimpleActorSheet extends ActorSheet {
             else {
               let raceName;
 
+              const races = { ...coreRaces, ...coreVariants };
+
               if (customRaceLabel !== "") {
                 raceName = customRaceLabel;
               } else {
                 raceName = raceSelection[0].id;
-                let selectedRace = races[raceName.toLowerCase()];
+                let selectedRace = races[raceName];
 
                 // Loop through and update actor base characteristics with race object baselines
                 for (let value in this.actor.system.characteristics) {
@@ -2058,7 +2037,7 @@ export class SimpleActorSheet extends ActorSheet {
         items: ["The Lover"],
         starCursed: ["The Star-Cursed Lover"],
         starCursedChoices: {
-          attributes: [ "willpower", "strength"],
+          attributes: ["willpower", "strength"],
           modifier: -5,
         },
       },
@@ -2197,9 +2176,8 @@ export class SimpleActorSheet extends ActorSheet {
           <h2 style="text-align: center;">${signObject.name}</h2>
           <div style="display: flex; flex-direction: row; justify-content: space-between; align-items: center; border-bottom: 1px solid; border-top: 1px solid; width: 100%;">
             <div style="display: flex; flex-direction: row; align-items: center;">
-              <input type="checkbox" id="${
-                signObject.name
-              }" class="signSelect">
+              <input type="checkbox" id="${signObject.name
+        }" class="signSelect">
               <div>${signObject.name}</div>
             </div>
 
@@ -2207,9 +2185,8 @@ export class SimpleActorSheet extends ActorSheet {
 
             <div style="display: flex; flex-direction: row; align-items: center;">
                 <div>Star-Cursed</div>
-                <input type="checkbox" id="${
-                  signObject.name
-                }" class="signSelect cursedSelect">
+                <input type="checkbox" id="${signObject.name
+        }" class="signSelect cursedSelect">
             </div>
           </div>
           <div style="padding: 10px 0 0 0;">
@@ -2372,21 +2349,18 @@ export class SimpleActorSheet extends ActorSheet {
                             <div style="display: flex; flex-direction: row; justify-content: space-around; background: rgba(180, 180, 180, 0.562); padding: 10px; text-align: center; border: 1px solid;">
                                 <div style="width: 33.33%">
                                     <div>Current XP</div>
-                                    <input type="number" id="xp" value="${
-                                      this.actor.system.xp
-                                    }">
+                                    <input type="number" id="xp" value="${this.actor.system.xp
+        }">
                                 </div>
                                 <div style="width: 33.33%">
                                     <div>Total XP</div>
-                                    <input type="number" id="xpTotal" value="${
-                                      this.actor.system.xpTotal
-                                    }">
+                                    <input type="number" id="xpTotal" value="${this.actor.system.xpTotal
+        }">
                                 </div>
                                 <div style="width: 33.33%">
                                     <div>Campaign Rank</div>
-                                    <div style="padding: 5px 0;">${
-                                      this.actor.system.campaignRank
-                                    }</div>
+                                    <div style="padding: 5px 0;">${this.actor.system.campaignRank
+        }</div>
                                 </div>
                             </div>
                         </div>
@@ -2653,25 +2627,20 @@ export class SimpleActorSheet extends ActorSheet {
           tableEntry = `<tr>
                             <td data-item-id="${item._id}">
                                 <div style="display: flex; flex-direction: row; align-items: center; gap: 5px;">
-                                  <img class="item-img" src="${
-                                    item.img
-                                  }" height="24" width="24">
+                                  <img class="item-img" src="${item.img
+            }" height="24" width="24">
                                   ${item.name}
                                 </div>
                             </td>
-                            <td style="text-align: center;">${
-                              item.system.armor
-                            }</td>
-                            <td style="text-align: center;">${
-                              item.system.magic_ar
-                            }</td>
-                            <td style="text-align: center;">${
-                              item.system.blockRating
-                            }</td>
+                            <td style="text-align: center;">${item.system.armor
+            }</td>
+                            <td style="text-align: center;">${item.system.magic_ar
+            }</td>
+                            <td style="text-align: center;">${item.system.blockRating
+            }</td>
                             <td style="text-align: center;">
-                                <input type="checkbox" class="itemSelect" data-item-id="${
-                                  item._id
-                                }" ${item.system.equipped ? "checked" : ""}>
+                                <input type="checkbox" class="itemSelect" data-item-id="${item._id
+            }" ${item.system.equipped ? "checked" : ""}>
                             </td>
                         </tr>`;
           break;
@@ -2680,25 +2649,20 @@ export class SimpleActorSheet extends ActorSheet {
           tableEntry = `<tr>
                             <td data-item-id="${item._id}">
                                 <div style="display: flex; flex-direction: row; align-items: center; gap: 5px;">
-                                  <img class="item-img" src="${
-                                    item.img
-                                  }" height="24" width="24">
+                                  <img class="item-img" src="${item.img
+            }" height="24" width="24">
                                   ${item.name}
                                 </div>
                             </td>
-                            <td style="text-align: center;">${
-                              item.system.damage
-                            }</td>
-                            <td style="text-align: center;">${
-                              item.system.damage2
-                            }</td>
-                            <td style="text-align: center;">${
-                              item.system.reach
-                            }</td>
+                            <td style="text-align: center;">${item.system.damage
+            }</td>
+                            <td style="text-align: center;">${item.system.damage2
+            }</td>
+                            <td style="text-align: center;">${item.system.reach
+            }</td>
                             <td style="text-align: center;">
-                                <input type="checkbox" class="itemSelect" data-item-id="${
-                                  item._id
-                                }" ${item.system.equipped ? "checked" : ""}>
+                                <input type="checkbox" class="itemSelect" data-item-id="${item._id
+            }" ${item.system.equipped ? "checked" : ""}>
                             </td>
                         </tr>`;
           break;
@@ -2707,25 +2671,20 @@ export class SimpleActorSheet extends ActorSheet {
           tableEntry = `<tr>
                             <td data-item-id="${item._id}">
                                 <div style="display: flex; flex-direction: row; align-items: center; gap: 5px;">
-                                  <img class="item-img" src="${
-                                    item.img
-                                  }" height="24" width="24">
+                                  <img class="item-img" src="${item.img
+            }" height="24" width="24">
                                   ${item.name}
                                 </div>
                             </td>
-                            <td style="text-align: center;">${
-                              item.system.quantity
-                            }</td>
-                            <td style="text-align: center;">${
-                              item.system.damage
-                            }</td>
-                            <td style="text-align: center;">${
-                              item.system.enchant_level
-                            }</td>
+                            <td style="text-align: center;">${item.system.quantity
+            }</td>
+                            <td style="text-align: center;">${item.system.damage
+            }</td>
+                            <td style="text-align: center;">${item.system.enchant_level
+            }</td>
                             <td style="text-align: center;">
-                                <input type="checkbox" class="itemSelect" data-item-id="${
-                                  item._id
-                                }" ${item.system.equipped ? "checked" : ""}>
+                                <input type="checkbox" class="itemSelect" data-item-id="${item._id
+            }" ${item.system.equipped ? "checked" : ""}>
                             </td>
                         </tr>`;
           break;
@@ -2835,7 +2794,7 @@ export class SimpleActorSheet extends ActorSheet {
                 (item) => item.id == armorItem.dataset.itemId
               )[0];
               const shouldEquip = !!armorItem.checked;
-              await thisArmor.update({system: {equipped: shouldEquip}});
+              await thisArmor.update({ system: { equipped: shouldEquip } });
             }
           },
         },
