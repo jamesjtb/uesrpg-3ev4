@@ -7,7 +7,8 @@ import { isUnlucky } from "../helpers/skillCalcHelper.js";
 import chooseBirthsignPenalty from "../dialogs/choose-birthsign-penalty.js";
 import { characteristicAbbreviations } from "../maps/characteristics.js";
 import renderErrorDialog from '../dialogs/error-dialog.js';
-import { coreRaces } from "./sheet-context/core-races.js";
+import { coreRaces } from "./racemenu/data/core-races.js";
+import { renderRaceCards } from "./racemenu/render-race-cards.js";
 
 export class SimpleActorSheet extends ActorSheet {
   /** @override */
@@ -1880,70 +1881,7 @@ export class SimpleActorSheet extends ActorSheet {
     event.preventDefault();
 
     const races = {...coreRaces};
-
-    const raceCards = [];
-    for (let i in races) {
-      const race = races[i];
-      const baseLineCells = [];
-      const traits = [];
-
-      // Loop through traits values and create list items
-      for (let i of race.traits) {
-        const trait = `<li>${i}</li>`;
-        traits.push(trait);
-      }
-
-      // Loop through baseline values and create table cells
-      for (let i in race.baseline) {
-        const base = race.baseline[i];
-        const tableCell = `<td>${base}</td>`;
-        baseLineCells.push(tableCell);
-      }
-
-      const card = `<div style="display: flex; flex-direction: row; align-items: center; border: solid 1px; padding: 0 5px; width: 49%;">
-                        <div style="width: 100%; height: 100%;">
-                            <div style="text-align: center; position: relative; top: 0;">
-                                <input type="checkbox" class="raceSelect" id="${
-                                  race.name
-                                }" style="position: relative; left: 0; top: 0;">
-                                <img src="${race.img}" alt="${
-        race.name
-      }" height="150" width="100" style="border: none;">
-                            </div>
-                            <div style="position: relative; top: 0;">
-                                <h2 style="text-align: center;">${
-                                  race.name
-                                }</h2>
-                                <table style="text-align: center;">
-                                    <thead>
-                                        <tr>
-                                          <th colspan="7">Characteristic Baseline</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <tr>
-                                          <th>STR</th>
-                                          <th>END</th>
-                                          <th>AGI</th>
-                                          <th>INT</th>
-                                          <th>WP</th>
-                                          <th>PRC</th>
-                                          <th>PRS</th>
-                                        </tr>
-                                        <tr>
-                                          ${baseLineCells.join("")}
-                                        </tr>
-                                    </tbody>
-                              </table>
-                              <ul>
-                                  ${traits.join("")}
-                              </ul>
-                            </div>
-                        </div>
-                    </div>`;
-
-      raceCards.push(card);
-    }
+    const raceCards = renderRaceCards(races);
 
     let d = new Dialog({
       title: "Race Menu",
