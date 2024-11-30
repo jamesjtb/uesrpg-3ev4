@@ -558,4 +558,37 @@ coreRaces.nord.variants = [{
   ]
 }];
 
-//TODO: Finish with crowns and forebears
+coreRaces.redguard.variants = [
+  {
+    name: "Redguard (Crown)",
+    baseline: {
+      str: 27,
+      end: 26,
+      agi: 26,
+      int: 22,
+      wp: 23,
+      prc: 25,
+      prs: 25,
+    },
+    traits:  [
+      ...coreRaces.redguard.traits,
+      "The character can replace Combat Style with Commerce or Persuade as their free starting skill.",
+    ],
+  },
+  {
+    name: "Redguard (Forebear)",
+    baseline: {
+      str: 27,
+      end: 28,
+      agi: 26,
+      int: 22,
+      wp: 24,
+      prc: 25,
+      prs: 22,
+    },
+    traits: [
+      ...coreRaces.redguard.traits,
+      "The character picks one additional weapon for their Combat Style at character creation, but it must be a Sword or variant of a Sword such as a Sabre or Dagger.",
+    ],
+  },
+]
