@@ -276,7 +276,7 @@ export default {
     },
     traits: [
       "Dark Sight: Can see normally even in areas with total darkness",
-      "Natural Weapons: (Claws; 1d4; Slashing)",
+      "Natural Weapons (Claws, 1d4 Slashing)",
     ],
     items: [
       {

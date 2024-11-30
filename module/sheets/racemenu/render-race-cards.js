@@ -15,7 +15,7 @@ function renderRaceCard(race) {
             <div style="width: 100%; height: 100%;">
                 <div style="text-align: center; position: relative; top: 0;">
                     <input type="checkbox" class="raceSelect" id="${race.name}" style="position: relative; left: 0; top: 0;">
-                    <img src="${race.img}" alt="${race.name}" height="150" width="100" style="border: none;">
+                    ${race.img ? `<img src="${race.img}" alt="${race.name}" height="150" width="100" style="border: none;">` : ''}
                 </div>
                 <div style="position: relative; top: 0;">
                     <h2 style="text-align: center;">${race.name}</h2>
