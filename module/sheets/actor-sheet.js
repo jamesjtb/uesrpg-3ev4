@@ -7,6 +7,11 @@ import { isUnlucky } from "../helpers/skillCalcHelper.js";
 import chooseBirthsignPenalty from "../dialogs/choose-birthsign-penalty.js";
 import { characteristicAbbreviations } from "../maps/characteristics.js";
 import renderErrorDialog from '../dialogs/error-dialog.js';
+import coreRaces from "./racemenu/data/core-races.js";
+import coreVariants from "./racemenu/data/core-variants.js";
+import { renderRaceCards } from "./racemenu/render-race-cards.js";
+import khajiitFurstocks from './racemenu/data/khajiit-furstocks.js';
+import expandedRaces from "./racemenu/data/expanded-races.js";
 
 export class SimpleActorSheet extends ActorSheet {
   /** @override */
@@ -55,7 +60,7 @@ export class SimpleActorSheet extends ActorSheet {
     data.isGM = game.user.isGM;
     data.editable = data.options.editable;
 
-    data.actor.system.enrichedBio = await TextEditor.enrichHTML(data.actor.system.bio, {async: true});
+    data.actor.system.enrichedBio = await TextEditor.enrichHTML(data.actor.system.bio, { async: true });
 
     // Prepare Items
     if (this.actor.type === 'Player Character') {
@@ -411,11 +416,9 @@ export class SimpleActorSheet extends ActorSheet {
       for (let key in item.system.characteristicBonus) {
         let itemBonus = item.system.characteristicBonus[key];
         if (itemBonus !== 0) {
-          let itemButton = `<button style="width: auto;" onclick="getItem(this.id, this.dataset.actor)" id="${
-            item.id
-          }" data-actor="${item.actor.id}">${item.name} ${
-            itemBonus >= 0 ? `+${itemBonus}` : itemBonus
-          }</button>`;
+          let itemButton = `<button style="width: auto;" onclick="getItem(this.id, this.dataset.actor)" id="${item.id
+            }" data-actor="${item.actor.id}">${item.name} ${itemBonus >= 0 ? `+${itemBonus}` : itemBonus
+            }</button>`;
           let bonusName = eval([...key].splice(0, 3).join("") + "BonusArray");
           bonusName.push(itemButton);
         }
@@ -453,15 +456,14 @@ export class SimpleActorSheet extends ActorSheet {
                     <div style="margin-bottom: 10px;">
                       <label><b>Points Total (without Luck): </b></label>
                       <label>
-                      ${
-                        this.actor.system.characteristics.str.base +
-                        this.actor.system.characteristics.end.base +
-                        this.actor.system.characteristics.agi.base +
-                        this.actor.system.characteristics.int.base +
-                        this.actor.system.characteristics.wp.base +
-                        this.actor.system.characteristics.prc.base +
-                        this.actor.system.characteristics.prs.base
-                      }
+                      ${this.actor.system.characteristics.str.base +
+        this.actor.system.characteristics.end.base +
+        this.actor.system.characteristics.agi.base +
+        this.actor.system.characteristics.int.base +
+        this.actor.system.characteristics.wp.base +
+        this.actor.system.characteristics.prc.base +
+        this.actor.system.characteristics.prs.base
+        }
                       </label>
                       <table style="table-layout: fixed; text-align: center;">
                         <tr>
@@ -475,30 +477,22 @@ export class SimpleActorSheet extends ActorSheet {
                           <th>LCK</th>
                         </tr>
                         <tr>
-                          <td><input type="number" id="strInput" value="${
-                            this.actor.system.characteristics.str.base
-                          }"></td>
-                          <td><input type="number" id="endInput" value="${
-                            this.actor.system.characteristics.end.base
-                          }"></td>
-                          <td><input type="number" id="agiInput" value="${
-                            this.actor.system.characteristics.agi.base
-                          }"></td>
-                          <td><input type="number" id="intInput" value="${
-                            this.actor.system.characteristics.int.base
-                          }"></td>
-                          <td><input type="number" id="wpInput" value="${
-                            this.actor.system.characteristics.wp.base
-                          }"></td>
-                          <td><input type="number" id="prcInput" value="${
-                            this.actor.system.characteristics.prc.base
-                          }"></td>
-                          <td><input type="number" id="prsInput" value="${
-                            this.actor.system.characteristics.prs.base
-                          }"></td>
-                          <td><input type="number" id="lckInput" value="${
-                            this.actor.system.characteristics.lck.base
-                          }"></td>
+                          <td><input type="number" id="strInput" value="${this.actor.system.characteristics.str.base
+        }"></td>
+                          <td><input type="number" id="endInput" value="${this.actor.system.characteristics.end.base
+        }"></td>
+                          <td><input type="number" id="agiInput" value="${this.actor.system.characteristics.agi.base
+        }"></td>
+                          <td><input type="number" id="intInput" value="${this.actor.system.characteristics.int.base
+        }"></td>
+                          <td><input type="number" id="wpInput" value="${this.actor.system.characteristics.wp.base
+        }"></td>
+                          <td><input type="number" id="prcInput" value="${this.actor.system.characteristics.prc.base
+        }"></td>
+                          <td><input type="number" id="prsInput" value="${this.actor.system.characteristics.prs.base
+        }"></td>
+                          <td><input type="number" id="lckInput" value="${this.actor.system.characteristics.lck.base
+        }"></td>
                         </tr>
                       </table>
                     </div>
@@ -506,57 +500,57 @@ export class SimpleActorSheet extends ActorSheet {
                     <div class="modifierBox">
                       <h2>STR Modifiers</h2>
                       <span style="font-size: small">${strBonusArray.join(
-                        ""
-                      )}</span>
+          ""
+        )}</span>
                     </div>
 
                     <div class="modifierBox">
                       <h2>END Modifiers</h2>
                       <span style="font-size: small">${endBonusArray.join(
-                        ""
-                      )}</span>
+          ""
+        )}</span>
                     </div>
 
                     <div class="modifierBox">
                       <h2>AGI Modifiers</h2>
                       <span style="font-size: small">${agiBonusArray.join(
-                        ""
-                      )}</span>
+          ""
+        )}</span>
                     </div>
 
                     <div class="modifierBox">
                       <h2>INT Modifiers</h2>
                       <span style="font-size: small">${intBonusArray.join(
-                        ""
-                      )}</span>
+          ""
+        )}</span>
                     </div>
 
                     <div class="modifierBox">
                       <h2>WP Modifiers</h2>
                       <span style="font-size: small">${wpCBonusArray.join(
-                        ""
-                      )}</span>
+          ""
+        )}</span>
                     </div>
 
                     <div class="modifierBox">
                       <h2>PRC Modifiers</h2>
                       <span style="font-size: small">${prcBonusArray.join(
-                        ""
-                      )}</span>
+          ""
+        )}</span>
                     </div>
 
                     <div class="modifierBox">
                       <h2>PRS Modifiers</h2>
                       <span style="font-size: small">${prsBonusArray.join(
-                        ""
-                      )}</span>
+          ""
+        )}</span>
                     </div>
 
                     <div class="modifierBox">
                       <h2>LCK Modifiers</h2>
                       <span style="font-size: small">${lckBonusArray.join(
-                        ""
-                      )}</span>
+          ""
+        )}</span>
                     </div>
 
                   </form>`,
@@ -663,8 +657,8 @@ export class SimpleActorSheet extends ActorSheet {
       content: `<form>
                   <div class="dialogForm">
                   <label><b>${element.getAttribute(
-                    "name"
-                  )} Modifier: </b></label><input placeholder="ex. -20, +10" id="playerInput" value="0" style=" text-align: center; width: 50%; border-style: groove; float: right;" type="text"></input></div>
+        "name"
+      )} Modifier: </b></label><input placeholder="ex. -20, +10" id="playerInput" value="0" style=" text-align: center; width: 50%; border-style: groove; float: right;" type="text"></input></div>
                 </form>`,
       buttons: {
         one: {
@@ -691,11 +685,10 @@ export class SimpleActorSheet extends ActorSheet {
                 contentString = `<h2>${element.getAttribute("name")}</h2
           <p></p><b>Target Number: [[${woundedValue + playerInput}]]</b> <p></p>
           <b>Result: [[${roll.result}]]</b><p></p>
-          <b>${
-            roll.total <= woundedValue + playerInput
-              ? "<span style='color:green; font-size: 120%;'> <b>SUCCESS!</b></span>"
-              : " <span style='color:rgb(168, 5, 5); font-size: 120%;'> <b>FAILURE!</b></span>"
-          }`;
+          <b>${roll.total <= woundedValue + playerInput
+                    ? "<span style='color:green; font-size: 120%;'> <b>SUCCESS!</b></span>"
+                    : " <span style='color:rgb(168, 5, 5); font-size: 120%;'> <b>FAILURE!</b></span>"
+                  }`;
               }
             } else {
               if (isLucky(this.actor, roll.result)) {
@@ -712,11 +705,10 @@ export class SimpleActorSheet extends ActorSheet {
                 contentString = `<h2>${element.getAttribute("name")}</h2
         <p></p><b>Target Number: [[${regularValue + playerInput}]]</b> <p></p>
         <b>Result: [[${roll.result}]]</b><p></p>
-        <b>${
-          roll.total <= regularValue + playerInput
-            ? "<span style='color:green; font-size: 120%;'> <b>SUCCESS!</b></span>"
-            : " <span style='color:rgb(168, 5, 5); font-size: 120%;'> <b>FAILURE!</b></span>"
-        }`;
+        <b>${roll.total <= regularValue + playerInput
+                    ? "<span style='color:green; font-size: 120%;'> <b>SUCCESS!</b></span>"
+                    : " <span style='color:rgb(168, 5, 5); font-size: 120%;'> <b>FAILURE!</b></span>"
+                  }`;
               }
             }
 
@@ -791,40 +783,34 @@ export class SimpleActorSheet extends ActorSheet {
 
             if (isLucky(this.actor, roll.result)) {
               contentString = `<h2><img src="${item.img}"</img>${item.name}</h2>
-            <p></p><b>Target Number: [[${regularValue} + ${playerInput} + ${
-                this.actor.system.wounded ? this.actor.system.woundPenalty : 0
-              }]]</b> <p></p>
+            <p></p><b>Target Number: [[${regularValue} + ${playerInput} + ${this.actor.system.wounded ? this.actor.system.woundPenalty : 0
+                }]]</b> <p></p>
             <b>Result: [[${roll.result}]]</b><p></p>
             <span style='color:green; font-size:120%;'> <b>LUCKY NUMBER!</b></span>`;
             } else if (isUnlucky(this.actor, roll.result)) {
               contentString = `<h2><img src="${item.img}"</img>${item.name}</h2>
-            <p></p><b>Target Number: [[${regularValue} + ${playerInput} + ${
-                this.actor.system.wounded ? this.actor.system.woundPenalty : 0
-              }]]</b> <p></p>
+            <p></p><b>Target Number: [[${regularValue} + ${playerInput} + ${this.actor.system.wounded ? this.actor.system.woundPenalty : 0
+                }]]</b> <p></p>
             <b>Result: [[${roll.result}]]</b><p></p>
             <span style='color:rgb(168, 5, 5); font-size:120%;'> <b>UNLUCKY NUMBER!</b></span>`;
             } else if (this.actor.system.wounded === true) {
               contentString = `<h2><img src="${item.img}"</img>${item.name}</h2>
-            <p></p><b>Target Number: [[${
-              woundedValue + playerInput
-            }]]</b> <p></p>
+            <p></p><b>Target Number: [[${woundedValue + playerInput
+                }]]</b> <p></p>
             <b>Result: [[${roll.result}]]</b><p></p>
-            <b>${
-              roll.total <= woundedValue + playerInput
-                ? " <span style='color:green; font-size: 120%;'> <b>SUCCESS!</b></span>"
-                : " <span style='color: rgb(168, 5, 5); font-size: 120%;'> <b>FAILURE!</b></span>"
-            }`;
+            <b>${roll.total <= woundedValue + playerInput
+                  ? " <span style='color:green; font-size: 120%;'> <b>SUCCESS!</b></span>"
+                  : " <span style='color: rgb(168, 5, 5); font-size: 120%;'> <b>FAILURE!</b></span>"
+                }`;
             } else {
               contentString = `<h2><img src="${item.img}"</img>${item.name}</h2>
-            <p></p><b>Target Number: [[${
-              regularValue + playerInput
-            }]]</b> <p></p>
+            <p></p><b>Target Number: [[${regularValue + playerInput
+                }]]</b> <p></p>
             <b>Result: [[${roll.result}]]</b><p></p>
-            <b>${
-              roll.total <= regularValue + playerInput
-                ? " <span style='color:green; font-size: 120%;'> <b>SUCCESS!</b></span>"
-                : " <span style='color: rgb(168, 5, 5); font-size: 120%;'> <b>FAILURE!</b></span>"
-            }`;
+            <b>${roll.total <= regularValue + playerInput
+                  ? " <span style='color:green; font-size: 120%;'> <b>SUCCESS!</b></span>"
+                  : " <span style='color: rgb(168, 5, 5); font-size: 120%;'> <b>FAILURE!</b></span>"
+                }`;
             }
 
             ChatMessage.create({
@@ -932,9 +918,8 @@ export class SimpleActorSheet extends ActorSheet {
 
                         <div>
                             <h2 style="text-align: center; display: flex; flex-direction: row; align-items: center; justify-content: center; gap: 5px; font-size: xx-large;">
-                                <img src="${
-                                  spellToCast.img
-                                }" class="item-img" height=35 width=35>
+                                <img src="${spellToCast.img
+        }" class="item-img" height=35 width=35>
                                 <div>${spellToCast.name}</div>
                             </h2>
 
@@ -950,9 +935,9 @@ export class SimpleActorSheet extends ActorSheet {
                                     <tr>
                                         <td>${spellToCast.system.cost}</td>
                                         <td>${Math.floor(
-                                          this.actor.system.characteristics.wp
-                                            .total / 10
-                                        )}</td>
+          this.actor.system.characteristics.wp
+            .total / 10
+        )}</td>
                                         <td>${spellToCast.system.level}</td>
                                     </tr>
                                 </tbody>
@@ -1224,36 +1209,32 @@ export class SimpleActorSheet extends ActorSheet {
 
             if (isLucky(this.actor, roll.result)) {
               contentString = `<h2><img src="${item.img}"</img>${item.name}</h2>
-            <p></p><b>Target Number: [[${regularValue} + ${playerInput} + ${
-                this.actor.system.wounded ? this.actor.system.woundPenalty : 0
-              }]]</b> <p></p>
+            <p></p><b>Target Number: [[${regularValue} + ${playerInput} + ${this.actor.system.wounded ? this.actor.system.woundPenalty : 0
+                }]]</b> <p></p>
             <b>Result: [[${roll.result}]]</b><p></p>
             <span style='color:green; font-size:120%;'> <b>LUCKY NUMBER!</b></span>`;
             } else if (isUnlucky(this.actor, roll.result)) {
               contentString = `<h2><img src="${item.img}"</img>${item.name}</h2>
-            <p></p><b>Target Number: [[${regularValue} + ${playerInput} + ${
-                this.actor.system.wounded ? this.actor.system.woundPenalty : 0
-              }]]</b> <p></p>
+            <p></p><b>Target Number: [[${regularValue} + ${playerInput} + ${this.actor.system.wounded ? this.actor.system.woundPenalty : 0
+                }]]</b> <p></p>
             <b>Result: [[${roll.result}]]</b><p></p>
             <span style='color:rgb(168, 5, 5); font-size:120%;'> <b>UNLUCKY NUMBER!</b></span>`;
             } else if (this.actor.system.wounded === true) {
               contentString = `<h2><img src="${item.img}"</img>${item.name}</h2>
             <p></p><b>Target Number: [[${woundedValue} + ${playerInput}]]</b> <p></p>
             <b>Result: [[${roll.result}]]</b><p></p>
-            <b>${
-              roll.total <= woundedValue + playerInput
-                ? " <span style='color:green; font-size: 120%;'> <b>SUCCESS!</b></span>"
-                : " <span style='color: rgb(168, 5, 5); font-size: 120%;'> <b>FAILURE!</b></span>"
-            }`;
+            <b>${roll.total <= woundedValue + playerInput
+                  ? " <span style='color:green; font-size: 120%;'> <b>SUCCESS!</b></span>"
+                  : " <span style='color: rgb(168, 5, 5); font-size: 120%;'> <b>FAILURE!</b></span>"
+                }`;
             } else {
               contentString = `<h2><img src="${item.img}"</img>${item.name}</h2>
             <p></p><b>Target Number: [[${regularValue} + ${playerInput}]]</b> <p></p>
             <b>Result: [[${roll.result}]]</b><p></p>
-            <b>${
-              roll.total <= regularValue + playerInput
-                ? " <span style='color:green; font-size: 120%;'> <b>SUCCESS!</b></span>"
-                : " <span style='color: rgb(168, 5, 5); font-size: 120%;'> <b>FAILURE!</b></span>"
-            }`;
+            <b>${roll.total <= regularValue + playerInput
+                  ? " <span style='color:green; font-size: 120%;'> <b>SUCCESS!</b></span>"
+                  : " <span style='color: rgb(168, 5, 5); font-size: 120%;'> <b>FAILURE!</b></span>"
+                }`;
             }
 
             ChatMessage.create({
@@ -1299,30 +1280,26 @@ export class SimpleActorSheet extends ActorSheet {
 
             if (isLucky(this.actor, roll.result)) {
               contentString = `<h2>${element.name} Resistance</h2>
-            <p></p><b>Target Number: [[${
-              this.actor.system.resistance[element.id]
-            } + ${playerInput}]]</b> <p></p>
+            <p></p><b>Target Number: [[${this.actor.system.resistance[element.id]
+                } + ${playerInput}]]</b> <p></p>
             <b>Result: [[${roll.result}]]</b><p></p>
             <span style='color:green; font-size:120%;'> <b>LUCKY NUMBER!</b></span>`;
             } else if (isLucky(this.actor, roll.result)) {
               contentString = `<h2>${element.name} Resistance</h2>
-            <p></p><b>Target Number: [[${
-              this.actor.system.resistance[element.id]
-            } + ${playerInput}]]</b> <p></p>
+            <p></p><b>Target Number: [[${this.actor.system.resistance[element.id]
+                } + ${playerInput}]]</b> <p></p>
             <b>Result: [[${roll.result}]]</b><p></p>
             <span style='color:rgb(168, 5, 5); font-size:120%;'> <b>UNLUCKY NUMBER!</b></span>`;
             } else {
               contentString = `<h2>${element.name} Resistance</h2>
-            <p></p><b>Target Number: [[${
-              this.actor.system.resistance[element.id]
-            } + ${playerInput}]]</b> <p></p>
+            <p></p><b>Target Number: [[${this.actor.system.resistance[element.id]
+                } + ${playerInput}]]</b> <p></p>
             <b>Result: [[${roll.result}]]</b><p></p>
-            <b>${
-              roll.total <=
-              this.actor.system.resistance[element.id] + playerInput
-                ? " <span style='color:green; font-size: 120%;'> <b>SUCCESS!</b></span>"
-                : " <span style='color: rgb(168, 5, 5); font-size: 120%;'> <b>FAILURE!</b></span>"
-            }`;
+            <b>${roll.total <=
+                  this.actor.system.resistance[element.id] + playerInput
+                  ? " <span style='color:green; font-size: 120%;'> <b>SUCCESS!</b></span>"
+                  : " <span style='color: rgb(168, 5, 5); font-size: 120%;'> <b>FAILURE!</b></span>"
+                }`;
             }
             await roll.toMessage({
               async: false,
@@ -1487,7 +1464,7 @@ export class SimpleActorSheet extends ActorSheet {
       ui.notifications.info("Out of Ammunition!");
     }
 
-    await item.update({system: {quantity: item.system.quantity}});
+    await item.update({ system: { quantity: item.system.quantity } });
   }
 
   async _onToggle2H(event) {
@@ -1496,7 +1473,7 @@ export class SimpleActorSheet extends ActorSheet {
     const li = toggle.parents(".item");
     const item = this.actor.getEmbeddedDocument("Item", li.data("itemId"));
 
-    item.update({"system.weapon2H": !item.system.weapon2H});
+    item.update({ "system.weapon2H": !item.system.weapon2H });
   }
 
   async _onPlusQty(event) {
@@ -1506,7 +1483,7 @@ export class SimpleActorSheet extends ActorSheet {
     const item = this.actor.getEmbeddedDocument("Item", li.data("itemId"));
 
     item.system.quantity = item.system.quantity + 1;
-    await item.update({ "system.quantity": item.system.quantity});
+    await item.update({ "system.quantity": item.system.quantity });
   }
 
   async _onMinusQty(event) {
@@ -1617,7 +1594,7 @@ export class SimpleActorSheet extends ActorSheet {
             "system.governingCha": "Str, Agi",
             "system.baseCha":
               this.actor.system.characteristics.str.total >=
-              this.actor.system.characteristics.agi.total
+                this.actor.system.characteristics.agi.total
                 ? "str"
                 : "agi",
           },
@@ -1633,7 +1610,7 @@ export class SimpleActorSheet extends ActorSheet {
             "system.governingCha": "Wp",
             "system.baseCha":
               this.actor.system.characteristics.int.total >=
-              this.actor.system.characteristics.wp.total
+                this.actor.system.characteristics.wp.total
                 ? "wp"
                 : "int",
           },
@@ -1877,516 +1854,15 @@ export class SimpleActorSheet extends ActorSheet {
 
   _onRaceMenu(event) {
     event.preventDefault();
-    const imgPath = "systems/uesrpg-3ev4/images";
 
-    const races = {
-      altmer: {
-        name: "Altmer",
-        img: `${imgPath}/altmer.webp`,
-        baseline: {
-          str: 20,
-          end: 23,
-          agi: 23,
-          int: 30,
-          wp: 28,
-          prc: 25,
-          prs: 25,
-        },
-        traits: [
-          "Disease Resistance (50%)",
-          "Power Well (20)",
-          "Weakness (Magic, 2)",
-          "Mental Strength: Ignores penalties to Willpower tests made to resist paralysis",
-          "During character creation, Altmer characters may pick one of the traditional magic skills to begin trained at Novice rank for free.",
-        ],
-        items: [
-          {
-            name: "Disease Resistance (50%) (Racial)",
-            img: "systems/uesrpg-3ev4/images/Icons/diseaseResistance.webp",
-            type: "trait",
-            dataPath: "system.diseaseR",
-            value: 50,
-            desc: `This character has a 50% chance to resist disease. Whenever the\
-              character would be infected by a common disease, roll a d100. If the\
-              roll is less than or equal to 50, the character doesn’t get the disease.`,
-          },
-          {
-            name: "Power Well (20) (Racial)",
-            img: "systems/uesrpg-3ev4/images/Icons/powerWell.webp",
-            type: "trait",
-            dataPath: "system.mpBonus",
-            value: 20,
-            desc: "This character has extra reserves of magicka available.",
-          },
-          {
-            name: "Weakness (Magic, 2) (Racial)",
-            img: "icons/magic/defensive/shield-barrier-blue.webp",
-            type: "trait",
-            dataPath: "system.magicR",
-            value: -2,
-          },
-          {
-            name: "Mental Strength (Racial)",
-            img: "systems/uesrpg-3ev4/images/Icons/Skill_203.webp",
-            type: "trait",
-            desc: "Altmer ignore penalties to Willpower made to resist paralysis.",
-          },
-        ],
-      },
-
-      argonian: {
-        name: "Argonian",
-        img: `${imgPath}/argonian.webp`,
-        baseline: {
-          str: 25,
-          end: 24,
-          agi: 28,
-          int: 27,
-          wp: 24,
-          prc: 25,
-          prs: 22,
-        },
-        traits: [
-          "Disease Resistance (75%)",
-          "Immunity (Poison)",
-          "Amphibious: Can breathe water and ignores skill cap placed on Combat rolls by their Athletics skill",
-          "Inscrutable: -10 penalty on Persuade tests vs. Non-Argonians & others receive -10 penalty on Observe tests to determine an Argonians motives",
-        ],
-        items: [
-          {
-            name: "Disease Resistance (75%) (Racial)",
-            img: "systems/uesrpg-3ev4/images/Icons/diseaseResistance.webp",
-            type: "trait",
-            dataPath: "system.diseaseR",
-            value: 75,
-            desc: "This character has a chance to resist disease.",
-          },
-          {
-            name: "Immunity (Poison) (Racial)",
-            img: "systems/uesrpg-3ev4/images/Icons/poison.webp",
-            type: "trait",
-            dataPath: "system.poisonR",
-            value: 200,
-            desc: "This character does not take damage from Poison effects.",
-          },
-          {
-            name: "Amphibious (Racial)",
-            img: "systems/uesrpg-3ev4/images/Icons/amphibious.webp",
-            type: "trait",
-            desc: "Can breathe water and ignores skill-cap placed on Combat rolls by their Athletics Skill when fighting in water.",
-          },
-          {
-            name: "Inscrutable (Racial)",
-            img: "systems/uesrpg-3ev4/images/Icons/Assassinskill_31.webp",
-            type: "trait",
-            desc: "Argonians receive a -10 penalty to Persuade tests made to interact with non-Argonians. However, Observe tests made to try to distingush their motives are made with -10 penalty.",
-          },
-        ],
-      },
-
-      bosmer: {
-        name: "Bosmer",
-        img: `${imgPath}/bosmer.webp`,
-        baseline: {
-          str: 21,
-          end: 21,
-          agi: 31,
-          int: 25,
-          wp: 23,
-          prc: 26,
-          prs: 24,
-        },
-        traits: [
-          "Disease Resistance (50%)",
-          "Resistance (Poison, 1)",
-          "Natural Archers: May add shortbows to any Combat Style (does not count towards weapon max)",
-          "Beast Tongue: Can speak with animals",
-        ],
-        items: [
-          {
-            name: "Disease Resistance (50%) (Racial)",
-            img: "systems/uesrpg-3ev4/images/Icons/diseaseResistance.webp",
-            type: "trait",
-            dataPath: "system.diseaseR",
-            value: 50,
-            desc: "This character has a chance to resist disease.",
-          },
-          {
-            name: "Resistance (Poison, 1) (Racial)",
-            img: "systems/uesrpg-3ev4/images/Icons/poison.webp",
-            type: "trait",
-            dataPath: "system.poisonR",
-            value: 1,
-            desc: "This character reduces any incoming Poison damage by 1 and receives +10 bonus to resist non-damaging Poison effects.",
-          },
-          {
-            name: "Natural Archer (Racial)",
-            img: "systems/uesrpg-3ev4/images/Icons/Archerskill_04.webp",
-            type: "trait",
-            desc: "Bosmer add shortbows to any combat style they use. This does not count towards that combat style's maximum trained weapon count.",
-          },
-          {
-            name: "Beast Tongue (Racial)",
-            img: "systems/uesrpg-3ev4/images/Icons/beastAbility.webp",
-            type: "power",
-            desc: "Bosmer can speak to, and understand the speech of, animals. How exactly this functions is left to the GM’s discretion, though it is recommended the GM call for a Perception test when the Bosmer encounters the speech of an unfamiliar animal to determine if they can understand it and communicate back. Additionally, the character receives a +20 bonus to any Profession [Animal Training] skill tests they make.",
-          },
-        ],
-      },
-
-      breton: {
-        name: "Breton",
-        img: `${imgPath}/breton.webp`,
-        baseline: {
-          str: 23,
-          end: 21,
-          agi: 22,
-          int: 28,
-          wp: 30,
-          prc: 25,
-          prs: 25,
-        },
-        traits: [
-          "Resistance (Magic, 2)",
-          "Power Well (10)",
-          "During character creation, Breton characters may pick one of the traditional magic skills to begin trained at Novice rank for free.",
-        ],
-        items: [
-          {
-            name: "Resistance (Magic, 2) (Racial)",
-            img: "icons/magic/defensive/shield-barrier-blue.webp",
-            type: "trait",
-            dataPath: "system.magicR",
-            value: 2,
-            desc: "This character reduces incoming Magic damage by 2 and receives +20 bonus to resist any non-damaging magic effects",
-          },
-          {
-            name: "Power Well (10) (Racial)",
-            img: "systems/uesrpg-3ev4/images/Icons/powerWell.webp",
-            type: "trait",
-            dataPath: "system.mpBonus",
-            value: 10,
-            desc: "This character has extra reserves of magicka available to them.",
-          },
-        ],
-      },
-
-      dunmer: {
-        name: "Dunmer",
-        img: `${imgPath}/dunmer.webp`,
-        baseline: {
-          str: 25,
-          end: 24,
-          agi: 29,
-          int: 25,
-          wp: 24,
-          prc: 25,
-          prs: 23,
-        },
-        traits: [
-          "Resistance (Fire, 3)",
-          "Ancestor Guardian: See Powers section of Rules Compendium",
-          "During Character Creation, Dunmer may begin with the Destruction skill trained to Novice rank for free",
-        ],
-        items: [
-          {
-            name: "Resistance (Fire, 3) (Racial)",
-            img: "icons/magic/defensive/shield-barrier-glowing-triangle-red.webp",
-            type: "trait",
-            dataPath: "system.fireR",
-            value: 3,
-            desc: "This character reduces any incoming fire damage by 3 and receives +30 bonus to resist non-damaging fire effects",
-          },
-          {
-            name: "Ancestor Guardian (Racial)",
-            img: "systems/uesrpg-3ev4/images/Icons/ancestorGuardian.webp",
-            type: "power",
-            desc: "The Dunmer can, once per Long Rest, cast Sanctuary (3) on themselves that lasts for 3 rounds as a Free Action that costs no magicka and requires no test. Additionally, the Dunmer can perform a ritual that costs 10 drakes worth of incense and powders during a Long Rest to consult with an ancestor, asking up to 1d4+1 questions. The ancestor replies with a voice only the Dunmer can hear or sends imagery or signs to be interpreted.",
-          },
-        ],
-      },
-
-      imperial: {
-        name: "Imperial (Colovian)",
-        img: `${imgPath}/imperial.webp`,
-        baseline: {
-          str: 26,
-          end: 27,
-          agi: 24,
-          int: 24,
-          wp: 25,
-          prc: 25,
-          prs: 25,
-        },
-        traits: [
-          "Star of the West: Increase Stamina Points max by 1",
-          "Voice of the Emperor: They may choose to use Willpower in place of the base characteristic for a Persuade, Command, or Deceive skill test.",
-          "During Character Creation, may choose either Commerce, Persuade, or Deceive to begin at Novice rank for free",
-        ],
-        items: [
-          {
-            name: "Star of the West (Racial)",
-            img: "icons/environment/settlement/gazebo.webp",
-            type: "trait",
-            desc: "Imperials increase their Stamina Point max by 1",
-            dataPath: "system.spBonus",
-            value: 1,
-          },
-          {
-            name: "Voice of the Emperor (Racial)",
-            img: "icons/skills/social/diplomacy-peace-alliance.webp",
-            type: "trait",
-            desc: "Imperials speak with a small bit of the power and majesty of the Emperors. They may choose to use Willpower in place of the base characteristic for a Persuade, Command, or Deceive skill test.",
-          },
-        ],
-      },
-
-      khajiit: {
-        name: "Khajiit",
-        img: `${imgPath}/khajiit.webp`,
-        baseline: {
-          str: 22,
-          end: 22,
-          agi: 29,
-          int: 25,
-          wp: 21,
-          prc: 28,
-          prs: 24,
-        },
-        traits: [
-          "Dark Sight: Can see normally even in areas with total darkness",
-          "Natural Weapons: (Claws; 1d4; Slashing)",
-        ],
-        items: [
-          {
-            name: "Dark Sight (Racial)",
-            img: "systems/uesrpg-3ev4/images/Icons/darkSight.webp",
-            type: "trait",
-            desc: "A Khajiit can see normally even in areas with total darkness and never takes penalties for acting in areas with dim or no lighting.",
-          },
-          {
-            name: "Claws",
-            img: "systems/uesrpg-3ev4/images/Icons/claw_strike.webp",
-            type: "weapon",
-            dataPath: "system.damage",
-            value: "1d4",
-            dataPath2: "system.qualities",
-            qualities: "Slashing",
-          },
-        ],
-      },
-
-      nord: {
-        name: "Nord",
-        img: `${imgPath}/nord.webp`,
-        baseline: {
-          str: 30,
-          end: 28,
-          agi: 23,
-          int: 21,
-          wp: 24,
-          prc: 25,
-          prs: 23,
-        },
-        traits: [
-          "Tough: Increase the character's Wound Threshold by 1. (If using optional wounds rule, gain +10 bonus to Shock Tests instead)",
-          "Resistance (Frost, 2)",
-          "Resistance (Shock, 1)",
-          "War Cry: See Powers section of the Rules Compendium",
-        ],
-        items: [
-          {
-            name: "Tough (Racial)",
-            img: "systems/uesrpg-3ev4/images/Icons/unarmedProwess.webp",
-            type: "trait",
-            dataPath: "system.wound_threshold",
-            value: 1,
-            desc: "A Nord has their Wound Threshold increased by 1. (If using optional wounds rule, gain +10 bonus to Shock Tests instead)",
-          },
-          {
-            name: "Resistance (Frost, 2) (Racial)",
-            img: "icons/magic/water/snowflake-ice-blue.webp",
-            type: "trait",
-            dataPath: "system.frostR",
-            value: 2,
-            desc: "The character reduces all incoming frost damage by 2 and gains +20 bonus to resist non-damaging frost/cold effects.",
-          },
-          {
-            name: "Resistance (Shock, 1) (Racial)",
-            img: "icons/magic/lightning/bolt-blue.webp",
-            type: "trait",
-            dataPath: "system.shockR",
-            value: 1,
-            desc: "The character reduces all incoming shock damage by 1 and gains +10 bonus to resist non-damaging shock effects.",
-          },
-          {
-            name: "War Cry (Racial)",
-            img: "systems/uesrpg-3ev4/images/Icons/godOfWar.webp",
-            type: "power",
-            desc: "Nords are able to call on a very simple form of the Thu'um and harness it to frighten their enemies. As an action, they can issue a mighty war cry that forces all enemies who hear it to make a Panic (+30) test. If a character passes, they are immune to this effect for the remainder of the encounter. Can only be used once per Long Rest.",
-          },
-        ],
-      },
-
-      orsimer: {
-        name: "Orsimer",
-        img: `${imgPath}/orc.webp`,
-        baseline: {
-          str: 28,
-          end: 30,
-          agi: 22,
-          int: 23,
-          wp: 26,
-          prc: 24,
-          prs: 22,
-        },
-        traits: [
-          "Resilient: Increase HP max by +3",
-          "Tough: Increase the character's Wound Threshold by 1. (If using optional wounds rule, gain +10 bonus to Shock Tests instead)",
-          "Resistance (Magic, 1)",
-          "During Character Creation, may choose to begin with Profession (Smithing) at Novice rank for free",
-        ],
-        items: [
-          {
-            name: "Resilient (3) (Racial)",
-            img: "systems/uesrpg-3ev4/images/Icons/Warriorskill_44.webp",
-            type: "trait",
-            dataPath: "system.hpBonus",
-            value: 3,
-            desc: "Increase the character's HP maximum by 3",
-          },
-          {
-            name: "Tough (Racial)",
-            img: "systems/uesrpg-3ev4/images/Icons/Warriorskill_44.webp",
-            type: "trait",
-            dataPath: "system.wound_threshold",
-            value: 1,
-            desc: "An Orc has their Wound Threshold increased by 1. (If using newer rules, gain +10 bonus to Shock Tests instead)",
-          },
-          {
-            name: "Resistance (Magic, 1) (Racial)",
-            img: "icons/magic/defensive/shield-barrier-blue.webp",
-            type: "trait",
-            datPath: "system.magicR",
-            value: 1,
-            desc: "This character reduces all incoming Magic damage by 1 and gains +10 bonus to tests made to resist non-damaging magic effects.",
-          },
-        ],
-      },
-
-      redguard: {
-        name: "Redguard",
-        img: `${imgPath}/redguard.webp`,
-        baseline: {
-          str: 27,
-          end: 28,
-          agi: 26,
-          int: 22,
-          wp: 23,
-          prc: 25,
-          prs: 24,
-        },
-        traits: [
-          "Disease Resistance (75%)",
-          "Resistance (Poison, 3)",
-          "Adrenaline Rush: See Powers section of the Rules Compendium",
-          "During Character Creation, may choose to begin with a Combat Style skill at Novice rank for free",
-        ],
-        items: [
-          {
-            name: "Disease Resistance (75%) (Racial)",
-            img: "systems/uesrpg-3ev4/images/Icons/diseaseResistance.webp",
-            type: "trait",
-            dataPath: "system.diseaseR",
-            value: 75,
-            desc: "Characters with this trait have a chance to resist disease.",
-          },
-          {
-            name: "Resistance (Poison, 3) (Racial)",
-            img: "systems/uesrpg-3ev4/images/Icons/poison.webp",
-            type: "trait",
-            dataPath: "system.poisonR",
-            value: 3,
-            desc: "This character reduces all incoming Poison damage by 3 and gains +30 bonus to resist non-damaging Poison effects.",
-          },
-          {
-            name: "Adrenaline Rush (Racial)",
-            img: "systems/uesrpg-3ev4/images/Icons/champion.webp",
-            type: "power",
-            desc: "Redguards may choose to gain 1 Stamina Point at any time. If the character is fatigued when this power is used then then remove a level of fatigue instead. This Stamina Point persists for only that encounter and may only be used once per Long Rest.",
-          },
-        ],
-      },
-    };
-
-    const raceCards = [];
-    for (let i in races) {
-      const race = races[i];
-      const baseLineCells = [];
-      const traits = [];
-
-      // Loop through traits values and create list items
-      for (let i of race.traits) {
-        const trait = `<li>${i}</li>`;
-        traits.push(trait);
-      }
-
-      // Loop through baseline values and create table cells
-      for (let i in race.baseline) {
-        const base = race.baseline[i];
-        const tableCell = `<td>${base}</td>`;
-        baseLineCells.push(tableCell);
-      }
-
-      const card = `<div style="display: flex; flex-direction: row; align-items: center; border: solid 1px; padding: 0 5px; width: 49%;">
-                        <div style="width: 100%; height: 100%;">
-                            <div style="text-align: center; position: relative; top: 0;">
-                                <input type="checkbox" class="raceSelect" id="${
-                                  race.name
-                                }" style="position: relative; left: 0; top: 0;">
-                                <img src="${race.img}" alt="${
-        race.name
-      }" height="150" width="100" style="border: none;">
-                            </div>
-                            <div style="position: relative; top: 0;">
-                                <h2 style="text-align: center;">${
-                                  race.name
-                                }</h2>
-                                <table style="text-align: center;">
-                                    <thead>
-                                        <tr>
-                                          <th colspan="7">Characteristic Baseline</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <tr>
-                                          <th>STR</th>
-                                          <th>END</th>
-                                          <th>AGI</th>
-                                          <th>INT</th>
-                                          <th>WP</th>
-                                          <th>PRC</th>
-                                          <th>PRS</th>
-                                        </tr>
-                                        <tr>
-                                          ${baseLineCells.join("")}
-                                        </tr>
-                                    </tbody>
-                              </table>
-                              <ul>
-                                  ${traits.join("")}
-                              </ul>
-                            </div>
-                        </div>
-                    </div>`;
-
-      raceCards.push(card);
-    }
+    const coreRaceCards = renderRaceCards(coreRaces);
+    const variantRaceCards = renderRaceCards(coreVariants);
+    const khajiitFurstockRaceCards = renderRaceCards(khajiitFurstocks);
+    const expandedRaceCards = renderRaceCards(expandedRaces);
 
     let d = new Dialog({
       title: "Race Menu",
       content: `<form style="padding: 10px;">
-
                   <div style="border: 1px solid; background: rgba(85, 85, 85, 0.40); font-style:italic; padding: 5px; text-align: center;">
                     <div>
                         Select a Race from the cards below or input your own custom race label below. Leave blank if you do NOT want to use a custom race.
@@ -2399,11 +1875,23 @@ export class SimpleActorSheet extends ActorSheet {
                   </div>
 
                   <div style="height: 500px; overflow-y: scroll;">
+                      <h1 style="padding-top: 10px;">Core Races</h1>
                       <div style="display: flex; flex-direction: row; flex-wrap: wrap; justify-content: space-between; align-content: center; width: 100%;">
-                        ${raceCards.join("")}
+                        ${coreRaceCards.join("")}
+                      </div>
+                      <h1 style="padding-top: 10px;">Core Race Variants</h1>
+                      <div style="display: flex; flex-direction: row; flex-wrap: wrap; justify-content: space-between; align-content: center; width: 100%;">
+                        ${variantRaceCards.join("")}
+                      </div>
+                      <h1 style="padding-top: 10px;">Khajiit Furstocks</h1>
+                      <div style="display: flex; flex-direction: row; flex-wrap: wrap; justify-content: space-between; align-content: center; width: 100%;">
+                        ${khajiitFurstockRaceCards.join("")}
+                      </div>
+                      <h1 style="padding-top: 10px;">Expanded Races</h1>
+                      <div style="display: flex; flex-direction: row; flex-wrap: wrap; justify-content: space-between; align-content: center; width: 100%;">
+                        ${expandedRaceCards.join("")}
                       </div>
                   </div>
-
                 </form>`,
       buttons: {
         one: {
@@ -2429,11 +1917,13 @@ export class SimpleActorSheet extends ActorSheet {
             else {
               let raceName;
 
+              const races = { ...coreRaces, ...coreVariants, ...khajiitFurstocks, ...expandedRaces };
+
               if (customRaceLabel !== "") {
                 raceName = customRaceLabel;
               } else {
                 raceName = raceSelection[0].id;
-                let selectedRace = races[raceName.toLowerCase()];
+                let selectedRace = races[raceName];
 
                 // Loop through and update actor base characteristics with race object baselines
                 for (let value in this.actor.system.characteristics) {
@@ -2558,7 +2048,7 @@ export class SimpleActorSheet extends ActorSheet {
         items: ["The Lover"],
         starCursed: ["The Star-Cursed Lover"],
         starCursedChoices: {
-          attributes: [ "willpower", "strength"],
+          attributes: ["willpower", "strength"],
           modifier: -5,
         },
       },
@@ -2697,9 +2187,8 @@ export class SimpleActorSheet extends ActorSheet {
           <h2 style="text-align: center;">${signObject.name}</h2>
           <div style="display: flex; flex-direction: row; justify-content: space-between; align-items: center; border-bottom: 1px solid; border-top: 1px solid; width: 100%;">
             <div style="display: flex; flex-direction: row; align-items: center;">
-              <input type="checkbox" id="${
-                signObject.name
-              }" class="signSelect">
+              <input type="checkbox" id="${signObject.name
+        }" class="signSelect">
               <div>${signObject.name}</div>
             </div>
 
@@ -2707,9 +2196,8 @@ export class SimpleActorSheet extends ActorSheet {
 
             <div style="display: flex; flex-direction: row; align-items: center;">
                 <div>Star-Cursed</div>
-                <input type="checkbox" id="${
-                  signObject.name
-                }" class="signSelect cursedSelect">
+                <input type="checkbox" id="${signObject.name
+        }" class="signSelect cursedSelect">
             </div>
           </div>
           <div style="padding: 10px 0 0 0;">
@@ -2872,21 +2360,18 @@ export class SimpleActorSheet extends ActorSheet {
                             <div style="display: flex; flex-direction: row; justify-content: space-around; background: rgba(180, 180, 180, 0.562); padding: 10px; text-align: center; border: 1px solid;">
                                 <div style="width: 33.33%">
                                     <div>Current XP</div>
-                                    <input type="number" id="xp" value="${
-                                      this.actor.system.xp
-                                    }">
+                                    <input type="number" id="xp" value="${this.actor.system.xp
+        }">
                                 </div>
                                 <div style="width: 33.33%">
                                     <div>Total XP</div>
-                                    <input type="number" id="xpTotal" value="${
-                                      this.actor.system.xpTotal
-                                    }">
+                                    <input type="number" id="xpTotal" value="${this.actor.system.xpTotal
+        }">
                                 </div>
                                 <div style="width: 33.33%">
                                     <div>Campaign Rank</div>
-                                    <div style="padding: 5px 0;">${
-                                      this.actor.system.campaignRank
-                                    }</div>
+                                    <div style="padding: 5px 0;">${this.actor.system.campaignRank
+        }</div>
                                 </div>
                             </div>
                         </div>
@@ -3153,25 +2638,20 @@ export class SimpleActorSheet extends ActorSheet {
           tableEntry = `<tr>
                             <td data-item-id="${item._id}">
                                 <div style="display: flex; flex-direction: row; align-items: center; gap: 5px;">
-                                  <img class="item-img" src="${
-                                    item.img
-                                  }" height="24" width="24">
+                                  <img class="item-img" src="${item.img
+            }" height="24" width="24">
                                   ${item.name}
                                 </div>
                             </td>
-                            <td style="text-align: center;">${
-                              item.system.armor
-                            }</td>
-                            <td style="text-align: center;">${
-                              item.system.magic_ar
-                            }</td>
-                            <td style="text-align: center;">${
-                              item.system.blockRating
-                            }</td>
+                            <td style="text-align: center;">${item.system.armor
+            }</td>
+                            <td style="text-align: center;">${item.system.magic_ar
+            }</td>
+                            <td style="text-align: center;">${item.system.blockRating
+            }</td>
                             <td style="text-align: center;">
-                                <input type="checkbox" class="itemSelect" data-item-id="${
-                                  item._id
-                                }" ${item.system.equipped ? "checked" : ""}>
+                                <input type="checkbox" class="itemSelect" data-item-id="${item._id
+            }" ${item.system.equipped ? "checked" : ""}>
                             </td>
                         </tr>`;
           break;
@@ -3180,25 +2660,20 @@ export class SimpleActorSheet extends ActorSheet {
           tableEntry = `<tr>
                             <td data-item-id="${item._id}">
                                 <div style="display: flex; flex-direction: row; align-items: center; gap: 5px;">
-                                  <img class="item-img" src="${
-                                    item.img
-                                  }" height="24" width="24">
+                                  <img class="item-img" src="${item.img
+            }" height="24" width="24">
                                   ${item.name}
                                 </div>
                             </td>
-                            <td style="text-align: center;">${
-                              item.system.damage
-                            }</td>
-                            <td style="text-align: center;">${
-                              item.system.damage2
-                            }</td>
-                            <td style="text-align: center;">${
-                              item.system.reach
-                            }</td>
+                            <td style="text-align: center;">${item.system.damage
+            }</td>
+                            <td style="text-align: center;">${item.system.damage2
+            }</td>
+                            <td style="text-align: center;">${item.system.reach
+            }</td>
                             <td style="text-align: center;">
-                                <input type="checkbox" class="itemSelect" data-item-id="${
-                                  item._id
-                                }" ${item.system.equipped ? "checked" : ""}>
+                                <input type="checkbox" class="itemSelect" data-item-id="${item._id
+            }" ${item.system.equipped ? "checked" : ""}>
                             </td>
                         </tr>`;
           break;
@@ -3207,25 +2682,20 @@ export class SimpleActorSheet extends ActorSheet {
           tableEntry = `<tr>
                             <td data-item-id="${item._id}">
                                 <div style="display: flex; flex-direction: row; align-items: center; gap: 5px;">
-                                  <img class="item-img" src="${
-                                    item.img
-                                  }" height="24" width="24">
+                                  <img class="item-img" src="${item.img
+            }" height="24" width="24">
                                   ${item.name}
                                 </div>
                             </td>
-                            <td style="text-align: center;">${
-                              item.system.quantity
-                            }</td>
-                            <td style="text-align: center;">${
-                              item.system.damage
-                            }</td>
-                            <td style="text-align: center;">${
-                              item.system.enchant_level
-                            }</td>
+                            <td style="text-align: center;">${item.system.quantity
+            }</td>
+                            <td style="text-align: center;">${item.system.damage
+            }</td>
+                            <td style="text-align: center;">${item.system.enchant_level
+            }</td>
                             <td style="text-align: center;">
-                                <input type="checkbox" class="itemSelect" data-item-id="${
-                                  item._id
-                                }" ${item.system.equipped ? "checked" : ""}>
+                                <input type="checkbox" class="itemSelect" data-item-id="${item._id
+            }" ${item.system.equipped ? "checked" : ""}>
                             </td>
                         </tr>`;
           break;
@@ -3335,7 +2805,7 @@ export class SimpleActorSheet extends ActorSheet {
                 (item) => item.id == armorItem.dataset.itemId
               )[0];
               const shouldEquip = !!armorItem.checked;
-              await thisArmor.update({system: {equipped: shouldEquip}});
+              await thisArmor.update({ system: { equipped: shouldEquip } });
             }
           },
         },
