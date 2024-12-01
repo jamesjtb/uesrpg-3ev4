@@ -11,6 +11,7 @@ import coreRaces from "./racemenu/data/core-races.js";
 import coreVariants from "./racemenu/data/core-variants.js";
 import { renderRaceCards } from "./racemenu/render-race-cards.js";
 import khajiitFurstocks from './racemenu/data/khajiit-furstocks.js';
+import expandedRaces from "./racemenu/data/expanded-races.js";
 
 export class SimpleActorSheet extends ActorSheet {
   /** @override */
@@ -1857,6 +1858,7 @@ export class SimpleActorSheet extends ActorSheet {
     const coreRaceCards = renderRaceCards(coreRaces);
     const variantRaceCards = renderRaceCards(coreVariants);
     const khajiitFurstockRaceCards = renderRaceCards(khajiitFurstocks);
+    const expandedRaceCards = renderRaceCards(expandedRaces);
 
     let d = new Dialog({
       title: "Race Menu",
@@ -1885,6 +1887,10 @@ export class SimpleActorSheet extends ActorSheet {
                       <div style="display: flex; flex-direction: row; flex-wrap: wrap; justify-content: space-between; align-content: center; width: 100%;">
                         ${khajiitFurstockRaceCards.join("")}
                       </div>
+                      <h1 style="padding-top: 10px;">Expanded Races</h1>
+                      <div style="display: flex; flex-direction: row; flex-wrap: wrap; justify-content: space-between; align-content: center; width: 100%;">
+                        ${expandedRaceCards.join("")}
+                      </div>
                   </div>
                 </form>`,
       buttons: {
@@ -1911,7 +1917,7 @@ export class SimpleActorSheet extends ActorSheet {
             else {
               let raceName;
 
-              const races = { ...coreRaces, ...coreVariants, ...khajiitFurstocks };
+              const races = { ...coreRaces, ...coreVariants, ...khajiitFurstocks, ...expandedRaces };
 
               if (customRaceLabel !== "") {
                 raceName = customRaceLabel;
