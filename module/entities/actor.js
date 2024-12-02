@@ -124,7 +124,7 @@ export class SimpleActor extends Actor {
 
     actorSystemData.speed.base = strBonus + (2 * agiBonus) + (actorSystemData.speed.bonus);
     actorSystemData.speed.value = this._speedCalc(actorData);
-    actorSystemData.speed.swimSpeed = parseFloat(this._swimCalc(actorData)) + parseFloat((actorSystemData.speed.value/2).toFixed(0));
+    actorSystemData.speed.swimSpeed = parseFloat(this._swimCalc(actorData)) + Math.floor(actorSystemData.speed.value/2);
     actorSystemData.speed.flySpeed = this._flyCalc(actorData);
 
     actorSystemData.initiative.base = agiBonus + intBonus + prcBonus + (actorSystemData.initiative.bonus);
@@ -293,7 +293,7 @@ export class SimpleActor extends Actor {
     }
 
     //Fatigue Penalties
-    actorSystemData.fatigue.level = actorSystemData.stamina.value <= 0 ? ((actorSystemData.stamina.value -1) * -1) + actorSystemData.fatigue.bonus : 0 + actorSystemData.fatigue.bonus
+    actorSystemData.fatigue.level = actorSystemData.stamina.value < 0 ? (-actorSystemData.stamina.value) + actorSystemData.fatigue.bonus : 0 + actorSystemData.fatigue.bonus
 
     switch (actorSystemData.fatigue.level > 0) {
       case true:
@@ -974,7 +974,7 @@ export class SimpleActor extends Actor {
     for (let item of attribute) {
       bonus = bonus + item.system.swimBonus;
     }
-    return bonus
+    return bonus;
   }
 
   _flyCalc(actorData) {
