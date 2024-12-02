@@ -6,9 +6,10 @@
   "scripts": {
     "version": "node ./automation/version.js %npm_package_version%",
     "postversion": "git pull && git push && git push --tags",
-    "compile-packs": "node ./automation/ldb-packager.mjs compile",
-    "extract-packs": "node ./automation/ldb-packager.mjs extract",
-    "clean-packs": "node ./automation/ldb-packager.mjs clean"
+    "packs-compile": "node ./automation/ldb-packager.mjs compile",
+    "packs-extract": "node ./automation/ldb-packager.mjs extract",
+    "packs-extract-clean": "node ./automation/ldb-packager.mjs extract --clean",
+    "packs-clean": "node ./automation/ldb-packager.mjs clean"
   },
   "repository": {
     "type": "git",
