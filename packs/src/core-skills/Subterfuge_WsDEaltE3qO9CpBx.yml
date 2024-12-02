@@ -3,7 +3,7 @@ name: Subterfuge
 type: skill
 img: icons/skills/social/theft-pickpocket-bribery-brown.webp
 effects: []
-folder: M21YZXidaIesxWpe
+folder: null
 sort: 106250
 flags:
   core:

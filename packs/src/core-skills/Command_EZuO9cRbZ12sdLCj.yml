@@ -3,7 +3,7 @@ name: Command
 type: skill
 img: icons/sundries/flags/banner-pink.webp
 effects: []
-folder: M21YZXidaIesxWpe
+folder: null
 sort: 1700000
 flags:
   core:

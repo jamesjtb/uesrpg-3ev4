@@ -3,7 +3,7 @@ name: Enchant
 type: magicSkill
 img: icons/commodities/gems/gem-cluster-pink.webp
 effects: []
-folder: M21YZXidaIesxWpe
+folder: null
 sort: 1200000
 flags:
   core:

@@ -3,7 +3,7 @@ name: Conjuration
 type: magicSkill
 img: icons/magic/unholy/barrier-fire-pink.webp
 effects: []
-folder: M21YZXidaIesxWpe
+folder: null
 sort: 1500000
 flags:
   core:

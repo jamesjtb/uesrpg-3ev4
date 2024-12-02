@@ -3,7 +3,7 @@ name: Commerce
 type: skill
 img: icons/skills/social/trading-justice-scale-yellow.webp
 effects: []
-folder: M21YZXidaIesxWpe
+folder: null
 sort: 1600000
 flags:
   core:

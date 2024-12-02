@@ -3,7 +3,7 @@ name: Lore
 type: skill
 img: icons/sundries/books/book-stack.webp
 effects: []
-folder: M21YZXidaIesxWpe
+folder: null
 sort: 700000
 flags:
   core:

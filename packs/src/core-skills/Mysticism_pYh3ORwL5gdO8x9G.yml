@@ -3,7 +3,7 @@ name: Mysticism
 type: magicSkill
 img: icons/magic/symbols/circled-gem-pink.webp
 effects: []
-folder: M21YZXidaIesxWpe
+folder: null
 sort: 600000
 flags:
   core:

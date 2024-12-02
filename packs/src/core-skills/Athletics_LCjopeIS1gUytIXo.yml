@@ -3,7 +3,7 @@ name: Athletics
 type: skill
 img: systems/uesrpg-3ev4/images/Icons/unarmedProwess.webp
 effects: []
-folder: M21YZXidaIesxWpe
+folder: null
 sort: 1800000
 flags:
   core:

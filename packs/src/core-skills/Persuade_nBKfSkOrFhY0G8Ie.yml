@@ -3,7 +3,7 @@ name: Persuade
 type: skill
 img: icons/skills/social/diplomacy-handshake-yellow.webp
 effects: []
-folder: M21YZXidaIesxWpe
+folder: null
 sort: 200000
 flags:
   core:

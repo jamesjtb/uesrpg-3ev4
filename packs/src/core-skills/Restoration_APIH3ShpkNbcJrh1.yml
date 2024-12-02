@@ -3,7 +3,7 @@ name: Restoration
 type: magicSkill
 img: icons/magic/life/heart-red-blue.webp
 effects: []
-folder: M21YZXidaIesxWpe
+folder: null
 sort: 150000
 flags:
   core:

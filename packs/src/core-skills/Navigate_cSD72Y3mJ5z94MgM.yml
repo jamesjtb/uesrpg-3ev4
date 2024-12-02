@@ -3,7 +3,7 @@ name: Navigate
 type: skill
 img: icons/tools/navigation/map-chart-tan.webp
 effects: []
-folder: M21YZXidaIesxWpe
+folder: null
 sort: 500000
 flags:
   core:

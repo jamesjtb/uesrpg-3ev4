@@ -3,7 +3,7 @@ name: Stealth
 type: skill
 img: systems/uesrpg-3ev4/images/Icons/invisible.webp
 effects: []
-folder: M21YZXidaIesxWpe
+folder: null
 sort: 112500
 flags:
   core:

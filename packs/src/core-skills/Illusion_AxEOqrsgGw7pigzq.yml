@@ -3,7 +3,7 @@ name: Illusion
 type: magicSkill
 img: systems/uesrpg-3ev4/images/Icons/observant.webp
 effects: []
-folder: M21YZXidaIesxWpe
+folder: null
 sort: 1000000
 flags:
   core:

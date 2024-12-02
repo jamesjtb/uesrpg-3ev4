@@ -3,7 +3,7 @@ name: Survival
 type: skill
 img: systems/uesrpg-3ev4/images/Icons/OnewithWild.webp
 effects: []
-folder: M21YZXidaIesxWpe
+folder: null
 sort: 103125
 flags:
   core:

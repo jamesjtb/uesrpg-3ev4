@@ -3,7 +3,7 @@ name: Observe
 type: skill
 img: systems/uesrpg-3ev4/images/Icons/attentionToDetail.webp
 effects: []
-folder: M21YZXidaIesxWpe
+folder: null
 sort: 300000
 flags:
   core:

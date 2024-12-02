@@ -3,7 +3,7 @@ name: Investigate
 type: skill
 img: icons/tools/scribal/magnifying-glass.webp
 effects: []
-folder: M21YZXidaIesxWpe
+folder: null
 sort: 900000
 flags:
   core:

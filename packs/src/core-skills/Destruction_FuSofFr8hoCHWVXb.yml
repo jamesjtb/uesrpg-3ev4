@@ -3,7 +3,7 @@ name: Destruction
 type: magicSkill
 img: icons/magic/fire/projectile-fireball-red-yellow.webp
 effects: []
-folder: M21YZXidaIesxWpe
+folder: null
 sort: 1300000
 flags:
   core:

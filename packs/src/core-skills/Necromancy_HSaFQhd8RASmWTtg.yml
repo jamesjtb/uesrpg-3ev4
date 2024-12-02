@@ -3,7 +3,7 @@ name: Necromancy
 type: magicSkill
 img: icons/magic/death/skull-flames-white-blue.webp
 effects: []
-folder: M21YZXidaIesxWpe
+folder: null
 sort: 400000
 flags:
   core:

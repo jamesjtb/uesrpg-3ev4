@@ -3,7 +3,7 @@ name: Ride
 type: skill
 img: icons/environment/creatures/horse-brown.webp
 effects: []
-folder: M21YZXidaIesxWpe
+folder: null
 sort: 125000
 flags:
   core:

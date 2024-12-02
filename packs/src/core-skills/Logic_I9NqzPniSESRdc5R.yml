@@ -3,7 +3,7 @@ name: Logic
 type: skill
 img: systems/uesrpg-3ev4/images/Icons/depthOfUnderstanding.webp
 effects: []
-folder: M21YZXidaIesxWpe
+folder: null
 sort: 800000
 flags:
   core:

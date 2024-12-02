@@ -3,7 +3,7 @@ name: Alteration
 type: magicSkill
 img: systems/uesrpg-3ev4/images/Icons/masterOfMagicka.webp
 effects: []
-folder: M21YZXidaIesxWpe
+folder: null
 sort: 2000000
 flags:
   core:
