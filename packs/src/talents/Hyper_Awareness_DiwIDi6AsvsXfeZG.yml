@@ -1,4 +1,3 @@
-_id: caqCYmGgZTWopyhs
 name: Hyper Awareness
 type: talent
 flags:
@@ -7,17 +6,17 @@ flags:
 img: systems/uesrpg-3ev4/images/Icons/hyperAwareness.webp
 effects: []
 _stats:
-  coreVersion: '12.331'
-  systemId: null
-  systemVersion: null
-  createdTime: null
-  modifiedTime: null
-  lastModifiedBy: null
-  compendiumSource: null
+  compendiumSource: Item.DYVazRNO2caSDMGE
   duplicateSource: null
+  coreVersion: '12.331'
+  systemId: uesrpg-3ev4
+  systemVersion: v1.0.0-RC.62
+  createdTime: 1733123705338
+  modifiedTime: 1733123705338
+  lastModifiedBy: HcIrULZhA1JFIlrf
 ownership:
   default: 0
-  xvA5SwRGJiyPsnxH: 3
+  HcIrULZhA1JFIlrf: 3
 system:
   mpBonus: 0
   hpBonus: 0
@@ -41,11 +40,11 @@ system:
     ini:
       iniToggle: false
       value: 0
-      characteristic: null
+      characteristic: none
     wt:
       wtToggle: false
       value: 0
-      characteristic: null
+      characteristic: none
   characteristics:
     none: None
     str: STR
@@ -67,13 +66,13 @@ system:
     lckChaBonus: 0
   skillArray: []
   description: >-
-    <p>When the character passes any Combat Style or Evade skill test, he can
-    choose to take the number of DoS that was rolled or take a number equal to
-    his Observe skill rank instead.</p>
+    <p>When the character passes any Combat Style or Evade skill test they can
+    choose to take the number of degrees of success that they rolled, or take a
+    number equal to their Observe skill rank instead. </p>
   xpCost: 800
   level: 6
   talentReq: Observant
-  miscReq: Adept Observe
+  miscReq: ''
   halfFatiguePenalty: false
   halfWoundPenalty: false
   untrainedException: false
@@ -81,7 +80,8 @@ system:
   addIntToMP: false
   armorAcrobaticsException: false
   addHalfSpeed: false
-folder: null
+folder: wHXhCeP5Fmy5GR8f
+_id: DiwIDi6AsvsXfeZG
 sort: 0
-_key: '!items!caqCYmGgZTWopyhs'
+_key: '!items!DiwIDi6AsvsXfeZG'
 
