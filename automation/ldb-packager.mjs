@@ -1,4 +1,4 @@
-import { readdirSync, rmSync } from 'fs';
+import { mkdirSync, readdirSync, rmSync } from 'fs';
 import { compilePack, extractPack } from '@foundryvtt/foundryvtt-cli';
 
 const commands = {
@@ -8,7 +8,9 @@ const commands = {
 };
 
 const command = process.argv[2];
-const specifiedPack = process.argv[3];
+const specifiedPack = process.argv[3].startsWith('--') ? null : process.argv[3];
+
+const opts = process.argv.filter((arg) => arg.startsWith('--')).map(arg => arg.slice(2));
 
 if (!command) {
   throw new Error('No command provided');
@@ -27,7 +29,11 @@ const findCompiledPacks = () => {
 };
 
 if (command === commands.extract) {
-  const packs = findCompiledPacks()
+  if (opts.includes('clean')) {
+    rmSync(packsSrcPath, {recursive: true, force: true});
+    mkdirSync(packsSrcPath);
+  }
+  const packs = findCompiledPacks();
   console.log(`Found ${packs.length} packs...`);
   for (const pack of packs) {
     if (specifiedPack && specifiedPack !== pack) continue;
