@@ -1,23 +1,22 @@
-_id: DBTqIepbIQ6wdAGa
-name: Brawler
+name: Controlled Anger
 type: talent
 flags:
   core:
     sourceId: Item.DYVazRNO2caSDMGE
-img: systems/uesrpg-3ev4/images/Icons/brawler.webp
+img: systems/uesrpg-3ev4/images/Icons/controlledAnger.webp
 effects: []
 _stats:
-  coreVersion: '12.331'
-  systemId: null
-  systemVersion: null
-  createdTime: null
-  modifiedTime: null
-  lastModifiedBy: null
-  compendiumSource: null
+  compendiumSource: Item.DYVazRNO2caSDMGE
   duplicateSource: null
+  coreVersion: '12.331'
+  systemId: uesrpg-3ev4
+  systemVersion: v1.0.0-RC.62
+  createdTime: 1733290385290
+  modifiedTime: 1733290385344
+  lastModifiedBy: HcIrULZhA1JFIlrf
 ownership:
   default: 0
-  xvA5SwRGJiyPsnxH: 3
+  HcIrULZhA1JFIlrf: 3
 system:
   mpBonus: 0
   hpBonus: 0
@@ -41,11 +40,11 @@ system:
     ini:
       iniToggle: false
       value: 0
-      characteristic: null
+      characteristic: none
     wt:
       wtToggle: false
       value: 0
-      characteristic: null
+      characteristic: none
   characteristics:
     none: None
     str: STR
@@ -67,12 +66,15 @@ system:
     lckChaBonus: 0
   skillArray: []
   description: >-
-    <p>The character adds a bonus DoS to any successful Combat Style or Evade
-    tests made while within melee range of two or more opponents.</p>
-  xpCost: 100
-  level: 1
-  talentReq: ''
-  miscReq: Apprentice Combat/Evade
+    <p>The character may remove the Frenzied condition as a free action. They
+    can also roll a +0 Willpower test to take control of any involuntarily
+    applied Frenzied condition. The character no longer loses SP as part of
+    losing the Frenzied condition, and halve any skill test penalties associated
+    with the Frenzied condition.</p>
+  xpCost: 400
+  level: Adept
+  talentReq: Berserker
+  miscReq: Willpower 35
   halfFatiguePenalty: false
   halfWoundPenalty: false
   untrainedException: false
@@ -80,7 +82,9 @@ system:
   addIntToMP: false
   armorAcrobaticsException: false
   addHalfSpeed: false
-folder: null
-sort: 0
-_key: '!items!DBTqIepbIQ6wdAGa'
+  governingCharacteristics: Wp
+folder: aAOygNvKFmG4260D
+_id: J0EDbLXB7XW7BAFd
+sort: 200000
+_key: '!items!J0EDbLXB7XW7BAFd'
 

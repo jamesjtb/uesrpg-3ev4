@@ -1,23 +1,22 @@
-_id: BPxBfgkguMU4MYBu
-name: Controlled Anger
+name: Gladiator
 type: talent
 flags:
   core:
     sourceId: Item.DYVazRNO2caSDMGE
-img: systems/uesrpg-3ev4/images/Icons/controlledAnger.webp
+img: systems/uesrpg-3ev4/images/Icons/gladiator.webp
 effects: []
 _stats:
-  coreVersion: '12.331'
-  systemId: null
-  systemVersion: null
-  createdTime: null
-  modifiedTime: null
-  lastModifiedBy: null
-  compendiumSource: null
+  compendiumSource: Item.DYVazRNO2caSDMGE
   duplicateSource: null
+  coreVersion: '12.331'
+  systemId: uesrpg-3ev4
+  systemVersion: v1.0.0-RC.62
+  createdTime: 1733291241759
+  modifiedTime: 1733291241759
+  lastModifiedBy: HcIrULZhA1JFIlrf
 ownership:
   default: 0
-  xvA5SwRGJiyPsnxH: 3
+  HcIrULZhA1JFIlrf: 3
 system:
   mpBonus: 0
   hpBonus: 0
@@ -41,11 +40,11 @@ system:
     ini:
       iniToggle: false
       value: 0
-      characteristic: null
+      characteristic: none
     wt:
       wtToggle: false
       value: 0
-      characteristic: null
+      characteristic: none
   characteristics:
     none: None
     str: STR
@@ -66,11 +65,14 @@ system:
     prsChaBonus: 0
     lckChaBonus: 0
   skillArray: []
-  description: <p>The character may remove the Frenzied condition as a Free Action.</p>
-  xpCost: 400
-  level: 4
-  talentReq: Berserker
-  miscReq: Willpower 35
+  description: >-
+    <p>If the character is the target of a melee attack while within the melee
+    range of at least two opponents, then they make a free defensive reaction
+    against that attack, but only once per round.</p>
+  xpCost: 500
+  level: Expert
+  talentReq: Brawler
+  miscReq: Journeyman Combat/Evade
   halfFatiguePenalty: false
   halfWoundPenalty: false
   untrainedException: false
@@ -78,7 +80,9 @@ system:
   addIntToMP: false
   armorAcrobaticsException: false
   addHalfSpeed: false
-folder: null
+  governingCharacteristics: Str, Ag
+folder: aAOygNvKFmG4260D
+_id: xjvy6AXQRppsCqTl
 sort: 0
-_key: '!items!BPxBfgkguMU4MYBu'
+_key: '!items!xjvy6AXQRppsCqTl'
 

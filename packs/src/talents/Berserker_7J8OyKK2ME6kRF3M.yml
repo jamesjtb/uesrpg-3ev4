@@ -1,9 +1,9 @@
-name: Honed Senses
+name: Berserker
 type: talent
 flags:
   core:
     sourceId: Item.DYVazRNO2caSDMGE
-img: systems/uesrpg-3ev4/images/Icons/honedSenses.webp
+img: systems/uesrpg-3ev4/images/Icons/berserker.webp
 effects: []
 _stats:
   compendiumSource: Item.DYVazRNO2caSDMGE
@@ -11,8 +11,8 @@ _stats:
   coreVersion: '12.331'
   systemId: uesrpg-3ev4
   systemVersion: v1.0.0-RC.62
-  createdTime: 1733122929272
-  modifiedTime: 1733289566703
+  createdTime: 1733290317544
+  modifiedTime: 1733290385344
   lastModifiedBy: HcIrULZhA1JFIlrf
 ownership:
   default: 0
@@ -66,15 +66,14 @@ system:
     lckChaBonus: 0
   skillArray: []
   description: >-
-    <p>The character has honed their senses so that they can partially
-    compensate for the loss of one with the others. Halves all penalties imposed
-    on any tests by the loss or impairment of one sense (bad lighting,
-    blindness, deafness, and so on) as long as they have the others to fall back
-    on.</p>
-  xpCost: 200
-  level: Apprentice
+    <p>The character may take a primary action to gain the Frenzied condition.
+    They only attack enemies as long as the condition was entered voluntarily.
+    When the character loses the frenzied condition, they only lose 1 SP instead
+    of the usual 2.</p>
+  xpCost: 100
+  level: Novice
   talentReq: ''
-  miscReq: ''
+  miscReq: Willpower 30
   halfFatiguePenalty: false
   halfWoundPenalty: false
   untrainedException: false
@@ -82,9 +81,9 @@ system:
   addIntToMP: false
   armorAcrobaticsException: false
   addHalfSpeed: false
-  governingCharacteristics: Prc
-folder: wHXhCeP5Fmy5GR8f
-_id: JoWuf2stciOzXdGU
-sort: 500000
-_key: '!items!JoWuf2stciOzXdGU'
+  governingCharacteristics: Wp
+folder: aAOygNvKFmG4260D
+_id: 7J8OyKK2ME6kRF3M
+sort: 300000
+_key: '!items!7J8OyKK2ME6kRF3M'
 

@@ -1,0 +1,20 @@
+name: Combat
+sorting: a
+folder: null
+type: Item
+_id: aAOygNvKFmG4260D
+description: ''
+sort: 0
+color: '#8a0000'
+flags: {}
+_stats:
+  compendiumSource: null
+  duplicateSource: null
+  coreVersion: '12.331'
+  systemId: uesrpg-3ev4
+  systemVersion: v1.0.0-RC.62
+  createdTime: 1733290118799
+  modifiedTime: 1733290118799
+  lastModifiedBy: HcIrULZhA1JFIlrf
+_key: '!folders!aAOygNvKFmG4260D'
+

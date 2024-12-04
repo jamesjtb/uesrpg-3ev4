@@ -11,7 +11,7 @@ _stats:
   systemId: uesrpg-3ev4
   systemVersion: v1.0.0-RC.62
   createdTime: null
-  modifiedTime: 1733122937400
+  modifiedTime: 1733289519752
   lastModifiedBy: HcIrULZhA1JFIlrf
   compendiumSource: null
   duplicateSource: null
@@ -71,7 +71,7 @@ system:
     twice their Perception Bonus and adding two instead of the usual
     formula.</p>
   xpCost: 100
-  level: 1
+  level: Novice
   talentReq: ''
   miscReq: ''
   halfFatiguePenalty: false
@@ -81,7 +81,8 @@ system:
   addIntToMP: false
   armorAcrobaticsException: false
   addHalfSpeed: false
+  governingCharacteristics: Prc
 folder: wHXhCeP5Fmy5GR8f
-sort: 100000
+sort: 600000
 _key: '!items!4xPU1C6vWJq4ZfIi'
 

@@ -1,23 +1,22 @@
-_id: LHNEwi3TAu3nqEkU
-name: Arms Master
+name: Light Sleeper
 type: talent
 flags:
   core:
     sourceId: Item.DYVazRNO2caSDMGE
-img: systems/uesrpg-3ev4/images/Icons/armsMaster.webp
+img: systems/uesrpg-3ev4/images/Icons/lightSleeper.webp
 effects: []
 _stats:
-  coreVersion: '12.331'
-  systemId: null
-  systemVersion: null
-  createdTime: null
-  modifiedTime: null
-  lastModifiedBy: null
-  compendiumSource: null
+  compendiumSource: Item.DYVazRNO2caSDMGE
   duplicateSource: null
+  coreVersion: '12.331'
+  systemId: uesrpg-3ev4
+  systemVersion: v1.0.0-RC.62
+  createdTime: 1733289950509
+  modifiedTime: 1733289950509
+  lastModifiedBy: HcIrULZhA1JFIlrf
 ownership:
   default: 0
-  xvA5SwRGJiyPsnxH: 3
+  HcIrULZhA1JFIlrf: 3
 system:
   mpBonus: 0
   hpBonus: 0
@@ -26,8 +25,8 @@ system:
   wtBonus: 0
   iniBonus: 0
   speedBonus: 0
-  flyBonus: null
-  swimBonus: null
+  flyBonus: 0
+  swimBonus: 0
   diseaseR: 0
   fireR: 0
   frostR: 0
@@ -35,17 +34,17 @@ system:
   poisonR: 0
   magicR: 0
   natToughnessR: 0
-  silverR: null
-  sunlightR: null
+  silverR: 0
+  sunlightR: 0
   replace:
     ini:
       iniToggle: false
       value: 0
-      characteristic: null
+      characteristic: none
     wt:
       wtToggle: false
       value: 0
-      characteristic: null
+      characteristic: none
   characteristics:
     none: None
     str: STR
@@ -67,20 +66,22 @@ system:
     lckChaBonus: 0
   skillArray: []
   description: >-
-    <p>The character never suffers the usual &ndash;10 untrained penalty for the
-    using of weapons not included in one of their Combat Styles.</p>
-  xpCost: 300
-  level: 3
+    <p>The character always counts as being awake for the purposes of making
+    Observe tests and determining surprise, even if asleep.</p>
+  xpCost: 200
+  level: Apprentice
   talentReq: ''
-  miscReq: Apprentice Combat Style
+  miscReq: Apprentice Observe
   halfFatiguePenalty: false
   halfWoundPenalty: false
-  untrainedException: true
+  untrainedException: false
   fatigueException: false
   addIntToMP: false
   armorAcrobaticsException: false
   addHalfSpeed: false
-folder: null
+  governingCharacteristics: Prc
+folder: wHXhCeP5Fmy5GR8f
+_id: BBWlZ3HxyI1xBtBU
 sort: 0
-_key: '!items!LHNEwi3TAu3nqEkU'
+_key: '!items!BBWlZ3HxyI1xBtBU'
 

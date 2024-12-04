@@ -1,23 +1,22 @@
-_id: tC0AyyA9iQf2aiFY
-name: God of War
+name: Arms Master
 type: talent
 flags:
   core:
     sourceId: Item.DYVazRNO2caSDMGE
-img: systems/uesrpg-3ev4/images/Icons/godOfWar.webp
+img: systems/uesrpg-3ev4/images/Icons/armsMaster.webp
 effects: []
 _stats:
-  coreVersion: '12.331'
-  systemId: null
-  systemVersion: null
-  createdTime: null
-  modifiedTime: null
-  lastModifiedBy: null
-  compendiumSource: null
+  compendiumSource: Item.DYVazRNO2caSDMGE
   duplicateSource: null
+  coreVersion: '12.331'
+  systemId: uesrpg-3ev4
+  systemVersion: v1.0.0-RC.62
+  createdTime: 1733290203676
+  modifiedTime: 1733290385344
+  lastModifiedBy: HcIrULZhA1JFIlrf
 ownership:
   default: 0
-  xvA5SwRGJiyPsnxH: 3
+  HcIrULZhA1JFIlrf: 3
 system:
   mpBonus: 0
   hpBonus: 0
@@ -26,8 +25,8 @@ system:
   wtBonus: 0
   iniBonus: 0
   speedBonus: 0
-  flyBonus: 0
-  swimBonus: 0
+  flyBonus: null
+  swimBonus: null
   diseaseR: 0
   fireR: 0
   frostR: 0
@@ -35,17 +34,17 @@ system:
   poisonR: 0
   magicR: 0
   natToughnessR: 0
-  silverR: 0
-  sunlightR: 0
+  silverR: null
+  sunlightR: null
   replace:
     ini:
       iniToggle: false
       value: 0
-      characteristic: null
+      characteristic: none
     wt:
       wtToggle: false
       value: 0
-      characteristic: null
+      characteristic: none
   characteristics:
     none: None
     str: STR
@@ -67,24 +66,22 @@ system:
     lckChaBonus: 0
   skillArray: []
   description: >-
-    <p>When the character passes a Combat Style or Evade test while within melee
-    range of two or more opponents (and made against them) he can choose to take
-    the number of DoS that was rolled, or take a number equal to their
-    corre-sponding skill rank instead.</p>
-
-    <p><em>*The Brawler Talent only applies to the rolled DoS</em></p>
-  xpCost: 800
-  level: 6
-  talentReq: Brawler & Gladiator
-  miscReq: Adept Combat/Evade
+    <p>The character never suffers the usual -20 untrained penalty for using
+    weapons not included in one of their Combat Styles.</p>
+  xpCost: 400
+  level: Adept
+  talentReq: ''
+  miscReq: Apprentice Combat Style
   halfFatiguePenalty: false
   halfWoundPenalty: false
-  untrainedException: false
+  untrainedException: true
   fatigueException: false
   addIntToMP: false
   armorAcrobaticsException: false
   addHalfSpeed: false
-folder: null
-sort: 0
-_key: '!items!tC0AyyA9iQf2aiFY'
+  governingCharacteristics: Str, Ag
+folder: aAOygNvKFmG4260D
+_id: 1jWUrWaelGxWONEy
+sort: 100000
+_key: '!items!1jWUrWaelGxWONEy'
 

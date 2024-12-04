@@ -1,23 +1,22 @@
-_id: 5HqJhjehOXuzUEQ5
-name: Invisible
+name: '''Tis But a Scratch'
 type: talent
 flags:
   core:
     sourceId: Item.DYVazRNO2caSDMGE
-img: systems/uesrpg-3ev4/images/Icons/invisible.webp
+img: icons/skills/wounds/injury-triple-slash-bleed.webp
 effects: []
 _stats:
-  coreVersion: '12.331'
-  systemId: null
-  systemVersion: null
-  createdTime: null
-  modifiedTime: null
-  lastModifiedBy: null
-  compendiumSource: null
+  compendiumSource: Item.DYVazRNO2caSDMGE
   duplicateSource: null
+  coreVersion: '12.331'
+  systemId: uesrpg-3ev4
+  systemVersion: v1.0.0-RC.62
+  createdTime: 1733291085130
+  modifiedTime: 1733291085130
+  lastModifiedBy: HcIrULZhA1JFIlrf
 ownership:
   default: 0
-  xvA5SwRGJiyPsnxH: 3
+  HcIrULZhA1JFIlrf: 3
 system:
   mpBonus: 0
   hpBonus: 0
@@ -41,11 +40,11 @@ system:
     ini:
       iniToggle: false
       value: 0
-      characteristic: null
+      characteristic: none
     wt:
       wtToggle: false
       value: 0
-      characteristic: null
+      characteristic: none
   characteristics:
     none: None
     str: STR
@@ -66,11 +65,15 @@ system:
     prsChaBonus: 0
     lckChaBonus: 0
   skillArray: []
-  description: <p>Survival tests made to track the character suffer a -20 penalty.</p>
-  xpCost: 200
-  level: 2
-  talentReq: ''
-  miscReq: ''
+  description: >-
+    <p>While the character is frenzied, they double the associated bonus to
+    their Wound Threshold and ignore any Crippled or Lost Limb/Body Conditions
+    that they gain during this frenzy. These effects are immediately applied as
+    normal once the character loses the Frenzied condition.</p>
+  xpCost: 500
+  level: Expert
+  talentReq: Berserker
+  miscReq: Willpower 35
   halfFatiguePenalty: false
   halfWoundPenalty: false
   untrainedException: false
@@ -78,7 +81,9 @@ system:
   addIntToMP: false
   armorAcrobaticsException: false
   addHalfSpeed: false
-folder: null
+  governingCharacteristics: End
+folder: aAOygNvKFmG4260D
+_id: Z9lPfVUBe7cLjpCK
 sort: 0
-_key: '!items!5HqJhjehOXuzUEQ5'
+_key: '!items!Z9lPfVUBe7cLjpCK'
 

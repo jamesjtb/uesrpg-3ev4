@@ -12,7 +12,7 @@ _stats:
   systemId: uesrpg-3ev4
   systemVersion: v1.0.0-RC.62
   createdTime: 1733123002231
-  modifiedTime: 1733123002231
+  modifiedTime: 1733289635784
   lastModifiedBy: HcIrULZhA1JFIlrf
 ownership:
   default: 0
@@ -69,11 +69,12 @@ system:
     <p>The character has honed their senses so that they can entirely compensate
     for the loss of one with the others. Negates all penalties imposed on any
     tests by the loss or impairment of one sense (bad lighting, blindness,
-    deafness, and so on) as long as they have the others to fall back on.</p>
+    deafness, and so on) as long as they have the others to fall back
+    on.</p><p>Replaces Honed Senses.</p>
   xpCost: 500
-  level: 5
+  level: Expert
   talentReq: Honed Senses
-  miscReq: Replaces Honed Senses
+  miscReq: ''
   halfFatiguePenalty: false
   halfWoundPenalty: false
   untrainedException: false
@@ -81,8 +82,9 @@ system:
   addIntToMP: false
   armorAcrobaticsException: false
   addHalfSpeed: false
+  governingCharacteristics: Prc
 folder: wHXhCeP5Fmy5GR8f
 _id: GVQafrevdvqUKrXZ
-sort: 0
+sort: 400000
 _key: '!items!GVQafrevdvqUKrXZ'
 
