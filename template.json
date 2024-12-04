@@ -863,8 +863,9 @@
   "talent": {
     "templates": ["resistanceArray", "replaceAttributesArray", "characteristicArray", "objectArrays"],
     "description": "",
+    "governingCharacteristics": "",
     "xpCost": 0,
-    "level": 0,
+    "level": "",
     "talentReq": "",
     "miscReq": "",
     "halfFatiguePenalty": false,
