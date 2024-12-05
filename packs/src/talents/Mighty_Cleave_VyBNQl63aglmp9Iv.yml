@@ -1,9 +1,9 @@
-name: '''Tis But a Scratch'
+name: Mighty Cleave
 type: talent
 flags:
   core:
     sourceId: Item.DYVazRNO2caSDMGE
-img: icons/skills/wounds/injury-triple-slash-bleed.webp
+img: systems/uesrpg-3ev4/images/Icons/mightyCleave.webp
 effects: []
 _stats:
   compendiumSource: Item.DYVazRNO2caSDMGE
@@ -11,7 +11,7 @@ _stats:
   coreVersion: '12.331'
   systemId: uesrpg-3ev4
   systemVersion: v1.0.0-RC.62
-  createdTime: 1733291085130
+  createdTime: 1733367311322
   modifiedTime: 1733369301281
   lastModifiedBy: HcIrULZhA1JFIlrf
 ownership:
@@ -66,15 +66,18 @@ system:
     lckChaBonus: 0
   skillArray: []
   description: >-
-    <p>While the character is frenzied, they double the associated bonus to
-    their Wound Threshold and ignore any Crippled or Lost Limb/Body Conditions
-    that they gain during this frenzy. These effects are immediately applied as
-    normal once the character loses the Frenzied condition.</p>
-  governingCharacteristics: End
+    <p>While wielding a weapon in two hands the character can, as part of an All
+    Out Attack, strike two viable targets within their melee range. Each target
+    must be within 2 meters of one another. The character only rolls once for
+    the attack and each defender has an opportunity to defend separately against
+    that attack roll. Roll damage separately for each target that is hit. This
+    attack cannot gain advantages and only counts as a single attack for the
+    round.</p>
+  governingCharacteristics: Str
   xpCost: 500
   level: Expert
-  talentReq: Berserker
-  miscReq: Willpower 35
+  talentReq: ''
+  miscReq: Strength 50
   halfFatiguePenalty: false
   halfWoundPenalty: false
   untrainedException: false
@@ -83,7 +86,7 @@ system:
   armorAcrobaticsException: false
   addHalfSpeed: false
 folder: aAOygNvKFmG4260D
-_id: Z9lPfVUBe7cLjpCK
-sort: 2500000
-_key: '!items!Z9lPfVUBe7cLjpCK'
+_id: VyBNQl63aglmp9Iv
+sort: 500000
+_key: '!items!VyBNQl63aglmp9Iv'
 

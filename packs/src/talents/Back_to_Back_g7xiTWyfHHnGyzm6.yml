@@ -1,9 +1,9 @@
-name: '''Tis But a Scratch'
+name: Back to Back
 type: talent
 flags:
   core:
     sourceId: Item.DYVazRNO2caSDMGE
-img: icons/skills/wounds/injury-triple-slash-bleed.webp
+img: systems/uesrpg-3ev4/images/Icons/backToBack.webp
 effects: []
 _stats:
   compendiumSource: Item.DYVazRNO2caSDMGE
@@ -11,8 +11,8 @@ _stats:
   coreVersion: '12.331'
   systemId: uesrpg-3ev4
   systemVersion: v1.0.0-RC.62
-  createdTime: 1733291085130
-  modifiedTime: 1733369301281
+  createdTime: 1733369640141
+  modifiedTime: 1733369640141
   lastModifiedBy: HcIrULZhA1JFIlrf
 ownership:
   default: 0
@@ -25,8 +25,8 @@ system:
   wtBonus: 0
   iniBonus: 0
   speedBonus: 0
-  flyBonus: 0
-  swimBonus: 0
+  flyBonus: null
+  swimBonus: null
   diseaseR: 0
   fireR: 0
   frostR: 0
@@ -34,8 +34,8 @@ system:
   poisonR: 0
   magicR: 0
   natToughnessR: 0
-  silverR: 0
-  sunlightR: 0
+  silverR: null
+  sunlightR: null
   replace:
     ini:
       iniToggle: false
@@ -66,15 +66,14 @@ system:
     lckChaBonus: 0
   skillArray: []
   description: >-
-    <p>While the character is frenzied, they double the associated bonus to
-    their Wound Threshold and ignore any Crippled or Lost Limb/Body Conditions
-    that they gain during this frenzy. These effects are immediately applied as
-    normal once the character loses the Frenzied condition.</p>
-  governingCharacteristics: End
-  xpCost: 500
-  level: Expert
-  talentReq: Berserker
-  miscReq: Willpower 35
+    <p>The character can make an attack of opportunity whenever an enemy within
+    their melee range makes a melee attack against an ally who also has this
+    talent.</p>
+  governingCharacteristics: Prc
+  xpCost: 300
+  level: Journeyman
+  talentReq: Teamwork
+  miscReq: Journeyman Combat
   halfFatiguePenalty: false
   halfWoundPenalty: false
   untrainedException: false
@@ -83,7 +82,7 @@ system:
   armorAcrobaticsException: false
   addHalfSpeed: false
 folder: aAOygNvKFmG4260D
-_id: Z9lPfVUBe7cLjpCK
-sort: 2500000
-_key: '!items!Z9lPfVUBe7cLjpCK'
+_id: g7xiTWyfHHnGyzm6
+sort: 0
+_key: '!items!g7xiTWyfHHnGyzm6'
 

@@ -1,22 +1,6 @@
-name: '''Tis But a Scratch'
+name: Assassinate
 type: talent
-flags:
-  core:
-    sourceId: Item.DYVazRNO2caSDMGE
-img: icons/skills/wounds/injury-triple-slash-bleed.webp
-effects: []
-_stats:
-  compendiumSource: Item.DYVazRNO2caSDMGE
-  duplicateSource: null
-  coreVersion: '12.331'
-  systemId: uesrpg-3ev4
-  systemVersion: v1.0.0-RC.62
-  createdTime: 1733291085130
-  modifiedTime: 1733369301281
-  lastModifiedBy: HcIrULZhA1JFIlrf
-ownership:
-  default: 0
-  HcIrULZhA1JFIlrf: 3
+img: icons/skills/melee/strike-dagger-skull-white.webp
 system:
   mpBonus: 0
   hpBonus: 0
@@ -66,15 +50,14 @@ system:
     lckChaBonus: 0
   skillArray: []
   description: >-
-    <p>While the character is frenzied, they double the associated bonus to
-    their Wound Threshold and ignore any Crippled or Lost Limb/Body Conditions
-    that they gain during this frenzy. These effects are immediately applied as
-    normal once the character loses the Frenzied condition.</p>
-  governingCharacteristics: End
-  xpCost: 500
-  level: Expert
-  talentReq: Berserker
-  miscReq: Willpower 35
+    <p>The character can cause only the damage from Sneak Attack to ignore any
+    AR of the hit location they are hitting if they are attacking with a
+    one-handed weapon that has the Exploit Weakness Weapon Quality.</p>
+  governingCharacteristics: Ag
+  xpCost: 200
+  level: Apprentice
+  talentReq: Sneak Attack
+  miscReq: ''
   halfFatiguePenalty: false
   halfWoundPenalty: false
   untrainedException: false
@@ -82,8 +65,22 @@ system:
   addIntToMP: false
   armorAcrobaticsException: false
   addHalfSpeed: false
+effects: []
 folder: aAOygNvKFmG4260D
-_id: Z9lPfVUBe7cLjpCK
-sort: 2500000
-_key: '!items!Z9lPfVUBe7cLjpCK'
+ownership:
+  default: 0
+  HcIrULZhA1JFIlrf: 3
+flags: {}
+_stats:
+  compendiumSource: null
+  duplicateSource: null
+  coreVersion: '12.331'
+  systemId: uesrpg-3ev4
+  systemVersion: v1.0.0-RC.62
+  createdTime: 1733368585994
+  modifiedTime: 1733369301281
+  lastModifiedBy: HcIrULZhA1JFIlrf
+_id: w5sxHXsx0xZQqsHa
+sort: 1300000
+_key: '!items!w5sxHXsx0xZQqsHa'
 

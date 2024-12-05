@@ -1,9 +1,9 @@
-name: '''Tis But a Scratch'
+name: Teamwork
 type: talent
 flags:
   core:
     sourceId: Item.DYVazRNO2caSDMGE
-img: icons/skills/wounds/injury-triple-slash-bleed.webp
+img: systems/uesrpg-3ev4/images/Icons/teamwork.webp
 effects: []
 _stats:
   compendiumSource: Item.DYVazRNO2caSDMGE
@@ -11,8 +11,8 @@ _stats:
   coreVersion: '12.331'
   systemId: uesrpg-3ev4
   systemVersion: v1.0.0-RC.62
-  createdTime: 1733291085130
-  modifiedTime: 1733369301281
+  createdTime: 1733369572413
+  modifiedTime: 1733369572413
   lastModifiedBy: HcIrULZhA1JFIlrf
 ownership:
   default: 0
@@ -66,15 +66,15 @@ system:
     lckChaBonus: 0
   skillArray: []
   description: >-
-    <p>While the character is frenzied, they double the associated bonus to
-    their Wound Threshold and ignore any Crippled or Lost Limb/Body Conditions
-    that they gain during this frenzy. These effects are immediately applied as
-    normal once the character loses the Frenzied condition.</p>
-  governingCharacteristics: End
-  xpCost: 500
-  level: Expert
-  talentReq: Berserker
-  miscReq: Willpower 35
+    <p>The character adds a bonus degree of success to any successful Combat
+    Style tests made to attack or defend against opponents in melee range as
+    long as that opponent is also within melee range of an ally who also has
+    this talent.</p>
+  governingCharacteristics: Prc
+  xpCost: 100
+  level: Novice
+  talentReq: ''
+  miscReq: ''
   halfFatiguePenalty: false
   halfWoundPenalty: false
   untrainedException: false
@@ -83,7 +83,7 @@ system:
   armorAcrobaticsException: false
   addHalfSpeed: false
 folder: aAOygNvKFmG4260D
-_id: Z9lPfVUBe7cLjpCK
-sort: 2500000
-_key: '!items!Z9lPfVUBe7cLjpCK'
+_id: hOPvYk9W9OIYiIN3
+sort: 0
+_key: '!items!hOPvYk9W9OIYiIN3'
 

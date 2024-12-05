@@ -1,9 +1,9 @@
-name: '''Tis But a Scratch'
+name: Unstoppable Might
 type: talent
 flags:
   core:
     sourceId: Item.DYVazRNO2caSDMGE
-img: icons/skills/wounds/injury-triple-slash-bleed.webp
+img: systems/uesrpg-3ev4/images/Icons/unstoppableMight.webp
 effects: []
 _stats:
   compendiumSource: Item.DYVazRNO2caSDMGE
@@ -11,8 +11,8 @@ _stats:
   coreVersion: '12.331'
   systemId: uesrpg-3ev4
   systemVersion: v1.0.0-RC.62
-  createdTime: 1733291085130
-  modifiedTime: 1733369301281
+  createdTime: 1733369929963
+  modifiedTime: 1733369929963
   lastModifiedBy: HcIrULZhA1JFIlrf
 ownership:
   default: 0
@@ -66,15 +66,15 @@ system:
     lckChaBonus: 0
   skillArray: []
   description: >-
-    <p>While the character is frenzied, they double the associated bonus to
-    their Wound Threshold and ignore any Crippled or Lost Limb/Body Conditions
-    that they gain during this frenzy. These effects are immediately applied as
-    normal once the character loses the Frenzied condition.</p>
-  governingCharacteristics: End
+    <p>The character can wield two-handed weapons in one hand (but cannot dual
+    wield them) and can dual wield hand-and-a-half weapons, using the two-handed
+    damage value. When using their weapons in either of these ways, the
+    character cannot use those weapons to Parry or Counter-Attack.</p>
+  governingCharacteristics: Str
   xpCost: 500
   level: Expert
-  talentReq: Berserker
-  miscReq: Willpower 35
+  talentReq: ''
+  miscReq: Strength 50
   halfFatiguePenalty: false
   halfWoundPenalty: false
   untrainedException: false
@@ -83,7 +83,7 @@ system:
   armorAcrobaticsException: false
   addHalfSpeed: false
 folder: aAOygNvKFmG4260D
-_id: Z9lPfVUBe7cLjpCK
-sort: 2500000
-_key: '!items!Z9lPfVUBe7cLjpCK'
+_id: saMOMSwvTtiK5FQn
+sort: 0
+_key: '!items!saMOMSwvTtiK5FQn'
 

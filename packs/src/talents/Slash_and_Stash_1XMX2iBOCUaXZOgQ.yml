@@ -1,9 +1,9 @@
-name: '''Tis But a Scratch'
+name: Slash and Stash
 type: talent
 flags:
   core:
     sourceId: Item.DYVazRNO2caSDMGE
-img: icons/skills/wounds/injury-triple-slash-bleed.webp
+img: systems/uesrpg-3ev4/images/Icons/slashAndStash.webp
 effects: []
 _stats:
   compendiumSource: Item.DYVazRNO2caSDMGE
@@ -11,7 +11,7 @@ _stats:
   coreVersion: '12.331'
   systemId: uesrpg-3ev4
   systemVersion: v1.0.0-RC.62
-  createdTime: 1733291085130
+  createdTime: 1733368392468
   modifiedTime: 1733369301281
   lastModifiedBy: HcIrULZhA1JFIlrf
 ownership:
@@ -66,15 +66,17 @@ system:
     lckChaBonus: 0
   skillArray: []
   description: >-
-    <p>While the character is frenzied, they double the associated bonus to
-    their Wound Threshold and ignore any Crippled or Lost Limb/Body Conditions
-    that they gain during this frenzy. These effects are immediately applied as
-    normal once the character loses the Frenzied condition.</p>
-  governingCharacteristics: End
-  xpCost: 500
-  level: Expert
-  talentReq: Berserker
-  miscReq: Willpower 35
+    <p>After the character deals damage to an unaware or surprised enemy, they
+    can spend a Stamina Point to roll Subterfuge against the enemy's Observe in
+    order to grab a random item that is on said enemy's person, such as a potion
+    hanging off their belt or a coin pouch. The item must be within reach and
+    not stashed anywhere that would require extensive effort to acquire, like if
+    it were inside a backpack.</p>
+  governingCharacteristics: Ag
+  xpCost: 400
+  level: Adept
+  talentReq: ''
+  miscReq: Apprentice Combat/Subterfuge
   halfFatiguePenalty: false
   halfWoundPenalty: false
   untrainedException: false
@@ -83,7 +85,7 @@ system:
   armorAcrobaticsException: false
   addHalfSpeed: false
 folder: aAOygNvKFmG4260D
-_id: Z9lPfVUBe7cLjpCK
-sort: 2500000
-_key: '!items!Z9lPfVUBe7cLjpCK'
+_id: 1XMX2iBOCUaXZOgQ
+sort: 1100000
+_key: '!items!1XMX2iBOCUaXZOgQ'
 

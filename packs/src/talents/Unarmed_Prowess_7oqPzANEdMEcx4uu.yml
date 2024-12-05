@@ -1,9 +1,9 @@
-name: '''Tis But a Scratch'
+name: Unarmed Prowess
 type: talent
 flags:
   core:
     sourceId: Item.DYVazRNO2caSDMGE
-img: icons/skills/wounds/injury-triple-slash-bleed.webp
+img: systems/uesrpg-3ev4/images/Icons/unarmedProwess.webp
 effects: []
 _stats:
   compendiumSource: Item.DYVazRNO2caSDMGE
@@ -11,8 +11,8 @@ _stats:
   coreVersion: '12.331'
   systemId: uesrpg-3ev4
   systemVersion: v1.0.0-RC.62
-  createdTime: 1733291085130
-  modifiedTime: 1733369301281
+  createdTime: 1733369722644
+  modifiedTime: 1733369722644
   lastModifiedBy: HcIrULZhA1JFIlrf
 ownership:
   default: 0
@@ -65,16 +65,12 @@ system:
     prsChaBonus: 0
     lckChaBonus: 0
   skillArray: []
-  description: >-
-    <p>While the character is frenzied, they double the associated bonus to
-    their Wound Threshold and ignore any Crippled or Lost Limb/Body Conditions
-    that they gain during this frenzy. These effects are immediately applied as
-    normal once the character loses the Frenzied condition.</p>
-  governingCharacteristics: End
-  xpCost: 500
-  level: Expert
-  talentReq: Berserker
-  miscReq: Willpower 35
+  description: <p>The character adds their Strength bonus to their unarmed damage.</p>
+  governingCharacteristics: Str, Ag
+  xpCost: 300
+  level: Journeyman
+  talentReq: ''
+  miscReq: Strength 40
   halfFatiguePenalty: false
   halfWoundPenalty: false
   untrainedException: false
@@ -83,7 +79,7 @@ system:
   armorAcrobaticsException: false
   addHalfSpeed: false
 folder: aAOygNvKFmG4260D
-_id: Z9lPfVUBe7cLjpCK
-sort: 2500000
-_key: '!items!Z9lPfVUBe7cLjpCK'
+_id: 7oqPzANEdMEcx4uu
+sort: 0
+_key: '!items!7oqPzANEdMEcx4uu'
 
