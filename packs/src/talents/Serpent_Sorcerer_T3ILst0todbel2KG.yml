@@ -11,8 +11,8 @@ _stats:
   systemId: null
   systemVersion: null
   createdTime: null
-  modifiedTime: null
-  lastModifiedBy: null
+  modifiedTime: 1733366896133
+  lastModifiedBy: HcIrULZhA1JFIlrf
   compendiumSource: null
   duplicateSource: null
 ownership:
@@ -77,6 +77,7 @@ system:
     effectively fused. The serpent becomes a creature under the Maormer&rsquo;s
     control, and gains the Bound trait. The Maormer gains the Mindlock (1)
     trait, and has direct control of the snake.</p>
+  governingCharacteristics: ''
   xpCost: 400
   level: 4
   talentReq: Shimmerskin
@@ -89,6 +90,6 @@ system:
   armorAcrobaticsException: false
   addHalfSpeed: false
 folder: null
-sort: 0
+sort: 7000000
 _key: '!items!T3ILst0todbel2KG'
 

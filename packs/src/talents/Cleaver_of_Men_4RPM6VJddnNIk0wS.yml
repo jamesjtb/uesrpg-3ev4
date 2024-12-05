@@ -11,8 +11,8 @@ _stats:
   systemId: null
   systemVersion: null
   createdTime: null
-  modifiedTime: null
-  lastModifiedBy: null
+  modifiedTime: 1733366896133
+  lastModifiedBy: HcIrULZhA1JFIlrf
   compendiumSource: null
   duplicateSource: null
 ownership:
@@ -74,6 +74,7 @@ system:
     and both targets defend normally. Roll damage separately for each target
     hit. This attack cannot win advantages. This talent can stack with Mighty
     Cleave.</p>
+  governingCharacteristics: ''
   xpCost: 500
   level: 5
   talentReq: ''
@@ -86,6 +87,6 @@ system:
   armorAcrobaticsException: false
   addHalfSpeed: false
 folder: null
-sort: 0
+sort: 1300000
 _key: '!items!4RPM6VJddnNIk0wS'
 

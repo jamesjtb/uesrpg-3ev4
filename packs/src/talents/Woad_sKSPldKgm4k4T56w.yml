@@ -11,8 +11,8 @@ _stats:
   systemId: null
   systemVersion: null
   createdTime: null
-  modifiedTime: null
-  lastModifiedBy: null
+  modifiedTime: 1733366896133
+  lastModifiedBy: HcIrULZhA1JFIlrf
   compendiumSource: null
   duplicateSource: null
 ownership:
@@ -79,6 +79,7 @@ system:
     have access to natural plants, an open sky, and must be performed over a
     Long Rest as they beseech Kyne for her blessings and protection in the
     battles to come.</p>
+  governingCharacteristics: ''
   xpCost: 400
   level: 4
   talentReq: Sons of Skyrim
@@ -91,6 +92,6 @@ system:
   armorAcrobaticsException: false
   addHalfSpeed: false
 folder: null
-sort: 0
+sort: 12500000
 _key: '!items!sKSPldKgm4k4T56w'
 

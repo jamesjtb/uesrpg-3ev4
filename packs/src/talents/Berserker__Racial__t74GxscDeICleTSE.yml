@@ -11,8 +11,8 @@ _stats:
   systemId: null
   systemVersion: null
   createdTime: null
-  modifiedTime: null
-  lastModifiedBy: null
+  modifiedTime: 1733366896133
+  lastModifiedBy: HcIrULZhA1JFIlrf
   compendiumSource: null
   duplicateSource: null
 ownership:
@@ -74,6 +74,7 @@ system:
     immediately heal themselves for EnB Hit Points, and then increase their
     Strength Bonus and Resistance (Magic) trait by their Endurance Bonus for one
     minute.</p>
+  governingCharacteristics: ''
   xpCost: 400
   level: 4
   talentReq: Wrothgarian
@@ -86,6 +87,6 @@ system:
   armorAcrobaticsException: false
   addHalfSpeed: false
 folder: null
-sort: 0
+sort: 12700000
 _key: '!items!t74GxscDeICleTSE'
 

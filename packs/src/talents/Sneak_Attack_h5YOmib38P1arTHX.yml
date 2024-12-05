@@ -11,8 +11,8 @@ _stats:
   systemId: null
   systemVersion: null
   createdTime: null
-  modifiedTime: null
-  lastModifiedBy: null
+  modifiedTime: 1733366896133
+  lastModifiedBy: HcIrULZhA1JFIlrf
   compendiumSource: null
   duplicateSource: null
 ownership:
@@ -70,6 +70,7 @@ system:
     <p>The character adds his Stealth skill rank to the damage of successful
     attacks made if they were hidden from the target when they made the
     attack.</p>
+  governingCharacteristics: ''
   xpCost: 200
   level: 2
   talentReq: ''
@@ -82,6 +83,6 @@ system:
   armorAcrobaticsException: false
   addHalfSpeed: false
 folder: null
-sort: 0
+sort: 10600000
 _key: '!items!h5YOmib38P1arTHX'
 

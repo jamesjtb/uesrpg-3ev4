@@ -12,7 +12,7 @@ _stats:
   systemId: uesrpg-3ev4
   systemVersion: v1.0.0-RC.62
   createdTime: 1733290385290
-  modifiedTime: 1733290385344
+  modifiedTime: 1733366487991
   lastModifiedBy: HcIrULZhA1JFIlrf
 ownership:
   default: 0
@@ -71,6 +71,7 @@ system:
     applied Frenzied condition. The character no longer loses SP as part of
     losing the Frenzied condition, and halve any skill test penalties associated
     with the Frenzied condition.</p>
+  governingCharacteristics: Wp
   xpCost: 400
   level: Adept
   talentReq: Berserker
@@ -82,9 +83,8 @@ system:
   addIntToMP: false
   armorAcrobaticsException: false
   addHalfSpeed: false
-  governingCharacteristics: Wp
 folder: aAOygNvKFmG4260D
 _id: J0EDbLXB7XW7BAFd
-sort: 200000
+sort: 1600000
 _key: '!items!J0EDbLXB7XW7BAFd'
 

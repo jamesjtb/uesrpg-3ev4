@@ -11,8 +11,8 @@ _stats:
   systemId: null
   systemVersion: null
   createdTime: null
-  modifiedTime: null
-  lastModifiedBy: null
+  modifiedTime: 1733366896133
+  lastModifiedBy: HcIrULZhA1JFIlrf
   compendiumSource: null
   duplicateSource: null
 ownership:
@@ -70,6 +70,7 @@ system:
     <p>When the character passes a characteristic or skill test made to grapple,
     restrain, or entangle his oppo-nent, he can choose to take the DoS that was
     rolled or take a number equal to his Combat Style skill rank.</p>
+  governingCharacteristics: ''
   xpCost: 400
   level: 4
   talentReq: ''
@@ -82,6 +83,6 @@ system:
   armorAcrobaticsException: false
   addHalfSpeed: false
 folder: null
-sort: 0
+sort: 3500000
 _key: '!items!CToOWh0vFb4hc2UA'
 

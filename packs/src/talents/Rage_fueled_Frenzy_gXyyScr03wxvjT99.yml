@@ -12,7 +12,7 @@ _stats:
   systemId: uesrpg-3ev4
   systemVersion: v1.0.0-RC.62
   createdTime: 1733290968544
-  modifiedTime: 1733290968544
+  modifiedTime: 1733366487991
   lastModifiedBy: HcIrULZhA1JFIlrf
 ownership:
   default: 0
@@ -68,6 +68,7 @@ system:
   description: >-
     <p>The character doubles bonuses to their Strength Bonus and their Stamina
     Points gained from the Frenzied condition.</p>
+  governingCharacteristics: Wp
   xpCost: 400
   level: Adept
   talentReq: Berserker
@@ -79,9 +80,8 @@ system:
   addIntToMP: false
   armorAcrobaticsException: false
   addHalfSpeed: false
-  governingCharacteristics: Wp
 folder: aAOygNvKFmG4260D
 _id: gXyyScr03wxvjT99
-sort: 0
+sort: 1200000
 _key: '!items!gXyyScr03wxvjT99'
 

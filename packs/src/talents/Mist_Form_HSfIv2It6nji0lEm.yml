@@ -9,8 +9,8 @@ _stats:
   systemId: null
   systemVersion: null
   createdTime: null
-  modifiedTime: null
-  lastModifiedBy: null
+  modifiedTime: 1733366896133
+  lastModifiedBy: HcIrULZhA1JFIlrf
   compendiumSource: null
   duplicateSource: null
 ownership:
@@ -72,6 +72,7 @@ system:
 
     <p>While in this form, the Vampire Lord is invincible but cannot use AP or
     SP and may only move up to their movement +10m on their turn.</p>
+  governingCharacteristics: ''
   xpCost: 500
   level: 1
   talentReq: Vampire Lord Curse
@@ -84,6 +85,6 @@ system:
   armorAcrobaticsException: false
   addHalfSpeed: false
 folder: null
-sort: 0
+sort: 4500000
 _key: '!items!HSfIv2It6nji0lEm'
 

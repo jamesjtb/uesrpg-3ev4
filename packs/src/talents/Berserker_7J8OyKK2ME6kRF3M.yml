@@ -12,7 +12,7 @@ _stats:
   systemId: uesrpg-3ev4
   systemVersion: v1.0.0-RC.62
   createdTime: 1733290317544
-  modifiedTime: 1733290385344
+  modifiedTime: 1733366487991
   lastModifiedBy: HcIrULZhA1JFIlrf
 ownership:
   default: 0
@@ -70,6 +70,7 @@ system:
     They only attack enemies as long as the condition was entered voluntarily.
     When the character loses the frenzied condition, they only lose 1 SP instead
     of the usual 2.</p>
+  governingCharacteristics: Wp
   xpCost: 100
   level: Novice
   talentReq: ''
@@ -81,9 +82,8 @@ system:
   addIntToMP: false
   armorAcrobaticsException: false
   addHalfSpeed: false
-  governingCharacteristics: Wp
 folder: aAOygNvKFmG4260D
 _id: 7J8OyKK2ME6kRF3M
-sort: 300000
+sort: 1700000
 _key: '!items!7J8OyKK2ME6kRF3M'
 

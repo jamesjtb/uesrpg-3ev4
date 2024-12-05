@@ -12,7 +12,7 @@ _stats:
   systemId: uesrpg-3ev4
   systemVersion: v1.0.0-RC.62
   createdTime: 1733291241759
-  modifiedTime: 1733291241759
+  modifiedTime: 1733366487991
   lastModifiedBy: HcIrULZhA1JFIlrf
 ownership:
   default: 0
@@ -69,6 +69,7 @@ system:
     <p>If the character is the target of a melee attack while within the melee
     range of at least two opponents, then they make a free defensive reaction
     against that attack, but only once per round.</p>
+  governingCharacteristics: Str, Ag
   xpCost: 500
   level: Expert
   talentReq: Brawler
@@ -80,9 +81,8 @@ system:
   addIntToMP: false
   armorAcrobaticsException: false
   addHalfSpeed: false
-  governingCharacteristics: Str, Ag
 folder: aAOygNvKFmG4260D
 _id: xjvy6AXQRppsCqTl
-sort: 0
+sort: 1400000
 _key: '!items!xjvy6AXQRppsCqTl'
 

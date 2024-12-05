@@ -12,7 +12,7 @@ _stats:
   systemId: uesrpg-3ev4
   systemVersion: v1.0.0-RC.62
   createdTime: 1733291290130
-  modifiedTime: 1733291290130
+  modifiedTime: 1733366487991
   lastModifiedBy: HcIrULZhA1JFIlrf
 ownership:
   default: 0
@@ -71,6 +71,7 @@ system:
     opponents) they can choose to take the number of degrees of success that
     they rolled, or take a number equal to the corresponding skill rank instead.
     </p><p>Note: The Brawler talent only applies to the rolled DoS.</p>
+  governingCharacteristics: Str, Ag
   xpCost: 800
   level: Master
   talentReq: Brawler & Gladiator
@@ -82,9 +83,8 @@ system:
   addIntToMP: false
   armorAcrobaticsException: false
   addHalfSpeed: false
-  governingCharacteristics: Str, Ag
 folder: aAOygNvKFmG4260D
 _id: mNtALhnZlax4lMu9
-sort: 0
+sort: 1300000
 _key: '!items!mNtALhnZlax4lMu9'
 

@@ -11,8 +11,8 @@ _stats:
   systemId: null
   systemVersion: null
   createdTime: null
-  modifiedTime: null
-  lastModifiedBy: null
+  modifiedTime: 1733366896133
+  lastModifiedBy: HcIrULZhA1JFIlrf
   compendiumSource: null
   duplicateSource: null
 ownership:
@@ -70,6 +70,7 @@ system:
     <p>The character adds their Intelligence score to their maximum Magicka pool
     (changes to their Intelligence will also change this pool). This effectively
     doubles the most character&rsquo;s maximum magicka.</p>
+  governingCharacteristics: ''
   xpCost: 800
   level: 6
   talentReq: Spell Mastery
@@ -82,6 +83,6 @@ system:
   armorAcrobaticsException: false
   addHalfSpeed: false
 folder: null
-sort: 0
+sort: 11700000
 _key: '!items!kAe5oP6LGdfMbmIq'
 

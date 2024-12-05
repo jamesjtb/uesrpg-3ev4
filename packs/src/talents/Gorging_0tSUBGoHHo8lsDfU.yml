@@ -9,8 +9,8 @@ _stats:
   systemId: null
   systemVersion: null
   createdTime: null
-  modifiedTime: null
-  lastModifiedBy: null
+  modifiedTime: 1733366896133
+  lastModifiedBy: HcIrULZhA1JFIlrf
   compendiumSource: null
   duplicateSource: null
 ownership:
@@ -65,6 +65,7 @@ system:
     lckChaBonus: 0
   skillArray: []
   description: <p>Recover +1 extra HP when using the Feast action in Beast Form.</p>
+  governingCharacteristics: ''
   xpCost: 200
   level: 2
   talentReq: Lycanthrope Form
@@ -77,6 +78,6 @@ system:
   armorAcrobaticsException: false
   addHalfSpeed: false
 folder: null
-sort: 0
+sort: 400000
 _key: '!items!0tSUBGoHHo8lsDfU'
 

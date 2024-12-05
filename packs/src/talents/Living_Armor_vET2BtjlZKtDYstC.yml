@@ -11,8 +11,8 @@ _stats:
   systemId: null
   systemVersion: null
   createdTime: null
-  modifiedTime: null
-  lastModifiedBy: null
+  modifiedTime: 1733366896133
+  lastModifiedBy: HcIrULZhA1JFIlrf
   compendiumSource: null
   duplicateSource: null
 ownership:
@@ -73,6 +73,7 @@ system:
     concentration (such as being Stunned, Dazed, or Unconscious), the
     spell&rsquo;s effects immediately end as if they had not paid the Upkeep
     cost.</p>
+  governingCharacteristics: ''
   xpCost: 800
   level: 6
   talentReq: ''
@@ -85,6 +86,6 @@ system:
   armorAcrobaticsException: false
   addHalfSpeed: false
 folder: null
-sort: 0
+sort: 13600000
 _key: '!items!vET2BtjlZKtDYstC'
 

@@ -11,8 +11,8 @@ _stats:
   systemId: null
   systemVersion: null
   createdTime: null
-  modifiedTime: null
-  lastModifiedBy: null
+  modifiedTime: 1733366896133
+  lastModifiedBy: HcIrULZhA1JFIlrf
   compendiumSource: null
   duplicateSource: null
 ownership:
@@ -71,6 +71,7 @@ system:
     them by 1 (to a minimum of 0). The maximum number of creatures summoned this
     way is equal to the Summoner&rsquo;s WpB. A character may use this talent or
     Task-master, but not both.</p>
+  governingCharacteristics: ''
   xpCost: 800
   level: 6
   talentReq: Taskmaster
@@ -83,6 +84,6 @@ system:
   armorAcrobaticsException: false
   addHalfSpeed: false
 folder: null
-sort: 0
+sort: 10800000
 _key: '!items!i0XIsOCO1OQqVYrZ'
 

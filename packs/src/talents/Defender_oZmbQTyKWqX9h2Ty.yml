@@ -1,0 +1,90 @@
+name: Defender
+type: talent
+flags:
+  core:
+    sourceId: Item.DYVazRNO2caSDMGE
+img: systems/uesrpg-3ev4/images/Icons/defender.webp
+effects: []
+_stats:
+  compendiumSource: Item.DYVazRNO2caSDMGE
+  duplicateSource: null
+  coreVersion: '12.331'
+  systemId: uesrpg-3ev4
+  systemVersion: v1.0.0-RC.62
+  createdTime: 1733366230730
+  modifiedTime: 1733366487991
+  lastModifiedBy: HcIrULZhA1JFIlrf
+ownership:
+  default: 0
+  HcIrULZhA1JFIlrf: 3
+system:
+  mpBonus: 0
+  hpBonus: 0
+  spBonus: 0
+  lpBonus: 0
+  wtBonus: 0
+  iniBonus: 0
+  speedBonus: 0
+  flyBonus: 0
+  swimBonus: 0
+  diseaseR: 0
+  fireR: 0
+  frostR: 0
+  shockR: 0
+  poisonR: 0
+  magicR: 0
+  natToughnessR: 0
+  silverR: 0
+  sunlightR: 0
+  replace:
+    ini:
+      iniToggle: false
+      value: 0
+      characteristic: none
+    wt:
+      wtToggle: false
+      value: 0
+      characteristic: none
+  characteristics:
+    none: None
+    str: STR
+    end: END
+    agi: AGI
+    int: INT
+    wp: WP
+    prc: PRC
+    prs: PRS
+    lck: LCK
+  characteristicBonus:
+    strChaBonus: 0
+    endChaBonus: 0
+    agiChaBonus: 0
+    intChaBonus: 0
+    wpChaBonus: 0
+    prcChaBonus: 0
+    prsChaBonus: 0
+    lckChaBonus: 0
+  skillArray: []
+  description: >-
+    <p>As a 1 AP reaction the character can switch positions with an ally within
+    2 meters if that ally is attacked. They become the new target of the attack
+    and either block, parry, or counter attack it for 0 AP. Neither the
+    character nor the ally spend movement or provoke Attacks of Opportunity when
+    this talent is used.</p>
+  governingCharacteristics: End, Wp, Prc
+  xpCost: 300
+  level: Journeyman
+  talentReq: ''
+  miscReq: ''
+  halfFatiguePenalty: false
+  halfWoundPenalty: false
+  untrainedException: false
+  fatigueException: false
+  addIntToMP: false
+  armorAcrobaticsException: false
+  addHalfSpeed: false
+folder: aAOygNvKFmG4260D
+_id: oZmbQTyKWqX9h2Ty
+sort: 500000
+_key: '!items!oZmbQTyKWqX9h2Ty'
+

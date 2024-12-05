@@ -11,8 +11,8 @@ _stats:
   systemId: null
   systemVersion: null
   createdTime: null
-  modifiedTime: null
-  lastModifiedBy: null
+  modifiedTime: 1733366896133
+  lastModifiedBy: HcIrULZhA1JFIlrf
   compendiumSource: null
   duplicateSource: null
 ownership:
@@ -69,6 +69,7 @@ system:
   description: >-
     <p>The character ignores any limits placed on Combat related tests by his
     Athletics or Acrobatics skill ranks (except when fighting underwater).</p>
+  governingCharacteristics: ''
   xpCost: 200
   level: 2
   talentReq: ''
@@ -81,6 +82,6 @@ system:
   armorAcrobaticsException: false
   addHalfSpeed: false
 folder: null
-sort: 0
+sort: 1700000
 _key: '!items!510SzDprJIwndtHG'
 

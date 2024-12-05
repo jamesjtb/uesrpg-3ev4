@@ -11,8 +11,8 @@ _stats:
   systemId: null
   systemVersion: null
   createdTime: null
-  modifiedTime: null
-  lastModifiedBy: null
+  modifiedTime: 1733366896133
+  lastModifiedBy: HcIrULZhA1JFIlrf
   compendiumSource: null
   duplicateSource: null
 ownership:
@@ -70,6 +70,7 @@ system:
     <p>The character gains a cumulative +10 modifier on Alchemy tests made to
     brew a potion if their last Alchemy test was a failed attempt to create the
     same potion (max +30).</p>
+  governingCharacteristics: ''
   xpCost: 300
   level: 3
   talentReq: ''
@@ -82,6 +83,6 @@ system:
   armorAcrobaticsException: false
   addHalfSpeed: false
 folder: null
-sort: 0
+sort: 1600000
 _key: '!items!4zzkd5ahCA4uNMeu'
 

@@ -11,8 +11,8 @@ _stats:
   systemId: null
   systemVersion: null
   createdTime: null
-  modifiedTime: null
-  lastModifiedBy: null
+  modifiedTime: 1733366896133
+  lastModifiedBy: HcIrULZhA1JFIlrf
   compendiumSource: null
   duplicateSource: null
 ownership:
@@ -73,6 +73,7 @@ system:
     Additionally, the character may use the longbow as if it were an Unwieldy
     wooden quarterstaff in melee, and longbows they wield gain Exploit Weakness.
     Removes the &ndash;20 to hit prone targets with a Longbow.</p>
+  governingCharacteristics: ''
   xpCost: 500
   level: 5
   talentReq: ''
@@ -85,6 +86,6 @@ system:
   armorAcrobaticsException: false
   addHalfSpeed: false
 folder: null
-sort: 0
+sort: 14300000
 _key: '!items!xqguTwkwezsCfJDb'
 

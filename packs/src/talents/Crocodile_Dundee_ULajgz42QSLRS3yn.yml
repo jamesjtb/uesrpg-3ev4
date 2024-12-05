@@ -9,8 +9,8 @@ _stats:
   systemId: null
   systemVersion: null
   createdTime: null
-  modifiedTime: null
-  lastModifiedBy: null
+  modifiedTime: 1733366896133
+  lastModifiedBy: HcIrULZhA1JFIlrf
   compendiumSource: null
   duplicateSource: null
 ownership:
@@ -67,6 +67,7 @@ system:
   description: >-
     <p>While in Werecrocodile Form, this character no longer suffers from the
     1/2 speed penalty on land.</p>
+  governingCharacteristics: ''
   xpCost: 300
   level: 3
   talentReq: Werecrocodile Form
@@ -79,6 +80,6 @@ system:
   armorAcrobaticsException: false
   addHalfSpeed: true
 folder: null
-sort: 0
+sort: 7300000
 _key: '!items!ULajgz42QSLRS3yn'
 

@@ -11,8 +11,8 @@ _stats:
   systemId: null
   systemVersion: null
   createdTime: null
-  modifiedTime: null
-  lastModifiedBy: null
+  modifiedTime: 1733366896133
+  lastModifiedBy: HcIrULZhA1JFIlrf
   compendiumSource: null
   duplicateSource: null
 ownership:
@@ -69,6 +69,7 @@ system:
   description: >-
     <p>The Khajiit can, once per Long Rest, force a single target to take a
     Panic test with a -30 penalty to their Willpower, as a free action.</p>
+  governingCharacteristics: ''
   xpCost: 400
   level: 4
   talentReq: Eye of Night
@@ -81,6 +82,6 @@ system:
   armorAcrobaticsException: false
   addHalfSpeed: false
 folder: null
-sort: 0
+sort: 7500000
 _key: '!items!XAm0y33loqTrFzyY'
 

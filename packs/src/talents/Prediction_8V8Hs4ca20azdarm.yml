@@ -11,8 +11,8 @@ _stats:
   systemId: null
   systemVersion: null
   createdTime: null
-  modifiedTime: null
-  lastModifiedBy: null
+  modifiedTime: 1733366896133
+  lastModifiedBy: HcIrULZhA1JFIlrf
   compendiumSource: null
   duplicateSource: null
 ownership:
@@ -69,6 +69,7 @@ system:
   description: >-
     <p>The character can choose to use their Intelligence bonus times 3 to
     determine their Initiative Rating.</p>
+  governingCharacteristics: ''
   xpCost: 400
   level: 4
   talentReq: ''
@@ -81,6 +82,6 @@ system:
   armorAcrobaticsException: false
   addHalfSpeed: false
 folder: null
-sort: 0
+sort: 2500000
 _key: '!items!8V8Hs4ca20azdarm'
 
