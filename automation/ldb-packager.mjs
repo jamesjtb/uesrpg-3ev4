@@ -8,7 +8,7 @@ const commands = {
 };
 
 const command = process.argv[2];
-const specifiedPack = process.argv[3].startsWith('--') ? null : process.argv[3];
+const specifiedPack = process.argv[3]?.startsWith('--') ? null : process.argv[3];
 
 const opts = process.argv.filter((arg) => arg.startsWith('--')).map(arg => arg.slice(2));
 
