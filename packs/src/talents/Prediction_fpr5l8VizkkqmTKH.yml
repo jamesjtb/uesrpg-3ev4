@@ -1,4 +1,3 @@
-_id: 8V8Hs4ca20azdarm
 name: Prediction
 type: talent
 flags:
@@ -7,17 +6,17 @@ flags:
 img: systems/uesrpg-3ev4/images/Icons/prediction.webp
 effects: []
 _stats:
-  coreVersion: '12.331'
-  systemId: null
-  systemVersion: null
-  createdTime: null
-  modifiedTime: 1733366896133
-  lastModifiedBy: HcIrULZhA1JFIlrf
-  compendiumSource: null
+  compendiumSource: Item.DYVazRNO2caSDMGE
   duplicateSource: null
+  coreVersion: '12.331'
+  systemId: uesrpg-3ev4
+  systemVersion: v1.0.0-RC.62
+  createdTime: 1733461192217
+  modifiedTime: 1733461295702
+  lastModifiedBy: HcIrULZhA1JFIlrf
 ownership:
   default: 0
-  xvA5SwRGJiyPsnxH: 3
+  HcIrULZhA1JFIlrf: 3
 system:
   mpBonus: 0
   hpBonus: 0
@@ -45,7 +44,7 @@ system:
     wt:
       wtToggle: false
       value: 0
-      characteristic: null
+      characteristic: none
   characteristics:
     none: None
     str: STR
@@ -67,11 +66,11 @@ system:
     lckChaBonus: 0
   skillArray: []
   description: >-
-    <p>The character can choose to use their Intelligence bonus times 3 to
-    determine their Initiative Rating.</p>
-  governingCharacteristics: ''
-  xpCost: 400
-  level: 4
+    <p>The character can choose to use their Intelligence bonus in place of
+    their Agility bonus when calculating their Initiative Rating.</p>
+  governingCharacteristics: Int
+  xpCost: 300
+  level: Journeyman
   talentReq: ''
   miscReq: ''
   halfFatiguePenalty: false
@@ -81,7 +80,8 @@ system:
   addIntToMP: false
   armorAcrobaticsException: false
   addHalfSpeed: false
-folder: null
-sort: 2500000
-_key: '!items!8V8Hs4ca20azdarm'
+folder: KJRldsXHEAX2SjOs
+_id: fpr5l8VizkkqmTKH
+sort: 500000
+_key: '!items!fpr5l8VizkkqmTKH'
 

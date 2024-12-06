@@ -1,23 +1,22 @@
-_id: MJvTwsKOAqAlkcgl
-name: Businessman
+name: Tactician
 type: talent
 flags:
   core:
     sourceId: Item.DYVazRNO2caSDMGE
-img: systems/uesrpg-3ev4/images/Icons/businessman.webp
+img: systems/uesrpg-3ev4/images/Icons/tactician.webp
 effects: []
 _stats:
-  coreVersion: '12.331'
-  systemId: null
-  systemVersion: null
-  createdTime: null
-  modifiedTime: 1733366896133
-  lastModifiedBy: HcIrULZhA1JFIlrf
-  compendiumSource: null
+  compendiumSource: Item.DYVazRNO2caSDMGE
   duplicateSource: null
+  coreVersion: '12.331'
+  systemId: uesrpg-3ev4
+  systemVersion: v1.0.0-RC.62
+  createdTime: 1733461376741
+  modifiedTime: 1733461376741
+  lastModifiedBy: HcIrULZhA1JFIlrf
 ownership:
   default: 0
-  xvA5SwRGJiyPsnxH: 3
+  HcIrULZhA1JFIlrf: 3
 system:
   mpBonus: 0
   hpBonus: 0
@@ -41,11 +40,11 @@ system:
     ini:
       iniToggle: false
       value: 0
-      characteristic: null
+      characteristic: none
     wt:
       wtToggle: false
       value: 0
-      characteristic: null
+      characteristic: none
   characteristics:
     none: None
     str: STR
@@ -67,14 +66,13 @@ system:
     lckChaBonus: 0
   skillArray: []
   description: >-
-    <p>When the character passes a Commerce skill, he can choose to take the DoS
-    that was rolled or take a number equal to his Commerce skill rank
-    instead.</p>
-  governingCharacteristics: ''
-  xpCost: 400
-  level: 4
+    <p>Allies of this character may use the character's initiative result in
+    place of their own when determining initiative for combat.</p>
+  governingCharacteristics: Int
+  xpCost: 500
+  level: Expert
   talentReq: ''
-  miscReq: Journeyman Commerce
+  miscReq: ''
   halfFatiguePenalty: false
   halfWoundPenalty: false
   untrainedException: false
@@ -82,7 +80,8 @@ system:
   addIntToMP: false
   armorAcrobaticsException: false
   addHalfSpeed: false
-folder: null
-sort: 5700000
-_key: '!items!MJvTwsKOAqAlkcgl'
+folder: KJRldsXHEAX2SjOs
+_id: HSccnz09msIepO2b
+sort: 0
+_key: '!items!HSccnz09msIepO2b'
 

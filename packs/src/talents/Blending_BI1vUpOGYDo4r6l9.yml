@@ -1,23 +1,22 @@
-_id: O03dQJZCtowesg6e
-name: Grandmaster (Skill)
+name: Blending
 type: talent
 flags:
   core:
     sourceId: Item.DYVazRNO2caSDMGE
-img: systems/uesrpg-3ev4/images/Icons/expert.webp
+img: systems/uesrpg-3ev4/images/Icons/blending.webp
 effects: []
 _stats:
-  coreVersion: '12.331'
-  systemId: null
-  systemVersion: null
-  createdTime: null
-  modifiedTime: 1733366896133
-  lastModifiedBy: HcIrULZhA1JFIlrf
-  compendiumSource: null
+  compendiumSource: Item.DYVazRNO2caSDMGE
   duplicateSource: null
+  coreVersion: '12.331'
+  systemId: uesrpg-3ev4
+  systemVersion: v1.0.0-RC.62
+  createdTime: 1733460987123
+  modifiedTime: 1733461295702
+  lastModifiedBy: HcIrULZhA1JFIlrf
 ownership:
   default: 0
-  xvA5SwRGJiyPsnxH: 3
+  HcIrULZhA1JFIlrf: 3
 system:
   mpBonus: 0
   hpBonus: 0
@@ -41,11 +40,11 @@ system:
     ini:
       iniToggle: false
       value: 0
-      characteristic: null
+      characteristic: none
     wt:
       wtToggle: false
       value: 0
-      characteristic: null
+      characteristic: none
   characteristics:
     none: None
     str: STR
@@ -67,20 +66,13 @@ system:
     lckChaBonus: 0
   skillArray: []
   description: >-
-    <p>The character chooses one of their existing Master rank skills when they
-    purchase this talent. The character may reroll failed skill tests for that
-    skill (but only once per test). This talent can be purchased multiple times
-    for different skills. Does not stack with other talents that would allow
-    rerolls.</p>
-
-    <p>If this talent is taken with a spellcasting skill, then it increases the
-    effective skill rank from a +1 to a +2, which allows for the casting of
-    Grandmaster spells without penalty.</p>
-  governingCharacteristics: ''
-  xpCost: 800
-  level: 6
+    <p>The character can choose to use the Lore skill in place of the Stealth
+    skill when shadowing someone through a crowded area.</p>
+  governingCharacteristics: Int
+  xpCost: 100
+  level: Novice
   talentReq: ''
-  miscReq: Master in Chosen Skill
+  miscReq: ''
   halfFatiguePenalty: false
   halfWoundPenalty: false
   untrainedException: false
@@ -88,7 +80,8 @@ system:
   addIntToMP: false
   armorAcrobaticsException: false
   addHalfSpeed: false
-folder: null
-sort: 6100000
-_key: '!items!O03dQJZCtowesg6e'
+folder: KJRldsXHEAX2SjOs
+_id: BI1vUpOGYDo4r6l9
+sort: 400000
+_key: '!items!BI1vUpOGYDo4r6l9'
 

@@ -1,5 +1,4 @@
-_id: 7k7w7O3newxVRmZX
-name: Scholar
+name: Grandmaster (Skill)
 type: talent
 flags:
   core:
@@ -7,17 +6,17 @@ flags:
 img: systems/uesrpg-3ev4/images/Icons/expert.webp
 effects: []
 _stats:
-  coreVersion: '12.331'
-  systemId: null
-  systemVersion: null
-  createdTime: null
-  modifiedTime: 1733366896133
-  lastModifiedBy: HcIrULZhA1JFIlrf
-  compendiumSource: null
+  compendiumSource: Item.DYVazRNO2caSDMGE
   duplicateSource: null
+  coreVersion: '12.331'
+  systemId: uesrpg-3ev4
+  systemVersion: v1.0.0-RC.62
+  createdTime: 1733459951901
+  modifiedTime: 1733459951901
+  lastModifiedBy: HcIrULZhA1JFIlrf
 ownership:
   default: 0
-  xvA5SwRGJiyPsnxH: 3
+  HcIrULZhA1JFIlrf: 3
 system:
   mpBonus: 0
   hpBonus: 0
@@ -41,11 +40,11 @@ system:
     ini:
       iniToggle: false
       value: 0
-      characteristic: null
+      characteristic: none
     wt:
       wtToggle: false
       value: 0
-      characteristic: null
+      characteristic: none
   characteristics:
     none: None
     str: STR
@@ -67,14 +66,18 @@ system:
     lckChaBonus: 0
   skillArray: []
   description: >-
-    <p>The character halves the base CrP/XP cost required to gain
-    Specializations for the Lore skill (50 instead of 100), and may take twice
-    the usual number.</p>
-  governingCharacteristics: ''
-  xpCost: 200
-  level: 2
+    <p>The character may reroll failed skill tests for the chosen skill (but
+    only once for a given test). This talent does not stack with other talents
+    that would allow rerolls. Grandmaster can be purchased multiple times for
+    different skills. If this talent is taken with a magical skill, then it
+    increases the bonus to effective skill rank by +1, which allows for the
+    casting of Grandmaster spells, the enchantment of Master spell effects, or
+    the creation of level 6 potion/poison effects without penalty.</p>
+  governingCharacteristics: '[Skill''s Gov. Char]'
+  xpCost: 800
+  level: Master
   talentReq: ''
-  miscReq: Apprentice Lore
+  miscReq: Master in Chosen Skill
   halfFatiguePenalty: false
   halfWoundPenalty: false
   untrainedException: false
@@ -82,7 +85,8 @@ system:
   addIntToMP: false
   armorAcrobaticsException: false
   addHalfSpeed: false
-folder: null
-sort: 2200000
-_key: '!items!7k7w7O3newxVRmZX'
+folder: gNFUNr8dqFnssltG
+_id: 5sI17vWN4dcxAiob
+sort: 0
+_key: '!items!5sI17vWN4dcxAiob'
 
