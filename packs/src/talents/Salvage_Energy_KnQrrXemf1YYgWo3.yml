@@ -1,23 +1,22 @@
-_id: x1f51U5VjDCmaYPX
-name: Nothing Ventured, Nothing Gained
+name: Salvage Energy
 type: talent
 flags:
   core:
     sourceId: Item.DYVazRNO2caSDMGE
-img: systems/uesrpg-3ev4/images/Icons/nothingVentured.webp
+img: systems/uesrpg-3ev4/images/Icons/salvageEnergy.webp
 effects: []
 _stats:
-  coreVersion: '12.331'
-  systemId: null
-  systemVersion: null
-  createdTime: null
-  modifiedTime: 1733366896133
-  lastModifiedBy: HcIrULZhA1JFIlrf
-  compendiumSource: null
+  compendiumSource: Item.DYVazRNO2caSDMGE
   duplicateSource: null
+  coreVersion: '12.331'
+  systemId: uesrpg-3ev4
+  systemVersion: v1.0.0-RC.62
+  createdTime: 1733458579962
+  modifiedTime: 1733458579962
+  lastModifiedBy: HcIrULZhA1JFIlrf
 ownership:
   default: 0
-  xvA5SwRGJiyPsnxH: 3
+  HcIrULZhA1JFIlrf: 3
 system:
   mpBonus: 0
   hpBonus: 0
@@ -41,11 +40,11 @@ system:
     ini:
       iniToggle: false
       value: 0
-      characteristic: null
+      characteristic: none
     wt:
       wtToggle: false
       value: 0
-      characteristic: null
+      characteristic: none
   characteristics:
     none: None
     str: STR
@@ -67,18 +66,16 @@ system:
     lckChaBonus: 0
   skillArray: []
   description: >-
-    <p>The character can choose to disregard normal safety procedures when
-    creating a potion. When doing so, they gain a +20 bonus on their Alchemy
-    test, but the potion backfires if they roll doubles.</p>
-
-    <p>If the test fails, it automatically backfires (roll a d4 on the
-    appropriate backfire table and add the highest included spell level). Ignore
-    the effects of the Master Alchemist talent when using this effect.</p>
-  governingCharacteristics: ''
-  xpCost: 400
-  level: 4
+    <p>When the character fails an Enchant test to create an enchantment they
+    can make another Enchant test at a -40 penalty. On success, the soul gem is
+    not destroyed and maintains all of its soul energy. Alternatively, they may
+    attempt the test at a -20 penalty. On a success the gem survives, but with
+    no energy.</p>
+  governingCharacteristics: Int
+  xpCost: 500
+  level: Expert
   talentReq: ''
-  miscReq: Journeyman Alchemy
+  miscReq: Adept Enchant
   halfFatiguePenalty: false
   halfWoundPenalty: false
   untrainedException: false
@@ -86,7 +83,8 @@ system:
   addIntToMP: false
   armorAcrobaticsException: false
   addHalfSpeed: false
-folder: null
-sort: 14100000
-_key: '!items!x1f51U5VjDCmaYPX'
+folder: HWSRIB6sXLi4pmti
+_id: KnQrrXemf1YYgWo3
+sort: 0
+_key: '!items!KnQrrXemf1YYgWo3'
 

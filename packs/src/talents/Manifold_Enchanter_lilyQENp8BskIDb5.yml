@@ -1,23 +1,22 @@
-_id: Kqho61aaTBulZHEr
-name: Master Alchemist
+name: Manifold Enchanter
 type: talent
 flags:
   core:
     sourceId: Item.DYVazRNO2caSDMGE
-img: systems/uesrpg-3ev4/images/Icons/masterEnchanter.webp
+img: systems/uesrpg-3ev4/images/Icons/manifoldEnchanter.webp
 effects: []
 _stats:
-  coreVersion: '12.331'
-  systemId: null
-  systemVersion: null
-  createdTime: null
-  modifiedTime: 1733366896133
-  lastModifiedBy: HcIrULZhA1JFIlrf
-  compendiumSource: null
+  compendiumSource: Item.DYVazRNO2caSDMGE
   duplicateSource: null
+  coreVersion: '12.331'
+  systemId: uesrpg-3ev4
+  systemVersion: v1.0.0-RC.62
+  createdTime: 1733457905777
+  modifiedTime: 1733458226320
+  lastModifiedBy: HcIrULZhA1JFIlrf
 ownership:
   default: 0
-  xvA5SwRGJiyPsnxH: 3
+  HcIrULZhA1JFIlrf: 3
 system:
   mpBonus: 0
   hpBonus: 0
@@ -41,11 +40,11 @@ system:
     ini:
       iniToggle: false
       value: 0
-      characteristic: null
+      characteristic: none
     wt:
       wtToggle: false
       value: 0
-      characteristic: null
+      characteristic: none
   characteristics:
     none: None
     str: STR
@@ -67,14 +66,13 @@ system:
     lckChaBonus: 0
   skillArray: []
   description: >-
-    <p>The character increases the strength of alchemical ingredients by 10%
-    (stacks to 20% with the Alchemist [School] talent) and never suffers from
-    alchemical backfires.</p>
-  governingCharacteristics: ''
+    <p>The character can create cast, strike, and constant enchantments with up
+    to three effects/spells instead of just one.</p>
+  governingCharacteristics: Int
   xpCost: 500
-  level: 5
+  level: Expert
   talentReq: ''
-  miscReq: Journeyman Alchemy
+  miscReq: Adept Enchanting
   halfFatiguePenalty: false
   halfWoundPenalty: false
   untrainedException: false
@@ -82,7 +80,8 @@ system:
   addIntToMP: false
   armorAcrobaticsException: false
   addHalfSpeed: false
-folder: null
-sort: 5300000
-_key: '!items!Kqho61aaTBulZHEr'
+folder: HWSRIB6sXLi4pmti
+_id: lilyQENp8BskIDb5
+sort: 300000
+_key: '!items!lilyQENp8BskIDb5'
 

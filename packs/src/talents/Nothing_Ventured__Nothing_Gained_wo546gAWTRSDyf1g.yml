@@ -1,23 +1,22 @@
-_id: jmEsQeokef8oYiOP
-name: Alchemist (School)
+name: Nothing Ventured, Nothing Gained
 type: talent
 flags:
   core:
     sourceId: Item.DYVazRNO2caSDMGE
-img: systems/uesrpg-3ev4/images/Icons/alchemist.webp
+img: systems/uesrpg-3ev4/images/Icons/nothingVentured.webp
 effects: []
 _stats:
-  coreVersion: '12.331'
-  systemId: null
-  systemVersion: null
-  createdTime: null
-  modifiedTime: null
-  lastModifiedBy: null
-  compendiumSource: null
+  compendiumSource: Item.DYVazRNO2caSDMGE
   duplicateSource: null
+  coreVersion: '12.331'
+  systemId: uesrpg-3ev4
+  systemVersion: v1.0.0-RC.62
+  createdTime: 1733458492785
+  modifiedTime: 1733458492785
+  lastModifiedBy: HcIrULZhA1JFIlrf
 ownership:
   default: 0
-  xvA5SwRGJiyPsnxH: 3
+  HcIrULZhA1JFIlrf: 3
 system:
   mpBonus: 0
   hpBonus: 0
@@ -41,11 +40,11 @@ system:
     ini:
       iniToggle: false
       value: 0
-      characteristic: null
+      characteristic: none
     wt:
       wtToggle: false
       value: 0
-      characteristic: null
+      characteristic: none
   characteristics:
     none: None
     str: STR
@@ -67,12 +66,17 @@ system:
     lckChaBonus: 0
   skillArray: []
   description: >-
-    <p>The character increases the strength of alchemical ingredients of chosen
-    school by 10% (round down to the nearest whole number).</p>
-  xpCost: 200
-  level: 2
+    <p>The character can choose to disregard normal safety procedures when
+    creating a potion. When doing so, they gain a +20 bonus on their Alchemy
+    skill test, but the potion backfires if they roll doubles. If the test fails
+    it automatically backfires (roll a d4 on the appropriate backfire table and
+    add the highest included spell level). Ignore Master Alchemist when using
+    this effect.</p>
+  governingCharacteristics: Int
+  xpCost: 400
+  level: Adept
   talentReq: ''
-  miscReq: Apprentice Alchemy
+  miscReq: Journeyman Alchemy
   halfFatiguePenalty: false
   halfWoundPenalty: false
   untrainedException: false
@@ -80,7 +84,8 @@ system:
   addIntToMP: false
   armorAcrobaticsException: false
   addHalfSpeed: false
-folder: null
+folder: HWSRIB6sXLi4pmti
+_id: wo546gAWTRSDyf1g
 sort: 0
-_key: '!items!jmEsQeokef8oYiOP'
+_key: '!items!wo546gAWTRSDyf1g'
 

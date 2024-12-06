@@ -1,23 +1,22 @@
-_id: uftd5sIDd5SVbNBB
-name: Salvage Energy
+name: Master Alchemist
 type: talent
 flags:
   core:
     sourceId: Item.DYVazRNO2caSDMGE
-img: systems/uesrpg-3ev4/images/Icons/salvageEnergy.webp
+img: systems/uesrpg-3ev4/images/Icons/masterEnchanter.webp
 effects: []
 _stats:
-  coreVersion: '12.331'
-  systemId: null
-  systemVersion: null
-  createdTime: null
-  modifiedTime: 1733366896133
-  lastModifiedBy: HcIrULZhA1JFIlrf
-  compendiumSource: null
+  compendiumSource: Item.DYVazRNO2caSDMGE
   duplicateSource: null
+  coreVersion: '12.331'
+  systemId: uesrpg-3ev4
+  systemVersion: v1.0.0-RC.62
+  createdTime: 1733458388489
+  modifiedTime: 1733458388489
+  lastModifiedBy: HcIrULZhA1JFIlrf
 ownership:
   default: 0
-  xvA5SwRGJiyPsnxH: 3
+  HcIrULZhA1JFIlrf: 3
 system:
   mpBonus: 0
   hpBonus: 0
@@ -41,11 +40,11 @@ system:
     ini:
       iniToggle: false
       value: 0
-      characteristic: null
+      characteristic: none
     wt:
       wtToggle: false
       value: 0
-      characteristic: null
+      characteristic: none
   characteristics:
     none: None
     str: STR
@@ -67,17 +66,14 @@ system:
     lckChaBonus: 0
   skillArray: []
   description: >-
-    <p>When the character fails an Enchant test to create an enchantment, he can
-    make another Enchant test at a -40 penalty. On a success, the soul gem is
-    not destroyed and maintains all of it&rsquo;s Soul Energy.</p>
-
-    <p>Alternatively, they may attempt the test at a &ndash;20 penalty, and on a
-    success the gem survives with no Soul Energy.</p>
-  governingCharacteristics: ''
-  xpCost: 500
-  level: 5
+    <p>The character increases the strength of alchemical ingredients by 20%
+    (stacks to 30% with Alchemist [School]) and never suffers from alchemical
+    backfires.</p>
+  governingCharacteristics: Int
+  xpCost: 800
+  level: Master
   talentReq: ''
-  miscReq: Adept Enchant
+  miscReq: Journeyman Alchemy
   halfFatiguePenalty: false
   halfWoundPenalty: false
   untrainedException: false
@@ -85,7 +81,8 @@ system:
   addIntToMP: false
   armorAcrobaticsException: false
   addHalfSpeed: false
-folder: null
-sort: 13300000
-_key: '!items!uftd5sIDd5SVbNBB'
+folder: HWSRIB6sXLi4pmti
+_id: tZ4j3B2yWHKpePX1
+sort: 0
+_key: '!items!tZ4j3B2yWHKpePX1'
 

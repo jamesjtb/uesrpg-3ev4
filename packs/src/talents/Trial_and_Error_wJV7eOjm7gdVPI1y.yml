@@ -1,23 +1,22 @@
-_id: YFwHX11PbZXS15DY
-name: Manifold Enchanter
+name: Trial and Error
 type: talent
 flags:
   core:
     sourceId: Item.DYVazRNO2caSDMGE
-img: systems/uesrpg-3ev4/images/Icons/manifoldEnchanter.webp
+img: systems/uesrpg-3ev4/images/Icons/trialAndError.webp
 effects: []
 _stats:
-  coreVersion: '12.331'
-  systemId: null
-  systemVersion: null
-  createdTime: null
-  modifiedTime: 1733366896133
-  lastModifiedBy: HcIrULZhA1JFIlrf
-  compendiumSource: null
+  compendiumSource: Item.DYVazRNO2caSDMGE
   duplicateSource: null
+  coreVersion: '12.331'
+  systemId: uesrpg-3ev4
+  systemVersion: v1.0.0-RC.62
+  createdTime: 1733458540065
+  modifiedTime: 1733458540065
+  lastModifiedBy: HcIrULZhA1JFIlrf
 ownership:
   default: 0
-  xvA5SwRGJiyPsnxH: 3
+  HcIrULZhA1JFIlrf: 3
 system:
   mpBonus: 0
   hpBonus: 0
@@ -41,11 +40,11 @@ system:
     ini:
       iniToggle: false
       value: 0
-      characteristic: null
+      characteristic: none
     wt:
       wtToggle: false
       value: 0
-      characteristic: null
+      characteristic: none
   characteristics:
     none: None
     str: STR
@@ -67,13 +66,14 @@ system:
     lckChaBonus: 0
   skillArray: []
   description: >-
-    <p>The character can create Cast, Strike, and Constant enchantments with up
-    to three effects/spell instead of just one.</p>
-  governingCharacteristics: ''
-  xpCost: 800
-  level: 6
+    <p>The character gains a cumulative +10 modifier on Alchemy tests made to
+    brew a potion or poison if their last Alchemy test was a failed attempt to
+    create the same potion (max +30).</p>
+  governingCharacteristics: Int
+  xpCost: 300
+  level: Journeyman
   talentReq: ''
-  miscReq: Adept Enchanting
+  miscReq: Apprentice Alchemy
   halfFatiguePenalty: false
   halfWoundPenalty: false
   untrainedException: false
@@ -81,7 +81,8 @@ system:
   addIntToMP: false
   armorAcrobaticsException: false
   addHalfSpeed: false
-folder: null
-sort: 7800000
-_key: '!items!YFwHX11PbZXS15DY'
+folder: HWSRIB6sXLi4pmti
+_id: wJV7eOjm7gdVPI1y
+sort: 0
+_key: '!items!wJV7eOjm7gdVPI1y'
 
