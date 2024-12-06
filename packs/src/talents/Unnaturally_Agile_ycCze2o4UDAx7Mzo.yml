@@ -1,23 +1,22 @@
-_id: PXb2tMsZF5Ct1j2F
-name: Armored Agility
+name: Unnaturally Agile
 type: talent
 flags:
   core:
     sourceId: Item.DYVazRNO2caSDMGE
-img: systems/uesrpg-3ev4/images/Icons/armoredAgility.webp
+img: systems/uesrpg-3ev4/images/Icons/unnaturallyAgile.webp
 effects: []
 _stats:
-  coreVersion: '12.331'
-  systemId: null
-  systemVersion: null
-  createdTime: null
-  modifiedTime: null
-  lastModifiedBy: null
-  compendiumSource: null
+  compendiumSource: Item.DYVazRNO2caSDMGE
   duplicateSource: null
+  coreVersion: '12.331'
+  systemId: uesrpg-3ev4
+  systemVersion: v1.0.0-RC.62
+  createdTime: 1733463057550
+  modifiedTime: 1733463057550
+  lastModifiedBy: HcIrULZhA1JFIlrf
 ownership:
   default: 0
-  xvA5SwRGJiyPsnxH: 3
+  HcIrULZhA1JFIlrf: 3
 system:
   mpBonus: 0
   hpBonus: 0
@@ -41,11 +40,11 @@ system:
     ini:
       iniToggle: false
       value: 0
-      characteristic: null
+      characteristic: none
     wt:
       wtToggle: false
       value: 0
-      characteristic: null
+      characteristic: none
   characteristics:
     none: None
     str: STR
@@ -67,15 +66,16 @@ system:
     lckChaBonus: 0
   skillArray: []
   description: >-
-    <p>The character can ignore the penalty imposed by armor when using
-    Acrobatics. For every level of the Acrobatics skill above Novice, the
-    character ignores the penalties imposed upon Acrobatics tests by the
-    relevant Weight Class, starting with Light at Apprentice Acrobatics and
-    stopping with Super-Heavy at Expert.</p>
-  xpCost: 500
-  level: 5
+    <p>If the character successfully evades an area of effect attack, then they
+    may immediately move a number of meters equal to their Evade skill rank. If
+    this move would allow them to escape the affected area, they take no damage
+    from the attack. This movement does not count toward their total movement
+    for the round.</p>
+  governingCharacteristics: Ag
+  xpCost: 400
+  level: Adept
   talentReq: ''
-  miscReq: Apprentice Acrobatics
+  miscReq: Adept Evade
   halfFatiguePenalty: false
   halfWoundPenalty: false
   untrainedException: false
@@ -83,7 +83,8 @@ system:
   addIntToMP: false
   armorAcrobaticsException: false
   addHalfSpeed: false
-folder: null
+folder: DV2HX0o6o4SP9uib
+_id: ycCze2o4UDAx7Mzo
 sort: 0
-_key: '!items!PXb2tMsZF5Ct1j2F'
+_key: '!items!ycCze2o4UDAx7Mzo'
 

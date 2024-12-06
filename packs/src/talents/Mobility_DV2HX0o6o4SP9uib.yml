@@ -1,0 +1,20 @@
+name: Mobility
+sorting: a
+folder: null
+type: Item
+_id: DV2HX0o6o4SP9uib
+description: ''
+sort: 0
+color: '#b3ad00'
+flags: {}
+_stats:
+  compendiumSource: null
+  duplicateSource: null
+  coreVersion: '12.331'
+  systemId: uesrpg-3ev4
+  systemVersion: v1.0.0-RC.62
+  createdTime: 1733462237746
+  modifiedTime: 1733462314975
+  lastModifiedBy: HcIrULZhA1JFIlrf
+_key: '!folders!DV2HX0o6o4SP9uib'
+

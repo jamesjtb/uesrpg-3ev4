@@ -1,23 +1,22 @@
-_id: Wra6mCQOlSW5JnfC
-name: Assassin Strike
+name: Swashbuckler
 type: talent
 flags:
   core:
     sourceId: Item.DYVazRNO2caSDMGE
-img: systems/uesrpg-3ev4/images/Icons/assassinStrike.webp
+img: systems/uesrpg-3ev4/images/Icons/swashbuckler.webp
 effects: []
 _stats:
-  coreVersion: '12.331'
-  systemId: null
-  systemVersion: null
-  createdTime: null
-  modifiedTime: null
-  lastModifiedBy: null
-  compendiumSource: null
+  compendiumSource: Item.DYVazRNO2caSDMGE
   duplicateSource: null
+  coreVersion: '12.331'
+  systemId: uesrpg-3ev4
+  systemVersion: v1.0.0-RC.62
+  createdTime: 1733463017094
+  modifiedTime: 1733463017094
+  lastModifiedBy: HcIrULZhA1JFIlrf
 ownership:
   default: 0
-  xvA5SwRGJiyPsnxH: 3
+  HcIrULZhA1JFIlrf: 3
 system:
   mpBonus: 0
   hpBonus: 0
@@ -26,8 +25,8 @@ system:
   wtBonus: 0
   iniBonus: 0
   speedBonus: 0
-  flyBonus: null
-  swimBonus: null
+  flyBonus: 0
+  swimBonus: 0
   diseaseR: 0
   fireR: 0
   frostR: 0
@@ -35,17 +34,17 @@ system:
   poisonR: 0
   magicR: 0
   natToughnessR: 0
-  silverR: null
-  sunlightR: null
+  silverR: 0
+  sunlightR: 0
   replace:
     ini:
       iniToggle: false
       value: 0
-      characteristic: null
+      characteristic: none
     wt:
       wtToggle: false
       value: 0
-      characteristic: null
+      characteristic: none
   characteristics:
     none: None
     str: STR
@@ -67,11 +66,12 @@ system:
     lckChaBonus: 0
   skillArray: []
   description: >-
-    <p>If the character successfully inflicts damage with an attack (after
-    mitigation) then the target of that attack cannot make an attack of
-    opportunity against the character during that turn.</p>
+    <p>The character ignores any limits placed on any combat related skill tests
+    by their Athletics or Acrobatics skill ranks (except for when fighting
+    underwater).</p>
+  governingCharacteristics: Ag
   xpCost: 300
-  level: 3
+  level: Journeyman
   talentReq: ''
   miscReq: ''
   halfFatiguePenalty: false
@@ -81,7 +81,8 @@ system:
   addIntToMP: false
   armorAcrobaticsException: false
   addHalfSpeed: false
-folder: null
+folder: DV2HX0o6o4SP9uib
+_id: gNZyPFnI0mxHI6IG
 sort: 0
-_key: '!items!Wra6mCQOlSW5JnfC'
+_key: '!items!gNZyPFnI0mxHI6IG'
 

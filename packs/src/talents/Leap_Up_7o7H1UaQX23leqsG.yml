@@ -1,23 +1,22 @@
-_id: ggaqoGJhO7ATGO5l
-name: Catfall
+name: Leap Up
 type: talent
 flags:
   core:
     sourceId: Item.DYVazRNO2caSDMGE
-img: systems/uesrpg-3ev4/images/Icons/catfall.webp
+img: systems/uesrpg-3ev4/images/Icons/leapUp.webp
 effects: []
 _stats:
-  coreVersion: '12.331'
-  systemId: null
-  systemVersion: null
-  createdTime: null
-  modifiedTime: 1733366896133
-  lastModifiedBy: HcIrULZhA1JFIlrf
-  compendiumSource: null
+  compendiumSource: Item.DYVazRNO2caSDMGE
   duplicateSource: null
+  coreVersion: '12.331'
+  systemId: uesrpg-3ev4
+  systemVersion: v1.0.0-RC.62
+  createdTime: 1733462894991
+  modifiedTime: 1733462894991
+  lastModifiedBy: HcIrULZhA1JFIlrf
 ownership:
   default: 0
-  xvA5SwRGJiyPsnxH: 3
+  HcIrULZhA1JFIlrf: 3
 system:
   mpBonus: 0
   hpBonus: 0
@@ -41,11 +40,11 @@ system:
     ini:
       iniToggle: false
       value: 0
-      characteristic: null
+      characteristic: none
     wt:
       wtToggle: false
       value: 0
-      characteristic: null
+      characteristic: none
   characteristics:
     none: None
     str: STR
@@ -67,13 +66,13 @@ system:
     lckChaBonus: 0
   skillArray: []
   description: >-
-    <p>Reduce the distance the character falls by a number of meters equal to
-    his Agility Bonus when calculating fall damage.</p>
-  governingCharacteristics: ''
-  xpCost: 100
-  level: 1
+    <p>The character can stand up from prone without spending any movement and
+    without triggering attacks of opportunity.</p>
+  governingCharacteristics: Ag
+  xpCost: 300
+  level: Novice
   talentReq: ''
-  miscReq: Apprentice Acrobatics
+  miscReq: ''
   halfFatiguePenalty: false
   halfWoundPenalty: false
   untrainedException: false
@@ -81,7 +80,8 @@ system:
   addIntToMP: false
   armorAcrobaticsException: false
   addHalfSpeed: false
-folder: null
-sort: 10500000
-_key: '!items!ggaqoGJhO7ATGO5l'
+folder: DV2HX0o6o4SP9uib
+_id: 7o7H1UaQX23leqsG
+sort: 0
+_key: '!items!7o7H1UaQX23leqsG'
 

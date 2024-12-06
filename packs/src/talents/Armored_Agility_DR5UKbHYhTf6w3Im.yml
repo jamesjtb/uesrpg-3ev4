@@ -1,23 +1,22 @@
-_id: GUo2tnGThkAdyhd4
-name: Hard Target
+name: Armored Agility
 type: talent
 flags:
   core:
     sourceId: Item.DYVazRNO2caSDMGE
-img: systems/uesrpg-3ev4/images/Icons/hardTarget.webp
+img: systems/uesrpg-3ev4/images/Icons/armoredAgility.webp
 effects: []
 _stats:
-  coreVersion: '12.331'
-  systemId: null
-  systemVersion: null
-  createdTime: null
-  modifiedTime: 1733366896133
-  lastModifiedBy: HcIrULZhA1JFIlrf
-  compendiumSource: null
+  compendiumSource: Item.DYVazRNO2caSDMGE
   duplicateSource: null
+  coreVersion: '12.331'
+  systemId: uesrpg-3ev4
+  systemVersion: v1.0.0-RC.62
+  createdTime: 1733462423242
+  modifiedTime: 1733462858392
+  lastModifiedBy: HcIrULZhA1JFIlrf
 ownership:
   default: 0
-  xvA5SwRGJiyPsnxH: 3
+  HcIrULZhA1JFIlrf: 3
 system:
   mpBonus: 0
   hpBonus: 0
@@ -41,11 +40,11 @@ system:
     ini:
       iniToggle: false
       value: 0
-      characteristic: null
+      characteristic: none
     wt:
       wtToggle: false
       value: 0
-      characteristic: null
+      characteristic: none
   characteristics:
     none: None
     str: STR
@@ -67,13 +66,13 @@ system:
     lckChaBonus: 0
   skillArray: []
   description: >-
-    <p>If the character takes the Dash action, any ranged attacks made against
-    him until the start of his next turn suffer a -20 penalty.</p>
-  governingCharacteristics: ''
-  xpCost: 300
-  level: 3
+    <p>The character reduces Acrobatics test penalties gained from their armor
+    class by their Acrobatics skill rank - 1 multiplied by 10.</p>
+  governingCharacteristics: Ag
+  xpCost: 500
+  level: Expert
   talentReq: ''
-  miscReq: ''
+  miscReq: Apprentice Acrobatics
   halfFatiguePenalty: false
   halfWoundPenalty: false
   untrainedException: false
@@ -81,7 +80,8 @@ system:
   addIntToMP: false
   armorAcrobaticsException: false
   addHalfSpeed: false
-folder: null
-sort: 4300000
-_key: '!items!GUo2tnGThkAdyhd4'
+folder: DV2HX0o6o4SP9uib
+_id: DR5UKbHYhTf6w3Im
+sort: 100000
+_key: '!items!DR5UKbHYhTf6w3Im'
 
