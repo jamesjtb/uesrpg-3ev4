@@ -1,23 +1,22 @@
-_id: XmfxE735nzujRSrm
-name: Enduring
+name: Iron Jaw
 type: talent
 flags:
   core:
     sourceId: Item.DYVazRNO2caSDMGE
-img: systems/uesrpg-3ev4/images/Icons/enduring.webp
+img: systems/uesrpg-3ev4/images/Icons/ironJaw.webp
 effects: []
 _stats:
-  coreVersion: '12.331'
-  systemId: null
-  systemVersion: null
-  createdTime: null
-  modifiedTime: 1733366896133
-  lastModifiedBy: HcIrULZhA1JFIlrf
-  compendiumSource: null
+  compendiumSource: Item.DYVazRNO2caSDMGE
   duplicateSource: null
+  coreVersion: '12.331'
+  systemId: uesrpg-3ev4
+  systemVersion: v1.0.0-RC.63
+  createdTime: 1734333285328
+  modifiedTime: 1734333331842
+  lastModifiedBy: HcIrULZhA1JFIlrf
 ownership:
   default: 0
-  xvA5SwRGJiyPsnxH: 3
+  HcIrULZhA1JFIlrf: 3
 system:
   mpBonus: 0
   hpBonus: 0
@@ -41,11 +40,11 @@ system:
     ini:
       iniToggle: false
       value: 0
-      characteristic: null
+      characteristic: none
     wt:
       wtToggle: false
       value: 0
-      characteristic: null
+      characteristic: none
   characteristics:
     none: None
     str: STR
@@ -66,20 +65,23 @@ system:
     prsChaBonus: 0
     lckChaBonus: 0
   skillArray: []
-  description: <p>The character halves the penalties imposed by levels of fatigue.</p>
-  governingCharacteristics: ''
-  xpCost: 400
-  level: 4
+  description: >-
+    <p>The character is always entitled to an Endurance test to avoid being
+    knocked back, knocked down, or stunned.</p>
+  governingCharacteristics: Str, End
+  xpCost: 200
+  level: Apprentice
   talentReq: ''
-  miscReq: Endurance 40
-  halfFatiguePenalty: true
+  miscReq: ''
+  halfFatiguePenalty: false
   halfWoundPenalty: false
   untrainedException: false
   fatigueException: false
   addIntToMP: false
   armorAcrobaticsException: false
   addHalfSpeed: false
-folder: null
-sort: 7600000
-_key: '!items!XmfxE735nzujRSrm'
+folder: JTb2hMtfQ7j6XzaV
+_id: 9gEdbSfk2vAJLaDb
+sort: 500000
+_key: '!items!9gEdbSfk2vAJLaDb'
 

@@ -1,23 +1,22 @@
-_id: fD1o5iqfpCJ6yugV
-name: Iron Jaw
+name: Die-Hard
 type: talent
 flags:
   core:
     sourceId: Item.DYVazRNO2caSDMGE
-img: systems/uesrpg-3ev4/images/Icons/ironJaw.webp
+img: systems/uesrpg-3ev4/images/Icons/dieHard.webp
 effects: []
 _stats:
-  coreVersion: '12.331'
-  systemId: null
-  systemVersion: null
-  createdTime: null
-  modifiedTime: 1733366896133
-  lastModifiedBy: HcIrULZhA1JFIlrf
-  compendiumSource: null
+  compendiumSource: Item.DYVazRNO2caSDMGE
   duplicateSource: null
+  coreVersion: '12.331'
+  systemId: uesrpg-3ev4
+  systemVersion: v1.0.0-RC.63
+  createdTime: 1734333049085
+  modifiedTime: 1734333331842
+  lastModifiedBy: HcIrULZhA1JFIlrf
 ownership:
   default: 0
-  xvA5SwRGJiyPsnxH: 3
+  HcIrULZhA1JFIlrf: 3
 system:
   mpBonus: 0
   hpBonus: 0
@@ -41,11 +40,11 @@ system:
     ini:
       iniToggle: false
       value: 0
-      characteristic: null
+      characteristic: none
     wt:
       wtToggle: false
       value: 0
-      characteristic: null
+      characteristic: none
   characteristics:
     none: None
     str: STR
@@ -67,13 +66,13 @@ system:
     lckChaBonus: 0
   skillArray: []
   description: >-
-    <p>The character is always entitled to an Endurance test to avoid being
-    knocked back, knocked down or stunned.</p>
-  governingCharacteristics: ''
-  xpCost: 200
-  level: 2
+    <p>The character can reroll failed Endurance tests to resist the shock
+    effects of a wound, or to avoid death, but only once per test.</p>
+  governingCharacteristics: End
+  xpCost: 400
+  level: Adept
   talentReq: ''
-  miscReq: ''
+  miscReq: Endurance 40
   halfFatiguePenalty: false
   halfWoundPenalty: false
   untrainedException: false
@@ -81,7 +80,8 @@ system:
   addIntToMP: false
   armorAcrobaticsException: false
   addHalfSpeed: false
-folder: null
-sort: 10400000
-_key: '!items!fD1o5iqfpCJ6yugV'
+folder: JTb2hMtfQ7j6XzaV
+_id: 4Ij3QjIGZfg6J3GQ
+sort: 100000
+_key: '!items!4Ij3QjIGZfg6J3GQ'
 

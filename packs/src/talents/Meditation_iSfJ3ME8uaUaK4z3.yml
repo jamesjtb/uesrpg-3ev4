@@ -1,23 +1,22 @@
-_id: TmbiKExu5W2PnSLU
-name: Unstoppable
+name: Meditation
 type: talent
 flags:
   core:
     sourceId: Item.DYVazRNO2caSDMGE
-img: systems/uesrpg-3ev4/images/Icons/unstoppable.webp
+img: systems/uesrpg-3ev4/images/Icons/meditation.webp
 effects: []
 _stats:
-  coreVersion: '12.331'
-  systemId: null
-  systemVersion: null
-  createdTime: null
-  modifiedTime: 1733366896133
-  lastModifiedBy: HcIrULZhA1JFIlrf
-  compendiumSource: null
+  compendiumSource: Item.DYVazRNO2caSDMGE
   duplicateSource: null
+  coreVersion: '12.331'
+  systemId: uesrpg-3ev4
+  systemVersion: v1.0.0-RC.63
+  createdTime: 1734333331802
+  modifiedTime: 1734333331842
+  lastModifiedBy: HcIrULZhA1JFIlrf
 ownership:
   default: 0
-  xvA5SwRGJiyPsnxH: 3
+  HcIrULZhA1JFIlrf: 3
 system:
   mpBonus: 0
   hpBonus: 0
@@ -41,11 +40,11 @@ system:
     ini:
       iniToggle: false
       value: 0
-      characteristic: null
+      characteristic: none
     wt:
       wtToggle: false
       value: 0
-      characteristic: null
+      characteristic: none
   characteristics:
     none: None
     str: STR
@@ -66,20 +65,23 @@ system:
     prsChaBonus: 0
     lckChaBonus: 0
   skillArray: []
-  description: <p>The character halves the passive effects of wounds.</p>
-  governingCharacteristics: ''
-  xpCost: 500
-  level: 5
-  talentReq: Die-Hard
-  miscReq: Endurance 50
+  description: >-
+    <p>By spending a short rest in uninterrupted meditation, the character
+    doubles their normal Magicka and Stamina point regeneration.</p>
+  governingCharacteristics: Wp
+  xpCost: 400
+  level: Adept
+  talentReq: ''
+  miscReq: ''
   halfFatiguePenalty: false
-  halfWoundPenalty: true
+  halfWoundPenalty: false
   untrainedException: false
   fatigueException: false
   addIntToMP: false
   armorAcrobaticsException: false
   addHalfSpeed: false
-folder: null
-sort: 7100000
-_key: '!items!TmbiKExu5W2PnSLU'
+folder: JTb2hMtfQ7j6XzaV
+_id: iSfJ3ME8uaUaK4z3
+sort: 400000
+_key: '!items!iSfJ3ME8uaUaK4z3'
 
