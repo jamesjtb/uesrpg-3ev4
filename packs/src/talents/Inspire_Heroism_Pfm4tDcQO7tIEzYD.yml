@@ -1,4 +1,3 @@
-_id: z9LUbRUWgGmspZe0
 name: Inspire Heroism
 type: talent
 flags:
@@ -7,17 +6,17 @@ flags:
 img: systems/uesrpg-3ev4/images/Icons/inspireHeroism.webp
 effects: []
 _stats:
-  coreVersion: '12.331'
-  systemId: null
-  systemVersion: null
-  createdTime: null
-  modifiedTime: 1733366896133
-  lastModifiedBy: HcIrULZhA1JFIlrf
-  compendiumSource: null
+  compendiumSource: Item.DYVazRNO2caSDMGE
   duplicateSource: null
+  coreVersion: '12.331'
+  systemId: uesrpg-3ev4
+  systemVersion: v1.0.0-RC.64
+  createdTime: 1734513295888
+  modifiedTime: 1734513295921
+  lastModifiedBy: HcIrULZhA1JFIlrf
 ownership:
   default: 0
-  xvA5SwRGJiyPsnxH: 3
+  HcIrULZhA1JFIlrf: 3
 system:
   mpBonus: 0
   hpBonus: 0
@@ -41,11 +40,11 @@ system:
     ini:
       iniToggle: false
       value: 0
-      characteristic: null
+      characteristic: none
     wt:
       wtToggle: false
       value: 0
-      characteristic: null
+      characteristic: none
   characteristics:
     none: None
     str: STR
@@ -67,12 +66,12 @@ system:
     lckChaBonus: 0
   skillArray: []
   description: >-
-    <p>As a Free action, the character can make a Command test to inspire an
-    ally within range to gain +10 to their next combat test, but only once per
-    round.</p>
-  governingCharacteristics: ''
+    <p>Once per round as a free action, the character can make a command test to
+    inspire an ally who can perceive them. When inspired, the ally gains +10 to
+    their next combat test.</p>
+  governingCharacteristics: Prs
   xpCost: 200
-  level: 2
+  level: Apprentice
   talentReq: ''
   miscReq: Apprentice Command
   halfFatiguePenalty: false
@@ -82,7 +81,8 @@ system:
   addIntToMP: false
   armorAcrobaticsException: false
   addHalfSpeed: false
-folder: null
-sort: 14700000
-_key: '!items!z9LUbRUWgGmspZe0'
+folder: xSPpHH9gRDH02Lng
+_id: Pfm4tDcQO7tIEzYD
+sort: 300000
+_key: '!items!Pfm4tDcQO7tIEzYD'
 

@@ -1,23 +1,22 @@
-_id: LoeH9eUrBDzGyuZm
-name: Charlatan
+name: Into the Fire
 type: talent
 flags:
   core:
     sourceId: Item.DYVazRNO2caSDMGE
-img: systems/uesrpg-3ev4/images/Icons/charlatan.webp
+img: systems/uesrpg-3ev4/images/Icons/intoTheFire.webp
 effects: []
 _stats:
-  coreVersion: '12.331'
-  systemId: null
-  systemVersion: null
-  createdTime: null
-  modifiedTime: 1733366896133
-  lastModifiedBy: HcIrULZhA1JFIlrf
-  compendiumSource: null
+  compendiumSource: Item.DYVazRNO2caSDMGE
   duplicateSource: null
+  coreVersion: '12.331'
+  systemId: uesrpg-3ev4
+  systemVersion: v1.0.0-RC.64
+  createdTime: 1734513260476
+  modifiedTime: 1734513295921
+  lastModifiedBy: HcIrULZhA1JFIlrf
 ownership:
   default: 0
-  xvA5SwRGJiyPsnxH: 3
+  HcIrULZhA1JFIlrf: 3
 system:
   mpBonus: 0
   hpBonus: 0
@@ -41,11 +40,11 @@ system:
     ini:
       iniToggle: false
       value: 0
-      characteristic: null
+      characteristic: none
     wt:
       wtToggle: false
       value: 0
-      characteristic: null
+      characteristic: none
   characteristics:
     none: None
     str: STR
@@ -67,13 +66,14 @@ system:
     lckChaBonus: 0
   skillArray: []
   description: >-
-    <p>The character can use the Deceive skill in place of the Commerce
-    skill.</p>
-  governingCharacteristics: ''
+    <p>As long as this character is leading the group then they and their allies
+    roll twice on the appropriate table on a failed Fear test and use the lower
+    result.</p>
+  governingCharacteristics: Prs
   xpCost: 300
-  level: 3
+  level: Journeyman
   talentReq: ''
-  miscReq: Apprentice Deceive
+  miscReq: ''
   halfFatiguePenalty: false
   halfWoundPenalty: false
   untrainedException: false
@@ -81,7 +81,8 @@ system:
   addIntToMP: false
   armorAcrobaticsException: false
   addHalfSpeed: false
-folder: null
-sort: 5500000
-_key: '!items!LoeH9eUrBDzGyuZm'
+folder: xSPpHH9gRDH02Lng
+_id: HL3LixfixcVhSyoQ
+sort: 400000
+_key: '!items!HL3LixfixcVhSyoQ'
 
