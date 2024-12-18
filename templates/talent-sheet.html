@@ -103,12 +103,6 @@
                                 </div>
                             </div>
                             <div class="grid-container">
-                                <div>Add INT to Magicka</div>
-                                <div class="right-align-content">
-                                    <input class="checkbox" type="checkbox" name="system.addIntToMP" {{checked item.system.addIntToMP}}>
-                                </div>
-                            </div>
-                            <div class="grid-container">
                                 <div>No Untrained Combat Penalty</div>
                                 <div class="right-align-content">
                                     <input class="checkbox" type="checkbox" name="system.untrainedException" {{checked item.system.untrainedException}}>
@@ -118,6 +112,14 @@
                                 <div>Add 1/2 Speed</div>
                                 <div class="right-align-content">
                                     <input class="checkbox" type="checkbox" name="system.addHalfSpeed" {{checked item.system.addHalfSpeed}}>
+                                </div>
+                            </div>
+                            <div class="grid-container">
+                                <div>Add IB to Magicka</div>
+                                <div class="right-align-content">
+                                    <input class="checkbox" type="checkbox" name="system.addIBToMP" {{checked item.system.addIBToMP}}>
+                                    <div>Multiplier:</div>
+                                    <input type="number" name="system.addIntToMPMultiplier" value="{{item.system.addIntToMPMultiplier}}">
                                 </div>
                             </div>
                         </div>

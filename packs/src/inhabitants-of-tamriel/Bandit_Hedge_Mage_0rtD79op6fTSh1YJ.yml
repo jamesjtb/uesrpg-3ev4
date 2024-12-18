@@ -82,7 +82,7 @@ items:
       halfWoundPenalty: false
       untrainedException: false
       fatigueException: false
-      addIntToMP: false
+      addIBToMP: false
       armorAcrobaticsException: false
       addHalfSpeed: false
     _key: '!actors.items!0rtD79op6fTSh1YJ.NNZLILhWmSlbkiG8'

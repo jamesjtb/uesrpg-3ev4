@@ -85,7 +85,7 @@ system:
   halfWoundPenalty: false
   untrainedException: false
   fatigueException: false
-  addIntToMP: false
+  addIBToMP: false
   armorAcrobaticsException: false
   addHalfSpeed: false
 folder: gNFUNr8dqFnssltG

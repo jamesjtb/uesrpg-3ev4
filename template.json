@@ -872,7 +872,8 @@
     "halfWoundPenalty": false,
     "untrainedException": false,
     "fatigueException": false,
-    "addIntToMP": false,
+    "addIBToMP": false,
+    "addIntToMPMultiplier": 1,
     "armorAcrobaticsException": false,
     "addHalfSpeed": false
   },
