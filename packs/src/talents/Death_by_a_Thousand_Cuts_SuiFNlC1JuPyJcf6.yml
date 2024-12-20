@@ -1,23 +1,6 @@
-_id: FlVvJwjbJTdswbfa
-name: Riposte
+name: Death by a Thousand Cuts
 type: talent
-flags:
-  core:
-    sourceId: Item.DYVazRNO2caSDMGE
-img: systems/uesrpg-3ev4/images/Icons/riposte.webp
-effects: []
-_stats:
-  coreVersion: '12.331'
-  systemId: null
-  systemVersion: null
-  createdTime: null
-  modifiedTime: 1733366896133
-  lastModifiedBy: HcIrULZhA1JFIlrf
-  compendiumSource: null
-  duplicateSource: null
-ownership:
-  default: 0
-  xvA5SwRGJiyPsnxH: 3
+img: icons/skills/wounds/blood-spurt-spray-red.webp
 system:
   mpBonus: 0
   hpBonus: 0
@@ -41,11 +24,11 @@ system:
     ini:
       iniToggle: false
       value: 0
-      characteristic: null
+      characteristic: none
     wt:
       wtToggle: false
       value: 0
-      characteristic: null
+      characteristic: none
   characteristics:
     none: None
     str: STR
@@ -67,22 +50,38 @@ system:
     lckChaBonus: 0
   skillArray: []
   description: >-
-    <p>The first counter attack made by this character using a weapon with the
-    Dueling quality does not count towards the character&rsquo;s maximum number
-    of attacks they can make per round.</p>
-  governingCharacteristics: ''
-  xpCost: 500
-  level: 5
-  talentReq: ''
-  miscReq: Apprentice Combat
+    <p>When the character deals at least one point of damage to a target after
+    mitigation using a Katana or a Wakizashi, they can apply the Bleeding (1)
+    condition.</p>
+  governingCharacteristics: Str, Ag
+  xpCost: 800
+  level: Master
+  talentReq: Daisho
+  miscReq: ''
   halfFatiguePenalty: false
   halfWoundPenalty: false
   untrainedException: false
   fatigueException: false
   addIBToMP: false
+  addIntToMPMultiplier: 1
   armorAcrobaticsException: false
   addHalfSpeed: false
-folder: null
-sort: 4200000
-_key: '!items!FlVvJwjbJTdswbfa'
+effects: []
+folder: coY6fwnED7jEStIl
+ownership:
+  default: 0
+  HcIrULZhA1JFIlrf: 3
+flags: {}
+_stats:
+  compendiumSource: null
+  duplicateSource: null
+  coreVersion: '12.331'
+  systemId: uesrpg-3ev4
+  systemVersion: v1.0.0-RC.64
+  createdTime: 1734675992235
+  modifiedTime: 1734675992235
+  lastModifiedBy: HcIrULZhA1JFIlrf
+_id: SuiFNlC1JuPyJcf6
+sort: 0
+_key: '!items!SuiFNlC1JuPyJcf6'
 

@@ -1,23 +1,6 @@
-_id: 1rZKl8HgUEM3EYnI
-name: Halberdier
+name: Slinger's Wail
 type: talent
-flags:
-  core:
-    sourceId: Item.DYVazRNO2caSDMGE
-img: systems/uesrpg-3ev4/images/Icons/halberdier.webp
-effects: []
-_stats:
-  coreVersion: '12.331'
-  systemId: null
-  systemVersion: null
-  createdTime: null
-  modifiedTime: 1733366896133
-  lastModifiedBy: HcIrULZhA1JFIlrf
-  compendiumSource: null
-  duplicateSource: null
-ownership:
-  default: 0
-  xvA5SwRGJiyPsnxH: 3
+img: icons/weapons/slings/slingshot-wood.webp
 system:
   mpBonus: 0
   hpBonus: 0
@@ -41,11 +24,11 @@ system:
     ini:
       iniToggle: false
       value: 0
-      characteristic: null
+      characteristic: none
     wt:
       wtToggle: false
       value: 0
-      characteristic: null
+      characteristic: none
   characteristics:
     none: None
     str: STR
@@ -67,24 +50,38 @@ system:
     lckChaBonus: 0
   skillArray: []
   description: >-
-    <p>The character can choose to replace his halberd&rsquo;s Splitting quality
-    with the Crushing quality instead. Additionally, when the character
-    successfully hits a target with a halberd he can spend a Stamina point. If
-    he does so he may move the target and himself up to one meter in any single
-    direction.</p>
-  governingCharacteristics: ''
+    <p>When the character attacks with a sling while Hidden, characters who are
+    unaware of them within the weapon’s short range must make a +0 Panic
+    test.</p>
+  governingCharacteristics: Ag
   xpCost: 500
-  level: 5
+  level: Expert
   talentReq: ''
-  miscReq: Apprentice Combat
+  miscReq: ''
   halfFatiguePenalty: false
   halfWoundPenalty: false
   untrainedException: false
   fatigueException: false
   addIBToMP: false
+  addIntToMPMultiplier: 1
   armorAcrobaticsException: false
   addHalfSpeed: false
-folder: null
-sort: 600000
-_key: '!items!1rZKl8HgUEM3EYnI'
+effects: []
+folder: coY6fwnED7jEStIl
+ownership:
+  default: 0
+  HcIrULZhA1JFIlrf: 3
+flags: {}
+_stats:
+  compendiumSource: null
+  duplicateSource: null
+  coreVersion: '12.331'
+  systemId: uesrpg-3ev4
+  systemVersion: v1.0.0-RC.64
+  createdTime: 1734677430459
+  modifiedTime: 1734677430459
+  lastModifiedBy: HcIrULZhA1JFIlrf
+_id: QsP03RQjCzyUkKwu
+sort: 0
+_key: '!items!QsP03RQjCzyUkKwu'
 

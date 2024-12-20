@@ -1,23 +1,22 @@
-_id: A1aUDbzHEVuQc5Wa
-name: Whirling School
+name: Staff Mastery
 type: talent
 flags:
   core:
     sourceId: Item.DYVazRNO2caSDMGE
-img: systems/uesrpg-3ev4/images/Icons/rainOfSteel.webp
+img: systems/uesrpg-3ev4/images/Icons/staffMastery.webp
 effects: []
 _stats:
-  coreVersion: '12.331'
-  systemId: null
-  systemVersion: null
-  createdTime: null
-  modifiedTime: 1733366896133
-  lastModifiedBy: HcIrULZhA1JFIlrf
-  compendiumSource: null
+  compendiumSource: Item.DYVazRNO2caSDMGE
   duplicateSource: null
+  coreVersion: '12.331'
+  systemId: uesrpg-3ev4
+  systemVersion: v1.0.0-RC.64
+  createdTime: 1734677480667
+  modifiedTime: 1734677480667
+  lastModifiedBy: HcIrULZhA1JFIlrf
 ownership:
   default: 0
-  xvA5SwRGJiyPsnxH: 3
+  HcIrULZhA1JFIlrf: 3
 system:
   mpBonus: 0
   hpBonus: 0
@@ -41,11 +40,11 @@ system:
     ini:
       iniToggle: false
       value: 0
-      characteristic: null
+      characteristic: none
     wt:
       wtToggle: false
       value: 0
-      characteristic: null
+      characteristic: none
   characteristics:
     none: None
     str: STR
@@ -67,18 +66,12 @@ system:
     lckChaBonus: 0
   skillArray: []
   description: >-
-    <p>Any bola wielded by the character gains the concussive quality. The
-    character can now use the Trip action as a reaction to anyone moving within
-    the bola&rsquo;s short range, counting as having the Impaling quality for
-    the purpose of stopping the charge.</p>
-
-    <p>The character can also spend 1 SP to make a Precision Strike aimed for
-    the target&rsquo;s neck, causing the bola to choke the opponent causing them
-    to lose 1 SP per round. Removing the bola requires 1 AP and a successful -10
-    Strength test.</p>
-  governingCharacteristics: ''
+    <p>When the character takes the defensive stance action while wielding a
+    quarterstaff they receive a free action point that can also be used for that
+    purpose. Additionally, quarterstaffs they wield gain Crushing.</p>
+  governingCharacteristics: Str, Ag
   xpCost: 500
-  level: 5
+  level: Expert
   talentReq: ''
   miscReq: Apprentice Combat
   halfFatiguePenalty: false
@@ -86,9 +79,12 @@ system:
   untrainedException: false
   fatigueException: false
   addIBToMP: false
+  addIntToMPMultiplier: 1
   armorAcrobaticsException: false
   addHalfSpeed: false
-folder: null
-sort: 2900000
-_key: '!items!A1aUDbzHEVuQc5Wa'
+  addIntToMP: false
+folder: coY6fwnED7jEStIl
+_id: yt5eN4j0heUbhGrY
+sort: 0
+_key: '!items!yt5eN4j0heUbhGrY'
 

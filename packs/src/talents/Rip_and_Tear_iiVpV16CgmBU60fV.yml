@@ -1,23 +1,22 @@
-_id: d7QJ28z1bUpTyhgw
-name: Executioner
+name: Rip and Tear
 type: talent
 flags:
   core:
     sourceId: Item.DYVazRNO2caSDMGE
-img: systems/uesrpg-3ev4/images/Icons/executioner.webp
+img: systems/uesrpg-3ev4/images/Icons/ripAndTear.webp
 effects: []
 _stats:
-  coreVersion: '12.331'
-  systemId: null
-  systemVersion: null
-  createdTime: null
-  modifiedTime: 1733366896133
-  lastModifiedBy: HcIrULZhA1JFIlrf
-  compendiumSource: null
+  compendiumSource: Item.DYVazRNO2caSDMGE
   duplicateSource: null
+  coreVersion: '12.331'
+  systemId: uesrpg-3ev4
+  systemVersion: v1.0.0-RC.64
+  createdTime: 1734677133399
+  modifiedTime: 1734677133399
+  lastModifiedBy: HcIrULZhA1JFIlrf
 ownership:
   default: 0
-  xvA5SwRGJiyPsnxH: 3
+  HcIrULZhA1JFIlrf: 3
 system:
   mpBonus: 0
   hpBonus: 0
@@ -41,11 +40,11 @@ system:
     ini:
       iniToggle: false
       value: 0
-      characteristic: null
+      characteristic: none
     wt:
       wtToggle: false
       value: 0
-      characteristic: null
+      characteristic: none
   characteristics:
     none: None
     str: STR
@@ -67,14 +66,13 @@ system:
     lckChaBonus: 0
   skillArray: []
   description: >-
-    <p>The character increases the bonus from All Out Attacks to +30 and adds
-    1d4 to his Strength bonus for the purpose of the Splitting/Slashing quality
-    when making an All Out Attack with great axes or scimitars. Foes suffer -20
-    to Shock tests made because of wounds inflicted by great axes or
-    scimitars.</p>
-  governingCharacteristics: ''
+    <p>Hook Swords wielded by this character replaces the Slashing (1) quality
+    with the Slashing quality. Additionally, the penalties inflicted by the
+    Hooked trait are increased to -20 while the weapon is wielded by the
+    character.</p>
+  governingCharacteristics: Str, Ag
   xpCost: 500
-  level: 5
+  level: Expert
   talentReq: ''
   miscReq: Apprentice Combat
   halfFatiguePenalty: false
@@ -82,9 +80,12 @@ system:
   untrainedException: false
   fatigueException: false
   addIBToMP: false
+  addIntToMPMultiplier: 1
   armorAcrobaticsException: false
   addHalfSpeed: false
-folder: null
-sort: 9800000
-_key: '!items!d7QJ28z1bUpTyhgw'
+  addIntToMP: false
+folder: coY6fwnED7jEStIl
+_id: iiVpV16CgmBU60fV
+sort: 0
+_key: '!items!iiVpV16CgmBU60fV'
 

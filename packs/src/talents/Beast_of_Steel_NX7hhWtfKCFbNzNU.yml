@@ -1,4 +1,3 @@
-_id: cz9BOXFlrtdJNMCQ
 name: Beast of Steel
 type: talent
 flags:
@@ -7,17 +6,17 @@ flags:
 img: systems/uesrpg-3ev4/images/Icons/beastOfSteel.webp
 effects: []
 _stats:
-  coreVersion: '12.331'
-  systemId: null
-  systemVersion: null
-  createdTime: null
-  modifiedTime: 1733366896133
-  lastModifiedBy: HcIrULZhA1JFIlrf
-  compendiumSource: null
+  compendiumSource: Item.DYVazRNO2caSDMGE
   duplicateSource: null
+  coreVersion: '12.331'
+  systemId: uesrpg-3ev4
+  systemVersion: v1.0.0-RC.64
+  createdTime: 1734675652279
+  modifiedTime: 1734675741901
+  lastModifiedBy: HcIrULZhA1JFIlrf
 ownership:
   default: 0
-  xvA5SwRGJiyPsnxH: 3
+  HcIrULZhA1JFIlrf: 3
 system:
   mpBonus: 0
   hpBonus: 0
@@ -41,11 +40,11 @@ system:
     ini:
       iniToggle: false
       value: 0
-      characteristic: null
+      characteristic: none
     wt:
       wtToggle: false
       value: 0
-      characteristic: null
+      characteristic: none
   characteristics:
     none: None
     str: STR
@@ -67,17 +66,17 @@ system:
     lckChaBonus: 0
   skillArray: []
   description: >-
-    <p>When wielding a flail or great flail the character can spend either an
-    action or a Stamina point to wind up <strong>Momentum </strong>as they begin
-    to spin the flail. Maintaining momentum is a free action.</p>
-
-    <p>On the first attack the character makes with Momentum, they roll an
-    additional d4 (flail) or d6 (great flail) for damage. Flails the character
-    wields gain the Concussive quality, and the character gains a +10 to
-    Persuade (Strength) checks when wielding a flail or great flail.</p>
-  governingCharacteristics: ''
+    <p>When wielding a flail or great flail, the character can spend either an
+    action or a Stamina point to build up Momentum as they begin spinning the
+    flail. Maintaining momentum is a free action. For attacks made with
+    momentum, the character rolls an additional d4 (flail) or d6 (great flail)
+    for damage. Momentum is lost when the character takes an action other than
+    attacking with the flail or dashing, when an attack with momentum is blocked
+    or parried, or at any other time the GM deems appropriate. Additionally,
+    flails wielded by the character gain the Concussive quality.</p>
+  governingCharacteristics: Str
   xpCost: 500
-  level: 5
+  level: Expert
   talentReq: ''
   miscReq: Apprentice Combat
   halfFatiguePenalty: false
@@ -85,9 +84,12 @@ system:
   untrainedException: false
   fatigueException: false
   addIBToMP: false
+  addIntToMPMultiplier: 1
   armorAcrobaticsException: false
   addHalfSpeed: false
-folder: null
-sort: 9700000
-_key: '!items!cz9BOXFlrtdJNMCQ'
+  addIntToMP: false
+folder: coY6fwnED7jEStIl
+_id: NX7hhWtfKCFbNzNU
+sort: 200000
+_key: '!items!NX7hhWtfKCFbNzNU'
 

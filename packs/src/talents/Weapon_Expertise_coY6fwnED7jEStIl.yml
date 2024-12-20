@@ -1,20 +1,20 @@
-name: Crafting
+name: Weapon Expertise
 sorting: a
 folder: null
 type: Item
-_id: HWSRIB6sXLi4pmti
+_id: coY6fwnED7jEStIl
 description: ''
 sort: 0
-color: '#404040'
+color: '#878787'
 flags: {}
 _stats:
   compendiumSource: null
   duplicateSource: null
   coreVersion: '12.331'
   systemId: uesrpg-3ev4
-  systemVersion: v1.0.0-RC.62
-  createdTime: 1733457774431
-  modifiedTime: 1734675461805
+  systemVersion: v1.0.0-RC.64
+  createdTime: 1734675486124
+  modifiedTime: 1734675492795
   lastModifiedBy: HcIrULZhA1JFIlrf
-_key: '!folders!HWSRIB6sXLi4pmti'
+_key: '!folders!coY6fwnED7jEStIl'
 
