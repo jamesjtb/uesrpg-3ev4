@@ -1,23 +1,22 @@
-_id: 1IP06Fc8XZImZCtg
-name: Magicka Cycling
+name: Strong Willed
 type: talent
 flags:
   core:
     sourceId: Item.DYVazRNO2caSDMGE
-img: systems/uesrpg-3ev4/images/Icons/magickaCycling.webp
+img: systems/uesrpg-3ev4/images/Icons/strongWilled.webp
 effects: []
 _stats:
-  coreVersion: '12.331'
-  systemId: null
-  systemVersion: null
-  createdTime: null
-  modifiedTime: 1733366896133
-  lastModifiedBy: HcIrULZhA1JFIlrf
-  compendiumSource: null
+  compendiumSource: Item.DYVazRNO2caSDMGE
   duplicateSource: null
+  coreVersion: '12.331'
+  systemId: uesrpg-3ev4
+  systemVersion: v1.0.0-RC.64
+  createdTime: 1734674670867
+  modifiedTime: 1734674943732
+  lastModifiedBy: HcIrULZhA1JFIlrf
 ownership:
   default: 0
-  xvA5SwRGJiyPsnxH: 3
+  HcIrULZhA1JFIlrf: 3
 system:
   mpBonus: 0
   hpBonus: 0
@@ -41,11 +40,11 @@ system:
     ini:
       iniToggle: false
       value: 0
-      characteristic: null
+      characteristic: none
     wt:
       wtToggle: false
       value: 0
-      characteristic: null
+      characteristic: none
   characteristics:
     none: None
     str: STR
@@ -67,23 +66,24 @@ system:
     lckChaBonus: 0
   skillArray: []
   description: >-
-    <p>The character can choose, before casting a spell, to double the amount of
-    magicka that will be conserved via spell restraint. If he does, then the
-    spell automatically backfires if he fails. Roll 1d4 on the appropriate
-    magicka backfire table and add the spell level to the result.</p>
-  governingCharacteristics: ''
-  xpCost: 500
-  level: 5
+    <p>The character gains a bonus Degree of Success on all successful
+    Conjuration tests.</p>
+  governingCharacteristics: Wp
+  xpCost: 400
+  level: Adept
   talentReq: ''
-  miscReq: Willpower 40
+  miscReq: Journeyman Conjuration
   halfFatiguePenalty: false
   halfWoundPenalty: false
   untrainedException: false
   fatigueException: false
   addIBToMP: false
+  addIntToMPMultiplier: 1
   armorAcrobaticsException: false
   addHalfSpeed: false
-folder: null
-sort: 500000
-_key: '!items!1IP06Fc8XZImZCtg'
+  addIntToMP: false
+folder: 0QVoIqdNtc8Z7RM2
+_id: q066MiClezUSy8ob
+sort: 600000
+_key: '!items!q066MiClezUSy8ob'
 

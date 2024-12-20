@@ -1,9 +1,9 @@
-name: Creative
+name: Taskmaster
 type: talent
 flags:
   core:
     sourceId: Item.DYVazRNO2caSDMGE
-img: systems/uesrpg-3ev4/images/Icons/creative.webp
+img: systems/uesrpg-3ev4/images/Icons/taskmaster.webp
 effects: []
 _stats:
   compendiumSource: Item.DYVazRNO2caSDMGE
@@ -11,8 +11,8 @@ _stats:
   coreVersion: '12.331'
   systemId: uesrpg-3ev4
   systemVersion: v1.0.0-RC.64
-  createdTime: 1734517223771
-  modifiedTime: 1734674943732
+  createdTime: 1734674970164
+  modifiedTime: 1734674970164
   lastModifiedBy: HcIrULZhA1JFIlrf
 ownership:
   default: 0
@@ -66,13 +66,13 @@ system:
     lckChaBonus: 0
   skillArray: []
   description: >-
-    <p>The character improves their Willpower bonus by 1 for spell restraint
-    purposes when casting unconventional spells.</p>
+    <p>The character may reduce the AP required by each Mindlock trait affecting
+    them by 1 (to a minimum of 1).</p>
   governingCharacteristics: Wp
-  xpCost: 200
-  level: Apprentice
+  xpCost: 500
+  level: Expert
   talentReq: ''
-  miscReq: ''
+  miscReq: Adept Conjuration
   halfFatiguePenalty: false
   halfWoundPenalty: false
   untrainedException: false
@@ -83,7 +83,7 @@ system:
   addHalfSpeed: false
   addIntToMP: false
 folder: 0QVoIqdNtc8Z7RM2
-_id: 2SLF1sLyffJJ94aI
-sort: 2200000
-_key: '!items!2SLF1sLyffJJ94aI'
+_id: BkiXlx0knMpCZMyE
+sort: 0
+_key: '!items!BkiXlx0knMpCZMyE'
 

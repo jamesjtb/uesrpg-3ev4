@@ -1,22 +1,6 @@
-name: Creative
+name: Living Armory
 type: talent
-flags:
-  core:
-    sourceId: Item.DYVazRNO2caSDMGE
-img: systems/uesrpg-3ev4/images/Icons/creative.webp
-effects: []
-_stats:
-  compendiumSource: Item.DYVazRNO2caSDMGE
-  duplicateSource: null
-  coreVersion: '12.331'
-  systemId: uesrpg-3ev4
-  systemVersion: v1.0.0-RC.64
-  createdTime: 1734517223771
-  modifiedTime: 1734674943732
-  lastModifiedBy: HcIrULZhA1JFIlrf
-ownership:
-  default: 0
-  HcIrULZhA1JFIlrf: 3
+img: systems/uesrpg-3ev4/images/Icons/livingArmor.webp
 system:
   mpBonus: 0
   hpBonus: 0
@@ -66,11 +50,15 @@ system:
     lckChaBonus: 0
   skillArray: []
   description: >-
-    <p>The character improves their Willpower bonus by 1 for spell restraint
-    purposes when casting unconventional spells.</p>
+    <p>The character can choose to reduce their AP by 1 point instead of paying
+    the Magicka cost of Upkeeping all active Conjure Armour and Conjure Weapon
+    effects that affect only the caster. If the character ever loses
+    concentration, such as by being Stunned, Dazed, knocked Unconscious, or
+    simply choosing to drop concentration, the spells’ effects immediately end
+    as if they had not paid their Upkeep.</p>
   governingCharacteristics: Wp
-  xpCost: 200
-  level: Apprentice
+  xpCost: 800
+  level: Master
   talentReq: ''
   miscReq: ''
   halfFatiguePenalty: false
@@ -81,9 +69,22 @@ system:
   addIntToMPMultiplier: 1
   armorAcrobaticsException: false
   addHalfSpeed: false
-  addIntToMP: false
+effects: []
 folder: 0QVoIqdNtc8Z7RM2
-_id: 2SLF1sLyffJJ94aI
-sort: 2200000
-_key: '!items!2SLF1sLyffJJ94aI'
+ownership:
+  default: 0
+  HcIrULZhA1JFIlrf: 3
+flags: {}
+_stats:
+  compendiumSource: null
+  duplicateSource: null
+  coreVersion: '12.331'
+  systemId: uesrpg-3ev4
+  systemVersion: v1.0.0-RC.64
+  createdTime: 1734673435916
+  modifiedTime: 1734674943732
+  lastModifiedBy: HcIrULZhA1JFIlrf
+_id: Z700cMlzSMGXvQPz
+sort: 1700000
+_key: '!items!Z700cMlzSMGXvQPz'
 

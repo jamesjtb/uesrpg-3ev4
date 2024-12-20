@@ -1,23 +1,22 @@
-_id: K2EfmZIlCATzRaif
-name: Healer
+name: Magicka Cycling
 type: talent
 flags:
   core:
     sourceId: Item.DYVazRNO2caSDMGE
-img: systems/uesrpg-3ev4/images/Icons/healer.webp
+img: systems/uesrpg-3ev4/images/Icons/magickaCycling.webp
 effects: []
 _stats:
-  coreVersion: '12.331'
-  systemId: null
-  systemVersion: null
-  createdTime: null
-  modifiedTime: 1733366896133
-  lastModifiedBy: HcIrULZhA1JFIlrf
-  compendiumSource: null
+  compendiumSource: Item.DYVazRNO2caSDMGE
   duplicateSource: null
+  coreVersion: '12.331'
+  systemId: uesrpg-3ev4
+  systemVersion: v1.0.0-RC.64
+  createdTime: 1734673502382
+  modifiedTime: 1734674943732
+  lastModifiedBy: HcIrULZhA1JFIlrf
 ownership:
   default: 0
-  xvA5SwRGJiyPsnxH: 3
+  HcIrULZhA1JFIlrf: 3
 system:
   mpBonus: 0
   hpBonus: 0
@@ -41,11 +40,11 @@ system:
     ini:
       iniToggle: false
       value: 0
-      characteristic: null
+      characteristic: none
     wt:
       wtToggle: false
       value: 0
-      characteristic: null
+      characteristic: none
   characteristics:
     none: None
     str: STR
@@ -67,22 +66,24 @@ system:
     lckChaBonus: 0
   skillArray: []
   description: >-
-    <p>The character can make a Restoration test and spend 10 magicka to perform
-    an hour long ritual in order to treat a wound that they or another character
-    has so that it can begin to heal naturally.</p>
-  governingCharacteristics: ''
-  xpCost: 300
-  level: 3
+    <p>The character improves their Willpower bonus by 2 for spell restraint
+    purposes.</p>
+  governingCharacteristics: Wp
+  xpCost: 500
+  level: Expert
   talentReq: ''
-  miscReq: Journeyman Restoration
+  miscReq: Willpower 40
   halfFatiguePenalty: false
   halfWoundPenalty: false
   untrainedException: false
   fatigueException: false
   addIBToMP: false
+  addIntToMPMultiplier: 1
   armorAcrobaticsException: false
   addHalfSpeed: false
-folder: null
-sort: 4900000
-_key: '!items!K2EfmZIlCATzRaif'
+  addIntToMP: false
+folder: 0QVoIqdNtc8Z7RM2
+_id: lrMEHgjwKChQyIwO
+sort: 1600000
+_key: '!items!lrMEHgjwKChQyIwO'
 

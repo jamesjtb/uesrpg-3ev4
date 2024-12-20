@@ -1,23 +1,22 @@
-_id: bDMbSacIxM4UpjFU
-name: Methodical
+name: Overcharge
 type: talent
 flags:
   core:
     sourceId: Item.DYVazRNO2caSDMGE
-img: systems/uesrpg-3ev4/images/Icons/methodical.webp
+img: systems/uesrpg-3ev4/images/Icons/overcharge.webp
 effects: []
 _stats:
-  coreVersion: '12.331'
-  systemId: null
-  systemVersion: null
-  createdTime: null
-  modifiedTime: 1733366896133
-  lastModifiedBy: HcIrULZhA1JFIlrf
-  compendiumSource: null
+  compendiumSource: Item.DYVazRNO2caSDMGE
   duplicateSource: null
+  coreVersion: '12.331'
+  systemId: uesrpg-3ev4
+  systemVersion: v1.0.0-RC.64
+  createdTime: 1734674510263
+  modifiedTime: 1734674943732
+  lastModifiedBy: HcIrULZhA1JFIlrf
 ownership:
   default: 0
-  xvA5SwRGJiyPsnxH: 3
+  HcIrULZhA1JFIlrf: 3
 system:
   mpBonus: 0
   hpBonus: 0
@@ -41,11 +40,11 @@ system:
     ini:
       iniToggle: false
       value: 0
-      characteristic: null
+      characteristic: none
     wt:
       wtToggle: false
       value: 0
-      characteristic: null
+      characteristic: none
   characteristics:
     none: None
     str: STR
@@ -67,22 +66,25 @@ system:
     lckChaBonus: 0
   skillArray: []
   description: >-
-    <p>The character cannot take the Creative talent. The character improves
-    their Willpower bonus by 1 for spell restraint purposes when casting
-    conventional spells.</p>
-  governingCharacteristics: ''
-  xpCost: 200
-  level: 2
+    <p>The character can double the cost they pay for a spell (after spell
+    restraint) in order to roll damage twice and use the highest when
+    calculating that spell’s damage.</p>
+  governingCharacteristics: Wp
+  xpCost: 500
+  level: Expert
   talentReq: ''
-  miscReq: ''
+  miscReq: Adept Destructin/Mysticism
   halfFatiguePenalty: false
   halfWoundPenalty: false
   untrainedException: false
   fatigueException: false
   addIBToMP: false
+  addIntToMPMultiplier: 1
   armorAcrobaticsException: false
   addHalfSpeed: false
-folder: null
-sort: 9100000
-_key: '!items!bDMbSacIxM4UpjFU'
+  addIntToMP: false
+folder: 0QVoIqdNtc8Z7RM2
+_id: Om9cXmZRb0kFWvAx
+sort: 100000
+_key: '!items!Om9cXmZRb0kFWvAx'
 

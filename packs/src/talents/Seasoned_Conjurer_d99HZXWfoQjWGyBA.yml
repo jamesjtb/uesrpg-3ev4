@@ -1,23 +1,22 @@
-_id: Npjt7kk0MEPwEiZY
-name: Strong Willed
+name: Seasoned Conjurer
 type: talent
 flags:
   core:
     sourceId: Item.DYVazRNO2caSDMGE
-img: systems/uesrpg-3ev4/images/Icons/strongWilled.webp
+img: systems/uesrpg-3ev4/images/Icons/seasonedConjurer.webp
 effects: []
 _stats:
-  coreVersion: '12.331'
-  systemId: null
-  systemVersion: null
-  createdTime: null
-  modifiedTime: 1733366896133
-  lastModifiedBy: HcIrULZhA1JFIlrf
-  compendiumSource: null
+  compendiumSource: Item.DYVazRNO2caSDMGE
   duplicateSource: null
+  coreVersion: '12.331'
+  systemId: uesrpg-3ev4
+  systemVersion: v1.0.0-RC.64
+  createdTime: 1734674799642
+  modifiedTime: 1734674943732
+  lastModifiedBy: HcIrULZhA1JFIlrf
 ownership:
   default: 0
-  xvA5SwRGJiyPsnxH: 3
+  HcIrULZhA1JFIlrf: 3
 system:
   mpBonus: 0
   hpBonus: 0
@@ -41,11 +40,11 @@ system:
     ini:
       iniToggle: false
       value: 0
-      characteristic: null
+      characteristic: none
     wt:
       wtToggle: false
       value: 0
-      characteristic: null
+      characteristic: none
   characteristics:
     none: None
     str: STR
@@ -66,20 +65,26 @@ system:
     prsChaBonus: 0
     lckChaBonus: 0
   skillArray: []
-  description: <p>The character gains a bonus DoS on all successful Conjuration tests.</p>
-  governingCharacteristics: ''
-  xpCost: 400
-  level: 4
-  talentReq: ''
-  miscReq: Journeyman Conjuration
+  description: >-
+    <p>When the character succeeds on a Conjuration test, they can choose to
+    take the number of degrees of success that they rolled or take a number
+    equal to their Conjuration skill rank instead.</p>
+  governingCharacteristics: Wp
+  xpCost: 500
+  level: Expert
+  talentReq: Strong Willed
+  miscReq: Expert Conjuration
   halfFatiguePenalty: false
   halfWoundPenalty: false
   untrainedException: false
   fatigueException: false
   addIBToMP: false
+  addIntToMPMultiplier: 1
   armorAcrobaticsException: false
   addHalfSpeed: false
-folder: null
-sort: 6000000
-_key: '!items!Npjt7kk0MEPwEiZY'
+  addIntToMP: false
+folder: 0QVoIqdNtc8Z7RM2
+_id: d99HZXWfoQjWGyBA
+sort: 700000
+_key: '!items!d99HZXWfoQjWGyBA'
 

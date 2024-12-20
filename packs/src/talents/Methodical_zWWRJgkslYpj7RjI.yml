@@ -1,23 +1,22 @@
-_id: JJFEgqAVGaJBVsbe
-name: The Mending Tides of Oblivion
+name: Methodical
 type: talent
 flags:
   core:
     sourceId: Item.DYVazRNO2caSDMGE
-img: systems/uesrpg-3ev4/images/Icons/mendingTides.webp
+img: systems/uesrpg-3ev4/images/Icons/methodical.webp
 effects: []
 _stats:
-  coreVersion: '12.331'
-  systemId: null
-  systemVersion: null
-  createdTime: null
-  modifiedTime: 1733366896133
-  lastModifiedBy: HcIrULZhA1JFIlrf
-  compendiumSource: null
+  compendiumSource: Item.DYVazRNO2caSDMGE
   duplicateSource: null
+  coreVersion: '12.331'
+  systemId: uesrpg-3ev4
+  systemVersion: v1.0.0-RC.64
+  createdTime: 1734674485668
+  modifiedTime: 1734674943732
+  lastModifiedBy: HcIrULZhA1JFIlrf
 ownership:
   default: 0
-  xvA5SwRGJiyPsnxH: 3
+  HcIrULZhA1JFIlrf: 3
 system:
   mpBonus: 0
   hpBonus: 0
@@ -41,11 +40,11 @@ system:
     ini:
       iniToggle: false
       value: 0
-      characteristic: null
+      characteristic: none
     wt:
       wtToggle: false
       value: 0
-      characteristic: null
+      characteristic: none
   characteristics:
     none: None
     str: STR
@@ -67,21 +66,24 @@ system:
     lckChaBonus: 0
   skillArray: []
   description: >-
-    <p>All summoned Daedra under the character&rsquo;s control have the
-    Regeneration (Conjurer&rsquo;s WpB) trait.</p>
-  governingCharacteristics: ''
-  xpCost: 800
-  level: 6
-  talentReq: Void Channeler
-  miscReq: Expert Conjuration
+    <p>The character improves their Willpower bonus by 1 for spell restraint
+    purposes when casting conventional spells.</p>
+  governingCharacteristics: Wp
+  xpCost: 200
+  level: Apprentice
+  talentReq: Cannot have the Creative Talent
+  miscReq: ''
   halfFatiguePenalty: false
   halfWoundPenalty: false
   untrainedException: false
   fatigueException: false
   addIBToMP: false
+  addIntToMPMultiplier: 1
   armorAcrobaticsException: false
   addHalfSpeed: false
-folder: null
-sort: 4700000
-_key: '!items!JJFEgqAVGaJBVsbe'
+  addIntToMP: false
+folder: 0QVoIqdNtc8Z7RM2
+_id: zWWRJgkslYpj7RjI
+sort: 1200000
+_key: '!items!zWWRJgkslYpj7RjI'
 

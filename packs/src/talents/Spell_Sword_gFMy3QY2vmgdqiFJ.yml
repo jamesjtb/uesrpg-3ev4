@@ -1,9 +1,9 @@
-name: Creative
+name: Spell Sword
 type: talent
 flags:
   core:
     sourceId: Item.DYVazRNO2caSDMGE
-img: systems/uesrpg-3ev4/images/Icons/creative.webp
+img: systems/uesrpg-3ev4/images/Icons/spellSword.webp
 effects: []
 _stats:
   compendiumSource: Item.DYVazRNO2caSDMGE
@@ -11,7 +11,7 @@ _stats:
   coreVersion: '12.331'
   systemId: uesrpg-3ev4
   systemVersion: v1.0.0-RC.64
-  createdTime: 1734517223771
+  createdTime: 1734674550980
   modifiedTime: 1734674943732
   lastModifiedBy: HcIrULZhA1JFIlrf
 ownership:
@@ -66,13 +66,13 @@ system:
     lckChaBonus: 0
   skillArray: []
   description: >-
-    <p>The character improves their Willpower bonus by 1 for spell restraint
-    purposes when casting unconventional spells.</p>
+    <p>The character only needs one free hand to cast spells without penalty
+    instead of two.</p>
   governingCharacteristics: Wp
-  xpCost: 200
-  level: Apprentice
+  xpCost: 300
+  level: Journeyman
   talentReq: ''
-  miscReq: ''
+  miscReq: Willpower 40
   halfFatiguePenalty: false
   halfWoundPenalty: false
   untrainedException: false
@@ -83,7 +83,7 @@ system:
   addHalfSpeed: false
   addIntToMP: false
 folder: 0QVoIqdNtc8Z7RM2
-_id: 2SLF1sLyffJJ94aI
-sort: 2200000
-_key: '!items!2SLF1sLyffJJ94aI'
+_id: gFMy3QY2vmgdqiFJ
+sort: 300000
+_key: '!items!gFMy3QY2vmgdqiFJ'
 

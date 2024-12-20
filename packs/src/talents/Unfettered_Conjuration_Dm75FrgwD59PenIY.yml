@@ -1,23 +1,6 @@
-_id: zxE6rGhV07FPbD1N
-name: Flow of Magicka
+name: Unfettered Conjuration
 type: talent
-flags:
-  core:
-    sourceId: Item.DYVazRNO2caSDMGE
-img: systems/uesrpg-3ev4/images/Icons/flowOfMagicka.webp
-effects: []
-_stats:
-  coreVersion: '12.331'
-  systemId: null
-  systemVersion: null
-  createdTime: null
-  modifiedTime: 1733366896133
-  lastModifiedBy: HcIrULZhA1JFIlrf
-  compendiumSource: null
-  duplicateSource: null
-ownership:
-  default: 0
-  xvA5SwRGJiyPsnxH: 3
+img: icons/magic/unholy/silhouette-evil-horned-giant.webp
 system:
   mpBonus: 0
   hpBonus: 0
@@ -41,11 +24,11 @@ system:
     ini:
       iniToggle: false
       value: 0
-      characteristic: null
+      characteristic: none
     wt:
       wtToggle: false
       value: 0
-      characteristic: null
+      characteristic: none
   characteristics:
     none: None
     str: STR
@@ -67,22 +50,37 @@ system:
     lckChaBonus: 0
   skillArray: []
   description: >-
-    <p>As a reaction to a spell cast, the character may make a &ndash;20
-    Mysticism test. If their DoS exceed the spell level of the casted spell,
-    then the effect is negated.</p>
-  governingCharacteristics: ''
-  xpCost: 500
-  level: 5
-  talentReq: ''
-  miscReq: Expert Mysticism
+    <p>Creatures summoned by the character do not suffer a penalty to their AP
+    as a result of restraining the summoning spell.</p>
+  governingCharacteristics: Wp
+  xpCost: 800
+  level: Master
+  talentReq: Strong Willed
+  miscReq: ''
   halfFatiguePenalty: false
   halfWoundPenalty: false
   untrainedException: false
   fatigueException: false
   addIBToMP: false
+  addIntToMPMultiplier: 1
   armorAcrobaticsException: false
   addHalfSpeed: false
-folder: null
-sort: 15400000
-_key: '!items!zxE6rGhV07FPbD1N'
+effects: []
+folder: 0QVoIqdNtc8Z7RM2
+ownership:
+  default: 0
+  HcIrULZhA1JFIlrf: 3
+flags: {}
+_stats:
+  compendiumSource: null
+  duplicateSource: null
+  coreVersion: '12.331'
+  systemId: uesrpg-3ev4
+  systemVersion: v1.0.0-RC.64
+  createdTime: 1734674943693
+  modifiedTime: 1734674943732
+  lastModifiedBy: HcIrULZhA1JFIlrf
+_id: Dm75FrgwD59PenIY
+sort: 500000
+_key: '!items!Dm75FrgwD59PenIY'
 

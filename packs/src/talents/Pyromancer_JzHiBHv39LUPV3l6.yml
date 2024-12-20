@@ -1,23 +1,22 @@
-_id: IORKDndjMPohARqU
-name: Electromancer
+name: Pyromancer
 type: talent
 flags:
   core:
     sourceId: Item.DYVazRNO2caSDMGE
-img: systems/uesrpg-3ev4/images/Icons/electromancer.webp
+img: systems/uesrpg-3ev4/images/Icons/pyromancer.webp
 effects: []
 _stats:
-  coreVersion: '12.331'
-  systemId: null
-  systemVersion: null
-  createdTime: null
-  modifiedTime: 1733366896133
-  lastModifiedBy: HcIrULZhA1JFIlrf
-  compendiumSource: null
+  compendiumSource: Item.DYVazRNO2caSDMGE
   duplicateSource: null
+  coreVersion: '12.331'
+  systemId: uesrpg-3ev4
+  systemVersion: v1.0.0-RC.64
+  createdTime: 1734674531097
+  modifiedTime: 1734674943732
+  lastModifiedBy: HcIrULZhA1JFIlrf
 ownership:
   default: 0
-  xvA5SwRGJiyPsnxH: 3
+  HcIrULZhA1JFIlrf: 3
 system:
   mpBonus: 0
   hpBonus: 0
@@ -41,11 +40,11 @@ system:
     ini:
       iniToggle: false
       value: 0
-      characteristic: null
+      characteristic: none
     wt:
       wtToggle: false
       value: 0
-      characteristic: null
+      characteristic: none
   characteristics:
     none: None
     str: STR
@@ -67,11 +66,11 @@ system:
     lckChaBonus: 0
   skillArray: []
   description: >-
-    <p>Whenever the character casts a spell that deals shock damage, increase
-    the amount dealt by 1.</p>
-  governingCharacteristics: ''
+    <p>Whenever the character casts a spell that deals fire damage, increase the
+    amount dealt by 1.</p>
+  governingCharacteristics: Wp
   xpCost: 300
-  level: 3
+  level: Journeyman
   talentReq: ''
   miscReq: Apprentice Destruction
   halfFatiguePenalty: false
@@ -79,9 +78,12 @@ system:
   untrainedException: false
   fatigueException: false
   addIBToMP: false
+  addIntToMPMultiplier: 1
   armorAcrobaticsException: false
   addHalfSpeed: false
-folder: null
-sort: 4600000
-_key: '!items!IORKDndjMPohARqU'
+  addIntToMP: false
+folder: 0QVoIqdNtc8Z7RM2
+_id: JzHiBHv39LUPV3l6
+sort: 200000
+_key: '!items!JzHiBHv39LUPV3l6'
 

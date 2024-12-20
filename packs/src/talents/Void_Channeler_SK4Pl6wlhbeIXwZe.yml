@@ -1,23 +1,22 @@
-_id: bT0ZUNAHhFxXhaDx
-name: Seasoned Conjurer
+name: Void Channeler
 type: talent
 flags:
   core:
     sourceId: Item.DYVazRNO2caSDMGE
-img: systems/uesrpg-3ev4/images/Icons/seasonedConjurer.webp
+img: systems/uesrpg-3ev4/images/Icons/voidChanneler.webp
 effects: []
 _stats:
-  coreVersion: '12.331'
-  systemId: null
-  systemVersion: null
-  createdTime: null
-  modifiedTime: 1733366896133
-  lastModifiedBy: HcIrULZhA1JFIlrf
-  compendiumSource: null
+  compendiumSource: Item.DYVazRNO2caSDMGE
   duplicateSource: null
+  coreVersion: '12.331'
+  systemId: uesrpg-3ev4
+  systemVersion: v1.0.0-RC.64
+  createdTime: 1734675125124
+  modifiedTime: 1734675125124
+  lastModifiedBy: HcIrULZhA1JFIlrf
 ownership:
   default: 0
-  xvA5SwRGJiyPsnxH: 3
+  HcIrULZhA1JFIlrf: 3
 system:
   mpBonus: 0
   hpBonus: 0
@@ -41,11 +40,11 @@ system:
     ini:
       iniToggle: false
       value: 0
-      characteristic: null
+      characteristic: none
     wt:
       wtToggle: false
       value: 0
-      characteristic: null
+      characteristic: none
   characteristics:
     none: None
     str: STR
@@ -67,22 +66,25 @@ system:
     lckChaBonus: 0
   skillArray: []
   description: >-
-    <p>When the character succeeds on a Conjuration test, they can choose to
-    take a number of DoS that was rolled or take a number equal to their
-    Conjuration skill rank instead.</p>
-  governingCharacteristics: ''
+    <p>The character can spend a Stamina Point to increase all their summoned
+    Daedra’s Natural Toughness by the Conjurer’s Willpower Bonus for one
+    Round.</p>
+  governingCharacteristics: Wp
   xpCost: 500
-  level: 5
-  talentReq: Strong Willed
-  miscReq: Expert Conjuration
+  level: Expert
+  talentReq: ''
+  miscReq: Adept Conjuration
   halfFatiguePenalty: false
   halfWoundPenalty: false
   untrainedException: false
   fatigueException: false
   addIBToMP: false
+  addIntToMPMultiplier: 1
   armorAcrobaticsException: false
   addHalfSpeed: false
-folder: null
-sort: 9200000
-_key: '!items!bT0ZUNAHhFxXhaDx'
+  addIntToMP: false
+folder: 0QVoIqdNtc8Z7RM2
+_id: SK4Pl6wlhbeIXwZe
+sort: 0
+_key: '!items!SK4Pl6wlhbeIXwZe'
 

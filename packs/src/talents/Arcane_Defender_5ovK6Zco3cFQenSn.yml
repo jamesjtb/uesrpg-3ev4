@@ -1,22 +1,6 @@
-name: Creative
+name: Arcane Defender
 type: talent
-flags:
-  core:
-    sourceId: Item.DYVazRNO2caSDMGE
-img: systems/uesrpg-3ev4/images/Icons/creative.webp
-effects: []
-_stats:
-  compendiumSource: Item.DYVazRNO2caSDMGE
-  duplicateSource: null
-  coreVersion: '12.331'
-  systemId: uesrpg-3ev4
-  systemVersion: v1.0.0-RC.64
-  createdTime: 1734517223771
-  modifiedTime: 1734674943732
-  lastModifiedBy: HcIrULZhA1JFIlrf
-ownership:
-  default: 0
-  HcIrULZhA1JFIlrf: 3
+img: icons/magic/defensive/barrier-shield-dome-deflect-blue.webp
 system:
   mpBonus: 0
   hpBonus: 0
@@ -66,12 +50,12 @@ system:
     lckChaBonus: 0
   skillArray: []
   description: >-
-    <p>The character improves their Willpower bonus by 1 for spell restraint
-    purposes when casting unconventional spells.</p>
+    <p>The character increases the bonus gained from the Mage Guard Talent from
+    1 to WB/2 (round up).</p>
   governingCharacteristics: Wp
-  xpCost: 200
-  level: Apprentice
-  talentReq: ''
+  xpCost: 800
+  level: Master
+  talentReq: Arcane Defender
   miscReq: ''
   halfFatiguePenalty: false
   halfWoundPenalty: false
@@ -81,9 +65,22 @@ system:
   addIntToMPMultiplier: 1
   armorAcrobaticsException: false
   addHalfSpeed: false
-  addIntToMP: false
+effects: []
 folder: 0QVoIqdNtc8Z7RM2
-_id: 2SLF1sLyffJJ94aI
-sort: 2200000
-_key: '!items!2SLF1sLyffJJ94aI'
+ownership:
+  default: 0
+  HcIrULZhA1JFIlrf: 3
+flags: {}
+_stats:
+  compendiumSource: null
+  duplicateSource: null
+  coreVersion: '12.331'
+  systemId: uesrpg-3ev4
+  systemVersion: v1.0.0-RC.64
+  createdTime: 1734674434672
+  modifiedTime: 1734674943732
+  lastModifiedBy: HcIrULZhA1JFIlrf
+_id: 5ovK6Zco3cFQenSn
+sort: 1300000
+_key: '!items!5ovK6Zco3cFQenSn'
 
