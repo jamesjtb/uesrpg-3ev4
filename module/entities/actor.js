@@ -989,11 +989,13 @@ export class SimpleActor extends Actor {
   }
 
   _swimCalc(actorData) {
-    let attribute = this._filterToEquippedBonusItems(actorData.items, 'swimBonus');
+    let swimBonusItems = this._filterToEquippedBonusItems(actorData.items, 'swimBonus');
     let bonus = 0;
-    for (let item of attribute) {
+    for (let item of swimBonusItems) {
       bonus = bonus + item.system.swimBonus;
     }
+    const shouldDoubleSwimSpeed = actorData.items?.some(i => i.system.doubleSwimSpeed);
+    if (shouldDoubleSwimSpeed) bonus *= 2;
     return bonus;
   }
 

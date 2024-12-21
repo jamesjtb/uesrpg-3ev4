@@ -875,7 +875,8 @@
     "addIBToMP": false,
     "addIntToMPMultiplier": 1,
     "armorAcrobaticsException": false,
-    "addHalfSpeed": false
+    "addHalfSpeed": false,
+    "doubleSwimSpeed": false
   },
   "combatStyle": {
     "templates": ["characteristicArray", "rankArray"],
