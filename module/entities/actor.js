@@ -134,7 +134,8 @@ export class SimpleActor extends Actor {
 
     actorSystemData.speed.base = strBonus + (2 * agiBonus) + (actorSystemData.speed.bonus);
     actorSystemData.speed.value = this._speedCalc(actorData);
-    actorSystemData.speed.swimSpeed = parseFloat(this._swimCalc(actorData)) + Math.floor(actorSystemData.speed.value/2);
+    actorSystemData.speed.swimSpeed = Math.floor(actorSystemData.speed.value/2);
+    actorSystemData.speed.swimSpeed += parseFloat(this._swimCalc(actorData))
     actorSystemData.speed.flySpeed = this._flyCalc(actorData);
 
     actorSystemData.initiative.base = agiBonus + intBonus + prcBonus + (actorSystemData.initiative.bonus);
@@ -388,7 +389,8 @@ export class SimpleActor extends Actor {
         actorSystemData.speed.base = strBonus + (2 * agiBonus) + (actorSystemData.speed.bonus);
     }
     actorSystemData.speed.value = this._speedCalc(actorData);
-    actorSystemData.speed.swimSpeed = parseFloat(this._swimCalc(actorData)) + parseFloat((actorSystemData.speed.value/2).toFixed(0));
+    actorSystemData.speed.swimSpeed = parseFloat((actorSystemData.speed.value/2).toFixed(0));
+    actorSystemData.speed.swimSpeed += parseFloat(this._swimCalc(actorData));
     actorSystemData.speed.flySpeed = this._flyCalc(actorData);
 
     actorSystemData.initiative.base = agiBonus + intBonus + prcBonus + (actorSystemData.initiative.bonus);
@@ -995,7 +997,11 @@ export class SimpleActor extends Actor {
       bonus = bonus + item.system.swimBonus;
     }
     const shouldDoubleSwimSpeed = actorData.items?.some(i => i.system.doubleSwimSpeed);
-    if (shouldDoubleSwimSpeed) bonus *= 2;
+    // Double the swim speed and any bonuses
+    if (shouldDoubleSwimSpeed) {
+      bonus *= 2;
+      bonus += actorData.system.speed.swimSpeed;
+    }
     return bonus;
   }
 
