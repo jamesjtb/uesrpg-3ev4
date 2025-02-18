@@ -13,6 +13,21 @@ async function registerSettings() {
   function delayedReload() {
     window.setTimeout(() => location.reload(), 500);
   }
+  
+  game.settings.register("uesrpg-3ev4", "changeUiFont", {
+    name: "System Font",
+    hint: "Changes main Font",
+    scope: "world",
+    requiresReload: true,
+    config: true,
+    default: false,
+    type: String,
+    choices: {
+      "Cyrodiil": "Сyrodiil - Default",
+      "Magic-Cyr": "Magic-Cyr"
+    },
+    default: "Cyrodiil"
+  });
 
   game.settings.register("uesrpg-3ev4", "legacyUntrainedPenalty", {
     name: "v3 Untrained Penalty",
@@ -136,4 +151,15 @@ export default async function initHandler() {
   await registerSettings();
 
   await registerSheets();
+
+// Applying Font to system
+function applyFont(fontFamily) {
+  document.documentElement.style.setProperty("--main-font-family", fontFamily);
+}
+
+//Hook for changing font on startup
+Hooks.once("ready", () => {
+  const fontFamily = game.settings.get("uesrpg-3ev4", "changeUiFont");
+  applyFont(fontFamily);
+});
 }
