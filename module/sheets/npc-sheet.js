@@ -1055,21 +1055,12 @@ export class npcSheet extends ActorSheet {
       tags.push(tagEntry);
     }
 
-    const speaker = ChatMessage.getSpeaker() // Using for determine speaker and use it for extending information (For Animations)
-
     ChatMessage.create({
       user: game.user.id,
       speaker: ChatMessage.getSpeaker(),
       flavor: tags.join(""),
       content: contentString,
       roll: weaponRoll,
-      flags:{
-        // Object, which contains item and token info (For Animations)
-        ['uesrpg-3ev4']:{
-            itemUUID: shortcutWeapon.uuid, // SpellToCast - item type
-            sourceTokenID: speaker.token
-        }
-      },
     });
   }
 
@@ -1368,20 +1359,11 @@ export class npcSheet extends ActorSheet {
                                                 </tbody>
                                             </table>`;
 
-            const speaker = ChatMessage.getSpeaker() // Using for determine speaker and use it for extending information (For Animations)
-
             damageRoll.toMessage({
               user: game.user.id,
               speaker: ChatMessage.getSpeaker(),
               flavor: tags.join(""),
               content: contentString,
-              flags:{
-                // Object, which contains item and token info (For Animations)
-                ['uesrpg-3ev4']:{
-                    itemUUID: spellToCast.uuid, // SpellToCast - item type
-                    sourceTokenID: speaker.token
-                }
-              },
             });
 
             // If Automate Magicka Setting is on, reduce the character's magicka by the calculated output cost
@@ -1654,19 +1636,10 @@ export class npcSheet extends ActorSheet {
     <i><b>${item.type}</b></i><p>
       <i>${item.system.description}</i>`;
 
-    const speaker = ChatMessage.getSpeaker() // Using for determine speaker and use it for extending information (For Animations)
-
     await ChatMessage.create({
       user: game.user.id,
       speaker: ChatMessage.getSpeaker(),
       content: contentString,
-      flags:{
-        // Object, which contains item and token info (For Animations)
-        ['uesrpg-3ev4']:{
-            itemUUID: item.uuid, // SpellToCast - item type
-            sourceTokenID: speaker.token
-        }
-      },
     });
   }
 

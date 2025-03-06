@@ -650,7 +650,7 @@ export class SimpleActorSheet extends ActorSheet {
         `<span class="tag enc-tag">Encumbered ${this.actor.system.carry_rating.penalty}</span>`
       );
     }
-    
+
     // Dialog Menu
     let d = new Dialog({
       title: "Apply Roll Modifier",
@@ -1128,20 +1128,11 @@ export class SimpleActorSheet extends ActorSheet {
                                                 </tbody>
                                             </table>`;
 
-            const speaker = ChatMessage.getSpeaker() // Using for determine speaker and use it for extending information (For Animations)
-
             damageRoll.toMessage({
               user: game.user.id,
               speaker: ChatMessage.getSpeaker(),
               flavor: tags.join(""),
               content: contentString,
-              flags:{
-                // Object, which contains item and token info (For Animations)
-                ['uesrpg-3ev4']:{
-                    itemUUID: spellToCast.uuid, // SpellToCast - item type
-                    sourceTokenID: speaker.token
-                }
-              },
             });
 
             // If Automate Magicka Setting is on, reduce the character's magicka by the calculated output cost
@@ -1440,20 +1431,12 @@ export class SimpleActorSheet extends ActorSheet {
       tags.push(tagEntry);
     }
 
-    const speaker = ChatMessage.getSpeaker() // Dont touch, for Anims
-
     ChatMessage.create({
       user: game.user.id,
       speaker: ChatMessage.getSpeaker(),
       flavor: tags.join(""),
       content: contentString,
       roll: weaponRoll,
-      flags:{
-        ['uesrpg-3ev4']:{
-            itemUUID: shortcutWeapon.uuid, // Items with damage using this type
-            sourceTokenID: speaker.token
-        }
-      },
     });
   }
 
@@ -1649,18 +1632,10 @@ export class SimpleActorSheet extends ActorSheet {
     <i><b>${item.type}</b></i><p>
       <i>${item.system.description}</i>`;
 
-    const speaker = ChatMessage.getSpeaker() // Dont touch, for Anims
-
     await ChatMessage.create({
       user: game.user.id,
       speaker: ChatMessage.getSpeaker(),
       content: contentString,
-      flags:{
-        ['uesrpg-3ev4']:{
-            itemUUID: item.uuid,
-            sourceTokenID: speaker.token
-        }
-      },
     });
   }
 
