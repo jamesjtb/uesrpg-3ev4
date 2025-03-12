@@ -2,9 +2,18 @@
   Fonts
 ------------------------------*/
 
+:mainFont{
+  --main-font-family: "Cyrodiil"
+}
+
 @font-face {
-  font-family: "cyrodiil";
+  font-family: "Cyrodiil";
   src: url("../fonts/cyrodiil/cyrodiil.ttf");
+}
+
+@font-face {
+  font-family: "Magic-Cyr";
+  src: url("../fonts/magic-cyr/Magic-Cyr.ttf");
 }
 
 
@@ -14,7 +23,7 @@
 
 .window-header {
   background: url("../images/black.png") repeat;
-  font-family: "cyrodiil";
+  font-family: var(--main-font-family);
 }
 
 .window-app .window-content,
@@ -32,16 +41,16 @@
 }
 
 .changelog h3{
-  font-family: "cyrodiil";
+  font-family: var(--main-font-family);
 }
 
 .worldbuilding h1, h1, h2 {
-  font-family: "cyrodiil";
+  font-family: var(--main-font-family);
   text-align: center;
 }
 
 .worldbuilding button {
-  font-family: "cyrodiil";
+  font-family: var(--main-font-family);
   border: 1px solid;
 }
 
@@ -55,7 +64,7 @@
 }
 
 .worldbuilding nav {
-  font-family: "cyrodiil";
+  font-family: var(--main-font-family);
   font-size: 18px;
   background: url('../images/gray_leather.jpg');
   color: white;
@@ -489,7 +498,7 @@
   border-radius: 5px;
   height: 28px;
   width: 100%;
-  font-family: "cyrodiil";
+  font-family: var(--main-font-family);
   font-weight: bold;
   background: rgb(73, 73, 73);
 }
@@ -589,22 +598,22 @@
 }
 
 .worldbuilding .styled-font-default {
-  font-family: "cyrodiil";
+  font-family: var(--main-font-family);
 }
 
 .worldbuilding .styled-font {
-  font-family: "cyrodiil";
+  font-family: var(--main-font-family);
   font-size: 18px;
 }
 
 .worldbuilding .styled-font-bold {
-  font-family: "cyrodiil";
+  font-family: var(--main-font-family);
   font-size: 18px;
   font-weight: bold;
 }
 
 .worldbuilding .styled-font-red {
-  font-family: "cyrodiil";
+  font-family: var(--main-font-family);
   color: darkred;
   font-size: 16px;
 }
@@ -760,7 +769,7 @@
 }
 
 .worldbuilding .combat-stat .stat-value-label {
-  font-family: "cyrodiil";
+  font-family: var(--main-font-family);
   font-size: 18px;
   color: darkred;
   height: 50%;
@@ -1043,7 +1052,7 @@
 }
 
 .worldbuilding .combat-button-value {
-  font-family: "cyrodiil";
+  font-family: var(--main-font-family);
   color: darkred;
   font-size: 18px;
   height: 25px;
@@ -1080,14 +1089,14 @@
 }
 
 .worldbuilding #merchantPriceValue {
-  font-family: "cyrodiil";
+  font-family: var(--main-font-family);
   font-size: 18px;
   color: darkred;
   width: 75px;
 }
 
 .worldbuilding .store-name input {
-  font-family: "cyrodiil";
+  font-family: var(--main-font-family);
   border: none;
 }
 
@@ -1137,7 +1146,7 @@
 .worldbuilding .item-resource-container input {
   color: darkred;
   font-size: 18px;
-  font-family: "cyrodiil";
+  font-family: var(--main-font-family);
   border: none;
   width: 100%;
 }
@@ -1162,7 +1171,7 @@
 }
 
 .worldbuilding .item-resource .stat-value-label {
-  font-family: "cyrodiil";
+  font-family: var(--main-font-family);
   font-size: 18px;
   color: darkred;
   height: 26px;
