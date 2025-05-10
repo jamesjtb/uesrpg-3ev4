@@ -129,6 +129,9 @@
       "system": "uesrpg-3ev4"
     },
     {
+
+    }
+    {
       "name": "npc-build-reference-items-revised",
       "label": "NPC Items Revised",
       "path": "./packs/npc-build-reference-items-revised",
@@ -162,7 +165,7 @@
         "npc-build-reference-items-revised",
         "powers",
         "powers-revised",
-        "reference-revised-v1",
+        "journal",
         "spells-revised",
         "talents-revised",
         "traits",
