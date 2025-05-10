@@ -187,7 +187,8 @@
       "packs": [
         "signs",
         "core-skills",
-        "talents"
+        "talents",
+        "rules-reference"
       ]
     }
   ],
