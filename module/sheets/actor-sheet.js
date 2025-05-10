@@ -2286,6 +2286,7 @@ export class SimpleActorSheet extends ActorSheet {
                 } else if (signSelection.length > 0) {
                   for (let item of signObject.items) {
                     let docItem = signCompendium.find((i) => i.name === item);
+                    const newDocItem = docItem.toObject();
                     newDocItem.system.source = `The ${signObject.name}`;
                     Item.create(docItem.toObject(), { parent: this.actor });
                   }
