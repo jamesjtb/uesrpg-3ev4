@@ -1,7 +1,7 @@
 {
   "title": "UESRPG 3ev4",
   "description": "A system used to play the UESRPG (Unofficial Elder Scrolls Roleplaying Game) 3ev4 d100 system.",
-  "version": "v1.0.0-RC.67",
+  "version": "v1.0.0-RC.68",
   "esmodules": [
     "module/entrypoint.js"
   ],
@@ -190,8 +190,8 @@
   "primaryTokenAttribute": "hp",
   "secondaryTokenAttribute": "action_points",
   "url": "https://github.com/jamesjtb/uesrpg-3ev4",
-  "manifest": "https://raw.githubusercontent.com/jamesjtb/uesrpg-3ev4/refs/tags/v1.0.0-RC.67/system.json",
-  "download": "https://github.com/jamesjtb/uesrpg-3ev4/releases/download/v1.0.0-RC.67/uesrpg-bundle_v1.0.0-RC.67.zip",
+  "manifest": "https://raw.githubusercontent.com/jamesjtb/uesrpg-3ev4/refs/tags/v1.0.0-RC.68/system.json",
+  "download": "https://github.com/jamesjtb/uesrpg-3ev4/releases/download/v1.0.0-RC.68/uesrpg-bundle_v1.0.0-RC.68.zip",
   "license": "LICENSE.txt",
   "id": "uesrpg-3ev4",
   "authors": [
