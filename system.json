@@ -2,12 +2,8 @@
   "title": "UESRPG 3ev4",
   "description": "A system used to play the UESRPG (Unofficial Elder Scrolls Roleplaying Game) 3ev4 d100 system.",
   "version": "v1.0.0-RC.64",
-  "esmodules": [
-    "module/entrypoint.js"
-  ],
-  "styles": [
-    "styles/main.css"
-  ],
+  "esmodules": ["module/entrypoint.js"],
+  "styles": ["styles/main.css"],
   "packs": [
     {
       "name": "roll-tables",
@@ -143,6 +139,44 @@
       "private": false,
       "entity": "Actor",
       "system": "uesrpg-3ev4"
+    }
+  ],
+  "packFolders": [
+    {
+      "name": "UESRPG - In Progress",
+      "sorting": "a",
+      "color": "#ff0000",
+      "ownership": {
+        "PLAYER": "observer"
+      },
+      "packs": [
+        "advanced-skills",
+        "inhabitants-of-tamriel",
+        "items-revised",
+        "loot-tables",
+        "macros",
+        "npc-build-reference-items-revised",
+        "powers",
+        "powers-revised",
+        "reference-revised-v1",
+        "spells-revised",
+        "talents-revised",
+        "traits",
+        "traits-revised"
+      ]
+    },
+    {
+      "name": "UESRPG 3ev4",
+      "sorting": "a",
+      "color": "#00ff00",
+      "ownership": {
+        "PLAYER": "observer"
+      },
+      "packs": [
+        "signs",
+        "core-skills",
+        "talents"
+      ]
     }
   ],
   "grid": {
