@@ -1,0 +1,96 @@
+folder: E6lRNoGbrd0HrI75
+name: Thief Birthsigns
+_id: qAtsjOabPOkfqjHO
+img: systems/uesrpg-3ev4/images/sign-thief.webp
+description: >-
+  <p><em>“The Thief is the last Guardian Constellation, and her Season is the
+  darkest month of Evening Star. Her Charges are the Lover, the Shadow, and the
+  Tower. Those born under the sign of the Thief are not typically thieves,
+  though they take risks more often and only rarely come to harm. They will run
+  out of luck eventually, however, and rarely live as long as those born under
+  other signs.”</em></p>
+results:
+  - type: pack
+    documentCollection: uesrpg-3ev4.signs
+    weight: 1
+    range:
+      - 1
+      - 1
+    drawn: false
+    text: The Thief
+    documentId: Jag859J9G9frGbMl
+    img: systems/uesrpg-3ev4/images/sign-thief.webp
+    _id: TCpE2HlYKSJ5rUA5
+    flags: {}
+    _key: '!tables.results!qAtsjOabPOkfqjHO.TCpE2HlYKSJ5rUA5'
+  - type: pack
+    documentCollection: uesrpg-3ev4.signs
+    weight: 1
+    range:
+      - 2
+      - 2
+    drawn: false
+    text: The Lover
+    documentId: wbAPvCrZhdq0XKTi
+    img: systems/uesrpg-3ev4/images/sign-lover.webp
+    _id: CVd2WJyTEJpJvg1P
+    flags: {}
+    _key: '!tables.results!qAtsjOabPOkfqjHO.CVd2WJyTEJpJvg1P'
+  - type: pack
+    documentCollection: uesrpg-3ev4.signs
+    weight: 1
+    range:
+      - 3
+      - 3
+    drawn: false
+    text: The Shadow
+    documentId: sLHFIZIfD1afVEWO
+    img: systems/uesrpg-3ev4/images/sign-shadow.webp
+    _id: jTeQWXfoJ8weExkh
+    flags: {}
+    _key: '!tables.results!qAtsjOabPOkfqjHO.jTeQWXfoJ8weExkh'
+  - type: pack
+    documentCollection: uesrpg-3ev4.signs
+    weight: 1
+    range:
+      - 4
+      - 4
+    drawn: false
+    text: The Tower
+    documentId: RBBHJh9SJ52T4FMh
+    img: systems/uesrpg-3ev4/images/sign-tower.webp
+    _id: 1c3AvmBCA58XmBoH
+    flags: {}
+    _key: '!tables.results!qAtsjOabPOkfqjHO.1c3AvmBCA58XmBoH'
+  - type: pack
+    documentCollection: uesrpg-3ev4.roll-tables
+    weight: 1
+    range:
+      - 5
+      - 5
+    drawn: false
+    text: Thief Birthsigns (Star-Cursed)
+    documentId: sGSuzKe7EQevXHGZ
+    img: systems/uesrpg-3ev4/images/sign-thief.webp
+    _id: 74jhkZGVQohpFOnW
+    flags: {}
+    _key: '!tables.results!qAtsjOabPOkfqjHO.74jhkZGVQohpFOnW'
+replacement: true
+displayRoll: true
+sort: 0
+ownership:
+  default: 0
+  HcIrULZhA1JFIlrf: 3
+flags: {}
+_stats:
+  compendiumSource: null
+  duplicateSource: null
+  coreVersion: '12.331'
+  systemId: uesrpg-3ev4
+  systemVersion: v1.0.0-RC.70
+  createdTime: 1746864169864
+  modifiedTime: 1746864246717
+  lastModifiedBy: HcIrULZhA1JFIlrf
+formula: 1d5
+_key: '!tables!qAtsjOabPOkfqjHO'
+

@@ -1,0 +1,94 @@
+folder: E6lRNoGbrd0HrI75
+name: Mage Birthsigns
+_id: pDnmbio4KQZ9flVV
+img: systems/uesrpg-3ev4/images/sign-mage.webp
+description: >-
+  <p><em>“The Mage is a Guardian Constellation whose Season is Rain’s Hand when
+  magicka was first used by men. His Charges are the Apprentice, the Golem, and
+  the Ritual. Those born under the Mage have more magicka and talent for all
+  kinds of spellcasting, but are often arrogant and absent-minded.”</em></p>
+results:
+  - type: pack
+    documentCollection: uesrpg-3ev4.signs
+    weight: 1
+    range:
+      - 1
+      - 1
+    drawn: false
+    text: The Mage
+    documentId: 2KiAzQo3gpXi0rPc
+    img: systems/uesrpg-3ev4/images/sign-mage.webp
+    _id: kADaJRnrPwQCzaYZ
+    flags: {}
+    _key: '!tables.results!pDnmbio4KQZ9flVV.kADaJRnrPwQCzaYZ'
+  - type: pack
+    documentCollection: uesrpg-3ev4.signs
+    weight: 1
+    range:
+      - 2
+      - 2
+    drawn: false
+    text: The Apprentice
+    documentId: vkladIiz5vEJGdy1
+    img: systems/uesrpg-3ev4/images/sign-apprentice.webp
+    _id: VKYkRUoyhaY2G8Gz
+    flags: {}
+    _key: '!tables.results!pDnmbio4KQZ9flVV.VKYkRUoyhaY2G8Gz'
+  - type: pack
+    documentCollection: uesrpg-3ev4.signs
+    weight: 1
+    range:
+      - 3
+      - 3
+    drawn: false
+    text: The Atronach
+    documentId: hmwYTUgjaDAJzSMa
+    img: systems/uesrpg-3ev4/images/sign-atronach.webp
+    _id: VFi6pOBjkpbJKJXz
+    flags: {}
+    _key: '!tables.results!pDnmbio4KQZ9flVV.VFi6pOBjkpbJKJXz'
+  - type: pack
+    documentCollection: uesrpg-3ev4.signs
+    weight: 1
+    range:
+      - 4
+      - 4
+    drawn: false
+    text: The Ritual
+    documentId: sRy9dPLIRLD60wGC
+    img: systems/uesrpg-3ev4/images/sign-ritual.webp
+    _id: ERXirLRgKHSD5azL
+    flags: {}
+    _key: '!tables.results!pDnmbio4KQZ9flVV.ERXirLRgKHSD5azL'
+  - type: pack
+    documentCollection: uesrpg-3ev4.roll-tables
+    weight: 1
+    range:
+      - 5
+      - 5
+    drawn: false
+    text: Mage Birthsigns (Star-Cursed)
+    documentId: oheStl9LEUyET8VX
+    img: systems/uesrpg-3ev4/images/sign-mage.webp
+    _id: Iux5LxzFgpW2zK7T
+    flags: {}
+    _key: '!tables.results!pDnmbio4KQZ9flVV.Iux5LxzFgpW2zK7T'
+replacement: true
+displayRoll: true
+sort: 0
+ownership:
+  default: 0
+  HcIrULZhA1JFIlrf: 3
+flags: {}
+_stats:
+  compendiumSource: null
+  duplicateSource: null
+  coreVersion: '12.331'
+  systemId: uesrpg-3ev4
+  systemVersion: v1.0.0-RC.70
+  createdTime: 1746863946018
+  modifiedTime: 1746864060475
+  lastModifiedBy: HcIrULZhA1JFIlrf
+formula: 1d5
+_key: '!tables!pDnmbio4KQZ9flVV'
+

@@ -11,7 +11,7 @@
   "packs": [
     {
       "name": "roll-tables",
-      "label": "Loot Tables",
+      "label": "Roll Tables",
       "system": "uesrpg-3ev4",
       "path": "packs/roll-tables",
       "type": "RollTable",
@@ -77,7 +77,7 @@
       "label": "Items Revised",
       "path": "./packs/items-revised",
       "private": false,
-      "entity": "Item",
+      "type": "Item",
       "system": "uesrpg-3ev4"
     },
     {
@@ -85,7 +85,7 @@
       "label": "Advanced Skills",
       "path": "./packs/advanced-skills",
       "private": false,
-      "entity": "Item",
+      "type": "Item",
       "system": "uesrpg-3ev4"
     },
     {
@@ -93,7 +93,7 @@
       "label": "Traits Revised",
       "path": "./packs/traits-revised",
       "private": false,
-      "entity": "Item",
+      "type": "Item",
       "system": "uesrpg-3ev4"
     },
     {
@@ -101,7 +101,7 @@
       "label": "Powers Revised",
       "path": "./packs/powers-revised",
       "private": false,
-      "entity": "Item",
+      "type": "Item",
       "system": "uesrpg-3ev4"
     },
     {
@@ -109,7 +109,7 @@
       "label": "Talents Revised",
       "path": "./packs/talents-revised",
       "private": false,
-      "entity": "Item",
+      "type": "Item",
       "system": "uesrpg-3ev4"
     },
     {
@@ -117,7 +117,7 @@
       "label": "Spells Revised",
       "path": "./packs/spells-revised",
       "private": false,
-      "entity": "Item",
+      "type": "Item",
       "system": "uesrpg-3ev4"
     },
     {
@@ -125,7 +125,15 @@
       "label": "Reference Revised",
       "path": "./packs/reference-revised-v1",
       "private": false,
-      "entity": "JournalEntry",
+      "type": "JournalEntry",
+      "system": "uesrpg-3ev4"
+    },
+    {
+      "name": "rules-reference",
+      "label": "Rules Reference",
+      "path": "./packs/rules-reference",
+      "private": false,
+      "type": "JournalEntry",
       "system": "uesrpg-3ev4"
     },
     {
@@ -133,7 +141,7 @@
       "label": "NPC Items Revised",
       "path": "./packs/npc-build-reference-items-revised",
       "private": false,
-      "entity": "Item",
+      "type": "Item",
       "system": "uesrpg-3ev4"
     },
     {
@@ -141,7 +149,7 @@
       "label": "Inhabitants of Tamriel",
       "path": "./packs/inhabitants-of-tamriel",
       "private": false,
-      "entity": "Actor",
+      "type": "Actor",
       "system": "uesrpg-3ev4"
     }
   ],
@@ -157,7 +165,7 @@
         "advanced-skills",
         "inhabitants-of-tamriel",
         "items-revised",
-        "loot-tables",
+        "roll-tables",
         "macros",
         "npc-build-reference-items-revised",
         "powers",
@@ -207,7 +215,7 @@
   ],
   "dependencies": [
     {
-      "name": "gm-notes",
+      "id": "gm-notes",
       "manifest": "https://raw.githubusercontent.com/syl3r86/gm-notes/master/module.json",
       "type": "module"
     }
