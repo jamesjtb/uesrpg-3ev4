@@ -164,7 +164,7 @@ items:
       halfWoundPenalty: false
       untrainedException: false
       fatigueException: false
-      addIntToMP: false
+      addIBToMP: false
       armorAcrobaticsException: false
       addHalfSpeed: false
     _key: '!actors.items!4CvgWZjrMBjVr3iQ.h0AvBcZdVoAPNMm8'
@@ -248,7 +248,7 @@ items:
       halfWoundPenalty: false
       untrainedException: false
       fatigueException: false
-      addIntToMP: false
+      addIBToMP: false
       armorAcrobaticsException: false
       addHalfSpeed: false
     _key: '!actors.items!4CvgWZjrMBjVr3iQ.rMyojt2phcSIZXdj'

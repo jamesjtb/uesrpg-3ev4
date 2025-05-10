@@ -80,7 +80,7 @@ system:
   halfWoundPenalty: false
   untrainedException: false
   fatigueException: false
-  addIntToMP: false
+  addIBToMP: false
   armorAcrobaticsException: false
   addHalfSpeed: false
 _key: '!items!d8Dqy05pbfiEwijK'

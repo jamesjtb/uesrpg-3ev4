@@ -19,7 +19,7 @@ jobs:
       - name: create release
         run:
           echo "creating release for tag $tag" &&
-          gh release create "$tag" --repo="$GITHUB_REPOSITORY" --title="$tag" --generate-notes
+          gh release create "$tag" --repo="$GITHUB_REPOSITORY" --title="$tag" --generate-notes --prerelease
 
       - name: checkout repo
         uses: actions/checkout@v4

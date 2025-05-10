@@ -1,0 +1,95 @@
+name: Untouchable
+type: talent
+flags:
+  core:
+    sourceId: Item.DYVazRNO2caSDMGE
+img: systems/uesrpg-3ev4/images/Icons/untouchable.webp
+effects: []
+_stats:
+  compendiumSource: Item.DYVazRNO2caSDMGE
+  duplicateSource: null
+  coreVersion: '12.331'
+  systemId: uesrpg-3ev4
+  systemVersion: v1.0.0-RC.62
+  createdTime: 1733460048065
+  modifiedTime: 1733460048065
+  lastModifiedBy: HcIrULZhA1JFIlrf
+ownership:
+  default: 0
+  xvA5SwRGJiyPsnxH: 3
+  HcIrULZhA1JFIlrf: 3
+system:
+  mpBonus: 0
+  hpBonus: 0
+  spBonus: 0
+  lpBonus: 0
+  wtBonus: 0
+  iniBonus: 0
+  speedBonus: 0
+  flyBonus: 0
+  swimBonus: 0
+  diseaseR: 0
+  fireR: 0
+  frostR: 0
+  shockR: 0
+  poisonR: 0
+  magicR: 0
+  natToughnessR: 0
+  silverR: 0
+  sunlightR: 0
+  replace:
+    ini:
+      iniToggle: false
+      value: 0
+      characteristic: none
+    wt:
+      wtToggle: false
+      value: 0
+      characteristic: none
+  characteristics:
+    none: None
+    str: STR
+    end: END
+    agi: AGI
+    int: INT
+    wp: WP
+    prc: PRC
+    prs: PRS
+    lck: LCK
+  characteristicBonus:
+    strChaBonus: 0
+    endChaBonus: 0
+    agiChaBonus: 0
+    intChaBonus: 0
+    wpChaBonus: 0
+    prcChaBonus: 0
+    prsChaBonus: 0
+    lckChaBonus: 0
+  skillArray: []
+  description: >-
+    <p>The character can choose to replace their Wound Threshold with 3 times
+    their Luck Bonus. Additionally, if the character is hit by an attack, they
+    may spend any amount of available LP after damage is rolled to increase
+    their WT by the amount spent for the purposes of resolving that
+    attack.</p><p><em>If your group is using the alternate rules for Wounds
+    defined in the Physical Health section in Chapter 5, replace the rules of
+    the Untouchable Talent with the following: “The character can choose to
+    expend a Luck Point to reroll a failed Shock Test. This can be done multiple
+    times for a single Shock Test.”</em></p>
+  governingCharacteristics: Any
+  xpCost: 800
+  level: Master
+  talentReq: ''
+  miscReq: Luck 50
+  halfFatiguePenalty: false
+  halfWoundPenalty: false
+  untrainedException: false
+  fatigueException: false
+  addIBToMP: false
+  armorAcrobaticsException: false
+  addHalfSpeed: false
+folder: gNFUNr8dqFnssltG
+_id: O9ihiEqOR6otLlhV
+sort: 0
+_key: '!items!O9ihiEqOR6otLlhV'
+

@@ -863,17 +863,20 @@
   "talent": {
     "templates": ["resistanceArray", "replaceAttributesArray", "characteristicArray", "objectArrays"],
     "description": "",
+    "governingCharacteristics": "",
     "xpCost": 0,
-    "level": 0,
+    "level": "",
     "talentReq": "",
     "miscReq": "",
     "halfFatiguePenalty": false,
     "halfWoundPenalty": false,
     "untrainedException": false,
     "fatigueException": false,
-    "addIntToMP": false,
+    "addIBToMP": false,
+    "addIntToMPMultiplier": 1,
     "armorAcrobaticsException": false,
-    "addHalfSpeed": false
+    "addHalfSpeed": false,
+    "doubleSwimSpeed": false
   },
   "combatStyle": {
     "templates": ["characteristicArray", "rankArray"],

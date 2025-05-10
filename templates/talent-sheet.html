@@ -10,10 +10,18 @@
                     <div class="item-resource-row">
                         <div class="item-resource">
                             <div class="stat-value-label">
-                                <input type="number" name="system.level" value="{{item.system.level}}"/>
+                                <input type="text" name="system.level" value="{{item.system.level}}"/>
                             </div>
                             <div class="flex-container">
                                 <div class="small-text-label">Level</div>
+                            </div>
+                        </div>
+                        <div class="item-resource">
+                            <div class="stat-value-label">
+                                <input type="text" name="system.governingCharacteristics" value="{{item.system.governingCharacteristics}}"/>
+                            </div>
+                            <div class="flex-container">
+                                <div class="small-text-label">Governing Chars.</div>
                             </div>
                         </div>
                         <div class="item-resource">
@@ -29,17 +37,17 @@
                                 <input type="text" name="system.talentReq" value="{{item.system.talentReq}}"/>
                             </div>
                             <div class="flex-container">
-                                <div class="small-text-label">Required Talents</div>
+                                <div class="small-text-label">Requirement(s)</div>
                             </div>
                         </div>
-                        <div class="item-resource">
+                        <!-- <div class="item-resource">
                             <div class="stat-value-label">
                                 <input type="text" name="system.miscReq" value="{{item.system.miscReq}}"/>
                             </div>
                             <div class="flex-container">
-                                <div class="small-text-label">Other Requirements</div>
+                                <div class="small-text-label">Misc Req.</div>
                             </div>
-                        </div>
+                        </div> -->
                     </div>
                 </div>
             </div>
@@ -95,12 +103,6 @@
                                 </div>
                             </div>
                             <div class="grid-container">
-                                <div>Add INT to Magicka</div>
-                                <div class="right-align-content">
-                                    <input class="checkbox" type="checkbox" name="system.addIntToMP" {{checked item.system.addIntToMP}}>
-                                </div>
-                            </div>
-                            <div class="grid-container">
                                 <div>No Untrained Combat Penalty</div>
                                 <div class="right-align-content">
                                     <input class="checkbox" type="checkbox" name="system.untrainedException" {{checked item.system.untrainedException}}>
@@ -110,6 +112,20 @@
                                 <div>Add 1/2 Speed</div>
                                 <div class="right-align-content">
                                     <input class="checkbox" type="checkbox" name="system.addHalfSpeed" {{checked item.system.addHalfSpeed}}>
+                                </div>
+                            </div>
+                            <div class="grid-container">
+                                <div>Double Swim Speed</div>
+                                <div class="right-align-content">
+                                    <input class="checkbox" type="checkbox" name="system.doubleSwimSpeed" {{checked item.system.doubleSwimSpeed}}>
+                                </div>
+                            </div>
+                            <div class="grid-container">
+                                <div>Add IB to Magicka</div>
+                                <div class="right-align-content">
+                                    <input class="checkbox" type="checkbox" name="system.addIBToMP" {{checked item.system.addIBToMP}}>
+                                    <div>Multiplier:</div>
+                                    <input type="number" name="system.addIntToMPMultiplier" value="{{item.system.addIntToMPMultiplier}}">
                                 </div>
                             </div>
                         </div>

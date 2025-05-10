@@ -1,0 +1,87 @@
+folder: lNROAEsqjZtYpX3Y
+name: Birds of Prey
+type: talent
+_id: mLKDDaiI0zqupg35
+img: icons/creatures/birds/raptor-hawk-flying.webp
+system:
+  mpBonus: 10
+  hpBonus: 0
+  spBonus: 0
+  lpBonus: 0
+  wtBonus: 0
+  iniBonus: 0
+  speedBonus: 1
+  flyBonus: 0
+  swimBonus: 0
+  diseaseR: 0
+  fireR: 0
+  frostR: 0
+  shockR: 0
+  poisonR: 0
+  magicR: 0
+  natToughnessR: 0
+  silverR: 0
+  sunlightR: 0
+  replace:
+    ini:
+      iniToggle: false
+      value: 0
+      characteristic: none
+    wt:
+      wtToggle: false
+      value: 0
+      characteristic: none
+  characteristics:
+    none: None
+    str: STR
+    end: END
+    agi: AGI
+    int: INT
+    wp: WP
+    prc: PRC
+    prs: PRS
+    lck: LCK
+  characteristicBonus:
+    strChaBonus: 0
+    endChaBonus: 0
+    agiChaBonus: 0
+    intChaBonus: 0
+    wpChaBonus: 0
+    prcChaBonus: 0
+    prsChaBonus: 0
+    lckChaBonus: 0
+  skillArray: []
+  description: >-
+    <p>The Ayleid gains +1 to their movement Speed and a +10 bonus to their
+    Power Well trait.</p>
+  governingCharacteristics: Any
+  xpCost: 400
+  level: Adept
+  talentReq: Ayleid
+  miscReq: ''
+  halfFatiguePenalty: false
+  halfWoundPenalty: false
+  untrainedException: false
+  fatigueException: false
+  addIBToMP: false
+  addIntToMPMultiplier: 1
+  armorAcrobaticsException: false
+  addHalfSpeed: false
+  doubleSwimSpeed: false
+effects: []
+sort: 0
+ownership:
+  default: 0
+  HcIrULZhA1JFIlrf: 3
+flags: {}
+_stats:
+  compendiumSource: null
+  duplicateSource: null
+  coreVersion: '12.331'
+  systemId: uesrpg-3ev4
+  systemVersion: v1.0.0-RC.64
+  createdTime: 1746849511221
+  modifiedTime: 1746849698536
+  lastModifiedBy: HcIrULZhA1JFIlrf
+_key: '!items!mLKDDaiI0zqupg35'
+

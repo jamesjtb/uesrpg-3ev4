@@ -80,6 +80,16 @@ export class SimpleActor extends Actor {
     var prsBonus = Math.floor(actorSystemData.characteristics.prs.total / 10);
     var lckBonus = Math.floor(actorSystemData.characteristics.lck.total / 10);
 
+    // Set characteristic bonus values
+    actorSystemData.characteristics.str.bonus = strBonus;
+    actorSystemData.characteristics.end.bonus = endBonus;
+    actorSystemData.characteristics.agi.bonus = agiBonus;
+    actorSystemData.characteristics.int.bonus = intBonus;
+    actorSystemData.characteristics.wp.bonus = wpBonus;
+    actorSystemData.characteristics.prc.bonus = prcBonus;
+    actorSystemData.characteristics.prs.bonus = prsBonus;
+    actorSystemData.characteristics.lck.bonus = lckBonus;
+
   //Set Campaign Rank
   if (actorSystemData.xpTotal >= 5000) {
     actorSystemData.campaignRank = "Master"
@@ -124,7 +134,8 @@ export class SimpleActor extends Actor {
 
     actorSystemData.speed.base = strBonus + (2 * agiBonus) + (actorSystemData.speed.bonus);
     actorSystemData.speed.value = this._speedCalc(actorData);
-    actorSystemData.speed.swimSpeed = parseFloat(this._swimCalc(actorData)) + Math.floor(actorSystemData.speed.value/2);
+    actorSystemData.speed.swimSpeed = Math.floor(actorSystemData.speed.value/2);
+    actorSystemData.speed.swimSpeed += parseFloat(this._swimCalc(actorData))
     actorSystemData.speed.flySpeed = this._flyCalc(actorData);
 
     actorSystemData.initiative.base = agiBonus + intBonus + prcBonus + (actorSystemData.initiative.bonus);
@@ -134,7 +145,7 @@ export class SimpleActor extends Actor {
     actorSystemData.hp.base = Math.ceil(actorSystemData.characteristics.end.total / 2);
     actorSystemData.hp.max = actorSystemData.hp.base + actorSystemData.hp.bonus;
 
-    actorSystemData.magicka.max = actorSystemData.characteristics.int.total + actorSystemData.magicka.bonus + this._addIntToMP(actorData);
+    actorSystemData.magicka.max = actorSystemData.characteristics.int.total + actorSystemData.magicka.bonus + this._determineIbMp(actorData);
 
     actorSystemData.stamina.max = endBonus + actorSystemData.stamina.bonus;
 
@@ -332,6 +343,16 @@ export class SimpleActor extends Actor {
     var prsBonus = Math.floor(actorSystemData.characteristics.prs.total / 10);
     var lckBonus = Math.floor(actorSystemData.characteristics.lck.total / 10);
 
+    // Set characteristic bonus values
+    actorSystemData.characteristics.str.bonus = strBonus;
+    actorSystemData.characteristics.end.bonus = endBonus;
+    actorSystemData.characteristics.agi.bonus = agiBonus;
+    actorSystemData.characteristics.int.bonus = intBonus;
+    actorSystemData.characteristics.wp.bonus = wpBonus;
+    actorSystemData.characteristics.prc.bonus = prcBonus;
+    actorSystemData.characteristics.prs.bonus = prsBonus;
+    actorSystemData.characteristics.lck.bonus = lckBonus;
+
     //Talent/Power/Trait Bonuses
     actorSystemData.hp.bonus = this._hpBonus(actorData);
     actorSystemData.magicka.bonus = this._mpBonus(actorData);
@@ -368,7 +389,8 @@ export class SimpleActor extends Actor {
         actorSystemData.speed.base = strBonus + (2 * agiBonus) + (actorSystemData.speed.bonus);
     }
     actorSystemData.speed.value = this._speedCalc(actorData);
-    actorSystemData.speed.swimSpeed = parseFloat(this._swimCalc(actorData)) + parseFloat((actorSystemData.speed.value/2).toFixed(0));
+    actorSystemData.speed.swimSpeed = parseFloat((actorSystemData.speed.value/2).toFixed(0));
+    actorSystemData.speed.swimSpeed += parseFloat(this._swimCalc(actorData));
     actorSystemData.speed.flySpeed = this._flyCalc(actorData);
 
     actorSystemData.initiative.base = agiBonus + intBonus + prcBonus + (actorSystemData.initiative.bonus);
@@ -378,7 +400,7 @@ export class SimpleActor extends Actor {
     actorSystemData.hp.base = Math.ceil(actorSystemData.characteristics.end.total / 2);
     actorSystemData.hp.max = actorSystemData.hp.base + actorSystemData.hp.bonus;
 
-    actorSystemData.magicka.max = actorSystemData.characteristics.int.total + actorSystemData.magicka.bonus + this._addIntToMP(actorData);
+    actorSystemData.magicka.max = actorSystemData.characteristics.int.total + actorSystemData.magicka.bonus + this._determineIbMp(actorData);
 
     actorSystemData.stamina.max = endBonus + actorSystemData.stamina.bonus;
 
@@ -969,10 +991,16 @@ export class SimpleActor extends Actor {
   }
 
   _swimCalc(actorData) {
-    let attribute = this._filterToEquippedBonusItems(actorData.items, 'swimBonus');
+    let swimBonusItems = this._filterToEquippedBonusItems(actorData.items, 'swimBonus');
     let bonus = 0;
-    for (let item of attribute) {
+    for (let item of swimBonusItems) {
       bonus = bonus + item.system.swimBonus;
+    }
+    const shouldDoubleSwimSpeed = actorData.items?.some(i => i.system.doubleSwimSpeed);
+    // Double the swim speed and any bonuses
+    if (shouldDoubleSwimSpeed) {
+      bonus *= 2;
+      bonus += actorData.system.speed.swimSpeed;
     }
     return bonus;
   }
@@ -1073,15 +1101,17 @@ export class SimpleActor extends Actor {
     return woundReduction
   }
 
-  _addIntToMP(actorData) {
-    let attribute = actorData.items.filter(item => item.system.addIntToMP == true);
-    let mp = 0;
-    if (attribute.length >= 1) {
-      mp = actorData.system.characteristics.int.total;
-    } else {
-      mp = 0;
+  _determineIbMp(actorData) {
+    let addIbItems = actorData.items.filter(item => item.system.addIBToMP == true);
+
+    if (addIbItems.length >= 1) {
+      const actorIntBonus = actorData.system.characteristics.int.bonus;
+      return addIbItems.reduce(
+        (acc, item) => actorIntBonus * item.system.addIntToMPMultiplier + acc,
+        0
+      );
     }
-    return mp
+    return 0;
   }
 
   _untrainedException(actorData) {

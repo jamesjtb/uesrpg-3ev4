@@ -8,11 +8,11 @@ img: systems/uesrpg-3ev4/images/Icons/combatSenses.webp
 effects: []
 _stats:
   coreVersion: '12.331'
-  systemId: null
-  systemVersion: null
+  systemId: uesrpg-3ev4
+  systemVersion: v1.0.0-RC.62
   createdTime: null
-  modifiedTime: null
-  lastModifiedBy: null
+  modifiedTime: 1733289519752
+  lastModifiedBy: HcIrULZhA1JFIlrf
   compendiumSource: null
   duplicateSource: null
 ownership:
@@ -45,7 +45,7 @@ system:
     wt:
       wtToggle: false
       value: 0
-      characteristic: null
+      characteristic: none
   characteristics:
     none: None
     str: STR
@@ -67,20 +67,22 @@ system:
     lckChaBonus: 0
   skillArray: []
   description: >-
-    <p>The character can choose to use 3 times their Perception Bonus instead of
-    using the normal formula when determining Initiative Rating.</p>
-  xpCost: 400
-  level: 4
+    <p>The character can choose to calculate their Initiative Rating  by taking
+    twice their Perception Bonus and adding two instead of the usual
+    formula.</p>
+  xpCost: 100
+  level: Novice
   talentReq: ''
   miscReq: ''
   halfFatiguePenalty: false
   halfWoundPenalty: false
   untrainedException: false
   fatigueException: false
-  addIntToMP: false
+  addIBToMP: false
   armorAcrobaticsException: false
   addHalfSpeed: false
-folder: null
-sort: 0
+  governingCharacteristics: Prc
+folder: wHXhCeP5Fmy5GR8f
+sort: 600000
 _key: '!items!4xPU1C6vWJq4ZfIi'
 
