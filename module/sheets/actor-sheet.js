@@ -650,7 +650,7 @@ export class SimpleActorSheet extends ActorSheet {
         `<span class="tag enc-tag">Encumbered ${this.actor.system.carry_rating.penalty}</span>`
       );
     }
-
+    
     // Dialog Menu
     let d = new Dialog({
       title: "Apply Roll Modifier",
@@ -712,13 +712,14 @@ export class SimpleActorSheet extends ActorSheet {
               }
             }
 
-            ChatMessage.create({
+            await roll.toMessage({
               async: false,
               user: game.user.id,
               speaker: ChatMessage.getSpeaker(),
               roll: roll,
               content: contentString,
               flavor: `<div class="tag-container">${tags.join("")}</div>`,
+              rollMode: game.settings.get("core", "rollMode"),
             });
           },
         },
@@ -812,14 +813,15 @@ export class SimpleActorSheet extends ActorSheet {
                   : " <span style='color: rgb(168, 5, 5); font-size: 120%;'> <b>FAILURE!</b></span>"
                 }`;
             }
-
-            ChatMessage.create({
+            
+            await roll.toMessage({
               async: false,
               user: game.user.id,
               speaker: ChatMessage.getSpeaker(),
               roll: roll,
               content: contentString,
               flavor: `<div class="tag-container">${tags.join("")}</div>`,
+              rollMode: game.settings.get("core", "rollMode"),
             });
           },
         },
@@ -1128,11 +1130,12 @@ export class SimpleActorSheet extends ActorSheet {
                                                 </tbody>
                                             </table>`;
 
-            damageRoll.toMessage({
+            await damageRoll.toMessage({
               user: game.user.id,
               speaker: ChatMessage.getSpeaker(),
               flavor: tags.join(""),
               content: contentString,
+              rollMode: game.settings.get("core", "rollMode"),
             });
 
             // If Automate Magicka Setting is on, reduce the character's magicka by the calculated output cost
@@ -1237,13 +1240,14 @@ export class SimpleActorSheet extends ActorSheet {
                 }`;
             }
 
-            ChatMessage.create({
+            await roll.toMessage({
               async: false,
               user: game.user.id,
               speaker: ChatMessage.getSpeaker(),
               roll: roll,
               content: contentString,
               flavor: `<div class="tag-container">${tags.join("")}</div>`,
+              rollMode: game.settings.get("core", "rollMode"),
             });
           },
         },
@@ -1306,6 +1310,7 @@ export class SimpleActorSheet extends ActorSheet {
               user: game.user.id,
               speaker: ChatMessage.getSpeaker(),
               content: contentString,
+              rollMode: game.settings.get("core", "rollMode"),
             });
           },
         },
@@ -1431,12 +1436,13 @@ export class SimpleActorSheet extends ActorSheet {
       tags.push(tagEntry);
     }
 
-    ChatMessage.create({
+    await weaponRoll.toMessage({
       user: game.user.id,
       speaker: ChatMessage.getSpeaker(),
       flavor: tags.join(""),
       content: contentString,
       roll: weaponRoll,
+      rollMode: game.settings.get("core", "rollMode"),
     });
   }
 
@@ -1635,7 +1641,7 @@ export class SimpleActorSheet extends ActorSheet {
     await ChatMessage.create({
       user: game.user.id,
       speaker: ChatMessage.getSpeaker(),
-      content: contentString,
+      content: contentString
     });
   }
 
