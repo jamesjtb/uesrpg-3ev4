@@ -151,6 +151,14 @@
       "private": false,
       "type": "Actor",
       "system": "uesrpg-3ev4"
+    },
+    {
+      "name": "npc-items",
+      "label": "NPC Items",
+      "path": "./packs/npcs",
+      "private": false,
+      "type": "Item",
+      "system": "uesrpg-3ev4"
     }
   ],
   "packFolders": [
@@ -168,6 +176,7 @@
         "roll-tables",
         "macros",
         "npc-build-reference-items-revised",
+        "npc-items",
         "powers",
         "powers-revised",
         "journal",

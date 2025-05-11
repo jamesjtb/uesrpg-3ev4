@@ -90,17 +90,17 @@
                 </div>
             </div>
         </header>
-    
+
         {{!-- Sheet Tab Navigation --}}
         <nav class="sheet-tabs tabs" data-group="primary">
             <a class="item" data-tab="description">Description</a>
             <a class="item" data-tab="attributes">Attributes</a>
         </nav>
     </div>
-    
+
         {{!-- Sheet Body --}}
         <section class="sheet-body">
-    
+
             {{!-- Description Tab --}}
             <div class="tab" data-group="primary" data-tab="description">
                 <div class="item-description-container">
@@ -116,10 +116,16 @@
                     </div>
                 </div>
             </div>
-    
+
             {{!-- Attributes Tab --}}
             <div class="tab" data-group="primary" data-tab="attributes">
                 <div class="attribute-tab-container">
+                    <div class="quality-container">
+                        <div class="basic-padding">
+                            <h2>Qualities</h2>
+                            <div>{{editor item.system.qualities target="system.qualities" engine="prosemirror" button=true owner=owner editable=editable}}</div>
+                        </div>
+                    </div>
                     <div class="item-selection-container">
                         <h2>Attributes</h2>
                         <div class="selection-container">
@@ -227,12 +233,6 @@
                                     <div><input type="number" name="system.sunlightR" value="{{item.system.sunlightR}}"></div>
                                 </div>
                             </div>
-                        </div>
-                    </div>
-                    <div class="quality-container">
-                        <div class="flex-container">
-                            <h2>Qualities</h2>
-                            <div>{{editor item.system.qualities target="system.qualities" engine="prosemirror" button=true owner=owner editable=editable}}</div>
                         </div>
                     </div>
                 </div>

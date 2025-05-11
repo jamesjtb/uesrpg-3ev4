@@ -30,6 +30,7 @@ export class SimpleItemSheet extends ItemSheet {
       const itemData = data.item;
 
       data.item.system.enrichedDescription = await TextEditor.enrichHTML(itemData.system.description, {async: true});
+      data.item.system.qualities = await TextEditor.enrichHTML(itemData.system.qualities, {async: true});
       return data;
       }
 
