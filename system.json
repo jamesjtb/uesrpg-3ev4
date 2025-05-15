@@ -155,7 +155,7 @@
     {
       "name": "npc-items",
       "label": "NPC Items",
-      "path": "./packs/npcs",
+      "path": "./packs/npc-items",
       "private": false,
       "type": "Item",
       "system": "uesrpg-3ev4"
