@@ -6,17 +6,17 @@ effects: []
 folder: null
 sort: 0
 flags:
-  core:
-    sourceId: Item.7fKKFs3JVM7UgiPU
+  core: {}
 _stats:
-  coreVersion: '12.331'
+  coreVersion: '13.342'
   systemId: null
   systemVersion: null
   createdTime: null
   modifiedTime: null
   lastModifiedBy: null
-  compendiumSource: null
+  compendiumSource: Item.7fKKFs3JVM7UgiPU
   duplicateSource: null
+  exportSource: null
 ownership:
   default: 0
   xvA5SwRGJiyPsnxH: 3
@@ -74,6 +74,7 @@ system:
     at a -10 penalty, but likewise </span><span style="color: #191813;">inflicts
     a -10 penalty to all incoming ranged attacks on the </span><span
     style="color: #191813;">same round.</span></p>
+  governingCharacteristics: ''
   xpCost: 0
   level: 0
   talentReq: ''
@@ -83,7 +84,9 @@ system:
   untrainedException: false
   fatigueException: false
   addIBToMP: false
+  addIntToMPMultiplier: 1
   armorAcrobaticsException: false
   addHalfSpeed: false
+  doubleSwimSpeed: false
 _key: '!items!Zx2WuvaHuFjN9jfp'
 

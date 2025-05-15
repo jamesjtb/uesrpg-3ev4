@@ -17,7 +17,7 @@ pages:
       format: 1
       content: "<p>Attacks with this weapon cannot be parried or blocked. Instead of dealing damage, a successful attack with this weapon forces the opponent to make a Strength or Agility test. If they fail, they suffer a -20 penalty to all combat tests as they become entangled. They can use an action to repeat the test and free themselves on success.</p>\n<p>\_</p>\n<p>If this effect was applied by a melee attack, then if the target character leaves the melee ranged of the Entangling weapon then the character wielding the weapon must choose to either let go of their weapon (maintaining the effect on the target), or keep their weapon (removing the effect from the target).\_</p>"
     _stats:
-      coreVersion: '12.331'
+      coreVersion: '13.342'
       systemId: null
       systemVersion: null
       createdTime: null
@@ -25,6 +25,7 @@ pages:
       lastModifiedBy: null
       compendiumSource: null
       duplicateSource: null
+      exportSource: null
     _id: 01uw7yWAJV4Q0RIR
     system: {}
     image: {}
@@ -36,9 +37,10 @@ pages:
     ownership:
       default: -1
     flags: {}
+    category: null
     _key: '!journal.pages!DfC1501wL64oIckY.01uw7yWAJV4Q0RIR'
 _stats:
-  coreVersion: '12.331'
+  coreVersion: '13.342'
   systemId: null
   systemVersion: null
   createdTime: null
@@ -46,8 +48,10 @@ _stats:
   lastModifiedBy: null
   compendiumSource: null
   duplicateSource: null
+  exportSource: null
 ownership:
   default: 0
   eeXhsDlbzUBZOXZT: 3
+categories: []
 _key: '!journal!DfC1501wL64oIckY'
 

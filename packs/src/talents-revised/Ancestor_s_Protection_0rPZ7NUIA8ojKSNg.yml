@@ -2,19 +2,19 @@ _id: 0rPZ7NUIA8ojKSNg
 name: Ancestor's Protection
 type: talent
 flags:
-  core:
-    sourceId: Item.JX5ttPQSa94C9UKX
+  core: {}
 img: systems/uesrpg-3ev4/images/Icons/ancestorGuardian.webp
 effects: []
 _stats:
-  coreVersion: '12.331'
+  coreVersion: '13.342'
   systemId: null
   systemVersion: null
   createdTime: null
   modifiedTime: null
   lastModifiedBy: null
-  compendiumSource: null
+  compendiumSource: Item.JX5ttPQSa94C9UKX
   duplicateSource: null
+  exportSource: null
 ownership:
   default: 0
   xvA5SwRGJiyPsnxH: 3
@@ -70,6 +70,7 @@ system:
     <p>The Dunmer increases their Resistance (Fire) trait by +1, and their
     Ancestor Guardian power is increased to Sanctuary (4), and lasts for 4
     Rounds instead of 3.</p>
+  governingCharacteristics: ''
   xpCost: 300
   level: 3
   talentReq: ''
@@ -79,8 +80,10 @@ system:
   untrainedException: false
   fatigueException: false
   addIBToMP: false
+  addIntToMPMultiplier: 1
   armorAcrobaticsException: false
   addHalfSpeed: false
+  doubleSwimSpeed: false
 folder: null
 sort: 0
 _key: '!items!0rPZ7NUIA8ojKSNg'

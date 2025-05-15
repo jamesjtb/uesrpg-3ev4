@@ -17,7 +17,7 @@ pages:
       format: 1
       content: "<p>The shield has extra straps that can be fastened as a Secondary action. When the shield is strapped, it is impossible to disarm, but likewise, requires a Secondary action to undo the straps keeping it in place.\_</p>"
     _stats:
-      coreVersion: '12.331'
+      coreVersion: '13.342'
       systemId: null
       systemVersion: null
       createdTime: null
@@ -25,6 +25,7 @@ pages:
       lastModifiedBy: null
       compendiumSource: null
       duplicateSource: null
+      exportSource: null
     _id: KermkAx9wfcaCHiL
     system: {}
     image: {}
@@ -36,9 +37,10 @@ pages:
     ownership:
       default: -1
     flags: {}
+    category: null
     _key: '!journal.pages!mSPuL09jHxnZtLe8.KermkAx9wfcaCHiL'
 _stats:
-  coreVersion: '12.331'
+  coreVersion: '13.342'
   systemId: null
   systemVersion: null
   createdTime: null
@@ -46,8 +48,10 @@ _stats:
   lastModifiedBy: null
   compendiumSource: null
   duplicateSource: null
+  exportSource: null
 ownership:
   default: 0
   eeXhsDlbzUBZOXZT: 3
+categories: []
 _key: '!journal!mSPuL09jHxnZtLe8'
 

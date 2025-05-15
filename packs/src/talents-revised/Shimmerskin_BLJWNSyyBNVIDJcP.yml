@@ -1,20 +1,20 @@
 name: Shimmerskin
 type: talent
 flags:
-  core:
-    sourceId: Item.JX5ttPQSa94C9UKX
+  core: {}
 img: systems/uesrpg-3ev4/images/Icons/childrenOfSea.webp
 effects: []
 _id: BLJWNSyyBNVIDJcP
 _stats:
-  coreVersion: '12.331'
+  coreVersion: '13.342'
   systemId: null
   systemVersion: null
   createdTime: null
   modifiedTime: null
   lastModifiedBy: null
-  compendiumSource: null
+  compendiumSource: Item.JX5ttPQSa94C9UKX
   duplicateSource: null
+  exportSource: null
 ownership:
   default: 0
   xvA5SwRGJiyPsnxH: 3
@@ -70,6 +70,7 @@ system:
     <p>The Maormer increases their Power Well trait by +10, and gains an
     additional +10 bonus on their Chameleon Skin trait, for a total of +20 to
     Stealth tests while hiding in the environment.</p>
+  governingCharacteristics: ''
   xpCost: 300
   level: 3
   talentReq: ''
@@ -79,8 +80,10 @@ system:
   untrainedException: false
   fatigueException: false
   addIBToMP: false
+  addIntToMPMultiplier: 1
   armorAcrobaticsException: false
   addHalfSpeed: false
+  doubleSwimSpeed: false
 folder: null
 sort: 0
 _key: '!items!BLJWNSyyBNVIDJcP'

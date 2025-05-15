@@ -26,12 +26,14 @@ pages:
     _stats:
       compendiumSource: null
       duplicateSource: null
-      coreVersion: '12.331'
+      coreVersion: '13.342'
       systemId: uesrpg-3ev4
       systemVersion: v1.0.0-RC.70
       createdTime: 1746860234008
       modifiedTime: 1746862281649
       lastModifiedBy: HcIrULZhA1JFIlrf
+      exportSource: null
+    category: null
     _key: '!journal.pages!ITVR2uHSThxcwwGw.Pjeawm3l3ZweoVrr'
   - sort: 200000
     name: Bleeding (X)
@@ -70,12 +72,14 @@ pages:
     _stats:
       compendiumSource: null
       duplicateSource: null
-      coreVersion: '12.331'
+      coreVersion: '13.342'
       systemId: uesrpg-3ev4
       systemVersion: v1.0.0-RC.70
       createdTime: 1746861984292
       modifiedTime: 1746861984292
       lastModifiedBy: HcIrULZhA1JFIlrf
+      exportSource: null
+    category: null
     _key: '!journal.pages!ITVR2uHSThxcwwGw.KCulQW8H7ki4f4eD'
   - sort: 300000
     name: Blinded
@@ -104,12 +108,14 @@ pages:
     _stats:
       compendiumSource: null
       duplicateSource: null
-      coreVersion: '12.331'
+      coreVersion: '13.342'
       systemId: uesrpg-3ev4
       systemVersion: v1.0.0-RC.70
       createdTime: 1746862079246
       modifiedTime: 1746862095074
       lastModifiedBy: HcIrULZhA1JFIlrf
+      exportSource: null
+    category: null
     _key: '!journal.pages!ITVR2uHSThxcwwGw.e9bBpMOxuLtsHMXV'
   - sort: 400000
     name: Burning (X)
@@ -150,12 +156,14 @@ pages:
     _stats:
       compendiumSource: null
       duplicateSource: null
-      coreVersion: '12.331'
+      coreVersion: '13.342'
       systemId: uesrpg-3ev4
       systemVersion: v1.0.0-RC.70
       createdTime: 1746862103326
       modifiedTime: 1746862144368
       lastModifiedBy: HcIrULZhA1JFIlrf
+      exportSource: null
+    category: null
     _key: '!journal.pages!ITVR2uHSThxcwwGw.979jJVqU2cCF0Qbx'
   - sort: 500000
     name: Chameleon (X)
@@ -184,12 +192,14 @@ pages:
     _stats:
       compendiumSource: null
       duplicateSource: null
-      coreVersion: '12.331'
+      coreVersion: '13.342'
       systemId: uesrpg-3ev4
       systemVersion: v1.0.0-RC.70
       createdTime: 1746862154990
       modifiedTime: 1746862160648
       lastModifiedBy: HcIrULZhA1JFIlrf
+      exportSource: null
+    category: null
     _key: '!journal.pages!ITVR2uHSThxcwwGw.qf8htAejhYIc5qN6'
   - sort: 600000
     name: Crippled Body Part
@@ -221,12 +231,14 @@ pages:
     _stats:
       compendiumSource: null
       duplicateSource: null
-      coreVersion: '12.331'
+      coreVersion: '13.342'
       systemId: uesrpg-3ev4
       systemVersion: v1.0.0-RC.70
       createdTime: 1746862180022
       modifiedTime: 1746862183985
       lastModifiedBy: HcIrULZhA1JFIlrf
+      exportSource: null
+    category: null
     _key: '!journal.pages!ITVR2uHSThxcwwGw.GTgfechUElXmOmRJ'
   - sort: 700000
     name: Dazed
@@ -253,12 +265,14 @@ pages:
     _stats:
       compendiumSource: null
       duplicateSource: null
-      coreVersion: '12.331'
+      coreVersion: '13.342'
       systemId: uesrpg-3ev4
       systemVersion: v1.0.0-RC.70
       createdTime: 1746862195864
       modifiedTime: 1746862198655
       lastModifiedBy: HcIrULZhA1JFIlrf
+      exportSource: null
+    category: null
     _key: '!journal.pages!ITVR2uHSThxcwwGw.mwEcZvpsfEX4Dq6K'
   - sort: 800000
     name: Deafened
@@ -287,12 +301,14 @@ pages:
     _stats:
       compendiumSource: null
       duplicateSource: null
-      coreVersion: '12.331'
+      coreVersion: '13.342'
       systemId: uesrpg-3ev4
       systemVersion: v1.0.0-RC.70
       createdTime: 1746862257945
       modifiedTime: 1746862279377
       lastModifiedBy: HcIrULZhA1JFIlrf
+      exportSource: null
+    category: null
     _key: '!journal.pages!ITVR2uHSThxcwwGw.NUs6KiYlReCT6P5t'
   - sort: 1000000
     name: Fatigued
@@ -329,12 +345,14 @@ pages:
     _stats:
       compendiumSource: null
       duplicateSource: null
-      coreVersion: '12.331'
+      coreVersion: '13.342'
       systemId: uesrpg-3ev4
       systemVersion: v1.0.0-RC.70
       createdTime: 1746862289240
       modifiedTime: 1746862416558
       lastModifiedBy: HcIrULZhA1JFIlrf
+      exportSource: null
+    category: null
     _key: '!journal.pages!ITVR2uHSThxcwwGw.wSyEN3fyDsBVzHPG'
   - sort: 1100000
     name: Frenzied
@@ -377,12 +395,14 @@ pages:
     _stats:
       compendiumSource: null
       duplicateSource: null
-      coreVersion: '12.331'
+      coreVersion: '13.342'
       systemId: uesrpg-3ev4
       systemVersion: v1.0.0-RC.70
       createdTime: 1746862435687
       modifiedTime: 1746862513978
       lastModifiedBy: HcIrULZhA1JFIlrf
+      exportSource: null
+    category: null
     _key: '!journal.pages!ITVR2uHSThxcwwGw.LAQu84sHcjEYttIh'
   - sort: 1200000
     name: Hidden
@@ -418,12 +438,14 @@ pages:
     _stats:
       compendiumSource: null
       duplicateSource: null
-      coreVersion: '12.331'
+      coreVersion: '13.342'
       systemId: uesrpg-3ev4
       systemVersion: v1.0.0-RC.70
       createdTime: 1746862523643
       modifiedTime: 1746862526149
       lastModifiedBy: HcIrULZhA1JFIlrf
+      exportSource: null
+    category: null
     _key: '!journal.pages!ITVR2uHSThxcwwGw.vZHQ3fPiozhgoZg2'
   - sort: 1300000
     name: Immobilized
@@ -450,12 +472,14 @@ pages:
     _stats:
       compendiumSource: null
       duplicateSource: null
-      coreVersion: '12.331'
+      coreVersion: '13.342'
       systemId: uesrpg-3ev4
       systemVersion: v1.0.0-RC.70
       createdTime: 1746862532060
       modifiedTime: 1746862534450
       lastModifiedBy: HcIrULZhA1JFIlrf
+      exportSource: null
+    category: null
     _key: '!journal.pages!ITVR2uHSThxcwwGw.BS9D6rd16Mh39rrp'
   - sort: 1400000
     name: Invisible
@@ -484,12 +508,14 @@ pages:
     _stats:
       compendiumSource: null
       duplicateSource: null
-      coreVersion: '12.331'
+      coreVersion: '13.342'
       systemId: uesrpg-3ev4
       systemVersion: v1.0.0-RC.70
       createdTime: 1746862539096
       modifiedTime: 1746862541141
       lastModifiedBy: HcIrULZhA1JFIlrf
+      exportSource: null
+    category: null
     _key: '!journal.pages!ITVR2uHSThxcwwGw.o7jyDByenx9JcyB8'
   - sort: 1500000
     name: Lost Body Part
@@ -521,12 +547,14 @@ pages:
     _stats:
       compendiumSource: null
       duplicateSource: null
-      coreVersion: '12.331'
+      coreVersion: '13.342'
       systemId: uesrpg-3ev4
       systemVersion: v1.0.0-RC.70
       createdTime: 1746862549799
       modifiedTime: 1746862554144
       lastModifiedBy: HcIrULZhA1JFIlrf
+      exportSource: null
+    category: null
     _key: '!journal.pages!ITVR2uHSThxcwwGw.ZwYx67TtO3EUstVt'
   - sort: 1600000
     name: Lost Ear
@@ -556,12 +584,14 @@ pages:
     _stats:
       compendiumSource: null
       duplicateSource: null
-      coreVersion: '12.331'
+      coreVersion: '13.342'
       systemId: uesrpg-3ev4
       systemVersion: v1.0.0-RC.70
       createdTime: 1746862561416
       modifiedTime: 1746862574554
       lastModifiedBy: HcIrULZhA1JFIlrf
+      exportSource: null
+    category: null
     _key: '!journal.pages!ITVR2uHSThxcwwGw.YOhH0JXZ0XWOJu11'
   - sort: 1700000
     name: Lost Eye
@@ -590,12 +620,14 @@ pages:
     _stats:
       compendiumSource: null
       duplicateSource: null
-      coreVersion: '12.331'
+      coreVersion: '13.342'
       systemId: uesrpg-3ev4
       systemVersion: v1.0.0-RC.70
       createdTime: 1746862579045
       modifiedTime: 1746862606570
       lastModifiedBy: HcIrULZhA1JFIlrf
+      exportSource: null
+    category: null
     _key: '!journal.pages!ITVR2uHSThxcwwGw.O64RiFgdUERVuMQg'
   - sort: 1800000
     name: Lost Foot/Leg
@@ -626,12 +658,14 @@ pages:
     _stats:
       compendiumSource: null
       duplicateSource: null
-      coreVersion: '12.331'
+      coreVersion: '13.342'
       systemId: uesrpg-3ev4
       systemVersion: v1.0.0-RC.70
       createdTime: 1746862611239
       modifiedTime: 1746862641544
       lastModifiedBy: HcIrULZhA1JFIlrf
+      exportSource: null
+    category: null
     _key: '!journal.pages!ITVR2uHSThxcwwGw.OU9G8LgVYicA6YoU'
   - sort: 1900000
     name: Lost Hand/Arm
@@ -663,12 +697,14 @@ pages:
     _stats:
       compendiumSource: null
       duplicateSource: null
-      coreVersion: '12.331'
+      coreVersion: '13.342'
       systemId: uesrpg-3ev4
       systemVersion: v1.0.0-RC.70
       createdTime: 1746862654521
       modifiedTime: 1746862676102
       lastModifiedBy: HcIrULZhA1JFIlrf
+      exportSource: null
+    category: null
     _key: '!journal.pages!ITVR2uHSThxcwwGw.6bmEsLz2dtcCZJkC'
   - sort: 2000000
     name: Organ Damage
@@ -700,12 +736,14 @@ pages:
     _stats:
       compendiumSource: null
       duplicateSource: null
-      coreVersion: '12.331'
+      coreVersion: '13.342'
       systemId: uesrpg-3ev4
       systemVersion: v1.0.0-RC.70
       createdTime: 1746862688159
       modifiedTime: 1746862723295
       lastModifiedBy: HcIrULZhA1JFIlrf
+      exportSource: null
+    category: null
     _key: '!journal.pages!ITVR2uHSThxcwwGw.AEpZn9fNEEAAuDjb'
   - sort: 2100000
     name: Muffled (X)
@@ -734,12 +772,14 @@ pages:
     _stats:
       compendiumSource: null
       duplicateSource: null
-      coreVersion: '12.331'
+      coreVersion: '13.342'
       systemId: uesrpg-3ev4
       systemVersion: v1.0.0-RC.70
       createdTime: 1746862731782
       modifiedTime: 1746862737191
       lastModifiedBy: HcIrULZhA1JFIlrf
+      exportSource: null
+    category: null
     _key: '!journal.pages!ITVR2uHSThxcwwGw.cdXDW5iHIwBrA5ZP'
   - sort: 2200000
     name: Prone
@@ -773,12 +813,14 @@ pages:
     _stats:
       compendiumSource: null
       duplicateSource: null
-      coreVersion: '12.331'
+      coreVersion: '13.342'
       systemId: uesrpg-3ev4
       systemVersion: v1.0.0-RC.70
       createdTime: 1746862752445
       modifiedTime: 1746862754427
       lastModifiedBy: HcIrULZhA1JFIlrf
+      exportSource: null
+    category: null
     _key: '!journal.pages!ITVR2uHSThxcwwGw.cZFeCoF5sWQB5mDD'
   - sort: 2300000
     name: Paralyzed
@@ -805,12 +847,14 @@ pages:
     _stats:
       compendiumSource: null
       duplicateSource: null
-      coreVersion: '12.331'
+      coreVersion: '13.342'
       systemId: uesrpg-3ev4
       systemVersion: v1.0.0-RC.70
       createdTime: 1746862780227
       modifiedTime: 1746862782426
       lastModifiedBy: HcIrULZhA1JFIlrf
+      exportSource: null
+    category: null
     _key: '!journal.pages!ITVR2uHSThxcwwGw.NBmgBgP3lbhlrESY'
   - sort: 2400000
     name: Restrained
@@ -838,12 +882,14 @@ pages:
     _stats:
       compendiumSource: null
       duplicateSource: null
-      coreVersion: '12.331'
+      coreVersion: '13.342'
       systemId: uesrpg-3ev4
       systemVersion: v1.0.0-RC.70
       createdTime: 1746862788425
       modifiedTime: 1746862790637
       lastModifiedBy: HcIrULZhA1JFIlrf
+      exportSource: null
+    category: null
     _key: '!journal.pages!ITVR2uHSThxcwwGw.X8e9mpn8qlLW8f0s'
   - sort: 2500000
     name: Silenced
@@ -873,12 +919,14 @@ pages:
     _stats:
       compendiumSource: null
       duplicateSource: null
-      coreVersion: '12.331'
+      coreVersion: '13.342'
       systemId: uesrpg-3ev4
       systemVersion: v1.0.0-RC.70
       createdTime: 1746862795945
       modifiedTime: 1746862808325
       lastModifiedBy: HcIrULZhA1JFIlrf
+      exportSource: null
+    category: null
     _key: '!journal.pages!ITVR2uHSThxcwwGw.nNhibA9UKYd5EfbO'
   - sort: 2600000
     name: Slowed
@@ -903,12 +951,14 @@ pages:
     _stats:
       compendiumSource: null
       duplicateSource: null
-      coreVersion: '12.331'
+      coreVersion: '13.342'
       systemId: uesrpg-3ev4
       systemVersion: v1.0.0-RC.70
       createdTime: 1746862820255
       modifiedTime: 1746862824378
       lastModifiedBy: HcIrULZhA1JFIlrf
+      exportSource: null
+    category: null
     _key: '!journal.pages!ITVR2uHSThxcwwGw.Ur9zzz9fbLoTeVlU'
   - sort: 2700000
     name: Stunned
@@ -936,12 +986,14 @@ pages:
     _stats:
       compendiumSource: null
       duplicateSource: null
-      coreVersion: '12.331'
+      coreVersion: '13.342'
       systemId: uesrpg-3ev4
       systemVersion: v1.0.0-RC.70
       createdTime: 1746862834354
       modifiedTime: 1746862837850
       lastModifiedBy: HcIrULZhA1JFIlrf
+      exportSource: null
+    category: null
     _key: '!journal.pages!ITVR2uHSThxcwwGw.XGXQ5LpKlVsQV4Kr'
   - sort: 2800000
     name: Unconscious
@@ -969,12 +1021,14 @@ pages:
     _stats:
       compendiumSource: null
       duplicateSource: null
-      coreVersion: '12.331'
+      coreVersion: '13.342'
       systemId: uesrpg-3ev4
       systemVersion: v1.0.0-RC.70
       createdTime: 1746862849927
       modifiedTime: 1746862861472
       lastModifiedBy: HcIrULZhA1JFIlrf
+      exportSource: null
+    category: null
     _key: '!journal.pages!ITVR2uHSThxcwwGw.9wllu4ofzrfI91zm'
 folder: null
 sort: 0
@@ -985,11 +1039,13 @@ flags: {}
 _stats:
   compendiumSource: null
   duplicateSource: null
-  coreVersion: '12.331'
+  coreVersion: '13.342'
   systemId: uesrpg-3ev4
   systemVersion: v1.0.0-RC.70
   createdTime: 1746860228201
   modifiedTime: 1746860228201
   lastModifiedBy: HcIrULZhA1JFIlrf
+  exportSource: null
+categories: []
 _key: '!journal!ITVR2uHSThxcwwGw'
 

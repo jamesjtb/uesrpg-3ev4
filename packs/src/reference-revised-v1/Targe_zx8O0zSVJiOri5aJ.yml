@@ -25,7 +25,7 @@ pages:
         BR (rounding up), but counts as a free hand for wielding Small weapons
         or Grappling.</p>
     _stats:
-      coreVersion: '12.331'
+      coreVersion: '13.342'
       systemId: null
       systemVersion: null
       createdTime: null
@@ -33,6 +33,7 @@ pages:
       lastModifiedBy: null
       compendiumSource: null
       duplicateSource: null
+      exportSource: null
     _id: Zpp0ESlIQ0z4vtEf
     system: {}
     image: {}
@@ -44,9 +45,10 @@ pages:
     ownership:
       default: -1
     flags: {}
+    category: null
     _key: '!journal.pages!zx8O0zSVJiOri5aJ.Zpp0ESlIQ0z4vtEf'
 _stats:
-  coreVersion: '12.331'
+  coreVersion: '13.342'
   systemId: null
   systemVersion: null
   createdTime: null
@@ -54,8 +56,10 @@ _stats:
   lastModifiedBy: null
   compendiumSource: null
   duplicateSource: null
+  exportSource: null
 ownership:
   default: 0
   eeXhsDlbzUBZOXZT: 3
+categories: []
 _key: '!journal!zx8O0zSVJiOri5aJ'
 

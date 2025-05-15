@@ -2,19 +2,19 @@ _id: F0Z8bNEfCLtBorrT
 name: Attention to Detail
 type: talent
 flags:
-  core:
-    sourceId: Item.DYVazRNO2caSDMGE
+  core: {}
 img: systems/uesrpg-3ev4/images/Icons/attentionToDetail.webp
 effects: []
 _stats:
-  coreVersion: '12.331'
+  coreVersion: '13.342'
   systemId: null
   systemVersion: null
   createdTime: null
   modifiedTime: null
   lastModifiedBy: null
-  compendiumSource: null
+  compendiumSource: Item.DYVazRNO2caSDMGE
   duplicateSource: null
+  exportSource: null
 ownership:
   default: 0
   xvA5SwRGJiyPsnxH: 3
@@ -69,6 +69,7 @@ system:
   description: >-
     <p>The character can use the Investigate skill to oppose attempts to deceive
     him.</p>
+  governingCharacteristics: ''
   xpCost: 100
   level: 1
   talentReq: ''
@@ -78,8 +79,10 @@ system:
   untrainedException: false
   fatigueException: false
   addIBToMP: false
+  addIntToMPMultiplier: 1
   armorAcrobaticsException: false
   addHalfSpeed: false
+  doubleSwimSpeed: false
 folder: null
 sort: 0
 _key: '!items!F0Z8bNEfCLtBorrT'

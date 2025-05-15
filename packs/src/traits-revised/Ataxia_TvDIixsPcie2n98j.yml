@@ -68,20 +68,20 @@ flags:
       {Month}, {Era}</p>
 
       <p><em><strong>Current Stage:&nbsp;</strong></em>{One, Two, Three}</p>
-  core:
-    sourceId: Item.kzJidtI5bnJdqIAa
+  core: {}
   cf:
     id: temp_kg76x9jbadm
     color: '#000000'
 _stats:
-  coreVersion: '12.331'
+  coreVersion: '13.342'
   systemId: null
   systemVersion: null
   createdTime: null
   modifiedTime: null
   lastModifiedBy: null
-  compendiumSource: null
+  compendiumSource: Item.kzJidtI5bnJdqIAa
   duplicateSource: null
+  exportSource: null
 ownership:
   default: 0
   eeXhsDlbzUBZOXZT: 3

@@ -7,20 +7,20 @@ items:
     type: spell
     sort: 100000
     flags:
-      core:
-        sourceId: Item.Dvncp3T7Nn3WBpgy
+      core: {}
     img: icons/magic/symbols/cross-circle-blue.webp
     effects: []
     folder: null
     _stats:
-      compendiumSource: null
+      compendiumSource: Item.Dvncp3T7Nn3WBpgy
       duplicateSource: null
-      coreVersion: '12.331'
+      coreVersion: '13.342'
       systemId: uesrpg-3ev4
       systemVersion: v1.0.0-RC.59
       createdTime: null
       modifiedTime: null
       lastModifiedBy: null
+      exportSource: null
     ownership:
       default: 0
     system:
@@ -60,20 +60,20 @@ items:
     type: power
     sort: 300000
     flags:
-      core:
-        sourceId: Item.MyWjMeVAtBCJa8Bt
+      core: {}
     img: systems/uesrpg-3ev4/images/Icons/overcharge.webp
     effects: []
     folder: null
     _stats:
-      compendiumSource: null
+      compendiumSource: Item.MyWjMeVAtBCJa8Bt
       duplicateSource: null
-      coreVersion: '12.331'
+      coreVersion: '13.342'
       systemId: uesrpg-3ev4
       systemVersion: v1.0.0-RC.59
       createdTime: null
       modifiedTime: null
       lastModifiedBy: null
+      exportSource: null
     ownership:
       default: 0
     system:
@@ -141,20 +141,20 @@ items:
     type: power
     sort: 400000
     flags:
-      core:
-        sourceId: Item.MyWjMeVAtBCJa8Bt
+      core: {}
     img: systems/uesrpg-3ev4/images/Icons/magicalExertion.webp
     effects: []
     folder: null
     _stats:
-      compendiumSource: null
+      compendiumSource: Item.MyWjMeVAtBCJa8Bt
       duplicateSource: null
-      coreVersion: '12.331'
+      coreVersion: '13.342'
       systemId: uesrpg-3ev4
       systemVersion: v1.0.0-RC.59
       createdTime: null
       modifiedTime: null
       lastModifiedBy: null
+      exportSource: null
     ownership:
       default: 0
     system:
@@ -223,20 +223,20 @@ items:
     type: power
     sort: 500000
     flags:
-      core:
-        sourceId: Item.MyWjMeVAtBCJa8Bt
+      core: {}
     img: systems/uesrpg-3ev4/images/Icons/magickaCycling.webp
     effects: []
     folder: null
     _stats:
-      compendiumSource: null
+      compendiumSource: Item.MyWjMeVAtBCJa8Bt
       duplicateSource: null
-      coreVersion: '12.331'
+      coreVersion: '13.342'
       systemId: uesrpg-3ev4
       systemVersion: v1.0.0-RC.59
       createdTime: null
       modifiedTime: null
       lastModifiedBy: null
+      exportSource: null
     ownership:
       default: 0
     system:
@@ -304,20 +304,20 @@ items:
     type: talent
     sort: 600000
     flags:
-      core:
-        sourceId: Item.7fKKFs3JVM7UgiPU
+      core: {}
     img: systems/uesrpg-3ev4/images/Icons/questioning.webp
     effects: []
     folder: null
     _stats:
-      compendiumSource: null
+      compendiumSource: Item.7fKKFs3JVM7UgiPU
       duplicateSource: null
-      coreVersion: '12.331'
+      coreVersion: '13.342'
       systemId: uesrpg-3ev4
       systemVersion: v1.0.0-RC.59
       createdTime: null
       modifiedTime: null
       lastModifiedBy: null
+      exportSource: null
     ownership:
       default: 0
     system:
@@ -371,6 +371,7 @@ items:
       description: >-
         <p><span style="color: #191813;">This character does not track magicka,
         and can instead cast each spell it knows once.</span></p>
+      governingCharacteristics: ''
       xpCost: 0
       level: 0
       talentReq: ''
@@ -380,8 +381,10 @@ items:
       untrainedException: false
       fatigueException: false
       addIBToMP: false
+      addIntToMPMultiplier: 1
       armorAcrobaticsException: false
       addHalfSpeed: false
+      doubleSwimSpeed: false
     _key: '!actors.items!wohhiwhN1V1NeLKm.FW8KmW0Q8irUno6B'
   - _id: rqttf5SSVAMnZ7lU
     name: Learned Scholar
@@ -391,17 +394,17 @@ items:
     folder: null
     sort: 0
     flags:
-      core:
-        sourceId: Item.OafS5mQizHlpXzEb
+      core: {}
     _stats:
-      compendiumSource: null
+      compendiumSource: Item.OafS5mQizHlpXzEb
       duplicateSource: null
-      coreVersion: '12.331'
+      coreVersion: '13.342'
       systemId: uesrpg-3ev4
       systemVersion: v1.0.0-RC.59
       createdTime: null
       modifiedTime: null
       lastModifiedBy: null
+      exportSource: null
     ownership:
       default: 0
       eeXhsDlbzUBZOXZT: 3
@@ -472,17 +475,17 @@ items:
     folder: null
     sort: 0
     flags:
-      core:
-        sourceId: Item.JzGx9VUhSZ8Gutbe
+      core: {}
     _stats:
-      compendiumSource: null
+      compendiumSource: Item.JzGx9VUhSZ8Gutbe
       duplicateSource: null
-      coreVersion: '12.331'
+      coreVersion: '13.342'
       systemId: uesrpg-3ev4
       systemVersion: v1.0.0-RC.59
       createdTime: null
       modifiedTime: null
       lastModifiedBy: null
+      exportSource: null
     ownership:
       default: 0
       eeXhsDlbzUBZOXZT: 3
@@ -581,12 +584,13 @@ flags: {}
 _stats:
   compendiumSource: null
   duplicateSource: null
-  coreVersion: '12.331'
+  coreVersion: '13.342'
   systemId: uesrpg-3ev4
   systemVersion: v1.0.0-RC.59
   createdTime: 1732339016711
   modifiedTime: 1732339102041
   lastModifiedBy: 7bDMesNjX54nzN9S
+  exportSource: null
 ownership:
   default: 0
   WcwhQU1nz94WaD5n: 3
@@ -1099,7 +1103,6 @@ prototypeToken:
     contrast: 0
   appendNumber: false
   prependAdjective: false
-  hexagonalShape: 0
   detectionModes: []
   occludable:
     radius: 0
@@ -1112,6 +1115,12 @@ prototypeToken:
     subject:
       scale: 1
       texture: null
+  turnMarker:
+    mode: 1
+    animation: null
+    src: null
+    disposition: false
+  movementAction: null
 _id: wohhiwhN1V1NeLKm
 sort: 2200000
 _key: '!actors!wohhiwhN1V1NeLKm'

@@ -1,20 +1,20 @@
 name: Thrash
 type: power
 flags:
-  core:
-    sourceId: Item.MyWjMeVAtBCJa8Bt
+  core: {}
 img: systems/uesrpg-3ev4/images/Icons/bestial.webp
 effects: []
 _id: 2Y5zzOrYHGmLj59U
 _stats:
-  coreVersion: '12.331'
+  coreVersion: '13.342'
   systemId: null
   systemVersion: null
   createdTime: null
   modifiedTime: null
   lastModifiedBy: null
-  compendiumSource: null
+  compendiumSource: Item.MyWjMeVAtBCJa8Bt
   duplicateSource: null
+  exportSource: null
 ownership:
   default: 0
   inSimu0FutxmlwqN: 3

@@ -3,8 +3,7 @@ name: Damaged
 folder: null
 sort: 0
 flags:
-  core:
-    sourceId: JournalEntry.WIdvfxJBtmtBPqcE
+  core: {}
   cf:
     id: temp_u0ce34u73r
     path: References#/CF_SEP/Qualities#/CF_SEP/Armour Qualities
@@ -22,7 +21,7 @@ pages:
         Reduce its AR or BR by X. If this would reduce that value to 0, then the
         item is destroyed.</p>
     _stats:
-      coreVersion: '12.331'
+      coreVersion: '13.342'
       systemId: null
       systemVersion: null
       createdTime: null
@@ -30,6 +29,7 @@ pages:
       lastModifiedBy: null
       compendiumSource: null
       duplicateSource: null
+      exportSource: null
     _id: 3agqDtP36yQFX79c
     system: {}
     image: {}
@@ -41,18 +41,21 @@ pages:
     ownership:
       default: -1
     flags: {}
+    category: null
     _key: '!journal.pages!mrb4qtbhsgvVhaF3.3agqDtP36yQFX79c'
 _stats:
-  coreVersion: '12.331'
+  coreVersion: '13.342'
   systemId: null
   systemVersion: null
   createdTime: null
   modifiedTime: null
   lastModifiedBy: null
-  compendiumSource: null
+  compendiumSource: JournalEntry.WIdvfxJBtmtBPqcE
   duplicateSource: null
+  exportSource: null
 ownership:
   default: 0
   eeXhsDlbzUBZOXZT: 3
+categories: []
 _key: '!journal!mrb4qtbhsgvVhaF3'
 

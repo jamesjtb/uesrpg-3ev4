@@ -1,19 +1,19 @@
 name: Keen Intuition
 type: talent
 flags:
-  core:
-    sourceId: Item.DYVazRNO2caSDMGE
+  core: {}
 img: systems/uesrpg-3ev4/images/Icons/keenIntuition.webp
 effects: []
 _stats:
   compendiumSource: Item.DYVazRNO2caSDMGE
   duplicateSource: null
-  coreVersion: '12.331'
+  coreVersion: '13.342'
   systemId: uesrpg-3ev4
   systemVersion: v1.0.0-RC.62
   createdTime: 1733289898249
   modifiedTime: 1733289898249
   lastModifiedBy: HcIrULZhA1JFIlrf
+  exportSource: null
 ownership:
   default: 0
   HcIrULZhA1JFIlrf: 3
@@ -69,6 +69,7 @@ system:
     <p>When the character passes an Observe skill test they can choose to take
     the number of degrees of success that they rolled or take a number equal to
     their Observe skill rank instead.</p>
+  governingCharacteristics: Prc
   xpCost: 500
   level: Expert
   talentReq: ''
@@ -78,9 +79,10 @@ system:
   untrainedException: false
   fatigueException: false
   addIBToMP: false
+  addIntToMPMultiplier: 1
   armorAcrobaticsException: false
   addHalfSpeed: false
-  governingCharacteristics: Prc
+  doubleSwimSpeed: false
 folder: wHXhCeP5Fmy5GR8f
 _id: EInKnj3I3D5mRpHA
 sort: 0

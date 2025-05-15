@@ -7,20 +7,20 @@ items:
     type: power
     sort: 100000
     flags:
-      core:
-        sourceId: Item.MyWjMeVAtBCJa8Bt
+      core: {}
     img: systems/uesrpg-3ev4/images/Icons/dieHard.webp
     effects: []
     folder: null
     _stats:
-      compendiumSource: null
+      compendiumSource: Item.MyWjMeVAtBCJa8Bt
       duplicateSource: null
-      coreVersion: '12.331'
+      coreVersion: '13.342'
       systemId: uesrpg-3ev4
       systemVersion: v1.0.0-RC.59
       createdTime: null
       modifiedTime: null
       lastModifiedBy: null
+      exportSource: null
     ownership:
       default: 0
     system:
@@ -88,20 +88,20 @@ items:
     type: power
     sort: 200000
     flags:
-      core:
-        sourceId: Item.MyWjMeVAtBCJa8Bt
+      core: {}
     img: systems/uesrpg-3ev4/images/Icons/dieHard.webp
     effects: []
     folder: null
     _stats:
-      compendiumSource: null
+      compendiumSource: Item.MyWjMeVAtBCJa8Bt
       duplicateSource: null
-      coreVersion: '12.331'
+      coreVersion: '13.342'
       systemId: uesrpg-3ev4
       systemVersion: v1.0.0-RC.59
       createdTime: null
       modifiedTime: null
       lastModifiedBy: null
+      exportSource: null
     ownership:
       default: 0
     system:
@@ -169,20 +169,20 @@ items:
     type: power
     sort: 300000
     flags:
-      core:
-        sourceId: Item.MyWjMeVAtBCJa8Bt
+      core: {}
     img: systems/uesrpg-3ev4/images/Icons/alchemist.webp
     effects: []
     folder: null
     _stats:
-      compendiumSource: null
+      compendiumSource: Item.MyWjMeVAtBCJa8Bt
       duplicateSource: null
-      coreVersion: '12.331'
+      coreVersion: '13.342'
       systemId: uesrpg-3ev4
       systemVersion: v1.0.0-RC.59
       createdTime: null
       modifiedTime: null
       lastModifiedBy: null
+      exportSource: null
     ownership:
       default: 0
     system:
@@ -250,20 +250,20 @@ items:
     type: talent
     sort: 400000
     flags:
-      core:
-        sourceId: Item.DYVazRNO2caSDMGE
+      core: {}
     img: systems/uesrpg-3ev4/images/Icons/healer.webp
     effects: []
     folder: null
     _stats:
-      compendiumSource: null
+      compendiumSource: Item.DYVazRNO2caSDMGE
       duplicateSource: null
-      coreVersion: '12.331'
+      coreVersion: '13.342'
       systemId: uesrpg-3ev4
       systemVersion: v1.0.0-RC.59
       createdTime: null
       modifiedTime: null
       lastModifiedBy: null
+      exportSource: null
     ownership:
       default: 0
     system:
@@ -318,6 +318,7 @@ items:
         <p>The character can make a Restoration test and spend 10 magicka to
         perform an hour long ritual in order to treat a wound that they or
         another character has so that it can begin to heal naturally.</p>
+      governingCharacteristics: ''
       xpCost: 0
       level: 0
       talentReq: ''
@@ -327,28 +328,30 @@ items:
       untrainedException: false
       fatigueException: false
       addIBToMP: false
+      addIntToMPMultiplier: 1
       armorAcrobaticsException: false
       addHalfSpeed: false
+      doubleSwimSpeed: false
     _key: '!actors.items!JRnn9NQcrVPgNWXn.Cg7scF1anfc5ZfLz'
   - _id: cYJFK7PTMheY339g
     name: Spellcaster
     type: talent
     sort: 500000
     flags:
-      core:
-        sourceId: Item.7fKKFs3JVM7UgiPU
+      core: {}
     img: systems/uesrpg-3ev4/images/Icons/questioning.webp
     effects: []
     folder: null
     _stats:
-      compendiumSource: null
+      compendiumSource: Item.7fKKFs3JVM7UgiPU
       duplicateSource: null
-      coreVersion: '12.331'
+      coreVersion: '13.342'
       systemId: uesrpg-3ev4
       systemVersion: v1.0.0-RC.59
       createdTime: null
       modifiedTime: null
       lastModifiedBy: null
+      exportSource: null
     ownership:
       default: 0
     system:
@@ -402,6 +405,7 @@ items:
       description: >-
         <p><span style="color: #191813;">This character does not track magicka,
         and can instead cast each spell it knows once.</span></p>
+      governingCharacteristics: ''
       xpCost: 0
       level: 0
       talentReq: ''
@@ -411,8 +415,10 @@ items:
       untrainedException: false
       fatigueException: false
       addIBToMP: false
+      addIntToMPMultiplier: 1
       armorAcrobaticsException: false
       addHalfSpeed: false
+      doubleSwimSpeed: false
     _key: '!actors.items!JRnn9NQcrVPgNWXn.cYJFK7PTMheY339g'
   - _id: RrFFLWXzrl6gzVhg
     name: Cure Paralysis
@@ -422,17 +428,17 @@ items:
     folder: null
     sort: 0
     flags:
-      core:
-        sourceId: Item.VFpLofeTcfbOjRxo
+      core: {}
     _stats:
-      compendiumSource: null
+      compendiumSource: Item.VFpLofeTcfbOjRxo
       duplicateSource: null
-      coreVersion: '12.331'
+      coreVersion: '13.342'
       systemId: uesrpg-3ev4
       systemVersion: v1.0.0-RC.59
       createdTime: null
       modifiedTime: null
       lastModifiedBy: null
+      exportSource: null
     ownership:
       default: 0
       qwt9o1cuKYitvD9G: 3
@@ -500,17 +506,17 @@ items:
     folder: null
     sort: 0
     flags:
-      core:
-        sourceId: Item.VFpLofeTcfbOjRxo
+      core: {}
     _stats:
-      compendiumSource: null
+      compendiumSource: Item.VFpLofeTcfbOjRxo
       duplicateSource: null
-      coreVersion: '12.331'
+      coreVersion: '13.342'
       systemId: uesrpg-3ev4
       systemVersion: v1.0.0-RC.59
       createdTime: null
       modifiedTime: null
       lastModifiedBy: null
+      exportSource: null
     ownership:
       default: 0
       eeXhsDlbzUBZOXZT: 3
@@ -586,17 +592,17 @@ items:
     folder: null
     sort: 0
     flags:
-      core:
-        sourceId: Item.VFpLofeTcfbOjRxo
+      core: {}
     _stats:
-      compendiumSource: null
+      compendiumSource: Item.VFpLofeTcfbOjRxo
       duplicateSource: null
-      coreVersion: '12.331'
+      coreVersion: '13.342'
       systemId: uesrpg-3ev4
       systemVersion: v1.0.0-RC.59
       createdTime: null
       modifiedTime: null
       lastModifiedBy: null
+      exportSource: null
     ownership:
       default: 0
       qwt9o1cuKYitvD9G: 3
@@ -664,17 +670,17 @@ items:
     folder: null
     sort: 0
     flags:
-      core:
-        sourceId: Item.VFpLofeTcfbOjRxo
+      core: {}
     _stats:
-      compendiumSource: null
+      compendiumSource: Item.VFpLofeTcfbOjRxo
       duplicateSource: null
-      coreVersion: '12.331'
+      coreVersion: '13.342'
       systemId: uesrpg-3ev4
       systemVersion: v1.0.0-RC.59
       createdTime: null
       modifiedTime: null
       lastModifiedBy: null
+      exportSource: null
     ownership:
       default: 0
       qwt9o1cuKYitvD9G: 3
@@ -741,17 +747,17 @@ items:
     folder: null
     sort: 0
     flags:
-      core:
-        sourceId: Item.Dvncp3T7Nn3WBpgy
+      core: {}
     _stats:
-      compendiumSource: null
+      compendiumSource: Item.Dvncp3T7Nn3WBpgy
       duplicateSource: null
-      coreVersion: '12.331'
+      coreVersion: '13.342'
       systemId: uesrpg-3ev4
       systemVersion: v1.0.0-RC.59
       createdTime: null
       modifiedTime: null
       lastModifiedBy: null
+      exportSource: null
     ownership:
       default: 0
       qwt9o1cuKYitvD9G: 3
@@ -869,17 +875,17 @@ items:
     folder: null
     sort: 0
     flags:
-      core:
-        sourceId: Item.Dvncp3T7Nn3WBpgy
+      core: {}
     _stats:
-      compendiumSource: null
+      compendiumSource: Item.Dvncp3T7Nn3WBpgy
       duplicateSource: null
-      coreVersion: '12.331'
+      coreVersion: '13.342'
       systemId: uesrpg-3ev4
       systemVersion: v1.0.0-RC.59
       createdTime: null
       modifiedTime: null
       lastModifiedBy: null
+      exportSource: null
     ownership:
       default: 0
       qwt9o1cuKYitvD9G: 3
@@ -997,17 +1003,17 @@ items:
     folder: null
     sort: 0
     flags:
-      core:
-        sourceId: Item.Dvncp3T7Nn3WBpgy
+      core: {}
     _stats:
-      compendiumSource: null
+      compendiumSource: Item.Dvncp3T7Nn3WBpgy
       duplicateSource: null
-      coreVersion: '12.331'
+      coreVersion: '13.342'
       systemId: uesrpg-3ev4
       systemVersion: v1.0.0-RC.59
       createdTime: null
       modifiedTime: null
       lastModifiedBy: null
+      exportSource: null
     ownership:
       default: 0
       qwt9o1cuKYitvD9G: 3
@@ -1125,17 +1131,17 @@ items:
     folder: null
     sort: 0
     flags:
-      core:
-        sourceId: Item.Dvncp3T7Nn3WBpgy
+      core: {}
     _stats:
-      compendiumSource: null
+      compendiumSource: Item.Dvncp3T7Nn3WBpgy
       duplicateSource: null
-      coreVersion: '12.331'
+      coreVersion: '13.342'
       systemId: uesrpg-3ev4
       systemVersion: v1.0.0-RC.59
       createdTime: null
       modifiedTime: null
       lastModifiedBy: null
+      exportSource: null
     ownership:
       default: 0
       qwt9o1cuKYitvD9G: 3
@@ -1251,12 +1257,13 @@ flags: {}
 _stats:
   compendiumSource: null
   duplicateSource: null
-  coreVersion: '12.331'
+  coreVersion: '13.342'
   systemId: uesrpg-3ev4
   systemVersion: v1.0.0-RC.59
   createdTime: 1732338997840
   modifiedTime: 1732339102041
   lastModifiedBy: 7bDMesNjX54nzN9S
+  exportSource: null
 ownership:
   default: 0
   WcwhQU1nz94WaD5n: 3
@@ -1767,7 +1774,6 @@ prototypeToken:
     contrast: 0
   appendNumber: false
   prependAdjective: false
-  hexagonalShape: 0
   detectionModes: []
   occludable:
     radius: 0
@@ -1780,6 +1786,12 @@ prototypeToken:
     subject:
       scale: 1
       texture: null
+  turnMarker:
+    mode: 1
+    animation: null
+    src: null
+    disposition: false
+  movementAction: null
 _id: JRnn9NQcrVPgNWXn
 sort: 1600000
 _key: '!actors!JRnn9NQcrVPgNWXn'

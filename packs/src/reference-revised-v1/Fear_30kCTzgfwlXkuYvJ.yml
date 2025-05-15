@@ -17,7 +17,7 @@ pages:
       format: 1
       content: "<p>When a character is confronted by such a frightening event or adversary they must take a Fear Test. There are two types of fear tests: panic and horror tests.</p>\n<p>Fear tests are Willpower tests that use a special notation, either Panic (+/- X) or Horror (+/- X), where X is the bonus or penalty applied to the test. If the character fails the test, they succumb to the effects of fear.</p>\n<p>\_</p>\n<p>Your GM may call on you to make a Panic Test when you are confronted by mundane shock or horror. This is represented by the Panic (+/- X) notation, which is simply a Willpower test with a +/- X modifier.</p>\n<p>Your GM may call on you to make a Horror Test when you are confronted by supernatural terrors. This is represented by the Horror (+/- X) notation, which is simply a Willpower test with a +/- X modifier. In general, horror tests with any sort of penalty should be reserved for the most terrifying monsters and mind melting terrors.</p>"
     _stats:
-      coreVersion: '12.331'
+      coreVersion: '13.342'
       systemId: null
       systemVersion: null
       createdTime: null
@@ -25,6 +25,7 @@ pages:
       lastModifiedBy: null
       compendiumSource: null
       duplicateSource: null
+      exportSource: null
     _id: UsXBLd0BWt2KzdTY
     system: {}
     image: {}
@@ -36,9 +37,10 @@ pages:
     ownership:
       default: -1
     flags: {}
+    category: null
     _key: '!journal.pages!30kCTzgfwlXkuYvJ.UsXBLd0BWt2KzdTY'
 _stats:
-  coreVersion: '12.331'
+  coreVersion: '13.342'
   systemId: null
   systemVersion: null
   createdTime: null
@@ -46,8 +48,10 @@ _stats:
   lastModifiedBy: null
   compendiumSource: null
   duplicateSource: null
+  exportSource: null
 ownership:
   default: 0
   eeXhsDlbzUBZOXZT: 3
+categories: []
 _key: '!journal!30kCTzgfwlXkuYvJ'
 

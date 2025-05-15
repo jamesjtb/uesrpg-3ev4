@@ -2,19 +2,19 @@ _id: uJbPNGv6ic0EvSdq
 name: Weapon Echo
 type: talent
 flags:
-  core:
-    sourceId: Item.DYVazRNO2caSDMGE
+  core: {}
 img: systems/uesrpg-3ev4/images/Icons/weaponEcho.webp
 effects: []
 _stats:
-  coreVersion: '12.331'
+  coreVersion: '13.342'
   systemId: null
   systemVersion: null
   createdTime: null
   modifiedTime: null
   lastModifiedBy: null
-  compendiumSource: null
+  compendiumSource: Item.DYVazRNO2caSDMGE
   duplicateSource: null
+  exportSource: null
 ownership:
   default: 0
   xvA5SwRGJiyPsnxH: 3
@@ -76,6 +76,7 @@ system:
 
     <p>Immediately before or after making this attack, the character can move
     the weapon up to their WpB meters in any direction.</p>
+  governingCharacteristics: ''
   xpCost: 500
   level: 5
   talentReq: Bladecaller
@@ -85,8 +86,10 @@ system:
   untrainedException: false
   fatigueException: false
   addIBToMP: false
+  addIntToMPMultiplier: 1
   armorAcrobaticsException: false
   addHalfSpeed: false
+  doubleSwimSpeed: false
 folder: null
 sort: 0
 _key: '!items!uJbPNGv6ic0EvSdq'

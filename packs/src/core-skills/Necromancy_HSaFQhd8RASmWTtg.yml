@@ -6,17 +6,17 @@ effects: []
 folder: null
 sort: 400000
 flags:
-  core:
-    sourceId: Item.accrDR52Vb6rfZjr
+  core: {}
 _stats:
-  coreVersion: '12.331'
+  coreVersion: '13.342'
   systemId: uesrpg-3ev4
   systemVersion: v1.0.0-RC.61
   createdTime: null
   modifiedTime: 1732510440759
   lastModifiedBy: GikQCnLAeu0WrzSO
-  compendiumSource: null
+  compendiumSource: Item.accrDR52Vb6rfZjr
   duplicateSource: null
+  exportSource: null
 ownership:
   default: 0
   KoTybT0dunV5wS6T: 3

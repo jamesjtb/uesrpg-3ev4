@@ -65,17 +65,17 @@ command: |-
 folder: null
 sort: 0
 flags:
-  core:
-    sourceId: Macro.2NWjlMZQPWTPEWTI
+  core: {}
 _stats:
-  coreVersion: '12.331'
+  coreVersion: '13.342'
   systemId: null
   systemVersion: null
   createdTime: null
   modifiedTime: null
   lastModifiedBy: null
-  compendiumSource: null
+  compendiumSource: Macro.2NWjlMZQPWTPEWTI
   duplicateSource: null
+  exportSource: null
 ownership:
   default: 0
   inSimu0FutxmlwqN: 3

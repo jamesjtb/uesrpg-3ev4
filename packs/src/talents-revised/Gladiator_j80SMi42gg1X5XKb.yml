@@ -2,19 +2,19 @@ _id: j80SMi42gg1X5XKb
 name: Gladiator
 type: talent
 flags:
-  core:
-    sourceId: Item.DYVazRNO2caSDMGE
+  core: {}
 img: systems/uesrpg-3ev4/images/Icons/gladiator.webp
 effects: []
 _stats:
-  coreVersion: '12.331'
+  coreVersion: '13.342'
   systemId: null
   systemVersion: null
   createdTime: null
   modifiedTime: null
   lastModifiedBy: null
-  compendiumSource: null
+  compendiumSource: Item.DYVazRNO2caSDMGE
   duplicateSource: null
+  exportSource: null
 ownership:
   default: 0
   xvA5SwRGJiyPsnxH: 3
@@ -70,6 +70,7 @@ system:
     <p>If the character is the target of a melee attack while within melee range
     of at least two opponents, he can make a free defensive reaction against
     that attack (once per round).</p>
+  governingCharacteristics: ''
   xpCost: 500
   level: 5
   talentReq: Brawler
@@ -79,8 +80,10 @@ system:
   untrainedException: false
   fatigueException: false
   addIBToMP: false
+  addIntToMPMultiplier: 1
   armorAcrobaticsException: false
   addHalfSpeed: false
+  doubleSwimSpeed: false
 folder: null
 sort: 0
 _key: '!items!j80SMi42gg1X5XKb'

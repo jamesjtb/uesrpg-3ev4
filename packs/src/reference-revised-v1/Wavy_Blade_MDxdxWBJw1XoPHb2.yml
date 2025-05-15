@@ -19,7 +19,7 @@ pages:
         <p>+5 to Counterattack, -5 to Parry. Increases bonus to +10 against
         polearms.</p>
     _stats:
-      coreVersion: '12.331'
+      coreVersion: '13.342'
       systemId: null
       systemVersion: null
       createdTime: null
@@ -27,6 +27,7 @@ pages:
       lastModifiedBy: null
       compendiumSource: null
       duplicateSource: null
+      exportSource: null
     _id: wsiHTDq1t0qMaoeF
     system: {}
     image: {}
@@ -38,9 +39,10 @@ pages:
     ownership:
       default: -1
     flags: {}
+    category: null
     _key: '!journal.pages!MDxdxWBJw1XoPHb2.wsiHTDq1t0qMaoeF'
 _stats:
-  coreVersion: '12.331'
+  coreVersion: '13.342'
   systemId: null
   systemVersion: null
   createdTime: null
@@ -48,8 +50,10 @@ _stats:
   lastModifiedBy: null
   compendiumSource: null
   duplicateSource: null
+  exportSource: null
 ownership:
   default: 0
   eeXhsDlbzUBZOXZT: 3
+categories: []
 _key: '!journal!MDxdxWBJw1XoPHb2'
 

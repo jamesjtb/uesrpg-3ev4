@@ -1,19 +1,19 @@
 name: Danger Sense
 type: talent
 flags:
-  core:
-    sourceId: Item.DYVazRNO2caSDMGE
+  core: {}
 img: systems/uesrpg-3ev4/images/Icons/dangerSense.webp
 effects: []
 _stats:
   compendiumSource: Item.DYVazRNO2caSDMGE
   duplicateSource: null
-  coreVersion: '12.331'
+  coreVersion: '13.342'
   systemId: uesrpg-3ev4
   systemVersion: v1.0.0-RC.62
   createdTime: 1733290083632
   modifiedTime: 1733290083632
   lastModifiedBy: HcIrULZhA1JFIlrf
+  exportSource: null
 ownership:
   default: 0
   HcIrULZhA1JFIlrf: 3
@@ -68,6 +68,7 @@ system:
   description: >-
     <p>The character can always test Perception to avoid surprise, regardless of
     the circumstances.</p>
+  governingCharacteristics: Prc
   xpCost: 300
   level: Journeyman
   talentReq: Light Sleeper
@@ -77,9 +78,10 @@ system:
   untrainedException: false
   fatigueException: false
   addIBToMP: false
+  addIntToMPMultiplier: 1
   armorAcrobaticsException: false
   addHalfSpeed: false
-  governingCharacteristics: Prc
+  doubleSwimSpeed: false
 folder: wHXhCeP5Fmy5GR8f
 _id: KqxBLNw1qWYoJH8T
 sort: 0

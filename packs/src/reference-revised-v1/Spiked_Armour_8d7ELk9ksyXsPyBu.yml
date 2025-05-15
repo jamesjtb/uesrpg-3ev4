@@ -21,7 +21,7 @@ pages:
         the Crushing quality using the character's SB if grappling, and the
         grappler's SB if grappled.</p>
     _stats:
-      coreVersion: '12.331'
+      coreVersion: '13.342'
       systemId: null
       systemVersion: null
       createdTime: null
@@ -29,6 +29,7 @@ pages:
       lastModifiedBy: null
       compendiumSource: null
       duplicateSource: null
+      exportSource: null
     _id: dVCUVyXtsfG67Mfd
     system: {}
     image: {}
@@ -40,9 +41,10 @@ pages:
     ownership:
       default: -1
     flags: {}
+    category: null
     _key: '!journal.pages!8d7ELk9ksyXsPyBu.dVCUVyXtsfG67Mfd'
 _stats:
-  coreVersion: '12.331'
+  coreVersion: '13.342'
   systemId: null
   systemVersion: null
   createdTime: null
@@ -50,8 +52,10 @@ _stats:
   lastModifiedBy: null
   compendiumSource: null
   duplicateSource: null
+  exportSource: null
 ownership:
   default: 0
   eeXhsDlbzUBZOXZT: 3
+categories: []
 _key: '!journal!8d7ELk9ksyXsPyBu'
 

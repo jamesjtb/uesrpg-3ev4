@@ -2,19 +2,19 @@ _id: ZSTpUXKoPtxilIUZ
 name: Cryomancer
 type: talent
 flags:
-  core:
-    sourceId: Item.DYVazRNO2caSDMGE
+  core: {}
 img: systems/uesrpg-3ev4/images/Icons/cryomancer.webp
 effects: []
 _stats:
-  coreVersion: '12.331'
+  coreVersion: '13.342'
   systemId: null
   systemVersion: null
   createdTime: null
   modifiedTime: null
   lastModifiedBy: null
-  compendiumSource: null
+  compendiumSource: Item.DYVazRNO2caSDMGE
   duplicateSource: null
+  exportSource: null
 ownership:
   default: 0
   xvA5SwRGJiyPsnxH: 3
@@ -69,6 +69,7 @@ system:
   description: >-
     <p>Whenever the character casts a spell that deals frost damage, increase
     the amount dealt by 1.</p>
+  governingCharacteristics: ''
   xpCost: 300
   level: 3
   talentReq: ''
@@ -78,8 +79,10 @@ system:
   untrainedException: false
   fatigueException: false
   addIBToMP: false
+  addIntToMPMultiplier: 1
   armorAcrobaticsException: false
   addHalfSpeed: false
+  doubleSwimSpeed: false
 folder: null
 sort: 0
 _key: '!items!ZSTpUXKoPtxilIUZ'

@@ -6,17 +6,17 @@ effects: []
 folder: null
 sort: 0
 flags:
-  core:
-    sourceId: Item.DYVazRNO2caSDMGE
+  core: {}
 _stats:
-  coreVersion: '12.331'
+  coreVersion: '13.342'
   systemId: null
   systemVersion: null
   createdTime: null
   modifiedTime: null
   lastModifiedBy: null
-  compendiumSource: null
+  compendiumSource: Item.DYVazRNO2caSDMGE
   duplicateSource: null
+  exportSource: null
 ownership:
   default: 0
   xvA5SwRGJiyPsnxH: 3
@@ -74,6 +74,7 @@ system:
     @Compendium[uesrpg-revision.journal.wra9K7hRoVnZarja]{Splitting} (PrcB) to
     the crossbow&rsquo;s attack. If this attack has the full +30 aim bonus, the
     Perception Bonus (PrcB) damage is doubled.</p>
+  governingCharacteristics: ''
   xpCost: 500
   level: 5
   talentReq: ''
@@ -83,7 +84,9 @@ system:
   untrainedException: false
   fatigueException: false
   addIBToMP: false
+  addIntToMPMultiplier: 1
   armorAcrobaticsException: false
   addHalfSpeed: false
+  doubleSwimSpeed: false
 _key: '!items!Mw0aEqYRmY951Q60'
 

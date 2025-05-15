@@ -17,7 +17,7 @@ pages:
       format: 1
       content: "<p>Primary Actions can only be taken during the character’s own turn. They are dedicated combat actions where the character is the instigator, and a character may take any number. An extended action is an action that requires the use of more than one AP, which can cause it to require more than one turn.</p>\n<p>\_</p>\n<p><strong>Attack</strong></p>\n<p>The character can make an attack with a melee or ranged weapon. A character may make no more than two total attacks in a single round. When attacking they can use one of three optional variations of this action. A player must declare if their character is choosing one of these variations before the attack test has been made.</p>\n<p>• <strong>All Out Attack (melee only)</strong>: When making an all-out attack, the character sacrifices some defensive potential in order to better land an attack or gain an advantage. The character makes a normal melee attack with a +20 bonus, but the attack costs an additional AP to perform (though it is not an extended action).</p>\n<p>• <strong>Coup de Grâce</strong>: The character can make a killing blow against a helpless target. A helpless target is one who is either unconscious, both restrained and prone, or otherwise incapable of defending themselves. The GM may rule that certain characters cannot be killed in this way depending on the circumstances. This automatically kills the target. For Unarmed Coup de Grâce see Grappling rules</p>\n<p>• <strong>Precision Strike</strong>: A character attempting a precision strike is aiming to hit a particular part of their opponent’s body, and thus suffers a -20 penalty on the attack test. If successful, the character may choose the hit location of that attack in addition to resolving any other effects the attack would have.</p>\n<p>\_</p>\n<p><strong>Disengage</strong></p>\n<p>The character can use this action to retreat from combat with an enemy. If they move out of an enemy’s engagement range during this turn then the attack of opportunity reaction, or other delayed actions/reactions, may not be taken against them.</p>\n<p>\_</p>\n<p><strong>Cast Magic</strong></p>\n<p>The character casts a spell that they know using the rules for spellcasting found in Chapter 6. This may be used to cast spells that count as attacks, but a character may make no more than two attacks in a single round.</p>\n<p>\_</p>\n<p><strong>Delay</strong></p>\n<p>Characters can choose to delay action until the right moment.</p>\n<p>• <strong>Delay Turn</strong>: The character declares a set of circumstances in which they will act. The character then skips their turn without spending AP, and may insert their delayed turn into the order as a free reaction if the conditions are met. If the delayed turn is not taken before the character’s next turn would occur, then the action points are lost entirely.</p>\n<p>• <strong>Defensive Stance</strong>: The character assumes a defensive stance, ready to react to incoming threats. The character then skips their turn, but does not lose an action point for taking this action. They may spend this saved AP on a reaction any time before the end of the round, when the AP is lost.</p>"
     _stats:
-      coreVersion: '12.331'
+      coreVersion: '13.342'
       systemId: null
       systemVersion: null
       createdTime: null
@@ -25,6 +25,7 @@ pages:
       lastModifiedBy: null
       compendiumSource: null
       duplicateSource: null
+      exportSource: null
     _id: Yu4duCfBj8DnJZFz
     system: {}
     image: {}
@@ -36,9 +37,10 @@ pages:
     ownership:
       default: -1
     flags: {}
+    category: null
     _key: '!journal.pages!0bAOPj09sybvIOOL.Yu4duCfBj8DnJZFz'
 _stats:
-  coreVersion: '12.331'
+  coreVersion: '13.342'
   systemId: null
   systemVersion: null
   createdTime: null
@@ -46,8 +48,10 @@ _stats:
   lastModifiedBy: null
   compendiumSource: null
   duplicateSource: null
+  exportSource: null
 ownership:
   default: 0
   eeXhsDlbzUBZOXZT: 3
+categories: []
 _key: '!journal!0bAOPj09sybvIOOL'
 

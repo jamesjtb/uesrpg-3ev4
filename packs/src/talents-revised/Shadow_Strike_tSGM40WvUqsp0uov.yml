@@ -2,19 +2,19 @@ _id: tSGM40WvUqsp0uov
 name: Shadow Strike
 type: talent
 flags:
-  core:
-    sourceId: Item.DYVazRNO2caSDMGE
+  core: {}
 img: systems/uesrpg-3ev4/images/Icons/shadowStrike.webp
 effects: []
 _stats:
-  coreVersion: '12.331'
+  coreVersion: '13.342'
   systemId: null
   systemVersion: null
   createdTime: null
   modifiedTime: null
   lastModifiedBy: null
-  compendiumSource: null
+  compendiumSource: Item.DYVazRNO2caSDMGE
   duplicateSource: null
+  exportSource: null
 ownership:
   default: 0
   xvA5SwRGJiyPsnxH: 3
@@ -75,6 +75,7 @@ system:
     from those enemies. Alternatively, if the attack is a melee attack, the
     character can forgo the advantage gained by being hidden to use this
     talent.</p>
+  governingCharacteristics: ''
   xpCost: 500
   level: 5
   talentReq: Sneak Attack
@@ -84,8 +85,10 @@ system:
   untrainedException: false
   fatigueException: false
   addIBToMP: false
+  addIntToMPMultiplier: 1
   armorAcrobaticsException: false
   addHalfSpeed: false
+  doubleSwimSpeed: false
 folder: null
 sort: 0
 _key: '!items!tSGM40WvUqsp0uov'

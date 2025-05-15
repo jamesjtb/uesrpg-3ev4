@@ -7,20 +7,20 @@ items:
     type: item
     sort: 300000
     flags:
-      core:
-        sourceId: Item.1F7yBGksEz9zoPVU
+      core: {}
     img: systems/uesrpg-3ev4/images/item-compendium/item_tokens/manacles.webp
     effects: []
     folder: null
     _stats:
-      compendiumSource: null
+      compendiumSource: Item.1F7yBGksEz9zoPVU
       duplicateSource: null
-      coreVersion: '12.331'
+      coreVersion: '13.342'
       systemId: uesrpg-3ev4
       systemVersion: v1.0.0-RC.59
       createdTime: null
       modifiedTime: null
       lastModifiedBy: null
+      exportSource: null
     ownership:
       default: 0
     system:
@@ -121,20 +121,20 @@ items:
     type: talent
     sort: 400000
     flags:
-      core:
-        sourceId: Item.DYVazRNO2caSDMGE
+      core: {}
     img: systems/uesrpg-3ev4/images/Icons/control.webp
     effects: []
     folder: null
     _stats:
-      compendiumSource: null
+      compendiumSource: Item.DYVazRNO2caSDMGE
       duplicateSource: null
-      coreVersion: '12.331'
+      coreVersion: '13.342'
       systemId: uesrpg-3ev4
       systemVersion: v1.0.0-RC.59
       createdTime: null
       modifiedTime: null
       lastModifiedBy: null
+      exportSource: null
     ownership:
       default: 0
     system:
@@ -189,6 +189,7 @@ items:
         <p>Enchanted Shackles- while wearing these, Encumbrance level is always
         1 level higher and Combat Style TN is lowered by 10, Constant drain
         Magicka 10pts/round.</p>
+      governingCharacteristics: ''
       xpCost: 0
       level: 0
       talentReq: ''
@@ -198,8 +199,10 @@ items:
       untrainedException: false
       fatigueException: false
       addIBToMP: false
+      addIntToMPMultiplier: 1
       armorAcrobaticsException: false
       addHalfSpeed: false
+      doubleSwimSpeed: false
     _key: '!actors.items!lL96vCJtu0VRclPz.MAqMtCPjwCB3ZHri'
 effects: []
 folder: YOakefp1093wiaNm
@@ -207,12 +210,13 @@ flags: {}
 _stats:
   compendiumSource: null
   duplicateSource: null
-  coreVersion: '12.331'
+  coreVersion: '13.342'
   systemId: uesrpg-3ev4
   systemVersion: v1.0.0-RC.59
   createdTime: 1732339009627
   modifiedTime: 1732339102041
   lastModifiedBy: 7bDMesNjX54nzN9S
+  exportSource: null
 ownership:
   default: 0
   WcwhQU1nz94WaD5n: 3
@@ -723,7 +727,6 @@ prototypeToken:
     contrast: 0
   appendNumber: false
   prependAdjective: false
-  hexagonalShape: 0
   detectionModes: []
   occludable:
     radius: 0
@@ -736,6 +739,12 @@ prototypeToken:
     subject:
       scale: 1
       texture: null
+  turnMarker:
+    mode: 1
+    animation: null
+    src: null
+    disposition: false
+  movementAction: null
 _id: lL96vCJtu0VRclPz
 sort: 1800000
 _key: '!actors!lL96vCJtu0VRclPz'

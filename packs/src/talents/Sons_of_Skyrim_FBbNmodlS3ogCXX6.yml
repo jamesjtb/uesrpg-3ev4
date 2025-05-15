@@ -1,19 +1,19 @@
 name: Sons of Skyrim
 type: talent
 flags:
-  core:
-    sourceId: Item.JX5ttPQSa94C9UKX
+  core: {}
 img: systems/uesrpg-3ev4/images/Icons/teamwork.webp
 effects: []
 _stats:
   compendiumSource: Item.JX5ttPQSa94C9UKX
   duplicateSource: null
-  coreVersion: '12.331'
+  coreVersion: '13.342'
   systemId: uesrpg-3ev4
   systemVersion: v1.0.0-RC.64
   createdTime: 1734749184250
   modifiedTime: 1734749184250
   lastModifiedBy: HcIrULZhA1JFIlrf
+  exportSource: null
 ownership:
   default: 0
   HcIrULZhA1JFIlrf: 3
@@ -81,8 +81,8 @@ system:
   addIntToMPMultiplier: 1
   armorAcrobaticsException: false
   addHalfSpeed: false
-  addIntToMP: false
   doubleSwimSpeed: false
+  addIntToMP: false
 folder: znvtmUBMi3Cqd1zw
 _id: FBbNmodlS3ogCXX6
 sort: 0

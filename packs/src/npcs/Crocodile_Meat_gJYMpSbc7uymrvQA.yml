@@ -1,0 +1,118 @@
+name: Crocodile Meat
+type: item
+img: icons/consumables/meat/steak-alien-pink.webp
+effects: []
+folder: WgSjHj9G4W2TcQgX
+flags:
+  core: {}
+_stats:
+  compendiumSource: null
+  duplicateSource: null
+  exportSource: null
+  coreVersion: '13.342'
+  systemId: uesrpg-3ev4
+  systemVersion: v1.0.0-RC.71
+  createdTime: 1746998800807
+  modifiedTime: 1747083415922
+  lastModifiedBy: HcIrULZhA1JFIlrf
+ownership:
+  default: 0
+  qwt9o1cuKYitvD9G: 3
+  HcIrULZhA1JFIlrf: 3
+system:
+  characteristics:
+    none: None
+    str: STR
+    end: END
+    agi: AGI
+    int: INT
+    wp: WP
+    prc: PRC
+    prs: PRS
+    lck: LCK
+  characteristicBonus:
+    strChaBonus: 0
+    endChaBonus: 0
+    agiChaBonus: 0
+    intChaBonus: 0
+    wpChaBonus: 0
+    prcChaBonus: 0
+    prsChaBonus: 0
+    lckChaBonus: 0
+  replace:
+    ini:
+      iniToggle: false
+      value: 0
+      characteristic: ''
+    wt:
+      wtToggle: false
+      value: 0
+      characteristic: ''
+  mpBonus: 0
+  hpBonus: 0
+  spBonus: 0
+  lpBonus: 0
+  wtBonus: 0
+  iniBonus: 0
+  speedBonus: 0
+  flyBonus: 0
+  swimBonus: 0
+  diseaseR: 0
+  fireR: 0
+  frostR: 0
+  shockR: 0
+  poisonR: 0
+  magicR: 0
+  natToughnessR: 0
+  silverR: 0
+  sunlightR: 0
+  skillArray: []
+  isPhysicalObject: true
+  containerStats:
+    contained: false
+    container_id: ''
+    container_name: ''
+  description: >-
+    <p>On a successful <strong>+20 Simple Survival test</strong> over a Short
+    Rest, a character can butcher a crocodile for meat. A character prepares DoS
+    x 2 days' rations worth of crocodile meat. The meat will spoil within a day
+    if not properly preserved.</p>
+  quantity: 1
+  enc: 1
+  totalENC: 0
+  reach: ''
+  damage: ''
+  equipped: false
+  hands: 0
+  price: 0
+  modPrice: 0
+  armor: 0
+  magic_ar: 0
+  blockRating: 0
+  enchant_level: 0
+  excludeENC: false
+  consumable: false
+  qualities: ''
+  wearable: false
+  charge:
+    value: 0
+    max: 0
+    reduction: 1
+  carried: false
+  item_cat:
+    none: None
+    head: Helmet
+    l_arm: Left Gauntlet
+    r_arm: Right Gauntlet
+    l_leg: Left Leg
+    r_leg: Right Leg
+    body: Chestplate
+    shield: Shield
+    weapon1: Primary Weapon
+    weapon2: Secondary Weapon
+    weapon3: Sidearm
+  attributes: {}
+_id: gJYMpSbc7uymrvQA
+sort: 1800000
+_key: '!items!gJYMpSbc7uymrvQA'
+

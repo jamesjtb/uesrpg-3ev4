@@ -2,19 +2,19 @@ _id: wRVr6n2OHvcD2GY3
 name: Trickster
 type: talent
 flags:
-  core:
-    sourceId: Item.DYVazRNO2caSDMGE
+  core: {}
 img: systems/uesrpg-3ev4/images/Icons/trickster.webp
 effects: []
 _stats:
-  coreVersion: '12.331'
+  coreVersion: '13.342'
   systemId: null
   systemVersion: null
   createdTime: null
   modifiedTime: null
   lastModifiedBy: null
-  compendiumSource: null
+  compendiumSource: Item.DYVazRNO2caSDMGE
   duplicateSource: null
+  exportSource: null
 ownership:
   default: 0
   xvA5SwRGJiyPsnxH: 3
@@ -69,6 +69,7 @@ system:
   description: >-
     <p>The character can use the Illusion skill in place of the Deceive skill,
     but each time they do so they must spend 1 magicka point.</p>
+  governingCharacteristics: ''
   xpCost: 200
   level: 2
   talentReq: ''
@@ -78,8 +79,10 @@ system:
   untrainedException: false
   fatigueException: false
   addIBToMP: false
+  addIntToMPMultiplier: 1
   armorAcrobaticsException: false
   addHalfSpeed: false
+  doubleSwimSpeed: false
 folder: null
 sort: 0
 _key: '!items!wRVr6n2OHvcD2GY3'

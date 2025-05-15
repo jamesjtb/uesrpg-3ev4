@@ -1,0 +1,21 @@
+type: Item
+folder: null
+name: Natural Weapons and Armor
+color: null
+sorting: a
+_id: U1K0MATSkyl5LyNi
+description: ''
+sort: 0
+flags: {}
+_stats:
+  compendiumSource: null
+  duplicateSource: null
+  exportSource: null
+  coreVersion: '13.342'
+  systemId: uesrpg-3ev4
+  systemVersion: v1.0.0-RC.70
+  createdTime: 1746911593018
+  modifiedTime: 1746913081034
+  lastModifiedBy: HcIrULZhA1JFIlrf
+_key: '!folders!U1K0MATSkyl5LyNi'
+

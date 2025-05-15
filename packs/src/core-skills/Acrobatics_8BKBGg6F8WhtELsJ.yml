@@ -6,17 +6,17 @@ effects: []
 folder: null
 sort: 100000
 flags:
-  core:
-    sourceId: Item.T2Tnips3skDxgFWZ
+  core: {}
 _stats:
-  coreVersion: '12.331'
+  coreVersion: '13.342'
   systemId: null
   systemVersion: null
   createdTime: null
   modifiedTime: 1732510420625
   lastModifiedBy: GikQCnLAeu0WrzSO
-  compendiumSource: null
+  compendiumSource: Item.T2Tnips3skDxgFWZ
   duplicateSource: null
+  exportSource: null
 ownership:
   default: 0
   zrZomzLbu6XsebKn: 3

@@ -6,17 +6,17 @@ effects: []
 folder: null
 sort: 0
 flags:
-  core:
-    sourceId: Item.JX5ttPQSa94C9UKX
+  core: {}
 _stats:
-  coreVersion: '12.331'
+  coreVersion: '13.342'
   systemId: null
   systemVersion: null
   createdTime: null
   modifiedTime: null
   lastModifiedBy: null
-  compendiumSource: null
+  compendiumSource: Item.JX5ttPQSa94C9UKX
   duplicateSource: null
+  exportSource: null
 ownership:
   default: 0
   xvA5SwRGJiyPsnxH: 3
@@ -81,6 +81,7 @@ system:
     have access to natural plants, an open sky, and must be performed over a
     Long Rest as they beseech Kyne for her blessings and protection in the
     battles to come.</p>
+  governingCharacteristics: ''
   xpCost: 400
   level: 4
   talentReq: Sons of Skyrim
@@ -90,7 +91,9 @@ system:
   untrainedException: false
   fatigueException: false
   addIBToMP: false
+  addIntToMPMultiplier: 1
   armorAcrobaticsException: false
   addHalfSpeed: false
+  doubleSwimSpeed: false
 _key: '!items!gZOH5bJi32Nm9dk0'
 

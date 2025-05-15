@@ -6,17 +6,17 @@ effects: []
 folder: null
 sort: 0
 flags:
-  core:
-    sourceId: Item.7fKKFs3JVM7UgiPU
+  core: {}
 _stats:
-  coreVersion: '12.331'
+  coreVersion: '13.342'
   systemId: null
   systemVersion: null
   createdTime: null
   modifiedTime: null
   lastModifiedBy: null
-  compendiumSource: null
+  compendiumSource: Item.7fKKFs3JVM7UgiPU
   duplicateSource: null
+  exportSource: null
 ownership:
   default: 0
   xvA5SwRGJiyPsnxH: 3
@@ -72,6 +72,7 @@ system:
     <p>The Khajiit increases the size of their Natural Weapon damage dice by one
     step (d4 becomes d6, d12 becomes 2d8, etc), and can make a free Precision
     Strike with their first attack made while Hidden in total darkness.</p>
+  governingCharacteristics: ''
   xpCost: 300
   level: 3
   talentReq: ''
@@ -81,7 +82,9 @@ system:
   untrainedException: false
   fatigueException: false
   addIBToMP: false
+  addIntToMPMultiplier: 1
   armorAcrobaticsException: false
   addHalfSpeed: false
+  doubleSwimSpeed: false
 _key: '!items!UaThtIxOqSqGjPQm'
 

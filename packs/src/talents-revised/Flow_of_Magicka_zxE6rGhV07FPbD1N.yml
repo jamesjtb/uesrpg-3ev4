@@ -2,19 +2,19 @@ _id: zxE6rGhV07FPbD1N
 name: Flow of Magicka
 type: talent
 flags:
-  core:
-    sourceId: Item.DYVazRNO2caSDMGE
+  core: {}
 img: systems/uesrpg-3ev4/images/Icons/flowOfMagicka.webp
 effects: []
 _stats:
-  coreVersion: '12.331'
+  coreVersion: '13.342'
   systemId: null
   systemVersion: null
   createdTime: null
   modifiedTime: null
   lastModifiedBy: null
-  compendiumSource: null
+  compendiumSource: Item.DYVazRNO2caSDMGE
   duplicateSource: null
+  exportSource: null
 ownership:
   default: 0
   xvA5SwRGJiyPsnxH: 3
@@ -70,6 +70,7 @@ system:
     <p>As a reaction to a spell cast, the character may make a &ndash;20
     Mysticism test. If their DoS exceed the spell level of the casted spell,
     then the effect is negated.</p>
+  governingCharacteristics: ''
   xpCost: 500
   level: 5
   talentReq: ''
@@ -79,8 +80,10 @@ system:
   untrainedException: false
   fatigueException: false
   addIBToMP: false
+  addIntToMPMultiplier: 1
   armorAcrobaticsException: false
   addHalfSpeed: false
+  doubleSwimSpeed: false
 folder: null
 sort: 0
 _key: '!items!zxE6rGhV07FPbD1N'

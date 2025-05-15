@@ -1,0 +1,112 @@
+name: Goblin Bow
+type: weapon
+img: icons/weapons/bows/longbow-recurve-skull-brown.webp
+effects: []
+folder: 2pFaxS1x1IFFFZhY
+flags:
+  core: {}
+_stats:
+  compendiumSource: null
+  duplicateSource: null
+  exportSource: null
+  coreVersion: '13.342'
+  systemId: uesrpg-3ev4
+  systemVersion: v1.0.0-RC.71
+  createdTime: 1747293277053
+  modifiedTime: 1747293764254
+  lastModifiedBy: HcIrULZhA1JFIlrf
+ownership:
+  default: 0
+  eeXhsDlbzUBZOXZT: 3
+  HcIrULZhA1JFIlrf: 3
+system:
+  mpBonus: 0
+  hpBonus: 0
+  spBonus: 0
+  lpBonus: 0
+  wtBonus: 0
+  iniBonus: 0
+  speedBonus: 0
+  flyBonus: 0
+  swimBonus: 0
+  diseaseR: 0
+  fireR: 0
+  frostR: 0
+  shockR: 0
+  poisonR: 0
+  magicR: 0
+  natToughnessR: 0
+  silverR: 0
+  sunlightR: 0
+  characteristics:
+    none: None
+    str: STR
+    end: END
+    agi: AGI
+    int: INT
+    wp: WP
+    prc: PRC
+    prs: PRS
+    lck: LCK
+  characteristicBonus:
+    strChaBonus: 0
+    endChaBonus: 0
+    agiChaBonus: 0
+    intChaBonus: 0
+    wpChaBonus: 0
+    prcChaBonus: 0
+    prsChaBonus: 0
+    lckChaBonus: 0
+  replace:
+    ini:
+      iniToggle: false
+      value: 0
+      characteristic: ''
+    wt:
+      wtToggle: false
+      value: 0
+      characteristic: ''
+  skillArray: []
+  isPhysicalObject: true
+  containerStats:
+    contained: false
+    container_id: ''
+    container_name: ''
+  description: >-
+    <p><em style="box-sizing: border-box; user-select: text; color:
+    #191813;">Enchantments, modifications, notes, etc...</em></p>
+  quantity: 1
+  enc: 1
+  totalENC: 0
+  reach: 20/100/200
+  damage: '0'
+  damage2: 1d6
+  damage3: 0
+  weapon2H: true
+  equippped: false
+  carried: false
+  excludeENC: false
+  superior: false
+  hands: 0
+  price: 50
+  modPrice: 0
+  armor: 0
+  magic_ar: 0
+  enchant_level: null
+  qualities: >-
+    <p>@UUID[Compendium.uesrpg-3ev4.rules-reference.JournalEntry.COYSCdFncXiw8nAn.JournalEntryPage.ArBaLM4Yhq5sgKop]{Reload
+    (1)}</p>
+  charge:
+    value: 0
+    max: 0
+    reduction: 1
+  item_cat:
+    none: None
+    weapon1: Primary Weapon
+    weapon2: Secondary Weapon
+    weapon3: Sidearm
+  equipped: false
+_id: VpBvjqTA2b6HrpjY
+sort: 800000
+_key: '!items!VpBvjqTA2b6HrpjY'
+

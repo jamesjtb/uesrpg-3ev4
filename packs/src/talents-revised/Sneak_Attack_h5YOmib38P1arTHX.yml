@@ -2,19 +2,19 @@ _id: h5YOmib38P1arTHX
 name: Sneak Attack
 type: talent
 flags:
-  core:
-    sourceId: Item.DYVazRNO2caSDMGE
+  core: {}
 img: systems/uesrpg-3ev4/images/Icons/sneakAttack.webp
 effects: []
 _stats:
-  coreVersion: '12.331'
+  coreVersion: '13.342'
   systemId: null
   systemVersion: null
   createdTime: null
   modifiedTime: null
   lastModifiedBy: null
-  compendiumSource: null
+  compendiumSource: Item.DYVazRNO2caSDMGE
   duplicateSource: null
+  exportSource: null
 ownership:
   default: 0
   xvA5SwRGJiyPsnxH: 3
@@ -70,6 +70,7 @@ system:
     <p>The character adds his Stealth skill rank to the damage of successful
     attacks made if they were hidden from the target when they made the
     attack.</p>
+  governingCharacteristics: ''
   xpCost: 200
   level: 2
   talentReq: ''
@@ -79,8 +80,10 @@ system:
   untrainedException: false
   fatigueException: false
   addIBToMP: false
+  addIntToMPMultiplier: 1
   armorAcrobaticsException: false
   addHalfSpeed: false
+  doubleSwimSpeed: false
 folder: null
 sort: 0
 _key: '!items!h5YOmib38P1arTHX'

@@ -1,19 +1,19 @@
 name: One with All
 type: talent
 flags:
-  core:
-    sourceId: Item.DYVazRNO2caSDMGE
+  core: {}
 img: systems/uesrpg-3ev4/images/Icons/onWithAll.webp
 effects: []
 _stats:
   compendiumSource: Item.DYVazRNO2caSDMGE
   duplicateSource: null
-  coreVersion: '12.331'
+  coreVersion: '13.342'
   systemId: uesrpg-3ev4
   systemVersion: v1.0.0-RC.62
   createdTime: 1733123002231
   modifiedTime: 1733289635784
   lastModifiedBy: HcIrULZhA1JFIlrf
+  exportSource: null
 ownership:
   default: 0
   HcIrULZhA1JFIlrf: 3
@@ -71,6 +71,7 @@ system:
     tests by the loss or impairment of one sense (bad lighting, blindness,
     deafness, and so on) as long as they have the others to fall back
     on.</p><p>Replaces Honed Senses.</p>
+  governingCharacteristics: Prc
   xpCost: 500
   level: Expert
   talentReq: Honed Senses
@@ -80,9 +81,10 @@ system:
   untrainedException: false
   fatigueException: false
   addIBToMP: false
+  addIntToMPMultiplier: 1
   armorAcrobaticsException: false
   addHalfSpeed: false
-  governingCharacteristics: Prc
+  doubleSwimSpeed: false
 folder: wHXhCeP5Fmy5GR8f
 _id: GVQafrevdvqUKrXZ
 sort: 400000

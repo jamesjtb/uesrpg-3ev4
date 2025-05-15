@@ -19,7 +19,7 @@ pages:
         <p>The character is frozen, unable to move any part of their body. They
         may only cast spells that do not require speech or motion.</p>
     _stats:
-      coreVersion: '12.331'
+      coreVersion: '13.342'
       systemId: null
       systemVersion: null
       createdTime: null
@@ -27,6 +27,7 @@ pages:
       lastModifiedBy: null
       compendiumSource: null
       duplicateSource: null
+      exportSource: null
     _id: 1VVl4LoT1T5z41fw
     system: {}
     image: {}
@@ -38,9 +39,10 @@ pages:
     ownership:
       default: -1
     flags: {}
+    category: null
     _key: '!journal.pages!u0PbnRInKiHqD2YR.1VVl4LoT1T5z41fw'
 _stats:
-  coreVersion: '12.331'
+  coreVersion: '13.342'
   systemId: null
   systemVersion: null
   createdTime: null
@@ -48,8 +50,10 @@ _stats:
   lastModifiedBy: null
   compendiumSource: null
   duplicateSource: null
+  exportSource: null
 ownership:
   default: 0
   eeXhsDlbzUBZOXZT: 3
+categories: []
 _key: '!journal!u0PbnRInKiHqD2YR'
 

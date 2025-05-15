@@ -9,70 +9,120 @@ description: >-
   the Lord. Those born under the sign of the Warrior are skilled with weapons of
   all kinds, but prone to short tempers.”</em></p>
 results:
-  - type: pack
-    documentCollection: uesrpg-3ev4.signs
+  - type: document
     weight: 1
     range:
       - 1
       - 1
     drawn: false
-    text: The Warrior
-    documentId: Jepd3F0flaRojWRY
     img: systems/uesrpg-3ev4/images/sign-warrior.webp
     _id: CKPXqEk7swlYt4Aj
     flags: {}
+    _stats:
+      coreVersion: '13.342'
+      systemId: null
+      systemVersion: null
+      createdTime: null
+      modifiedTime: null
+      lastModifiedBy: null
+      compendiumSource: null
+      duplicateSource: null
+      exportSource: null
+    name: The Warrior
+    documentUuid: Compendium.uesrpg-3ev4.signs.Item.Jepd3F0flaRojWRY
+    description: ''
     _key: '!tables.results!X43kA34rXJlPwmJX.CKPXqEk7swlYt4Aj'
-  - type: pack
-    documentCollection: uesrpg-3ev4.signs
+  - type: document
     weight: 1
     range:
       - 2
       - 2
     drawn: false
-    text: The Lady
-    documentId: IpFdy7LeqwI4x9Ce
     img: systems/uesrpg-3ev4/images/sign-lady.webp
     _id: HnX410W3zKiwzY0O
     flags: {}
+    _stats:
+      coreVersion: '13.342'
+      systemId: null
+      systemVersion: null
+      createdTime: null
+      modifiedTime: null
+      lastModifiedBy: null
+      compendiumSource: null
+      duplicateSource: null
+      exportSource: null
+    name: The Lady
+    documentUuid: Compendium.uesrpg-3ev4.signs.Item.IpFdy7LeqwI4x9Ce
+    description: ''
     _key: '!tables.results!X43kA34rXJlPwmJX.HnX410W3zKiwzY0O'
-  - type: pack
-    documentCollection: uesrpg-3ev4.signs
+  - type: document
     weight: 1
     range:
       - 3
       - 3
     drawn: false
-    text: The Steed
-    documentId: cjA4A770YNaWTHYD
     img: systems/uesrpg-3ev4/images/sign-steed.webp
     _id: ry6jFVwanhSgbYkR
     flags: {}
+    _stats:
+      coreVersion: '13.342'
+      systemId: null
+      systemVersion: null
+      createdTime: null
+      modifiedTime: null
+      lastModifiedBy: null
+      compendiumSource: null
+      duplicateSource: null
+      exportSource: null
+    name: The Steed
+    documentUuid: Compendium.uesrpg-3ev4.signs.Item.cjA4A770YNaWTHYD
+    description: ''
     _key: '!tables.results!X43kA34rXJlPwmJX.ry6jFVwanhSgbYkR'
-  - type: pack
-    documentCollection: uesrpg-3ev4.signs
+  - type: document
     weight: 1
     range:
       - 4
       - 4
     drawn: false
-    text: The Lord
-    documentId: k9EyqaUeYcN34wWo
     img: systems/uesrpg-3ev4/images/sign-lord.webp
     _id: olVkExvVmXC82jMd
     flags: {}
+    _stats:
+      coreVersion: '13.342'
+      systemId: null
+      systemVersion: null
+      createdTime: null
+      modifiedTime: null
+      lastModifiedBy: null
+      compendiumSource: null
+      duplicateSource: null
+      exportSource: null
+    name: The Lord
+    documentUuid: Compendium.uesrpg-3ev4.signs.Item.k9EyqaUeYcN34wWo
+    description: ''
     _key: '!tables.results!X43kA34rXJlPwmJX.olVkExvVmXC82jMd'
-  - type: pack
-    documentCollection: uesrpg-3ev4.roll-tables
+  - type: document
     weight: 1
     range:
       - 5
       - 5
     drawn: false
-    text: Warrior Birthsigns (Star-Cursed)
-    documentId: YzMEpFSLKQt3hBQP
     img: systems/uesrpg-3ev4/images/sign-warrior.webp
     _id: AxSQaPHwFiDweApG
     flags: {}
+    _stats:
+      coreVersion: '13.342'
+      systemId: null
+      systemVersion: null
+      createdTime: null
+      modifiedTime: null
+      lastModifiedBy: null
+      compendiumSource: null
+      duplicateSource: null
+      exportSource: null
+    name: Warrior Birthsigns (Star-Cursed)
+    documentUuid: Compendium.uesrpg-3ev4.roll-tables.RollTable.YzMEpFSLKQt3hBQP
+    description: ''
     _key: '!tables.results!X43kA34rXJlPwmJX.AxSQaPHwFiDweApG'
 replacement: true
 displayRoll: true
@@ -84,12 +134,13 @@ flags: {}
 _stats:
   compendiumSource: null
   duplicateSource: null
-  coreVersion: '12.331'
+  coreVersion: '13.342'
   systemId: uesrpg-3ev4
   systemVersion: v1.0.0-RC.70
   createdTime: 1746863420396
   modifiedTime: 1746864282817
   lastModifiedBy: HcIrULZhA1JFIlrf
+  exportSource: null
 formula: 1d5
 _key: '!tables!X43kA34rXJlPwmJX'
 

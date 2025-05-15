@@ -83,7 +83,7 @@ pages:
         the target as specified in the shout profile, and based on the number of
         words the character used.</p>
     _stats:
-      coreVersion: '12.331'
+      coreVersion: '13.342'
       systemId: null
       systemVersion: null
       createdTime: null
@@ -91,6 +91,7 @@ pages:
       lastModifiedBy: null
       compendiumSource: null
       duplicateSource: null
+      exportSource: null
     _id: wb69YeB4YPDkRqwS
     system: {}
     image: {}
@@ -102,9 +103,10 @@ pages:
     ownership:
       default: -1
     flags: {}
+    category: null
     _key: '!journal.pages!gZfIStguLN2kk6m7.wb69YeB4YPDkRqwS'
 _stats:
-  coreVersion: '12.331'
+  coreVersion: '13.342'
   systemId: null
   systemVersion: null
   createdTime: null
@@ -112,8 +114,10 @@ _stats:
   lastModifiedBy: null
   compendiumSource: null
   duplicateSource: null
+  exportSource: null
 ownership:
   default: 0
   eeXhsDlbzUBZOXZT: 3
+categories: []
 _key: '!journal!gZfIStguLN2kk6m7'
 

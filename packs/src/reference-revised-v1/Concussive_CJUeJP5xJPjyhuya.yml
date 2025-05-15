@@ -19,7 +19,7 @@ pages:
         @Compendium[uesrpg-revision.journal.iNRvDXhCiPR8lHX9]{Concussive.}
         quality.</span></p>
     _stats:
-      coreVersion: '12.331'
+      coreVersion: '13.342'
       systemId: null
       systemVersion: null
       createdTime: null
@@ -27,6 +27,7 @@ pages:
       lastModifiedBy: null
       compendiumSource: null
       duplicateSource: null
+      exportSource: null
     _id: XXe8Ywj2LWdS5KAe
     system: {}
     image: {}
@@ -38,9 +39,10 @@ pages:
     ownership:
       default: -1
     flags: {}
+    category: null
     _key: '!journal.pages!CJUeJP5xJPjyhuya.XXe8Ywj2LWdS5KAe'
 _stats:
-  coreVersion: '12.331'
+  coreVersion: '13.342'
   systemId: null
   systemVersion: null
   createdTime: null
@@ -48,8 +50,10 @@ _stats:
   lastModifiedBy: null
   compendiumSource: null
   duplicateSource: null
+  exportSource: null
 ownership:
   default: 0
   eeXhsDlbzUBZOXZT: 3
+categories: []
 _key: '!journal!CJUeJP5xJPjyhuya'
 

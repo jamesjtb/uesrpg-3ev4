@@ -1,19 +1,19 @@
 name: Honed Senses
 type: talent
 flags:
-  core:
-    sourceId: Item.DYVazRNO2caSDMGE
+  core: {}
 img: systems/uesrpg-3ev4/images/Icons/honedSenses.webp
 effects: []
 _stats:
   compendiumSource: Item.DYVazRNO2caSDMGE
   duplicateSource: null
-  coreVersion: '12.331'
+  coreVersion: '13.342'
   systemId: uesrpg-3ev4
   systemVersion: v1.0.0-RC.62
   createdTime: 1733122929272
   modifiedTime: 1733289566703
   lastModifiedBy: HcIrULZhA1JFIlrf
+  exportSource: null
 ownership:
   default: 0
   HcIrULZhA1JFIlrf: 3
@@ -71,6 +71,7 @@ system:
     on any tests by the loss or impairment of one sense (bad lighting,
     blindness, deafness, and so on) as long as they have the others to fall back
     on.</p>
+  governingCharacteristics: Prc
   xpCost: 200
   level: Apprentice
   talentReq: ''
@@ -80,9 +81,10 @@ system:
   untrainedException: false
   fatigueException: false
   addIBToMP: false
+  addIntToMPMultiplier: 1
   armorAcrobaticsException: false
   addHalfSpeed: false
-  governingCharacteristics: Prc
+  doubleSwimSpeed: false
 folder: wHXhCeP5Fmy5GR8f
 _id: JoWuf2stciOzXdGU
 sort: 500000

@@ -1,20 +1,20 @@
 name: Silver-Scarred (X)
 type: trait
 flags:
-  core:
-    sourceId: Item.wtEFksGPcojtDLTj
+  core: {}
 img: icons/weapons/swords/greatsword-crossguard-barbed.webp
 effects: []
 _id: xBx2TGAllXwzxDdD
 _stats:
-  coreVersion: '12.331'
+  coreVersion: '13.342'
   systemId: null
   systemVersion: null
   createdTime: null
   modifiedTime: null
   lastModifiedBy: null
-  compendiumSource: null
+  compendiumSource: Item.wtEFksGPcojtDLTj
   duplicateSource: null
+  exportSource: null
 ownership:
   default: 0
   xvA5SwRGJiyPsnxH: 3

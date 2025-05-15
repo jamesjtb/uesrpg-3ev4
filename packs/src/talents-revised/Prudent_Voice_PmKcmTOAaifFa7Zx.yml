@@ -5,18 +5,18 @@ effects: []
 folder: null
 sort: 0
 flags:
-  core:
-    sourceId: Item.ix7OWKRHNsOGBVyV
+  core: {}
 _id: PmKcmTOAaifFa7Zx
 _stats:
-  coreVersion: '12.331'
+  coreVersion: '13.342'
   systemId: null
   systemVersion: null
   createdTime: null
   modifiedTime: null
   lastModifiedBy: null
-  compendiumSource: null
+  compendiumSource: Item.ix7OWKRHNsOGBVyV
   duplicateSource: null
+  exportSource: null
 ownership:
   default: 0
   eeXhsDlbzUBZOXZT: 3
@@ -79,6 +79,7 @@ system:
     <p>What the tongue can and cannot do with this talent is up to the GM, but
     the effect is generally small and innocuous, though it is still apparent to
     those nearby that the Tongue is using his Voice.</p>
+  governingCharacteristics: ''
   xpCost: 500
   level: 5
   talentReq: Adept of the Voice
@@ -88,7 +89,9 @@ system:
   untrainedException: false
   fatigueException: false
   addIBToMP: false
+  addIntToMPMultiplier: 1
   armorAcrobaticsException: false
   addHalfSpeed: false
+  doubleSwimSpeed: false
 _key: '!items!PmKcmTOAaifFa7Zx'
 

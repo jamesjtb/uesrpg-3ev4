@@ -21,7 +21,7 @@ pages:
         tests (except Combat Style skill tests), as well as reduces their Speed
         by 2.</p>
     _stats:
-      coreVersion: '12.331'
+      coreVersion: '13.342'
       systemId: null
       systemVersion: null
       createdTime: null
@@ -29,6 +29,7 @@ pages:
       lastModifiedBy: null
       compendiumSource: null
       duplicateSource: null
+      exportSource: null
     _id: cXfPEf7VCzP6sh58
     system: {}
     image: {}
@@ -40,9 +41,10 @@ pages:
     ownership:
       default: -1
     flags: {}
+    category: null
     _key: '!journal.pages!2QEgtXVs9q5qjcOW.cXfPEf7VCzP6sh58'
 _stats:
-  coreVersion: '12.331'
+  coreVersion: '13.342'
   systemId: null
   systemVersion: null
   createdTime: null
@@ -50,8 +52,10 @@ _stats:
   lastModifiedBy: null
   compendiumSource: null
   duplicateSource: null
+  exportSource: null
 ownership:
   default: 0
   eeXhsDlbzUBZOXZT: 3
+categories: []
 _key: '!journal!2QEgtXVs9q5qjcOW'
 

@@ -2,19 +2,19 @@ _id: wtlOWKANcIuSNOJo
 name: Tactician
 type: talent
 flags:
-  core:
-    sourceId: Item.DYVazRNO2caSDMGE
+  core: {}
 img: systems/uesrpg-3ev4/images/Icons/tactician.webp
 effects: []
 _stats:
-  coreVersion: '12.331'
+  coreVersion: '13.342'
   systemId: null
   systemVersion: null
   createdTime: null
   modifiedTime: null
   lastModifiedBy: null
-  compendiumSource: null
+  compendiumSource: Item.DYVazRNO2caSDMGE
   duplicateSource: null
+  exportSource: null
 ownership:
   default: 0
   xvA5SwRGJiyPsnxH: 3
@@ -69,6 +69,7 @@ system:
   description: >-
     <p>Allies of this character may use the character&rsquo;s initiative result
     in place of their own when determining initiative for combat.</p>
+  governingCharacteristics: ''
   xpCost: 400
   level: 4
   talentReq: ''
@@ -78,8 +79,10 @@ system:
   untrainedException: false
   fatigueException: false
   addIBToMP: false
+  addIntToMPMultiplier: 1
   armorAcrobaticsException: false
   addHalfSpeed: false
+  doubleSwimSpeed: false
 folder: null
 sort: 0
 _key: '!items!wtlOWKANcIuSNOJo'

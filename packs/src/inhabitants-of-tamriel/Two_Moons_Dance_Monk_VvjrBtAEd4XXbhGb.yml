@@ -7,20 +7,20 @@ items:
     type: power
     sort: 600000
     flags:
-      core:
-        sourceId: Item.MyWjMeVAtBCJa8Bt
+      core: {}
     img: systems/uesrpg-3ev4/images/Icons/martialRevenge.webp
     effects: []
     folder: null
     _stats:
-      compendiumSource: null
+      compendiumSource: Item.MyWjMeVAtBCJa8Bt
       duplicateSource: null
-      coreVersion: '12.331'
+      coreVersion: '13.342'
       systemId: uesrpg-3ev4
       systemVersion: v1.0.0-RC.59
       createdTime: null
       modifiedTime: null
       lastModifiedBy: null
+      exportSource: null
     ownership:
       default: 0
     system:
@@ -89,20 +89,20 @@ items:
     type: talent
     sort: 700000
     flags:
-      core:
-        sourceId: Item.7fKKFs3JVM7UgiPU
+      core: {}
     img: systems/uesrpg-3ev4/images/Icons/forceOfWill.webp
     effects: []
     folder: null
     _stats:
-      compendiumSource: null
+      compendiumSource: Item.7fKKFs3JVM7UgiPU
       duplicateSource: null
-      coreVersion: '12.331'
+      coreVersion: '13.342'
       systemId: uesrpg-3ev4
       systemVersion: v1.0.0-RC.59
       createdTime: null
       modifiedTime: null
       lastModifiedBy: null
+      exportSource: null
     ownership:
       default: 0
     system:
@@ -160,6 +160,7 @@ items:
 
         <p>They also do not suffer any penalties normally applied when wielding
         hand-to-hand weapons.</p>
+      governingCharacteristics: ''
       xpCost: 0
       level: 0
       talentReq: ''
@@ -169,28 +170,30 @@ items:
       untrainedException: false
       fatigueException: false
       addIBToMP: false
+      addIntToMPMultiplier: 1
       armorAcrobaticsException: false
       addHalfSpeed: false
+      doubleSwimSpeed: false
     _key: '!actors.items!VvjrBtAEd4XXbhGb.Iw69eYcq4m2dZPR1'
   - _id: wIceofbHPos5GUYe
     name: Spellcaster
     type: talent
     sort: 800000
     flags:
-      core:
-        sourceId: Item.7fKKFs3JVM7UgiPU
+      core: {}
     img: systems/uesrpg-3ev4/images/Icons/questioning.webp
     effects: []
     folder: null
     _stats:
-      compendiumSource: null
+      compendiumSource: Item.7fKKFs3JVM7UgiPU
       duplicateSource: null
-      coreVersion: '12.331'
+      coreVersion: '13.342'
       systemId: uesrpg-3ev4
       systemVersion: v1.0.0-RC.59
       createdTime: null
       modifiedTime: null
       lastModifiedBy: null
+      exportSource: null
     ownership:
       default: 0
     system:
@@ -244,6 +247,7 @@ items:
       description: >-
         <p><span style="color: #191813;">This character does not track magicka,
         and can instead cast each spell it knows once.</span></p>
+      governingCharacteristics: ''
       xpCost: 0
       level: 0
       talentReq: ''
@@ -253,28 +257,30 @@ items:
       untrainedException: false
       fatigueException: false
       addIBToMP: false
+      addIntToMPMultiplier: 1
       armorAcrobaticsException: false
       addHalfSpeed: false
+      doubleSwimSpeed: false
     _key: '!actors.items!VvjrBtAEd4XXbhGb.wIceofbHPos5GUYe'
   - _id: 7L2CmSPIsE7BM445
     name: Martial Domination
     type: talent
     sort: 900000
     flags:
-      core:
-        sourceId: Item.7fKKFs3JVM7UgiPU
+      core: {}
     img: systems/uesrpg-3ev4/images/Icons/forceOfWill.webp
     effects: []
     folder: null
     _stats:
-      compendiumSource: null
+      compendiumSource: Item.7fKKFs3JVM7UgiPU
       duplicateSource: null
-      coreVersion: '12.331'
+      coreVersion: '13.342'
       systemId: uesrpg-3ev4
       systemVersion: v1.0.0-RC.59
       createdTime: null
       modifiedTime: null
       lastModifiedBy: null
+      exportSource: null
     ownership:
       default: 0
     system:
@@ -329,6 +335,7 @@ items:
         <p>Can parry any melee or non magic ranged attack while unarmed, and
         gains a minimum of 4 DoS when grappling, restraining or engangling an
         opponent.</p>
+      governingCharacteristics: ''
       xpCost: 0
       level: 0
       talentReq: ''
@@ -338,28 +345,30 @@ items:
       untrainedException: false
       fatigueException: false
       addIBToMP: false
+      addIntToMPMultiplier: 1
       armorAcrobaticsException: false
       addHalfSpeed: false
+      doubleSwimSpeed: false
     _key: '!actors.items!VvjrBtAEd4XXbhGb.7L2CmSPIsE7BM445'
   - _id: TEIWCZq4Y8PiR5TM
     name: Eye of Night
     type: talent
     sort: 1100000
     flags:
-      core:
-        sourceId: Item.7fKKFs3JVM7UgiPU
+      core: {}
     img: systems/uesrpg-3ev4/images/Icons/combatSenses.webp
     effects: []
     folder: null
     _stats:
-      compendiumSource: null
+      compendiumSource: Item.7fKKFs3JVM7UgiPU
       duplicateSource: null
-      coreVersion: '12.331'
+      coreVersion: '13.342'
       systemId: uesrpg-3ev4
       systemVersion: v1.0.0-RC.59
       createdTime: null
       modifiedTime: null
       lastModifiedBy: null
+      exportSource: null
     ownership:
       default: 0
     system:
@@ -415,6 +424,7 @@ items:
         one step (d4 becomes d6, d12 becomes 2d8, etc), and can make a free
         Precision Strike with their first attack made while Hidden at night time
         or in total darkness.</p>
+      governingCharacteristics: ''
       xpCost: 300
       level: 3
       talentReq: ''
@@ -424,28 +434,30 @@ items:
       untrainedException: false
       fatigueException: false
       addIBToMP: false
+      addIntToMPMultiplier: 1
       armorAcrobaticsException: false
       addHalfSpeed: false
+      doubleSwimSpeed: false
     _key: '!actors.items!VvjrBtAEd4XXbhGb.TEIWCZq4Y8PiR5TM'
   - _id: bs2x55URclJNTcGS
     name: Skyhigh
     type: trait
     sort: 1200000
     flags:
-      core:
-        sourceId: Item.wtEFksGPcojtDLTj
+      core: {}
     img: systems/uesrpg-3ev4/images/Icons/catfall.webp
     effects: []
     folder: null
     _stats:
-      compendiumSource: null
+      compendiumSource: Item.wtEFksGPcojtDLTj
       duplicateSource: null
-      coreVersion: '12.331'
+      coreVersion: '13.342'
       systemId: uesrpg-3ev4
       systemVersion: v1.0.0-RC.59
       createdTime: null
       modifiedTime: null
       lastModifiedBy: null
+      exportSource: null
     ownership:
       default: 0
     system:
@@ -513,20 +525,20 @@ items:
     type: trait
     sort: 1300000
     flags:
-      core:
-        sourceId: Item.wtEFksGPcojtDLTj
+      core: {}
     img: systems/uesrpg-3ev4/images/Icons/lightningReflexes.webp
     effects: []
     folder: null
     _stats:
-      compendiumSource: null
+      compendiumSource: Item.wtEFksGPcojtDLTj
       duplicateSource: null
-      coreVersion: '12.331'
+      coreVersion: '13.342'
       systemId: uesrpg-3ev4
       systemVersion: v1.0.0-RC.59
       createdTime: null
       modifiedTime: null
       lastModifiedBy: null
+      exportSource: null
     ownership:
       default: 0
     system:
@@ -591,20 +603,20 @@ items:
     type: talent
     sort: 1400000
     flags:
-      core:
-        sourceId: Item.JX5ttPQSa94C9UKX
+      core: {}
     img: systems/uesrpg-3ev4/images/Icons/blessingOfMadgod.webp
     effects: []
     folder: null
     _stats:
-      compendiumSource: null
+      compendiumSource: Item.JX5ttPQSa94C9UKX
       duplicateSource: null
-      coreVersion: '12.331'
+      coreVersion: '13.342'
       systemId: uesrpg-3ev4
       systemVersion: v1.0.0-RC.59
       createdTime: null
       modifiedTime: null
       lastModifiedBy: null
+      exportSource: null
     ownership:
       default: 0
     system:
@@ -662,6 +674,7 @@ items:
 
         <p>They can also evade AoE attacks completely if the AoE is less than
         6m.</p>
+      governingCharacteristics: ''
       xpCost: 0
       level: 0
       talentReq: ''
@@ -671,8 +684,10 @@ items:
       untrainedException: false
       fatigueException: false
       addIBToMP: false
+      addIntToMPMultiplier: 1
       armorAcrobaticsException: false
       addHalfSpeed: false
+      doubleSwimSpeed: false
     _key: '!actors.items!VvjrBtAEd4XXbhGb.U47kd8Y08mLxlChF'
   - _id: BQQDax0WBj5JS6wZ
     name: Cestus
@@ -682,17 +697,17 @@ items:
     folder: null
     sort: 0
     flags:
-      core:
-        sourceId: Item.LDevjhdz5praSC0l
+      core: {}
     _stats:
-      compendiumSource: null
+      compendiumSource: Item.LDevjhdz5praSC0l
       duplicateSource: null
-      coreVersion: '12.331'
+      coreVersion: '13.342'
       systemId: uesrpg-3ev4
       systemVersion: v1.0.0-RC.59
       createdTime: null
       modifiedTime: null
       lastModifiedBy: null
+      exportSource: null
     ownership:
       default: 0
       qwt9o1cuKYitvD9G: 3
@@ -796,17 +811,17 @@ items:
     folder: null
     sort: 0
     flags:
-      core:
-        sourceId: Item.Fu76GajVgn4dKKq4
+      core: {}
     _stats:
-      compendiumSource: null
+      compendiumSource: Item.Fu76GajVgn4dKKq4
       duplicateSource: null
-      coreVersion: '12.331'
+      coreVersion: '13.342'
       systemId: uesrpg-3ev4
       systemVersion: v1.0.0-RC.59
       createdTime: null
       modifiedTime: null
       lastModifiedBy: null
+      exportSource: null
     ownership:
       default: 0
       qwt9o1cuKYitvD9G: 3
@@ -907,17 +922,17 @@ items:
     folder: null
     sort: 0
     flags:
-      core:
-        sourceId: Item.OKZPsQqlt5joV7DH
+      core: {}
     _stats:
-      compendiumSource: null
+      compendiumSource: Item.OKZPsQqlt5joV7DH
       duplicateSource: null
-      coreVersion: '12.331'
+      coreVersion: '13.342'
       systemId: uesrpg-3ev4
       systemVersion: v1.0.0-RC.59
       createdTime: null
       modifiedTime: null
       lastModifiedBy: null
+      exportSource: null
     ownership:
       default: 0
       qwt9o1cuKYitvD9G: 3
@@ -1017,17 +1032,17 @@ items:
     folder: null
     sort: 100000
     flags:
-      core:
-        sourceId: Item.8SI16Irg5SyQEdhU
+      core: {}
     _stats:
-      compendiumSource: null
+      compendiumSource: Item.8SI16Irg5SyQEdhU
       duplicateSource: null
-      coreVersion: '12.331'
+      coreVersion: '13.342'
       systemId: uesrpg-3ev4
       systemVersion: v1.0.0-RC.59
       createdTime: null
       modifiedTime: null
       lastModifiedBy: null
+      exportSource: null
     ownership:
       default: 0
       WcwhQU1nz94WaD5n: 3
@@ -1115,17 +1130,17 @@ items:
     folder: null
     sort: 0
     flags:
-      core:
-        sourceId: Item.wu2mKwl7koDbwaa2
+      core: {}
     _stats:
-      compendiumSource: null
+      compendiumSource: Item.wu2mKwl7koDbwaa2
       duplicateSource: null
-      coreVersion: '12.331'
+      coreVersion: '13.342'
       systemId: uesrpg-3ev4
       systemVersion: v1.0.0-RC.59
       createdTime: null
       modifiedTime: null
       lastModifiedBy: null
+      exportSource: null
     ownership:
       default: 0
       WcwhQU1nz94WaD5n: 3
@@ -1213,17 +1228,17 @@ items:
     folder: null
     sort: 0
     flags:
-      core:
-        sourceId: Item.FxHxtXoffTmPh5kN
+      core: {}
     _stats:
-      compendiumSource: null
+      compendiumSource: Item.FxHxtXoffTmPh5kN
       duplicateSource: null
-      coreVersion: '12.331'
+      coreVersion: '13.342'
       systemId: uesrpg-3ev4
       systemVersion: v1.0.0-RC.59
       createdTime: null
       modifiedTime: null
       lastModifiedBy: null
+      exportSource: null
     ownership:
       default: 0
       eeXhsDlbzUBZOXZT: 3
@@ -1320,17 +1335,17 @@ items:
     folder: null
     sort: 0
     flags:
-      core:
-        sourceId: Item.Dvncp3T7Nn3WBpgy
+      core: {}
     _stats:
-      compendiumSource: null
+      compendiumSource: Item.Dvncp3T7Nn3WBpgy
       duplicateSource: null
-      coreVersion: '12.331'
+      coreVersion: '13.342'
       systemId: uesrpg-3ev4
       systemVersion: v1.0.0-RC.59
       createdTime: null
       modifiedTime: null
       lastModifiedBy: null
+      exportSource: null
     ownership:
       default: 0
       qwt9o1cuKYitvD9G: 3
@@ -1448,17 +1463,17 @@ items:
     folder: null
     sort: 0
     flags:
-      core:
-        sourceId: Item.JzGx9VUhSZ8Gutbe
+      core: {}
     _stats:
-      compendiumSource: null
+      compendiumSource: Item.JzGx9VUhSZ8Gutbe
       duplicateSource: null
-      coreVersion: '12.331'
+      coreVersion: '13.342'
       systemId: uesrpg-3ev4
       systemVersion: v1.0.0-RC.59
       createdTime: null
       modifiedTime: null
       lastModifiedBy: null
+      exportSource: null
     ownership:
       default: 0
       qwt9o1cuKYitvD9G: 3
@@ -1557,12 +1572,13 @@ flags: {}
 _stats:
   compendiumSource: null
   duplicateSource: null
-  coreVersion: '12.331'
+  coreVersion: '13.342'
   systemId: uesrpg-3ev4
   systemVersion: v1.0.0-RC.59
   createdTime: 1732339096381
   modifiedTime: 1732339102041
   lastModifiedBy: 7bDMesNjX54nzN9S
+  exportSource: null
 ownership:
   default: 0
   WcwhQU1nz94WaD5n: 3
@@ -2080,7 +2096,6 @@ prototypeToken:
     contrast: 0
   appendNumber: false
   prependAdjective: false
-  hexagonalShape: 0
   detectionModes: []
   occludable:
     radius: 0
@@ -2093,6 +2108,12 @@ prototypeToken:
     subject:
       scale: 1
       texture: null
+  turnMarker:
+    mode: 1
+    animation: null
+    src: null
+    disposition: false
+  movementAction: null
 _id: VvjrBtAEd4XXbhGb
 sort: 500000
 _key: '!actors!VvjrBtAEd4XXbhGb'

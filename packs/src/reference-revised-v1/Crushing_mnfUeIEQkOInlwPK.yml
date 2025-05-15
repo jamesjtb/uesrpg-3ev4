@@ -21,7 +21,7 @@ pages:
         value is given), capped at the AR value of the armour on the hit
         location or BR of a shield used to block it.</p>
     _stats:
-      coreVersion: '12.331'
+      coreVersion: '13.342'
       systemId: null
       systemVersion: null
       createdTime: null
@@ -29,6 +29,7 @@ pages:
       lastModifiedBy: null
       compendiumSource: null
       duplicateSource: null
+      exportSource: null
     _id: cvpncODNhIPM1K8u
     system: {}
     image: {}
@@ -40,9 +41,10 @@ pages:
     ownership:
       default: -1
     flags: {}
+    category: null
     _key: '!journal.pages!mnfUeIEQkOInlwPK.cvpncODNhIPM1K8u'
 _stats:
-  coreVersion: '12.331'
+  coreVersion: '13.342'
   systemId: null
   systemVersion: null
   createdTime: null
@@ -50,8 +52,10 @@ _stats:
   lastModifiedBy: null
   compendiumSource: null
   duplicateSource: null
+  exportSource: null
 ownership:
   default: 0
   eeXhsDlbzUBZOXZT: 3
+categories: []
 _key: '!journal!mnfUeIEQkOInlwPK'
 

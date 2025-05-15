@@ -10,70 +10,120 @@ description: >-
   out of luck eventually, however, and rarely live as long as those born under
   other signs.”</em></p>
 results:
-  - type: pack
-    documentCollection: uesrpg-3ev4.signs
+  - type: document
     weight: 1
     range:
       - 1
       - 1
     drawn: false
-    text: The Star-Cursed Thief
-    documentId: Lh5P9QgIeoanw0YG
     img: systems/uesrpg-3ev4/images/sign-thief.webp
     _id: 0aI6OYPB9gt6rbGP
     flags: {}
+    _stats:
+      coreVersion: '13.342'
+      systemId: null
+      systemVersion: null
+      createdTime: null
+      modifiedTime: null
+      lastModifiedBy: null
+      compendiumSource: null
+      duplicateSource: null
+      exportSource: null
+    name: The Star-Cursed Thief
+    documentUuid: Compendium.uesrpg-3ev4.signs.Item.Lh5P9QgIeoanw0YG
+    description: ''
     _key: '!tables.results!sGSuzKe7EQevXHGZ.0aI6OYPB9gt6rbGP'
-  - type: pack
-    documentCollection: uesrpg-3ev4.signs
+  - type: document
     weight: 1
     range:
       - 2
       - 2
     drawn: false
-    text: The Star-Cursed Lover
-    documentId: WhC7vYGPnVzI5GcP
     img: systems/uesrpg-3ev4/images/sign-lover.webp
     _id: necnBxsndHpzP2UF
     flags: {}
+    _stats:
+      coreVersion: '13.342'
+      systemId: null
+      systemVersion: null
+      createdTime: null
+      modifiedTime: null
+      lastModifiedBy: null
+      compendiumSource: null
+      duplicateSource: null
+      exportSource: null
+    name: The Star-Cursed Lover
+    documentUuid: Compendium.uesrpg-3ev4.signs.Item.WhC7vYGPnVzI5GcP
+    description: ''
     _key: '!tables.results!sGSuzKe7EQevXHGZ.necnBxsndHpzP2UF'
-  - type: pack
-    documentCollection: uesrpg-3ev4.signs
+  - type: document
     weight: 1
     range:
       - 3
       - 3
     drawn: false
-    text: The Star-Cursed Shadow
-    documentId: qkBb4VFHCB0VlRqy
     img: systems/uesrpg-3ev4/images/sign-shadow.webp
     _id: KCw1gdj8Hq3MHZVt
     flags: {}
+    _stats:
+      coreVersion: '13.342'
+      systemId: null
+      systemVersion: null
+      createdTime: null
+      modifiedTime: null
+      lastModifiedBy: null
+      compendiumSource: null
+      duplicateSource: null
+      exportSource: null
+    name: The Star-Cursed Shadow
+    documentUuid: Compendium.uesrpg-3ev4.signs.Item.qkBb4VFHCB0VlRqy
+    description: ''
     _key: '!tables.results!sGSuzKe7EQevXHGZ.KCw1gdj8Hq3MHZVt'
-  - type: pack
-    documentCollection: uesrpg-3ev4.signs
+  - type: document
     weight: 1
     range:
       - 4
       - 4
     drawn: false
-    text: The Star-Cursed Tower
-    documentId: iMCvgBy07nmPh3ig
     img: systems/uesrpg-3ev4/images/sign-tower.webp
     _id: EZLGWtd6P3X85vs1
     flags: {}
+    _stats:
+      coreVersion: '13.342'
+      systemId: null
+      systemVersion: null
+      createdTime: null
+      modifiedTime: null
+      lastModifiedBy: null
+      compendiumSource: null
+      duplicateSource: null
+      exportSource: null
+    name: The Star-Cursed Tower
+    documentUuid: Compendium.uesrpg-3ev4.signs.Item.iMCvgBy07nmPh3ig
+    description: ''
     _key: '!tables.results!sGSuzKe7EQevXHGZ.EZLGWtd6P3X85vs1'
-  - type: pack
-    documentCollection: uesrpg-3ev4.roll-tables
+  - type: document
     weight: 1
     range:
       - 5
       - 5
     drawn: false
-    text: Thief Birthsigns (Star-Cursed)
-    documentId: sGSuzKe7EQevXHGZ
     img: systems/uesrpg-3ev4/images/sign-thief.webp
     _id: avrGXP30he1CKrv1
     flags: {}
+    _stats:
+      coreVersion: '13.342'
+      systemId: null
+      systemVersion: null
+      createdTime: null
+      modifiedTime: null
+      lastModifiedBy: null
+      compendiumSource: null
+      duplicateSource: null
+      exportSource: null
+    name: Thief Birthsigns (Star-Cursed)
+    documentUuid: Compendium.uesrpg-3ev4.roll-tables.RollTable.sGSuzKe7EQevXHGZ
+    description: ''
     _key: '!tables.results!sGSuzKe7EQevXHGZ.avrGXP30he1CKrv1'
 replacement: true
 displayRoll: true
@@ -85,12 +135,13 @@ flags: {}
 _stats:
   compendiumSource: null
   duplicateSource: null
-  coreVersion: '12.331'
+  coreVersion: '13.342'
   systemId: uesrpg-3ev4
   systemVersion: v1.0.0-RC.70
   createdTime: 1746864090321
   modifiedTime: 1746864270825
   lastModifiedBy: HcIrULZhA1JFIlrf
+  exportSource: null
 formula: 1d5
 _key: '!tables!sGSuzKe7EQevXHGZ'
 

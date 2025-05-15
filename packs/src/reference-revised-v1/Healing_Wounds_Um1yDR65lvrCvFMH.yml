@@ -17,7 +17,7 @@ pages:
       format: 1
       content: "<p>In order for a character to begin to heal wounds, those wounds must be treated first. If a wound is not treated within a number of days equal to the character’s Endurance bonus, the character becomes Maimed: any body parts crippled by the wound become crippled permanently and count as being lost.</p>\n<p>\_</p>\n<p><strong>Healing Untreated Wounds</strong></p>\n<p>Characters cannot regenerate HP naturally while they have untreated wounds. In addition to restoring HP, magical healing done while the character is wounded temporarily removes the passive effects and forestalls unconsciousness for a number of rounds equal to the amount healed. If a character ever heals to full HP while they have an untreated wound, they become maimed as the wound has healed improperly.</p>\n<p>\_</p>\n<p><strong>Treating Wounds</strong></p>\n<p>A wound can be treated by a successful Profession [Medicine] test, which takes approximately an hour. Once a character’s wound(s) have been treated, they can begin to heal naturally again. Treating a wound related to the Crippled Condition can only be done once per long rest. If this test results in a dramatic failure, the limb immediately becomes Maimed.</p>\n<p>\_</p>\n<p><strong>Curing Wounds</strong></p>\n<p>Once a wound has been treated it can be properly healed. After treatment if a character regenerates HP (by magical or natural means) equal to or in excess of the damage that caused the wound, then the wound and all of its effects are removed. The one exception is that characters cannot heal lost limbs in this fashion.</p>"
     _stats:
-      coreVersion: '12.331'
+      coreVersion: '13.342'
       systemId: null
       systemVersion: null
       createdTime: null
@@ -25,6 +25,7 @@ pages:
       lastModifiedBy: null
       compendiumSource: null
       duplicateSource: null
+      exportSource: null
     _id: 6Cne5LAhmVALwFCI
     system: {}
     image: {}
@@ -36,9 +37,10 @@ pages:
     ownership:
       default: -1
     flags: {}
+    category: null
     _key: '!journal.pages!Um1yDR65lvrCvFMH.6Cne5LAhmVALwFCI'
 _stats:
-  coreVersion: '12.331'
+  coreVersion: '13.342'
   systemId: null
   systemVersion: null
   createdTime: null
@@ -46,8 +48,10 @@ _stats:
   lastModifiedBy: null
   compendiumSource: null
   duplicateSource: null
+  exportSource: null
 ownership:
   default: 0
   eeXhsDlbzUBZOXZT: 3
+categories: []
 _key: '!journal!Um1yDR65lvrCvFMH'
 

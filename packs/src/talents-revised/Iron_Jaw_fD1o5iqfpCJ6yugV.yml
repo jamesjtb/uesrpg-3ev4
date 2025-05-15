@@ -2,19 +2,19 @@ _id: fD1o5iqfpCJ6yugV
 name: Iron Jaw
 type: talent
 flags:
-  core:
-    sourceId: Item.DYVazRNO2caSDMGE
+  core: {}
 img: systems/uesrpg-3ev4/images/Icons/ironJaw.webp
 effects: []
 _stats:
-  coreVersion: '12.331'
+  coreVersion: '13.342'
   systemId: null
   systemVersion: null
   createdTime: null
   modifiedTime: null
   lastModifiedBy: null
-  compendiumSource: null
+  compendiumSource: Item.DYVazRNO2caSDMGE
   duplicateSource: null
+  exportSource: null
 ownership:
   default: 0
   xvA5SwRGJiyPsnxH: 3
@@ -69,6 +69,7 @@ system:
   description: >-
     <p>The character is always entitled to an Endurance test to avoid being
     knocked back, knocked down or stunned.</p>
+  governingCharacteristics: ''
   xpCost: 200
   level: 2
   talentReq: ''
@@ -78,8 +79,10 @@ system:
   untrainedException: false
   fatigueException: false
   addIBToMP: false
+  addIntToMPMultiplier: 1
   armorAcrobaticsException: false
   addHalfSpeed: false
+  doubleSwimSpeed: false
 folder: null
 sort: 0
 _key: '!items!fD1o5iqfpCJ6yugV'

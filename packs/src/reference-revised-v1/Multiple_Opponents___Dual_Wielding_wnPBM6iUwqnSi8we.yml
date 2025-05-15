@@ -17,7 +17,7 @@ pages:
       format: 1
       content: "<p><strong>Multiple Opponents</strong></p>\n<p>Facing multiple opponents can be dangerous. While a character suffers no direct penalties for doing so, they can soon become swamped and run out of action points with which to defend themself. Remember that once all their AP for a round have been expended the character is treated as having failed their defense roll against any subsequent attacks, meaning they quickly become vulnerable to the others.</p>\n<p>\_</p>\n<p><strong>Dual Wielding</strong></p>\n<p>Some characters fight with two one handed weapons at once as a part of their Combat Style and may choose to attack, parry, or counter attack with either one.</p>"
     _stats:
-      coreVersion: '12.331'
+      coreVersion: '13.342'
       systemId: null
       systemVersion: null
       createdTime: null
@@ -25,6 +25,7 @@ pages:
       lastModifiedBy: null
       compendiumSource: null
       duplicateSource: null
+      exportSource: null
     _id: 6iLnIz2pX6Z7iLuX
     system: {}
     image: {}
@@ -36,9 +37,10 @@ pages:
     ownership:
       default: -1
     flags: {}
+    category: null
     _key: '!journal.pages!wnPBM6iUwqnSi8we.6iLnIz2pX6Z7iLuX'
 _stats:
-  coreVersion: '12.331'
+  coreVersion: '13.342'
   systemId: null
   systemVersion: null
   createdTime: null
@@ -46,8 +48,10 @@ _stats:
   lastModifiedBy: null
   compendiumSource: null
   duplicateSource: null
+  exportSource: null
 ownership:
   default: 0
   eeXhsDlbzUBZOXZT: 3
+categories: []
 _key: '!journal!wnPBM6iUwqnSi8we'
 

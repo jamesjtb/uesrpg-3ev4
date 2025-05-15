@@ -1,19 +1,19 @@
 name: Untouchable
 type: talent
 flags:
-  core:
-    sourceId: Item.DYVazRNO2caSDMGE
+  core: {}
 img: systems/uesrpg-3ev4/images/Icons/untouchable.webp
 effects: []
 _stats:
   compendiumSource: Item.DYVazRNO2caSDMGE
   duplicateSource: null
-  coreVersion: '12.331'
+  coreVersion: '13.342'
   systemId: uesrpg-3ev4
   systemVersion: v1.0.0-RC.62
   createdTime: 1733460048065
   modifiedTime: 1733460048065
   lastModifiedBy: HcIrULZhA1JFIlrf
+  exportSource: null
 ownership:
   default: 0
   xvA5SwRGJiyPsnxH: 3
@@ -86,8 +86,10 @@ system:
   untrainedException: false
   fatigueException: false
   addIBToMP: false
+  addIntToMPMultiplier: 1
   armorAcrobaticsException: false
   addHalfSpeed: false
+  doubleSwimSpeed: false
 folder: gNFUNr8dqFnssltG
 _id: O9ihiEqOR6otLlhV
 sort: 0

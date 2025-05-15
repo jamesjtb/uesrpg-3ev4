@@ -8,20 +8,20 @@ items:
     type: item
     sort: 100000
     flags:
-      core:
-        sourceId: Item.9HprpbkgIr54vcPt
+      core: {}
     img: systems/uesrpg-3ev4/images/item-compendium/item_tokens/ingredient.webp
     effects: []
     folder: null
     _stats:
-      coreVersion: '12.331'
+      coreVersion: '13.342'
       systemId: null
       systemVersion: null
       createdTime: null
       modifiedTime: null
       lastModifiedBy: null
-      compendiumSource: null
+      compendiumSource: Item.9HprpbkgIr54vcPt
       duplicateSource: null
+      exportSource: null
     ownership:
       default: 0
     system:
@@ -122,20 +122,20 @@ items:
     type: power
     sort: 700000
     flags:
-      core:
-        sourceId: Item.MyWjMeVAtBCJa8Bt
+      core: {}
     img: systems/uesrpg-3ev4/images/Icons/stuntedMagicka.webp
     effects: []
     folder: null
     _stats:
-      coreVersion: '12.331'
+      coreVersion: '13.342'
       systemId: null
       systemVersion: null
       createdTime: null
       modifiedTime: null
       lastModifiedBy: null
-      compendiumSource: null
+      compendiumSource: Item.MyWjMeVAtBCJa8Bt
       duplicateSource: null
+      exportSource: null
     ownership:
       default: 0
     system:
@@ -202,20 +202,20 @@ items:
     type: trait
     sort: 800000
     flags:
-      core:
-        sourceId: Item.wtEFksGPcojtDLTj
+      core: {}
     img: systems/uesrpg-3ev4/images/Icons/flyer.webp
     effects: []
     folder: null
     _stats:
-      coreVersion: '12.331'
+      coreVersion: '13.342'
       systemId: null
       systemVersion: null
       createdTime: null
       modifiedTime: null
       lastModifiedBy: null
-      compendiumSource: null
+      compendiumSource: Item.wtEFksGPcojtDLTj
       duplicateSource: null
+      exportSource: null
     ownership:
       default: 0
     system:
@@ -280,20 +280,20 @@ items:
     type: trait
     sort: 900000
     flags:
-      core:
-        sourceId: Item.wtEFksGPcojtDLTj
+      core: {}
     img: systems/uesrpg-3ev4/images/Icons/minion.webp
     effects: []
     folder: null
     _stats:
-      coreVersion: '12.331'
+      coreVersion: '13.342'
       systemId: null
       systemVersion: null
       createdTime: null
       modifiedTime: null
       lastModifiedBy: null
-      compendiumSource: null
+      compendiumSource: Item.wtEFksGPcojtDLTj
       duplicateSource: null
+      exportSource: null
     ownership:
       default: 0
     system:
@@ -358,20 +358,20 @@ items:
     type: talent
     sort: 1000000
     flags:
-      core:
-        sourceId: Item.7fKKFs3JVM7UgiPU
+      core: {}
     img: systems/uesrpg-3ev4/images/Icons/questioning.webp
     effects: []
     folder: null
     _stats:
-      coreVersion: '12.331'
+      coreVersion: '13.342'
       systemId: null
       systemVersion: null
       createdTime: null
       modifiedTime: null
       lastModifiedBy: null
-      compendiumSource: null
+      compendiumSource: Item.7fKKFs3JVM7UgiPU
       duplicateSource: null
+      exportSource: null
     ownership:
       default: 0
     system:
@@ -425,6 +425,7 @@ items:
       description: >-
         <p><span style="color: #191813;">This character does not track magicka,
         and can instead cast each spell it knows once.</span></p>
+      governingCharacteristics: ''
       xpCost: 0
       level: 0
       talentReq: ''
@@ -434,8 +435,10 @@ items:
       untrainedException: false
       fatigueException: false
       addIBToMP: false
+      addIntToMPMultiplier: 1
       armorAcrobaticsException: false
       addHalfSpeed: false
+      doubleSwimSpeed: false
     _key: '!actors.items!NTI0G8bTLN9pVgWT.5vAEdWm12aE72weB'
   - _id: wEvZEjFwfw3RHAJq
     name: Imp Claws
@@ -445,17 +448,17 @@ items:
     folder: null
     sort: 0
     flags:
-      core:
-        sourceId: Item.OHZa5LXndscWXRvU
+      core: {}
     _stats:
-      coreVersion: '12.331'
+      coreVersion: '13.342'
       systemId: null
       systemVersion: null
       createdTime: null
       modifiedTime: null
       lastModifiedBy: null
-      compendiumSource: null
+      compendiumSource: Item.OHZa5LXndscWXRvU
       duplicateSource: null
+      exportSource: null
     ownership:
       default: 0
       eeXhsDlbzUBZOXZT: 3
@@ -550,17 +553,17 @@ items:
     folder: null
     sort: 0
     flags:
-      core:
-        sourceId: Item.Dvncp3T7Nn3WBpgy
+      core: {}
     _stats:
-      coreVersion: '12.331'
+      coreVersion: '13.342'
       systemId: null
       systemVersion: null
       createdTime: null
       modifiedTime: null
       lastModifiedBy: null
-      compendiumSource: null
+      compendiumSource: Item.Dvncp3T7Nn3WBpgy
       duplicateSource: null
+      exportSource: null
     ownership:
       default: 0
       qwt9o1cuKYitvD9G: 3
@@ -682,17 +685,17 @@ items:
     folder: null
     sort: 0
     flags:
-      core:
-        sourceId: Item.Dvncp3T7Nn3WBpgy
+      core: {}
     _stats:
-      coreVersion: '12.331'
+      coreVersion: '13.342'
       systemId: null
       systemVersion: null
       createdTime: null
       modifiedTime: null
       lastModifiedBy: null
-      compendiumSource: null
+      compendiumSource: Item.Dvncp3T7Nn3WBpgy
       duplicateSource: null
+      exportSource: null
     ownership:
       default: 0
       qwt9o1cuKYitvD9G: 3
@@ -814,17 +817,17 @@ items:
     folder: null
     sort: 0
     flags:
-      core:
-        sourceId: Item.Dvncp3T7Nn3WBpgy
+      core: {}
     _stats:
-      coreVersion: '12.331'
+      coreVersion: '13.342'
       systemId: null
       systemVersion: null
       createdTime: null
       modifiedTime: null
       lastModifiedBy: null
-      compendiumSource: null
+      compendiumSource: Item.Dvncp3T7Nn3WBpgy
       duplicateSource: null
+      exportSource: null
     ownership:
       default: 0
       qwt9o1cuKYitvD9G: 3
@@ -946,17 +949,17 @@ items:
     folder: null
     sort: 0
     flags:
-      core:
-        sourceId: Item.Dvncp3T7Nn3WBpgy
+      core: {}
     _stats:
-      coreVersion: '12.331'
+      coreVersion: '13.342'
       systemId: null
       systemVersion: null
       createdTime: null
       modifiedTime: null
       lastModifiedBy: null
-      compendiumSource: null
+      compendiumSource: Item.Dvncp3T7Nn3WBpgy
       duplicateSource: null
+      exportSource: null
     ownership:
       default: 0
       qwt9o1cuKYitvD9G: 3
@@ -1083,17 +1086,17 @@ items:
         equipActive: false
         alwaysActive: false
         effects: []
-      core:
-        sourceId: Item.Ez7Rgk45jQ4Ue8A3
+      core: {}
     _stats:
-      coreVersion: '12.331'
+      coreVersion: '13.342'
       systemId: null
       systemVersion: null
       createdTime: null
       modifiedTime: null
       lastModifiedBy: null
-      compendiumSource: null
+      compendiumSource: Item.Ez7Rgk45jQ4Ue8A3
       duplicateSource: null
+      exportSource: null
     ownership:
       default: 0
       JMrHvZADCRvhdKBh: 3
@@ -1253,17 +1256,17 @@ items:
         equipActive: false
         alwaysActive: false
         effects: []
-      core:
-        sourceId: Item.Ez7Rgk45jQ4Ue8A3
+      core: {}
     _stats:
-      coreVersion: '12.331'
+      coreVersion: '13.342'
       systemId: null
       systemVersion: null
       createdTime: null
       modifiedTime: null
       lastModifiedBy: null
-      compendiumSource: null
+      compendiumSource: Item.Ez7Rgk45jQ4Ue8A3
       duplicateSource: null
+      exportSource: null
     ownership:
       default: 0
       JMrHvZADCRvhdKBh: 3
@@ -1423,17 +1426,17 @@ items:
         equipActive: false
         alwaysActive: false
         effects: []
-      core:
-        sourceId: Item.Ez7Rgk45jQ4Ue8A3
+      core: {}
     _stats:
-      coreVersion: '12.331'
+      coreVersion: '13.342'
       systemId: null
       systemVersion: null
       createdTime: null
       modifiedTime: null
       lastModifiedBy: null
-      compendiumSource: null
+      compendiumSource: Item.Ez7Rgk45jQ4Ue8A3
       duplicateSource: null
+      exportSource: null
     ownership:
       default: 0
       JMrHvZADCRvhdKBh: 3
@@ -1593,17 +1596,17 @@ items:
         equipActive: false
         alwaysActive: false
         effects: []
-      core:
-        sourceId: Item.Ez7Rgk45jQ4Ue8A3
+      core: {}
     _stats:
-      coreVersion: '12.331'
+      coreVersion: '13.342'
       systemId: null
       systemVersion: null
       createdTime: null
       modifiedTime: null
       lastModifiedBy: null
-      compendiumSource: null
+      compendiumSource: Item.Ez7Rgk45jQ4Ue8A3
       duplicateSource: null
+      exportSource: null
     ownership:
       default: 0
       JMrHvZADCRvhdKBh: 3
@@ -1764,17 +1767,17 @@ items:
         equipActive: false
         alwaysActive: false
         effects: []
-      core:
-        sourceId: Item.PLSfQETHSCYM7pRZ
+      core: {}
     _stats:
-      coreVersion: '12.331'
+      coreVersion: '13.342'
       systemId: null
       systemVersion: null
       createdTime: null
       modifiedTime: null
       lastModifiedBy: null
-      compendiumSource: null
+      compendiumSource: Item.PLSfQETHSCYM7pRZ
       duplicateSource: null
+      exportSource: null
     ownership:
       default: 0
       JMrHvZADCRvhdKBh: 3
@@ -1915,17 +1918,17 @@ items:
         equipActive: false
         alwaysActive: false
         effects: []
-      core:
-        sourceId: Item.PLSfQETHSCYM7pRZ
+      core: {}
     _stats:
-      coreVersion: '12.331'
+      coreVersion: '13.342'
       systemId: null
       systemVersion: null
       createdTime: null
       modifiedTime: null
       lastModifiedBy: null
-      compendiumSource: null
+      compendiumSource: Item.PLSfQETHSCYM7pRZ
       duplicateSource: null
+      exportSource: null
     ownership:
       default: 0
       JMrHvZADCRvhdKBh: 3
@@ -2066,17 +2069,17 @@ items:
         equipActive: false
         alwaysActive: false
         effects: []
-      core:
-        sourceId: Item.PLSfQETHSCYM7pRZ
+      core: {}
     _stats:
-      coreVersion: '12.331'
+      coreVersion: '13.342'
       systemId: null
       systemVersion: null
       createdTime: null
       modifiedTime: null
       lastModifiedBy: null
-      compendiumSource: null
+      compendiumSource: Item.PLSfQETHSCYM7pRZ
       duplicateSource: null
+      exportSource: null
     ownership:
       default: 0
       JMrHvZADCRvhdKBh: 3
@@ -2217,17 +2220,17 @@ items:
         equipActive: false
         alwaysActive: false
         effects: []
-      core:
-        sourceId: Item.PLSfQETHSCYM7pRZ
+      core: {}
     _stats:
-      coreVersion: '12.331'
+      coreVersion: '13.342'
       systemId: null
       systemVersion: null
       createdTime: null
       modifiedTime: null
       lastModifiedBy: null
-      compendiumSource: null
+      compendiumSource: Item.PLSfQETHSCYM7pRZ
       duplicateSource: null
+      exportSource: null
     ownership:
       default: 0
       JMrHvZADCRvhdKBh: 3
@@ -2361,7 +2364,7 @@ folder: Rb8ZFpjLmY0aQxpK
 sort: 3100000
 flags: {}
 _stats:
-  coreVersion: '12.331'
+  coreVersion: '13.342'
   systemId: null
   systemVersion: null
   createdTime: null
@@ -2369,6 +2372,7 @@ _stats:
   lastModifiedBy: 7bDMesNjX54nzN9S
   compendiumSource: null
   duplicateSource: null
+  exportSource: null
 ownership:
   default: 0
   WcwhQU1nz94WaD5n: 3
@@ -2916,7 +2920,6 @@ prototypeToken:
     contrast: 0
   appendNumber: false
   prependAdjective: false
-  hexagonalShape: 0
   detectionModes: []
   occludable:
     radius: 0
@@ -2929,5 +2932,11 @@ prototypeToken:
     subject:
       scale: 1
       texture: null
+  turnMarker:
+    mode: 1
+    animation: null
+    src: null
+    disposition: false
+  movementAction: null
 _key: '!actors!NTI0G8bTLN9pVgWT'
 

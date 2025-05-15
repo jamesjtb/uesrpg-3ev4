@@ -1,20 +1,20 @@
 name: Meticulous Planning
 type: talent
 flags:
-  core:
-    sourceId: Item.JX5ttPQSa94C9UKX
+  core: {}
 img: systems/uesrpg-3ev4/images/Icons/depthOfUnderstanding.webp
 effects: []
 _id: dxn6klgTXKIOukwH
 _stats:
-  coreVersion: '12.331'
+  coreVersion: '13.342'
   systemId: null
   systemVersion: null
   createdTime: null
   modifiedTime: null
   lastModifiedBy: null
-  compendiumSource: null
+  compendiumSource: Item.JX5ttPQSa94C9UKX
   duplicateSource: null
+  exportSource: null
 ownership:
   default: 0
   xvA5SwRGJiyPsnxH: 3
@@ -75,6 +75,7 @@ system:
     that number can no longer be used during this preparation period. These
     numbers persist until the Sload uses all of them, or until they spend
     another Long Rest planning and generating a new batch of numbers.</p>
+  governingCharacteristics: ''
   xpCost: 400
   level: 4
   talentReq: ''
@@ -84,8 +85,10 @@ system:
   untrainedException: false
   fatigueException: false
   addIBToMP: false
+  addIntToMPMultiplier: 1
   armorAcrobaticsException: false
   addHalfSpeed: false
+  doubleSwimSpeed: false
 folder: null
 sort: 0
 _key: '!items!dxn6klgTXKIOukwH'

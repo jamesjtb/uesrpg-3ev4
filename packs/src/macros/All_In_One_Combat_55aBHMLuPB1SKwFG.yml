@@ -239,18 +239,18 @@ command: >-
 folder: null
 sort: 0
 flags:
-  core:
-    sourceId: Macro.ymC8HGnimCfeDUhj
+  core: {}
 _id: 55aBHMLuPB1SKwFG
 _stats:
-  coreVersion: '12.331'
+  coreVersion: '13.342'
   systemId: null
   systemVersion: null
   createdTime: null
   modifiedTime: null
   lastModifiedBy: null
-  compendiumSource: null
+  compendiumSource: Macro.ymC8HGnimCfeDUhj
   duplicateSource: null
+  exportSource: null
 ownership:
   default: 0
   U7r9uXVolIFyJo7l: 3

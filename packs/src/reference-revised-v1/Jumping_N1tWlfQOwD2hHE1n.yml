@@ -17,7 +17,7 @@ pages:
       format: 1
       content: "<p>A character may also make an Acrobatics test to jump over or up to an obstacle, either horizontally or vertically. This can represent either completely clearing the obstacle, or just jumping high enough to grab it with both hands, depending on what the GM feels is appropriate. If the character does not spend several seconds running or otherwise preparing (approximately a round) before the jump then they suffer a -10 penalty to the test.</p>\n<p>\_</p>\n<p>When jumping vertically, each meter they wish to jump beyond the first imposes a -20 penalty on the test. When jumping horizontally, each meter they wish to jump beyond the first imposes a -10 penalty on the test. Critical Failure results in the character tumbling to the ground.</p>"
     _stats:
-      coreVersion: '12.331'
+      coreVersion: '13.342'
       systemId: null
       systemVersion: null
       createdTime: null
@@ -25,6 +25,7 @@ pages:
       lastModifiedBy: null
       compendiumSource: null
       duplicateSource: null
+      exportSource: null
     _id: 53TVDvMeLv9F5s77
     system: {}
     image: {}
@@ -36,9 +37,10 @@ pages:
     ownership:
       default: -1
     flags: {}
+    category: null
     _key: '!journal.pages!N1tWlfQOwD2hHE1n.53TVDvMeLv9F5s77'
 _stats:
-  coreVersion: '12.331'
+  coreVersion: '13.342'
   systemId: null
   systemVersion: null
   createdTime: null
@@ -46,8 +48,10 @@ _stats:
   lastModifiedBy: null
   compendiumSource: null
   duplicateSource: null
+  exportSource: null
 ownership:
   default: 0
   eeXhsDlbzUBZOXZT: 3
+categories: []
 _key: '!journal!N1tWlfQOwD2hHE1n'
 

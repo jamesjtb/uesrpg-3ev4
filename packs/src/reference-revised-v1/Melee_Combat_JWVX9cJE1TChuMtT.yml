@@ -17,7 +17,7 @@ pages:
       format: 1
       content: "<p>Melee combat is any combat that happens within several meters, where participants fight either with wielded or natural weapons. The melee weapons a character can use are listed as part of their Combat Style skills.</p>\n<p>\_</p>\n<p><strong>Melee Combat Circumstance Modifiers</strong></p>\n<p>Like all tests, tests made in melee combat should always be subject to difficulty based on the environment or circumstances in which the combat is happening. Disadvantageous circumstances can be rated in a simple scale by the GM, and should not usually be worse than -30. The table below provides the scale and some examples.</p>\n<p>\_</p>\n<table style=\"width:99.1549%;height:68px\" border=\"1\">\n<tbody>\n<tr style=\"height:17px\">\n<td style=\"width:44.0948%;height:17px\"><strong>\_ \_ \_ \_ \_ \_ \_ \_ \_ \_ \_ \_ \_ \_ \_ \_ \_Modifier</strong></td>\n<td style=\"width:55.1949%;height:17px\"><strong>\_ \_ \_ \_ \_ \_ \_ \_ \_ \_ \_ \_ \_ \_ \_ \_ \_Common Examples</strong></td>\n</tr>\n<tr style=\"height:17px\">\n<td style=\"width:44.0948%;height:17px\">Minor Disadvantage (-10)</td>\n<td style=\"width:55.1949%;height:17px\">Fighting in poor visibility</td>\n</tr>\n<tr style=\"height:17px\">\n<td style=\"width:44.0948%;height:17px\">Disadvantage (-20)</td>\n<td style=\"width:55.1949%;height:17px\">Fighting from lower ground or prone</td>\n</tr>\n<tr style=\"height:17px\">\n<td style=\"width:44.0948%;height:17px\">Major Disadvantage (-30)</td>\n<td style=\"width:55.1949%;height:17px\">Fighting blind</td>\n</tr>\n</tbody>\n</table>"
     _stats:
-      coreVersion: '12.331'
+      coreVersion: '13.342'
       systemId: null
       systemVersion: null
       createdTime: null
@@ -25,6 +25,7 @@ pages:
       lastModifiedBy: null
       compendiumSource: null
       duplicateSource: null
+      exportSource: null
     _id: P8AgCGybK3qEyuQc
     system: {}
     image: {}
@@ -36,9 +37,10 @@ pages:
     ownership:
       default: -1
     flags: {}
+    category: null
     _key: '!journal.pages!JWVX9cJE1TChuMtT.P8AgCGybK3qEyuQc'
 _stats:
-  coreVersion: '12.331'
+  coreVersion: '13.342'
   systemId: null
   systemVersion: null
   createdTime: null
@@ -46,8 +48,10 @@ _stats:
   lastModifiedBy: null
   compendiumSource: null
   duplicateSource: null
+  exportSource: null
 ownership:
   default: 0
   eeXhsDlbzUBZOXZT: 3
+categories: []
 _key: '!journal!JWVX9cJE1TChuMtT'
 

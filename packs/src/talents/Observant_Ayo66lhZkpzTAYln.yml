@@ -1,19 +1,19 @@
 name: Observant
 type: talent
 flags:
-  core:
-    sourceId: Item.DYVazRNO2caSDMGE
+  core: {}
 img: systems/uesrpg-3ev4/images/Icons/observant.webp
 effects: []
 _stats:
   compendiumSource: Item.DYVazRNO2caSDMGE
   duplicateSource: null
-  coreVersion: '12.331'
+  coreVersion: '13.342'
   systemId: uesrpg-3ev4
   systemVersion: v1.0.0-RC.62
   createdTime: 1733123689556
   modifiedTime: 1733289687318
   lastModifiedBy: HcIrULZhA1JFIlrf
+  exportSource: null
 ownership:
   default: 0
   HcIrULZhA1JFIlrf: 3
@@ -68,6 +68,7 @@ system:
   description: >-
     <p>The character can treat their Evade skill as also being governed by
     Perception.</p>
+  governingCharacteristics: Prc
   xpCost: 500
   level: Expert
   talentReq: ''
@@ -77,9 +78,10 @@ system:
   untrainedException: false
   fatigueException: false
   addIBToMP: false
+  addIntToMPMultiplier: 1
   armorAcrobaticsException: false
   addHalfSpeed: false
-  governingCharacteristics: Prc
+  doubleSwimSpeed: false
 folder: wHXhCeP5Fmy5GR8f
 _id: Ayo66lhZkpzTAYln
 sort: 100000

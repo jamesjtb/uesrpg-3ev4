@@ -5,18 +5,18 @@ effects: []
 folder: null
 sort: 0
 flags:
-  core:
-    sourceId: Item.uY0Pzn35u2Fss46p
+  core: {}
 _id: Jepd3F0flaRojWRY
 _stats:
-  coreVersion: '12.331'
+  coreVersion: '13.342'
   systemId: uesrpg-3ev4
   systemVersion: v1.0.0-RC.58
   createdTime: null
   modifiedTime: 1732332158291
   lastModifiedBy: 7bDMesNjX54nzN9S
-  compendiumSource: null
+  compendiumSource: Item.uY0Pzn35u2Fss46p
   duplicateSource: null
+  exportSource: null
 ownership:
   default: 0
   xfxQc6sVhNVKRNeU: 3

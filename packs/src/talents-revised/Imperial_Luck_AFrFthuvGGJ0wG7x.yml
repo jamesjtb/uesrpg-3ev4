@@ -2,19 +2,19 @@ _id: AFrFthuvGGJ0wG7x
 name: Imperial Luck
 type: talent
 flags:
-  core:
-    sourceId: Item.JX5ttPQSa94C9UKX
+  core: {}
 img: systems/uesrpg-3ev4/images/Icons/businessman.webp
 effects: []
 _stats:
-  coreVersion: '12.331'
+  coreVersion: '13.342'
   systemId: null
   systemVersion: null
   createdTime: null
   modifiedTime: null
   lastModifiedBy: null
-  compendiumSource: null
+  compendiumSource: Item.JX5ttPQSa94C9UKX
   duplicateSource: null
+  exportSource: null
 ownership:
   default: 0
   xvA5SwRGJiyPsnxH: 3
@@ -70,6 +70,7 @@ system:
     <p>The Imperial increases their bonus Stamina Points from Star of the West
     to 3 SP. Additionally, any time the Imperial rolls on the Treasure Table,
     they can roll twice and choose which result to keep.</p>
+  governingCharacteristics: ''
   xpCost: 400
   level: 4
   talentReq: Red Diamond
@@ -79,8 +80,10 @@ system:
   untrainedException: false
   fatigueException: false
   addIBToMP: false
+  addIntToMPMultiplier: 1
   armorAcrobaticsException: false
   addHalfSpeed: false
+  doubleSwimSpeed: false
 folder: null
 sort: 0
 _key: '!items!AFrFthuvGGJ0wG7x'

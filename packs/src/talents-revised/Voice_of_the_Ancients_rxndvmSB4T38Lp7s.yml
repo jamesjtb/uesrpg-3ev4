@@ -5,18 +5,18 @@ effects: []
 folder: null
 sort: 0
 flags:
-  core:
-    sourceId: Item.DkoUiSosstbHvzMj
+  core: {}
 _id: rxndvmSB4T38Lp7s
 _stats:
-  coreVersion: '12.331'
+  coreVersion: '13.342'
   systemId: null
   systemVersion: null
   createdTime: null
   modifiedTime: null
   lastModifiedBy: null
-  compendiumSource: null
+  compendiumSource: Item.DkoUiSosstbHvzMj
   duplicateSource: null
+  exportSource: null
 ownership:
   default: 0
   eeXhsDlbzUBZOXZT: 3
@@ -79,6 +79,7 @@ system:
     used to reduce the voice to a &ldquo;whisper&rdquo; temporarily, reducing
     his speech to the volume of &ldquo;rolling thunder&rdquo;, removing the
     threat of harm.</p>
+  governingCharacteristics: ''
   xpCost: 500
   level: 5
   talentReq: Master of the Voice
@@ -88,7 +89,9 @@ system:
   untrainedException: false
   fatigueException: false
   addIBToMP: false
+  addIntToMPMultiplier: 1
   armorAcrobaticsException: false
   addHalfSpeed: false
+  doubleSwimSpeed: false
 _key: '!items!rxndvmSB4T38Lp7s'
 

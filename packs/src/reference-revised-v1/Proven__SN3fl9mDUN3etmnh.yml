@@ -3,8 +3,7 @@ name: Proven.
 folder: null
 sort: 0
 flags:
-  core:
-    sourceId: JournalEntry.iqfgyCmnMCVzRUAu
+  core: {}
   cf:
     id: temp_qtm3mdw5kon
     path: References#/CF_SEP/Qualities#/CF_SEP/Weapon Qualities
@@ -19,7 +18,7 @@ pages:
       format: 1
       content: <p>Roll twice and use the higher value for this weapon’s damage.</p>
     _stats:
-      coreVersion: '12.331'
+      coreVersion: '13.342'
       systemId: null
       systemVersion: null
       createdTime: null
@@ -27,6 +26,7 @@ pages:
       lastModifiedBy: null
       compendiumSource: null
       duplicateSource: null
+      exportSource: null
     _id: 4RPg9haujImdvL42
     system: {}
     image: {}
@@ -38,18 +38,21 @@ pages:
     ownership:
       default: -1
     flags: {}
+    category: null
     _key: '!journal.pages!SN3fl9mDUN3etmnh.4RPg9haujImdvL42'
 _stats:
-  coreVersion: '12.331'
+  coreVersion: '13.342'
   systemId: null
   systemVersion: null
   createdTime: null
   modifiedTime: null
   lastModifiedBy: null
-  compendiumSource: null
+  compendiumSource: JournalEntry.iqfgyCmnMCVzRUAu
   duplicateSource: null
+  exportSource: null
 ownership:
   default: 0
   eeXhsDlbzUBZOXZT: 3
+categories: []
 _key: '!journal!SN3fl9mDUN3etmnh'
 

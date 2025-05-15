@@ -1,0 +1,123 @@
+name: Crocodile Hide
+type: item
+img: icons/commodities/leather/scales-green.webp
+effects: []
+folder: WgSjHj9G4W2TcQgX
+flags:
+  core: {}
+_stats:
+  compendiumSource: null
+  duplicateSource: null
+  exportSource: null
+  coreVersion: '13.342'
+  systemId: uesrpg-3ev4
+  systemVersion: v1.0.0-RC.71
+  createdTime: 1746998700876
+  modifiedTime: 1747083406078
+  lastModifiedBy: HcIrULZhA1JFIlrf
+ownership:
+  default: 0
+  qwt9o1cuKYitvD9G: 3
+  HcIrULZhA1JFIlrf: 3
+system:
+  characteristics:
+    none: None
+    str: STR
+    end: END
+    agi: AGI
+    int: INT
+    wp: WP
+    prc: PRC
+    prs: PRS
+    lck: LCK
+  characteristicBonus:
+    strChaBonus: 0
+    endChaBonus: 0
+    agiChaBonus: 0
+    intChaBonus: 0
+    wpChaBonus: 0
+    prcChaBonus: 0
+    prsChaBonus: 0
+    lckChaBonus: 0
+  replace:
+    ini:
+      iniToggle: false
+      value: 0
+      characteristic: ''
+    wt:
+      wtToggle: false
+      value: 0
+      characteristic: ''
+  mpBonus: 0
+  hpBonus: 0
+  spBonus: 0
+  lpBonus: 0
+  wtBonus: 0
+  iniBonus: 0
+  speedBonus: 0
+  flyBonus: 0
+  swimBonus: 0
+  diseaseR: 0
+  fireR: 0
+  frostR: 0
+  shockR: 0
+  poisonR: 0
+  magicR: 0
+  natToughnessR: 0
+  silverR: 0
+  sunlightR: 0
+  skillArray: []
+  isPhysicalObject: true
+  containerStats:
+    contained: false
+    container_id: ''
+    container_name: ''
+  description: >-
+    <p>On a <strong>+0 Survival test</strong>, a character can remove the
+    crocodile's hide, worth 100 drakes, over the course of a Long Rest. If the
+    character fails the test, they spoil the hide, halving its worth.</p><p>On a
+    <strong>+10 Survival test</strong>, a character can, over the course of a
+    Long Rest, turn a crocodile hide into one piece of Full Crocodile Hide
+    armor. Crocodile Hide armor is exactly the same as regular Hide but has +1
+    AR and is waterproof. It takes two crocodile hides to make a Crocodile Hide
+    chest piece. If the character fails the test, they spoil the hide, failing
+    to craft the armor and halving the hide's worth.</p>
+  quantity: 1
+  enc: 1
+  totalENC: 0
+  reach: ''
+  damage: ''
+  equipped: false
+  hands: 0
+  price: 100
+  modPrice: 0
+  armor: 0
+  magic_ar: 0
+  blockRating: 0
+  enchant_level: 0
+  excludeENC: false
+  consumable: false
+  qualities: ''
+  wearable: false
+  charge:
+    value: 0
+    max: 0
+    reduction: 1
+  carried: false
+  item_cat:
+    none: None
+    head: Helmet
+    l_arm: Left Gauntlet
+    r_arm: Right Gauntlet
+    l_leg: Left Leg
+    r_leg: Right Leg
+    body: Chestplate
+    shield: Shield
+    weapon1: Primary Weapon
+    weapon2: Secondary Weapon
+    weapon3: Sidearm
+  attributes: {}
+_id: 8nSlmtlqDhChObgZ
+sort: 600000
+_key: '!items!8nSlmtlqDhChObgZ'
+

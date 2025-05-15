@@ -80,11 +80,12 @@ flags: {}
 _stats:
   compendiumSource: null
   duplicateSource: null
-  coreVersion: '12.331'
+  coreVersion: '13.342'
   systemId: uesrpg-3ev4
   systemVersion: v1.0.0-RC.64
   createdTime: 1746849736669
   modifiedTime: 1746849924093
   lastModifiedBy: HcIrULZhA1JFIlrf
+  exportSource: null
 _key: '!items!P5PkpzZgLrqD1C2D'
 

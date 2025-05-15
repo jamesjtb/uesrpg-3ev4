@@ -5,18 +5,18 @@ effects: []
 folder: null
 sort: 0
 flags:
-  core:
-    sourceId: Item.F131pIdeL3ahAiRM
+  core: {}
 _id: cOGDWhK46Mm3uUu8
 _stats:
-  coreVersion: '12.331'
+  coreVersion: '13.342'
   systemId: null
   systemVersion: null
   createdTime: null
   modifiedTime: null
   lastModifiedBy: null
-  compendiumSource: null
+  compendiumSource: Item.F131pIdeL3ahAiRM
   duplicateSource: null
+  exportSource: null
 ownership:
   default: 0
   eeXhsDlbzUBZOXZT: 3
@@ -73,6 +73,7 @@ system:
     be some kind of sword). The character may manifest a first level Shehai of
     the chosen weapon type. The character may only ever purchase this talent
     once.</p>
+  governingCharacteristics: ''
   xpCost: 400
   level: 4
   talentReq: ''
@@ -82,7 +83,9 @@ system:
   untrainedException: false
   fatigueException: false
   addIBToMP: false
+  addIntToMPMultiplier: 1
   armorAcrobaticsException: false
   addHalfSpeed: false
+  doubleSwimSpeed: false
 _key: '!items!cOGDWhK46Mm3uUu8'
 

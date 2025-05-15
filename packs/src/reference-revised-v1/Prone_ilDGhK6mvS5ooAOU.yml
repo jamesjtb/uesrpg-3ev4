@@ -27,7 +27,7 @@ pages:
         character does not have this much movement left over to use, then they
         cannot get up unless they take the Arise action.</p>
     _stats:
-      coreVersion: '12.331'
+      coreVersion: '13.342'
       systemId: null
       systemVersion: null
       createdTime: null
@@ -35,6 +35,7 @@ pages:
       lastModifiedBy: null
       compendiumSource: null
       duplicateSource: null
+      exportSource: null
     _id: fWIFRN5NsLoxnqoi
     system: {}
     image: {}
@@ -46,9 +47,10 @@ pages:
     ownership:
       default: -1
     flags: {}
+    category: null
     _key: '!journal.pages!ilDGhK6mvS5ooAOU.fWIFRN5NsLoxnqoi'
 _stats:
-  coreVersion: '12.331'
+  coreVersion: '13.342'
   systemId: null
   systemVersion: null
   createdTime: null
@@ -56,8 +58,10 @@ _stats:
   lastModifiedBy: null
   compendiumSource: null
   duplicateSource: null
+  exportSource: null
 ownership:
   default: 0
   eeXhsDlbzUBZOXZT: 3
+categories: []
 _key: '!journal!ilDGhK6mvS5ooAOU'
 

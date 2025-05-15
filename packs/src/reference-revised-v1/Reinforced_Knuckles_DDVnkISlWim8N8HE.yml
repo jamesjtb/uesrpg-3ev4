@@ -22,7 +22,7 @@ pages:
         weapon is part of the armour and cannot be disarmed. It has the
         durability of the armour rather than the weapon.</p>
     _stats:
-      coreVersion: '12.331'
+      coreVersion: '13.342'
       systemId: null
       systemVersion: null
       createdTime: null
@@ -30,6 +30,7 @@ pages:
       lastModifiedBy: null
       compendiumSource: null
       duplicateSource: null
+      exportSource: null
     _id: VqEAOlwvUKyDJ9pd
     system: {}
     image: {}
@@ -41,9 +42,10 @@ pages:
     ownership:
       default: -1
     flags: {}
+    category: null
     _key: '!journal.pages!DDVnkISlWim8N8HE.VqEAOlwvUKyDJ9pd'
 _stats:
-  coreVersion: '12.331'
+  coreVersion: '13.342'
   systemId: null
   systemVersion: null
   createdTime: null
@@ -51,8 +53,10 @@ _stats:
   lastModifiedBy: null
   compendiumSource: null
   duplicateSource: null
+  exportSource: null
 ownership:
   default: 0
   eeXhsDlbzUBZOXZT: 3
+categories: []
 _key: '!journal!DDVnkISlWim8N8HE'
 

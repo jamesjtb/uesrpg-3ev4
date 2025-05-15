@@ -8,20 +8,20 @@ items:
     type: item
     sort: 300000
     flags:
-      core:
-        sourceId: Item.UuK7DCRPgd0L3QZB
+      core: {}
     img: systems/uesrpg-3ev4/images/item-compendium/item_tokens/pelt.webp
     effects: []
     folder: null
     _stats:
-      coreVersion: '12.331'
+      coreVersion: '13.342'
       systemId: null
       systemVersion: null
       createdTime: null
       modifiedTime: null
       lastModifiedBy: null
-      compendiumSource: null
+      compendiumSource: Item.UuK7DCRPgd0L3QZB
       duplicateSource: null
+      exportSource: null
     ownership:
       default: 0
     system:
@@ -125,20 +125,20 @@ items:
     type: item
     sort: 100000
     flags:
-      core:
-        sourceId: Item.NgM2QJP4U3KPV3Bx
+      core: {}
     img: systems/uesrpg-3ev4/images/item-compendium/item_tokens/meat.webp
     effects: []
     folder: null
     _stats:
-      coreVersion: '12.331'
+      coreVersion: '13.342'
       systemId: null
       systemVersion: null
       createdTime: null
       modifiedTime: null
       lastModifiedBy: null
-      compendiumSource: null
+      compendiumSource: Item.NgM2QJP4U3KPV3Bx
       duplicateSource: null
+      exportSource: null
     ownership:
       default: 0
     system:
@@ -238,20 +238,20 @@ items:
     type: item
     sort: 700000
     flags:
-      core:
-        sourceId: Item.9HprpbkgIr54vcPt
+      core: {}
     img: systems/uesrpg-3ev4/images/item-compendium/item_tokens/ingredient.webp
     effects: []
     folder: null
     _stats:
-      coreVersion: '12.331'
+      coreVersion: '13.342'
       systemId: null
       systemVersion: null
       createdTime: null
       modifiedTime: null
       lastModifiedBy: null
-      compendiumSource: null
+      compendiumSource: Item.9HprpbkgIr54vcPt
       duplicateSource: null
+      exportSource: null
     ownership:
       default: 0
     system:
@@ -352,20 +352,20 @@ items:
     type: trait
     sort: 800000
     flags:
-      core:
-        sourceId: Item.wtEFksGPcojtDLTj
+      core: {}
     img: systems/uesrpg-3ev4/images/Icons/enduring.webp
     effects: []
     folder: null
     _stats:
-      coreVersion: '12.331'
+      coreVersion: '13.342'
       systemId: null
       systemVersion: null
       createdTime: null
       modifiedTime: null
       lastModifiedBy: null
-      compendiumSource: null
+      compendiumSource: Item.wtEFksGPcojtDLTj
       duplicateSource: null
+      exportSource: null
     ownership:
       default: 0
     system:
@@ -433,20 +433,20 @@ items:
     type: power
     sort: 900000
     flags:
-      core:
-        sourceId: Item.MyWjMeVAtBCJa8Bt
+      core: {}
     img: systems/uesrpg-3ev4/images/Icons/thunderCharge.webp
     effects: []
     folder: null
     _stats:
-      coreVersion: '12.331'
+      coreVersion: '13.342'
       systemId: null
       systemVersion: null
       createdTime: null
       modifiedTime: null
       lastModifiedBy: null
-      compendiumSource: null
+      compendiumSource: Item.MyWjMeVAtBCJa8Bt
       duplicateSource: null
+      exportSource: null
     ownership:
       default: 0
     system:
@@ -515,20 +515,20 @@ items:
     type: power
     sort: 1000000
     flags:
-      core:
-        sourceId: Item.MyWjMeVAtBCJa8Bt
+      core: {}
     img: systems/uesrpg-3ev4/images/Icons/gallop.webp
     effects: []
     folder: null
     _stats:
-      coreVersion: '12.331'
+      coreVersion: '13.342'
       systemId: null
       systemVersion: null
       createdTime: null
       modifiedTime: null
       lastModifiedBy: null
-      compendiumSource: null
+      compendiumSource: Item.MyWjMeVAtBCJa8Bt
       duplicateSource: null
+      exportSource: null
     ownership:
       default: 0
     system:
@@ -595,20 +595,20 @@ items:
     type: trait
     sort: 1100000
     flags:
-      core:
-        sourceId: Item.wtEFksGPcojtDLTj
+      core: {}
     img: systems/uesrpg-3ev4/images/Icons/bestial.webp
     effects: []
     folder: null
     _stats:
-      coreVersion: '12.331'
+      coreVersion: '13.342'
       systemId: null
       systemVersion: null
       createdTime: null
       modifiedTime: null
       lastModifiedBy: null
-      compendiumSource: null
+      compendiumSource: Item.wtEFksGPcojtDLTj
       duplicateSource: null
+      exportSource: null
     ownership:
       default: 0
     system:
@@ -677,20 +677,20 @@ items:
     type: trait
     sort: 1200000
     flags:
-      core:
-        sourceId: Item.wtEFksGPcojtDLTj
+      core: {}
     img: systems/uesrpg-3ev4/images/Icons/gallop.webp
     effects: []
     folder: null
     _stats:
-      coreVersion: '12.331'
+      coreVersion: '13.342'
       systemId: null
       systemVersion: null
       createdTime: null
       modifiedTime: null
       lastModifiedBy: null
-      compendiumSource: null
+      compendiumSource: Item.wtEFksGPcojtDLTj
       duplicateSource: null
+      exportSource: null
     ownership:
       default: 0
     system:
@@ -757,20 +757,20 @@ items:
     type: trait
     sort: 1300000
     flags:
-      core:
-        sourceId: Item.wtEFksGPcojtDLTj
+      core: {}
     img: systems/uesrpg-3ev4/images/Icons/stubborn.webp
     effects: []
     folder: null
     _stats:
-      coreVersion: '12.331'
+      coreVersion: '13.342'
       systemId: null
       systemVersion: null
       createdTime: null
       modifiedTime: null
       lastModifiedBy: null
-      compendiumSource: null
+      compendiumSource: Item.wtEFksGPcojtDLTj
       duplicateSource: null
+      exportSource: null
     ownership:
       default: 0
     system:
@@ -835,20 +835,20 @@ items:
     type: trait
     sort: 1400000
     flags:
-      core:
-        sourceId: Item.wtEFksGPcojtDLTj
+      core: {}
     img: icons/sundries/misc/pet-collar-red.webp
     effects: []
     folder: null
     _stats:
-      coreVersion: '12.331'
+      coreVersion: '13.342'
       systemId: null
       systemVersion: null
       createdTime: null
       modifiedTime: null
       lastModifiedBy: null
-      compendiumSource: null
+      compendiumSource: Item.wtEFksGPcojtDLTj
       duplicateSource: null
+      exportSource: null
     ownership:
       default: 0
     system:
@@ -915,20 +915,20 @@ items:
     type: trait
     sort: 1500000
     flags:
-      core:
-        sourceId: Item.wtEFksGPcojtDLTj
+      core: {}
     img: systems/uesrpg-3ev4/images/Icons/unarmedProwess.webp
     effects: []
     folder: null
     _stats:
-      coreVersion: '12.331'
+      coreVersion: '13.342'
       systemId: null
       systemVersion: null
       createdTime: null
       modifiedTime: null
       lastModifiedBy: null
-      compendiumSource: null
+      compendiumSource: Item.wtEFksGPcojtDLTj
       duplicateSource: null
+      exportSource: null
     ownership:
       default: 0
     system:
@@ -996,17 +996,17 @@ items:
     folder: null
     sort: 0
     flags:
-      core:
-        sourceId: Item.OHZa5LXndscWXRvU
+      core: {}
     _stats:
-      coreVersion: '12.331'
+      coreVersion: '13.342'
       systemId: null
       systemVersion: null
       createdTime: null
       modifiedTime: null
       lastModifiedBy: null
-      compendiumSource: null
+      compendiumSource: Item.OHZa5LXndscWXRvU
       duplicateSource: null
+      exportSource: null
     ownership:
       default: 0
       eeXhsDlbzUBZOXZT: 3
@@ -1098,7 +1098,7 @@ folder: Rb8ZFpjLmY0aQxpK
 sort: 4800000
 flags: {}
 _stats:
-  coreVersion: '12.331'
+  coreVersion: '13.342'
   systemId: null
   systemVersion: null
   createdTime: null
@@ -1106,6 +1106,7 @@ _stats:
   lastModifiedBy: 7bDMesNjX54nzN9S
   compendiumSource: null
   duplicateSource: null
+  exportSource: null
 ownership:
   default: 0
   WcwhQU1nz94WaD5n: 3
@@ -1666,7 +1667,6 @@ prototypeToken:
     attenuation: 0.1
     saturation: 0
     contrast: 0
-  hexagonalShape: 1
   appendNumber: false
   prependAdjective: false
   detectionModes: []
@@ -1681,5 +1681,11 @@ prototypeToken:
     subject:
       scale: 1
       texture: null
+  turnMarker:
+    mode: 1
+    animation: null
+    src: null
+    disposition: false
+  movementAction: null
 _key: '!actors!lrxv6ilVGWbiYx38'
 

@@ -19,7 +19,7 @@ pages:
         <p>Spell counts as a ranged with the listed range. Direct attacks cannot
         do damage.</p>
     _stats:
-      coreVersion: '12.331'
+      coreVersion: '13.342'
       systemId: null
       systemVersion: null
       createdTime: null
@@ -27,6 +27,7 @@ pages:
       lastModifiedBy: null
       compendiumSource: null
       duplicateSource: null
+      exportSource: null
     _id: 6aKtAs79aG7hv6mc
     system: {}
     image: {}
@@ -38,9 +39,10 @@ pages:
     ownership:
       default: -1
     flags: {}
+    category: null
     _key: '!journal.pages!XtV9n7rHuDGDbW2j.6aKtAs79aG7hv6mc'
 _stats:
-  coreVersion: '12.331'
+  coreVersion: '13.342'
   systemId: null
   systemVersion: null
   createdTime: null
@@ -48,8 +50,10 @@ _stats:
   lastModifiedBy: null
   compendiumSource: null
   duplicateSource: null
+  exportSource: null
 ownership:
   default: 0
   eeXhsDlbzUBZOXZT: 3
+categories: []
 _key: '!journal!XtV9n7rHuDGDbW2j'
 

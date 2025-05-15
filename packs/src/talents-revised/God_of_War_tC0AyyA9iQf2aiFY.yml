@@ -2,19 +2,19 @@ _id: tC0AyyA9iQf2aiFY
 name: God of War
 type: talent
 flags:
-  core:
-    sourceId: Item.DYVazRNO2caSDMGE
+  core: {}
 img: systems/uesrpg-3ev4/images/Icons/godOfWar.webp
 effects: []
 _stats:
-  coreVersion: '12.331'
+  coreVersion: '13.342'
   systemId: null
   systemVersion: null
   createdTime: null
   modifiedTime: null
   lastModifiedBy: null
-  compendiumSource: null
+  compendiumSource: Item.DYVazRNO2caSDMGE
   duplicateSource: null
+  exportSource: null
 ownership:
   default: 0
   xvA5SwRGJiyPsnxH: 3
@@ -73,6 +73,7 @@ system:
     corre-sponding skill rank instead.</p>
 
     <p><em>*The Brawler Talent only applies to the rolled DoS</em></p>
+  governingCharacteristics: ''
   xpCost: 800
   level: 6
   talentReq: Brawler & Gladiator
@@ -82,8 +83,10 @@ system:
   untrainedException: false
   fatigueException: false
   addIBToMP: false
+  addIntToMPMultiplier: 1
   armorAcrobaticsException: false
   addHalfSpeed: false
+  doubleSwimSpeed: false
 folder: null
 sort: 0
 _key: '!items!tC0AyyA9iQf2aiFY'

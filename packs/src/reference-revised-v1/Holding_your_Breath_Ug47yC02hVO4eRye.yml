@@ -17,7 +17,7 @@ pages:
       format: 1
       content: "<p>In certain situations it might be necessary for a character to hold their breath, such as when diving, or running through a cloud of volcanic gasses.</p>\n<p>\_</p>\n<p>A character can hold their breath for 12 seconds (2 rounds in combat) per Endurance Bonus they has. This duration is doubled if the character does nothing but hold their breath (no action or movement allowed).</p>\n<p>\_</p>\n<p>For every round beyond the character’s Endurance Bonus holding their breath, the character gains a temporary level of fatigue until they die or regains access to fresh air, after which the temporary fatigue is removed at a rate of 1 per round.</p>"
     _stats:
-      coreVersion: '12.331'
+      coreVersion: '13.342'
       systemId: null
       systemVersion: null
       createdTime: null
@@ -25,6 +25,7 @@ pages:
       lastModifiedBy: null
       compendiumSource: null
       duplicateSource: null
+      exportSource: null
     _id: KXWEi3tM0Pmrr7dG
     system: {}
     image: {}
@@ -36,9 +37,10 @@ pages:
     ownership:
       default: -1
     flags: {}
+    category: null
     _key: '!journal.pages!Ug47yC02hVO4eRye.KXWEi3tM0Pmrr7dG'
 _stats:
-  coreVersion: '12.331'
+  coreVersion: '13.342'
   systemId: null
   systemVersion: null
   createdTime: null
@@ -46,8 +48,10 @@ _stats:
   lastModifiedBy: null
   compendiumSource: null
   duplicateSource: null
+  exportSource: null
 ownership:
   default: 0
   eeXhsDlbzUBZOXZT: 3
+categories: []
 _key: '!journal!Ug47yC02hVO4eRye'
 

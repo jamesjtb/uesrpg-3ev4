@@ -20,7 +20,7 @@ pages:
         quality. Hits from the character’s Shehai as part of a technique ignore
         armor.</span></p>
     _stats:
-      coreVersion: '12.331'
+      coreVersion: '13.342'
       systemId: null
       systemVersion: null
       createdTime: null
@@ -28,6 +28,7 @@ pages:
       lastModifiedBy: null
       compendiumSource: null
       duplicateSource: null
+      exportSource: null
     _id: R2Q4yMdbJXV1Nk4n
     system: {}
     image: {}
@@ -39,9 +40,10 @@ pages:
     ownership:
       default: -1
     flags: {}
+    category: null
     _key: '!journal.pages!XXD7UlY87F6SOHYJ.R2Q4yMdbJXV1Nk4n'
 _stats:
-  coreVersion: '12.331'
+  coreVersion: '13.342'
   systemId: null
   systemVersion: null
   createdTime: null
@@ -49,8 +51,10 @@ _stats:
   lastModifiedBy: null
   compendiumSource: null
   duplicateSource: null
+  exportSource: null
 ownership:
   default: 0
   eeXhsDlbzUBZOXZT: 3
+categories: []
 _key: '!journal!XXD7UlY87F6SOHYJ'
 

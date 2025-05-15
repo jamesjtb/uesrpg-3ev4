@@ -77,7 +77,7 @@ pages:
         requirements may learn techniques with XP. Remember that techniques
         count as magic, though they are not spells.</p>
     _stats:
-      coreVersion: '12.331'
+      coreVersion: '13.342'
       systemId: null
       systemVersion: null
       createdTime: null
@@ -85,6 +85,7 @@ pages:
       lastModifiedBy: null
       compendiumSource: null
       duplicateSource: null
+      exportSource: null
     _id: LTnPN7yravw2Zz98
     system: {}
     image: {}
@@ -96,9 +97,10 @@ pages:
     ownership:
       default: -1
     flags: {}
+    category: null
     _key: '!journal.pages!y5TXPvclnMZFRBVe.LTnPN7yravw2Zz98'
 _stats:
-  coreVersion: '12.331'
+  coreVersion: '13.342'
   systemId: null
   systemVersion: null
   createdTime: null
@@ -106,8 +108,10 @@ _stats:
   lastModifiedBy: null
   compendiumSource: null
   duplicateSource: null
+  exportSource: null
 ownership:
   default: 0
   eeXhsDlbzUBZOXZT: 3
+categories: []
 _key: '!journal!y5TXPvclnMZFRBVe'
 

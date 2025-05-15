@@ -1,0 +1,21 @@
+type: Item
+folder: null
+name: Loot
+color: null
+sorting: a
+_id: WgSjHj9G4W2TcQgX
+description: ''
+sort: 0
+flags: {}
+_stats:
+  compendiumSource: null
+  duplicateSource: null
+  exportSource: null
+  coreVersion: '13.342'
+  systemId: uesrpg-3ev4
+  systemVersion: v1.0.0-RC.70
+  createdTime: 1746913098963
+  modifiedTime: 1746913098963
+  lastModifiedBy: HcIrULZhA1JFIlrf
+_key: '!folders!WgSjHj9G4W2TcQgX'
+

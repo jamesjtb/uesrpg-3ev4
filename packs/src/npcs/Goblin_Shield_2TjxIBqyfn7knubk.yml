@@ -1,0 +1,117 @@
+name: Goblin Shield
+type: armor
+img: icons/equipment/shield/heater-wooden-worn.webp
+effects: []
+folder: 2pFaxS1x1IFFFZhY
+flags:
+  core: {}
+_stats:
+  compendiumSource: null
+  duplicateSource: null
+  exportSource: null
+  coreVersion: '13.342'
+  systemId: uesrpg-3ev4
+  systemVersion: v1.0.0-RC.71
+  createdTime: 1747293846618
+  modifiedTime: 1747293879085
+  lastModifiedBy: HcIrULZhA1JFIlrf
+ownership:
+  default: 0
+  eeXhsDlbzUBZOXZT: 3
+  HcIrULZhA1JFIlrf: 3
+system:
+  mpBonus: 0
+  hpBonus: 0
+  spBonus: 0
+  lpBonus: 0
+  wtBonus: 0
+  iniBonus: 0
+  speedBonus: 0
+  flyBonus: 0
+  swimBonus: 0
+  diseaseR: 0
+  fireR: 0
+  frostR: 0
+  shockR: 0
+  poisonR: 0
+  magicR: 0
+  natToughnessR: 0
+  silverR: 0
+  sunlightR: 0
+  characteristics:
+    none: None
+    str: STR
+    end: END
+    agi: AGI
+    int: INT
+    wp: WP
+    prc: PRC
+    prs: PRS
+    lck: LCK
+  characteristicBonus:
+    strChaBonus: 0
+    endChaBonus: 0
+    agiChaBonus: 0
+    intChaBonus: 0
+    wpChaBonus: 0
+    prcChaBonus: 0
+    prsChaBonus: 0
+    lckChaBonus: 0
+  replace:
+    ini:
+      iniToggle: false
+      value: 0
+      characteristic: ''
+    wt:
+      wtToggle: false
+      value: 0
+      characteristic: ''
+  skillArray: []
+  isPhysicalObject: true
+  containerStats:
+    contained: false
+    container_id: ''
+    container_name: ''
+  description: >-
+    <p><em>A basic iron shield, used across Tamriel by mercenaries, militia, and
+    soldiers. It is simple to maintain and can be made by almost any apprentice
+    smith.</em></p>
+  quantity: 1
+  enc: 3
+  totalENC: 0
+  reach: ''
+  damage: ''
+  equipped: false
+  carried: false
+  hands: 0
+  price: 60
+  modPrice: 0
+  armor: 6
+  blockRating: ''
+  excludeENC: false
+  magic_ar: 3 Magic
+  enchant_level: null
+  qualities: >-
+    <p><a class="content-link" draggable="true" data-link=""
+    data-uuid="Compendium.uesrpg-3ev4.rules-reference.JournalEntry.jpCUhAq6d1oYTs3N.JournalEntryPage.m4e9eOB1KRydVkRC"
+    data-id="m4e9eOB1KRydVkRC" data-type="JournalEntryPage"
+    data-pack="uesrpg-3ev4.rules-reference" data-tooltip="Page"
+    data-tooltip-text="Text Page">Light</a></p>
+  category: none
+  item_cat:
+    none: None
+    head: Helmet
+    l_arm: Left Gauntlet
+    r_arm: Right Gauntlet
+    l_leg: Left Leg
+    r_leg: Right Leg
+    body: Chestplate
+    shield: Shield
+  charge:
+    value: 0
+    max: 0
+    reduction: 1
+_id: 2TjxIBqyfn7knubk
+sort: 0
+_key: '!items!2TjxIBqyfn7knubk'
+

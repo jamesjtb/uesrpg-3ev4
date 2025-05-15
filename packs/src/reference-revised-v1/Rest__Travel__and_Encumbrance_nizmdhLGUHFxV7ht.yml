@@ -17,7 +17,7 @@ pages:
       format: 1
       content: "<p><strong>Rest</strong></p>\n<p>During their adventures characters will often spend long periods of time in dangerous environments and situations, and will typically need some time to recover afterwards. One way to do that is by resting. There are two different types of rests: long rests, and short rests.</p>\n<p><strong>Long Rests</strong></p>\n<p>A long rest is an 8 hour long period of downtime in which the character performs no strenuous physical activity.</p>\n<p>At the end of a long rest, a character removes all levels of fatigue and regains all SP spent, heals an amount of Hit Points equal to their Endurance bonus (as long as they have no untreated wounds), and regenerates all of their missing Magicka Points. Many powers also recharge at the end of a long rest.</p>\n<p>Their natural healing is doubled if the character is focused entirely on healing themselves (or if another person is caring for them). A character cannot benefit from more than one long rest in a 24 hour period, and must be conscious at the start to gain it benefits.</p>\n<p>\_</p>\n<p><strong>Short Rests</strong></p>\n<p>A short rest is an hour long period of downtime in which the character performs no strenuous physical activity. At the end of a short rest, a character regenerates one Stamina Point or removes one level of fatigue, and regains IB Magicka Points.</p>\n<p>\_</p>\n<p><strong>Travel</strong></p>\n<p>Adventurers are often wanderers, traveling far across Tamriel in search of fame and fortune.</p>\n<p><strong>Travel pace</strong></p>\n<p>A character, or group of characters, can travel at either a slow, normal, or fast pace. This determines how far they can move in a given period of time, and how taxing the journey is.</p>\n<table style=\"width:58.1705%\" border=\"1\">\n<tbody>\n<tr>\n<td style=\"width:25.3613%\"><strong>\_ \_ \_ \_Pace</strong></td>\n<td style=\"width:40.3425%\"><strong>\_ \_ \_ \_ \_ \_ \_ \_ \_ Speed</strong></td>\n<td style=\"width:33.4367%\"><strong>\_ \_ \_ \_ \_ \_ \_Effect</strong></td>\n</tr>\n<tr>\n<td style=\"width:25.3613%\">Fast</td>\n<td style=\"width:40.3425%\">7kph (56km/day)</td>\n<td style=\"width:33.4367%\">-20 Observe</td>\n</tr>\n<tr>\n<td style=\"width:25.3613%\">Normal</td>\n<td style=\"width:40.3425%\">5kph (40km/day)</td>\n<td style=\"width:33.4367%\">-</td>\n</tr>\n<tr>\n<td style=\"width:25.3613%\">Slow</td>\n<td style=\"width:40.3425%\">3kph (24km/day)</td>\n<td style=\"width:33.4367%\">Can move stealthily</td>\n</tr>\n</tbody>\n</table>\n<p>Characters traveling through particularly difficult terrain travel at half the normal pace for their given speed.</p>\n<p><strong>Travel and Exhaustion</strong></p>\n<p>The travel pace assumes that characters travel roughly 8 hours in a day. For each hour traveled beyond this the characters must make an Endurance test (starting at +0 for the first hour) with a stacking -10 penalty for each hour beyond this. On failure, the character loses 1 SP.</p>\n<p>\_</p>\n<p><strong>Encumbrance</strong></p>\n<p>Encumbrance represents the mass and bulk of the items the character is wearing, wielding, or carrying on their person. The Encumbrance Value (ENC) of an item is a single digit number that represents this. Items with an ENC of zero are, on their own, inconsequential. But if a character is carrying a large number of these items, treat every 10 zero ENC items as having a total ENC of one.</p>\n<p>If a character is carrying an item in such a way that the space it takes up isn’t an issue (such as inside a pack or container), its ENC is halved (round down).</p>\n<p>When worn, the ENC of a given piece of armor is halved (round down). Shields do not benefit from this effect. <strong>Encumbrance Levels</strong></p>\n<p>The number of times that a character’s total ENC (the sum of the ENC of all the equipment they are carrying) exceeds their Carry Rating determines their Encumbrance Level. Higher encumbrance levels apply specific penalties:</p>\n<p>• Test Penalty: A penalty to all physical and movement based skill and characteristic tests.</p>\n<p>• Speed Penalty: A reduction of the character’s base Speed.</p>\n<p>• Stamina Penalty: A reduction of the character’s SP max. For each level this would reduce it below 0 the character gains a level of fatigue. These penalties represent the raw difficulty of carrying something too heavy for your character. Thus they can stack with penalties for wearing particularly heavy armor, which represent the difficulties of fighting while weighed down.</p>\n<p>\_</p>\n<table style=\"width:99.1477%\" border=\"1\">\n<tbody>\n<tr>\n<td style=\"width:23.0001%\"><strong>Level</strong></td>\n<td style=\"width:23.9473%\"><strong>Total ENC</strong></td>\n<td style=\"width:12.6757%\"><strong>Test Penalty</strong></td>\n<td style=\"width:22.3577%\"><strong>Speed Penalty</strong></td>\n<td style=\"width:16.873%\"><strong>Stamina Penalty</strong></td>\n</tr>\n<tr>\n<td style=\"width:23.0001%\">Minimal (0)</td>\n<td style=\"width:23.9473%\">&lt;= 1 times Carry Rating</td>\n<td style=\"width:12.6757%\">No penalty</td>\n<td style=\"width:22.3577%\">No penalty</td>\n<td style=\"width:16.873%\">No penalty</td>\n</tr>\n<tr>\n<td style=\"width:23.0001%\">Moderate (1)</td>\n<td style=\"width:23.9473%\">&gt; 1 times Carry Rating</td>\n<td style=\"width:12.6757%\">-10</td>\n<td style=\"width:22.3577%\">-1 meter</td>\n<td style=\"width:16.873%\">-1 SP max</td>\n</tr>\n<tr>\n<td style=\"width:23.0001%\">Severe (2)</td>\n<td style=\"width:23.9473%\">&gt; 2 times Carry Rating</td>\n<td style=\"width:12.6757%\">-20</td>\n<td style=\"width:22.3577%\">1/2 speed (round down)</td>\n<td style=\"width:16.873%\">-3 SP max</td>\n</tr>\n<tr>\n<td style=\"width:23.0001%\">Crushing (3)</td>\n<td style=\"width:23.9473%\">&gt; 3 times Carry Rating</td>\n<td style=\"width:12.6757%\">-40</td>\n<td style=\"width:22.3577%\">Immobilized</td>\n<td style=\"width:16.873%\">-5 SP max</td>\n</tr>\n</tbody>\n</table>"
     _stats:
-      coreVersion: '12.331'
+      coreVersion: '13.342'
       systemId: null
       systemVersion: null
       createdTime: null
@@ -25,6 +25,7 @@ pages:
       lastModifiedBy: null
       compendiumSource: null
       duplicateSource: null
+      exportSource: null
     _id: igU88g3u5CXfXwvF
     system: {}
     image: {}
@@ -36,9 +37,10 @@ pages:
     ownership:
       default: -1
     flags: {}
+    category: null
     _key: '!journal.pages!nizmdhLGUHFxV7ht.igU88g3u5CXfXwvF'
 _stats:
-  coreVersion: '12.331'
+  coreVersion: '13.342'
   systemId: null
   systemVersion: null
   createdTime: null
@@ -46,8 +48,10 @@ _stats:
   lastModifiedBy: null
   compendiumSource: null
   duplicateSource: null
+  exportSource: null
 ownership:
   default: 0
   eeXhsDlbzUBZOXZT: 3
+categories: []
 _key: '!journal!nizmdhLGUHFxV7ht'
 

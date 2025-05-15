@@ -17,7 +17,7 @@ pages:
       format: 1
       content: "<p>The caster's maximal capacity for Mindlock is equal to their maximal Action Points, representing the ability to divide attention between the mental battle to control the ctreautre, and paying attention to one's surroundings. When a summoned creature is destroyed, banished, or released, the Mindlock is reduced, freeing up capacity for new minions.</p>\n<p>If the conjurer's maximal Action Points are reduced while in control of a Daedra, they must immediately roll an opposed willpower test against the conjured Daedra. The Daedra gain a bonus +1 DoS per Mindlock the conjurer is unable to provide to the reduced capacity.\_</p>\n<p>If the Daedra wins the opposed test, it becomes unbound exactly as described in the Summon [Daedra/Construct] trait.</p>\n<p>\_</p>\n<p>Creatures bound by Necroamncers rarely serve of their own free will and only has 1 AP per round to obey their master's order. A secondary action can be used by the necromancer in order to remove the minion's 1 AP limit.</p>"
     _stats:
-      coreVersion: '12.331'
+      coreVersion: '13.342'
       systemId: null
       systemVersion: null
       createdTime: null
@@ -25,6 +25,7 @@ pages:
       lastModifiedBy: null
       compendiumSource: null
       duplicateSource: null
+      exportSource: null
     _id: AFizPvszcbIhCcnp
     system: {}
     image: {}
@@ -36,9 +37,10 @@ pages:
     ownership:
       default: -1
     flags: {}
+    category: null
     _key: '!journal.pages!DyA3yhRJDDDu8cTw.AFizPvszcbIhCcnp'
 _stats:
-  coreVersion: '12.331'
+  coreVersion: '13.342'
   systemId: null
   systemVersion: null
   createdTime: null
@@ -46,8 +48,10 @@ _stats:
   lastModifiedBy: null
   compendiumSource: null
   duplicateSource: null
+  exportSource: null
 ownership:
   default: 0
   eeXhsDlbzUBZOXZT: 3
+categories: []
 _key: '!journal!DyA3yhRJDDDu8cTw'
 

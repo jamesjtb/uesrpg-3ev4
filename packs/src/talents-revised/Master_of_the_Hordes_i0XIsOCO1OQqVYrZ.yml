@@ -6,17 +6,17 @@ effects: []
 folder: null
 sort: 0
 flags:
-  core:
-    sourceId: Item.DYVazRNO2caSDMGE
+  core: {}
 _stats:
-  coreVersion: '12.331'
+  coreVersion: '13.342'
   systemId: null
   systemVersion: null
   createdTime: null
   modifiedTime: null
   lastModifiedBy: null
-  compendiumSource: null
+  compendiumSource: Item.DYVazRNO2caSDMGE
   duplicateSource: null
+  exportSource: null
 ownership:
   default: 0
   xvA5SwRGJiyPsnxH: 3
@@ -74,6 +74,7 @@ system:
     affecting them by 1 (to a minimum of 0). The maximum number of creatures
     summoned this way is equal to the Summoner&rsquo;s WpB. A character may use
     this talent or Task-master, but not both.</p>
+  governingCharacteristics: ''
   xpCost: 800
   level: 6
   talentReq: Taskmaster
@@ -83,7 +84,9 @@ system:
   untrainedException: false
   fatigueException: false
   addIBToMP: false
+  addIntToMPMultiplier: 1
   armorAcrobaticsException: false
   addHalfSpeed: false
+  doubleSwimSpeed: false
 _key: '!items!i0XIsOCO1OQqVYrZ'
 

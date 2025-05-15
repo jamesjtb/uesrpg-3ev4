@@ -18,7 +18,7 @@ pages:
         <p><span style="color:#191813">Character’s Shehai counts as
         Sunlight.</span></p>
     _stats:
-      coreVersion: '12.331'
+      coreVersion: '13.342'
       systemId: null
       systemVersion: null
       createdTime: null
@@ -26,6 +26,7 @@ pages:
       lastModifiedBy: null
       compendiumSource: null
       duplicateSource: null
+      exportSource: null
     _id: eZg3Iv4m4AibRLEL
     system: {}
     image: {}
@@ -37,9 +38,10 @@ pages:
     ownership:
       default: -1
     flags: {}
+    category: null
     _key: '!journal.pages!xvuc9IJWiBaMCCRR.eZg3Iv4m4AibRLEL'
 _stats:
-  coreVersion: '12.331'
+  coreVersion: '13.342'
   systemId: null
   systemVersion: null
   createdTime: null
@@ -47,8 +49,10 @@ _stats:
   lastModifiedBy: null
   compendiumSource: null
   duplicateSource: null
+  exportSource: null
 ownership:
   default: 0
   eeXhsDlbzUBZOXZT: 3
+categories: []
 _key: '!journal!xvuc9IJWiBaMCCRR'
 

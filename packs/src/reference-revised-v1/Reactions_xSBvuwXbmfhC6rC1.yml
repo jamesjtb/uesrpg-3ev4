@@ -17,7 +17,7 @@ pages:
       format: 1
       content: "<p>Reactions are actions that are taken to counter or resist other characters’ actions, or other events, that the character is aware of. Only one reaction attempt is permitted for each threat or event, but any number of reactions may be made per round (provided that the character has action points left for that round to spend).</p>\n<p>Reactions can be used at any time during the combat round in response to a threat or event that a character is aware of by spending an AP. Reactions can be triggered by other reactions: if this happens, resolve them however makes the most sense.</p>\n<p>\_</p>\n<p><strong>Attack of Opportunity</strong></p>\n<p>This reaction allows a character to take advantage of an opening to make a melee attack (This still follows the rules of a max of 2 attacks per round) against an opponent when they are vulnerable. Attacks of opportunity are resolved before the action they are being made in reaction to is resolved. Any character may use a reaction to an Attack of Opportunity without interrupting their current action, but they must be able to see to their target. This reaction may be triggered by the following:</p>\n<p>•<strong> Retreat</strong>: When an opponent moves out of the character’s melee range without taking the disengage action.</p>\n<p>• <strong>Approach</strong>: When an opponent moves closer to the character within their melee range (such as from 3 meters away to 2 meters away against a 3m range weapon).</p>\n<p>• <strong>Spellcast</strong>: When an opponent casts a spell within their melee range (unless the spell counts as a melee attack).</p>\n<p>• <strong>Standing Up</strong>: When a prone character stands up within their melee range without using the Arise action.</p>\n<p>• <strong>Ranged Attack</strong>: When an opponent makes a ranged attack or reloads a weapon within their engagement range.</p>\n<p>•<strong> Ready</strong>: When an opponent readies a weapon, reloads a weapon, or drinks a potion within their melee range. If the opponent does so as a free action, it does not allow for an attack of opportunity.</p>\n<p>\_</p>\n<p><strong>Block, Parry, Evade</strong></p>\n<p>The character tries defend against a melee or ranged attack. See the Attacking &amp; Defending section for details.</p>\n<p>\_</p>\n<p><strong>Counter Attack</strong></p>\n<p>The character attempts to make a melee counter attack (still subject to the two attack per round limit) in response to an attack from an opponent they are aware of through the use of their Combat Style skill. See Attacking &amp; Defending.</p>"
     _stats:
-      coreVersion: '12.331'
+      coreVersion: '13.342'
       systemId: null
       systemVersion: null
       createdTime: null
@@ -25,6 +25,7 @@ pages:
       lastModifiedBy: null
       compendiumSource: null
       duplicateSource: null
+      exportSource: null
     _id: omdpCCrFFEEBXzJA
     system: {}
     image: {}
@@ -36,9 +37,10 @@ pages:
     ownership:
       default: -1
     flags: {}
+    category: null
     _key: '!journal.pages!xSBvuwXbmfhC6rC1.omdpCCrFFEEBXzJA'
 _stats:
-  coreVersion: '12.331'
+  coreVersion: '13.342'
   systemId: null
   systemVersion: null
   createdTime: null
@@ -46,8 +48,10 @@ _stats:
   lastModifiedBy: null
   compendiumSource: null
   duplicateSource: null
+  exportSource: null
 ownership:
   default: 0
   eeXhsDlbzUBZOXZT: 3
+categories: []
 _key: '!journal!xSBvuwXbmfhC6rC1'
 

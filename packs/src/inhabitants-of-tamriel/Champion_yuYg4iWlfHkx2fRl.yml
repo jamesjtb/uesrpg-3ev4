@@ -7,20 +7,20 @@ items:
     type: talent
     sort: 1000000
     flags:
-      core:
-        sourceId: Item.DYVazRNO2caSDMGE
+      core: {}
     img: systems/uesrpg-3ev4/images/Icons/duelist.webp
     effects: []
     folder: null
     _stats:
-      compendiumSource: null
+      compendiumSource: Item.DYVazRNO2caSDMGE
       duplicateSource: null
-      coreVersion: '12.331'
+      coreVersion: '13.342'
       systemId: uesrpg-3ev4
       systemVersion: v1.0.0-RC.59
       createdTime: null
       modifiedTime: null
       lastModifiedBy: null
+      exportSource: null
     ownership:
       default: 0
     system:
@@ -74,6 +74,7 @@ items:
       description: >-
         <p>The character adds a bonus DoS to any successful Combat Style or
         evade test made while within melee range of only one opponent.</p>
+      governingCharacteristics: ''
       xpCost: 0
       level: 0
       talentReq: ''
@@ -83,28 +84,30 @@ items:
       untrainedException: false
       fatigueException: false
       addIBToMP: false
+      addIntToMPMultiplier: 1
       armorAcrobaticsException: false
       addHalfSpeed: false
+      doubleSwimSpeed: false
     _key: '!actors.items!yuYg4iWlfHkx2fRl.iHOe0sk9DEBcjGqy'
   - _id: xvAAi88YSxGMn3ad
     name: Appeal
     type: talent
     sort: 1100000
     flags:
-      core:
-        sourceId: Item.7fKKFs3JVM7UgiPU
+      core: {}
     img: systems/uesrpg-3ev4/images/Icons/appeal.webp
     effects: []
     folder: null
     _stats:
-      compendiumSource: null
+      compendiumSource: Item.7fKKFs3JVM7UgiPU
       duplicateSource: null
-      coreVersion: '12.331'
+      coreVersion: '13.342'
       systemId: uesrpg-3ev4
       systemVersion: v1.0.0-RC.59
       createdTime: null
       modifiedTime: null
       lastModifiedBy: null
+      exportSource: null
     ownership:
       default: 0
     system:
@@ -159,6 +162,7 @@ items:
         <p>While being watched by a crowd, this character can spend 1 AP to test
         Social. If they succeed, they gain a +20 to all Combat tests until they
         fail a Combat test.</p>
+      governingCharacteristics: ''
       xpCost: 0
       level: 0
       talentReq: ''
@@ -168,28 +172,30 @@ items:
       untrainedException: false
       fatigueException: false
       addIBToMP: false
+      addIntToMPMultiplier: 1
       armorAcrobaticsException: false
       addHalfSpeed: false
+      doubleSwimSpeed: false
     _key: '!actors.items!yuYg4iWlfHkx2fRl.xvAAi88YSxGMn3ad'
   - _id: 3wV1cPlCo1SQdSmV
     name: Seasoned Victor
     type: talent
     sort: 1200000
     flags:
-      core:
-        sourceId: Item.7fKKFs3JVM7UgiPU
+      core: {}
     img: systems/uesrpg-3ev4/images/Icons/appeal.webp
     effects: []
     folder: null
     _stats:
-      compendiumSource: null
+      compendiumSource: Item.7fKKFs3JVM7UgiPU
       duplicateSource: null
-      coreVersion: '12.331'
+      coreVersion: '13.342'
       systemId: uesrpg-3ev4
       systemVersion: v1.0.0-RC.59
       createdTime: null
       modifiedTime: null
       lastModifiedBy: null
+      exportSource: null
     ownership:
       default: 0
     system:
@@ -241,6 +247,7 @@ items:
         lckChaBonus: 0
       skillArray: []
       description: <p>This character gains +1 DoS in all successful Combat tests.</p>
+      governingCharacteristics: ''
       xpCost: 0
       level: 0
       talentReq: ''
@@ -250,8 +257,10 @@ items:
       untrainedException: false
       fatigueException: false
       addIBToMP: false
+      addIntToMPMultiplier: 1
       armorAcrobaticsException: false
       addHalfSpeed: false
+      doubleSwimSpeed: false
     _key: '!actors.items!yuYg4iWlfHkx2fRl.3wV1cPlCo1SQdSmV'
   - _id: wVVMGzockczujkcC
     name: Net
@@ -261,17 +270,17 @@ items:
     folder: null
     sort: 0
     flags:
-      core:
-        sourceId: Item.LF4lKSUrO7J5EVLI
+      core: {}
     _stats:
-      compendiumSource: null
+      compendiumSource: Item.LF4lKSUrO7J5EVLI
       duplicateSource: null
-      coreVersion: '12.331'
+      coreVersion: '13.342'
       systemId: uesrpg-3ev4
       systemVersion: v1.0.0-RC.59
       createdTime: null
       modifiedTime: null
       lastModifiedBy: null
+      exportSource: null
     ownership:
       default: 0
       qwt9o1cuKYitvD9G: 3
@@ -371,17 +380,17 @@ items:
     folder: null
     sort: 0
     flags:
-      core:
-        sourceId: Item.N9ME4VmcWOyHST5l
+      core: {}
     _stats:
-      compendiumSource: null
+      compendiumSource: Item.N9ME4VmcWOyHST5l
       duplicateSource: null
-      coreVersion: '12.331'
+      coreVersion: '13.342'
       systemId: uesrpg-3ev4
       systemVersion: v1.0.0-RC.59
       createdTime: null
       modifiedTime: null
       lastModifiedBy: null
+      exportSource: null
     ownership:
       default: 0
       qwt9o1cuKYitvD9G: 3
@@ -482,17 +491,17 @@ items:
     folder: null
     sort: 0
     flags:
-      core:
-        sourceId: Item.DUNRYXyycS1viYqC
+      core: {}
     _stats:
-      compendiumSource: null
+      compendiumSource: Item.DUNRYXyycS1viYqC
       duplicateSource: null
-      coreVersion: '12.331'
+      coreVersion: '13.342'
       systemId: uesrpg-3ev4
       systemVersion: v1.0.0-RC.59
       createdTime: null
       modifiedTime: null
       lastModifiedBy: null
+      exportSource: null
     ownership:
       default: 0
       qwt9o1cuKYitvD9G: 3
@@ -593,17 +602,17 @@ items:
     folder: null
     sort: 0
     flags:
-      core:
-        sourceId: Item.DZ2uV1a0hnTWi4I8
+      core: {}
     _stats:
-      compendiumSource: null
+      compendiumSource: Item.DZ2uV1a0hnTWi4I8
       duplicateSource: null
-      coreVersion: '12.331'
+      coreVersion: '13.342'
       systemId: uesrpg-3ev4
       systemVersion: v1.0.0-RC.59
       createdTime: null
       modifiedTime: null
       lastModifiedBy: null
+      exportSource: null
     ownership:
       default: 0
       qwt9o1cuKYitvD9G: 3
@@ -705,17 +714,17 @@ items:
     folder: null
     sort: 0
     flags:
-      core:
-        sourceId: Item.DZ2uV1a0hnTWi4I8
+      core: {}
     _stats:
-      compendiumSource: null
+      compendiumSource: Item.DZ2uV1a0hnTWi4I8
       duplicateSource: null
-      coreVersion: '12.331'
+      coreVersion: '13.342'
       systemId: uesrpg-3ev4
       systemVersion: v1.0.0-RC.59
       createdTime: null
       modifiedTime: null
       lastModifiedBy: null
+      exportSource: null
     ownership:
       default: 0
       qwt9o1cuKYitvD9G: 3
@@ -817,17 +826,17 @@ items:
     folder: null
     sort: 0
     flags:
-      core:
-        sourceId: Item.DZ2uV1a0hnTWi4I8
+      core: {}
     _stats:
-      compendiumSource: null
+      compendiumSource: Item.DZ2uV1a0hnTWi4I8
       duplicateSource: null
-      coreVersion: '12.331'
+      coreVersion: '13.342'
       systemId: uesrpg-3ev4
       systemVersion: v1.0.0-RC.59
       createdTime: null
       modifiedTime: null
       lastModifiedBy: null
+      exportSource: null
     ownership:
       default: 0
       qwt9o1cuKYitvD9G: 3
@@ -929,17 +938,17 @@ items:
     folder: null
     sort: 0
     flags:
-      core:
-        sourceId: Item.DZ2uV1a0hnTWi4I8
+      core: {}
     _stats:
-      compendiumSource: null
+      compendiumSource: Item.DZ2uV1a0hnTWi4I8
       duplicateSource: null
-      coreVersion: '12.331'
+      coreVersion: '13.342'
       systemId: uesrpg-3ev4
       systemVersion: v1.0.0-RC.59
       createdTime: null
       modifiedTime: null
       lastModifiedBy: null
+      exportSource: null
     ownership:
       default: 0
       qwt9o1cuKYitvD9G: 3
@@ -1041,17 +1050,17 @@ items:
     folder: null
     sort: 0
     flags:
-      core:
-        sourceId: Item.DZ2uV1a0hnTWi4I8
+      core: {}
     _stats:
-      compendiumSource: null
+      compendiumSource: Item.DZ2uV1a0hnTWi4I8
       duplicateSource: null
-      coreVersion: '12.331'
+      coreVersion: '13.342'
       systemId: uesrpg-3ev4
       systemVersion: v1.0.0-RC.59
       createdTime: null
       modifiedTime: null
       lastModifiedBy: null
+      exportSource: null
     ownership:
       default: 0
       qwt9o1cuKYitvD9G: 3
@@ -1153,17 +1162,17 @@ items:
     folder: null
     sort: 0
     flags:
-      core:
-        sourceId: Item.DZ2uV1a0hnTWi4I8
+      core: {}
     _stats:
-      compendiumSource: null
+      compendiumSource: Item.DZ2uV1a0hnTWi4I8
       duplicateSource: null
-      coreVersion: '12.331'
+      coreVersion: '13.342'
       systemId: uesrpg-3ev4
       systemVersion: v1.0.0-RC.59
       createdTime: null
       modifiedTime: null
       lastModifiedBy: null
+      exportSource: null
     ownership:
       default: 0
       qwt9o1cuKYitvD9G: 3
@@ -1263,12 +1272,13 @@ flags: {}
 _stats:
   compendiumSource: null
   duplicateSource: null
-  coreVersion: '12.331'
+  coreVersion: '13.342'
   systemId: uesrpg-3ev4
   systemVersion: v1.0.0-RC.59
   createdTime: 1732338960235
   modifiedTime: 1732339102041
   lastModifiedBy: 7bDMesNjX54nzN9S
+  exportSource: null
 ownership:
   default: 0
   WcwhQU1nz94WaD5n: 3
@@ -1781,7 +1791,6 @@ prototypeToken:
     contrast: 0
   appendNumber: false
   prependAdjective: false
-  hexagonalShape: 0
   detectionModes: []
   occludable:
     radius: 0
@@ -1794,6 +1803,12 @@ prototypeToken:
     subject:
       scale: 1
       texture: null
+  turnMarker:
+    mode: 1
+    animation: null
+    src: null
+    disposition: false
+  movementAction: null
 _id: yuYg4iWlfHkx2fRl
 sort: 4000000
 _key: '!actors!yuYg4iWlfHkx2fRl'

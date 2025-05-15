@@ -1,20 +1,20 @@
 name: Lords of the Niben
 type: talent
 flags:
-  core:
-    sourceId: Item.JX5ttPQSa94C9UKX
+  core: {}
 img: icons/equipment/head/crown-gold-blue.webp
 effects: []
 _id: Pownf9M1cCmrk8lc
 _stats:
-  coreVersion: '12.331'
+  coreVersion: '13.342'
   systemId: null
   systemVersion: null
   createdTime: null
   modifiedTime: null
   lastModifiedBy: null
-  compendiumSource: null
+  compendiumSource: Item.JX5ttPQSa94C9UKX
   duplicateSource: null
+  exportSource: null
 ownership:
   default: 0
   xvA5SwRGJiyPsnxH: 3
@@ -72,6 +72,7 @@ system:
     Starlight trait. Additionally, when they use the Empowered by Starlight
     power, the Ayleid can instead choose to regenerate 15 Magicka, or 8 Hit
     Points.</p>
+  governingCharacteristics: ''
   xpCost: 400
   level: 4
   talentReq: Birds of Prey
@@ -81,8 +82,10 @@ system:
   untrainedException: false
   fatigueException: false
   addIBToMP: false
+  addIntToMPMultiplier: 1
   armorAcrobaticsException: false
   addHalfSpeed: false
+  doubleSwimSpeed: false
 folder: null
 sort: 0
 _key: '!items!Pownf9M1cCmrk8lc'

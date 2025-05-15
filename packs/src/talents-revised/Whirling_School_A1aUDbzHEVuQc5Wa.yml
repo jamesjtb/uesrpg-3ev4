@@ -6,17 +6,17 @@ effects: []
 folder: null
 sort: 0
 flags:
-  core:
-    sourceId: Item.DYVazRNO2caSDMGE
+  core: {}
 _stats:
-  coreVersion: '12.331'
+  coreVersion: '13.342'
   systemId: null
   systemVersion: null
   createdTime: null
   modifiedTime: null
   lastModifiedBy: null
-  compendiumSource: null
+  compendiumSource: Item.DYVazRNO2caSDMGE
   duplicateSource: null
+  exportSource: null
 ownership:
   default: 0
   xvA5SwRGJiyPsnxH: 3
@@ -80,6 +80,7 @@ system:
     the target&rsquo;s neck, causing the bola to choke the opponent causing them
     to lose 1 SP per round. Removing the bola requires 1 AP and a successful -10
     Strength test.</p>
+  governingCharacteristics: ''
   xpCost: 500
   level: 5
   talentReq: ''
@@ -89,7 +90,9 @@ system:
   untrainedException: false
   fatigueException: false
   addIBToMP: false
+  addIntToMPMultiplier: 1
   armorAcrobaticsException: false
   addHalfSpeed: false
+  doubleSwimSpeed: false
 _key: '!items!A1aUDbzHEVuQc5Wa'
 

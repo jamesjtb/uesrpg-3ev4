@@ -17,7 +17,7 @@ pages:
       format: 1
       content: "<p>Special Actions are a unique class of actions that are often taken in opposition to another character. Special actions can be either primary/secondary actions or reactions, and follow all the normal rules for an action of their type.</p>\n<p>\_</p>\n<p><strong>Arise</strong></p>\n<p><em>Secondary Action</em></p>\n<p>Allows the character to use a momentary opening to roll back up to their feet, removing the prone condition without granting opponents the ability to make an attack of opportunity.</p>\n<p>\_</p>\n<p><strong>Blind Opponent</strong></p>\n<p><em>Secondary Action</em></p>\n<p>Character makes a Combat Style test against an opponent that they can see which their opponent may oppose with either the Evade or Combat Style (if wielding a shield) skill. If the target loses, they become blinded for 1 round. The character must be within Strength Bonus meters of the opponent and reasonably have access with some way to blind their opponent (thrown sand or rocks, for example). A character wearing a Full Helmet automatically succeeds on the opposed test.</p>\n<p>\_</p>\n<p><strong>Disarm/Take Weapon</strong></p>\n<p><em>Primary Action</em></p>\n<p>Character makes an Athletics or unarmed Combat Style test which their opponent may oppose with their unarmed Combat Style or Athletics skill. If the target of the disarm attempt loses, the character takes their weapon. Target cannot be of larger size and must be within 1 meter. Cannot take natural weapons. The character must have a free hand with which to hold the taken weapon. If the character does not have a free hand or if the character chooses throw it, the weapon is flung away 1d4 meters in a random direction.</p>\n<p>\_</p>\n<p><strong>Force Movement</strong></p>\n<p><em>Primary Action</em></p>\n<p>Character makes a Combat Style test which their opponent may oppose with their Combat Style skill. If the character wins, they may move themself and their opponent up to three meters in any direction (they must both move in the same direction and the same amount) as the character shifts the location of the fight. Target character must be within melee range.</p>\n<p>\_</p>\n<p><strong>Resist</strong></p>\n<p><em>Secondary Action</em></p>\n<p>Character makes an Athletics or unarmed Combat Style test which their opponent may oppose with their Athletics or unarmed Combat Style skill. If they win, they may escape being restrained, grappled, or blinded.</p>\n<p>\_</p>\n<p><strong>Trip</strong></p>\n<p><em>Secondary Action</em></p>\n<p>Character makes an Athletics or unarmed Combat Style test which their opponent may oppose with their Athletics, unarmed Combat Style, or Evade skill. If they win, their opponent falls prone. Target character cannot be of larger size, and must be within 2 meters.</p>\n<p>\_</p>\n<p><strong>Feint</strong></p>\n<p><em>Secondary Action</em></p>\n<p>Character makes a Deceive test against an opponent within 2m. On a success, they gain an advantage on the next melee attack made against that opponent before the end of their next turn.</p>"
     _stats:
-      coreVersion: '12.331'
+      coreVersion: '13.342'
       systemId: null
       systemVersion: null
       createdTime: null
@@ -25,6 +25,7 @@ pages:
       lastModifiedBy: null
       compendiumSource: null
       duplicateSource: null
+      exportSource: null
     _id: 2LDS5om9JUICVjE5
     system: {}
     image: {}
@@ -36,9 +37,10 @@ pages:
     ownership:
       default: -1
     flags: {}
+    category: null
     _key: '!journal.pages!h89YoRE0ufzAVT2F.2LDS5om9JUICVjE5'
 _stats:
-  coreVersion: '12.331'
+  coreVersion: '13.342'
   systemId: null
   systemVersion: null
   createdTime: null
@@ -46,8 +48,10 @@ _stats:
   lastModifiedBy: null
   compendiumSource: null
   duplicateSource: null
+  exportSource: null
 ownership:
   default: 0
   eeXhsDlbzUBZOXZT: 3
+categories: []
 _key: '!journal!h89YoRE0ufzAVT2F'
 

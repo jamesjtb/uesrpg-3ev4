@@ -40,7 +40,7 @@ pages:
         also test Willpower at a -20 as an action during combat to attempt to
         snap out of frenzy, which ends the condition.</p>
     _stats:
-      coreVersion: '12.331'
+      coreVersion: '13.342'
       systemId: null
       systemVersion: null
       createdTime: null
@@ -48,6 +48,7 @@ pages:
       lastModifiedBy: null
       compendiumSource: null
       duplicateSource: null
+      exportSource: null
     _id: UaN7ojq78tnyh4PF
     system: {}
     image: {}
@@ -59,9 +60,10 @@ pages:
     ownership:
       default: -1
     flags: {}
+    category: null
     _key: '!journal.pages!1yYaEZKzCWMWCgNn.UaN7ojq78tnyh4PF'
 _stats:
-  coreVersion: '12.331'
+  coreVersion: '13.342'
   systemId: null
   systemVersion: null
   createdTime: null
@@ -69,8 +71,10 @@ _stats:
   lastModifiedBy: null
   compendiumSource: null
   duplicateSource: null
+  exportSource: null
 ownership:
   default: 0
   eeXhsDlbzUBZOXZT: 3
+categories: []
 _key: '!journal!1yYaEZKzCWMWCgNn'
 

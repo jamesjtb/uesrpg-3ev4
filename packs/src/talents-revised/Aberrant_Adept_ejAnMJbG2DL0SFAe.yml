@@ -5,18 +5,18 @@ effects: []
 folder: null
 sort: 0
 flags:
-  core:
-    sourceId: Item.9wfTQADmRYdgOEDI
+  core: {}
 _id: ejAnMJbG2DL0SFAe
 _stats:
-  coreVersion: '12.331'
+  coreVersion: '13.342'
   systemId: null
   systemVersion: null
   createdTime: null
   modifiedTime: null
   lastModifiedBy: null
-  compendiumSource: null
+  compendiumSource: Item.9wfTQADmRYdgOEDI
   duplicateSource: null
+  exportSource: null
 ownership:
   default: 0
   eeXhsDlbzUBZOXZT: 3
@@ -71,6 +71,7 @@ system:
   description: |-
     <p>The character only ever loses one Stamina Point from failed</p>
     <p>Technique tests.</p>
+  governingCharacteristics: ''
   xpCost: 500
   level: 5
   talentReq: ''
@@ -80,7 +81,9 @@ system:
   untrainedException: false
   fatigueException: false
   addIBToMP: false
+  addIntToMPMultiplier: 1
   armorAcrobaticsException: false
   addHalfSpeed: false
+  doubleSwimSpeed: false
 _key: '!items!ejAnMJbG2DL0SFAe'
 

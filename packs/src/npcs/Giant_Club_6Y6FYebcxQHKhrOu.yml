@@ -1,0 +1,116 @@
+name: Giant Club
+type: weapon
+img: icons/weapons/clubs/club-heavy-barbed-black.webp
+effects: []
+folder: U1K0MATSkyl5LyNi
+flags:
+  core: {}
+_stats:
+  compendiumSource: null
+  duplicateSource: null
+  exportSource: null
+  coreVersion: '13.342'
+  systemId: uesrpg-3ev4
+  systemVersion: v1.0.0-RC.71
+  createdTime: 1747021337502
+  modifiedTime: 1747082045349
+  lastModifiedBy: HcIrULZhA1JFIlrf
+ownership:
+  default: 0
+  eeXhsDlbzUBZOXZT: 3
+  HcIrULZhA1JFIlrf: 3
+system:
+  mpBonus: 0
+  hpBonus: 0
+  spBonus: 0
+  lpBonus: 0
+  wtBonus: 0
+  iniBonus: 0
+  speedBonus: 0
+  flyBonus: 0
+  swimBonus: 0
+  diseaseR: 0
+  fireR: 0
+  frostR: 0
+  shockR: 0
+  poisonR: 0
+  magicR: 0
+  natToughnessR: 0
+  silverR: 0
+  sunlightR: 0
+  characteristics:
+    none: None
+    str: STR
+    end: END
+    agi: AGI
+    int: INT
+    wp: WP
+    prc: PRC
+    prs: PRS
+    lck: LCK
+  characteristicBonus:
+    strChaBonus: 0
+    endChaBonus: 0
+    agiChaBonus: 0
+    intChaBonus: 0
+    wpChaBonus: 0
+    prcChaBonus: 0
+    prsChaBonus: 0
+    lckChaBonus: 0
+  replace:
+    ini:
+      iniToggle: false
+      value: 0
+      characteristic: ''
+    wt:
+      wtToggle: false
+      value: 0
+      characteristic: ''
+  skillArray: []
+  isPhysicalObject: true
+  containerStats:
+    contained: false
+    container_id: ''
+    container_name: ''
+  description: >-
+    <p><em style="box-sizing: border-box; user-select: text; color:
+    #191813;">Use by a regular PC requires at least 50 Strength, must be used in
+    two hands, and requires a Stamina Point each time it swings.</em></p>
+  quantity: 1
+  enc: 10
+  totalENC: 0
+  reach: 2-4
+  damage: '0'
+  damage2: 3d10
+  damage3: 0
+  weapon2H: true
+  equippped: false
+  carried: false
+  excludeENC: false
+  superior: false
+  hands: 0
+  price: 200
+  modPrice: 0
+  armor: 0
+  magic_ar: 0
+  enchant_level: 1
+  qualities: >-
+    <p>@UUID[Compendium.uesrpg-3ev4.rules-reference.JournalEntry.COYSCdFncXiw8nAn.JournalEntryPage.DroJvQvpGtAqmNV8]{Crushing},
+    @UUID[Compendium.uesrpg-3ev4.rules-reference.JournalEntry.COYSCdFncXiw8nAn.JournalEntryPage.oNVjeI8oiViUphmD]{Unwieldy},
+    @UUID[Compendium.uesrpg-3ev4.rules-reference.JournalEntry.COYSCdFncXiw8nAn.JournalEntryPage.5tTQCnFPwqFo6KG1]{Shield
+    Splitter},
+    @UUID[Compendium.uesrpg-3ev4.rules-reference.JournalEntry.COYSCdFncXiw8nAn.JournalEntryPage.OH0xMEhGquMpclet]{Concussive}</p>
+  charge:
+    value: 0
+    max: 0
+    reduction: 1
+  item_cat:
+    none: None
+    weapon1: Primary Weapon
+    weapon2: Secondary Weapon
+    weapon3: Sidearm
+  equipped: false
+_id: 6Y6FYebcxQHKhrOu
+sort: 100000
+_key: '!items!6Y6FYebcxQHKhrOu'
+

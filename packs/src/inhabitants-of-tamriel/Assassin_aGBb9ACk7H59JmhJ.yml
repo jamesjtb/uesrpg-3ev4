@@ -7,20 +7,20 @@ items:
     type: power
     sort: 900000
     flags:
-      core:
-        sourceId: Item.MyWjMeVAtBCJa8Bt
+      core: {}
     img: systems/uesrpg-3ev4/images/Icons/poison.webp
     effects: []
     folder: null
     _stats:
-      compendiumSource: null
+      compendiumSource: Item.MyWjMeVAtBCJa8Bt
       duplicateSource: null
-      coreVersion: '12.331'
+      coreVersion: '13.342'
       systemId: uesrpg-3ev4
       systemVersion: v1.0.0-RC.59
       createdTime: null
       modifiedTime: null
       lastModifiedBy: null
+      exportSource: null
     ownership:
       default: 0
     system:
@@ -90,20 +90,20 @@ items:
     type: talent
     sort: 1000000
     flags:
-      core:
-        sourceId: Item.7fKKFs3JVM7UgiPU
+      core: {}
     img: systems/uesrpg-3ev4/images/Icons/leapUp.webp
     effects: []
     folder: null
     _stats:
-      compendiumSource: null
+      compendiumSource: Item.7fKKFs3JVM7UgiPU
       duplicateSource: null
-      coreVersion: '12.331'
+      coreVersion: '13.342'
       systemId: uesrpg-3ev4
       systemVersion: v1.0.0-RC.59
       createdTime: null
       modifiedTime: null
       lastModifiedBy: null
+      exportSource: null
     ownership:
       default: 0
     system:
@@ -157,6 +157,7 @@ items:
       description: >-
         <p><span style="color: #191813;">This character does not provoke Attacks
         of Opportunity.</span></p>
+      governingCharacteristics: ''
       xpCost: 0
       level: 0
       talentReq: ''
@@ -166,28 +167,30 @@ items:
       untrainedException: false
       fatigueException: false
       addIBToMP: false
+      addIntToMPMultiplier: 1
       armorAcrobaticsException: false
       addHalfSpeed: false
+      doubleSwimSpeed: false
     _key: '!actors.items!aGBb9ACk7H59JmhJ.4PCY5BZWzDqDUhfz'
   - _id: F14UzIjOcQlSMe1a
     name: Killer's Instinct
     type: talent
     sort: 1100000
     flags:
-      core:
-        sourceId: Item.7fKKFs3JVM7UgiPU
+      core: {}
     img: systems/uesrpg-3ev4/images/Icons/killingBlow.webp
     effects: []
     folder: null
     _stats:
-      compendiumSource: null
+      compendiumSource: Item.7fKKFs3JVM7UgiPU
       duplicateSource: null
-      coreVersion: '12.331'
+      coreVersion: '13.342'
       systemId: uesrpg-3ev4
       systemVersion: v1.0.0-RC.59
       createdTime: null
       modifiedTime: null
       lastModifiedBy: null
+      exportSource: null
     ownership:
       default: 0
     system:
@@ -242,6 +245,7 @@ items:
         <p><span style="color: #191813;">This character treats all enemy Wound
         Thresholds as being 1 lower than normal for the purposes of dealing
         Wounds.</span></p>
+      governingCharacteristics: ''
       xpCost: 0
       level: 0
       talentReq: ''
@@ -251,28 +255,30 @@ items:
       untrainedException: false
       fatigueException: false
       addIBToMP: false
+      addIntToMPMultiplier: 1
       armorAcrobaticsException: false
       addHalfSpeed: false
+      doubleSwimSpeed: false
     _key: '!actors.items!aGBb9ACk7H59JmhJ.F14UzIjOcQlSMe1a'
   - _id: hrjrtS4xcbddC5YO
     name: Sneak Attack (4)
     type: talent
     sort: 1200000
     flags:
-      core:
-        sourceId: Item.DYVazRNO2caSDMGE
+      core: {}
     img: systems/uesrpg-3ev4/images/Icons/sneakAttack.webp
     effects: []
     folder: null
     _stats:
-      compendiumSource: null
+      compendiumSource: Item.DYVazRNO2caSDMGE
       duplicateSource: null
-      coreVersion: '12.331'
+      coreVersion: '13.342'
       systemId: uesrpg-3ev4
       systemVersion: v1.0.0-RC.59
       createdTime: null
       modifiedTime: null
       lastModifiedBy: null
+      exportSource: null
     ownership:
       default: 0
     system:
@@ -326,6 +332,7 @@ items:
       description: >-
         <p>This character deals +4 damage on successful attacks made while
         Hidden.</p>
+      governingCharacteristics: ''
       xpCost: null
       level: null
       talentReq: ''
@@ -335,8 +342,10 @@ items:
       untrainedException: false
       fatigueException: false
       addIBToMP: false
+      addIntToMPMultiplier: 1
       armorAcrobaticsException: false
       addHalfSpeed: false
+      doubleSwimSpeed: false
     _key: '!actors.items!aGBb9ACk7H59JmhJ.hrjrtS4xcbddC5YO'
   - _id: MJo7oMUoAEPtjdCW
     name: Steel Shortsword
@@ -346,17 +355,17 @@ items:
     folder: null
     sort: 0
     flags:
-      core:
-        sourceId: Item.2jUT8icq4MuyLEaC
+      core: {}
     _stats:
-      compendiumSource: null
+      compendiumSource: Item.2jUT8icq4MuyLEaC
       duplicateSource: null
-      coreVersion: '12.331'
+      coreVersion: '13.342'
       systemId: uesrpg-3ev4
       systemVersion: v1.0.0-RC.59
       createdTime: null
       modifiedTime: null
       lastModifiedBy: null
+      exportSource: null
     ownership:
       default: 0
       qwt9o1cuKYitvD9G: 3
@@ -456,17 +465,17 @@ items:
     folder: null
     sort: 0
     flags:
-      core:
-        sourceId: Item.OKZPsQqlt5joV7DH
+      core: {}
     _stats:
-      compendiumSource: null
+      compendiumSource: Item.OKZPsQqlt5joV7DH
       duplicateSource: null
-      coreVersion: '12.331'
+      coreVersion: '13.342'
       systemId: uesrpg-3ev4
       systemVersion: v1.0.0-RC.59
       createdTime: null
       modifiedTime: null
       lastModifiedBy: null
+      exportSource: null
     ownership:
       default: 0
       qwt9o1cuKYitvD9G: 3
@@ -566,17 +575,17 @@ items:
     folder: null
     sort: 0
     flags:
-      core:
-        sourceId: Item.8SI16Irg5SyQEdhU
+      core: {}
     _stats:
-      compendiumSource: null
+      compendiumSource: Item.8SI16Irg5SyQEdhU
       duplicateSource: null
-      coreVersion: '12.331'
+      coreVersion: '13.342'
       systemId: uesrpg-3ev4
       systemVersion: v1.0.0-RC.59
       createdTime: null
       modifiedTime: null
       lastModifiedBy: null
+      exportSource: null
     ownership:
       default: 0
       WcwhQU1nz94WaD5n: 3
@@ -664,17 +673,17 @@ items:
     folder: null
     sort: 0
     flags:
-      core:
-        sourceId: Item.wu2mKwl7koDbwaa2
+      core: {}
     _stats:
-      compendiumSource: null
+      compendiumSource: Item.wu2mKwl7koDbwaa2
       duplicateSource: null
-      coreVersion: '12.331'
+      coreVersion: '13.342'
       systemId: uesrpg-3ev4
       systemVersion: v1.0.0-RC.59
       createdTime: null
       modifiedTime: null
       lastModifiedBy: null
+      exportSource: null
     ownership:
       default: 0
       WcwhQU1nz94WaD5n: 3
@@ -762,17 +771,17 @@ items:
     folder: null
     sort: 0
     flags:
-      core:
-        sourceId: Item.0HkulFPTpv356zmz
+      core: {}
     _stats:
-      compendiumSource: null
+      compendiumSource: Item.0HkulFPTpv356zmz
       duplicateSource: null
-      coreVersion: '12.331'
+      coreVersion: '13.342'
       systemId: uesrpg-3ev4
       systemVersion: v1.0.0-RC.59
       createdTime: null
       modifiedTime: null
       lastModifiedBy: null
+      exportSource: null
     ownership:
       default: 0
       qwt9o1cuKYitvD9G: 3
@@ -875,17 +884,17 @@ items:
     folder: null
     sort: 0
     flags:
-      core:
-        sourceId: Item.3KcuXZzkMXNRvXBc
+      core: {}
     _stats:
-      compendiumSource: null
+      compendiumSource: Item.3KcuXZzkMXNRvXBc
       duplicateSource: null
-      coreVersion: '12.331'
+      coreVersion: '13.342'
       systemId: uesrpg-3ev4
       systemVersion: v1.0.0-RC.59
       createdTime: null
       modifiedTime: null
       lastModifiedBy: null
+      exportSource: null
     ownership:
       default: 0
       qwt9o1cuKYitvD9G: 3
@@ -988,17 +997,17 @@ items:
     folder: null
     sort: 0
     flags:
-      core:
-        sourceId: Item.3KcuXZzkMXNRvXBc
+      core: {}
     _stats:
-      compendiumSource: null
+      compendiumSource: Item.3KcuXZzkMXNRvXBc
       duplicateSource: null
-      coreVersion: '12.331'
+      coreVersion: '13.342'
       systemId: uesrpg-3ev4
       systemVersion: v1.0.0-RC.59
       createdTime: null
       modifiedTime: null
       lastModifiedBy: null
+      exportSource: null
     ownership:
       default: 0
       qwt9o1cuKYitvD9G: 3
@@ -1101,17 +1110,17 @@ items:
     folder: null
     sort: 0
     flags:
-      core:
-        sourceId: Item.QzE81F3FCC26O0if
+      core: {}
     _stats:
-      compendiumSource: null
+      compendiumSource: Item.QzE81F3FCC26O0if
       duplicateSource: null
-      coreVersion: '12.331'
+      coreVersion: '13.342'
       systemId: uesrpg-3ev4
       systemVersion: v1.0.0-RC.59
       createdTime: null
       modifiedTime: null
       lastModifiedBy: null
+      exportSource: null
     ownership:
       default: 0
       qwt9o1cuKYitvD9G: 3
@@ -1214,17 +1223,17 @@ items:
     folder: null
     sort: 0
     flags:
-      core:
-        sourceId: Item.QzE81F3FCC26O0if
+      core: {}
     _stats:
-      compendiumSource: null
+      compendiumSource: Item.QzE81F3FCC26O0if
       duplicateSource: null
-      coreVersion: '12.331'
+      coreVersion: '13.342'
       systemId: uesrpg-3ev4
       systemVersion: v1.0.0-RC.59
       createdTime: null
       modifiedTime: null
       lastModifiedBy: null
+      exportSource: null
     ownership:
       default: 0
       qwt9o1cuKYitvD9G: 3
@@ -1327,17 +1336,17 @@ items:
     folder: null
     sort: 0
     flags:
-      core:
-        sourceId: Item.Lrge7JVHLu2pQrYN
+      core: {}
     _stats:
-      compendiumSource: null
+      compendiumSource: Item.Lrge7JVHLu2pQrYN
       duplicateSource: null
-      coreVersion: '12.331'
+      coreVersion: '13.342'
       systemId: uesrpg-3ev4
       systemVersion: v1.0.0-RC.59
       createdTime: null
       modifiedTime: null
       lastModifiedBy: null
+      exportSource: null
     ownership:
       default: 0
       qwt9o1cuKYitvD9G: 3
@@ -1438,12 +1447,13 @@ flags: {}
 _stats:
   compendiumSource: null
   duplicateSource: null
-  coreVersion: '12.331'
+  coreVersion: '13.342'
   systemId: uesrpg-3ev4
   systemVersion: v1.0.0-RC.59
   createdTime: 1732338920352
   modifiedTime: 1732339102041
   lastModifiedBy: 7bDMesNjX54nzN9S
+  exportSource: null
 ownership:
   default: 0
   WcwhQU1nz94WaD5n: 3
@@ -1956,7 +1966,6 @@ prototypeToken:
     contrast: 0
   appendNumber: false
   prependAdjective: false
-  hexagonalShape: 0
   detectionModes: []
   occludable:
     radius: 0
@@ -1969,6 +1978,12 @@ prototypeToken:
     subject:
       scale: 1
       texture: null
+  turnMarker:
+    mode: 1
+    animation: null
+    src: null
+    disposition: false
+  movementAction: null
 _id: aGBb9ACk7H59JmhJ
 sort: 4900000
 _key: '!actors!aGBb9ACk7H59JmhJ'

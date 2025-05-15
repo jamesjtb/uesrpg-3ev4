@@ -17,7 +17,7 @@ pages:
       format: 1
       content: "<p>Weapons of this type are able to strike unpredictably. These weapons cannot be parried or countered, but cannot be used to parry or counter attack either. If an attacker with this weapon and a defender blocking with a shield both pass their respective tests, and the attacker’s degrees of success exceed those of the defender, then the defender does not block the attack as they normally would and the attack is resolved as if the attacker had won. If a character critically fails an attack with a flail they hit themselves.\_</p>"
     _stats:
-      coreVersion: '12.331'
+      coreVersion: '13.342'
       systemId: null
       systemVersion: null
       createdTime: null
@@ -25,6 +25,7 @@ pages:
       lastModifiedBy: null
       compendiumSource: null
       duplicateSource: null
+      exportSource: null
     _id: v3vP1uOBaJOpD9QV
     system: {}
     image: {}
@@ -36,9 +37,10 @@ pages:
     ownership:
       default: -1
     flags: {}
+    category: null
     _key: '!journal.pages!InDSKbnEwiwBQUeq.v3vP1uOBaJOpD9QV'
 _stats:
-  coreVersion: '12.331'
+  coreVersion: '13.342'
   systemId: null
   systemVersion: null
   createdTime: null
@@ -46,8 +48,10 @@ _stats:
   lastModifiedBy: null
   compendiumSource: null
   duplicateSource: null
+  exportSource: null
 ownership:
   default: 0
   eeXhsDlbzUBZOXZT: 3
+categories: []
 _key: '!journal!InDSKbnEwiwBQUeq'
 

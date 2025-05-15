@@ -2,19 +2,19 @@ _id: n8LeJBpmomzA4Zzv
 name: Quick Draw
 type: talent
 flags:
-  core:
-    sourceId: Item.DYVazRNO2caSDMGE
+  core: {}
 img: systems/uesrpg-3ev4/images/Icons/quickDraw.webp
 effects: []
 _stats:
-  coreVersion: '12.331'
+  coreVersion: '13.342'
   systemId: null
   systemVersion: null
   createdTime: null
   modifiedTime: null
   lastModifiedBy: null
-  compendiumSource: null
+  compendiumSource: Item.DYVazRNO2caSDMGE
   duplicateSource: null
+  exportSource: null
 ownership:
   default: 0
   xvA5SwRGJiyPsnxH: 3
@@ -71,6 +71,7 @@ system:
     cost AP (except reloads). Additionally, the character can choose to either
     reduce the AP cost of drinking a potion to 1 AP or drink a potion without
     provoking Attacks of Opportunity.</p>
+  governingCharacteristics: ''
   xpCost: 200
   level: 2
   talentReq: ''
@@ -80,8 +81,10 @@ system:
   untrainedException: false
   fatigueException: false
   addIBToMP: false
+  addIntToMPMultiplier: 1
   armorAcrobaticsException: false
   addHalfSpeed: false
+  doubleSwimSpeed: false
 folder: null
 sort: 0
 _key: '!items!n8LeJBpmomzA4Zzv'

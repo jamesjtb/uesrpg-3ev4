@@ -20,7 +20,7 @@ pages:
         purposes of casting spells. The weapon does not increase the range of
         any spell, due to it’s reach.</p>
     _stats:
-      coreVersion: '12.331'
+      coreVersion: '13.342'
       systemId: null
       systemVersion: null
       createdTime: null
@@ -28,6 +28,7 @@ pages:
       lastModifiedBy: null
       compendiumSource: null
       duplicateSource: null
+      exportSource: null
     _id: bf5XwZXO5RFEn8a7
     system: {}
     image: {}
@@ -39,9 +40,10 @@ pages:
     ownership:
       default: -1
     flags: {}
+    category: null
     _key: '!journal.pages!H74ao7uTiZrIVyUW.bf5XwZXO5RFEn8a7'
 _stats:
-  coreVersion: '12.331'
+  coreVersion: '13.342'
   systemId: null
   systemVersion: null
   createdTime: null
@@ -49,8 +51,10 @@ _stats:
   lastModifiedBy: null
   compendiumSource: null
   duplicateSource: null
+  exportSource: null
 ownership:
   default: 0
   eeXhsDlbzUBZOXZT: 3
+categories: []
 _key: '!journal!H74ao7uTiZrIVyUW'
 

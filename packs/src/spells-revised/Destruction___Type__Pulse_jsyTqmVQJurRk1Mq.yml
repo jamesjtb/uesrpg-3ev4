@@ -10,17 +10,17 @@ flags:
     equipActive: false
     alwaysActive: false
     effects: []
-  core:
-    sourceId: Item.Ez7Rgk45jQ4Ue8A3
+  core: {}
 _stats:
-  coreVersion: '12.331'
+  coreVersion: '13.342'
   systemId: null
   systemVersion: null
   createdTime: null
   modifiedTime: null
   lastModifiedBy: null
-  compendiumSource: null
+  compendiumSource: Item.Ez7Rgk45jQ4Ue8A3
   duplicateSource: null
+  exportSource: null
 ownership:
   default: 0
   JMrHvZADCRvhdKBh: 3

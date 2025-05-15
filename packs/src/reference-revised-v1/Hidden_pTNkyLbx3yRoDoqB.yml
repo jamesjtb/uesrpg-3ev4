@@ -17,7 +17,7 @@ pages:
       format: 1
       content: "<p>The character is hidden from enemies and moving stealthily. Characters must spend 2 meters of their movement for the round for each 1 meter that they actually move while hidden, and cannot Dash. Enemies cannot attempt to defend themselves against the attacks of hidden characters, but attacking causes a character to lose this condition immediately afterwards.</p>\n<p>\_</p>\n<p>If a hidden character would enter line of sight of at least one character from whom they have not previously hidden, they must make a Stealth test opposed by that character’s Observe. On success, or if they achieve more degrees of success, they remain hidden. Otherwise that character becomes aware of them.</p>"
     _stats:
-      coreVersion: '12.331'
+      coreVersion: '13.342'
       systemId: null
       systemVersion: null
       createdTime: null
@@ -25,6 +25,7 @@ pages:
       lastModifiedBy: null
       compendiumSource: null
       duplicateSource: null
+      exportSource: null
     _id: g4fJxdDgap2Bi9Kt
     system: {}
     image: {}
@@ -36,9 +37,10 @@ pages:
     ownership:
       default: -1
     flags: {}
+    category: null
     _key: '!journal.pages!pTNkyLbx3yRoDoqB.g4fJxdDgap2Bi9Kt'
 _stats:
-  coreVersion: '12.331'
+  coreVersion: '13.342'
   systemId: null
   systemVersion: null
   createdTime: null
@@ -46,8 +48,10 @@ _stats:
   lastModifiedBy: null
   compendiumSource: null
   duplicateSource: null
+  exportSource: null
 ownership:
   default: 0
   eeXhsDlbzUBZOXZT: 3
+categories: []
 _key: '!journal!pTNkyLbx3yRoDoqB'
 

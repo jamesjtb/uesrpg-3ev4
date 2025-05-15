@@ -2,19 +2,19 @@ _id: GkFM7j31QuyNpaWD
 name: Champion
 type: talent
 flags:
-  core:
-    sourceId: Item.DYVazRNO2caSDMGE
+  core: {}
 img: systems/uesrpg-3ev4/images/Icons/champion.webp
 effects: []
 _stats:
-  coreVersion: '12.331'
+  coreVersion: '13.342'
   systemId: null
   systemVersion: null
   createdTime: null
   modifiedTime: null
   lastModifiedBy: null
-  compendiumSource: null
+  compendiumSource: Item.DYVazRNO2caSDMGE
   duplicateSource: null
+  exportSource: null
 ownership:
   default: 0
   xvA5SwRGJiyPsnxH: 3
@@ -73,6 +73,7 @@ system:
     skill rank instead.</p>
 
     <p><em>*The Duelist talent only applies to the rolled DoS.</em></p>
+  governingCharacteristics: ''
   xpCost: 800
   level: 6
   talentReq: Duelist & Exploit Advantage
@@ -82,8 +83,10 @@ system:
   untrainedException: false
   fatigueException: false
   addIBToMP: false
+  addIntToMPMultiplier: 1
   armorAcrobaticsException: false
   addHalfSpeed: false
+  doubleSwimSpeed: false
 folder: null
 sort: 0
 _key: '!items!GkFM7j31QuyNpaWD'

@@ -28,12 +28,14 @@ pages:
     _stats:
       compendiumSource: null
       duplicateSource: null
-      coreVersion: '12.331'
+      coreVersion: '13.342'
       systemId: uesrpg-3ev4
       systemVersion: v1.0.0-RC.70
       createdTime: 1746859684660
       modifiedTime: 1746859794695
       lastModifiedBy: HcIrULZhA1JFIlrf
+      exportSource: null
+    category: null
     _key: '!journal.pages!COYSCdFncXiw8nAn.DroJvQvpGtAqmNV8'
   - sort: 0
     name: '"The Big Three"'
@@ -62,12 +64,14 @@ pages:
     _stats:
       compendiumSource: null
       duplicateSource: null
-      coreVersion: '12.331'
+      coreVersion: '13.342'
       systemId: uesrpg-3ev4
       systemVersion: v1.0.0-RC.70
       createdTime: 1746859758865
       modifiedTime: 1746860765120
       lastModifiedBy: HcIrULZhA1JFIlrf
+      exportSource: null
+    category: null
     _key: '!journal.pages!COYSCdFncXiw8nAn.ewlqwIhPBwsm2Oh0'
   - sort: 200000
     name: Splitting (X)
@@ -96,12 +100,14 @@ pages:
     _stats:
       compendiumSource: null
       duplicateSource: null
-      coreVersion: '12.331'
+      coreVersion: '13.342'
       systemId: uesrpg-3ev4
       systemVersion: v1.0.0-RC.70
       createdTime: 1746859824974
       modifiedTime: 1746859828892
       lastModifiedBy: HcIrULZhA1JFIlrf
+      exportSource: null
+    category: null
     _key: '!journal.pages!COYSCdFncXiw8nAn.iFXMszfecRgc8Jvv'
   - sort: 300000
     name: Slashing (X)
@@ -129,12 +135,14 @@ pages:
     _stats:
       compendiumSource: null
       duplicateSource: null
-      coreVersion: '12.331'
+      coreVersion: '13.342'
       systemId: uesrpg-3ev4
       systemVersion: v1.0.0-RC.70
       createdTime: 1746859855214
       modifiedTime: 1746859860526
       lastModifiedBy: HcIrULZhA1JFIlrf
+      exportSource: null
+    category: null
     _key: '!journal.pages!COYSCdFncXiw8nAn.z9krUt6hXWjT5Zi4'
   - sort: 400000
     name: Other Weapon Qualities
@@ -162,12 +170,14 @@ pages:
     _stats:
       compendiumSource: null
       duplicateSource: null
-      coreVersion: '12.331'
+      coreVersion: '13.342'
       systemId: uesrpg-3ev4
       systemVersion: v1.0.0-RC.70
       createdTime: 1746859880641
       modifiedTime: 1746860774536
       lastModifiedBy: HcIrULZhA1JFIlrf
+      exportSource: null
+    category: null
     _key: '!journal.pages!COYSCdFncXiw8nAn.2TP0YgnlO2Kq4uG3'
   - sort: 500000
     name: Complex
@@ -194,12 +204,14 @@ pages:
     _stats:
       compendiumSource: null
       duplicateSource: null
-      coreVersion: '12.331'
+      coreVersion: '13.342'
       systemId: uesrpg-3ev4
       systemVersion: v1.0.0-RC.70
       createdTime: 1746859963624
       modifiedTime: 1746859975854
       lastModifiedBy: HcIrULZhA1JFIlrf
+      exportSource: null
+    category: null
     _key: '!journal.pages!COYSCdFncXiw8nAn.cgc8IAP7bubHeFIB'
   - sort: 600000
     name: Concussive
@@ -228,12 +240,14 @@ pages:
     _stats:
       compendiumSource: null
       duplicateSource: null
-      coreVersion: '12.331'
+      coreVersion: '13.342'
       systemId: uesrpg-3ev4
       systemVersion: v1.0.0-RC.70
       createdTime: 1746859982473
       modifiedTime: 1746859992010
       lastModifiedBy: HcIrULZhA1JFIlrf
+      exportSource: null
+    category: null
     _key: '!journal.pages!COYSCdFncXiw8nAn.OH0xMEhGquMpclet'
   - sort: 700000
     name: Damaged (X)
@@ -263,12 +277,14 @@ pages:
     _stats:
       compendiumSource: null
       duplicateSource: null
-      coreVersion: '12.331'
+      coreVersion: '13.342'
       systemId: uesrpg-3ev4
       systemVersion: v1.0.0-RC.70
       createdTime: 1746860002556
       modifiedTime: 1746860009000
       lastModifiedBy: HcIrULZhA1JFIlrf
+      exportSource: null
+    category: null
     _key: '!journal.pages!COYSCdFncXiw8nAn.VIilkSfjUDPcFZun'
   - sort: 800000
     name: Dueling Weapon
@@ -295,12 +311,14 @@ pages:
     _stats:
       compendiumSource: null
       duplicateSource: null
-      coreVersion: '12.331'
+      coreVersion: '13.342'
       systemId: uesrpg-3ev4
       systemVersion: v1.0.0-RC.70
       createdTime: 1746860014409
       modifiedTime: 1746860023936
       lastModifiedBy: HcIrULZhA1JFIlrf
+      exportSource: null
+    category: null
     _key: '!journal.pages!COYSCdFncXiw8nAn.jBHrm1WlWT09oAS4'
   - sort: 900000
     name: Entangling
@@ -336,12 +354,14 @@ pages:
     _stats:
       compendiumSource: null
       duplicateSource: null
-      coreVersion: '12.331'
+      coreVersion: '13.342'
       systemId: uesrpg-3ev4
       systemVersion: v1.0.0-RC.70
       createdTime: 1746860192233
       modifiedTime: 1746860450299
       lastModifiedBy: HcIrULZhA1JFIlrf
+      exportSource: null
+    category: null
     _key: '!journal.pages!COYSCdFncXiw8nAn.frMHLGvZfr656K5g'
   - sort: 1000000
     name: Focus
@@ -369,12 +389,14 @@ pages:
     _stats:
       compendiumSource: null
       duplicateSource: null
-      coreVersion: '12.331'
+      coreVersion: '13.342'
       systemId: uesrpg-3ev4
       systemVersion: v1.0.0-RC.70
       createdTime: 1746860456124
       modifiedTime: 1746860463335
       lastModifiedBy: HcIrULZhA1JFIlrf
+      exportSource: null
+    category: null
     _key: '!journal.pages!COYSCdFncXiw8nAn.W3VajaEEkT9ruyL3'
   - sort: 1100000
     name: Exploit Weakness
@@ -405,12 +427,14 @@ pages:
     _stats:
       compendiumSource: null
       duplicateSource: null
-      coreVersion: '12.331'
+      coreVersion: '13.342'
       systemId: uesrpg-3ev4
       systemVersion: v1.0.0-RC.70
       createdTime: 1746860472633
       modifiedTime: 1746860567619
       lastModifiedBy: HcIrULZhA1JFIlrf
+      exportSource: null
+    category: null
     _key: '!journal.pages!COYSCdFncXiw8nAn.iWEVoKLBavJ9ykEJ'
   - sort: 1200000
     name: Flail
@@ -443,12 +467,14 @@ pages:
     _stats:
       compendiumSource: null
       duplicateSource: null
-      coreVersion: '12.331'
+      coreVersion: '13.342'
       systemId: uesrpg-3ev4
       systemVersion: v1.0.0-RC.70
       createdTime: 1746860485825
       modifiedTime: 1746860494185
       lastModifiedBy: HcIrULZhA1JFIlrf
+      exportSource: null
+    category: null
     _key: '!journal.pages!COYSCdFncXiw8nAn.IDvUhWsp5BNVuVcC'
   - sort: 1300000
     name: Impaling
@@ -477,12 +503,14 @@ pages:
     _stats:
       compendiumSource: null
       duplicateSource: null
-      coreVersion: '12.331'
+      coreVersion: '13.342'
       systemId: uesrpg-3ev4
       systemVersion: v1.0.0-RC.70
       createdTime: 1746860606311
       modifiedTime: 1746860631191
       lastModifiedBy: HcIrULZhA1JFIlrf
+      exportSource: null
+    category: null
     _key: '!journal.pages!COYSCdFncXiw8nAn.14HzJvdGOyLlqsoc'
   - sort: 1400000
     name: Hand to Hand
@@ -511,12 +539,14 @@ pages:
     _stats:
       compendiumSource: null
       duplicateSource: null
-      coreVersion: '12.331'
+      coreVersion: '13.342'
       systemId: uesrpg-3ev4
       systemVersion: v1.0.0-RC.70
       createdTime: 1746860642611
       modifiedTime: 1746860645965
       lastModifiedBy: HcIrULZhA1JFIlrf
+      exportSource: null
+    category: null
     _key: '!journal.pages!COYSCdFncXiw8nAn.XdRz4yBXSWbFGwzM'
   - sort: 1500000
     name: Hooked
@@ -544,12 +574,14 @@ pages:
     _stats:
       compendiumSource: null
       duplicateSource: null
-      coreVersion: '12.331'
+      coreVersion: '13.342'
       systemId: uesrpg-3ev4
       systemVersion: v1.0.0-RC.70
       createdTime: 1746860660215
       modifiedTime: 1746860663076
       lastModifiedBy: HcIrULZhA1JFIlrf
+      exportSource: null
+    category: null
     _key: '!journal.pages!COYSCdFncXiw8nAn.bsGKV3bjL1Q6TYOf'
   - sort: 1600000
     name: Magic
@@ -577,12 +609,14 @@ pages:
     _stats:
       compendiumSource: null
       duplicateSource: null
-      coreVersion: '12.331'
+      coreVersion: '13.342'
       systemId: uesrpg-3ev4
       systemVersion: v1.0.0-RC.70
       createdTime: 1746860669683
       modifiedTime: 1746860672914
       lastModifiedBy: HcIrULZhA1JFIlrf
+      exportSource: null
+    category: null
     _key: '!journal.pages!COYSCdFncXiw8nAn.Kv5Ldo7JrIlp6tis'
   - sort: 1700000
     name: Mounted
@@ -610,12 +644,14 @@ pages:
     _stats:
       compendiumSource: null
       duplicateSource: null
-      coreVersion: '12.331'
+      coreVersion: '13.342'
       systemId: uesrpg-3ev4
       systemVersion: v1.0.0-RC.70
       createdTime: 1746860678918
       modifiedTime: 1746860685814
       lastModifiedBy: HcIrULZhA1JFIlrf
+      exportSource: null
+    category: null
     _key: '!journal.pages!COYSCdFncXiw8nAn.4H4LSi1OUjFUpQeJ'
   - sort: 1800000
     name: Primitive
@@ -640,12 +676,14 @@ pages:
     _stats:
       compendiumSource: null
       duplicateSource: null
-      coreVersion: '12.331'
+      coreVersion: '13.342'
       systemId: uesrpg-3ev4
       systemVersion: v1.0.0-RC.70
       createdTime: 1746860703648
       modifiedTime: 1746860707065
       lastModifiedBy: HcIrULZhA1JFIlrf
+      exportSource: null
+    category: null
     _key: '!journal.pages!COYSCdFncXiw8nAn.wq3q1KcNZnzhyLwM'
   - sort: 1900000
     name: Proven
@@ -672,12 +710,14 @@ pages:
     _stats:
       compendiumSource: null
       duplicateSource: null
-      coreVersion: '12.331'
+      coreVersion: '13.342'
       systemId: uesrpg-3ev4
       systemVersion: v1.0.0-RC.70
       createdTime: 1746860715027
       modifiedTime: 1746860720364
       lastModifiedBy: HcIrULZhA1JFIlrf
+      exportSource: null
+    category: null
     _key: '!journal.pages!COYSCdFncXiw8nAn.h795F3LQ2eiES62m'
   - sort: 2000000
     name: Reload (X)
@@ -705,12 +745,14 @@ pages:
     _stats:
       compendiumSource: null
       duplicateSource: null
-      coreVersion: '12.331'
+      coreVersion: '13.342'
       systemId: uesrpg-3ev4
       systemVersion: v1.0.0-RC.70
       createdTime: 1746860731027
       modifiedTime: 1746860751260
       lastModifiedBy: HcIrULZhA1JFIlrf
+      exportSource: null
+    category: null
     _key: '!journal.pages!COYSCdFncXiw8nAn.ArBaLM4Yhq5sgKop'
   - sort: 2100000
     name: Shield Splitter
@@ -737,12 +779,14 @@ pages:
     _stats:
       compendiumSource: null
       duplicateSource: null
-      coreVersion: '12.331'
+      coreVersion: '13.342'
       systemId: uesrpg-3ev4
       systemVersion: v1.0.0-RC.70
       createdTime: 1746860739362
       modifiedTime: 1746860742181
       lastModifiedBy: HcIrULZhA1JFIlrf
+      exportSource: null
+    category: null
     _key: '!journal.pages!COYSCdFncXiw8nAn.5tTQCnFPwqFo6KG1'
   - sort: 2200000
     name: Sling
@@ -771,12 +815,14 @@ pages:
     _stats:
       compendiumSource: null
       duplicateSource: null
-      coreVersion: '12.331'
+      coreVersion: '13.342'
       systemId: uesrpg-3ev4
       systemVersion: v1.0.0-RC.70
       createdTime: 1746860785159
       modifiedTime: 1746860793112
       lastModifiedBy: HcIrULZhA1JFIlrf
+      exportSource: null
+    category: null
     _key: '!journal.pages!COYSCdFncXiw8nAn.id635PtL8E3l3gJN'
   - sort: 2300000
     name: Sling
@@ -805,12 +851,14 @@ pages:
     _stats:
       compendiumSource: null
       duplicateSource: null
-      coreVersion: '12.331'
+      coreVersion: '13.342'
       systemId: uesrpg-3ev4
       systemVersion: v1.0.0-RC.70
       createdTime: 1746860799755
       modifiedTime: 1746860847023
       lastModifiedBy: HcIrULZhA1JFIlrf
+      exportSource: null
+    category: null
     _key: '!journal.pages!COYSCdFncXiw8nAn.5PsmmOsOdwEUnoMr'
   - sort: 2400000
     name: Small
@@ -840,12 +888,14 @@ pages:
     _stats:
       compendiumSource: null
       duplicateSource: null
-      coreVersion: '12.331'
+      coreVersion: '13.342'
       systemId: uesrpg-3ev4
       systemVersion: v1.0.0-RC.70
       createdTime: 1746860822944
       modifiedTime: 1746860830431
       lastModifiedBy: HcIrULZhA1JFIlrf
+      exportSource: null
+    category: null
     _key: '!journal.pages!COYSCdFncXiw8nAn.avrWoHwfyL3J4HbV'
   - sort: 2500000
     name: Snare
@@ -874,12 +924,14 @@ pages:
     _stats:
       compendiumSource: null
       duplicateSource: null
-      coreVersion: '12.331'
+      coreVersion: '13.342'
       systemId: uesrpg-3ev4
       systemVersion: v1.0.0-RC.70
       createdTime: 1746860855891
       modifiedTime: 1746860859516
       lastModifiedBy: HcIrULZhA1JFIlrf
+      exportSource: null
+    category: null
     _key: '!journal.pages!COYSCdFncXiw8nAn.4nkBRXfuVCifg2WS'
   - sort: 2600000
     name: Thrown (X/Y/Z)
@@ -908,12 +960,14 @@ pages:
     _stats:
       compendiumSource: null
       duplicateSource: null
-      coreVersion: '12.331'
+      coreVersion: '13.342'
       systemId: uesrpg-3ev4
       systemVersion: v1.0.0-RC.70
       createdTime: 1746860871279
       modifiedTime: 1746860879760
       lastModifiedBy: HcIrULZhA1JFIlrf
+      exportSource: null
+    category: null
     _key: '!journal.pages!COYSCdFncXiw8nAn.TdegA81BjsJ0f9FZ'
   - sort: 2700000
     name: Unwieldy
@@ -940,12 +994,14 @@ pages:
     _stats:
       compendiumSource: null
       duplicateSource: null
-      coreVersion: '12.331'
+      coreVersion: '13.342'
       systemId: uesrpg-3ev4
       systemVersion: v1.0.0-RC.70
       createdTime: 1746860892659
       modifiedTime: 1746860897984
       lastModifiedBy: HcIrULZhA1JFIlrf
+      exportSource: null
+    category: null
     _key: '!journal.pages!COYSCdFncXiw8nAn.oNVjeI8oiViUphmD'
 folder: 1poHHI2iuhnE2N16
 sort: 200000
@@ -956,11 +1012,13 @@ flags: {}
 _stats:
   compendiumSource: null
   duplicateSource: null
-  coreVersion: '12.331'
+  coreVersion: '13.342'
   systemId: uesrpg-3ev4
   systemVersion: v1.0.0-RC.70
   createdTime: 1746859672821
   modifiedTime: 1746861673026
   lastModifiedBy: HcIrULZhA1JFIlrf
+  exportSource: null
+categories: []
 _key: '!journal!COYSCdFncXiw8nAn'
 

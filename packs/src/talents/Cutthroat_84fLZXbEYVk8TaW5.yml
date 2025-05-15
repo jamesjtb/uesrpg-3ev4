@@ -64,8 +64,10 @@ system:
   untrainedException: false
   fatigueException: false
   addIBToMP: false
+  addIntToMPMultiplier: 1
   armorAcrobaticsException: false
   addHalfSpeed: false
+  doubleSwimSpeed: false
 effects: []
 folder: aAOygNvKFmG4260D
 ownership:
@@ -75,12 +77,13 @@ flags: {}
 _stats:
   compendiumSource: null
   duplicateSource: null
-  coreVersion: '12.331'
+  coreVersion: '13.342'
   systemId: uesrpg-3ev4
   systemVersion: v1.0.0-RC.62
   createdTime: 1733368758221
   modifiedTime: 1733369301281
   lastModifiedBy: HcIrULZhA1JFIlrf
+  exportSource: null
 _id: 84fLZXbEYVk8TaW5
 sort: 1400000
 _key: '!items!84fLZXbEYVk8TaW5'

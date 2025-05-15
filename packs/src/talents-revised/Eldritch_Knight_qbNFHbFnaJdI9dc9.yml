@@ -1,20 +1,20 @@
 name: Eldritch Knight
 type: talent
 flags:
-  core:
-    sourceId: Item.sRwqfUHJaoZIrZw7
+  core: {}
 img: systems/uesrpg-3ev4/images/Icons/tactician.webp
 effects: []
 _id: qbNFHbFnaJdI9dc9
 _stats:
-  coreVersion: '12.331'
+  coreVersion: '13.342'
   systemId: null
   systemVersion: null
   createdTime: null
   modifiedTime: null
   lastModifiedBy: null
-  compendiumSource: null
+  compendiumSource: Item.sRwqfUHJaoZIrZw7
   duplicateSource: null
+  exportSource: null
 ownership:
   default: 0
   WcwhQU1nz94WaD5n: 3
@@ -71,6 +71,7 @@ system:
     wearing armor equal to their skill rank in the relevant school of magic
     multiplied by 10 (Apprentice ignores -10, Journeyman ignores -20, and Adept
     ignores -30).</p>
+  governingCharacteristics: ''
   xpCost: 200
   level: 2
   talentReq: '-'
@@ -80,8 +81,10 @@ system:
   untrainedException: false
   fatigueException: false
   addIBToMP: false
+  addIntToMPMultiplier: 1
   armorAcrobaticsException: false
   addHalfSpeed: false
+  doubleSwimSpeed: false
 folder: null
 sort: 0
 _key: '!items!qbNFHbFnaJdI9dc9'

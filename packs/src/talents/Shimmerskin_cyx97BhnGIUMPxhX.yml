@@ -1,19 +1,19 @@
 name: Shimmerskin
 type: talent
 flags:
-  core:
-    sourceId: Item.JX5ttPQSa94C9UKX
+  core: {}
 img: systems/uesrpg-3ev4/images/Icons/childrenOfSea.webp
 effects: []
 _stats:
   compendiumSource: Item.JX5ttPQSa94C9UKX
   duplicateSource: null
-  coreVersion: '12.331'
+  coreVersion: '13.342'
   systemId: uesrpg-3ev4
   systemVersion: v1.0.0-RC.64
   createdTime: 1746850753155
   modifiedTime: 1746850982167
   lastModifiedBy: HcIrULZhA1JFIlrf
+  exportSource: null
 ownership:
   default: 0
   HcIrULZhA1JFIlrf: 3

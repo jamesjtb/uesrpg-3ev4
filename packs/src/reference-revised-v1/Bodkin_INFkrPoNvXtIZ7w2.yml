@@ -20,7 +20,7 @@ pages:
         @Compendium[uesrpg-revision.journal.8QrUeG8YXaLx1BqW]{Slashing} quality
         (uses the firing character’s Strength bonus as normal).</p>
     _stats:
-      coreVersion: '12.331'
+      coreVersion: '13.342'
       systemId: null
       systemVersion: null
       createdTime: null
@@ -28,6 +28,7 @@ pages:
       lastModifiedBy: null
       compendiumSource: null
       duplicateSource: null
+      exportSource: null
     _id: ukFa5p4aJWQ31KKW
     system: {}
     image: {}
@@ -39,9 +40,10 @@ pages:
     ownership:
       default: -1
     flags: {}
+    category: null
     _key: '!journal.pages!INFkrPoNvXtIZ7w2.ukFa5p4aJWQ31KKW'
 _stats:
-  coreVersion: '12.331'
+  coreVersion: '13.342'
   systemId: null
   systemVersion: null
   createdTime: null
@@ -49,8 +51,10 @@ _stats:
   lastModifiedBy: null
   compendiumSource: null
   duplicateSource: null
+  exportSource: null
 ownership:
   default: 0
   eeXhsDlbzUBZOXZT: 3
+categories: []
 _key: '!journal!INFkrPoNvXtIZ7w2'
 

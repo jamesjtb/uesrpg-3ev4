@@ -59,20 +59,20 @@ flags:
 
       <p style="box-sizing: border-box; user-select: text; color:
       #191813;">&nbsp;</p>
-  core:
-    sourceId: Item.eEs3VjN4rAmXvZXG
+  core: {}
   cf:
     id: temp_kg76x9jbadm
     color: '#000000'
 _stats:
-  coreVersion: '12.331'
+  coreVersion: '13.342'
   systemId: null
   systemVersion: null
   createdTime: null
   modifiedTime: null
   lastModifiedBy: null
-  compendiumSource: null
+  compendiumSource: Item.eEs3VjN4rAmXvZXG
   duplicateSource: null
+  exportSource: null
 ownership:
   default: 0
   eeXhsDlbzUBZOXZT: 3

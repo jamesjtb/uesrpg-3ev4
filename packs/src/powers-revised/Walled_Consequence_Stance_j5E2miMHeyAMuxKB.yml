@@ -6,20 +6,20 @@ effects: []
 folder: null
 sort: 0
 flags:
-  core:
-    sourceId: Item.35m9hRsN5d8NeObv
+  core: {}
   cf:
     id: temp_qjpcdxl96ph
     color: '#000000'
 _stats:
-  coreVersion: '12.331'
+  coreVersion: '13.342'
   systemId: null
   systemVersion: null
   createdTime: null
   modifiedTime: null
   lastModifiedBy: null
-  compendiumSource: null
+  compendiumSource: Item.35m9hRsN5d8NeObv
   duplicateSource: null
+  exportSource: null
 ownership:
   default: 0
   eeXhsDlbzUBZOXZT: 3

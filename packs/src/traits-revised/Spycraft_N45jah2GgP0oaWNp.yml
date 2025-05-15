@@ -1,20 +1,20 @@
 name: Spycraft
 type: talent
 flags:
-  core:
-    sourceId: Item.7fKKFs3JVM7UgiPU
+  core: {}
 img: icons/equipment/head/hood-cloth-teal-gold.webp
 effects: []
 _id: N45jah2GgP0oaWNp
 _stats:
-  coreVersion: '12.331'
+  coreVersion: '13.342'
   systemId: null
   systemVersion: null
   createdTime: null
   modifiedTime: null
   lastModifiedBy: null
-  compendiumSource: null
+  compendiumSource: Item.7fKKFs3JVM7UgiPU
   duplicateSource: null
+  exportSource: null
 ownership:
   default: 0
   xvA5SwRGJiyPsnxH: 3
@@ -70,6 +70,7 @@ system:
     <p><span style="color: #191813;">Can oppose Deceive with Investigate, and
     always </span><span style="color: #191813;">scores a minimum of 4 DoS on any
     successful Social skill test.</span></p>
+  governingCharacteristics: ''
   xpCost: 0
   level: 0
   talentReq: ''
@@ -79,8 +80,10 @@ system:
   untrainedException: false
   fatigueException: false
   addIBToMP: false
+  addIntToMPMultiplier: 1
   armorAcrobaticsException: false
   addHalfSpeed: false
+  doubleSwimSpeed: false
 folder: null
 sort: 0
 _key: '!items!N45jah2GgP0oaWNp'

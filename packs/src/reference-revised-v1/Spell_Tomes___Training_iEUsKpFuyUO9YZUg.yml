@@ -104,7 +104,7 @@ pages:
         long as it would take to learn the spell normally, but also requires a
         teacher. Use the costs above as the training cost.</p>
     _stats:
-      coreVersion: '12.331'
+      coreVersion: '13.342'
       systemId: null
       systemVersion: null
       createdTime: null
@@ -112,6 +112,7 @@ pages:
       lastModifiedBy: null
       compendiumSource: null
       duplicateSource: null
+      exportSource: null
     _id: Jw7IOJDZ6B2QxQvG
     system: {}
     image: {}
@@ -123,9 +124,10 @@ pages:
     ownership:
       default: -1
     flags: {}
+    category: null
     _key: '!journal.pages!iEUsKpFuyUO9YZUg.Jw7IOJDZ6B2QxQvG'
 _stats:
-  coreVersion: '12.331'
+  coreVersion: '13.342'
   systemId: null
   systemVersion: null
   createdTime: null
@@ -133,8 +135,10 @@ _stats:
   lastModifiedBy: null
   compendiumSource: null
   duplicateSource: null
+  exportSource: null
 ownership:
   default: 0
   eeXhsDlbzUBZOXZT: 3
+categories: []
 _key: '!journal!iEUsKpFuyUO9YZUg'
 

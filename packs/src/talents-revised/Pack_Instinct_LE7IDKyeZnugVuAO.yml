@@ -5,7 +5,7 @@ img: systems/uesrpg-3ev4/images/Icons/beastAbility.webp
 effects: []
 _id: LE7IDKyeZnugVuAO
 _stats:
-  coreVersion: '12.331'
+  coreVersion: '13.342'
   systemId: null
   systemVersion: null
   createdTime: null
@@ -13,6 +13,7 @@ _stats:
   lastModifiedBy: null
   compendiumSource: null
   duplicateSource: null
+  exportSource: null
 ownership:
   default: 0
   inSimu0FutxmlwqN: 3
@@ -67,6 +68,7 @@ system:
   description: >-
     <p>Summon 2 wolves to aid this character when they are in Beast Form. They
     can be used to aid in tracking, defending, or attacking.</p>
+  governingCharacteristics: ''
   xpCost: 300
   level: 3
   talentReq: Lycanthrope Form
@@ -76,8 +78,10 @@ system:
   untrainedException: false
   fatigueException: false
   addIBToMP: false
+  addIntToMPMultiplier: 1
   armorAcrobaticsException: false
   addHalfSpeed: false
+  doubleSwimSpeed: false
 folder: null
 sort: 0
 _key: '!items!LE7IDKyeZnugVuAO'

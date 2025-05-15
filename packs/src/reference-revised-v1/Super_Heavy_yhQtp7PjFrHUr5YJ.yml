@@ -21,7 +21,7 @@ pages:
         Agility based tests (except Combat Style skill tests), as well as
         reduces their Speed by 3.</p>
     _stats:
-      coreVersion: '12.331'
+      coreVersion: '13.342'
       systemId: null
       systemVersion: null
       createdTime: null
@@ -29,6 +29,7 @@ pages:
       lastModifiedBy: null
       compendiumSource: null
       duplicateSource: null
+      exportSource: null
     _id: 76dWoUAQRChQe4HX
     system: {}
     image: {}
@@ -40,9 +41,10 @@ pages:
     ownership:
       default: -1
     flags: {}
+    category: null
     _key: '!journal.pages!yhQtp7PjFrHUr5YJ.76dWoUAQRChQe4HX'
 _stats:
-  coreVersion: '12.331'
+  coreVersion: '13.342'
   systemId: null
   systemVersion: null
   createdTime: null
@@ -50,8 +52,10 @@ _stats:
   lastModifiedBy: null
   compendiumSource: null
   duplicateSource: null
+  exportSource: null
 ownership:
   default: 0
   eeXhsDlbzUBZOXZT: 3
+categories: []
 _key: '!journal!yhQtp7PjFrHUr5YJ'
 

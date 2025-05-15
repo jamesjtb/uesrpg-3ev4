@@ -2,19 +2,19 @@ _id: 4xPU1C6vWJq4ZfIi
 name: Combat Senses
 type: talent
 flags:
-  core:
-    sourceId: Item.DYVazRNO2caSDMGE
+  core: {}
 img: systems/uesrpg-3ev4/images/Icons/combatSenses.webp
 effects: []
 _stats:
-  coreVersion: '12.331'
+  coreVersion: '13.342'
   systemId: uesrpg-3ev4
   systemVersion: v1.0.0-RC.62
   createdTime: null
   modifiedTime: 1733289519752
   lastModifiedBy: HcIrULZhA1JFIlrf
-  compendiumSource: null
+  compendiumSource: Item.DYVazRNO2caSDMGE
   duplicateSource: null
+  exportSource: null
 ownership:
   default: 0
   xvA5SwRGJiyPsnxH: 3
@@ -70,6 +70,7 @@ system:
     <p>The character can choose to calculate their Initiative Rating  by taking
     twice their Perception Bonus and adding two instead of the usual
     formula.</p>
+  governingCharacteristics: Prc
   xpCost: 100
   level: Novice
   talentReq: ''
@@ -79,9 +80,10 @@ system:
   untrainedException: false
   fatigueException: false
   addIBToMP: false
+  addIntToMPMultiplier: 1
   armorAcrobaticsException: false
   addHalfSpeed: false
-  governingCharacteristics: Prc
+  doubleSwimSpeed: false
 folder: wHXhCeP5Fmy5GR8f
 sort: 600000
 _key: '!items!4xPU1C6vWJq4ZfIi'

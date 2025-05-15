@@ -1,20 +1,20 @@
 name: Histskin
 type: talent
 flags:
-  core:
-    sourceId: Item.JX5ttPQSa94C9UKX
+  core: {}
 img: systems/uesrpg-3ev4/images/Icons/regeneration.webp
 effects: []
 _id: ioTHkWlbtkD0UO4p
 _stats:
-  coreVersion: '12.331'
+  coreVersion: '13.342'
   systemId: null
   systemVersion: null
   createdTime: null
   modifiedTime: null
   lastModifiedBy: null
-  compendiumSource: null
+  compendiumSource: Item.JX5ttPQSa94C9UKX
   duplicateSource: null
+  exportSource: null
 ownership:
   default: 0
   xvA5SwRGJiyPsnxH: 3
@@ -70,6 +70,7 @@ system:
     <p>The Argonian doubles their swimming speed, and gains +30 to any Stealth
     or Athletics tests made while underwater. Additionally, once per Short Rest,
     the Argonian can immediately regenerate EnB Hit Points as a free action.</p>
+  governingCharacteristics: ''
   xpCost: 400
   level: 4
   talentReq: Child of the Sap
@@ -79,8 +80,10 @@ system:
   untrainedException: false
   fatigueException: false
   addIBToMP: false
+  addIntToMPMultiplier: 1
   armorAcrobaticsException: false
   addHalfSpeed: false
+  doubleSwimSpeed: false
 folder: null
 sort: 0
 _key: '!items!ioTHkWlbtkD0UO4p'

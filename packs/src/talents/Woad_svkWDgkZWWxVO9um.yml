@@ -1,19 +1,19 @@
 name: Woad
 type: talent
 flags:
-  core:
-    sourceId: Item.JX5ttPQSa94C9UKX
+  core: {}
 img: icons/equipment/head/mask-horned-skull.webp
 effects: []
 _stats:
   compendiumSource: Item.JX5ttPQSa94C9UKX
   duplicateSource: null
-  coreVersion: '12.331'
+  coreVersion: '13.342'
   systemId: uesrpg-3ev4
   systemVersion: v1.0.0-RC.64
   createdTime: 1734749333259
   modifiedTime: 1734749333259
   lastModifiedBy: HcIrULZhA1JFIlrf
+  exportSource: null
 ownership:
   default: 0
   HcIrULZhA1JFIlrf: 3
@@ -91,8 +91,8 @@ system:
   addIntToMPMultiplier: 1
   armorAcrobaticsException: false
   addHalfSpeed: false
-  addIntToMP: false
   doubleSwimSpeed: false
+  addIntToMP: false
 folder: znvtmUBMi3Cqd1zw
 _id: svkWDgkZWWxVO9um
 sort: 0

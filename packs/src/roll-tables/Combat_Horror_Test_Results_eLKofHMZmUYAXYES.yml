@@ -1,7 +1,6 @@
 name: Combat Horror Test Results
 flags:
-  core:
-    sourceId: RollTable.k48aCdCAZtTLpTeS
+  core: {}
 img: icons/svg/terror.svg
 description: >-
   <p>When a character is confronted by an excessively frightening event or
@@ -33,40 +32,76 @@ results:
   - _id: wgRr13v9yJ57So9a
     flags: {}
     type: text
-    text: >-
-      Momentary Blackout: The character is so overcome with horror that their
-      mind fails them for a few precious seconds in the face of this horror. The
-      character drops to the ground unconscious for 1 round and has a -10
-      penalty to all actions afterwards for the rest of the encounter.
     img: icons/svg/d20-black.svg
     weight: 1
     range:
       - 1
       - 40
     drawn: false
-    documentId: null
+    _stats:
+      coreVersion: '13.342'
+      systemId: null
+      systemVersion: null
+      createdTime: null
+      modifiedTime: null
+      lastModifiedBy: null
+      compendiumSource: null
+      duplicateSource: null
+      exportSource: null
+    description: >-
+      Momentary Blackout: The character is so overcome with horror that their
+      mind fails them for a few precious seconds in the face of this horror. The
+      character drops to the ground unconscious for 1 round and has a -10
+      penalty to all actions afterwards for the rest of the encounter.
+    name: ''
     _key: '!tables.results!eLKofHMZmUYAXYES.wgRr13v9yJ57So9a'
   - _id: C9L97SjCvSBIvAeY
     flags: {}
     type: text
-    text: >-
-      Uncontrollable Vomiting: The character’s own body reacts with a gut
-      wrenching sound as the character’s innards empty themselves, and they
-      start vomiting uncontrollably. The character bends over and vomits for 1
-      round and is considered helpless during this time. Afterwards the
-      character is still nauseous and loses 1 Stamina point immediately.
     img: icons/svg/d20-black.svg
     weight: 1
     range:
       - 41
       - 60
     drawn: false
-    documentId: null
+    _stats:
+      coreVersion: '13.342'
+      systemId: null
+      systemVersion: null
+      createdTime: null
+      modifiedTime: null
+      lastModifiedBy: null
+      compendiumSource: null
+      duplicateSource: null
+      exportSource: null
+    description: >-
+      Uncontrollable Vomiting: The character’s own body reacts with a gut
+      wrenching sound as the character’s innards empty themselves, and they
+      start vomiting uncontrollably. The character bends over and vomits for 1
+      round and is considered helpless during this time. Afterwards the
+      character is still nauseous and loses 1 Stamina point immediately.
+    name: ''
     _key: '!tables.results!eLKofHMZmUYAXYES.C9L97SjCvSBIvAeY'
   - _id: hXIzJOLwhisdEg4r
     flags: {}
     type: text
-    text: >-
+    img: icons/svg/d20-black.svg
+    weight: 1
+    range:
+      - 61
+      - 80
+    drawn: false
+    _stats:
+      coreVersion: '13.342'
+      systemId: null
+      systemVersion: null
+      createdTime: null
+      modifiedTime: null
+      lastModifiedBy: null
+      compendiumSource: null
+      duplicateSource: null
+      exportSource: null
+    description: >-
       Manic Terror: The Character’s mind cracks like a fragile glass sculpture,
       and they begin to laugh maniacally. Turning upon the closest nearby friend
       or foe they start attacking them with whatever weapon they have in their
@@ -74,91 +109,126 @@ results:
       start of their first turn each round or be knocked unconscious to stop
       their manic rampage. Afterwards the character loses 1d4 Stamina points
       immediately.
-    img: icons/svg/d20-black.svg
-    weight: 1
-    range:
-      - 61
-      - 80
-    drawn: false
-    documentId: null
+    name: ''
     _key: '!tables.results!eLKofHMZmUYAXYES.hXIzJOLwhisdEg4r'
   - _id: yUz8SATKyZo5mBZI
     flags: {}
     type: text
-    text: >-
-      Hopeless and Despairing: The character falls to the ground and cries out
-      in despair and terror while shutting out all other sounds, babbling and
-      mumbling to themselves for comfort for 1d6 rounds. When they regain their
-      senses they immediately lose 1d4 Stamina.
     img: icons/svg/d20-black.svg
     weight: 1
     range:
       - 81
       - 90
     drawn: false
-    documentId: null
+    _stats:
+      coreVersion: '13.342'
+      systemId: null
+      systemVersion: null
+      createdTime: null
+      modifiedTime: null
+      lastModifiedBy: null
+      compendiumSource: null
+      duplicateSource: null
+      exportSource: null
+    description: >-
+      Hopeless and Despairing: The character falls to the ground and cries out
+      in despair and terror while shutting out all other sounds, babbling and
+      mumbling to themselves for comfort for 1d6 rounds. When they regain their
+      senses they immediately lose 1d4 Stamina.
+    name: ''
     _key: '!tables.results!eLKofHMZmUYAXYES.yUz8SATKyZo5mBZI'
   - _id: 07EzM9J3M1VMwlnc
     flags: {}
     type: text
-    text: >-
-      Blackout: The character’s mind snaps like a twig, unable to truly process
-      the horror of the situation and collapsing instead. The character goes
-      catatonic for 1d4 hours and cannot be roused by normal means during this
-      time.
     img: icons/svg/d20-black.svg
     weight: 1
     range:
       - 91
       - 95
     drawn: false
-    documentId: null
-    _key: '!tables.results!eLKofHMZmUYAXYES.07EzM9J3M1VMwlnc'
-  - _id: 83I0EfvkAKLcn7nr
-    flags: {}
-    type: text
-    text: >-
+    _stats:
+      coreVersion: '13.342'
+      systemId: null
+      systemVersion: null
+      createdTime: null
+      modifiedTime: null
+      lastModifiedBy: null
+      compendiumSource: null
+      duplicateSource: null
+      exportSource: null
+    description: >-
       Blackout: The character’s mind snaps like a twig, unable to truly process
       the horror of the situation and collapsing instead. The character goes
       catatonic for 1d4 hours and cannot be roused by normal means during this
       time.
+    name: ''
+    _key: '!tables.results!eLKofHMZmUYAXYES.07EzM9J3M1VMwlnc'
+  - _id: 83I0EfvkAKLcn7nr
+    flags: {}
+    type: text
     img: icons/svg/d20-black.svg
     weight: 1
     range:
       - 96
       - 99
     drawn: false
-    documentId: null
+    _stats:
+      coreVersion: '13.342'
+      systemId: null
+      systemVersion: null
+      createdTime: null
+      modifiedTime: null
+      lastModifiedBy: null
+      compendiumSource: null
+      duplicateSource: null
+      exportSource: null
+    description: >-
+      Blackout: The character’s mind snaps like a twig, unable to truly process
+      the horror of the situation and collapsing instead. The character goes
+      catatonic for 1d4 hours and cannot be roused by normal means during this
+      time.
+    name: ''
     _key: '!tables.results!eLKofHMZmUYAXYES.83I0EfvkAKLcn7nr'
   - _id: fNpWH9VdKqWjlacs
     flags: {}
     type: text
-    text: >-
-      Scared to Death: The character is so immeasurably overcome with terror and
-      horror that their heart stops beating; they must make an Endurance test or
-      die on the spot. Should they succeed, they instead fall catatonic for 1d4
-      hours as with Blackout.
     img: icons/svg/d20-black.svg
     weight: 1
     range:
       - 100
       - 100
     drawn: false
-    documentId: null
+    _stats:
+      coreVersion: '13.342'
+      systemId: null
+      systemVersion: null
+      createdTime: null
+      modifiedTime: null
+      lastModifiedBy: null
+      compendiumSource: null
+      duplicateSource: null
+      exportSource: null
+    description: >-
+      Scared to Death: The character is so immeasurably overcome with terror and
+      horror that their heart stops beating; they must make an Endurance test or
+      die on the spot. Should they succeed, they instead fall catatonic for 1d4
+      hours as with Blackout.
+    name: ''
     _key: '!tables.results!eLKofHMZmUYAXYES.fNpWH9VdKqWjlacs'
 formula: 1d100
 replacement: true
 displayRoll: true
 _id: eLKofHMZmUYAXYES
 _stats:
-  coreVersion: '12.331'
+  coreVersion: '13.342'
   systemId: null
   systemVersion: null
   createdTime: null
   modifiedTime: 1746863194778
   lastModifiedBy: HcIrULZhA1JFIlrf
-  compendiumSource: null
+  compendiumSource: RollTable.k48aCdCAZtTLpTeS
   duplicateSource: null
+  exportSource: null
 ownership:
   default: 0
   qwt9o1cuKYitvD9G: 3

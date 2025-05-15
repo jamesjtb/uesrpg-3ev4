@@ -8,20 +8,20 @@ items:
     type: power
     sort: 100000
     flags:
-      core:
-        sourceId: Item.MyWjMeVAtBCJa8Bt
+      core: {}
     img: systems/uesrpg-3ev4/images/Icons/flyer.webp
     effects: []
     folder: null
     _stats:
-      coreVersion: '12.331'
+      coreVersion: '13.342'
       systemId: null
       systemVersion: null
       createdTime: null
       modifiedTime: null
       lastModifiedBy: null
-      compendiumSource: null
+      compendiumSource: Item.MyWjMeVAtBCJa8Bt
       duplicateSource: null
+      exportSource: null
     ownership:
       default: 0
     system:
@@ -95,20 +95,20 @@ items:
     type: trait
     sort: 200000
     flags:
-      core:
-        sourceId: Item.wtEFksGPcojtDLTj
+      core: {}
     img: systems/uesrpg-3ev4/images/Icons/flyer.webp
     effects: []
     folder: null
     _stats:
-      coreVersion: '12.331'
+      coreVersion: '13.342'
       systemId: null
       systemVersion: null
       createdTime: null
       modifiedTime: null
       lastModifiedBy: null
-      compendiumSource: null
+      compendiumSource: Item.wtEFksGPcojtDLTj
       duplicateSource: null
+      exportSource: null
     ownership:
       default: 0
     system:
@@ -173,20 +173,20 @@ items:
     type: trait
     sort: 300000
     flags:
-      core:
-        sourceId: Item.wtEFksGPcojtDLTj
+      core: {}
     img: systems/uesrpg-3ev4/images/Icons/resistNormalWeapons.webp
     effects: []
     folder: null
     _stats:
-      coreVersion: '12.331'
+      coreVersion: '13.342'
       systemId: null
       systemVersion: null
       createdTime: null
       modifiedTime: null
       lastModifiedBy: null
-      compendiumSource: null
+      compendiumSource: Item.wtEFksGPcojtDLTj
       duplicateSource: null
+      exportSource: null
     ownership:
       default: 0
     system:
@@ -254,20 +254,20 @@ items:
     type: item
     sort: 400000
     flags:
-      core:
-        sourceId: Item.UuK7DCRPgd0L3QZB
+      core: {}
     img: systems/uesrpg-3ev4/images/item-compendium/item_tokens/pelt.webp
     effects: []
     folder: null
     _stats:
-      coreVersion: '12.331'
+      coreVersion: '13.342'
       systemId: null
       systemVersion: null
       createdTime: null
       modifiedTime: null
       lastModifiedBy: null
-      compendiumSource: null
+      compendiumSource: Item.UuK7DCRPgd0L3QZB
       duplicateSource: null
+      exportSource: null
     ownership:
       default: 0
     system:
@@ -373,20 +373,20 @@ items:
     type: item
     sort: 700000
     flags:
-      core:
-        sourceId: Item.9HprpbkgIr54vcPt
+      core: {}
     img: systems/uesrpg-3ev4/images/item-compendium/item_tokens/ingredient.webp
     effects: []
     folder: null
     _stats:
-      coreVersion: '12.331'
+      coreVersion: '13.342'
       systemId: null
       systemVersion: null
       createdTime: null
       modifiedTime: null
       lastModifiedBy: null
-      compendiumSource: null
+      compendiumSource: Item.9HprpbkgIr54vcPt
       duplicateSource: null
+      exportSource: null
     ownership:
       default: 0
     system:
@@ -490,17 +490,17 @@ items:
     folder: null
     sort: 0
     flags:
-      core:
-        sourceId: Item.OHZa5LXndscWXRvU
+      core: {}
     _stats:
-      coreVersion: '12.331'
+      coreVersion: '13.342'
       systemId: null
       systemVersion: null
       createdTime: null
       modifiedTime: null
       lastModifiedBy: null
-      compendiumSource: null
+      compendiumSource: Item.OHZa5LXndscWXRvU
       duplicateSource: null
+      exportSource: null
     ownership:
       default: 0
       eeXhsDlbzUBZOXZT: 3
@@ -594,7 +594,7 @@ folder: Rb8ZFpjLmY0aQxpK
 sort: 2700000
 flags: {}
 _stats:
-  coreVersion: '12.331'
+  coreVersion: '13.342'
   systemId: null
   systemVersion: null
   createdTime: null
@@ -602,6 +602,7 @@ _stats:
   lastModifiedBy: 7bDMesNjX54nzN9S
   compendiumSource: null
   duplicateSource: null
+  exportSource: null
 ownership:
   default: 0
   WcwhQU1nz94WaD5n: 3
@@ -1154,7 +1155,6 @@ prototypeToken:
     contrast: 0
   appendNumber: false
   prependAdjective: false
-  hexagonalShape: 0
   detectionModes: []
   occludable:
     radius: 0
@@ -1167,5 +1167,11 @@ prototypeToken:
     subject:
       scale: 1
       texture: null
+  turnMarker:
+    mode: 1
+    animation: null
+    src: null
+    disposition: false
+  movementAction: null
 _key: '!actors!MxTbtWp1dA4cRYPH'
 

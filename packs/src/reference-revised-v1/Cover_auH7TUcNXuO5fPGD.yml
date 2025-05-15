@@ -17,7 +17,7 @@ pages:
       format: 1
       content: "<p>Cover is used by characters to obstruct attacks against them, either in ranged or close combat. This occurs by either physically blocking a blow, or by obscuring the exact location of the target.</p>\n<p>\_</p>\n<p>If the character is incapable of seeing their target, they simply cannot attack them unless they have another way of knowing that they are there. Otherwise they suffer a circumstance penalty to attack targets who are trying to use cover that their attack cannot penetrate based on the GM’s judgment of the level of the cover.</p>\n<p>\_</p>\n<p>If the target is protected by cover that the attack can penetrate with relative ease, the attacker suffers no penalty to hit but rolls twice and chooses the lower value for damage.</p>"
     _stats:
-      coreVersion: '12.331'
+      coreVersion: '13.342'
       systemId: null
       systemVersion: null
       createdTime: null
@@ -25,6 +25,7 @@ pages:
       lastModifiedBy: null
       compendiumSource: null
       duplicateSource: null
+      exportSource: null
     _id: 3lmk9BJXcJldzn8D
     system: {}
     image: {}
@@ -36,9 +37,10 @@ pages:
     ownership:
       default: -1
     flags: {}
+    category: null
     _key: '!journal.pages!auH7TUcNXuO5fPGD.3lmk9BJXcJldzn8D'
 _stats:
-  coreVersion: '12.331'
+  coreVersion: '13.342'
   systemId: null
   systemVersion: null
   createdTime: null
@@ -46,8 +48,10 @@ _stats:
   lastModifiedBy: null
   compendiumSource: null
   duplicateSource: null
+  exportSource: null
 ownership:
   default: 0
   eeXhsDlbzUBZOXZT: 3
+categories: []
 _key: '!journal!auH7TUcNXuO5fPGD'
 

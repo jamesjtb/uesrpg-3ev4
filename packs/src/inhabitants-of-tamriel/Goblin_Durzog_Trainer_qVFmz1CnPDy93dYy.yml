@@ -8,20 +8,20 @@ items:
     type: item
     sort: 1200000
     flags:
-      core:
-        sourceId: Item.9HprpbkgIr54vcPt
+      core: {}
     img: systems/uesrpg-3ev4/images/item-compendium/item_tokens/ingredient.webp
     effects: []
     folder: null
     _stats:
-      coreVersion: '12.331'
+      coreVersion: '13.342'
       systemId: null
       systemVersion: null
       createdTime: null
       modifiedTime: null
       lastModifiedBy: null
-      compendiumSource: null
+      compendiumSource: Item.9HprpbkgIr54vcPt
       duplicateSource: null
+      exportSource: null
     ownership:
       default: 0
     system:
@@ -122,20 +122,20 @@ items:
     type: item
     sort: 1300000
     flags:
-      core:
-        sourceId: Item.e3EcNwBT9SiXPGt9
+      core: {}
     img: systems/uesrpg-3ev4/images/item-compendium/item_tokens/bag.webp
     effects: []
     folder: null
     _stats:
-      coreVersion: '12.331'
+      coreVersion: '13.342'
       systemId: null
       systemVersion: null
       createdTime: null
       modifiedTime: null
       lastModifiedBy: null
-      compendiumSource: null
+      compendiumSource: Item.e3EcNwBT9SiXPGt9
       duplicateSource: null
+      exportSource: null
     ownership:
       default: 0
     system:
@@ -233,20 +233,20 @@ items:
     type: power
     sort: 1400000
     flags:
-      core:
-        sourceId: Item.MyWjMeVAtBCJa8Bt
+      core: {}
     img: systems/uesrpg-3ev4/images/Icons/ringleader.webp
     effects: []
     folder: null
     _stats:
-      coreVersion: '12.331'
+      coreVersion: '13.342'
       systemId: null
       systemVersion: null
       createdTime: null
       modifiedTime: null
       lastModifiedBy: null
-      compendiumSource: null
+      compendiumSource: Item.MyWjMeVAtBCJa8Bt
       duplicateSource: null
+      exportSource: null
     ownership:
       default: 0
     system:
@@ -317,20 +317,20 @@ items:
     type: trait
     sort: 1500000
     flags:
-      core:
-        sourceId: Item.wtEFksGPcojtDLTj
+      core: {}
     img: systems/uesrpg-3ev4/images/Icons/minion.webp
     effects: []
     folder: null
     _stats:
-      coreVersion: '12.331'
+      coreVersion: '13.342'
       systemId: null
       systemVersion: null
       createdTime: null
       modifiedTime: null
       lastModifiedBy: null
-      compendiumSource: null
+      compendiumSource: Item.wtEFksGPcojtDLTj
       duplicateSource: null
+      exportSource: null
     ownership:
       default: 0
     system:
@@ -395,20 +395,20 @@ items:
     type: power
     sort: 1600000
     flags:
-      core:
-        sourceId: Item.MyWjMeVAtBCJa8Bt
+      core: {}
     img: systems/uesrpg-3ev4/images/Icons/inspireHeroism.webp
     effects: []
     folder: null
     _stats:
-      coreVersion: '12.331'
+      coreVersion: '13.342'
       systemId: null
       systemVersion: null
       createdTime: null
       modifiedTime: null
       lastModifiedBy: null
-      compendiumSource: null
+      compendiumSource: Item.MyWjMeVAtBCJa8Bt
       duplicateSource: null
+      exportSource: null
     ownership:
       default: 0
     system:
@@ -475,20 +475,20 @@ items:
     type: trait
     sort: 1700000
     flags:
-      core:
-        sourceId: Item.wtEFksGPcojtDLTj
+      core: {}
     img: systems/uesrpg-3ev4/images/Icons/teamwork.webp
     effects: []
     folder: null
     _stats:
-      coreVersion: '12.331'
+      coreVersion: '13.342'
       systemId: null
       systemVersion: null
       createdTime: null
       modifiedTime: null
       lastModifiedBy: null
-      compendiumSource: null
+      compendiumSource: Item.wtEFksGPcojtDLTj
       duplicateSource: null
+      exportSource: null
     ownership:
       default: 0
     system:
@@ -558,17 +558,17 @@ items:
     folder: null
     sort: 0
     flags:
-      core:
-        sourceId: Item.iyDfQmjtSA16I317
+      core: {}
     _stats:
-      coreVersion: '12.331'
+      coreVersion: '13.342'
       systemId: null
       systemVersion: null
       createdTime: null
       modifiedTime: null
       lastModifiedBy: null
-      compendiumSource: null
+      compendiumSource: Item.iyDfQmjtSA16I317
       duplicateSource: null
+      exportSource: null
     ownership:
       default: 0
       eeXhsDlbzUBZOXZT: 3
@@ -667,17 +667,17 @@ items:
     folder: null
     sort: 0
     flags:
-      core:
-        sourceId: Item.2jUT8icq4MuyLEaC
+      core: {}
     _stats:
-      coreVersion: '12.331'
+      coreVersion: '13.342'
       systemId: null
       systemVersion: null
       createdTime: null
       modifiedTime: null
       lastModifiedBy: null
-      compendiumSource: null
+      compendiumSource: Item.2jUT8icq4MuyLEaC
       duplicateSource: null
+      exportSource: null
     ownership:
       default: 0
       eeXhsDlbzUBZOXZT: 3
@@ -776,17 +776,17 @@ items:
     folder: null
     sort: 0
     flags:
-      core:
-        sourceId: Item.IhEXiuBB0oj762Az
+      core: {}
     _stats:
-      coreVersion: '12.331'
+      coreVersion: '13.342'
       systemId: null
       systemVersion: null
       createdTime: null
       modifiedTime: null
       lastModifiedBy: null
-      compendiumSource: null
+      compendiumSource: Item.IhEXiuBB0oj762Az
       duplicateSource: null
+      exportSource: null
     ownership:
       default: 0
       eeXhsDlbzUBZOXZT: 3
@@ -883,17 +883,17 @@ items:
     folder: null
     sort: 0
     flags:
-      core:
-        sourceId: Item.NuW4lwMRLkPi5pzI
+      core: {}
     _stats:
-      coreVersion: '12.331'
+      coreVersion: '13.342'
       systemId: null
       systemVersion: null
       createdTime: null
       modifiedTime: null
       lastModifiedBy: null
-      compendiumSource: null
+      compendiumSource: Item.NuW4lwMRLkPi5pzI
       duplicateSource: null
+      exportSource: null
     ownership:
       default: 0
       eeXhsDlbzUBZOXZT: 3
@@ -992,17 +992,17 @@ items:
     folder: null
     sort: 0
     flags:
-      core:
-        sourceId: Item.bsRjaTiWmtxK05bq
+      core: {}
     _stats:
-      coreVersion: '12.331'
+      coreVersion: '13.342'
       systemId: null
       systemVersion: null
       createdTime: null
       modifiedTime: null
       lastModifiedBy: null
-      compendiumSource: null
+      compendiumSource: Item.bsRjaTiWmtxK05bq
       duplicateSource: null
+      exportSource: null
     ownership:
       default: 0
       eeXhsDlbzUBZOXZT: 3
@@ -1087,17 +1087,17 @@ items:
     folder: null
     sort: 0
     flags:
-      core:
-        sourceId: Item.bsRjaTiWmtxK05bq
+      core: {}
     _stats:
-      coreVersion: '12.331'
+      coreVersion: '13.342'
       systemId: null
       systemVersion: null
       createdTime: null
       modifiedTime: null
       lastModifiedBy: null
-      compendiumSource: null
+      compendiumSource: Item.bsRjaTiWmtxK05bq
       duplicateSource: null
+      exportSource: null
     ownership:
       default: 0
       eeXhsDlbzUBZOXZT: 3
@@ -1182,17 +1182,17 @@ items:
     folder: null
     sort: 0
     flags:
-      core:
-        sourceId: Item.0HkulFPTpv356zmz
+      core: {}
     _stats:
-      coreVersion: '12.331'
+      coreVersion: '13.342'
       systemId: null
       systemVersion: null
       createdTime: null
       modifiedTime: null
       lastModifiedBy: null
-      compendiumSource: null
+      compendiumSource: Item.0HkulFPTpv356zmz
       duplicateSource: null
+      exportSource: null
     ownership:
       default: 0
       eeXhsDlbzUBZOXZT: 3
@@ -1294,17 +1294,17 @@ items:
     folder: null
     sort: 0
     flags:
-      core:
-        sourceId: Item.3KcuXZzkMXNRvXBc
+      core: {}
     _stats:
-      coreVersion: '12.331'
+      coreVersion: '13.342'
       systemId: null
       systemVersion: null
       createdTime: null
       modifiedTime: null
       lastModifiedBy: null
-      compendiumSource: null
+      compendiumSource: Item.3KcuXZzkMXNRvXBc
       duplicateSource: null
+      exportSource: null
     ownership:
       default: 0
       eeXhsDlbzUBZOXZT: 3
@@ -1406,17 +1406,17 @@ items:
     folder: null
     sort: 0
     flags:
-      core:
-        sourceId: Item.3KcuXZzkMXNRvXBc
+      core: {}
     _stats:
-      coreVersion: '12.331'
+      coreVersion: '13.342'
       systemId: null
       systemVersion: null
       createdTime: null
       modifiedTime: null
       lastModifiedBy: null
-      compendiumSource: null
+      compendiumSource: Item.3KcuXZzkMXNRvXBc
       duplicateSource: null
+      exportSource: null
     ownership:
       default: 0
       eeXhsDlbzUBZOXZT: 3
@@ -1518,17 +1518,17 @@ items:
     folder: null
     sort: 0
     flags:
-      core:
-        sourceId: Item.QzE81F3FCC26O0if
+      core: {}
     _stats:
-      coreVersion: '12.331'
+      coreVersion: '13.342'
       systemId: null
       systemVersion: null
       createdTime: null
       modifiedTime: null
       lastModifiedBy: null
-      compendiumSource: null
+      compendiumSource: Item.QzE81F3FCC26O0if
       duplicateSource: null
+      exportSource: null
     ownership:
       default: 0
       eeXhsDlbzUBZOXZT: 3
@@ -1630,17 +1630,17 @@ items:
     folder: null
     sort: 0
     flags:
-      core:
-        sourceId: Item.QzE81F3FCC26O0if
+      core: {}
     _stats:
-      coreVersion: '12.331'
+      coreVersion: '13.342'
       systemId: null
       systemVersion: null
       createdTime: null
       modifiedTime: null
       lastModifiedBy: null
-      compendiumSource: null
+      compendiumSource: Item.QzE81F3FCC26O0if
       duplicateSource: null
+      exportSource: null
     ownership:
       default: 0
       eeXhsDlbzUBZOXZT: 3
@@ -1742,17 +1742,17 @@ items:
     folder: null
     sort: 0
     flags:
-      core:
-        sourceId: Item.Lrge7JVHLu2pQrYN
+      core: {}
     _stats:
-      coreVersion: '12.331'
+      coreVersion: '13.342'
       systemId: null
       systemVersion: null
       createdTime: null
       modifiedTime: null
       lastModifiedBy: null
-      compendiumSource: null
+      compendiumSource: Item.Lrge7JVHLu2pQrYN
       duplicateSource: null
+      exportSource: null
     ownership:
       default: 0
       eeXhsDlbzUBZOXZT: 3
@@ -1854,17 +1854,17 @@ items:
     folder: null
     sort: 0
     flags:
-      core:
-        sourceId: Item.8vtvGinLZmq14YJU
+      core: {}
     _stats:
-      coreVersion: '12.331'
+      coreVersion: '13.342'
       systemId: null
       systemVersion: null
       createdTime: null
       modifiedTime: null
       lastModifiedBy: null
-      compendiumSource: null
+      compendiumSource: Item.8vtvGinLZmq14YJU
       duplicateSource: null
+      exportSource: null
     ownership:
       default: 0
       eeXhsDlbzUBZOXZT: 3
@@ -1961,7 +1961,7 @@ folder: Rb8ZFpjLmY0aQxpK
 sort: 2400000
 flags: {}
 _stats:
-  coreVersion: '12.331'
+  coreVersion: '13.342'
   systemId: null
   systemVersion: null
   createdTime: null
@@ -1969,6 +1969,7 @@ _stats:
   lastModifiedBy: 7bDMesNjX54nzN9S
   compendiumSource: null
   duplicateSource: null
+  exportSource: null
 ownership:
   default: 0
   WcwhQU1nz94WaD5n: 3
@@ -2525,7 +2526,6 @@ prototypeToken:
     contrast: 0
   appendNumber: false
   prependAdjective: false
-  hexagonalShape: 0
   detectionModes: []
   occludable:
     radius: 0
@@ -2538,5 +2538,11 @@ prototypeToken:
     subject:
       scale: 1
       texture: null
+  turnMarker:
+    mode: 1
+    animation: null
+    src: null
+    disposition: false
+  movementAction: null
 _key: '!actors!qVFmz1CnPDy93dYy'
 

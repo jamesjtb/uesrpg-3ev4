@@ -17,7 +17,7 @@ pages:
       format: 1
       content: "<p>When a chracter gains a level of fatigue, they acquire the Fatigued condition. If they gain additional levels of fatigue, the effects worsen. Fatigue is most typically gained when a character falls to 0 SP, or spends/loses SP when they are at 0.</p>\n<p>\_</p>\n<table style=\"width:99.1549%;height:102px\" border=\"1\">\n<tbody>\n<tr style=\"height:17px\">\n<td style=\"width:48.8226%;height:17px\"><strong>\_ \_ \_ \_ \_ \_ \_ \_ \_ \_ \_ \_ \_ \_ \_ \_ \_ \_ \_ \_ \_ \_ \_ \_Levels</strong></td>\n<td style=\"width:50.4671%;height:17px\"><strong>\_ \_ \_ \_ \_ \_ \_ \_ \_ \_ \_ \_ \_ \_ \_ \_ \_ \_ \_ \_ \_ \_ \_ \_ \_ \_ \_ \_Effects</strong></td>\n</tr>\n<tr style=\"height:17px\">\n<td style=\"width:48.8226%;height:17px\">Fatigued (1)</td>\n<td style=\"width:50.4671%;height:17px\">-10 penalty to all tests</td>\n</tr>\n<tr style=\"height:17px\">\n<td style=\"width:48.8226%;height:17px\">Exhausted (2)</td>\n<td style=\"width:50.4671%;height:17px\">-20 penalty to all tests</td>\n</tr>\n<tr style=\"height:17px\">\n<td style=\"width:48.8226%;height:17px\">Drained (3)</td>\n<td style=\"width:50.4671%;height:17px\">-30 penalty to all tests</td>\n</tr>\n<tr style=\"height:17px\">\n<td style=\"width:48.8226%;height:17px\">Unconscious (4)</td>\n<td style=\"width:50.4671%;height:17px\">Character falls unconscious</td>\n</tr>\n<tr style=\"height:17px\">\n<td style=\"width:48.8226%;height:17px\">5+</td>\n<td style=\"width:50.4671%;height:17px\">Character dies</td>\n</tr>\n</tbody>\n</table>"
     _stats:
-      coreVersion: '12.331'
+      coreVersion: '13.342'
       systemId: null
       systemVersion: null
       createdTime: null
@@ -25,6 +25,7 @@ pages:
       lastModifiedBy: null
       compendiumSource: null
       duplicateSource: null
+      exportSource: null
     _id: LXGAUx0V3Qz7Qje9
     system: {}
     image: {}
@@ -36,9 +37,10 @@ pages:
     ownership:
       default: -1
     flags: {}
+    category: null
     _key: '!journal.pages!0Jz3TGUI2G4nKCc7.LXGAUx0V3Qz7Qje9'
 _stats:
-  coreVersion: '12.331'
+  coreVersion: '13.342'
   systemId: null
   systemVersion: null
   createdTime: null
@@ -46,8 +48,10 @@ _stats:
   lastModifiedBy: null
   compendiumSource: null
   duplicateSource: null
+  exportSource: null
 ownership:
   default: 0
   eeXhsDlbzUBZOXZT: 3
+categories: []
 _key: '!journal!0Jz3TGUI2G4nKCc7'
 

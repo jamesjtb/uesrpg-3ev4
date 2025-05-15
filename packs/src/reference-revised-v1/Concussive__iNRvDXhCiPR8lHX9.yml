@@ -20,7 +20,7 @@ pages:
         when a character uses the bash action with this weapon, they gain a +20
         bonus to the opposed test.</p>
     _stats:
-      coreVersion: '12.331'
+      coreVersion: '13.342'
       systemId: null
       systemVersion: null
       createdTime: null
@@ -28,6 +28,7 @@ pages:
       lastModifiedBy: null
       compendiumSource: null
       duplicateSource: null
+      exportSource: null
     _id: vx9vQ8NwGD57YrTX
     system: {}
     image: {}
@@ -39,9 +40,10 @@ pages:
     ownership:
       default: -1
     flags: {}
+    category: null
     _key: '!journal.pages!iNRvDXhCiPR8lHX9.vx9vQ8NwGD57YrTX'
 _stats:
-  coreVersion: '12.331'
+  coreVersion: '13.342'
   systemId: null
   systemVersion: null
   createdTime: null
@@ -49,8 +51,10 @@ _stats:
   lastModifiedBy: null
   compendiumSource: null
   duplicateSource: null
+  exportSource: null
 ownership:
   default: 0
   eeXhsDlbzUBZOXZT: 3
+categories: []
 _key: '!journal!iNRvDXhCiPR8lHX9'
 

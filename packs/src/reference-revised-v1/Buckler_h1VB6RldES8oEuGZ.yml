@@ -27,7 +27,7 @@ pages:
         Advantage, but must pay the AP cost if picking the Special Action
         Advantage.</p>
     _stats:
-      coreVersion: '12.331'
+      coreVersion: '13.342'
       systemId: null
       systemVersion: null
       createdTime: null
@@ -35,6 +35,7 @@ pages:
       lastModifiedBy: null
       compendiumSource: null
       duplicateSource: null
+      exportSource: null
     _id: cIt8vODw30VSDDA1
     system: {}
     image: {}
@@ -46,9 +47,10 @@ pages:
     ownership:
       default: -1
     flags: {}
+    category: null
     _key: '!journal.pages!h1VB6RldES8oEuGZ.cIt8vODw30VSDDA1'
 _stats:
-  coreVersion: '12.331'
+  coreVersion: '13.342'
   systemId: null
   systemVersion: null
   createdTime: null
@@ -56,8 +58,10 @@ _stats:
   lastModifiedBy: null
   compendiumSource: null
   duplicateSource: null
+  exportSource: null
 ownership:
   default: 0
   eeXhsDlbzUBZOXZT: 3
+categories: []
 _key: '!journal!h1VB6RldES8oEuGZ'
 

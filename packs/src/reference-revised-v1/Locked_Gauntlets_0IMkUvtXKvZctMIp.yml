@@ -22,7 +22,7 @@ pages:
         the user takes a -10 penalty to parrying, and cannot use the hand for
         anything else unless unlocked with a Secondary action.</p>
     _stats:
-      coreVersion: '12.331'
+      coreVersion: '13.342'
       systemId: null
       systemVersion: null
       createdTime: null
@@ -30,6 +30,7 @@ pages:
       lastModifiedBy: null
       compendiumSource: null
       duplicateSource: null
+      exportSource: null
     _id: 5zt70qAHqVo3qaLY
     system: {}
     image: {}
@@ -41,9 +42,10 @@ pages:
     ownership:
       default: -1
     flags: {}
+    category: null
     _key: '!journal.pages!0IMkUvtXKvZctMIp.5zt70qAHqVo3qaLY'
 _stats:
-  coreVersion: '12.331'
+  coreVersion: '13.342'
   systemId: null
   systemVersion: null
   createdTime: null
@@ -51,8 +53,10 @@ _stats:
   lastModifiedBy: null
   compendiumSource: null
   duplicateSource: null
+  exportSource: null
 ownership:
   default: 0
   eeXhsDlbzUBZOXZT: 3
+categories: []
 _key: '!journal!0IMkUvtXKvZctMIp'
 

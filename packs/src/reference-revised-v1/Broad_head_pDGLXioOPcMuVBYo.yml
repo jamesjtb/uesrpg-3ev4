@@ -17,7 +17,7 @@ pages:
       format: 1
       content: "<p>The shot gains the @Compendium[uesrpg-revision.journal.wra9K7hRoVnZarja]{Splitting}\_quality (uses the firing character’s Strength bonus as normal).\_</p>"
     _stats:
-      coreVersion: '12.331'
+      coreVersion: '13.342'
       systemId: null
       systemVersion: null
       createdTime: null
@@ -25,6 +25,7 @@ pages:
       lastModifiedBy: null
       compendiumSource: null
       duplicateSource: null
+      exportSource: null
     _id: wtzUmIG3HbkkGYcD
     system: {}
     image: {}
@@ -36,9 +37,10 @@ pages:
     ownership:
       default: -1
     flags: {}
+    category: null
     _key: '!journal.pages!pDGLXioOPcMuVBYo.wtzUmIG3HbkkGYcD'
 _stats:
-  coreVersion: '12.331'
+  coreVersion: '13.342'
   systemId: null
   systemVersion: null
   createdTime: null
@@ -46,8 +48,10 @@ _stats:
   lastModifiedBy: null
   compendiumSource: null
   duplicateSource: null
+  exportSource: null
 ownership:
   default: 0
   eeXhsDlbzUBZOXZT: 3
+categories: []
 _key: '!journal!pDGLXioOPcMuVBYo'
 

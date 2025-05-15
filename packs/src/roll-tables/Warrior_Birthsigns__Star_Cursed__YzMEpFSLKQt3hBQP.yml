@@ -9,70 +9,120 @@ description: >-
   the Lord. Those born under the sign of the Warrior are skilled with weapons of
   all kinds, but prone to short tempers.”</em></p>
 results:
-  - type: pack
-    documentCollection: uesrpg-3ev4.signs
+  - type: document
     weight: 1
     range:
       - 1
       - 1
     drawn: false
-    text: The Star-Cursed Warrior
-    documentId: 1VMWP1tbtpowTI4O
     img: systems/uesrpg-3ev4/images/sign-warrior.webp
     _id: ZmpO8fDiV9FRP3j0
     flags: {}
+    _stats:
+      coreVersion: '13.342'
+      systemId: null
+      systemVersion: null
+      createdTime: null
+      modifiedTime: null
+      lastModifiedBy: null
+      compendiumSource: null
+      duplicateSource: null
+      exportSource: null
+    name: The Star-Cursed Warrior
+    documentUuid: Compendium.uesrpg-3ev4.signs.Item.1VMWP1tbtpowTI4O
+    description: ''
     _key: '!tables.results!YzMEpFSLKQt3hBQP.ZmpO8fDiV9FRP3j0'
-  - type: pack
-    documentCollection: uesrpg-3ev4.signs
+  - type: document
     weight: 1
     range:
       - 2
       - 2
     drawn: false
-    text: The Star-Cursed Lady
-    documentId: YJ0znjzt5rhhyN1B
     img: systems/uesrpg-3ev4/images/sign-lady.webp
     _id: yFBESOxV4l56IqBu
     flags: {}
+    _stats:
+      coreVersion: '13.342'
+      systemId: null
+      systemVersion: null
+      createdTime: null
+      modifiedTime: null
+      lastModifiedBy: null
+      compendiumSource: null
+      duplicateSource: null
+      exportSource: null
+    name: The Star-Cursed Lady
+    documentUuid: Compendium.uesrpg-3ev4.signs.Item.YJ0znjzt5rhhyN1B
+    description: ''
     _key: '!tables.results!YzMEpFSLKQt3hBQP.yFBESOxV4l56IqBu'
-  - type: pack
-    documentCollection: uesrpg-3ev4.signs
+  - type: document
     weight: 1
     range:
       - 3
       - 3
     drawn: false
-    text: The Star-Cursed Steed
-    documentId: WbOrSiR2sPM5jA30
     img: systems/uesrpg-3ev4/images/sign-steed.webp
     _id: yVMPYwW6VLGTkGBW
     flags: {}
+    _stats:
+      coreVersion: '13.342'
+      systemId: null
+      systemVersion: null
+      createdTime: null
+      modifiedTime: null
+      lastModifiedBy: null
+      compendiumSource: null
+      duplicateSource: null
+      exportSource: null
+    name: The Star-Cursed Steed
+    documentUuid: Compendium.uesrpg-3ev4.signs.Item.WbOrSiR2sPM5jA30
+    description: ''
     _key: '!tables.results!YzMEpFSLKQt3hBQP.yVMPYwW6VLGTkGBW'
-  - type: pack
-    documentCollection: uesrpg-3ev4.signs
+  - type: document
     weight: 1
     range:
       - 4
       - 4
     drawn: false
-    text: The Star-Cursed Lord
-    documentId: mG6OvH97y78ijGsS
     img: systems/uesrpg-3ev4/images/sign-lord.webp
     _id: rwnoIZbiANFZ1bds
     flags: {}
+    _stats:
+      coreVersion: '13.342'
+      systemId: null
+      systemVersion: null
+      createdTime: null
+      modifiedTime: null
+      lastModifiedBy: null
+      compendiumSource: null
+      duplicateSource: null
+      exportSource: null
+    name: The Star-Cursed Lord
+    documentUuid: Compendium.uesrpg-3ev4.signs.Item.mG6OvH97y78ijGsS
+    description: ''
     _key: '!tables.results!YzMEpFSLKQt3hBQP.rwnoIZbiANFZ1bds'
-  - type: pack
-    documentCollection: uesrpg-3ev4.roll-tables
+  - type: document
     weight: 1
     range:
       - 5
       - 5
     drawn: false
-    text: Warrior Birthsigns (Star-Cursed)
-    documentId: YzMEpFSLKQt3hBQP
     img: systems/uesrpg-3ev4/images/sign-warrior.webp
     _id: FjLcWaoxnzFF5mBf
     flags: {}
+    _stats:
+      coreVersion: '13.342'
+      systemId: null
+      systemVersion: null
+      createdTime: null
+      modifiedTime: null
+      lastModifiedBy: null
+      compendiumSource: null
+      duplicateSource: null
+      exportSource: null
+    name: Warrior Birthsigns (Star-Cursed)
+    documentUuid: Compendium.uesrpg-3ev4.roll-tables.RollTable.YzMEpFSLKQt3hBQP
+    description: ''
     _key: '!tables.results!YzMEpFSLKQt3hBQP.FjLcWaoxnzFF5mBf'
 replacement: true
 displayRoll: true
@@ -84,12 +134,13 @@ flags: {}
 _stats:
   compendiumSource: null
   duplicateSource: null
-  coreVersion: '12.331'
+  coreVersion: '13.342'
   systemId: uesrpg-3ev4
   systemVersion: v1.0.0-RC.70
   createdTime: 1746863568452
   modifiedTime: 1746864272187
   lastModifiedBy: HcIrULZhA1JFIlrf
+  exportSource: null
 formula: 1d5
 _key: '!tables!YzMEpFSLKQt3hBQP'
 

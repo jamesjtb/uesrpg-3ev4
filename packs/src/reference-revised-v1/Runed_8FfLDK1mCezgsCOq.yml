@@ -3,8 +3,7 @@ name: Runed
 folder: null
 sort: 0
 flags:
-  core:
-    sourceId: JournalEntry.4KvWUbDVjSR8ZM0s
+  core: {}
   cf:
     id: temp_u0ce34u73r
     path: References#/CF_SEP/Qualities#/CF_SEP/Armour Qualities
@@ -21,7 +20,7 @@ pages:
         <p>Gains Magic and 1 magic AR. Only found among Dawnguard or specialized
         Skyrim Blacksmiths.</p>
     _stats:
-      coreVersion: '12.331'
+      coreVersion: '13.342'
       systemId: null
       systemVersion: null
       createdTime: null
@@ -29,6 +28,7 @@ pages:
       lastModifiedBy: null
       compendiumSource: null
       duplicateSource: null
+      exportSource: null
     _id: MtDHIH6VM1mfnXFA
     system: {}
     image: {}
@@ -40,18 +40,21 @@ pages:
     ownership:
       default: -1
     flags: {}
+    category: null
     _key: '!journal.pages!8FfLDK1mCezgsCOq.MtDHIH6VM1mfnXFA'
 _stats:
-  coreVersion: '12.331'
+  coreVersion: '13.342'
   systemId: null
   systemVersion: null
   createdTime: null
   modifiedTime: null
   lastModifiedBy: null
-  compendiumSource: null
+  compendiumSource: JournalEntry.4KvWUbDVjSR8ZM0s
   duplicateSource: null
+  exportSource: null
 ownership:
   default: 0
   eeXhsDlbzUBZOXZT: 3
+categories: []
 _key: '!journal!8FfLDK1mCezgsCOq'
 

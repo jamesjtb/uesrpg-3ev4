@@ -5,18 +5,18 @@ effects: []
 folder: null
 sort: 0
 flags:
-  core:
-    sourceId: Compendium.uesrpg-3ev4.traits.KDKw20ozu4hxkzPC
+  core: {}
 _id: zYJYxOo1QDWeWV0u
 _stats:
-  coreVersion: '12.331'
+  coreVersion: '13.342'
   systemId: null
   systemVersion: null
   createdTime: null
   modifiedTime: null
   lastModifiedBy: null
-  compendiumSource: null
+  compendiumSource: Compendium.uesrpg-3ev4.traits.KDKw20ozu4hxkzPC
   duplicateSource: null
+  exportSource: null
 ownership:
   default: 0
   Nq1YPyKFbs3ki1jr: 3

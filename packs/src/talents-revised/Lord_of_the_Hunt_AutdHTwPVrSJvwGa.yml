@@ -1,20 +1,20 @@
 name: Lord of the Hunt
 type: talent
 flags:
-  core:
-    sourceId: Item.JX5ttPQSa94C9UKX
+  core: {}
 img: systems/uesrpg-3ev4/images/Icons/blending.webp
 effects: []
 _id: AutdHTwPVrSJvwGa
 _stats:
-  coreVersion: '12.331'
+  coreVersion: '13.342'
   systemId: null
   systemVersion: null
   createdTime: null
   modifiedTime: null
   lastModifiedBy: null
-  compendiumSource: null
+  compendiumSource: Item.JX5ttPQSa94C9UKX
   duplicateSource: null
+  exportSource: null
 ownership:
   default: 0
   xvA5SwRGJiyPsnxH: 3
@@ -71,6 +71,7 @@ system:
     in natural foliage or terrain. If successful, they gain the Invisible
     condition until they perform another action that would normally cause the
     Hidden status to be broken.</p>
+  governingCharacteristics: ''
   xpCost: 400
   level: 4
   talentReq: Nature's Blessing
@@ -80,8 +81,10 @@ system:
   untrainedException: false
   fatigueException: false
   addIBToMP: false
+  addIntToMPMultiplier: 1
   armorAcrobaticsException: false
   addHalfSpeed: false
+  doubleSwimSpeed: false
 folder: null
 sort: 0
 _key: '!items!AutdHTwPVrSJvwGa'

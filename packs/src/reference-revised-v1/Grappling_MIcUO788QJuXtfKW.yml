@@ -17,7 +17,7 @@ pages:
       format: 1
       content: "<p>In place of making a normal attack a character can choose to attempt to grapple their opponent. This requires a Combat Style test (the style must include unarmed combat) opposed against either a Combat Style (with unarmed), Athletics, or Evade test. On success, the target gains the restrained condition. The target may attempt to escape by using the resist action. On success they break free.</p>\n<p>\_</p>\n<p>Characters suffer a -30 penalty when attempting to grapple characters of larger size than them, and cannot grapple characters of two or more sizes larger. While they have an opponent restrained, the character may not move but may take the following actions (each is a primary action that costs 1 AP):</p>\n<p>• Takedown: The character may render their victim, and themself, prone. They suffers no prone penalties in relation to any tests made against they target.</p>\n<p>• Move: The character may move themself and their victim a number of meters up to their Strength bonus in any direction.</p>\n<p>• Attack: The character may make a normal attack against their restrained victim, who cannot defend themself. They must use a weapon with a 1m range or less. If the target is both prone and restrained, and the character is armed, this can be a coup de grâce. If the character is unarmed, then they can choose to instead cause the target to lose Strength Bonus Stamina points.</p>"
     _stats:
-      coreVersion: '12.331'
+      coreVersion: '13.342'
       systemId: null
       systemVersion: null
       createdTime: null
@@ -25,6 +25,7 @@ pages:
       lastModifiedBy: null
       compendiumSource: null
       duplicateSource: null
+      exportSource: null
     _id: W9he45wgHu8bR3Y8
     system: {}
     image: {}
@@ -36,9 +37,10 @@ pages:
     ownership:
       default: -1
     flags: {}
+    category: null
     _key: '!journal.pages!MIcUO788QJuXtfKW.W9he45wgHu8bR3Y8'
 _stats:
-  coreVersion: '12.331'
+  coreVersion: '13.342'
   systemId: null
   systemVersion: null
   createdTime: null
@@ -46,8 +48,10 @@ _stats:
   lastModifiedBy: null
   compendiumSource: null
   duplicateSource: null
+  exportSource: null
 ownership:
   default: 0
   eeXhsDlbzUBZOXZT: 3
+categories: []
 _key: '!journal!MIcUO788QJuXtfKW'
 

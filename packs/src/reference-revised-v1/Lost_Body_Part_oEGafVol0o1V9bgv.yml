@@ -77,7 +77,7 @@ pages:
         this condition heal damage at half speed and increase the passive wound
         penalty to all tests to -30.</p>
     _stats:
-      coreVersion: '12.331'
+      coreVersion: '13.342'
       systemId: null
       systemVersion: null
       createdTime: null
@@ -85,6 +85,7 @@ pages:
       lastModifiedBy: null
       compendiumSource: null
       duplicateSource: null
+      exportSource: null
     _id: Dq4FldTui4LeZSgx
     system: {}
     image: {}
@@ -96,9 +97,10 @@ pages:
     ownership:
       default: -1
     flags: {}
+    category: null
     _key: '!journal.pages!oEGafVol0o1V9bgv.Dq4FldTui4LeZSgx'
 _stats:
-  coreVersion: '12.331'
+  coreVersion: '13.342'
   systemId: null
   systemVersion: null
   createdTime: null
@@ -106,8 +108,10 @@ _stats:
   lastModifiedBy: null
   compendiumSource: null
   duplicateSource: null
+  exportSource: null
 ownership:
   default: 0
   eeXhsDlbzUBZOXZT: 3
+categories: []
 _key: '!journal!oEGafVol0o1V9bgv'
 

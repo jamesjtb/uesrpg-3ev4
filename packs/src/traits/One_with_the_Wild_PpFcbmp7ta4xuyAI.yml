@@ -1,20 +1,20 @@
 name: One with the Wild
 type: trait
 flags:
-  core:
-    sourceId: Item.Hx4NHRgycp4DR0cQ
+  core: {}
 img: systems/uesrpg-3ev4/images/Icons/OnewithWild.webp
 effects: []
 _id: PpFcbmp7ta4xuyAI
 _stats:
-  coreVersion: '12.331'
+  coreVersion: '13.342'
   systemId: null
   systemVersion: null
   createdTime: null
   modifiedTime: null
   lastModifiedBy: null
-  compendiumSource: null
+  compendiumSource: Item.Hx4NHRgycp4DR0cQ
   duplicateSource: null
+  exportSource: null
 ownership:
   default: 0
   xvA5SwRGJiyPsnxH: 3

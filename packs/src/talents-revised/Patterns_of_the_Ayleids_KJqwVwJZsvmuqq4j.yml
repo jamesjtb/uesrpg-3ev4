@@ -1,20 +1,20 @@
 name: Patterns of the Ayleids
 type: talent
 flags:
-  core:
-    sourceId: Item.sRwqfUHJaoZIrZw7
+  core: {}
 img: systems/uesrpg-3ev4/images/Icons/spellReflect.webp
 effects: []
 _id: KJqwVwJZsvmuqq4j
 _stats:
-  coreVersion: '12.331'
+  coreVersion: '13.342'
   systemId: null
   systemVersion: null
   createdTime: null
   modifiedTime: null
   lastModifiedBy: null
-  compendiumSource: null
+  compendiumSource: Item.sRwqfUHJaoZIrZw7
   duplicateSource: null
+  exportSource: null
 ownership:
   default: 0
   WcwhQU1nz94WaD5n: 3
@@ -70,6 +70,7 @@ system:
     <p>This character has learned the secrets of forging weapons and armor used
     by ancient Ayleids, which are infused with starlight. This character can
     create Welkynd and Varla Elven armor and weapons.</p>
+  governingCharacteristics: ''
   xpCost: 200
   level: 2
   talentReq: '-'
@@ -79,8 +80,10 @@ system:
   untrainedException: false
   fatigueException: false
   addIBToMP: false
+  addIntToMPMultiplier: 1
   armorAcrobaticsException: false
   addHalfSpeed: false
+  doubleSwimSpeed: false
 folder: null
 sort: 0
 _key: '!items!KJqwVwJZsvmuqq4j'

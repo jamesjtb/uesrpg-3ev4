@@ -5,18 +5,18 @@ effects: []
 folder: null
 sort: 0
 flags:
-  core:
-    sourceId: Item.QLP1azejoTfsM0QT
+  core: {}
 _id: glUATXRL1K3zmf6Z
 _stats:
-  coreVersion: '12.331'
+  coreVersion: '13.342'
   systemId: null
   systemVersion: null
   createdTime: null
   modifiedTime: null
   lastModifiedBy: null
-  compendiumSource: null
+  compendiumSource: Item.QLP1azejoTfsM0QT
   duplicateSource: null
+  exportSource: null
 ownership:
   default: 0
   eeXhsDlbzUBZOXZT: 3
@@ -74,6 +74,7 @@ system:
     <p>The character can now use the second word of a shout without spending a
     Stamina Point, and is allowed to Test Endurance to not spend a Stamina point
     for the Third Word in a shout.</p>
+  governingCharacteristics: ''
   xpCost: 800
   level: 6
   talentReq: Adept of the Voice
@@ -83,7 +84,9 @@ system:
   untrainedException: false
   fatigueException: false
   addIBToMP: false
+  addIntToMPMultiplier: 1
   armorAcrobaticsException: false
   addHalfSpeed: false
+  doubleSwimSpeed: false
 _key: '!items!glUATXRL1K3zmf6Z'
 

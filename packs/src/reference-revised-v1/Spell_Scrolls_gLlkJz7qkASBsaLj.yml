@@ -17,7 +17,7 @@ pages:
       format: 1
       content: "<p>Spell scrolls are single use items that have had a particular spell bound to them through the use of enchanting. By reading the magical inscription on the scroll the character can invoke the stored magic without the difficulty of casting it themselves.</p>\n<table style=\"width:52.5606%\" border=\"1\">\n<tbody>\n<tr>\n<td style=\"width:45.1348%\"><strong>Spell Level</strong></td>\n<td style=\"width:54.1549%\"><strong>Cost</strong></td>\n</tr>\n<tr>\n<td style=\"width:45.1348%\">1</td>\n<td style=\"width:54.1549%\">30</td>\n</tr>\n<tr>\n<td style=\"width:45.1348%\">2</td>\n<td style=\"width:54.1549%\">45</td>\n</tr>\n<tr>\n<td style=\"width:45.1348%\">3</td>\n<td style=\"width:54.1549%\">90</td>\n</tr>\n<tr>\n<td style=\"width:45.1348%\">4</td>\n<td style=\"width:54.1549%\">150</td>\n</tr>\n<tr>\n<td style=\"width:45.1348%\">5</td>\n<td style=\"width:54.1549%\">300</td>\n</tr>\n<tr>\n<td style=\"width:45.1348%\">6</td>\n<td style=\"width:54.1549%\">600</td>\n</tr>\n<tr>\n<td style=\"width:45.1348%\">7+</td>\n<td style=\"width:54.1549%\">1500</td>\n</tr>\n</tbody>\n</table>\n<p>All of these prices assume a Binding Strength of 3. Higher/lower binding strengths require more/less skilled enchanters, which increase/decrease the total price by 20% for each step (max 5).</p>\n<p>\_</p>\n<p><strong>The Basics</strong></p>\n<p>Spell scrolls are single use items that a character can activate by using the Cast Magic action. This allows them to cast the stored spell at no magicka cost automatically: they count as having passed the casting test with a number of degrees of success equal to the Binding Strength of the scroll. This represents how effectively the magic of the spell was imprinted on the scroll. The scroll reproduces the effects of the spell exactly as decided by the creator, including whether or not the spell is overloaded or extended via upkeep (if applicable).</p>\n<p>\_</p>\n<p><strong>Learning Spells</strong></p>\n<p>A character can only create a spell scroll for a conventional or unconventional spell that they themselves know. Using a spell with a level higher than the character’s enchant skill rank can be difficult. Follow these steps to create a spell scroll:</p>\n<p><strong>Step 1: Gather Materials</strong></p>\n<p>Creating a spell scroll consumes materials worth approximately 25 drakes, and an hour long ritual.</p>\n<p><strong>Step 2: Create Spell Scroll</strong></p>\n<p>The character picks one of the spells they know and makes an enchant skill test penalized by -10 for each level by which the spell level exceeds their enchant skill rank. They must pay the cost of the spell as if they had cast it, either from their own magicka pool or by subtracting the cost from the soul energy of a soul gem in their possession (this does not destroy the gem). The character must choose if they wish to overload the spell (use their Willpower bonus for the scroll’s effect) or extend the duration via upkeep, if applicable, and must pay the appropriate associated costs.</p>\n<p><strong>Step 3: Finalize Scroll</strong></p>\n<p>On success, the character creates the spell scroll. The binding strength (min 1) of the scroll is equal to the character’s enchant skill rank. Write down the effects of the spell somewhere you can reference it, and add the scroll to the character’s gear list.</p>"
     _stats:
-      coreVersion: '12.331'
+      coreVersion: '13.342'
       systemId: null
       systemVersion: null
       createdTime: null
@@ -25,6 +25,7 @@ pages:
       lastModifiedBy: null
       compendiumSource: null
       duplicateSource: null
+      exportSource: null
     _id: QiTw2DV3eSPzCIgW
     system: {}
     image: {}
@@ -36,9 +37,10 @@ pages:
     ownership:
       default: -1
     flags: {}
+    category: null
     _key: '!journal.pages!gLlkJz7qkASBsaLj.QiTw2DV3eSPzCIgW'
 _stats:
-  coreVersion: '12.331'
+  coreVersion: '13.342'
   systemId: null
   systemVersion: null
   createdTime: null
@@ -46,8 +48,10 @@ _stats:
   lastModifiedBy: null
   compendiumSource: null
   duplicateSource: null
+  exportSource: null
 ownership:
   default: 0
   eeXhsDlbzUBZOXZT: 3
+categories: []
 _key: '!journal!gLlkJz7qkASBsaLj'
 

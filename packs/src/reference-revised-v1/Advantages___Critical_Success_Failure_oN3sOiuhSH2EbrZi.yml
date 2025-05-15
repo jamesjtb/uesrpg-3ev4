@@ -17,7 +17,7 @@ pages:
       format: 1
       content: "<p>Advantages reflect ways that an attacking character has gained a upper hand in combat, and is able to apply an additional effect on top of their normal attack. A character can gain multiple advantages if for example a defender fails as well as they roll a critical success. These advantages can stack with themselves if their effects allow for it.</p>\n<p>• Precision Strike: The character is able to choose the specific hit location of the attack.</p>\n<p>• Penetrate Armour: The character can treat any armour they are hitting as one step lower, so for example full armour is reduced to partial, and partial is reduced to unarmoured. This does not lower AR of the hit location.</p>\n<p>• Forceful Impact: The character can apply the Damaged(1) quality to any armour on the hit location. This may only be done if the weapon the character is using has the Crushing quality. This advantage can stack the Damaged quality if applied on the same hit location multiple times.</p>\n<p>• Wounding Cleave: The character can cause the opponent to gain a Bleeding(1) condition.</p>\n<p>• Fortunate Hit: The character can add half of their Luck Bonus to the damage of the attack. This damage has a minimum of 1, and is rounded down.</p>\n<p>• Press Advantage (attack only): The character gains a +10 to their next melee attack against the opponent within 1 round.</p>\n<p>• Overextend (evade/parry only): The opponent's next attack test within 1 round is made at a -10 penalty.</p>\n<p>• @JournalEntry[NfOxh1LojNtFjL4e]{Special Actions}: Immediately take a special action. Ignore the AP cost, or automatically win any opposed roll involved (The Bash SP use can also be chosen, but to benefit from the auto-success on the opposed roll, the character must spend an AP to do so on top of the SP)</p>\n<p>\_</p>\n<p><strong>Critical Success/Failure</strong></p>\n<p>If one character critically succeeded, treat it as if they succeeded with more degrees than their opponent (if their opponent succeeded at all). They also gain an advantage. If one character rolls a critical failure, and their opponent passed, then their opponent counts as having critically succeeded. If both sides roll a critical success, then nothing happens. An attack made with a critical success causes a wound to the hit location of the attack.</p>"
     _stats:
-      coreVersion: '12.331'
+      coreVersion: '13.342'
       systemId: null
       systemVersion: null
       createdTime: null
@@ -25,6 +25,7 @@ pages:
       lastModifiedBy: null
       compendiumSource: null
       duplicateSource: null
+      exportSource: null
     _id: zWK4zZXw1BiSRI9J
     system: {}
     image: {}
@@ -36,9 +37,10 @@ pages:
     ownership:
       default: -1
     flags: {}
+    category: null
     _key: '!journal.pages!oN3sOiuhSH2EbrZi.zWK4zZXw1BiSRI9J'
 _stats:
-  coreVersion: '12.331'
+  coreVersion: '13.342'
   systemId: null
   systemVersion: null
   createdTime: null
@@ -46,8 +48,10 @@ _stats:
   lastModifiedBy: null
   compendiumSource: null
   duplicateSource: null
+  exportSource: null
 ownership:
   default: 0
   eeXhsDlbzUBZOXZT: 3
+categories: []
 _key: '!journal!oN3sOiuhSH2EbrZi'
 

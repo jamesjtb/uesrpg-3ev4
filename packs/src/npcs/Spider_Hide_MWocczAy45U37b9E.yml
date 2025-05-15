@@ -1,0 +1,119 @@
+name: Spider Hide
+type: armor
+img: icons/commodities/leather/fur-pink.webp
+effects: []
+folder: WgSjHj9G4W2TcQgX
+flags:
+  core: {}
+_stats:
+  compendiumSource: null
+  duplicateSource: null
+  exportSource: null
+  coreVersion: '13.342'
+  systemId: uesrpg-3ev4
+  systemVersion: v1.0.0-RC.71
+  createdTime: 1747083814271
+  modifiedTime: 1747083890452
+  lastModifiedBy: HcIrULZhA1JFIlrf
+ownership:
+  default: 0
+  eeXhsDlbzUBZOXZT: 3
+  HcIrULZhA1JFIlrf: 3
+system:
+  mpBonus: 0
+  hpBonus: 0
+  spBonus: 0
+  lpBonus: 0
+  wtBonus: 0
+  iniBonus: 0
+  speedBonus: 0
+  flyBonus: 0
+  swimBonus: 0
+  diseaseR: 0
+  fireR: 0
+  frostR: 0
+  shockR: 0
+  poisonR: 0
+  magicR: 0
+  natToughnessR: 0
+  silverR: 0
+  sunlightR: 0
+  characteristics:
+    none: None
+    str: STR
+    end: END
+    agi: AGI
+    int: INT
+    wp: WP
+    prc: PRC
+    prs: PRS
+    lck: LCK
+  characteristicBonus:
+    strChaBonus: 0
+    endChaBonus: 0
+    agiChaBonus: 0
+    intChaBonus: 0
+    wpChaBonus: 0
+    prcChaBonus: 0
+    prsChaBonus: 0
+    lckChaBonus: 0
+  replace:
+    ini:
+      iniToggle: false
+      value: 0
+      characteristic: ''
+    wt:
+      wtToggle: false
+      value: 0
+      characteristic: ''
+  skillArray: []
+  isPhysicalObject: true
+  containerStats:
+    contained: false
+    container_id: ''
+    container_name: ''
+  description: >-
+    <p>On a <strong>+30 Survival test</strong>, a character can remove the
+    spider's hide, worth 30 drakes, over the course of a Short Rest. Failing
+    this test spoils the hide and halves its worth.</p><p>On a <strong>+20
+    Survival test</strong>, a character can, over the course of a Long Rest,
+    turn a spider hide into one piece of Full Spider Hide armor. Alternatively,
+    creating a Full Spider Hide chest piece requires two spider hides. Spider
+    Hide armor is exactly the same as regular Hide, but provides a +10 bonus to
+    the wearer's Athletics tests made to climb, if the character is wearing at
+    least 4 pieces. Failing this test spoils the hide, which halves its worth
+    and renders it useless.</p>
+  quantity: 1
+  enc: 1
+  totalENC: 0
+  reach: ''
+  damage: ''
+  equipped: true
+  carried: true
+  hands: 0
+  price: 30
+  modPrice: 0
+  armor: 4
+  blockRating: '0'
+  excludeENC: false
+  magic_ar: '0'
+  enchant_level: 0
+  qualities: '-'
+  category: head
+  item_cat:
+    none: None
+    head: Helmet
+    l_arm: Left Gauntlet
+    r_arm: Right Gauntlet
+    l_leg: Left Leg
+    r_leg: Right Leg
+    body: Chestplate
+    shield: Shield
+  charge:
+    value: 0
+    max: 0
+    reduction: 1
+_id: MWocczAy45U37b9E
+sort: 0
+_key: '!items!MWocczAy45U37b9E'
+

@@ -17,7 +17,7 @@ pages:
       format: 1
       content: "<p>Damage represents the ability of an attack to harm a character. Attacks against a character always strike a particular hit location (determined by the 1s digit of the attack roll, or a d10 counting 10 as 0), and the damage of that attack is reduced by the Armor Rating (AR) of that hit location. The characters Hit Points (HP) are then reduced by the remaining amount.</p>\n<p>\_</p>\n<table style=\"width:99.1549%\" border=\"1\">\n<tbody>\n<tr>\n<td style=\"width:32.4902%\"><strong>\_ \_ \_ \_ \_ \_ \_ \_ \_ \_ \_ \_ \_ \_Result</strong></td>\n<td style=\"width:66.7995%\"><strong>\_ \_ \_ \_ \_ \_ \_ \_ \_ \_ \_ \_ \_ \_ \_ \_ \_ \_ \_ \_ \_ \_ \_ \_ \_ \_ \_ \_ \_ \_ \_ \_ \_ Location Hit</strong></td>\n</tr>\n<tr>\n<td style=\"width:32.4902%\">1-5</td>\n<td style=\"width:66.7995%\">Body</td>\n</tr>\n<tr>\n<td style=\"width:32.4902%\">6</td>\n<td style=\"width:66.7995%\">Right Leg</td>\n</tr>\n<tr>\n<td style=\"width:32.4902%\">7</td>\n<td style=\"width:66.7995%\">Left Leg</td>\n</tr>\n<tr>\n<td style=\"width:32.4902%\">8</td>\n<td style=\"width:66.7995%\">Right Arm</td>\n</tr>\n<tr>\n<td style=\"width:32.4902%\">9</td>\n<td style=\"width:66.7995%\">Left Arm</td>\n</tr>\n<tr>\n<td style=\"width:32.4902%\">0</td>\n<td style=\"width:66.7995%\">Head</td>\n</tr>\n</tbody>\n</table>\n<p>\_</p>\n<p><strong>Damage Types</strong></p>\n<p>The above rules hold true for all physical attacks and physical armor. However, some attacks and effects can deal other types of damage that can only be resisted with certain types of armor. Broadly, damage can be divided into two overall types</p>\n<p>\_</p>\n<p><strong>Physical Damage</strong></p>\n<p>Physical damage represents physical cuts, jabs, and blows that harm a character through force of impact or blood loss (or both). All normal weapons deal physical damage, and physical damage is reduced by normal AR.</p>\n<p>\_</p>\n<p><strong>Magic Damage</strong></p>\n<p>Magic damage represents damage dealt by magical or elemental forces, such as burns from a fire ball spell. Poison is included in this category, though it is not always magical. There are sub-types of magic damage, each reduced by a corresponding armor type (and also reduced by generic magic AR).</p>\n<p>\_</p>\n<table style=\"width:99.1477%\" border=\"1\">\n<tbody>\n<tr>\n<td style=\"width:33.4223%\"><strong>\_ \_ \_ \_ \_ \_ \_ \_ \_ \_ \_ \_ \_ Sub-Type</strong></td>\n<td style=\"width:65.8614%\"><strong>\_ \_ \_ \_ \_ \_ \_ \_ \_ \_ \_ \_ \_ \_ \_ \_ \_ \_ \_ \_ \_ \_ \_ \_ \_ \_ \_ \_ \_ \_ Armour Type</strong></td>\n</tr>\n<tr>\n<td style=\"width:33.4223%\">(any)</td>\n<td style=\"width:65.8614%\">Magic AR</td>\n</tr>\n<tr>\n<td style=\"width:33.4223%\">Fire</td>\n<td style=\"width:65.8614%\">Fire AR</td>\n</tr>\n<tr>\n<td style=\"width:33.4223%\">Frost</td>\n<td style=\"width:65.8614%\">Frost AR</td>\n</tr>\n<tr>\n<td style=\"width:33.4223%\">Shock</td>\n<td style=\"width:65.8614%\">Shock AR</td>\n</tr>\n<tr>\n<td style=\"width:33.4223%\">Poison</td>\n<td style=\"width:65.8614%\">Poison Ar</td>\n</tr>\n</tbody>\n</table>"
     _stats:
-      coreVersion: '12.331'
+      coreVersion: '13.342'
       systemId: null
       systemVersion: null
       createdTime: null
@@ -25,6 +25,7 @@ pages:
       lastModifiedBy: null
       compendiumSource: null
       duplicateSource: null
+      exportSource: null
     _id: 4tLtN4XGwkXNg364
     system: {}
     image: {}
@@ -36,9 +37,10 @@ pages:
     ownership:
       default: -1
     flags: {}
+    category: null
     _key: '!journal.pages!J4R9A3uc40YoI6JR.4tLtN4XGwkXNg364'
 _stats:
-  coreVersion: '12.331'
+  coreVersion: '13.342'
   systemId: null
   systemVersion: null
   createdTime: null
@@ -46,8 +48,10 @@ _stats:
   lastModifiedBy: null
   compendiumSource: null
   duplicateSource: null
+  exportSource: null
 ownership:
   default: 0
   eeXhsDlbzUBZOXZT: 3
+categories: []
 _key: '!journal!J4R9A3uc40YoI6JR'
 

@@ -8,70 +8,120 @@ description: >-
   the Ritual. Those born under the Mage have more magicka and talent for all
   kinds of spellcasting, but are often arrogant and absent-minded.”</em></p>
 results:
-  - type: pack
-    documentCollection: uesrpg-3ev4.signs
+  - type: document
     weight: 1
     range:
       - 1
       - 1
     drawn: false
-    text: The Star-Cursed Mage
-    documentId: wJluoSBv3IMCoY5O
     img: systems/uesrpg-3ev4/images/sign-mage.webp
     _id: lsLZFxOFWtotz7Ly
     flags: {}
+    _stats:
+      coreVersion: '13.342'
+      systemId: null
+      systemVersion: null
+      createdTime: null
+      modifiedTime: null
+      lastModifiedBy: null
+      compendiumSource: null
+      duplicateSource: null
+      exportSource: null
+    name: The Star-Cursed Mage
+    documentUuid: Compendium.uesrpg-3ev4.signs.Item.wJluoSBv3IMCoY5O
+    description: ''
     _key: '!tables.results!oheStl9LEUyET8VX.lsLZFxOFWtotz7Ly'
-  - type: pack
-    documentCollection: uesrpg-3ev4.signs
+  - type: document
     weight: 1
     range:
       - 2
       - 2
     drawn: false
-    text: The Star-Cursed Apprentice
-    documentId: VMzpGy5SG1WWR11i
     img: systems/uesrpg-3ev4/images/sign-apprentice.webp
     _id: 94jIirHpyYU6BRHI
     flags: {}
+    _stats:
+      coreVersion: '13.342'
+      systemId: null
+      systemVersion: null
+      createdTime: null
+      modifiedTime: null
+      lastModifiedBy: null
+      compendiumSource: null
+      duplicateSource: null
+      exportSource: null
+    name: The Star-Cursed Apprentice
+    documentUuid: Compendium.uesrpg-3ev4.signs.Item.VMzpGy5SG1WWR11i
+    description: ''
     _key: '!tables.results!oheStl9LEUyET8VX.94jIirHpyYU6BRHI'
-  - type: pack
-    documentCollection: uesrpg-3ev4.signs
+  - type: document
     weight: 1
     range:
       - 3
       - 3
     drawn: false
-    text: The Star-Cursed Atronach
-    documentId: rq7QuSU4GhJ8XQgT
     img: systems/uesrpg-3ev4/images/sign-atronach.webp
     _id: yeuuX3JQSGCSfCrW
     flags: {}
+    _stats:
+      coreVersion: '13.342'
+      systemId: null
+      systemVersion: null
+      createdTime: null
+      modifiedTime: null
+      lastModifiedBy: null
+      compendiumSource: null
+      duplicateSource: null
+      exportSource: null
+    name: The Star-Cursed Atronach
+    documentUuid: Compendium.uesrpg-3ev4.signs.Item.rq7QuSU4GhJ8XQgT
+    description: ''
     _key: '!tables.results!oheStl9LEUyET8VX.yeuuX3JQSGCSfCrW'
-  - type: pack
-    documentCollection: uesrpg-3ev4.signs
+  - type: document
     weight: 1
     range:
       - 4
       - 4
     drawn: false
-    text: The Star-Cursed Ritual
-    documentId: 5vavAuRX67gfHLUO
     img: systems/uesrpg-3ev4/images/sign-ritual.webp
     _id: K8x7ZoR315D82tjD
     flags: {}
+    _stats:
+      coreVersion: '13.342'
+      systemId: null
+      systemVersion: null
+      createdTime: null
+      modifiedTime: null
+      lastModifiedBy: null
+      compendiumSource: null
+      duplicateSource: null
+      exportSource: null
+    name: The Star-Cursed Ritual
+    documentUuid: Compendium.uesrpg-3ev4.signs.Item.5vavAuRX67gfHLUO
+    description: ''
     _key: '!tables.results!oheStl9LEUyET8VX.K8x7ZoR315D82tjD'
-  - type: pack
-    documentCollection: uesrpg-3ev4.roll-tables
+  - type: document
     weight: 1
     range:
       - 5
       - 5
     drawn: false
-    text: Mage Birthsigns (Star-Cursed)
-    documentId: oheStl9LEUyET8VX
     img: systems/uesrpg-3ev4/images/sign-mage.webp
     _id: qGQz7BGBimTFtue7
     flags: {}
+    _stats:
+      coreVersion: '13.342'
+      systemId: null
+      systemVersion: null
+      createdTime: null
+      modifiedTime: null
+      lastModifiedBy: null
+      compendiumSource: null
+      duplicateSource: null
+      exportSource: null
+    name: Mage Birthsigns (Star-Cursed)
+    documentUuid: Compendium.uesrpg-3ev4.roll-tables.RollTable.oheStl9LEUyET8VX
+    description: ''
     _key: '!tables.results!oheStl9LEUyET8VX.qGQz7BGBimTFtue7'
 replacement: true
 displayRoll: true
@@ -83,12 +133,13 @@ flags: {}
 _stats:
   compendiumSource: null
   duplicateSource: null
-  coreVersion: '12.331'
+  coreVersion: '13.342'
   systemId: uesrpg-3ev4
   systemVersion: v1.0.0-RC.70
   createdTime: 1746863790967
   modifiedTime: 1746864269085
   lastModifiedBy: HcIrULZhA1JFIlrf
+  exportSource: null
 formula: 1d5
 _key: '!tables!oheStl9LEUyET8VX'
 
