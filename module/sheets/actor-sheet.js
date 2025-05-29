@@ -572,28 +572,28 @@ export class SimpleActorSheet extends ActorSheet {
 
             //Assign values to characteristics
             chaPath.str.base = strInput;
-            chaPath.str.total = strInput + chaPath.str.bonus;
+            chaPath.str.total = strInput;
 
             chaPath.end.base = endInput;
-            chaPath.end.total = endInput + chaPath.end.bonus;
+            chaPath.end.total = endInput;
 
             chaPath.agi.base = agiInput;
-            chaPath.agi.total = agiInput + chaPath.agi.bonus;
+            chaPath.agi.total = agiInput;
 
             chaPath.int.base = intInput;
-            chaPath.int.total = intInput + chaPath.int.bonus;
+            chaPath.int.total = intInput;
 
             chaPath.wp.base = wpInput;
-            chaPath.wp.total = wpInput + chaPath.wp.bonus;
+            chaPath.wp.total = wpInput;
 
             chaPath.prc.base = prcInput;
-            chaPath.prc.total = prcInput + chaPath.prc.bonus;
+            chaPath.prc.total = prcInput;
 
             chaPath.prs.base = prsInput;
-            chaPath.prs.total = prsInput + chaPath.prs.bonus;
+            chaPath.prs.total = prsInput;
 
             chaPath.lck.base = lckInput;
-            chaPath.lck.total = lckInput + chaPath.lck.bonus;
+            chaPath.lck.total = lckInput;
 
             await this.actor.update({
               system: {
@@ -650,7 +650,7 @@ export class SimpleActorSheet extends ActorSheet {
         `<span class="tag enc-tag">Encumbered ${this.actor.system.carry_rating.penalty}</span>`
       );
     }
-    
+
     // Dialog Menu
     let d = new Dialog({
       title: "Apply Roll Modifier",
@@ -813,7 +813,7 @@ export class SimpleActorSheet extends ActorSheet {
                   : " <span style='color: rgb(168, 5, 5); font-size: 120%;'> <b>FAILURE!</b></span>"
                 }`;
             }
-            
+
             await roll.toMessage({
               async: false,
               user: game.user.id,
