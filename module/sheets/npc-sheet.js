@@ -597,56 +597,56 @@ export class npcSheet extends ActorSheet {
 
             //Assign values to characteristics
             chaPath.str.base = strInput;
-            chaPath.str.total = strInput + chaPath.str.bonus;
+            chaPath.str.total = strInput;
             await this.actor.update({
               "system.characteristics.str.base": strInput,
               "system.characteristics.str.total": chaPath.str.total,
             });
 
             chaPath.end.base = endInput;
-            chaPath.end.total = endInput + chaPath.end.bonus;
+            chaPath.end.total = endInput;
             await this.actor.update({
               "system.characteristics.end.base": endInput,
               "system.characteristics.end.total": chaPath.end.total,
             });
 
             chaPath.agi.base = agiInput;
-            chaPath.agi.total = agiInput + chaPath.agi.bonus;
+            chaPath.agi.total = agiInput;
             await this.actor.update({
               "system.characteristics.agi.base": agiInput,
               "system.characteristics.agi.total": chaPath.agi.total,
             });
 
             chaPath.int.base = intInput;
-            chaPath.int.total = intInput + chaPath.int.bonus;
+            chaPath.int.total = intInput;
             await this.actor.update({
               "system.characteristics.int.base": intInput,
               "system.characteristics.int.total": chaPath.int.total,
             });
 
             chaPath.wp.base = wpInput;
-            chaPath.wp.total = wpInput + chaPath.wp.bonus;
+            chaPath.wp.total = wpInput;
             await this.actor.update({
               "system.characteristics.wp.base": wpInput,
               "system.characteristics.wp.total": chaPath.wp.total,
             });
 
             chaPath.prc.base = prcInput;
-            chaPath.prc.total = prcInput + chaPath.prc.bonus;
+            chaPath.prc.total = prcInput;
             await this.actor.update({
               "system.characteristics.prc.base": prcInput,
               "system.characteristics.prc.total": chaPath.prc.total,
             });
 
             chaPath.prs.base = prsInput;
-            chaPath.prs.total = prsInput + chaPath.prs.bonus;
+            chaPath.prs.total = prsInput;
             await this.actor.update({
               "system.characteristics.prs.base": prsInput,
               "system.characteristics.prs.total": chaPath.prs.total,
             });
 
             chaPath.lck.base = lckInput;
-            chaPath.lck.total = lckInput + chaPath.lck.bonus;
+            chaPath.lck.total = lckInput;
             await this.actor.update({
               "system.characteristics.lck.base": lckInput,
               "system.characteristics.lck.total": chaPath.lck.total,
