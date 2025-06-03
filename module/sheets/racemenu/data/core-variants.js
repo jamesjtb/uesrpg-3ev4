@@ -32,7 +32,7 @@ export default {
             }
         ]
     },
-    "Bosmer: The Unglamoured": {
+    "Bretic Reachman": {
         ...coreRaces.Breton,
         name: "Bretic Reachman",
         traits: [
