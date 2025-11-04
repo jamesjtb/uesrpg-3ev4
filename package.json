@@ -15,7 +15,8 @@
     "type": "git",
     "url": "git+https://github.com/jamesjtb/uesrpg-3ev4.git"
   },
-  "author": "DogBoneZone, SupaBeardyMan",
+  "author": "DogBoneZone",
+  "contributors": ["Greybard"],
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/jamesjtb/uesrpg-3ev4/issues"

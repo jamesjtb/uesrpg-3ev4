@@ -41,7 +41,7 @@ You can find the lively UESRPG Discord Community here: https://discord.gg/KAkXdf
 3. Click **Install** and follow the remaining on-screen instructions.
 
 ## Contributing
-### Contributing to the Compendium (non-developers)
+### Data Entry
 This guide is written for those who would like to help with the entry of content data, but don't necessarily have the skillset to contribute to the project directly.
 
 #### Requirements
@@ -52,7 +52,7 @@ This guide is written for those who would like to help with the entry of content
 - The latest version of uesrpg-3ev4 system module (see [Installing](#installing))
 - A Foundry world that you can use as your work environment
 
-#### Making and Submitting Compendium Changes (WIP)
+#### Making and Submitting Compendium Changes
 **IMPORTANT!!** You should be starting from the latest unmodified version of the uesrpg-3ev4 system. If you've modified your system compendiums prior to starting a new set of work, you will need to uninstall and reinstall the uesrpg-3ev4 system in foundry. If you do not, you could cause data corruption once you've handed off your changes to a developer.
 
 1. Find your \<foundry data folder\>, and take note of its path for later. On Windows, this can usually be found in `C:\Users\<username>\AppData\Local\FoundryVTT`.
@@ -60,4 +60,36 @@ This guide is written for those who would like to help with the entry of content
 
   Hint: if you're unable to find the folders in this path, make sure you "show hidden files" in Windows File Explorer.
   <img width="1139" height="651" alt="image" src="https://github.com/user-attachments/assets/ed5f40e8-b2d2-42a6-a70e-ad5edf786405" />
-2. 
+
+2. Navigate to your system folder: `<foundry data folder>\Data\systems\uesrpg-3ev4`
+
+3. Open your work environment world in Foundry VTT.
+
+4. Make your changes to the compendium content:
+   - Open the compendium you want to modify
+   - Create, edit, or delete items/actors/journal entries as needed
+   - Test your changes in the world to make sure everything works correctly
+
+5. Once you're satisfied with your changes, find the modified compendium folders:
+   - Navigate to: `<foundry data folder>\Data\systems\uesrpg-3ev4\packs\`
+   - The compendiums are in folders like `items-revised`, `spells-revised`, `talents-revised`, etc.
+
+6. Create a ZIP file containing your modified compendium folders:
+   - Select only the folder(s) you modified (e.g., `items-revised`)
+   - Right-click and create a ZIP archive
+   - Name it descriptively (e.g., `items-revised-update-YYYY-MM-DD.zip`)
+
+7. Submit your changes:
+   - Create an issue on the [GitHub repository](https://github.com/jamesjtb/uesrpg-3ev4/issues)
+   - Title it clearly (e.g., "Compendium Update: Items Revised - Added Missing Equipment")
+   - Describe what you changed, added, or removed
+   - Attach your ZIP file to the issue
+   - Include any relevant notes about your changes
+
+8. A developer will review your submission, extract the packs to YAML format for version control, and merge your changes if approved.
+
+**Tips for Data Entry:**
+- Work on one compendium at a time to keep submissions manageable
+- Test all your changes in-game before submitting
+- Include clear descriptions in your GitHub issue
+- If you're unsure about something, ask in the [UESRPG Discord](https://discord.gg/KAkXdf9) first 
