@@ -1,19 +1,22 @@
+/**
+ * World migrations for uesrpg-3ev4
+ * Runs at world startup (Hooks.once('ready')) via entrypoint.js.
+ */
+
 const NS = "uesrpg-3ev4";
 
-/**
- * Run all world migrations (idempotent).
- */
 export async function runMigrations() {
   await migrateArmorLocV1();
 }
 
 /**
  * armorLocV1:
- * - Normalize baked NPC per-location armor structure (system.armor.<slot>)
- * - Set a flag so it runs once per actor
+ * Normalizes baked NPC per-location armor structure so your new armor logic can safely read it.
  *
- * This does NOT create items and does NOT delete baked armor.
- * It simply ensures a consistent schema so your new armor logic can safely read it.
+ * - Does NOT create items
+ * - Does NOT delete baked armor
+ * - Does NOT change numeric values except normalization/coercion
+ * - Sets a per-actor flag so it runs only once per NPC
  */
 async function migrateArmorLocV1() {
   const slots = ["head", "body", "r_arm", "l_arm", "r_leg", "l_leg"];
@@ -62,6 +65,7 @@ async function migrateArmorLocV1() {
       };
     }
 
+    // Build normalized shield structure
     const nextShield = {
       ...blankShield(),
       name: String(shield.name ?? ""),
@@ -81,10 +85,5 @@ async function migrateArmorLocV1() {
     migrated += 1;
   }
 
-  if (migrated > 0) {
-    console.log(`UESRPG | Migration armorLocV1 completed: ${migrated} NPC(s) normalized`);
-  } else {
-    console.log(`UESRPG | Migration armorLocV1: nothing to do`);
-  }
+  console.log(`UESRPG | Migration armorLocV1: ${migrated} NPC(s) normalized`);
 }
-
