@@ -22,16 +22,33 @@ export class SimpleItemSheet extends ItemSheet {
       return `${path}/${this.item.type}-sheet.html`;
     }
 
-    async getData() {
-      const  data = super.getData();
-      data.dtypes = ["String", "Number", "Boolean"];
-      data.isGM = game.user.isGM;
-      data.editable = data.options.editable;
-      const itemData = data.item;
+async getData() {
+  const data = super.getData();
+  data.dtypes = ["String", "Number", "Boolean"];
+  data.isGM = game.user.isGM;
+  data.editable = data.options.editable;
 
-      data.item.system.enrichedDescription = await TextEditor.enrichHTML(itemData.system.description, {async: true});
-      return data;
-      }
+  const itemData = data.item;
+  data.item.system.enrichedDescription = await TextEditor.enrichHTML(itemData.system.description, { async: true });
+
+  // ADD THIS:
+  if (this.item.type === "armor") {
+    // Ensure your templates can always render the location dropdown options
+    data.config = data.config ?? {};
+    data.config.item_cat = CONFIG.UESRPG?.armorItemCat ?? {
+      head: "Head",
+      body: "Body",
+      r_arm: "Right Arm",
+      l_arm: "Left Arm",
+      r_leg: "Right Leg",
+      l_leg: "Left Leg",
+      shield: "Shield"
+    };
+  }
+
+  return data;
+}
+
 
   /* -------------------------------------------- */
 
