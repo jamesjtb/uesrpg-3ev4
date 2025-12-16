@@ -36,7 +36,7 @@ export class SimpleItem extends Item {
     // Prepare data based on item type
     if (this.isEmbedded && this.actor.system != null) {
       if (this.system.hasOwnProperty('modPrice')) {this._prepareMerchantItem(actorData, itemData)}
-      if (this.system.hasOwnProperty('damaged')) {this._prepareArmorItem(actorData, itemData)}
+      if (this.type === "armor") {this._prepareArmorItem(actorData, itemData)}
       if (this.type === 'item') {this._prepareNormalItem(actorData, itemData)}
       if (this.type === 'weapon') {this._prepareWeaponItem(actorData, itemData)}
       if (this.system.hasOwnProperty('skillArray') && actorData.type === 'Player Character') {this._prepareModSkillItems(actorData, itemData)}
@@ -119,9 +119,17 @@ export class SimpleItem extends Item {
     itemData.modPrice = (itemData.price + (itemData.price * (actorData.system.priceMod/100))).toFixed(0);
   }
 
-  _prepareArmorItem(actorData, itemData) {
-
+_prepareArmorItem(actorData, itemData) {
+  // Ensure location exists for actor.js bucketing.
+  // Valid keys in your system: head, body, r_arm, l_arm, r_leg, l_leg, shield
+  if (!itemData.category || itemData.category === "") {
+    itemData.category = "body";
   }
+
+  // Optional: normalize magic_ar to string to match actor mitigation parsing patterns
+  // (only do this if you have already moved to string-based "1 Fire, 2 Magic" formats).
+  if (itemData.magic_ar === 0) itemData.magic_ar = "";
+}
 
   _prepareNormalItem(actorData, itemData) {
     // Auto Assigns as a wearable item if the Equipped Toggle is on
