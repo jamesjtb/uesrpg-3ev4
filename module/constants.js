@@ -1,8 +1,5 @@
 export const UESRPG = {};
 
-/**
- * Languages
- */
 UESRPG.languages = {
   "aldmeri": "Aldmeri",
   "ayleidoon": "Ayleidoon",
@@ -21,7 +18,10 @@ UESRPG.languages = {
 
 /**
  * Armor hit-location categories for Armor Items.
- * These keys MUST match actor.js bucketing logic and template.json expectations.
+ * Keys MUST match:
+ * - template.json armor item system.category expected values
+ * - actor.js bucketing keys (head/body/l_arm/r_arm/l_leg/r_leg/shield)
+ * - armor-sheet.html location selector options
  */
 UESRPG.armorItemCat = {
   head: "Head",
