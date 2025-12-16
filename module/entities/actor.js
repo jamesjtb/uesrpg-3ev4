@@ -861,6 +861,12 @@ export class SimpleActor extends Actor {
    *  - system.enc (number)
    *  - system.quantity (number)
    */
+  /**
+   * Derive Actor.system.armor.<location> and Actor.system.shield from equipped Armor items.
+   * - Preserves typed magic AR strings (e.g. "1 Fire")
+   * - Avoids mixing AR from one piece with magic AR from another (no implicit stacking)
+   * - Backward-compatible fallback for NPCs that have baked per-location armor but no equipped armor items
+   */
   _prepareArmorAndShield(actorData) {
     const sys = actorData.system ?? (actorData.system = {});
 
@@ -868,63 +874,182 @@ export class SimpleActor extends Actor {
     sys.armor ??= {};
     const slots = ["head", "body", "r_arm", "l_arm", "r_leg", "l_leg"];
 
+    // Snapshot old (baked) armor before we reset anything
+    const oldArmor = foundry.utils?.deepClone ? foundry.utils.deepClone(sys.armor) : JSON.parse(JSON.stringify(sys.armor ?? {}));
+    const oldShield = foundry.utils?.deepClone ? foundry.utils.deepClone(sys.shield ?? {}) : JSON.parse(JSON.stringify(sys.shield ?? {}));
+
+    // Helpers
     const blankLoc = () => ({
       name: "",
       enc: 0,
       ar: 0,
-      magic_ar: 0,
+      magic_ar: "",     // keep as STRING (typed magic AR)
       class: sys.armor_class ?? ""
     });
 
+    const blankShield = () => ({
+      name: "",
+      enc: 0,
+      br: 0,
+      magic_br: "",     // keep as STRING (typed magic AR used as magic BR in some designs)
+      class: sys.armor_class ?? "",
+      qualities: ""
+    });
+
+    // Parse "magic_ar" into a map like { magic: 0, fire: 1, frost: 0, shock: 0, poison: 0 }
+    // Accepts numbers, "", "1 Fire", "2 Magic, 1 Fire", etc.
+    const parseMagicAR = (v) => {
+      const out = { magic: 0, fire: 0, frost: 0, shock: 0, poison: 0 };
+      if (v == null) return out;
+
+      // If numeric (or numeric string), treat as generic magic AR
+      if (typeof v === "number") {
+        out.magic = Number.isFinite(v) ? v : 0;
+        return out;
+      }
+
+      const s = String(v).trim();
+      if (!s) return out;
+
+      // If pure number string
+      if (/^\d+(\.\d+)?$/.test(s)) {
+        out.magic = Number(s) || 0;
+        return out;
+      }
+
+      // Tokenize: support "1 Fire", "1 Fire, 2 Magic", "Fire 1" (tolerant)
+      // We will extract pairs (number, word) in any order per chunk.
+      const chunks = s.split(/[,;]+/).map(c => c.trim()).filter(Boolean);
+
+      for (const chunk of chunks) {
+        const m1 = chunk.match(/(\d+)\s*(magic|fire|frost|shock|poison)/i);
+        const m2 = chunk.match(/(magic|fire|frost|shock|poison)\s*(\d+)/i);
+
+        const type = (m1?.[2] || m2?.[1] || "").toLowerCase();
+        const num = Number(m1?.[1] || m2?.[2] || 0) || 0;
+
+        if (type && Object.prototype.hasOwnProperty.call(out, type)) {
+          out[type] += num; // if authoring includes multiple mentions, combine
+        }
+      }
+
+      return out;
+    };
+
+    // Rank an armor piece for a location without stacking:
+    // primary = physical AR, secondary = total magic protection (generic + max element)
+    const scoreArmorItem = (item) => {
+      const ar = Number(item.system?.armor ?? 0) || 0;
+      const map = parseMagicAR(item.system?.magic_ar);
+      const magicTotal = (Number(map.magic) || 0) + Math.max(Number(map.fire)||0, Number(map.frost)||0, Number(map.shock)||0, Number(map.poison)||0);
+      return { ar, magicTotal };
+    };
+
     // Reset locations each prepareData()
-    for (const s of slots) {
-      sys.armor[s] = blankLoc();
-    }
+    for (const s of slots) sys.armor[s] = blankLoc();
 
     // Reset shield each prepareData()
-    sys.shield ??= { name: "", enc: 0, br: 0, magic_br: 0, class: "", qualities: "" };
-    sys.shield.name = "";
-    sys.shield.enc = 0;
-    sys.shield.br = 0;
-    sys.shield.magic_br = 0;
-    sys.shield.class = sys.armor_class ?? "";
-    sys.shield.qualities = "";
+    sys.shield = blankShield();
 
     // Equipped armor items only
     const equippedArmor = (actorData.items ?? []).filter(i => i?.type === "armor" && i?.system?.equipped);
 
+    // --- Backward-compatible baked NPC armor fallback ---
+    // If an NPC has no equipped armor items, but already has per-location AR saved on the actor,
+    // do not wipe it. Keep old values (this avoids "NPC armor never changes / gets zeroed").
+    if (actorData.type === "NPC" && equippedArmor.length === 0) {
+      // Restore any non-zero baked values
+      for (const s of slots) {
+        const baked = oldArmor?.[s];
+        if (!baked) continue;
+
+        const bakedAR = Number(baked.ar ?? 0) || 0;
+        const bakedMagic = baked.magic_ar ?? "";
+        const bakedEnc = Number(baked.enc ?? 0) || 0;
+
+        if (bakedAR > 0 || (String(bakedMagic).trim().length > 0) || bakedEnc > 0) {
+          sys.armor[s] = {
+            name: baked.name ?? sys.armor[s].name,
+            enc: bakedEnc,
+            ar: bakedAR,
+            magic_ar: bakedMagic ?? "",
+            class: sys.armor_class ?? baked.class ?? ""
+          };
+        }
+      }
+
+      // Shield baked fallback too
+      if (oldShield && (Number(oldShield.br ?? 0) || 0) > 0) {
+        sys.shield = {
+          name: oldShield.name ?? "",
+          enc: Number(oldShield.enc ?? 0) || 0,
+          br: Number(oldShield.br ?? 0) || 0,
+          magic_br: oldShield.magic_br ?? "",
+          class: sys.armor_class ?? oldShield.class ?? "",
+          qualities: oldShield.qualities ?? ""
+        };
+      }
+
+      return; // important: stop here, do not recompute from items
+    }
+
+    // --- Item-driven computation (PCs and NPCs that actually equip armor items) ---
+    // Group equipped armor by category (location)
+    const byCat = new Map();
     for (const item of equippedArmor) {
       const cat = item.system?.category ?? "none";
-      const qty = Number(item.system?.quantity ?? 1) || 1;
+      if (!byCat.has(cat)) byCat.set(cat, []);
+      byCat.get(cat).push(item);
+    }
 
-      const enc = (Number(item.system?.enc ?? 0) || 0) * qty;
-      const ar = (Number(item.system?.armor ?? 0) || 0);
-      const mar = (Number(item.system?.magic_ar ?? 0) || 0);
+    // For each location, choose the single best piece (no stacking).
+    for (const loc of slots) {
+      const list = byCat.get(loc) ?? [];
+      if (!list.length) continue;
 
-      if (slots.includes(cat)) {
-        const loc = sys.armor[cat] ?? blankLoc();
+      list.sort((a, b) => {
+        const sa = scoreArmorItem(a);
+        const sb = scoreArmorItem(b);
+        if (sb.ar !== sa.ar) return sb.ar - sa.ar;
+        return sb.magicTotal - sa.magicTotal;
+      });
 
-        // Choose max per slot (avoids accidental stacking)
-        loc.name = item.name ?? loc.name;
-        loc.class = sys.armor_class ?? loc.class;
-        loc.enc = Math.max(Number(loc.enc ?? 0) || 0, enc);
-        loc.ar = Math.max(Number(loc.ar ?? 0) || 0, ar);
-        loc.magic_ar = Math.max(Number(loc.magic_ar ?? 0) || 0, mar);
+      const best = list[0];
+      const qty = Number(best.system?.quantity ?? 1) || 1;
 
-        sys.armor[cat] = loc;
-        continue;
-      }
+      sys.armor[loc] = {
+        name: best.name ?? "",
+        enc: (Number(best.system?.enc ?? 0) || 0) * qty,
+        ar: Number(best.system?.armor ?? 0) || 0,
+        magic_ar: best.system?.magic_ar ?? "",
+        class: sys.armor_class ?? ""
+      };
+    }
 
-      if (cat === "shield") {
-        const br = (Number(item.system?.blockRating ?? 0) || 0);
+    // Shield (choose best BR; tie-break by magic)
+    const shields = byCat.get("shield") ?? [];
+    if (shields.length) {
+      shields.sort((a, b) => {
+        const bra = Number(a.system?.blockRating ?? 0) || 0;
+        const brb = Number(b.system?.blockRating ?? 0) || 0;
+        if (brb !== bra) return brb - bra;
 
-        sys.shield.name = item.name ?? sys.shield.name;
-        sys.shield.class = sys.armor_class ?? sys.shield.class;
-        sys.shield.enc = Math.max(Number(sys.shield.enc ?? 0) || 0, enc);
-        sys.shield.br = Math.max(Number(sys.shield.br ?? 0) || 0, br);
-        sys.shield.magic_br = Math.max(Number(sys.shield.magic_br ?? 0) || 0, mar);
-        sys.shield.qualities = item.system?.qualities ?? sys.shield.qualities;
-      }
+        const ma = scoreArmorItem(a).magicTotal;
+        const mb = scoreArmorItem(b).magicTotal;
+        return mb - ma;
+      });
+
+      const best = shields[0];
+      const qty = Number(best.system?.quantity ?? 1) || 1;
+
+      sys.shield = {
+        name: best.name ?? "",
+        enc: (Number(best.system?.enc ?? 0) || 0) * qty,
+        br: Number(best.system?.blockRating ?? 0) || 0,
+        magic_br: best.system?.magic_ar ?? "",
+        class: sys.armor_class ?? "",
+        qualities: best.system?.qualities ?? ""
+      };
     }
   }
 
