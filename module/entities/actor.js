@@ -847,6 +847,43 @@ export class SimpleActor extends Actor {
     }
     return totalWeight
   }  
+
+    /**
+   * Parse Magic AR field.
+   * Accepts: number, "", "1 Fire", "2 Magic, 1 Fire", "Fire 1", etc.
+   * Returns: { magic, fire, frost, shock, poison }
+   */
+  _parseMagicAR(v) {
+    const out = { magic: 0, fire: 0, frost: 0, shock: 0, poison: 0 };
+    if (v == null) return out;
+
+    if (typeof v === "number") {
+      out.magic = Number.isFinite(v) ? v : 0;
+      return out;
+    }
+
+    const s = String(v).trim();
+    if (!s) return out;
+
+    if (/^\d+(\.\d+)?$/.test(s)) {
+      out.magic = Number(s) || 0;
+      return out;
+    }
+
+    const chunks = s.split(/[,;]+/).map(c => c.trim()).filter(Boolean);
+    for (const chunk of chunks) {
+      const m1 = chunk.match(/(\d+)\s*(magic|fire|frost|shock|poison)/i);
+      const m2 = chunk.match(/(magic|fire|frost|shock|poison)\s*(\d+)/i);
+
+      const type = (m1?.[2] || m2?.[1] || "").toLowerCase();
+      const num  = Number(m1?.[1] || m2?.[2] || 0) || 0;
+
+      if (type && Object.prototype.hasOwnProperty.call(out, type)) out[type] += num;
+    }
+
+    return out;
+  }
+
   /**
    * Derive Actor.system.armor.<location> and Actor.system.shield from equipped Armor items.
    * - Preserves typed magic AR strings (e.g. "1 Fire")
@@ -1111,7 +1148,7 @@ export class SimpleActor extends Actor {
 
     // IMPORTANT: this assumes your HP lives at system.hp.value (common in your system),
     // adjust this path if your sheet uses a different field.
-        const curValue = Number(this.system?.hp?.value ?? 0) || 0;
+    const curValue = Number(this.system?.hp?.value ?? 0) || 0;
     const curTemp  = Number(this.system?.hp?.temp ?? 0) || 0;
 
     // Damage consumes temp HP first
