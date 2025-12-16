@@ -918,52 +918,12 @@ export class SimpleActor extends Actor {
       class: sys.armor_class ?? "",
       qualities: ""
     });
-
-    // Parse "magic_ar" into a map like { magic: 0, fire: 1, frost: 0, shock: 0, poison: 0 }
-    // Accepts numbers, "", "1 Fire", "2 Magic, 1 Fire", etc.
-    const parseMagicAR = (v) => {
-      const out = { magic: 0, fire: 0, frost: 0, shock: 0, poison: 0 };
-      if (v == null) return out;
-
-      // If numeric (or numeric string), treat as generic magic AR
-      if (typeof v === "number") {
-        out.magic = Number.isFinite(v) ? v : 0;
-        return out;
-      }
-
-      const s = String(v).trim();
-      if (!s) return out;
-
-      // If pure number string
-      if (/^\d+(\.\d+)?$/.test(s)) {
-        out.magic = Number(s) || 0;
-        return out;
-      }
-
-      // Tokenize: support "1 Fire", "1 Fire, 2 Magic", "Fire 1" (tolerant)
-      // We will extract pairs (number, word) in any order per chunk.
-      const chunks = s.split(/[,;]+/).map(c => c.trim()).filter(Boolean);
-
-      for (const chunk of chunks) {
-        const m1 = chunk.match(/(\d+)\s*(magic|fire|frost|shock|poison)/i);
-        const m2 = chunk.match(/(magic|fire|frost|shock|poison)\s*(\d+)/i);
-
-        const type = (m1?.[2] || m2?.[1] || "").toLowerCase();
-        const num = Number(m1?.[1] || m2?.[2] || 0) || 0;
-
-        if (type && Object.prototype.hasOwnProperty.call(out, type)) {
-          out[type] += num; // if authoring includes multiple mentions, combine
-        }
-      }
-
-      return out;
-    };
-
+    
     // Rank an armor piece for a location without stacking:
     // primary = physical AR, secondary = total magic protection (generic + max element)
     const scoreArmorItem = (item) => {
       const ar = Number(item.system?.armor ?? 0) || 0;
-      const map = parseMagicAR(item.system?.magic_ar);
+      const map = this._parseMagicAR(item.system?.magic_ar);
       const magicTotal = (Number(map.magic) || 0) + Math.max(Number(map.fire)||0, Number(map.frost)||0, Number(map.shock)||0, Number(map.poison)||0);
       return { ar, magicTotal };
     };
@@ -1082,36 +1042,7 @@ export class SimpleActor extends Actor {
    * - Magic: subtract MagicAR(loc) + Natural Toughness
    * - Element: subtract ElementAR(loc) + MagicAR(loc) + Natural Toughness
    */
-  _mitigateDamageByLocationRAW(hitLocKey, damageType, rawDamage) {
-    const sys = this.system ?? {};
-    const locKey = String(hitLocKey || "body");
-    const dmg = Math.max(0, Number(rawDamage) || 0);
-
-    const loc = sys.armor?.[locKey] ?? {};
-    const arLoc = Number(loc.ar ?? 0) || 0;
-
-    // parse loc.magic_ar which may be "" | number | "1 Fire" | "2 Magic, 1 Fire", etc.
-    const parseMagicAR = (v) => {
-      const out = { magic: 0, fire: 0, frost: 0, shock: 0, poison: 0 };
-      if (v == null) return out;
-      if (typeof v === "number") { out.magic = Number.isFinite(v) ? v : 0; return out; }
-
-      const s = String(v).trim();
-      if (!s) return out;
-      if (/^\d+(\.\d+)?$/.test(s)) { out.magic = Number(s) || 0; return out; }
-
-      const chunks = s.split(/[,;]+/).map(c => c.trim()).filter(Boolean);
-      for (const chunk of chunks) {
-        const m1 = chunk.match(/(\d+)\s*(magic|fire|frost|shock|poison)/i);
-        const m2 = chunk.match(/(magic|fire|frost|shock|poison)\s*(\d+)/i);
-        const type = (m1?.[2] || m2?.[1] || "").toLowerCase();
-        const num = Number(m1?.[1] || m2?.[2] || 0) || 0;
-        if (type && Object.prototype.hasOwnProperty.call(out, type)) out[type] += num;
-      }
-      return out;
-    };
-
-    const map = parseMagicAR(loc.magic_ar);
+    const map = this._parseMagicAR(loc.magic_ar);
     const magicARLoc = Number(map.magic ?? 0) || 0;
 
     const natTough = Number(sys.resistance?.natToughness ?? 0) || 0;
