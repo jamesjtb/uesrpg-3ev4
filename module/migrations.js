@@ -6,7 +6,8 @@
 const NS = "uesrpg-3ev4";
 
 export async function runMigrations() {
-  await migrateArmorLocV1();
+  await migrateArmorLocV1();          // existing NPC baked armor normalization
+  await migrateArmorItemsCategoryV1(); // NEW: armor Item category defaults + normalization
 }
 
 /**
@@ -86,4 +87,59 @@ async function migrateArmorLocV1() {
   }
 
   console.log(`UESRPG | Migration armorLocV1: ${migrated} NPC(s) normalized`);
+}
+
+/**
+ * armorItemsCategoryV1:
+ * Ensures embedded Armor items have a valid per-location category for actor.js bucketing.
+ *
+ * - Sets missing/blank system.category to "body"
+ * - Normalizes system.magic_ar from 0 to "" (optional but consistent with your armor parsing approach)
+ * - Sets a per-actor flag so it runs only once per actor
+ */
+async function migrateArmorItemsCategoryV1() {
+  const actors = game.actors?.contents ?? [];
+  let updatedItems = 0;
+
+  for (const actor of actors) {
+    if (actor.getFlag(NS, "migrations.armorItemsCategoryV1")) continue;
+
+    const armorItems = actor.items?.filter(i => i.type === "armor") ?? [];
+    if (!armorItems.length) {
+      await actor.setFlag(NS, "migrations.armorItemsCategoryV1", true);
+      continue;
+    }
+
+    const updates = [];
+
+    for (const item of armorItems) {
+      const cat = item.system?.category;
+      const magicAr = item.system?.magic_ar;
+
+      const patch = { _id: item.id };
+      let needsUpdate = false;
+
+      if (!cat || cat === "") {
+        patch["system.category"] = "body";
+        needsUpdate = true;
+      }
+
+      // Optional normalization
+      if (magicAr === 0) {
+        patch["system.magic_ar"] = "";
+        needsUpdate = true;
+      }
+
+      if (needsUpdate) updates.push(patch);
+    }
+
+    if (updates.length) {
+      await actor.updateEmbeddedDocuments("Item", updates);
+      updatedItems += updates.length;
+    }
+
+    await actor.setFlag(NS, "migrations.armorItemsCategoryV1", true);
+  }
+
+  console.log(`UESRPG | Migration armorItemsCategoryV1: updated ${updatedItems} armor item(s)`);
 }
