@@ -13,14 +13,13 @@ async function registerSettings() {
   function delayedReload() {
     window.setTimeout(() => location.reload(), 500);
   }
-  
+
   game.settings.register("uesrpg-3ev4", "changeUiFont", {
     name: "System Font",
     hint: "Changes main Font",
     scope: "world",
     requiresReload: true,
     config: true,
-    default: false,
     type: String,
     choices: {
       "Cyrodiil": "Сyrodiil - Default",
@@ -104,28 +103,32 @@ async function registerSettings() {
 }
 
 async function registerSheets () {
-    // Register sheet application classes
-    Actors.unregisterSheet("core", ActorSheet);
-    Items.unregisterSheet("core", ItemSheet);
-    Actors.registerSheet("uesrpg-3ev4", SimpleActorSheet, {
-      types: ['Player Character'],
-      makeDefault: true,
-      label: "Default UESRPG Character Sheet",
-    });
-    Items.registerSheet("uesrpg-3ev4", SimpleItemSheet, {
-      makeDefault: true,
-      label: "Default UESRPG Item Sheet",
-    });
-    Actors.registerSheet("uesrpg-3ev4", npcSheet, {
-      types: ["NPC"],
-      makeDefault: true,
-      label: "Default UESRPG NPC Sheet",
-    });
-    Actors.registerSheet("uesrpg-3ev4", merchantSheet, {
-      types: ["NPC"],
-      makeDefault: false,
-      label: "Default UESRPG Merchant Sheet",
-    });
+  // Register sheet application classes
+  Actors.unregisterSheet("core", ActorSheet);
+  Items.unregisterSheet("core", ItemSheet);
+
+  Actors.registerSheet("uesrpg-3ev4", SimpleActorSheet, {
+    types: ["Player Character"],
+    makeDefault: true,
+    label: "Default UESRPG Character Sheet",
+  });
+
+  Items.registerSheet("uesrpg-3ev4", SimpleItemSheet, {
+    makeDefault: true,
+    label: "Default UESRPG Item Sheet",
+  });
+
+  Actors.registerSheet("uesrpg-3ev4", npcSheet, {
+    types: ["NPC"],
+    makeDefault: true,
+    label: "Default UESRPG NPC Sheet",
+  });
+
+  Actors.registerSheet("uesrpg-3ev4", merchantSheet, {
+    types: ["NPC"],
+    makeDefault: false,
+    label: "Default UESRPG Merchant Sheet",
+  });
 }
 
 export default async function initHandler() {
@@ -149,17 +152,16 @@ export default async function initHandler() {
   CONFIG.Item.documentClass = SimpleItem;
 
   await registerSettings();
-
   await registerSheets();
 
-// Applying Font to system
-function applyFont(fontFamily) {
-  document.documentElement.style.setProperty("--main-font-family", fontFamily);
-}
+  // Applying Font to system
+  function applyFont(fontFamily) {
+    document.documentElement.style.setProperty("--main-font-family", fontFamily);
+  }
 
-//Hook for changing font on startup
-Hooks.once("ready", () => {
-  const fontFamily = game.settings.get("uesrpg-3ev4", "changeUiFont");
-  applyFont(fontFamily);
-});
+  // Hook for changing font on startup
+  Hooks.once("ready", () => {
+    const fontFamily = game.settings.get("uesrpg-3ev4", "changeUiFont");
+    applyFont(fontFamily);
+  });
 }
