@@ -136,6 +136,14 @@
                                     <input type="number" name="system.charge.reduction" value="{{item.system.charge.reduction}}">
                                 </div>
                             </div>
+                            <div class="grid-container">
+                                <div>Location</div>
+                                <div class="right-align-content">
+                                    <select name="system.category">
+                                        {{selectOptions item.system.item_cat selected=item.system.category localize=true}}
+                                    </select>
+                                </div>
+                            </div>
                         </div>
                     </div>
                     <div class="attribute-container">
