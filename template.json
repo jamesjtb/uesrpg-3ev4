@@ -600,7 +600,23 @@
     "traits": "",
     "powers": "",
     "spells": "",
-    "armor_class": "",
+"armor_class": "",
+"armor": {
+  "head": { "name": "", "enc": 0, "ar": 0, "magic_ar": 0, "class": "" },
+  "body": { "name": "", "enc": 0, "ar": 0, "magic_ar": 0, "class": "" },
+  "r_arm": { "name": "", "enc": 0, "ar": 0, "magic_ar": 0, "class": "" },
+  "l_arm": { "name": "", "enc": 0, "ar": 0, "magic_ar": 0, "class": "" },
+  "r_leg": { "name": "", "enc": 0, "ar": 0, "magic_ar": 0, "class": "" },
+  "l_leg": { "name": "", "enc": 0, "ar": 0, "magic_ar": 0, "class": "" }
+},
+"shield": {
+  "name": "",
+  "enc": 0,
+  "br": 0,
+  "magic_br": 0,
+  "class": "",
+  "qualities": ""
+},
     "armor_class_cat": {
       "none": "None",
       "super_light": "Super Light",
