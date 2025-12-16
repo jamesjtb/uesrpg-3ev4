@@ -831,7 +831,7 @@ export class SimpleActor extends Actor {
   }
 
   _armorWeight(actorData) {
-    let worn = actorData.items.filter(item => item.system.equipped == true);
+    let worn = actorData.items.filter(item => item.type === "armor" && item.system.equipped == true);
     let armorENC = 0.0;
     for (let item of worn) {
       armorENC = armorENC + ((item.system.enc / 2) * item.system.quantity);
@@ -847,20 +847,6 @@ export class SimpleActor extends Actor {
     }
     return totalWeight
   }  
-  /**
-   * Derive Actor.system.armor.<location> ...
- and Actor.system.shield from equipped Armor items.
-   * Recomputed each prepareData() so values always reflect currently-equipped armor.
-   *
-   * Armor item fields are defined in template.json -> Item.armor:
-   *  - system.equipped (boolean)
-   *  - system.category ("head" | "body" | "l_arm" | "r_arm" | "l_leg" | "r_leg" | "shield")
-   *  - system.armor (number)         // AR
-   *  - system.magic_ar (number)      // magic AR
-   *  - system.blockRating (number)   // shield BR
-   *  - system.enc (number)
-   *  - system.quantity (number)
-   */
   /**
    * Derive Actor.system.armor.<location> and Actor.system.shield from equipped Armor items.
    * - Preserves typed magic AR strings (e.g. "1 Fire")
