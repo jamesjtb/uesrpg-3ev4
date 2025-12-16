@@ -29,25 +29,27 @@ async getData() {
   data.editable = data.options.editable;
 
   const itemData = data.item;
-  data.item.system.enrichedDescription = await TextEditor.enrichHTML(itemData.system.description, { async: true });
+  data.item.system.enrichedDescription = await TextEditor.enrichHTML(
+    itemData.system.description,
+    { async: true }
+  );
 
-  // ADD THIS:
-  if (this.item.type === "armor") {
-    // Ensure your templates can always render the location dropdown options
-    data.config = data.config ?? {};
-    data.config.item_cat = CONFIG.UESRPG?.armorItemCat ?? {
-      head: "Head",
-      body: "Body",
-      r_arm: "Right Arm",
-      l_arm: "Left Arm",
-      r_leg: "Right Leg",
-      l_leg: "Left Leg",
-      shield: "Shield"
-    };
-  }
+  // Provide armor location options to templates via config.
+  // This is sourced from CONFIG.UESRPG (populated in init.js from constants.js).
+  data.config = data.config ?? {};
+  data.config.item_cat = CONFIG.UESRPG?.armorItemCat ?? {
+    head: "Head",
+    body: "Body",
+    r_arm: "Right Arm",
+    l_arm: "Left Arm",
+    r_leg: "Right Leg",
+    l_leg: "Left Leg",
+    shield: "Shield"
+  };
 
   return data;
 }
+
 
 
   /* -------------------------------------------- */
