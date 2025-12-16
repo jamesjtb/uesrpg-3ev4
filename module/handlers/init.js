@@ -102,7 +102,7 @@ async function registerSettings() {
   });
 }
 
-async function registerSheets () {
+async function registerSheets() {
   // Register sheet application classes
   Actors.unregisterSheet("core", ActorSheet);
   Items.unregisterSheet("core", ItemSheet);
@@ -144,7 +144,7 @@ export default async function initHandler() {
   // Set up custom combat functionality for the system.
   CONFIG.Combat.documentClass = SystemCombat;
 
-  // Record Configuration Values
+  // Record Configuration Values (this makes CONFIG.UESRPG.armorItemCat available)
   CONFIG.UESRPG = UESRPG;
 
   // Define custom Entity classes
