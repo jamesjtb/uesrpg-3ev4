@@ -1,6 +1,6 @@
 import startupHandler from './handlers/startup.js';
 import initHandler from './handlers/init.js';
-
+import { runMigrations } from './migrations.js';
 Hooks.once('ready', async function () {
   console.log(`UESRPG | Ready`);
   await startupHandler();
