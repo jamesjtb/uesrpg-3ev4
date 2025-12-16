@@ -1036,12 +1036,20 @@ export class SimpleActor extends Actor {
     }
   }
 
-    /**
+     /**
    * Compute RAW mitigation for a given hit location (no stacking).
    * - Physical: subtract AR(loc) + Natural Toughness
    * - Magic: subtract MagicAR(loc) + Natural Toughness
    * - Element: subtract ElementAR(loc) + MagicAR(loc) + Natural Toughness
    */
+  _mitigateDamageByLocationRAW(hitLocKey, damageType, rawDamage) {
+    const sys = this.system ?? {};
+    const locKey = String(hitLocKey || "body");
+    const dmg = Math.max(0, Number(rawDamage) || 0);
+
+    const loc = sys.armor?.[locKey] ?? {};
+    const arLoc = Number(loc.ar ?? 0) || 0;
+
     const map = this._parseMagicAR(loc.magic_ar);
     const magicARLoc = Number(map.magic ?? 0) || 0;
 
