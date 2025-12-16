@@ -1111,13 +1111,27 @@ export class SimpleActor extends Actor {
 
     // IMPORTANT: this assumes your HP lives at system.hp.value (common in your system),
     // adjust this path if your sheet uses a different field.
-    const hpPath = "system.hp.value";
-    const curHP = Number(foundry.utils.getProperty(this, hpPath) ?? 0) || 0;
-    const nextHP = curHP - m.final;
+        const curValue = Number(this.system?.hp?.value ?? 0) || 0;
+    const curTemp  = Number(this.system?.hp?.temp ?? 0) || 0;
 
-    await this.update({ [hpPath]: nextHP });
+    // Damage consumes temp HP first
+    const dmgToTemp = Math.min(curTemp, m.final);
+    const dmgRemainder = Math.max(0, m.final - dmgToTemp);
 
-    return { ...m, raw: rawDamage, before: curHP, after: nextHP };
+    const nextTemp = curTemp - dmgToTemp;
+    const nextValue = Math.max(0, curValue - dmgRemainder);
+
+    await this.update({
+      "system.hp.temp": nextTemp,
+      "system.hp.value": nextValue
+    });
+
+    return {
+      ...m,
+      raw: rawDamage,
+      before: { value: curValue, temp: curTemp },
+      after: { value: nextValue, temp: nextTemp }
+    };
   }
   
   _hpBonus(actorData) {
