@@ -51,6 +51,8 @@ export class SimpleActor extends Actor {
     // things organized.
     if (actorData.type === 'Player Character') this._prepareCharacterData(actorData);
     if (actorData.type === 'NPC') this._prepareNPCData(actorData);
+    
+    this._prepareArmorAndShield(actorData); 
   }
 
   /**
@@ -844,6 +846,86 @@ export class SimpleActor extends Actor {
       totalWeight = totalWeight + (item.system.enc * item.system.quantity);
     }
     return totalWeight
+      /**
+   * Derive Actor.system.armor.<location> and Actor.system.shield from equipped Armor items.
+   * Recomputed each prepareData() so values always reflect currently-equipped armor.
+   *
+   * Armor item fields are defined in template.json -> Item.armor:
+   *  - system.equipped (boolean)
+   *  - system.category ("head" | "body" | "l_arm" | "r_arm" | "l_leg" | "r_leg" | "shield")
+   *  - system.armor (number)         // AR
+   *  - system.magic_ar (number)      // magic AR
+   *  - system.blockRating (number)   // shield BR
+   *  - system.enc (number)
+   *  - system.quantity (number)
+   */
+  _prepareArmorAndShield(actorData) {
+    const sys = actorData.system ?? (actorData.system = {});
+
+    // Ensure stable structure for PCs/NPCs
+    sys.armor ??= {};
+    const slots = ["head", "body", "r_arm", "l_arm", "r_leg", "l_leg"];
+
+    const blankLoc = () => ({
+      name: "",
+      enc: 0,
+      ar: 0,
+      magic_ar: 0,
+      class: sys.armor_class ?? ""
+    });
+
+    // Reset locations each prepareData()
+    for (const s of slots) {
+      sys.armor[s] = blankLoc();
+    }
+
+    // Reset shield each prepareData()
+    sys.shield ??= { name: "", enc: 0, br: 0, magic_br: 0, class: "", qualities: "" };
+    sys.shield.name = "";
+    sys.shield.enc = 0;
+    sys.shield.br = 0;
+    sys.shield.magic_br = 0;
+    sys.shield.class = sys.armor_class ?? "";
+    sys.shield.qualities = "";
+
+    // Equipped armor items only
+    const equippedArmor = (actorData.items ?? []).filter(i => i?.type === "armor" && i?.system?.equipped);
+
+    for (const item of equippedArmor) {
+      const cat = item.system?.category ?? "none";
+      const qty = Number(item.system?.quantity ?? 1) || 1;
+
+      const enc = (Number(item.system?.enc ?? 0) || 0) * qty;
+      const ar = (Number(item.system?.armor ?? 0) || 0);
+      const mar = (Number(item.system?.magic_ar ?? 0) || 0);
+
+      if (slots.includes(cat)) {
+        const loc = sys.armor[cat] ?? blankLoc();
+
+        // Choose max per slot (avoids accidental stacking)
+        loc.name = item.name ?? loc.name;
+        loc.class = sys.armor_class ?? loc.class;
+        loc.enc = Math.max(Number(loc.enc ?? 0) || 0, enc);
+        loc.ar = Math.max(Number(loc.ar ?? 0) || 0, ar);
+        loc.magic_ar = Math.max(Number(loc.magic_ar ?? 0) || 0, mar);
+
+        sys.armor[cat] = loc;
+        continue;
+      }
+
+      if (cat === "shield") {
+        const br = (Number(item.system?.blockRating ?? 0) || 0);
+
+        sys.shield.name = item.name ?? sys.shield.name;
+        sys.shield.class = sys.armor_class ?? sys.shield.class;
+        sys.shield.enc = Math.max(Number(sys.shield.enc ?? 0) || 0, enc);
+        sys.shield.br = Math.max(Number(sys.shield.br ?? 0) || 0, br);
+        sys.shield.magic_br = Math.max(Number(sys.shield.magic_br ?? 0) || 0, mar);
+        sys.shield.qualities = item.system?.qualities ?? sys.shield.qualities;
+      }
+    }
+  }
+
   }
 
   _hpBonus(actorData) {
