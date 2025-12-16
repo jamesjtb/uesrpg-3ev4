@@ -846,8 +846,10 @@ export class SimpleActor extends Actor {
       totalWeight = totalWeight + (item.system.enc * item.system.quantity);
     }
     return totalWeight
-      /**
-   * Derive Actor.system.armor.<location> and Actor.system.shield from equipped Armor items.
+  }  
+  /**
+   * Derive Actor.system.armor.<location> ...
+ and Actor.system.shield from equipped Armor items.
    * Recomputed each prepareData() so values always reflect currently-equipped armor.
    *
    * Armor item fields are defined in template.json -> Item.armor:
@@ -924,8 +926,6 @@ export class SimpleActor extends Actor {
         sys.shield.qualities = item.system?.qualities ?? sys.shield.qualities;
       }
     }
-  }
-
   }
 
   _hpBonus(actorData) {
