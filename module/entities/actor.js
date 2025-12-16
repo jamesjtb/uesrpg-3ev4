@@ -1053,6 +1053,87 @@ export class SimpleActor extends Actor {
     }
   }
 
+    /**
+   * Compute RAW mitigation for a given hit location (no stacking).
+   * - Physical: subtract AR(loc) + Natural Toughness
+   * - Magic: subtract MagicAR(loc) + Natural Toughness
+   * - Element: subtract ElementAR(loc) + MagicAR(loc) + Natural Toughness
+   */
+  _mitigateDamageByLocationRAW(hitLocKey, damageType, rawDamage) {
+    const sys = this.system ?? {};
+    const locKey = String(hitLocKey || "body");
+    const dmg = Math.max(0, Number(rawDamage) || 0);
+
+    const loc = sys.armor?.[locKey] ?? {};
+    const arLoc = Number(loc.ar ?? 0) || 0;
+
+    // parse loc.magic_ar which may be "" | number | "1 Fire" | "2 Magic, 1 Fire", etc.
+    const parseMagicAR = (v) => {
+      const out = { magic: 0, fire: 0, frost: 0, shock: 0, poison: 0 };
+      if (v == null) return out;
+      if (typeof v === "number") { out.magic = Number.isFinite(v) ? v : 0; return out; }
+
+      const s = String(v).trim();
+      if (!s) return out;
+      if (/^\d+(\.\d+)?$/.test(s)) { out.magic = Number(s) || 0; return out; }
+
+      const chunks = s.split(/[,;]+/).map(c => c.trim()).filter(Boolean);
+      for (const chunk of chunks) {
+        const m1 = chunk.match(/(\d+)\s*(magic|fire|frost|shock|poison)/i);
+        const m2 = chunk.match(/(magic|fire|frost|shock|poison)\s*(\d+)/i);
+        const type = (m1?.[2] || m2?.[1] || "").toLowerCase();
+        const num = Number(m1?.[1] || m2?.[2] || 0) || 0;
+        if (type && Object.prototype.hasOwnProperty.call(out, type)) out[type] += num;
+      }
+      return out;
+    };
+
+    const map = parseMagicAR(loc.magic_ar);
+    const magicARLoc = Number(map.magic ?? 0) || 0;
+
+    const natTough = Number(sys.resistance?.natToughness ?? 0) || 0;
+    const dt = String(damageType || "physical").toLowerCase();
+
+    let armorMit = 0;
+    if (dt === "physical") armorMit = arLoc;
+    else if (dt === "magic") armorMit = magicARLoc;
+    else if (dt === "shadow") armorMit = magicARLoc; // generic Magic AR still applies
+    else if (["fire", "frost", "shock", "poison"].includes(dt)) {
+      const elemAR = Number(map[dt] ?? 0) || 0;
+      armorMit = elemAR + magicARLoc;
+    } else {
+      armorMit = magicARLoc;
+    }
+
+    const totalMit = armorMit + natTough;
+    const final = Math.max(0, dmg - totalMit);
+
+    return { final, totalMit, armorMit, natTough, arLoc, magicARLoc, locKey, dt };
+  }
+
+  /**
+   * System-level entry point: apply damage to HP using hit-location mitigation.
+   * Usage:
+   *   await actor.applyLocationDamage({ raw: 7, type: "fire", locKey: "l_leg", mitigated: true });
+   */
+  async applyLocationDamage({ raw, type = "physical", locKey = "body", mitigated = true } = {}) {
+    const rawDamage = Math.max(0, Number(raw) || 0);
+
+    const m = mitigated
+      ? this._mitigateDamageByLocationRAW(locKey, type, rawDamage)
+      : { final: rawDamage, totalMit: 0, armorMit: 0, natTough: 0, arLoc: 0, magicARLoc: 0, locKey, dt: String(type).toLowerCase() };
+
+    // IMPORTANT: this assumes your HP lives at system.hp.value (common in your system),
+    // adjust this path if your sheet uses a different field.
+    const hpPath = "system.hp.value";
+    const curHP = Number(foundry.utils.getProperty(this, hpPath) ?? 0) || 0;
+    const nextHP = curHP - m.final;
+
+    await this.update({ [hpPath]: nextHP });
+
+    return { ...m, raw: rawDamage, before: curHP, after: nextHP };
+  }
+  
   _hpBonus(actorData) {
     let attribute = this._filterToEquippedBonusItems(actorData.items, 'hpBonus');
     let bonus = 0;
