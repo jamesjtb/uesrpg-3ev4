@@ -31,7 +31,44 @@ function _getActorById(actorId) {
   return game.actors?.get(actorId) ?? null;
 }
 
-async function _renderDefenseDialog({ requestId, attackerUserId, targetTokenUuid, targetActorUuid, targetActorId, suggestedDefense }) {
+/**
+ * Resolve an Actor reliably across:
+ * - Unlinked / synthetic token actors (prefer token UUID)
+ * - Linked/world actors (actor UUID or actorId)
+ */
+async function _resolveTargetActor({ targetTokenUuid, targetActorUuid, targetActorId }) {
+  try {
+    if (targetTokenUuid) {
+      const doc = await fromUuid(targetTokenUuid);
+      const actor = doc?.actor ?? doc?._object?.actor ?? null;
+      if (actor) return actor;
+    }
+  } catch (e) {
+    console.warn("UESRPG | fromUuid(token) failed", e);
+  }
+
+  try {
+    if (targetActorUuid) {
+      const actor = await fromUuid(targetActorUuid);
+      if (actor) return actor;
+    }
+  } catch (e) {
+    console.warn("UESRPG | fromUuid(actor) failed", e);
+  }
+
+  if (targetActorId) return _getActorById(targetActorId);
+
+  return null;
+}
+
+async function _renderDefenseDialog({
+  requestId,
+  attackerUserId,
+  targetTokenUuid,
+  targetActorUuid,
+  targetActorId,
+  suggestedDefense
+}) {
   const actor = await _resolveTargetActor({ targetTokenUuid, targetActorUuid, targetActorId });
   if (!actor) return;
 
@@ -39,7 +76,11 @@ async function _renderDefenseDialog({ requestId, attackerUserId, targetTokenUuid
   if (!actor.isOwner && !game.user.isGM) return;
 
   const combatStyles = actor.items?.filter(i => i.type === "combatStyle") ?? [];
-  const shields = actor.items?.filter(i => i.type === "armor" && i.system?.equipped && Number(i.system?.blockRating ?? 0) > 0) ?? [];
+  const shields = actor.items?.filter(i =>
+    i.type === "armor" &&
+    i.system?.equipped &&
+    Number(i.system?.blockRating ?? 0) > 0
+  ) ?? [];
 
   const styleOptions = combatStyles.map(cs => {
     const tn = Number(cs.system?.value ?? 0) || 0;
@@ -59,27 +100,6 @@ async function _renderDefenseDialog({ requestId, attackerUserId, targetTokenUuid
     { v: "counter", l: "Counter-Attack" }
   ];
 
-// (combat-socket.js) ~lines 45–70
-async function _resolveTargetActor({ targetTokenUuid, targetActorUuid, targetActorId }) {
-  // Prefer token UUID (works for synthetic/unlinked token actors)
-  if (targetTokenUuid) {
-    const doc = await fromUuid(targetTokenUuid);
-    const actor = doc?.actor ?? doc?._object?.actor ?? null;
-    if (actor) return actor;
-  }
-
-  // Fallback: actor UUID (works for linked actors)
-  if (targetActorUuid) {
-    const actor = await fromUuid(targetActorUuid);
-    if (actor) return actor;
-  }
-
-  // Last resort: actorId (only for world actors)
-  if (targetActorId) return _getActorById(targetActorId);
-
-  return null;
-}
-  
   const defenseTypeOptions = defenseTypes.map(d => {
     const sel = (d.v === (suggestedDefense ?? "parry")) ? "selected" : "";
     return `<option value="${d.v}" ${sel}>${d.l}</option>`;
@@ -150,8 +170,11 @@ async function _resolveTargetActor({ targetTokenUuid, targetActorUuid, targetAct
             requestId,
             toUserId: attackerUserId,
             fromUserId: game.user.id,
-            targetTokenUuid,
-              targetActorUuid: actor.uuid,
+
+            // return both so attacker can correlate even if actorId differs
+            targetTokenUuid: targetTokenUuid ?? null,
+            targetActorUuid: actor.uuid,
+
             defenseType,
             tn,
             combatStyle: cs ? { id: cs.id, name: cs.name } : null,
@@ -171,8 +194,8 @@ async function _resolveTargetActor({ targetTokenUuid, targetActorUuid, targetAct
             requestId,
             toUserId: attackerUserId,
             fromUserId: game.user.id,
-            targetTokenUuid,
-              targetActorUuid: actor.uuid,
+            targetTokenUuid: targetTokenUuid ?? null,
+            targetActorUuid: actor.uuid,
             defenseType: "none",
             tn: 0,
             combatStyle: null,
@@ -188,10 +211,21 @@ async function _resolveTargetActor({ targetTokenUuid, targetActorUuid, targetAct
   dlg.render(true);
 }
 
-async function _gmApplyDamage({ requestId, toUserId, targetActorId, raw, type, locKey, mitigated }) {
+async function _gmApplyDamage({
+  requestId,
+  toUserId,
+  targetTokenUuid,
+  targetActorUuid,
+  targetActorId,
+  raw,
+  type,
+  locKey,
+  mitigated
+}) {
   if (!game.user.isGM) return;
 
-  const actor = _getActorById(targetActorId);
+  const actor = await _resolveTargetActor({ targetTokenUuid, targetActorUuid, targetActorId });
+
   if (!actor) {
     _emit({ type: "uesrpgApplyDamageResponse", requestId, toUserId, ok: false, error: "Target actor not found" });
     return;
@@ -215,8 +249,23 @@ export function initCombatSocket() {
 
     // Defender prompt: show only on defender's owning client(s)
     if (payload.type === "uesrpgDefensePrompt") {
-      const { requestId, attackerUserId, targetTokenUuid, targetActorUuid, targetActorId, suggestedDefense } = payload;
-      await _renderDefenseDialog({ requestId, attackerUserId, targetTokenUuid, targetActorUuid, targetActorId, suggestedDefense });
+      const {
+        requestId,
+        attackerUserId,
+        targetTokenUuid,
+        targetActorUuid,
+        targetActorId,
+        suggestedDefense
+      } = payload;
+
+      await _renderDefenseDialog({
+        requestId,
+        attackerUserId,
+        targetTokenUuid,
+        targetActorUuid,
+        targetActorId,
+        suggestedDefense
+      });
       return;
     }
 
@@ -241,8 +290,17 @@ export function initCombatSocket() {
   });
 }
 
-// (combat-socket.js) around lines ~220–260
-export function requestDefenseReaction({ attackerUserId, targetTokenUuid, suggestedDefense = "parry" } = {}) {
+/**
+ * Ask defender (their owning player) for a reaction.
+ * Returns: { defenseType, tn, shield, shieldArm, ... }
+ */
+export function requestDefenseReaction({
+  attackerUserId,
+  targetTokenUuid,
+  targetActorUuid = null,
+  targetActorId = null,
+  suggestedDefense = "parry"
+} = {}) {
   const requestId = _uuid();
 
   /** @type {(payload: any) => void} */
@@ -256,7 +314,9 @@ export function requestDefenseReaction({ attackerUserId, targetTokenUuid, sugges
     type: "uesrpgDefensePrompt",
     requestId,
     attackerUserId,
-    targetTokenUuid,
+    targetTokenUuid: targetTokenUuid ?? null,
+    targetActorUuid,
+    targetActorId,
     suggestedDefense
   });
 
@@ -280,16 +340,31 @@ export function requestDefenseReaction({ attackerUserId, targetTokenUuid, sugges
 /**
  * Request GM to apply damage if current user does not have update permission.
  */
-export function requestGMAppliedDamage({ targetActorId, raw, type = "physical", locKey = "body", mitigated = true } = {}) {
+export function requestGMAppliedDamage({
+  targetTokenUuid = null,
+  targetActorUuid = null,
+  targetActorId = null,
+  raw,
+  type = "physical",
+  locKey = "body",
+  mitigated = true
+} = {}) {
   const requestId = _uuid();
   const toUserId = game.user.id;
 
-  const p = new Promise((resolve) => _pending.set(requestId, resolve));
+  /** @type {(payload: any) => void} */
+  let resolveFn;
+  const p = new Promise((resolve) => {
+    resolveFn = resolve;
+    _pending.set(requestId, resolve);
+  });
 
   _emit({
     type: "uesrpgApplyDamageRequest",
     requestId,
     toUserId,
+    targetTokenUuid,
+    targetActorUuid,
     targetActorId,
     raw,
     type,
@@ -297,11 +372,11 @@ export function requestGMAppliedDamage({ targetActorId, raw, type = "physical", 
     mitigated
   });
 
-  // Safety timeout: if no GM response within 10s, fail gracefully
+  // Safety timeout
   setTimeout(() => {
     if (!_pending.has(requestId)) return;
     _pending.delete(requestId);
-    resolve({ ok: false, error: "GM did not respond in time." });
+    resolveFn({ ok: false, error: "GM did not respond in time." });
   }, 10_000);
 
   return p;
