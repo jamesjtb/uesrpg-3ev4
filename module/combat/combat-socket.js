@@ -218,14 +218,16 @@ export function initCombatSocket() {
   });
 }
 
-/**
- * Ask defender (their owning player) for a reaction.
- * Returns: { defenseType, tn, shield, shieldArm, ... }
- */
+// (combat-socket.js) around lines ~220–260
 export function requestDefenseReaction({ attackerUserId, targetActorId, suggestedDefense = "parry" } = {}) {
   const requestId = _uuid();
 
-  const p = new Promise((resolve) => _pending.set(requestId, resolve));
+  /** @type {(payload: any) => void} */
+  let resolveFn;
+  const p = new Promise((resolve) => {
+    resolveFn = resolve;
+    _pending.set(requestId, resolve);
+  });
 
   _emit({
     type: "uesrpgDefensePrompt",
@@ -239,7 +241,14 @@ export function requestDefenseReaction({ attackerUserId, targetActorId, suggeste
   setTimeout(() => {
     if (!_pending.has(requestId)) return;
     _pending.delete(requestId);
-    resolve({ defenseType: "none", tn: 0, combatStyle: null, shield: null, shieldArm: null, timeout: true });
+    resolveFn({
+      defenseType: "none",
+      tn: 0,
+      combatStyle: null,
+      shield: null,
+      shieldArm: null,
+      timeout: true
+    });
   }, 30_000);
 
   return p;
