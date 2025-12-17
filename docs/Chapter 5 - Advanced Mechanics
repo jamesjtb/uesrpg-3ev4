@@ -402,3 +402,57 @@ Stunned
 The character immediately loses all remaining Action Points upon becoming stunned. Stunned characters do not regain Action Points at the start of each round.
 Unconscious
 The character is knocked out and loses consciousness. They fall prone if the circumstances allow and may not take actions. If a character gains a level of fatigue while unconscious, they die.
+
+MOVEMENT & SIZE
+This section contains more detailed rules for movement, and creatures of larger sizes.
+Movement
+During their Turn a character can move before or after taking their action (or both), though they may not move further than their Speed in meters during a single round unless they take the Dash action. Furthermore, characters cannot move through a space occupied by a non-allied creature.
+Movement Budget
+A character’s Movement Budget is determined by their highest speed (usually base speed). During their Turn a character can move a total number of meters up to their Movement Budget.   This movement can take place at any point during a character’s Turn, either before or after any actions they take.
+Example: a character’s Base Speed is 13m and their Climb Speed is 7m, so their Movement Budget is 13m. They make a standard move for 8m, so they can only climb for 5 meters with their remaining Maximum Movement unless they use a Dash action.
+Difficult Terrain
+Sometimes terrain can be more difficult to traverse than usual, like when trudging in water, through a forest, or other sim-ilar terrain. Moving through Difficult Terrain doubles the “cost” of movement, unless the character passes an Athletics or Acrobatics test before moving.
+Swim Speed and Climb Speed
+Moving while climbing or swimming underwater uses a char-acter’s Climb Speed or Swim Speed respectively. Both speeds are half of their Base Speed (round down) unless otherwise specified by a talent or other ability.
+Jumping
+A character may also make an Acrobatics test to jump over or up to an obstacle, either horizontally or vertically. This can represent either completely clearing the obstacle or just jumping high enough to grab it with both hands, depending on what the GM feels is appropriate. If the character does not spend several seconds running or otherwise preparing (approximately a round) before the jump, then they suffer a -10 penalty to the test.
+When jumping vertically, each meter they wish to jump beyond the first imposes a -20 penalty on the test. When jumping horizontally, each meter they wish to jump beyond the first imposes a -10 penalty on the test. Critical Failure results in the character tumbling to the ground. 
+Falling
+Falling inflicts 1d10+[meters fallen beyond 2] damage to the body. This damage ignores armor.
+If a character falls 2m or less and is in control of their body when falling (not tied, paralyzed, unconscious, surprised, etc.), they do not take any damage from the fall.
+Size
+Tamriel is home to creatures of many shapes and sizes. A character’s size affects them in a number of critical ways. There are seven different size categories. 
+•	   Puny: This category is reserved for the smallest of creatures like kwama foragers, rats, or mice.
+•	   Tiny: This category includes smaller characters like cats or large cave rats.
+•	   Small: This category includes everything ranging from quadrupeds like wolves to smaller bipeds like goblins.
+•	   Standard: Standard sized characters fall fairly close to the average size for man or mer. There are no effects associated with this category.
+•	   Large: This category includes characters that are substan-tially larger than average, including quadrupeds like horses and larger bipeds like trolls.
+•	   Huge: This category includes very large characters such as giants or larger dwemer constructs.
+•	   Enormous: This category is reserved for extremely large characters, like dragons.
+Size-to-Hit Effects ( Size => Effect):
+Punity => -30 to hit by characters of larger size or at range; Tiny => -20 to hit by characters of larger size or at range; Small => -10 to hit by characters of larger size or at range; Standard => no bonus or penalty; Large => +10 to hit at range; Huge => +20 to hit by characters of smaller size or at range; Enormous => +30 to hit by characters of smaller size or at range
+
+FEAR
+When a character is confronted by an excessively frightening event or adversary, they must make a Fear Test. There are two types of fear tests: panic and horror tests. If the character fails the test, they succumb to the eﬀects of fear. 
+Your GM may call on you to make a Panic Test when you are confronted by mundane shock or horror. This is represented by the Panic (+/- X) notation, which is simply a Willpower test with a +/- X modiﬁer.
+Your GM may call on you to make a Horror Test when you are confronted by supernatural terrors. This is represented by the Horror (+/- X) notation, which is simply a Willpower test with a +/- X modiﬁer. In general, horror tests with any sort of penalty should be reserved for the most terrifying monsters and mind melting terrors.
+Fear Effects
+If in combat a character fails a fear test, they must immediately roll a d100 on the appropriate table on the next page. The eﬀects listed are applied immediately to the character. 
+If in a non-combat situation the character fails a fear test, the character becomes unnerved and suﬀers a -20 penalty to any tests that requires concentration on their part. This penalty lasts while the character remains in the vicinity of the object of their fear.
+Characters may be able to shake oﬀ some of the eﬀects of fear after the initial shock has worn oﬀ. The table below will specify certain cases where a character can make a Willpower test when it is their next Turn to “snap out” of their fear. “Snapping out” of the fear always happens at the end of their Turn.
+If this succeeds, then they regain their senses, shrug oﬀ the eﬀects, and may act normally from then on. If they fail this test, the eﬀect continues, and they may try again when it is their next Turn.
+Roll => Effect:
+Combat Panic Result
+01-30 => Startled: The character is startled by the source of panic. They jump in their boots and pause for a brief moment as they struggle to reassess the situation. They may not make any reactions until the beginning of their next Turn.;
+31-60 => Spooked: The character gets the shakes from the source of their panic. Fretting, nervous, and full of doubt, they suﬀer a -10 penalty to all tests for the rest of the encounter unless they snap out of it.
+61-90 => Frightened: The character is taken aback, and their teeth clatter in their skull as they inch back from the source of their panic. The character cannot willingly approach the object of their fear, and they suﬀer a –10 penalty to all tests until the end of the encounter.
+91-95 => Lost Composure: The character loses their nerve and freezes in place. Their will to act is decimated by the stress on their mind from the source of their Panic. The character may take no actions until they snap out of it. After snap-ping out of it, the character will make all tests at a –10 penalty for the rest of the encounter.
+96-100 => Running and Screaming: The character breaks down with fear and ﬂees. They must immediately ﬂee directly away from the source of their fear as fast as they can, which includes ditching equipment slowing them down. They must do everything in their power to accomplish this and is at a -20 penalty to all tests. Once away from the danger, they must successfully snap out of it to regain control, or the encounter must end.
+Combat Horror Result
+01-40 => Momentary Blackout: The character is so overcome with horror that their mind fails them for a few precious seconds in the face of this horror. The character drops to the ground unconscious for 1 round and has a -10 penalty to all actions afterwards for the rest of the encounter.
+41-60 => Uncontrollable Vomiting: The character’s own body reacts with a gut wrenching sound as the character’s innards empty themselves, and they start vomiting uncontrollably. The character bends over and vomits for 1 round and is considered helpless during this time. Afterwards the character is still nauseous and loses 1 Stamina point immediately.
+61-80 => Manic Terror: The Character’s mind cracks like a fragile glass sculpture, and they begin to laugh maniacally. Turning upon the closest nearby friend or foe they start attacking them with whatever weapon they have in their hands at the moment. The character can attempt to snap out of it at the start of their ﬁrst Turn each round or be knocked unconscious to stop their manic rampage. Afterwards the character loses 1d4 Stamina points immediately. 
+81-90 => Hopeless and Despairing: The character falls to the ground and cries out in despair and terror while shutting out all other sounds, babbling and mumbling to themselves for comfort for 1d6 rounds. When they regain their senses they immediately lose 1d4 Stamina.
+91-95 => Blackout: The character’s mind snaps like a twig, unable to truly process the horror of the situation and collapsing instead. The character goes catatonic for 1d4 hours and cannot be roused by normal means during this time.
+96-99 => Mind Break: The character’s will bends as their mind shatters. They drop to the ground while stuttering and mumbling incomprehensibly for 1d6 rounds. The character’s mind is irrepressibly damaged, and they lose either 1d8 Willpower or Personality (player’s choice) permanently from the harrowing experience. Afterwards, the character cannot attack or approach the source of horror until they snap out of the eﬀect or for the rest of the encounter.
+100 => Scared to Death: The character is so immeasurably overcome with terror and horror that their heart stops beating; they must make an Endurance test or die on the spot. Should they succeed, they instead fall catatonic for 1d4 hours as with Blackout.
