@@ -42,7 +42,7 @@ async function _renderDefenseDialog({ requestId, attackerUserId, targetActorId, 
   const shields = actor.items?.filter(i => i.type === "armor" && i.system?.equipped && Number(i.system?.blockRating ?? 0) > 0) ?? [];
 
   const styleOptions = combatStyles.map(cs => {
-    const tn = Number(cs.system?.rank ?? 0) || 0;
+    const tn = Number(cs.system?.value ?? 0) || 0;
     return `<option value="${cs.id}">${foundry.utils.escapeHTML(cs.name)} (TN ${tn})</option>`;
   }).join("");
 
@@ -121,7 +121,7 @@ async function _renderDefenseDialog({ requestId, attackerUserId, targetActorId, 
           const shieldArm = form.shieldArm?.value || "l_arm";
 
           const cs = combatStyleId ? actor.items.get(combatStyleId) : null;
-          const baseTN = Number(cs?.system?.rank ?? 0) || 0;
+          const baseTN = Number(cs?.system?.value ?? 0) || 0;
           const tn = Math.max(0, baseTN + modifier);
 
           _emit({
