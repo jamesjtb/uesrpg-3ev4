@@ -1,3 +1,4 @@
+_id: 55aBHMLuPB1SKwFG
 name: All-In-One Combat
 type: script
 author: U7r9uXVolIFyJo7l
@@ -5,772 +6,789 @@ img: icons/skills/melee/weapons-crossed-swords-yellow.webp
 scope: global
 command: >-
 
-(async () => {
-  const tok = canvas?.tokens?.controlled?.[0] ?? token;
-  if (!tok?.actor) return ui.notifications.warn("Select a token first.");
-  const actor = tok.actor;
-
-  const SYSFLAG_SCOPE = "uesrpg-3ev4";
-  const LAST_LOC_FLAG = "lastTargetLoc";
-  const DEFAULT_WOUND_ICON = "systems/uesrpg-3ev4/images/Icons/weakPoint.webp";
-
-  const GM_WHISPER = () => ChatMessage.getWhisperRecipients("GM") ?? [];
-  const escapeHTML = (s) => foundry.utils.escapeHTML(String(s ?? ""));
-  const get = (obj, path, fallback = undefined) => {
-    try { return foundry.utils.getProperty(obj, path) ?? fallback; } catch { return fallback; }
-  };
-
-  // v13-safe async evaluation (no {async:true})
-  const evalRoll = async (formula) => {
-    const r = new Roll(String(formula));
-    await r.evaluate();
-    return r;
-  };
-
-  const toInline = async (roll) => {
-    if (!roll) return "";
-    if (typeof roll.toAnchor === "function") {
-      const maybe = roll.toAnchor();
-      const a = (maybe instanceof Promise) ? await maybe : maybe;
-      if (a && a.tagName === "A") a.textContent = String(roll.total);
-      return a?.outerHTML ?? String(roll.total);
-    }
-    return `<span class="inline-roll inline-result">${roll.total}</span>`;
-  };
-
-  const stripFoundryLinksToLabel = (s) => {
-    return String(s)
-      .replace(/@UUID\[[^\]]+\]\{([^}]+)\}/gi, "$1")
-      .replace(/@Compendium\[[^\]]+\]\{([^}]+)\}/gi, "$1")
-      .replace(/@UUID\[[^\]]+\]/gi, "")
-      .replace(/@Compendium\[[^\]]+\]/gi, "")
-      .trim();
-  };
-
-  const parseQualitiesPlain = (q) => {
-    if (!q) return [];
-    const raw = Array.isArray(q) ? q.join(",") : String(q);
-    return raw
-      .split(/[,;|]/g)
-      .map(s => stripFoundryLinksToLabel(s).replace(/\s+/g, " ").trim())
+  (async () => {
+    const tok = canvas?.tokens?.controlled?.[0] ?? token;
+    if (!tok?.actor) return ui.notifications.warn("Select a token first.");
+    const actor = tok.actor;
+  
+    const SYSFLAG_SCOPE = "uesrpg-3ev4";
+    const LAST_LOC_FLAG = "lastTargetLoc";
+    const DEFAULT_WOUND_ICON = "systems/uesrpg-3ev4/images/Icons/weakPoint.webp";
+  
+    const GM_WHISPER = () => ChatMessage.getWhisperRecipients("GM") ?? [];
+    const escapeHTML = (s) => foundry.utils.escapeHTML(String(s ?? ""));
+    const get = (obj, path, fallback = undefined) => {
+      try { return foundry.utils.getProperty(obj, path) ?? fallback; } catch { return fallback; }
+    };
+  
+    // v13-safe async evaluation (no {async:true})
+    const evalRoll = async (formula) => {
+      const r = new Roll(String(formula));
+      await r.evaluate();
+      return r;
+    };
+  
+    const toInline = async (roll) => {
+      if (!roll) return "";
+      if (typeof roll.toAnchor === "function") {
+        const maybe = roll.toAnchor();
+        const a = (maybe instanceof Promise) ? await maybe : maybe;
+        if (a && a.tagName === "A") a.textContent = String(roll.total);
+        return a?.outerHTML ?? String(roll.total);
+      }
+      return `<span class="inline-roll inline-result">${roll.total}</span>`;
+    };
+  
+    const stripFoundryLinksToLabel = (s) => {
+      return String(s)
+        .replace(/@UUID\[[^\]]+\]\{([^}]+)\}/gi, "$1")
+        .replace(/@Compendium\[[^\]]+\]\{([^}]+)\}/gi, "$1")
+        .replace(/@UUID\[[^\]]+\]/gi, "")
+        .replace(/@Compendium\[[^\]]+\]/gi, "")
+        .trim();
+    };
+  
+    const parseQualitiesPlain = (q) => {
+      if (!q) return [];
+      const raw = Array.isArray(q) ? q.join(",") : String(q);
+      return raw
+        .split(/[,;|]/g)
+        .map(s => stripFoundryLinksToLabel(s).replace(/\s+/g, " ").trim())
+        .filter(Boolean);
+    };
+  
+    const getTargets = () => Array.from(game.user?.targets ?? [])
+      .map(t => t.actor)
       .filter(Boolean);
-  };
-
-  const getTargets = () => Array.from(game.user?.targets ?? [])
-    .map(t => t.actor)
-    .filter(Boolean);
-
-  const getWoundThreshold = (targetActor) => {
-    const candidates = [
-      "system.wound_threshold.value",
-      "system.wound_threshold",
-      "system.woundThreshold",
-      "system.wounds.threshold",
-      "system.wounds.woundThreshold",
-      "system.combat.woundThreshold",
-      "system.health.woundThreshold",
+  
+    const getWoundThreshold = (targetActor) => {
+      const candidates = [
+        "system.wound_threshold.value",
+        "system.wound_threshold",
+        "system.woundThreshold",
+        "system.wounds.threshold",
+        "system.wounds.woundThreshold",
+        "system.combat.woundThreshold",
+        "system.health.woundThreshold",
+      ];
+      for (const p of candidates) {
+        const v = Number(get(targetActor, p, NaN));
+        if (Number.isFinite(v)) return v;
+      }
+      return null;
+    };
+  
+    const hitLocFromD10 = (d10) => {
+      const n = Number(d10) || 1;
+      if (n <= 5) return { key: "body", text: "Body" };
+      if (n === 6) return { key: "r_leg", text: "Right Leg" };
+      if (n === 7) return { key: "l_leg", text: "Left Leg" };
+      if (n === 8) return { key: "r_arm", text: "Right Arm" };
+      if (n === 9) return { key: "l_arm", text: "Left Arm" };
+      return { key: "head", text: "Head" };
+    };
+  
+    const LOCATIONS = [
+      { key: "body",  text: "Body" },
+      { key: "head",  text: "Head" },
+      { key: "r_arm", text: "Right Arm" },
+      { key: "l_arm", text: "Left Arm" },
+      { key: "r_leg", text: "Right Leg" },
+      { key: "l_leg", text: "Left Leg" },
     ];
-    for (const p of candidates) {
-      const v = Number(get(targetActor, p, NaN));
-      if (Number.isFinite(v)) return v;
-    }
-    return null;
-  };
-
-  const hitLocFromD10 = (d10) => {
-    const n = Number(d10) || 1;
-    if (n <= 5) return { key: "body", text: "Body" };
-    if (n === 6) return { key: "r_leg", text: "Right Leg" };
-    if (n === 7) return { key: "l_leg", text: "Left Leg" };
-    if (n === 8) return { key: "r_arm", text: "Right Arm" };
-    if (n === 9) return { key: "l_arm", text: "Left Arm" };
-    return { key: "head", text: "Head" };
-  };
-
-  const LOCATIONS = [
-    { key: "body",  text: "Body" },
-    { key: "head",  text: "Head" },
-    { key: "r_arm", text: "Right Arm" },
-    { key: "l_arm", text: "Left Arm" },
-    { key: "r_leg", text: "Right Leg" },
-    { key: "l_leg", text: "Left Leg" },
-  ];
-  const locText = (key) => (LOCATIONS.find(l => l.key === key)?.text ?? "Body");
-
-  const parseMagicARMap = (magicArRaw) => {
-    const out = {};
-    const raw = (magicArRaw ?? "").toString().trim();
-    if (!raw) return out;
-
-    const parts = raw.split(/[,;|]/g).map(s => s.trim()).filter(Boolean);
-    for (const p of parts) {
-      let m = p.match(/^(\d+)\s*([A-Za-z]+)$/);
-      if (!m) m = p.match(/^([A-Za-z]+)\s*(\d+)$/);
-      if (!m) continue;
-
-      const n = Number(m[1]) || Number(m[2]) || 0;
-      const t = (isNaN(Number(m[1])) ? m[1] : m[2]).toString().toLowerCase();
-
-      const key =
-        t.startsWith("fir") ? "fire" :
-        t.startsWith("fro") ? "frost" :
-        t.startsWith("sho") ? "shock" :
-        t.startsWith("poi") ? "poison" :
-        t.startsWith("mag") ? "magic" :
-        t.startsWith("sha") ? "shadow" :
-        t;
-
-      out[key] = (out[key] ?? 0) + n;
-    }
-    return out;
-  };
-
-  const mitigateDamageRAW_LocationOnly = (targetActor, hitLocKey, damageType, rawDamage) => {
-    const dmg = Math.max(0, Number(rawDamage) || 0);
-    const locKey = String(hitLocKey || "body");
-
-    const locBlock = get(targetActor, `system.armor.${locKey}`, null) ?? {};
-    const arLoc = Number(locBlock.ar ?? 0) || 0;
-
-    const magicMap = parseMagicARMap(locBlock.magic_ar);
-    const magicARLoc = Number(magicMap.magic ?? 0) || 0;
-
-    const natTough = Number(get(targetActor, "system.resistance.natToughness", 0)) || 0;
-
-    const dt = String(damageType || "physical").toLowerCase();
-    const isElement = ["fire", "frost", "shock", "poison"].includes(dt);
-
-    let armorMit = 0;
-    if (dt === "physical") armorMit = arLoc;
-    else if (dt === "magic" || dt === "shadow") armorMit = magicARLoc;
-    else if (isElement) {
-      const elemAR = Number(magicMap[dt] ?? 0) || 0;
-      armorMit = elemAR + magicARLoc;
-    } else {
-      armorMit = magicARLoc;
-    }
-
-    const totalMit = armorMit + natTough;
-    const final = Math.max(0, dmg - totalMit);
-
-    return { final, locKey };
-  };
-
-  const applyHpDamage = async (targetActor, amount) => {
-    const hpVal = Number(get(targetActor, "system.hp.value", NaN));
-    const hpMax = Number(get(targetActor, "system.hp.max", NaN));
-    if (!Number.isFinite(hpVal) || !Number.isFinite(hpMax)) return null;
-
-    const dmg = Math.max(0, Number(amount) || 0);
-    const next = Math.clamp(hpVal - dmg, 0, hpMax);
-    await targetActor.update({ "system.hp.value": next });
-    return { before: hpVal, after: next, applied: (hpVal - next) };
-  };
-
-  const computeWoundSeverity = (applied, wt) => {
-    if (!Number.isFinite(applied) || !Number.isFinite(wt) || wt <= 0) return null;
-    const ratio = applied / wt;
-    if (ratio >= 4) return { label: "Devastating", rank: 4 };
-    if (ratio >= 3) return { label: "Grievous", rank: 3 };
-    if (ratio >= 2) return { label: "Major", rank: 2 };
-    if (ratio >= 1) return { label: "Minor", rank: 1 };
-    return null;
-  };
-
-  const createWoundTraitItem = async (targetActor, {
-    attackerName, severityLabel, hitLocKey, hitLocTextHuman, raw, applied, typeLabel, wt, isCrit
-  }) => {
-    const name = `Wound (${severityLabel}) — ${hitLocTextHuman}`;
-
-    // Non-stacking: one per name + kind=wound
-    const existing = targetActor.items?.find(i =>
-      i.type === "trait" &&
-      i.name === name &&
-      (i.flags?.[SYSFLAG_SCOPE]?.kind === "wound")
-    );
-    if (existing) return existing;
-
-    const descriptionHTML = `
-      <p><b>Wound Summary</b></p>
-      <ul>
-        <li><b>Attacker:</b> ${escapeHTML(attackerName)}</li>
-        <li><b>Location:</b> ${escapeHTML(hitLocTextHuman)}</li>
-        <li><b>Damage:</b> ${escapeHTML(applied)}/${escapeHTML(raw)} ${escapeHTML(typeLabel)}</li>
-        ${wt != null ? `<li><b>Wound Threshold:</b> ${escapeHTML(wt)}</li>` : ""}
-        <li><b>Severity:</b> ${escapeHTML(severityLabel)}${isCrit ? " (Critical)" : ""}</li>
-      </ul>
-      <p><b>General Wound Rules</b></p>
-      <ul>
-        <li>-20 to all tests and -2 to future initiative rolls until wound is fully healed.</li>
-        <li>Blood loss to 0 HP in 5 rounds unless first aid/magic intervenes.</li>
-      </ul>
-    `;
-
-    const itemData = {
-      name,
-      type: "trait",
-      img: DEFAULT_WOUND_ICON,
-      system: { description: descriptionHTML },
-      flags: {
-        [SYSFLAG_SCOPE]: {
-          kind: "wound",
-          attacker: attackerName,
-          severity: severityLabel,
-          locKey: hitLocKey,
-          locText: hitLocTextHuman,
-          raw,
-          applied,
-          damageType: typeLabel,
-          wt,
-          critical: !!isCrit,
-          ts: Date.now()
-        }
+    const locText = (key) => (LOCATIONS.find(l => l.key === key)?.text ?? "Body");
+  
+    const parseMagicARMap = (magicArRaw) => {
+      const out = {};
+      const raw = (magicArRaw ?? "").toString().trim();
+      if (!raw) return out;
+  
+      const parts = raw.split(/[,;|]/g).map(s => s.trim()).filter(Boolean);
+      for (const p of parts) {
+        let m = p.match(/^(\d+)\s*([A-Za-z]+)$/);
+        if (!m) m = p.match(/^([A-Za-z]+)\s*(\d+)$/);
+        if (!m) continue;
+  
+        const n = Number(m[1]) || Number(m[2]) || 0;
+        const t = (isNaN(Number(m[1])) ? m[1] : m[2]).toString().toLowerCase();
+  
+        const key =
+          t.startsWith("fir") ? "fire" :
+          t.startsWith("fro") ? "frost" :
+          t.startsWith("sho") ? "shock" :
+          t.startsWith("poi") ? "poison" :
+          t.startsWith("mag") ? "magic" :
+          t.startsWith("sha") ? "shadow" :
+          t;
+  
+        out[key] = (out[key] ?? 0) + n;
       }
+      return out;
     };
-
-    const created = await targetActor.createEmbeddedDocuments("Item", [itemData]);
-    return created?.[0] ?? null;
-  };
-
-  const postDamageCardGM = async ({
-    attackerName, targetActor, targetName, hitLocKey, hitLocTextHuman,
-    raw, applied, dmgType, hpBefore, hpAfter, isCriticalSuccess
-  }) => {
-    const typeLabel = (dmgType || "physical").toLowerCase();
-    const wt = getWoundThreshold(targetActor);
-
-    const thresholdTriggered = (wt != null) ? (Number(applied) >= Number(wt)) : false;
-    const woundTriggered = thresholdTriggered || !!isCriticalSuccess;
-
-    let sev = (wt != null && thresholdTriggered) ? computeWoundSeverity(Number(applied), Number(wt)) : null;
-    if (!sev && woundTriggered) sev = { label: "Minor", rank: 1 };
-
-    // Create wound trait ONLY here
-    let woundTrait = null;
-    if (woundTriggered) {
-      woundTrait = await createWoundTraitItem(targetActor, {
-        attackerName,
-        severityLabel: sev.label,
-        hitLocKey,
-        hitLocTextHuman,
-        raw,
-        applied,
-        typeLabel,
-        wt,
-        isCrit: !!isCriticalSuccess
-      });
-    }
-
-    const sevColor = (sev?.rank ?? 0) >= 3
-      ? "rgba(120,0,0,0.95)"
-      : (sev?.rank ?? 0) === 2
-        ? "rgba(150,60,0,0.95)"
-        : "rgba(0,0,0,0.78)";
-
-    const hpLine = (Number.isFinite(hpBefore) && Number.isFinite(hpAfter))
-      ? `<div style="margin-top:6px; opacity:.88;"><b>HP:</b> ${hpBefore} → ${hpAfter}</div>`
-      : "";
-
-    const wtLine = (wt != null)
-      ? `<div style="margin-top:6px; opacity:.88;"><b>Wound Threshold:</b> ${wt}</div>`
-      : "";
-
-    const traitLine = woundTrait
-      ? `<div style="margin-top:6px; opacity:.85; font-size:13px;"><b>Wound trait:</b> ${escapeHTML(woundTrait.name)}</div>`
-      : "";
-
-    const content = `
-      <div style="font-size:14px; line-height:1.35;">
-        <div style="font-weight:600; font-size:15px; margin:0 0 8px 0; opacity:.82;">Damage Applied</div>
-        <div style="margin:4px 0;"><b>${escapeHTML(attackerName)}</b> → <b>${escapeHTML(targetName)}</b></div>
-        <div style="margin:4px 0;"><b>Location:</b> ${escapeHTML(hitLocTextHuman)}</div>
-
-        <div style="margin-top:8px; font-weight:800; font-size:17px; color:${sevColor};">
-          ${applied}/${raw} ${escapeHTML(typeLabel)} damage
-          ${woundTriggered ? `<span style="margin-left:10px; font-weight:800;">${escapeHTML(sev.label)}${isCriticalSuccess ? " (Critical)" : ""}</span>` : ""}
-        </div>
-
-        ${wtLine}
-        ${hpLine}
-        ${traitLine}
-      </div>
-    `;
-
-    await ChatMessage.create({
-      speaker: ChatMessage.getSpeaker({ token: tok.document }),
-      content,
-      whisper: GM_WHISPER(),
-      blind: true
-    });
-  };
-
-  // ---- Dialog ---------------------------------------------------------------
-
-  const combatStyles = actor.items.filter(i => i.type === "combatStyle").sort((a, b) => a.name.localeCompare(b.name));
-  const weapons = actor.items.filter(i => i.type === "weapon").sort((a, b) => a.name.localeCompare(b.name));
-  const hasStyles = combatStyles.length > 0;
-  const parchmentTextureURL = "systems/uesrpg-3ev4/images/parchment5.jpg";
-  const lastLoc = (await actor.getFlag(SYSFLAG_SCOPE, LAST_LOC_FLAG)) ?? "body";
-  const getPathVal = (it, p1, p2, fb = 0) => Number(get(it, p1, get(it, p2, fb))) || 0;
-
-  class CombatRollDialogUX extends foundry.applications.api.DialogV2 {
-    _onRender(...args) {
-      super._onRender(...args);
-      const root = this.element;
-      if (!root) return;
-
-      const scopeAttr = `data-uesrpg-parchment`;
-      root.setAttribute(scopeAttr, "1");
-
-      const style = document.createElement("style");
-      style.dataset.uesrpgParchment = "1";
-      style.textContent = `
-        [${scopeAttr}="1"] .window-content {
-          background: url("${parchmentTextureURL}");
-          background-size: cover;
-          background-repeat: no-repeat;
-          border: 1px solid rgba(80, 60, 20, 0.35);
-          border-radius: 10px;
-          box-shadow: inset 0 0 0 1px rgba(255,255,255,.35);
-        }
-        [${scopeAttr}="1"] form { font-family: "Signika","Palatino Linotype","Book Antiqua",serif; }
-        [${scopeAttr}="1"] input[type="number"], [${scopeAttr}="1"] select, [${scopeAttr}="1"] input[type="text"] {
-          background: rgba(255,255,255,.35);
-          border: 1px solid rgba(80,60,20,.35);
-          border-radius: 8px;
-          height: 28px;
-        }
-        [${scopeAttr}="1"] .uesrpg-row {
-          background: rgba(255,255,255,.18);
-          border: 1px solid rgba(80,60,20,.18);
-          border-radius: 10px;
-          padding: 10px;
-        }
-        [${scopeAttr}="1"] .dialog-buttons button { border-radius: 10px; }
-        [${scopeAttr}="1"] .mini { font-size: 11px; opacity: .85; }
-
-        /* --- Contrast fix --- */
-        [${scopeAttr}="1"] .window-title,
-        [${scopeAttr}="1"] form,
-        [${scopeAttr}="1"] label,
-        [${scopeAttr}="1"] .mini,
-        [${scopeAttr}="1"] span,
-        [${scopeAttr}="1"] p,
-        [${scopeAttr}="1"] h1,
-        [${scopeAttr}="1"] h2,
-        [${scopeAttr}="1"] h3 {
-          color: #111 !important;
-          opacity: 1 !important;
-        }
-
-        [${scopeAttr}="1"] input,
-        [${scopeAttr}="1"] select,
-        [${scopeAttr}="1"] textarea {
-          color: #111 !important;
-          opacity: 1 !important;
-        }
-
-        [${scopeAttr}="1"] input::placeholder,
-        [${scopeAttr}="1"] textarea::placeholder {
-          color: rgba(17, 17, 17, 0.65) !important;
-          opacity: 1 !important;
-        }
-
-        [${scopeAttr}="1"] input:disabled,
-        [${scopeAttr}="1"] select:disabled,
-        [${scopeAttr}="1"] textarea:disabled {
-          color: rgba(17, 17, 17, 0.75) !important;
-          -webkit-text-fill-color: rgba(17, 17, 17, 0.75) !important;
-          opacity: 1 !important;
-        }
-
-        [${scopeAttr}="1"] option { color: #111 !important; }
+  
+    const mitigateDamageRAW_LocationOnly = (targetActor, hitLocKey, damageType, rawDamage) => {
+      const dmg = Math.max(0, Number(rawDamage) || 0);
+      const locKey = String(hitLocKey || "body");
+  
+      const locBlock = get(targetActor, `system.armor.${locKey}`, null) ?? {};
+      const arLoc = Number(locBlock.ar ?? 0) || 0;
+  
+      const magicMap = parseMagicARMap(locBlock.magic_ar);
+      const magicARLoc = Number(magicMap.magic ?? 0) || 0;
+  
+      const natTough = Number(get(targetActor, "system.resistance.natToughness", 0)) || 0;
+  
+      const dt = String(damageType || "physical").toLowerCase();
+      const isElement = ["fire", "frost", "shock", "poison"].includes(dt);
+  
+      let armorMit = 0;
+      if (dt === "physical") armorMit = arLoc;
+      else if (dt === "magic" || dt === "shadow") armorMit = magicARLoc;
+      else if (isElement) {
+        const elemAR = Number(magicMap[dt] ?? 0) || 0;
+        armorMit = elemAR + magicARLoc;
+      } else {
+        armorMit = magicARLoc;
+      }
+  
+      const totalMit = armorMit + natTough;
+      const final = Math.max(0, dmg - totalMit);
+  
+      return { final, locKey };
+    };
+  
+    const applyHpDamage = async (targetActor, amount) => {
+      const hpVal = Number(get(targetActor, "system.hp.value", NaN));
+      const hpMax = Number(get(targetActor, "system.hp.max", NaN));
+      if (!Number.isFinite(hpVal) || !Number.isFinite(hpMax)) return null;
+  
+      const dmg = Math.max(0, Number(amount) || 0);
+      const next = Math.clamp(hpVal - dmg, 0, hpMax);
+      await targetActor.update({ "system.hp.value": next });
+      return { before: hpVal, after: next, applied: (hpVal - next) };
+    };
+  
+    const computeWoundSeverity = (applied, wt) => {
+      if (!Number.isFinite(applied) || !Number.isFinite(wt) || wt <= 0) return null;
+      const ratio = applied / wt;
+      if (ratio >= 4) return { label: "Devastating", rank: 4 };
+      if (ratio >= 3) return { label: "Grievous", rank: 3 };
+      if (ratio >= 2) return { label: "Major", rank: 2 };
+      if (ratio >= 1) return { label: "Minor", rank: 1 };
+      return null;
+    };
+  
+    const createWoundTraitItem = async (targetActor, {
+      attackerName, severityLabel, hitLocKey, hitLocTextHuman, raw, applied, typeLabel, wt, isCrit
+    }) => {
+      const name = `Wound (${severityLabel}) — ${hitLocTextHuman}`;
+  
+      // Non-stacking: one per name + kind=wound
+      const existing = targetActor.items?.find(i =>
+        i.type === "trait" &&
+        i.name === name &&
+        (i.flags?.[SYSFLAG_SCOPE]?.kind === "wound")
+      );
+      if (existing) return existing;
+  
+      const descriptionHTML = `
+        <p><b>Wound Summary</b></p>
+        <ul>
+          <li><b>Attacker:</b> ${escapeHTML(attackerName)}</li>
+          <li><b>Location:</b> ${escapeHTML(hitLocTextHuman)}</li>
+          <li><b>Damage:</b> ${escapeHTML(applied)}/${escapeHTML(raw)} ${escapeHTML(typeLabel)}</li>
+          ${wt != null ? `<li><b>Wound Threshold:</b> ${escapeHTML(wt)}</li>` : ""}
+          <li><b>Severity:</b> ${escapeHTML(severityLabel)}${isCrit ? " (Critical)" : ""}</li>
+        </ul>
+        <p><b>General Wound Rules</b></p>
+        <ul>
+          <li>-20 to all tests and -2 to future initiative rolls until wound is fully healed.</li>
+          <li>Blood loss to 0 HP in 5 rounds unless first aid/magic intervenes.</li>
+        </ul>
       `;
-      root.appendChild(style);
-
-      const cb = root.querySelector('input[name="targetSpecific"]');
-      const sel = root.querySelector('select[name="targetLocKey"]');
-      const sync = () => { if (sel) sel.disabled = !cb?.checked; };
-      sync();
-      cb?.addEventListener("change", sync);
-    }
-
-    getFormData() {
-      const f = this.element?.querySelector("form");
-      if (!f) return null;
-      return {
-        styleId: f.elements.styleId?.value ?? "__npc__",
-        modifier: Number(f.elements.modifier?.value ?? 0),
-        rollDamage: !!f.elements.rollDamage?.checked,
-        weaponId: f.elements.weaponId?.value ?? "",
-        targetSpecific: !!f.elements.targetSpecific?.checked,
-        targetLocKey: f.elements.targetLocKey?.value ?? "body",
-      };
-    }
-  }
-
-  const styleBlock = hasStyles ? `
-    <div style="display:flex; flex-direction:column; gap:4px; min-width:260px;">
-      <div class="mini">Style</div>
-      <select name="styleId">
-        ${combatStyles.map(s => {
-          const val = getPathVal(s, "system.value", "data.data.value", 0);
-          return `<option value="${s.id}">${escapeHTML(s.name)} - ${val}%</option>`;
-        }).join("")}
-      </select>
-    </div>
-  ` : `
-    <div style="display:flex; flex-direction:column; gap:4px; min-width:260px;">
-      <div class="mini">Mode</div>
-      <input type="text" value="NPC Combat (auto)" disabled>
-      <input type="hidden" name="styleId" value="__npc__">
-    </div>
-  `;
-
-  const weaponOptions = `
-    <option value="">— Select —</option>
-    ${weapons.map(w => `<option value="${w.id}">${escapeHTML(w.name)}</option>`).join("")}
-  `;
-
-  const locOptions = LOCATIONS.map(l =>
-    `<option value="${l.key}" ${l.key === lastLoc ? "selected" : ""}>${l.text}</option>`
-  ).join("");
-
-  const dialogContent = `
-    <form>
-      <div style="display:flex; flex-direction:column; gap:10px; padding:8px;">
-        <div class="uesrpg-row" style="display:flex; gap:10px; align-items:end; justify-content:center; flex-wrap:wrap;">
-          ${styleBlock}
-          <div style="display:flex; flex-direction:column; gap:4px;">
-            <div class="mini">Modifier</div>
-            <input name="modifier" type="number" value="0" style="width:110px;">
-          </div>
-        </div>
-
-        <div class="uesrpg-row" style="display:flex; gap:14px; align-items:center; justify-content:center; flex-wrap:wrap;">
-          <label style="display:flex; align-items:center; gap:8px; margin:0;">
-            <input name="rollDamage" type="checkbox" checked>
-            <span>Roll Damage</span>
-          </label>
-
-          <div style="display:flex; align-items:center; gap:8px;">
-            <span class="mini">Weapon</span>
-            <select name="weaponId" style="min-width:240px;">
-              ${weaponOptions}
-            </select>
-          </div>
-        </div>
-
-        <div class="uesrpg-row" style="display:flex; gap:14px; align-items:center; justify-content:center; flex-wrap:wrap;">
-          <label style="display:flex; align-items:center; gap:8px; margin:0;">
-            <input name="targetSpecific" type="checkbox">
-            <span>Target specific part</span>
-          </label>
-
-          <div style="display:flex; align-items:center; gap:8px;">
-            <span class="mini">Part</span>
-            <select name="targetLocKey" style="min-width:180px;">
-              ${locOptions}
-            </select>
-          </div>
-        </div>
-      </div>
-    </form>
-  `;
-
-  const formData = await new Promise((resolve) => {
-    let resolved = false;
-    const dlg = new CombatRollDialogUX({
-      window: { title: "Combat Roll" },
-      content: dialogContent,
-      modal: true,
-      rejectClose: false,
-      buttons: [
-        { action: "roll", label: "Roll", default: true, callback: () => dlg.getFormData() }
-      ],
-      submit: (result) => {
-        resolved = true;
-        resolve(result ?? null);
-      }
-    });
-
-    const oldClose = dlg.close?.bind(dlg);
-    dlg.close = async (...args) => {
-      if (!resolved) resolve(null);
-      return oldClose ? oldClose(...args) : undefined;
-    };
-
-    dlg.render({ force: true });
-  });
-
-  // Closed dialog => no rolls, no chat
-  if (!formData) return;
-
-  if (formData.targetSpecific) await actor.setFlag(SYSFLAG_SCOPE, LAST_LOC_FLAG, formData.targetLocKey);
-
-  // ---- Target number --------------------------------------------------------
-
-  const modifier = Number(formData.modifier) || 0;
-  const fatiguePenalty = Number(get(actor, "system.fatigue.penalty", 0)) || 0;
-  const encPenalty = Number(get(actor, "system.carry_rating.penalty", 0)) || 0;
-  const wounded = !!get(actor, "system.wounded", false);
-  const woundPenalty = Number(get(actor, "system.woundPenalty", 0)) || 0;
-
-  const ln = get(actor, "system.lucky_numbers", {}) ?? {};
-  const un = get(actor, "system.unlucky_numbers", {}) ?? {};
-  const luckyArr = Object.values(ln).map(Number).filter(Number.isFinite);
-  const unluckyArr = Object.values(un).map(Number).filter(Number.isFinite);
-  const isLuckyNumber = (n) => luckyArr.includes(Number(n));
-  const isUnluckyNumber = (n) => unluckyArr.includes(Number(n));
-
-  const hasStyle = hasStyles && formData.styleId && formData.styleId !== "__npc__";
-  let baseTarget = 0;
-  let modeName = "";
-  let iconHTML = "";
-  let npcBaseCombat = null;
-
-  if (hasStyle) {
-    const style = actor.items.get(formData.styleId);
-    if (!style) return ui.notifications.warn("Combat Style not found.");
-    baseTarget = Number(get(style, "system.value", get(style, "data.data.value", 0))) || 0;
-    baseTarget += wounded ? woundPenalty : 0;
-    modeName = style.name;
-    iconHTML = style.img
-      ? `<img src="${style.img}" height="20" width="20" style="margin-right:6px; vertical-align:-4px;">`
-      : "";
-  } else {
-    npcBaseCombat = get(actor, "system.professionsWound.combat", null);
-    baseTarget = (npcBaseCombat == null) ? 50 : (Number(npcBaseCombat) || 0);
-    modeName = "Combat";
-  }
-
-  const targetNum = baseTarget + modifier + fatiguePenalty + encPenalty;
-
-  // ---- Attack roll ----------------------------------------------------------
-
-  const combatRoll = await evalRoll("1d100");
-  const total = Number(combatRoll.total);
-  const normalSuccess = total <= targetNum;
-
-  const unlucky = isUnluckyNumber(total);
-  const lucky = isLuckyNumber(total);
-  const double = (total % 11 === 0);
-
-  const isCriticalFailure = unlucky || (!lucky && double && !normalSuccess);
-  const isCriticalSuccess = lucky || (!unlucky && double && normalSuccess);
-
-  const countsAsHit = (normalSuccess && !unlucky) || lucky;
-
-  // Degrees
-  const rollTens = Math.floor(total / 10);
-  const tnTensBonus = (targetNum > 100) ? Math.floor(targetNum / 10) : 0;
-
-  let degreesText = "";
-  if (countsAsHit) {
-    const dos = Math.max(1, rollTens) + tnTensBonus;
-    degreesText = `DoS: ${dos}`;
-  } else {
-    const diff = Math.max(0, total - targetNum);
-    const dof = Math.max(1, 1 + Math.floor(diff / 10));
-    degreesText = `DoF: ${dof}`;
-  }
-
-  const margin = targetNum - total;
-
-  // Weapon info for flavor
-  const wpn = formData.weaponId ? actor.items.get(formData.weaponId) : null;
-  const weaponName = wpn?.name ?? "";
-  const qualitiesList = parseQualitiesPlain(get(wpn, "system.qualities", get(wpn, "data.data.qualities", "")) ?? "");
-  const weapon2H = !!get(wpn, "system.weapon2H", get(wpn, "data.data.weapon2H", false));
-  const dmg1 = get(wpn, "system.damage", get(wpn, "data.data.damage"));
-  const dmg2 = get(wpn, "system.damage2", get(wpn, "data.data.damage2"));
-  const dmgFormula = (weapon2H && dmg2) ? dmg2 : dmg1;
-  const weaponTypeFromItem = get(wpn, "system.damageType", null);
-  const defaultType = (weaponTypeFromItem ?? "physical").toString().toLowerCase();
-
-  let outcomeHTML = "";
-  if (unlucky) outcomeHTML = `<span style="color: rgb(168, 5, 5);"><b>UNLUCKY NUMBER!</b></span>`;
-  else if (lucky) outcomeHTML = `<span style="color:green;"><b>LUCKY NUMBER!</b></span>`;
-  else if (countsAsHit) outcomeHTML = `<span style="color:green;"><b>SUCCESS!</b></span>`;
-  else outcomeHTML = `<span style="color: rgb(168, 5, 5);"><b>FAILURE!</b></span>`;
-
-  const critTag = isCriticalSuccess
-    ? `<span style="margin-left:8px; color: rgba(120,0,0,.95); font-weight:800;">CRITICAL SUCCESS</span>`
-    : isCriticalFailure
-      ? `<span style="margin-left:8px; color: rgba(120,0,0,.95); font-weight:800;">CRITICAL FAILURE</span>`
-      : "";
-
-  const flavorParts = [`Modifier: ${modifier}`];
-  if (weaponName) flavorParts.push(`Weapon: ${weaponName}`);
-  if (npcBaseCombat != null) flavorParts.push(`Base: ${Number(npcBaseCombat) || 0}`);
-  if (fatiguePenalty) flavorParts.push(`Fatigue: ${fatiguePenalty}`);
-  if (encPenalty) flavorParts.push(`Enc: ${encPenalty}`);
-  if (wounded && woundPenalty) flavorParts.push(`Wound: ${woundPenalty}`);
-  flavorParts.push(`Margin: ${margin >= 0 ? "+" : ""}${margin}`);
-  if (qualitiesList.length) flavorParts.push(`Qualities: ${qualitiesList.join(", ")}`);
-  const flavor = flavorParts.join(" | ");
-
-  // On miss: no hit location / no damage rolls
-  let hitRoll = null;
-  let hitLocKey = null;
-  let hitLocTextHuman = null;
-  let dmgRoll = null;
-
-  if (countsAsHit) {
-    if (formData.targetSpecific) {
-      hitLocKey = formData.targetLocKey;
-      hitLocTextHuman = locText(hitLocKey);
-    } else {
-      hitRoll = await evalRoll("1d10");
-      const loc = hitLocFromD10(hitRoll.total);
-      hitLocKey = loc.key;
-      hitLocTextHuman = loc.text;
-    }
-
-    if (formData.rollDamage) {
-      if (!dmgFormula) return ui.notifications.warn("Roll Damage is enabled, but no weapon damage formula was found.");
-      dmgRoll = await evalRoll(dmgFormula);
-    }
-  }
-
-  const combatInline = await toInline(combatRoll);
-  const hitInline = !countsAsHit
-    ? `<span style="opacity:.75;">—</span>`
-    : (formData.targetSpecific ? `<span class="inline-roll inline-result">—</span>` : await toInline(hitRoll));
-  const dmgInline = dmgRoll ? await toInline(dmgRoll) : "";
-  const dmgTotal = dmgRoll ? Number(dmgRoll.total || 0) : 0;
-
-  const showControls = game.user?.isGM === true;
-  const damageControls = (countsAsHit && dmgRoll && showControls) ? `
-    <hr style="margin:10px 0; opacity:.25;">
-    <div style="margin:6px 0; text-align:center;">
-      <div style="font-weight:700; margin-bottom:4px;">Damage Type</div>
-      <select data-dmg-type
-        style="height:26px; min-width:140px; padding:0 8px; border-radius:999px;
-               background: rgba(255,255,255,0.35); border: 1px solid rgba(80, 60, 20, 0.35);">
-        ${["physical","magic","fire","frost","shock","poison","shadow"].map(t =>
-          `<option value="${t}" ${t===defaultType?"selected":""}>${t.toUpperCase()}</option>`
-        ).join("")}
-      </select>
-    </div>
-    <div style="margin:12px 0 0 0; text-align:center;">
-      <div style="font-weight:700; margin-bottom:6px;">Apply Damage</div>
-      <button type="button" data-action="apply"
-        style="height:30px; padding:0 14px; border-radius:999px;
-               border:1px solid rgba(0,0,0,.25); background: rgba(255,255,255,0.25); cursor:pointer;">
-        Apply
-      </button>
-    </div>
-    <div style="display:none"
-      data-payload
-      data-hitlockey="${escapeHTML(String(hitLocKey))}"
-      data-hitloctext="${escapeHTML(String(hitLocTextHuman))}"
-      data-raw="${escapeHTML(String(dmgTotal))}"
-      data-crit="${isCriticalSuccess ? "1" : "0"}">
-    </div>
-  ` : "";
-
-  const contentMsg = `
-    <div>
-      <h2 style="font-size: large; margin: 0 0 6px 0;">
-        ${iconHTML}${escapeHTML(modeName)}
-      </h2>
-      <p style="margin:4px 0;"><b>Target:</b> ${targetNum}</p>
-      <p style="margin:4px 0;"><b>Result:</b> ${combatInline} ${critTag}</p>
-      <p style="margin:4px 0;"><b>${degreesText}</b></p>
-
-      <p style="margin:4px 0;">
-        <b>Hit Location:</b> ${hitInline}
-        ${countsAsHit ? `<span style="opacity:.85">(${escapeHTML(hitLocTextHuman)})</span>` : `<span style="opacity:.85">(miss)</span>`}
-      </p>
-
-      ${countsAsHit && dmgRoll ? `<p style="margin:4px 0;"><b>Damage:</b> ${dmgInline} <span style="opacity:.85">(${escapeHTML(String(dmgFormula))})</span></p>` : ""}
-
-      <p style="margin:10px 0 0 0; font-size: 130%;">${outcomeHTML}</p>
-      ${damageControls}
-    </div>
-  `;
-
-  const msg = await ChatMessage.create({
-    speaker: ChatMessage.getSpeaker({ token: tok.document }),
-    flavor,
-    content: contentMsg
-  });
-
-  if (!game.user?.isGM) return;
-  if (!(countsAsHit && dmgRoll)) return;
-
-  Hooks.once("renderChatMessageHTML", (message, htmlEl) => {
-    if (message.id !== msg.id) return;
-
-    const root = htmlEl;
-    const payloadEl = root.querySelector("[data-payload]");
-    const btn = root.querySelector('button[data-action="apply"]');
-    const sel = root.querySelector("select[data-dmg-type]");
-    if (!payloadEl || !btn || !sel) return;
-
-    const setAppliedUI = () => {
-      btn.disabled = true;
-      btn.textContent = "Applied";
-      btn.style.opacity = "0.55";
-      btn.style.cursor = "default";
-      sel.disabled = true;
-      sel.style.opacity = "0.70";
-    };
-
-    const onApply = async () => {
-      if (btn.disabled) return;
-      setAppliedUI();
-
-      const targets = getTargets();
-      if (!targets.length) return;
-
-      const hitLocKey = (payloadEl.dataset.hitlockey || "body").toString();
-      const hitLocText = (payloadEl.dataset.hitloctext || "Body").toString();
-      const raw = Number(payloadEl.dataset.raw || 0) || 0;
-      const dmgType = (sel.value || "physical").toLowerCase();
-      const crit = payloadEl.dataset.crit === "1";
-
-      for (const tActor of targets) {
-        const hpBefore = Number(get(tActor, "system.hp.value", NaN));
-        let applied = raw;
-
-        const fn = tActor?.applyLocationDamage;
-        if (typeof fn === "function") {
-          try {
-            await fn.call(tActor, { raw, type: dmgType, locKey: hitLocKey, mitigated: true });
-            const hpAfterTmp = Number(get(tActor, "system.hp.value", NaN));
-            if (Number.isFinite(hpBefore) && Number.isFinite(hpAfterTmp) && hpAfterTmp <= hpBefore) {
-              applied = hpBefore - hpAfterTmp;
-            }
-          } catch (e) {
-            console.error(e);
+  
+      const itemData = {
+        name,
+        type: "trait",
+        img: DEFAULT_WOUND_ICON,
+        system: { description: descriptionHTML },
+        flags: {
+          [SYSFLAG_SCOPE]: {
+            kind: "wound",
+            attacker: attackerName,
+            severity: severityLabel,
+            locKey: hitLocKey,
+            locText: hitLocTextHuman,
+            raw,
+            applied,
+            damageType: typeLabel,
+            wt,
+            critical: !!isCrit,
+            ts: Date.now()
           }
-        } else {
-          const m = mitigateDamageRAW_LocationOnly(tActor, hitLocKey, dmgType, raw);
-          const res = await applyHpDamage(tActor, m.final);
-          applied = res?.applied ?? m.final;
         }
-
-        const hpAfter = Number(get(tActor, "system.hp.value", NaN));
-
-        await postDamageCardGM({
-          attackerName: actor.name,
-          targetActor: tActor,
-          targetName: tActor.name,
+      };
+  
+      const created = await targetActor.createEmbeddedDocuments("Item", [itemData]);
+      return created?.[0] ?? null;
+    };
+  
+    const postDamageCardGM = async ({
+      attackerName, targetActor, targetName, hitLocKey, hitLocTextHuman,
+      raw, applied, dmgType, hpBefore, hpAfter, isCriticalSuccess
+    }) => {
+      const typeLabel = (dmgType || "physical").toLowerCase();
+      const wt = getWoundThreshold(targetActor);
+  
+      const thresholdTriggered = (wt != null) ? (Number(applied) >= Number(wt)) : false;
+      const woundTriggered = thresholdTriggered || !!isCriticalSuccess;
+  
+      let sev = (wt != null && thresholdTriggered) ? computeWoundSeverity(Number(applied), Number(wt)) : null;
+      if (!sev && woundTriggered) sev = { label: "Minor", rank: 1 };
+  
+      // Create wound trait ONLY here
+      let woundTrait = null;
+      if (woundTriggered) {
+        woundTrait = await createWoundTraitItem(targetActor, {
+          attackerName,
+          severityLabel: sev.label,
           hitLocKey,
-          hitLocTextHuman: hitLocText,
+          hitLocTextHuman,
           raw,
           applied,
-          dmgType,
-          hpBefore: Number.isFinite(hpBefore) ? hpBefore : NaN,
-          hpAfter: Number.isFinite(hpAfter) ? hpAfter : NaN,
-          isCriticalSuccess: crit
+          typeLabel,
+          wt,
+          isCrit: !!isCriticalSuccess
         });
       }
+  
+      const sevColor = (sev?.rank ?? 0) >= 3
+        ? "rgba(120,0,0,0.95)"
+        : (sev?.rank ?? 0) === 2
+          ? "rgba(150,60,0,0.95)"
+          : "rgba(0,0,0,0.78)";
+  
+      const hpLine = (Number.isFinite(hpBefore) && Number.isFinite(hpAfter))
+        ? `<div style="margin-top:6px; opacity:.88;"><b>HP:</b> ${hpBefore} → ${hpAfter}</div>`
+        : "";
+  
+      const wtLine = (wt != null)
+        ? `<div style="margin-top:6px; opacity:.88;"><b>Wound Threshold:</b> ${wt}</div>`
+        : "";
+  
+      const traitLine = woundTrait
+        ? `<div style="margin-top:6px; opacity:.85; font-size:13px;"><b>Wound trait:</b> ${escapeHTML(woundTrait.name)}</div>`
+        : "";
+  
+      const content = `
+        <div style="font-size:14px; line-height:1.35;">
+          <div style="font-weight:600; font-size:15px; margin:0 0 8px 0; opacity:.82;">Damage Applied</div>
+          <div style="margin:4px 0;"><b>${escapeHTML(attackerName)}</b> → <b>${escapeHTML(targetName)}</b></div>
+          <div style="margin:4px 0;"><b>Location:</b> ${escapeHTML(hitLocTextHuman)}</div>
+  
+          <div style="margin-top:8px; font-weight:800; font-size:17px; color:${sevColor};">
+            ${applied}/${raw} ${escapeHTML(typeLabel)} damage
+            ${woundTriggered ? `<span style="margin-left:10px; font-weight:800;">${escapeHTML(sev.label)}${isCriticalSuccess ? " (Critical)" : ""}</span>` : ""}
+          </div>
+  
+          ${wtLine}
+          ${hpLine}
+          ${traitLine}
+        </div>
+      `;
+  
+      await ChatMessage.create({
+        speaker: ChatMessage.getSpeaker({ token: tok.document }),
+        content,
+        whisper: GM_WHISPER(),
+        blind: true
+      });
     };
-
-    btn.addEventListener("click", onApply);
-  });
-
-})();
+  
+    // ---- Dialog ---------------------------------------------------------------
+  
+    const combatStyles = actor.items.filter(i => i.type === "combatStyle").sort((a, b) => a.name.localeCompare(b.name));
+    const weapons = actor.items.filter(i => i.type === "weapon").sort((a, b) => a.name.localeCompare(b.name));
+    const hasStyles = combatStyles.length > 0;
+    const parchmentTextureURL = "systems/uesrpg-3ev4/images/parchment5.jpg";
+    const lastLoc = (await actor.getFlag(SYSFLAG_SCOPE, LAST_LOC_FLAG)) ?? "body";
+    const getPathVal = (it, p1, p2, fb = 0) => Number(get(it, p1, get(it, p2, fb))) || 0;
+  
+    class CombatRollDialogUX extends foundry.applications.api.DialogV2 {
+      _onRender(...args) {
+        super._onRender(...args);
+        const root = this.element;
+        if (!root) return;
+  
+        const scopeAttr = `data-uesrpg-parchment`;
+        root.setAttribute(scopeAttr, "1");
+  
+        const style = document.createElement("style");
+        style.dataset.uesrpgParchment = "1";
+        style.textContent = `
+          [${scopeAttr}="1"] .window-content {
+            background: url("${parchmentTextureURL}");
+            background-size: cover;
+            background-repeat: no-repeat;
+            border: 1px solid rgba(80, 60, 20, 0.35);
+            border-radius: 10px;
+            box-shadow: inset 0 0 0 1px rgba(255,255,255,.35);
+          }
+          [${scopeAttr}="1"] form { font-family: "Signika","Palatino Linotype","Book Antiqua",serif; }
+          [${scopeAttr}="1"] input[type="number"], [${scopeAttr}="1"] select, [${scopeAttr}="1"] input[type="text"] {
+            background: rgba(255,255,255,.35);
+            border: 1px solid rgba(80,60,20,.35);
+            border-radius: 8px;
+            height: 28px;
+          }
+          [${scopeAttr}="1"] .uesrpg-row {
+            background: rgba(255,255,255,.18);
+            border: 1px solid rgba(80,60,20,.18);
+            border-radius: 10px;
+            padding: 10px;
+          }
+          [${scopeAttr}="1"] .dialog-buttons button { border-radius: 10px; }
+          [${scopeAttr}="1"] .mini { font-size: 11px; opacity: .85; }
+  
+          /* --- Contrast fix --- */
+          [${scopeAttr}="1"] .window-title,
+          [${scopeAttr}="1"] form,
+          [${scopeAttr}="1"] label,
+          [${scopeAttr}="1"] .mini,
+          [${scopeAttr}="1"] span,
+          [${scopeAttr}="1"] p,
+          [${scopeAttr}="1"] h1,
+          [${scopeAttr}="1"] h2,
+          [${scopeAttr}="1"] h3 {
+            color: #111 !important;
+            opacity: 1 !important;
+          }
+  
+          [${scopeAttr}="1"] input,
+          [${scopeAttr}="1"] select,
+          [${scopeAttr}="1"] textarea {
+            color: #111 !important;
+            opacity: 1 !important;
+          }
+  
+          [${scopeAttr}="1"] input::placeholder,
+          [${scopeAttr}="1"] textarea::placeholder {
+            color: rgba(17, 17, 17, 0.65) !important;
+            opacity: 1 !important;
+          }
+  
+          [${scopeAttr}="1"] input:disabled,
+          [${scopeAttr}="1"] select:disabled,
+          [${scopeAttr}="1"] textarea:disabled {
+            color: rgba(17, 17, 17, 0.75) !important;
+            -webkit-text-fill-color: rgba(17, 17, 17, 0.75) !important;
+            opacity: 1 !important;
+          }
+  
+          [${scopeAttr}="1"] option { color: #111 !important; }
+        `;
+        root.appendChild(style);
+  
+        const cb = root.querySelector('input[name="targetSpecific"]');
+        const sel = root.querySelector('select[name="targetLocKey"]');
+        const sync = () => { if (sel) sel.disabled = !cb?.checked; };
+        sync();
+        cb?.addEventListener("change", sync);
+      }
+  
+      getFormData() {
+        const f = this.element?.querySelector("form");
+        if (!f) return null;
+        return {
+          styleId: f.elements.styleId?.value ?? "__npc__",
+          modifier: Number(f.elements.modifier?.value ?? 0),
+          rollDamage: !!f.elements.rollDamage?.checked,
+          weaponId: f.elements.weaponId?.value ?? "",
+          targetSpecific: !!f.elements.targetSpecific?.checked,
+          targetLocKey: f.elements.targetLocKey?.value ?? "body",
+        };
+      }
+    }
+  
+    const styleBlock = hasStyles ? `
+      <div style="display:flex; flex-direction:column; gap:4px; min-width:260px;">
+        <div class="mini">Style</div>
+        <select name="styleId">
+          ${combatStyles.map(s => {
+            const val = getPathVal(s, "system.value", "data.data.value", 0);
+            return `<option value="${s.id}">${escapeHTML(s.name)} - ${val}%</option>`;
+          }).join("")}
+        </select>
+      </div>
+    ` : `
+      <div style="display:flex; flex-direction:column; gap:4px; min-width:260px;">
+        <div class="mini">Mode</div>
+        <input type="text" value="NPC Combat (auto)" disabled>
+        <input type="hidden" name="styleId" value="__npc__">
+      </div>
+    `;
+  
+    const weaponOptions = `
+      <option value="">— Select —</option>
+      ${weapons.map(w => `<option value="${w.id}">${escapeHTML(w.name)}</option>`).join("")}
+    `;
+  
+    const locOptions = LOCATIONS.map(l =>
+      `<option value="${l.key}" ${l.key === lastLoc ? "selected" : ""}>${l.text}</option>`
+    ).join("");
+  
+    const dialogContent = `
+      <form>
+        <div style="display:flex; flex-direction:column; gap:10px; padding:8px;">
+          <div class="uesrpg-row" style="display:flex; gap:10px; align-items:end; justify-content:center; flex-wrap:wrap;">
+            ${styleBlock}
+            <div style="display:flex; flex-direction:column; gap:4px;">
+              <div class="mini">Modifier</div>
+              <input name="modifier" type="number" value="0" style="width:110px;">
+            </div>
+          </div>
+  
+          <div class="uesrpg-row" style="display:flex; gap:14px; align-items:center; justify-content:center; flex-wrap:wrap;">
+            <label style="display:flex; align-items:center; gap:8px; margin:0;">
+              <input name="rollDamage" type="checkbox" checked>
+              <span>Roll Damage</span>
+            </label>
+  
+            <div style="display:flex; align-items:center; gap:8px;">
+              <span class="mini">Weapon</span>
+              <select name="weaponId" style="min-width:240px;">
+                ${weaponOptions}
+              </select>
+            </div>
+          </div>
+  
+          <div class="uesrpg-row" style="display:flex; gap:14px; align-items:center; justify-content:center; flex-wrap:wrap;">
+            <label style="display:flex; align-items:center; gap:8px; margin:0;">
+              <input name="targetSpecific" type="checkbox">
+              <span>Target specific part</span>
+            </label>
+  
+            <div style="display:flex; align-items:center; gap:8px;">
+              <span class="mini">Part</span>
+              <select name="targetLocKey" style="min-width:180px;">
+                ${locOptions}
+              </select>
+            </div>
+          </div>
+        </div>
+      </form>
+    `;
+  
+    const formData = await new Promise((resolve) => {
+      let resolved = false;
+      const dlg = new CombatRollDialogUX({
+        window: { title: "Combat Roll" },
+        content: dialogContent,
+        modal: true,
+        rejectClose: false,
+        buttons: [
+          { action: "roll", label: "Roll", default: true, callback: () => dlg.getFormData() }
+        ],
+        submit: (result) => {
+          resolved = true;
+          resolve(result ?? null);
+        }
+      });
+  
+      const oldClose = dlg.close?.bind(dlg);
+      dlg.close = async (...args) => {
+        if (!resolved) resolve(null);
+        return oldClose ? oldClose(...args) : undefined;
+      };
+  
+      dlg.render({ force: true });
+    });
+  
+    // Closed dialog => no rolls, no chat
+    if (!formData) return;
+  
+    if (formData.targetSpecific) await actor.setFlag(SYSFLAG_SCOPE, LAST_LOC_FLAG, formData.targetLocKey);
+  
+    // ---- Target number --------------------------------------------------------
+  
+    const modifier = Number(formData.modifier) || 0;
+    const fatiguePenalty = Number(get(actor, "system.fatigue.penalty", 0)) || 0;
+    const encPenalty = Number(get(actor, "system.carry_rating.penalty", 0)) || 0;
+    const wounded = !!get(actor, "system.wounded", false);
+    const woundPenalty = Number(get(actor, "system.woundPenalty", 0)) || 0;
+  
+    const ln = get(actor, "system.lucky_numbers", {}) ?? {};
+    const un = get(actor, "system.unlucky_numbers", {}) ?? {};
+    const luckyArr = Object.values(ln).map(Number).filter(Number.isFinite);
+    const unluckyArr = Object.values(un).map(Number).filter(Number.isFinite);
+    const isLuckyNumber = (n) => luckyArr.includes(Number(n));
+    const isUnluckyNumber = (n) => unluckyArr.includes(Number(n));
+  
+    const hasStyle = hasStyles && formData.styleId && formData.styleId !== "__npc__";
+    let baseTarget = 0;
+    let modeName = "";
+    let iconHTML = "";
+    let npcBaseCombat = null;
+  
+    if (hasStyle) {
+      const style = actor.items.get(formData.styleId);
+      if (!style) return ui.notifications.warn("Combat Style not found.");
+      baseTarget = Number(get(style, "system.value", get(style, "data.data.value", 0))) || 0;
+      baseTarget += wounded ? woundPenalty : 0;
+      modeName = style.name;
+      iconHTML = style.img
+        ? `<img src="${style.img}" height="20" width="20" style="margin-right:6px; vertical-align:-4px;">`
+        : "";
+    } else {
+      npcBaseCombat = get(actor, "system.professionsWound.combat", null);
+      baseTarget = (npcBaseCombat == null) ? 50 : (Number(npcBaseCombat) || 0);
+      modeName = "Combat";
+    }
+  
+    const targetNum = baseTarget + modifier + fatiguePenalty + encPenalty;
+  
+    // ---- Attack roll ----------------------------------------------------------
+  
+    const combatRoll = await evalRoll("1d100");
+    const total = Number(combatRoll.total);
+    const normalSuccess = total <= targetNum;
+  
+    const unlucky = isUnluckyNumber(total);
+    const lucky = isLuckyNumber(total);
+    const double = (total % 11 === 0);
+  
+    const isCriticalFailure = unlucky || (!lucky && double && !normalSuccess);
+    const isCriticalSuccess = lucky || (!unlucky && double && normalSuccess);
+  
+    const countsAsHit = (normalSuccess && !unlucky) || lucky;
+  
+    // Degrees
+    const rollTens = Math.floor(total / 10);
+    const tnTensBonus = (targetNum > 100) ? Math.floor(targetNum / 10) : 0;
+  
+    let degreesText = "";
+    if (countsAsHit) {
+      const dos = Math.max(1, rollTens) + tnTensBonus;
+      degreesText = `DoS: ${dos}`;
+    } else {
+      const diff = Math.max(0, total - targetNum);
+      const dof = Math.max(1, 1 + Math.floor(diff / 10));
+      degreesText = `DoF: ${dof}`;
+    }
+  
+    const margin = targetNum - total;
+  
+    // Weapon info for flavor
+    const wpn = formData.weaponId ? actor.items.get(formData.weaponId) : null;
+    const weaponName = wpn?.name ?? "";
+    const qualitiesList = parseQualitiesPlain(get(wpn, "system.qualities", get(wpn, "data.data.qualities", "")) ?? "");
+    const weapon2H = !!get(wpn, "system.weapon2H", get(wpn, "data.data.weapon2H", false));
+    const dmg1 = get(wpn, "system.damage", get(wpn, "data.data.damage"));
+    const dmg2 = get(wpn, "system.damage2", get(wpn, "data.data.damage2"));
+    const dmgFormula = (weapon2H && dmg2) ? dmg2 : dmg1;
+    const weaponTypeFromItem = get(wpn, "system.damageType", null);
+    const defaultType = (weaponTypeFromItem ?? "physical").toString().toLowerCase();
+  
+    let outcomeHTML = "";
+    if (unlucky) outcomeHTML = `<span style="color: rgb(168, 5, 5);"><b>UNLUCKY NUMBER!</b></span>`;
+    else if (lucky) outcomeHTML = `<span style="color:green;"><b>LUCKY NUMBER!</b></span>`;
+    else if (countsAsHit) outcomeHTML = `<span style="color:green;"><b>SUCCESS!</b></span>`;
+    else outcomeHTML = `<span style="color: rgb(168, 5, 5);"><b>FAILURE!</b></span>`;
+  
+    const critTag = isCriticalSuccess
+      ? `<span style="margin-left:8px; color: rgba(120,0,0,.95); font-weight:800;">CRITICAL SUCCESS</span>`
+      : isCriticalFailure
+        ? `<span style="margin-left:8px; color: rgba(120,0,0,.95); font-weight:800;">CRITICAL FAILURE</span>`
+        : "";
+  
+    const flavorParts = [`Modifier: ${modifier}`];
+    if (weaponName) flavorParts.push(`Weapon: ${weaponName}`);
+    if (npcBaseCombat != null) flavorParts.push(`Base: ${Number(npcBaseCombat) || 0}`);
+    if (fatiguePenalty) flavorParts.push(`Fatigue: ${fatiguePenalty}`);
+    if (encPenalty) flavorParts.push(`Enc: ${encPenalty}`);
+    if (wounded && woundPenalty) flavorParts.push(`Wound: ${woundPenalty}`);
+    flavorParts.push(`Margin: ${margin >= 0 ? "+" : ""}${margin}`);
+    if (qualitiesList.length) flavorParts.push(`Qualities: ${qualitiesList.join(", ")}`);
+    const flavor = flavorParts.join(" | ");
+  
+    // On miss: no hit location / no damage rolls
+    let hitRoll = null;
+    let hitLocKey = null;
+    let hitLocTextHuman = null;
+    let dmgRoll = null;
+  
+    if (countsAsHit) {
+      if (formData.targetSpecific) {
+        hitLocKey = formData.targetLocKey;
+        hitLocTextHuman = locText(hitLocKey);
+      } else {
+        hitRoll = await evalRoll("1d10");
+        const loc = hitLocFromD10(hitRoll.total);
+        hitLocKey = loc.key;
+        hitLocTextHuman = loc.text;
+      }
+  
+      if (formData.rollDamage) {
+        if (!dmgFormula) return ui.notifications.warn("Roll Damage is enabled, but no weapon damage formula was found.");
+        dmgRoll = await evalRoll(dmgFormula);
+      }
+    }
+  
+    const combatInline = await toInline(combatRoll);
+    const hitInline = !countsAsHit
+      ? `<span style="opacity:.75;">—</span>`
+      : (formData.targetSpecific ? `<span class="inline-roll inline-result">—</span>` : await toInline(hitRoll));
+    const dmgInline = dmgRoll ? await toInline(dmgRoll) : "";
+    const dmgTotal = dmgRoll ? Number(dmgRoll.total || 0) : 0;
+  
+    const showControls = game.user?.isGM === true;
+    const damageControls = (countsAsHit && dmgRoll && showControls) ? `
+      <hr style="margin:10px 0; opacity:.25;">
+      <div style="margin:6px 0; text-align:center;">
+        <div style="font-weight:700; margin-bottom:4px;">Damage Type</div>
+        <select data-dmg-type
+          style="height:26px; min-width:140px; padding:0 8px; border-radius:999px;
+                 background: rgba(255,255,255,0.35); border: 1px solid rgba(80, 60, 20, 0.35);">
+          ${["physical","magic","fire","frost","shock","poison","shadow"].map(t =>
+            `<option value="${t}" ${t===defaultType?"selected":""}>${t.toUpperCase()}</option>`
+          ).join("")}
+        </select>
+      </div>
+      <div style="margin:12px 0 0 0; text-align:center;">
+        <div style="font-weight:700; margin-bottom:6px;">Apply Damage</div>
+        <button type="button" data-action="apply"
+          style="height:30px; padding:0 14px; border-radius:999px;
+                 border:1px solid rgba(0,0,0,.25); background: rgba(255,255,255,0.25); cursor:pointer;">
+          Apply
+        </button>
+      </div>
+      <div style="display:none"
+        data-payload
+        data-hitlockey="${escapeHTML(String(hitLocKey))}"
+        data-hitloctext="${escapeHTML(String(hitLocTextHuman))}"
+        data-raw="${escapeHTML(String(dmgTotal))}"
+        data-crit="${isCriticalSuccess ? "1" : "0"}">
+      </div>
+    ` : "";
+  
+    const contentMsg = `
+      <div>
+        <h2 style="font-size: large; margin: 0 0 6px 0;">
+          ${iconHTML}${escapeHTML(modeName)}
+        </h2>
+        <p style="margin:4px 0;"><b>Target:</b> ${targetNum}</p>
+        <p style="margin:4px 0;"><b>Result:</b> ${combatInline} ${critTag}</p>
+        <p style="margin:4px 0;"><b>${degreesText}</b></p>
+  
+        <p style="margin:4px 0;">
+          <b>Hit Location:</b> ${hitInline}
+          ${countsAsHit ? `<span style="opacity:.85">(${escapeHTML(hitLocTextHuman)})</span>` : `<span style="opacity:.85">(miss)</span>`}
+        </p>
+  
+        ${countsAsHit && dmgRoll ? `<p style="margin:4px 0;"><b>Damage:</b> ${dmgInline} <span style="opacity:.85">(${escapeHTML(String(dmgFormula))})</span></p>` : ""}
+  
+        <p style="margin:10px 0 0 0; font-size: 130%;">${outcomeHTML}</p>
+        ${damageControls}
+      </div>
+    `;
+  
+    const msg = await ChatMessage.create({
+      speaker: ChatMessage.getSpeaker({ token: tok.document }),
+      flavor,
+      content: contentMsg
+    });
+  
+    if (!game.user?.isGM) return;
+    if (!(countsAsHit && dmgRoll)) return;
+  
+    Hooks.once("renderChatMessageHTML", (message, htmlEl) => {
+      if (message.id !== msg.id) return;
+  
+      const root = htmlEl;
+      const payloadEl = root.querySelector("[data-payload]");
+      const btn = root.querySelector('button[data-action="apply"]');
+      const sel = root.querySelector("select[data-dmg-type]");
+      if (!payloadEl || !btn || !sel) return;
+  
+      const setAppliedUI = () => {
+        btn.disabled = true;
+        btn.textContent = "Applied";
+        btn.style.opacity = "0.55";
+        btn.style.cursor = "default";
+        sel.disabled = true;
+        sel.style.opacity = "0.70";
+      };
+  
+      const onApply = async () => {
+        if (btn.disabled) return;
+        setAppliedUI();
+  
+        const targets = getTargets();
+        if (!targets.length) return;
+  
+        const hitLocKey = (payloadEl.dataset.hitlockey || "body").toString();
+        const hitLocText = (payloadEl.dataset.hitloctext || "Body").toString();
+        const raw = Number(payloadEl.dataset.raw || 0) || 0;
+        const dmgType = (sel.value || "physical").toLowerCase();
+        const crit = payloadEl.dataset.crit === "1";
+  
+        for (const tActor of targets) {
+          const hpBefore = Number(get(tActor, "system.hp.value", NaN));
+          let applied = raw;
+  
+          const fn = tActor?.applyLocationDamage;
+          if (typeof fn === "function") {
+            try {
+              await fn.call(tActor, { raw, type: dmgType, locKey: hitLocKey, mitigated: true });
+              const hpAfterTmp = Number(get(tActor, "system.hp.value", NaN));
+              if (Number.isFinite(hpBefore) && Number.isFinite(hpAfterTmp) && hpAfterTmp <= hpBefore) {
+                applied = hpBefore - hpAfterTmp;
+              }
+            } catch (e) {
+              console.error(e);
+            }
+          } else {
+            const m = mitigateDamageRAW_LocationOnly(tActor, hitLocKey, dmgType, raw);
+            const res = await applyHpDamage(tActor, m.final);
+            applied = res?.applied ?? m.final;
+          }
+  
+          const hpAfter = Number(get(tActor, "system.hp.value", NaN));
+  
+          await postDamageCardGM({
+            attackerName: actor.name,
+            targetActor: tActor,
+            targetName: tActor.name,
+            hitLocKey,
+            hitLocTextHuman: hitLocText,
+            raw,
+            applied,
+            dmgType,
+            hpBefore: Number.isFinite(hpBefore) ? hpBefore : NaN,
+            hpAfter: Number.isFinite(hpAfter) ? hpAfter : NaN,
+            isCriticalSuccess: crit
+          });
+        }
+      };
+  
+      btn.addEventListener("click", onApply);
+    });
+  
+  })();
+folder: null
+sort: 0
+flags:
+  core:
+    sourceId: Macro.55aBHMLuPB1SKwFG
+_stats:
+  coreVersion: '12.331'
+  systemId: null
+  systemVersion: null
+  createdTime: null
+  modifiedTime: null
+  lastModifiedBy: null
+  compendiumSource: null
+  duplicateSource: null
+ownership:
+  default: 0
+_key: '!macros!55aBHMLuPB1SKwFG'
