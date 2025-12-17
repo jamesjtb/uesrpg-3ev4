@@ -32,22 +32,24 @@ async function evalRoll(formula) {
   return r;
 }
 
-/**
- * Degrees of Success / Failure
- * PDF: DoS = 1 + tens digit of (TN - roll) when success. DoF = 1 + tens digit of (roll - TN) when failure.
- * If TN > 100, add the TN 10s digit to DoS.
- */
+// (automated-combat.js) around lines ~45–80
 function calcDegrees({ rollTotal, tn, success }) {
   const r = Number(rollTotal) || 0;
   const t = Number(tn) || 0;
-  const diff = success ? (t - r) : (r - t);
-  const tens = Math.floor(Math.max(0, diff) / 10);
-  let degrees = 1 + tens;
 
-  if (success && t > 100) {
-    degrees += Math.floor(t / 10); // “adds the 10s digit of their Target Number”
+  if (success) {
+    // RAW: DoS = tens digit of the roll (minimum 1)
+    const rollTens = Math.floor(r / 10);
+    const baseDoS = Math.max(1, rollTens);
+
+    // RAW: If TN > 100, add the 10s digit of TN to DoS
+    const tnTensBonus = (t > 100) ? Math.floor(t / 10) : 0;
+    return baseDoS + tnTensBonus;
   }
-  return degrees;
+
+  // RAW: DoF = 1 + tens digit of (roll - TN), minimum 1
+  const diff = Math.max(0, r - t);
+  return Math.max(1, 1 + Math.floor(diff / 10));
 }
 
 function hitLocFromOnesDigit(rollTotal) {
