@@ -7,6 +7,7 @@ import { merchantSheet } from "../sheets/merchant-sheet.js";
 import { SimpleItem } from "../entities/item.js";
 import { SimpleItemSheet } from "../sheets/item-sheet.js";
 import { SystemCombat } from "../entities/combat.js";
+import { registerSocketListeners } from "./socket-handler.js";
 
 async function registerSettings() {
   // Register system settings
@@ -163,5 +164,8 @@ export default async function initHandler() {
   Hooks.once("ready", () => {
     const fontFamily = game.settings.get("uesrpg-3ev4", "changeUiFont");
     applyFont(fontFamily);
+    
+    // Register socket listeners for opposed rolls
+    registerSocketListeners();
   });
 }

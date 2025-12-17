@@ -1,0 +1,137 @@
+<div class="uesrpg-opposed-roll complete {{#if (eq winner 'attacker')}}attacker-wins{{else if (eq winner 'defender')}}defender-wins{{else}}tie{{/if}}">
+  <div class="opposed-header">
+    <h3>
+      <img src="{{itemImg}}" alt="{{itemName}}" style="border: none; max-width: 32px; max-height: 32px; vertical-align: middle;" />
+      Opposed Roll Result - {{itemName}}
+    </h3>
+  </div>
+  
+  <div class="opposed-combatants">
+    <div class="combatant attacker {{#if (eq winner 'attacker')}}winner{{/if}}">
+      <img src="{{attackerImg}}" alt="{{attackerName}}" style="border: none; max-width: 48px; max-height: 48px;" />
+      <div class="combatant-info">
+        <strong>{{attackerName}}</strong>
+        <div class="roll-result">Roll: <span class="roll-value">{{attackerRoll}}</span></div>
+        {{#if (eq winner 'attacker')}}
+        <div class="winner-badge">WINNER</div>
+        {{/if}}
+      </div>
+    </div>
+    
+    <div class="vs-indicator">VS</div>
+    
+    <div class="combatant defender {{#if (eq winner 'defender')}}winner{{/if}}">
+      <img src="{{defenderImg}}" alt="{{defenderName}}" style="border: none; max-width: 48px; max-height: 48px;" />
+      <div class="combatant-info">
+        <strong>{{defenderName}}</strong>
+        <div class="roll-result">Roll: <span class="roll-value">{{defenderRoll}}</span></div>
+        {{#if (eq winner 'defender')}}
+        <div class="winner-badge">WINNER</div>
+        {{/if}}
+      </div>
+    </div>
+  </div>
+  
+  <div class="opposed-result">
+    {{#if (eq winner 'attacker')}}
+    <p><strong>{{attackerName}}</strong> wins the opposed roll!</p>
+    {{else if (eq winner 'defender')}}
+    <p><strong>{{defenderName}}</strong> successfully defended!</p>
+    {{else}}
+    <p>The opposed roll is a <strong>tie</strong>!</p>
+    {{/if}}
+    {{#if margin}}
+    <p class="margin">Margin: {{margin}}</p>
+    {{/if}}
+  </div>
+</div>
+
+<style>
+.uesrpg-opposed-roll.complete {
+  padding: 10px;
+  border: 2px solid #444;
+  border-radius: 5px;
+  background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
+}
+
+.uesrpg-opposed-roll.attacker-wins {
+  border-color: #4CAF50;
+}
+
+.uesrpg-opposed-roll.defender-wins {
+  border-color: #2196F3;
+}
+
+.uesrpg-opposed-roll.tie {
+  border-color: #9E9E9E;
+}
+
+.opposed-header h3 {
+  margin: 0 0 10px 0;
+  text-align: center;
+  color: #fff;
+}
+
+.opposed-combatants {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin: 15px 0;
+}
+
+.combatant {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex: 1;
+}
+
+.combatant img {
+  border-radius: 50%;
+}
+
+.combatant-info {
+  flex: 1;
+}
+
+.roll-value {
+  font-size: 1.2em;
+  font-weight: bold;
+  color: #fff;
+}
+
+.combatant.winner .roll-value {
+  color: #4CAF50;
+}
+
+.winner-badge {
+  color: #4CAF50;
+  font-weight: bold;
+  font-size: 0.9em;
+  margin-top: 5px;
+}
+
+.vs-indicator {
+  font-weight: bold;
+  font-size: 1.5em;
+  color: #fff;
+  margin: 0 10px;
+}
+
+.opposed-result {
+  text-align: center;
+  margin-top: 10px;
+  padding-top: 10px;
+  border-top: 1px solid #444;
+}
+
+.opposed-result p {
+  margin: 5px 0;
+  font-size: 1.1em;
+}
+
+.opposed-result .margin {
+  color: #aaa;
+  font-size: 0.95em;
+}
+</style>

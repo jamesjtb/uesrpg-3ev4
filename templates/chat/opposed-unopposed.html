@@ -1,0 +1,114 @@
+<div class="uesrpg-opposed-roll unopposed">
+  <div class="opposed-header">
+    <h3>
+      <img src="{{itemImg}}" alt="{{itemName}}" style="border: none; max-width: 32px; max-height: 32px; vertical-align: middle;" />
+      Unopposed Roll - {{itemName}}
+    </h3>
+  </div>
+  
+  <div class="opposed-combatants">
+    <div class="combatant attacker winner">
+      <img src="{{attackerImg}}" alt="{{attackerName}}" style="border: none; max-width: 48px; max-height: 48px;" />
+      <div class="combatant-info">
+        <strong>{{attackerName}}</strong>
+        <div class="roll-result">Roll: <span class="roll-value">{{attackerRoll}}</span></div>
+        <div class="winner-badge">WINS BY DEFAULT</div>
+      </div>
+    </div>
+    
+    <div class="vs-indicator">VS</div>
+    
+    <div class="combatant defender">
+      <img src="{{defenderImg}}" alt="{{defenderName}}" style="border: none; max-width: 48px; max-height: 48px;" />
+      <div class="combatant-info">
+        <strong>{{defenderName}}</strong>
+        <div class="no-defense">
+          <em>No defense</em>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <div class="opposed-result timeout">
+    <p><strong>{{defenderName}}</strong> did not respond in time.</p>
+    <p><strong>{{attackerName}}</strong> wins the opposed roll by default!</p>
+  </div>
+</div>
+
+<style>
+.uesrpg-opposed-roll.unopposed {
+  padding: 10px;
+  border: 2px solid #ff9800;
+  border-radius: 5px;
+  background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
+}
+
+.opposed-header h3 {
+  margin: 0 0 10px 0;
+  text-align: center;
+  color: #ff9800;
+}
+
+.opposed-combatants {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin: 15px 0;
+}
+
+.combatant {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex: 1;
+}
+
+.combatant img {
+  border-radius: 50%;
+}
+
+.combatant-info {
+  flex: 1;
+}
+
+.roll-value {
+  font-size: 1.2em;
+  font-weight: bold;
+  color: #fff;
+}
+
+.combatant.winner .roll-value {
+  color: #ff9800;
+}
+
+.winner-badge {
+  color: #ff9800;
+  font-weight: bold;
+  font-size: 0.9em;
+  margin-top: 5px;
+}
+
+.no-defense {
+  color: #999;
+  font-style: italic;
+}
+
+.vs-indicator {
+  font-weight: bold;
+  font-size: 1.5em;
+  color: #fff;
+  margin: 0 10px;
+}
+
+.opposed-result {
+  text-align: center;
+  margin-top: 10px;
+  padding-top: 10px;
+  border-top: 1px solid #444;
+}
+
+.opposed-result.timeout p {
+  margin: 5px 0;
+  color: #ff9800;
+}
+</style>

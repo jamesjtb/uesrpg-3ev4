@@ -12,6 +12,8 @@ import coreVariants from "./racemenu/data/core-variants.js";
 import { renderRaceCards } from "./racemenu/render-race-cards.js";
 import khajiitFurstocks from './racemenu/data/khajiit-furstocks.js';
 import expandedRaces from "./racemenu/data/expanded-races.js";
+import { OpposedRollHandler } from "../combat/opposed-handler.js";
+import { emitOpposedRollRequest } from "../handlers/socket-handler.js";
 
 export class SimpleActorSheet extends ActorSheet {
   /** @override */
@@ -1240,15 +1242,78 @@ export class SimpleActorSheet extends ActorSheet {
                 }`;
             }
 
-            await roll.toMessage({
-              async: false,
-              user: game.user.id,
-              speaker: ChatMessage.getSpeaker(),
-              roll: roll,
-              content: contentString,
-              flavor: `<div class="tag-container">${tags.join("")}</div>`,
-              rollMode: game.settings.get("core", "rollMode"),
-            });
+            // Check if this is a defending roll (actor has an opposed message flag)
+            const opposedMessageId = await OpposedRollHandler.getOpposedMessageId(this.actor);
+            
+            if (opposedMessageId) {
+              // This is a defending roll - link it to the opposed message
+              const opposedMessage = game.messages.get(opposedMessageId);
+              
+              if (opposedMessage) {
+                const chatMessage = await roll.toMessage({
+                  async: false,
+                  user: game.user.id,
+                  speaker: ChatMessage.getSpeaker(),
+                  roll: roll,
+                  content: contentString,
+                  flavor: `<div class="tag-container">${tags.join("")}</div>`,
+                  rollMode: game.settings.get("core", "rollMode"),
+                });
+                
+                // Retrieve the handler and link the defender's roll
+                const handler = await OpposedRollHandler.fromMessage(opposedMessage);
+                if (handler) {
+                  await handler.setDefender(chatMessage);
+                }
+              }
+            } else {
+              // Check if there are targeted tokens for opposed roll
+              const targets = Array.from(game.user.targets);
+              
+              if (targets.length > 0) {
+                // Create opposed roll for the first target
+                const targetToken = targets[0];
+                const targetActor = targetToken.actor;
+                
+                if (targetActor && targetActor.id !== this.actor.id) {
+                  // Create the opposed roll handler
+                  const handler = new OpposedRollHandler({
+                    attackerActor: this.actor,
+                    attackerRoll: roll,
+                    attackerItem: item,
+                    defenderActor: targetActor,
+                    defenderToken: targetToken
+                  });
+                  
+                  // Create the opposed message
+                  await handler.createOpposedMessage();
+                  
+                  // Emit socket event to notify the defender's client
+                  emitOpposedRollRequest({
+                    attackerActorId: this.actor.id,
+                    attackerName: this.actor.name,
+                    attackerRoll: roll.total,
+                    defenderActorId: targetActor.id,
+                    itemName: item.name,
+                    itemImg: item.img,
+                    messageId: handler.attackerMessage.id
+                  });
+                  
+                  return; // Don't create a separate message, the opposed handler did it
+                }
+              }
+              
+              // No targets or not an opposed roll - create normal message
+              await roll.toMessage({
+                async: false,
+                user: game.user.id,
+                speaker: ChatMessage.getSpeaker(),
+                roll: roll,
+                content: contentString,
+                flavor: `<div class="tag-container">${tags.join("")}</div>`,
+                rollMode: game.settings.get("core", "rollMode"),
+              });
+            }
           },
         },
         two: {
