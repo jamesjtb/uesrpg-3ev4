@@ -10,10 +10,9 @@ if (!tag) {
   process.exit(1);
 }
 
-// Validate tag format to prevent command injection
-// Only allow semantic version format with optional v prefix and RC/beta suffixes
-if (!/^v?\d+\.\d+\.\d+(-[a-zA-Z0-9.]+)?$/.test(tag)) {
-  console.error('Error: Invalid tag format. Expected semantic version format (e.g., v1.0.0, v1.0.0-RC.77)');
+// Basic validation to prevent command injection
+if (/[;&|`$()]/.test(tag)) {
+  console.error('Error: Invalid characters in tag');
   process.exit(1);
 }
 
