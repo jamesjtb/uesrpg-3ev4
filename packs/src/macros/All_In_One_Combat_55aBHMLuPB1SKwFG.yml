@@ -4,6 +4,7 @@ author: U7r9uXVolIFyJo7l
 img: icons/skills/melee/weapons-crossed-swords-yellow.webp
 scope: global
 command: >-
+
 (async () => {
   const tok = canvas?.tokens?.controlled?.[0] ?? token;
   if (!tok?.actor) return ui.notifications.warn("Select a token first.");
