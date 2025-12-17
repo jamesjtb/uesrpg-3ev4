@@ -16,11 +16,6 @@ jobs:
       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       tag: ${{ github.ref_name }}
     steps:
-      - name: create release
-        run:
-          echo "creating release for tag $tag" &&
-          gh release create "$tag" --repo="$GITHUB_REPOSITORY" --title="$tag" --generate-notes --prerelease
-
       - name: checkout repo
         uses: actions/checkout@v4
 
@@ -35,6 +30,21 @@ jobs:
 
       - name: create system bundle
         run: zip uesrpg-bundle_${{ github.ref_name }}.zip -r . -x .git/\* .github/\* automation/\* .gitignore node_modules/\* packs/src/\* .editorconfig .gitattributes package.json package-lock.json
+
+      - name: verify system bundle
+        run: node ./automation/verify-bundle.js uesrpg-bundle_${{ github.ref_name }}.zip
+
+      - name: generate release notes
+        run: node ./automation/generate-release-notes.js "$tag"
+
+      - name: create release
+        run: |
+          echo "Creating release for tag $tag with enhanced release notes"
+          gh release create "$tag" \
+            --repo="$GITHUB_REPOSITORY" \
+            --title="UESRPG 3ev4 $tag" \
+            --notes-file RELEASE_NOTES.md \
+            --prerelease
 
       - name: upload system bundle
         run: gh release upload "$tag" uesrpg-bundle_${{ github.ref_name }}.zip

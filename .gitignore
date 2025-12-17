@@ -4,3 +4,7 @@ packs/*
 
 CLAUDE.md
 .claude
+
+# Build artifacts
+uesrpg-bundle*.zip
+RELEASE_NOTES.md

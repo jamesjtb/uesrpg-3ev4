@@ -93,3 +93,30 @@ This guide is written for those who would like to help with the entry of content
 - Test all your changes in-game before submitting
 - Include clear descriptions in your GitHub issue
 - If you're unsure about something, ask in the [UESRPG Discord](https://discord.gg/KAkXdf9) first 
+
+### Automated Release Process
+For maintainers creating new releases:
+
+1. **Update Version**: Run `npm version <version>` to update the version in `package.json` and `system.json`
+   ```bash
+   npm version 1.0.0-RC.78
+   ```
+
+2. **Push Tag**: The version script automatically pushes the tag, which triggers the release workflow
+   
+3. **Automated Steps**: The GitHub Actions workflow will automatically:
+   - Compile compendium packs from source
+   - Create a properly structured ZIP bundle
+   - Verify the bundle contents and structure
+   - Generate release notes with installation instructions
+   - Create a GitHub release with the bundle attached
+   - Register the release with Foundry VTT
+
+4. **Manual Verification**: Test the release bundle by downloading and installing it in a Foundry VTT instance
+
+The release process ensures:
+- ✓ All necessary files are included (system.json, modules, styles, packs, LICENSE)
+- ✓ Development files are excluded (node_modules, .git, automation scripts)
+- ✓ ZIP structure is compatible with Foundry VTT
+- ✓ Release notes include installation instructions
+- ✓ Semantic versioning is maintained
