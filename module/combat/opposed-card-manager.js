@@ -135,8 +135,7 @@ export class OpposedCardManager {
 
   /**
    * Add a test to an existing opposed card
-   * @param {string} messageId - Chat message ID of the card
-   * @param {UESRPGTest} test - The test object
+   * Handles both combat style tests and weapon tests
    */
   static async addTest(messageId, test) {
     const message = game.messages.get(messageId);
@@ -168,21 +167,36 @@ export class OpposedCardManager {
         success: null,
         degrees: null,
         hitLocation: null,
-        testData: null
+        testData: null,
+        isWeaponTest: false
       };
       cardData.participants.push(participant);
     }
 
     // Update participant with test results
     participant.rolled = true;
-    participant.rollResult = test.result.total;
-    participant.success = test.result.success;
-    participant.degrees = test.result.degrees;
-    participant.hitLocation = test._formatLocation(test.result.hitLocation);  // Format for display
     participant.skillId = test.item.id;
     participant.skillLabel = test.item.name;
     participant.targetNumber = test.targetNumber;
+    participant.hitLocation = test._formatLocation(test.result.hitLocation);  // Format for display
     participant.testData = test.toObject();  // Store complete test data!
+    
+    // Handle weapon tests vs combat style tests
+    if (test.isWeaponTest) {
+      participant.isWeaponTest = true;
+      participant.damage = test.result.damage;
+      participant.qualities = test.result.qualities;
+      participant.rollResult = test.result.damage;  // Use damage as "roll" for sorting
+      participant.success = true;  // Weapons always "hit" in NPC system
+      // Approximate degrees of success from damage (1 DoS per 10 damage)
+      // This allows weapon tests to be compared with combat style tests in opposed resolution
+      participant.degrees = Math.floor(test.result.damage / 10);
+    } else {
+      participant.isWeaponTest = false;
+      participant.rollResult = test.result.total;
+      participant.success = test.result.success;
+      participant.degrees = test.result.degrees;
+    }
 
     // Re-render card
     await this._updateCard(message, cardData);

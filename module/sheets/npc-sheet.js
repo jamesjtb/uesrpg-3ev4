@@ -292,6 +292,58 @@ export class npcSheet extends ActorSheet {
     this._setResourceBars();
     this._createStatusTags();
 
+    // Context menu for NPC weapons - add opposed test option
+    new ContextMenu(html, ".weapon-table .item", [
+      {
+        name: "Start Opposed Test",
+        icon: '<i class="fas fa-handshake"></i>',
+        condition: () => game.user.isGM || game.user.targets.size > 0,
+        callback: async (li) => {
+          const itemId = li.data("item-id");
+          const weapon = this.actor.items.get(itemId);
+          if (!weapon) return;
+
+          const { OpposedCardManager } = await import("../combat/opposed-card-manager.js");
+          const targets = Array.from(game.user.targets);
+          await OpposedCardManager.createCard(this.actor, weapon, targets);
+        }
+      },
+      {
+        name: "Add to Opposed Card",
+        icon: '<i class="fas fa-plus"></i>',
+        condition: () => {
+          // Check if there's an open opposed card
+          const messages = game.messages.filter(m => {
+            const cardData = m.flags?.['uesrpg-3ev4']?.opposedCard;
+            if (!cardData || cardData.state !== 'open') return false;
+            
+            const timestamp = cardData.timestamp;
+            const now = Date.now();
+            const oneDayMs = 24 * 60 * 60 * 1000;
+            
+            return (now - timestamp) < oneDayMs;
+          });
+          return messages.length > 0;
+        },
+        callback: async (li) => {
+          const itemId = li.data("item-id");
+          const weapon = this.actor.items.get(itemId);
+          if (!weapon) return;
+
+          // Flag actor for pending opposed roll
+          const openCard = game.messages.filter(m => {
+            const cardData = m.flags?.['uesrpg-3ev4']?.opposedCard;
+            return cardData?.state === 'open';
+          })[0];
+          
+          if (openCard) {
+            await this.actor.setFlag('uesrpg-3ev4', 'pendingOpposedCard', openCard.id);
+            ui.notifications.info("Roll weapon damage to add to opposed test");
+          }
+        }
+      }
+    ]);
+
     //Item Create Buttons
     html.find(".item-create").click(await this._onItemCreate.bind(this));
 
@@ -949,122 +1001,22 @@ export class npcSheet extends ActorSheet {
   async _onDamageRoll(event) {
     event.preventDefault();
     let itemElement = event.currentTarget.closest(".item");
-    let shortcutWeapon = this.actor.getEmbeddedDocument(
+    let weapon = this.actor.getEmbeddedDocument(
       "Item",
       itemElement.dataset.itemId
     );
 
-    let hit_loc = "";
-    let hit = new Roll("1d10");
-    await hit.evaluate();
-
-    switch (hit.result) {
-      case "1":
-        hit_loc = "Body";
-        break;
-
-      case "2":
-        hit_loc = "Body";
-        break;
-
-      case "3":
-        hit_loc = "Body";
-        break;
-
-      case "4":
-        hit_loc = "Body";
-        break;
-
-      case "5":
-        hit_loc = "Body";
-        break;
-
-      case "6":
-        hit_loc = "Right Leg";
-        break;
-
-      case "7":
-        hit_loc = "Left Leg";
-        break;
-
-      case "8":
-        hit_loc = "Right Arm";
-        break;
-
-      case "9":
-        hit_loc = "Left Arm";
-        break;
-
-      case "10":
-        hit_loc = "Head";
-        break;
-    }
-
-    let damageString;
-    shortcutWeapon.system.weapon2H
-      ? (damageString = shortcutWeapon.system.damage2)
-      : (damageString = shortcutWeapon.system.damage);
-    let weaponRoll = new Roll(damageString);
-    await weaponRoll.evaluate();
-
-    // Superior Weapon Roll
-    let supRollTag = ``;
-    let superiorRoll = new Roll(damageString);
-    await superiorRoll.evaluate();
-
-    if (shortcutWeapon.system.superior) {
-      supRollTag = `[[${superiorRoll.result}]]`;
-    }
-
-    let contentString = `<div>
-                              <h2>
-                                  <img src="${shortcutWeapon.img}">
-                                  <div>${shortcutWeapon.name}</div>
-                              </h2>
-
-                              <table>
-                                  <thead>
-                                      <tr>
-                                          <th>Damage</th>
-                                          <th class="tableCenterText">Result</th>
-                                          <th class="tableCenterText">Detail</th>
-                                      </tr>
-                                  </thead>
-                                  <tbody>
-                                      <tr>
-                                          <td class="tableAttribute">Damage</td>
-                                          <td class="tableCenterText">[[${weaponRoll.result}]] ${supRollTag}</td>
-                                          <td class="tableCenterText">${damageString}</td>
-                                      </tr>
-                                      <tr>
-                                          <td class="tableAttribute">Hit Location</td>
-                                          <td class="tableCenterText">${hit_loc}</td>
-                                          <td class="tableCenterText">[[${hit.result}]]</td>
-                                      </tr>
-                                      <tr>
-                                          <td class="tableAttribute">Qualities</td>
-                                          <td class="tableCenterText" colspan="2">${shortcutWeapon.system.qualities}</td>
-                                      </tr>
-                                  </tbody>
-                              </table>
-                          <div>`;
-
-    // tags for flavor on chat message
-    let tags = [];
-
-    if (shortcutWeapon.system.superior) {
-      let tagEntry = `<span style="border: none; border-radius: 30px; background-color: rgba(29, 97, 187, 0.80); color: white; text-align: center; font-size: xx-small; padding: 5px;" title="Damage was rolled twice and output was highest of the two">Superior</span>`;
-      tags.push(tagEntry);
-    }
-
-    await weaponRoll.toMessage({
-      user: game.user.id,
-      speaker: ChatMessage.getSpeaker(),
-      flavor: tags.join(""),
-      content: contentString,
-      roll: weaponRoll,
-      rollMode: game.settings.get("core", "rollMode"),
+    // NEW: Use UESRPGWeaponTest
+    const { UESRPGWeaponTest } = await import("../tests/test-uesrpg.js");
+    
+    const test = new UESRPGWeaponTest({
+      actor: this.actor,
+      weapon: weapon,
+      modifier: 0,
+      manualLocation: null
     });
+    
+    await test.roll();
   }
 
   _onSpellRoll(event) {

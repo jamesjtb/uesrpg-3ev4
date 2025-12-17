@@ -23,12 +23,19 @@
           {{#if rolled}}
             <div class="roll-result">
               <strong>Roll:</strong> {{rollResult}}
-              {{#if success}}
-                <span class="success">SUCCESS</span>
+              {{#if isWeaponTest}}
+                <span class="weapon-damage">Damage: {{damage}}</span>
+                {{#if qualities}}
+                  <div class="qualities"><strong>Qualities:</strong> {{qualities}}</div>
+                {{/if}}
               {{else}}
-                <span class="failure">FAILURE</span>
+                {{#if success}}
+                  <span class="success">SUCCESS</span>
+                {{else}}
+                  <span class="failure">FAILURE</span>
+                {{/if}}
+                <div><strong>Degrees:</strong> {{degrees}}</div>
               {{/if}}
-              <div><strong>Degrees:</strong> {{degrees}}</div>
               {{#if hitLocation}}
                 <div><strong>Hit Location:</strong> {{hitLocation}}</div>
               {{/if}}
@@ -167,6 +174,18 @@
   color: #f44336;
   font-weight: bold;
   margin-left: 10px;
+}
+
+.weapon-damage {
+  color: #ff9800;
+  font-weight: bold;
+  margin-left: 10px;
+}
+
+.qualities {
+  margin-top: 3px;
+  color: #aaa;
+  font-size: 0.9em;
 }
 
 .waiting {
