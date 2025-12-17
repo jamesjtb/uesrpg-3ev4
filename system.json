@@ -198,9 +198,9 @@
   },
   "primaryTokenAttribute": "hp",
   "secondaryTokenAttribute": "action_points",
-  "url": "https://github.com/jamesjtb/uesrpg-3ev4",
-  "manifest": "https://raw.githubusercontent.com/jamesjtb/uesrpg-3ev4/refs/tags/v1.0.0-RC.77/system.json",
-  "download": "https://github.com/jamesjtb/uesrpg-3ev4/releases/download/v1.0.0-RC.77/uesrpg-bundle_v1.0.0-RC.77.zip",
+  "url": "https://github.com/varys1337/uesrpg-3ev4",
+  "manifest": "https://raw.githubusercontent.com/varys1337/uesrpg-3ev4/reserve-branch/system.json",
+  "download": "https://github.com/varys1337/uesrpg-3ev4/releases/download/v1.0.0-RC.77/uesrpg-bundle_v1.0.0-RC.77.zip",
   "license": "LICENSE.txt",
   "id": "uesrpg-3ev4",
   "authors": [
