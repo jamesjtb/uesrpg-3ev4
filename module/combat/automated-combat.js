@@ -192,7 +192,10 @@ export async function attackWithDialog(attacker, weapon) {
       <div class="form-group">
         <label>Combat Style (TN)</label>
         <select name="combatStyleId">
-          ${makeOptions(combatStyles, { selectedId: defaultStyleId })}
+          ${makeOptions(combatStyles, {
+  selectedId: defaultStyleId,
+  labelFn: (cs) => `${cs.name} (TN ${Number(cs.system?.value ?? 0) || 0})`
+})}
         </select>
       </div>
 
@@ -266,9 +269,8 @@ export async function attackWithDialog(attacker, weapon) {
   if (!result) return;
 
   const cs = attacker.items.get(result.combatStyleId);
-  const baseTN = Number(cs?.system?.rank ?? 0) || 0;
+  const baseTN = Number(cs?.system?.value ?? 0) || 0;
   const attackTN = Math.max(0, baseTN + result.modifier);
-
   const attackRoll = await evalRoll("1d100");
   const attackSuccess = attackRoll.total <= attackTN;
   const attackDegrees = calcDegrees({ rollTotal: attackRoll.total, tn: attackTN, success: attackSuccess });
