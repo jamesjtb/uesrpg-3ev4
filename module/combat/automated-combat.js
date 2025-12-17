@@ -102,7 +102,15 @@ async function applyDamageToTarget({ target, raw, type, locKey }) {
     return await target.applyLocationDamage({ raw, type, locKey, mitigated: true });
   }
 
-  const resp = await requestGMAppliedDamage({ targetActorId: target.id, raw, type, locKey, mitigated: true });
+  const resp = await requestGMAppliedDamage({
+  targetTokenUuid: target.getActiveTokens?.()[0]?.document?.uuid ?? null,
+  targetActorUuid: target.uuid,
+  raw,
+  type,
+  locKey,
+  mitigated: true
+});
+
   if (!resp?.ok) throw new Error(resp?.error ?? "GM apply damage failed");
   return resp.result;
 }
@@ -164,16 +172,19 @@ async function postChatSummary({ attacker, weapon, target, attack, defense, outc
  * Main entry point: open an attack dialog and resolve an attack vs target.
  */
 export async function attackWithDialog(attacker, weapon) {
-  const targets = getTargets();
-  if (!targets.length) {
-    ui.notifications.warn("Target a token first.");
-    return;
-  }
-  if (targets.length > 1) {
-    ui.notifications.warn("Phase 1 supports one target at a time. Please target only one token.");
-    return;
-  }
-  const target = targets[0];
+// (automated-combat.js) ~lines 170–190
+const targetTokens = Array.from(game.user?.targets ?? []);
+if (!targetTokens.length) {
+  ui.notifications.warn("Target a token first.");
+  return;
+}
+if (targetTokens.length > 1) {
+  ui.notifications.warn("Phase 1 supports one target at a time. Please target only one token.");
+  return;
+}
+const targetToken = targetTokens[0];
+const target = targetToken.actor;
+
 
   const combatStyles = getCombatStyles(attacker);
   if (!combatStyles.length) {
@@ -297,10 +308,11 @@ export async function attackWithDialog(attacker, weapon) {
 
   if (result.opposed) {
     const defenseChoice = await requestDefenseReaction({
-      attackerUserId: game.user.id,
-      targetActorId: target.id,
-      suggestedDefense: "parry"
-    });
+  attackerUserId: game.user.id,
+  targetTokenUuid: targetToken.document.uuid,
+  suggestedDefense: "parry"
+});
+
 
     const defType = defenseChoice?.defenseType ?? "none";
     const defTN = Number(defenseChoice?.tn ?? 0) || 0;
