@@ -1,15 +1,5 @@
 /**
  * Automated Combat Workflow (Phase 1)
- *
- * Phase 1 scope:
- * - Attack roll + DoS/DoF computation (RAW-correct)
- * - Hit location from 1s digit of attack roll (RAW default)
- * - Precision Strike toggle for manual hit location override (RAW feature name)
- * - Defender reaction prompt via socket (Parry/Evade/Block/Counter/None)
- * - Damage roll and application via Actor.applyLocationDamage()
- * - Basic wound trigger: set system.wounded = true when applied >= WT
- *
- * Phase 2 will add AP spend enforcement, attack-per-round limits, and richer wound automation.
  */
 
 import { initCombatSocket, requestDefenseReaction, requestGMAppliedDamage } from "./combat-socket.js";
@@ -33,12 +23,6 @@ async function evalRoll(formula) {
   return r;
 }
 
-/**
- * RAW degrees:
- * - DoS on success = tens digit of the roll result (minimum 1)
- * - DoF on failure = 1 + tens digit of (roll - TN), minimum 1
- * - If TN > 100, add tens digit of TN to DoS
- */
 function calcDegrees({ rollTotal, tn, success }) {
   const r = Number(rollTotal) || 0;
   const t = Number(tn) || 0;
@@ -61,11 +45,7 @@ function hitLocFromOnesDigit(rollTotal) {
   if (n === 7) return "l_leg";
   if (n === 8) return "r_arm";
   if (n === 9) return "l_arm";
-  return "head"; // 0
-}
-
-function getTargets() {
-  return Array.from(game.user?.targets ?? []).map(t => t.actor).filter(Boolean);
+  return "head";
 }
 
 function getCombatStyles(actor) {
@@ -86,7 +66,6 @@ function makeOptions(items, { labelFn, valueFn, selectedId } = {}) {
 }
 
 async function applyDamageToTarget({ target, targetToken, raw, type, locKey }) {
-  // If current user can update target, do it directly; otherwise ask GM.
   const canUpdate = target.isOwner || game.user.isGM;
 
   if (canUpdate) {
@@ -159,11 +138,7 @@ async function postChatSummary({ attacker, weapon, target, attack, defense, outc
   });
 }
 
-/**
- * Main entry point: open an attack dialog and resolve an attack vs target.
- */
 export async function attackWithDialog(attacker, weapon) {
-  // Prevent overlapping workflows that cause delayed second damage
   if (game.uesrpg?.automatedCombat?._busy) {
     ui.notifications.warn("An automated attack is already in progress.");
     return;
@@ -276,7 +251,6 @@ export async function attackWithDialog(attacker, weapon) {
 
       dlg.render(true);
 
-      // Precision Strike toggle enables/disables manual location selection
       setTimeout(() => {
         const form = dlg.element?.find("form.uesrpg-attack-dialog")?.[0];
         if (!form) return;
@@ -298,25 +272,26 @@ export async function attackWithDialog(attacker, weapon) {
     const attackSuccess = attackRoll.total <= attackTN;
     const attackDegrees = calcDegrees({ rollTotal: attackRoll.total, tn: attackTN, success: attackSuccess });
 
-    let defenseResolved = null;
-    let outcome = "Miss";
-    let hit = false;
-
     if (!attackSuccess) {
-      outcome = `Attack failed (${attackRoll.total} > ${attackTN}).`;
       await postChatSummary({
         attacker,
         weapon,
         target,
         attack: { tn: attackTN, roll: attackRoll.total, success: false, degrees: attackDegrees },
         defense: null,
-        outcome,
+        outcome: `Attack failed (${attackRoll.total} > ${attackTN}).`,
         damage: null
       });
       return;
     }
 
+    let defenseResolved = null;
+    let hit = true;
+    let outcome = result.opposed ? "Hit (awaiting defense reaction...)" : "Hit (standard test).";
+
     if (result.opposed) {
+      ui.notifications.info("Waiting for defender reaction (up to 30s)...");
+
       const defenseChoice = await requestDefenseReaction({
         attackerUserId: game.user.id,
         targetTokenUuid: targetToken.document.uuid,
@@ -327,9 +302,8 @@ export async function attackWithDialog(attacker, weapon) {
       const defTN = Number(defenseChoice?.tn ?? 0) || 0;
 
       if (defType === "none") {
-        hit = true;
-        outcome = "Hit (no defense reaction).";
         defenseResolved = { type: "none", typeLabel: "No Reaction", tn: 0, roll: null, success: false, degrees: null };
+        outcome = defenseChoice?.timeout ? "Hit (defense timed out)." : "Hit (no defense reaction).";
       } else {
         const defRoll = await evalRoll("1d100");
         const defSuccess = defRoll.total <= defTN;
@@ -349,37 +323,19 @@ export async function attackWithDialog(attacker, weapon) {
         if (defType === "block") {
           hit = true;
           outcome = defSuccess ? "Hit (blocked: resolve vs Shield BR)." : "Hit (block failed).";
-        } else if (defType === "counter") {
-          if (defSuccess) {
-            if (attackDegrees > defDegrees) {
-              hit = true;
-              outcome = `Hit (attacker DoS ${attackDegrees} > defender DoS ${defDegrees}).`;
-            } else {
-              hit = false;
-              outcome = `Defended (counter: defender DoS ${defDegrees} ≥ attacker DoS ${attackDegrees}).`;
-            }
-          } else {
+        } else if (defSuccess) {
+          if (attackDegrees > defDegrees) {
             hit = true;
-            outcome = "Hit (counter failed).";
+            outcome = `Hit (attacker DoS ${attackDegrees} > defender DoS ${defDegrees}).`;
+          } else {
+            hit = false;
+            outcome = `Defended (defender DoS ${defDegrees} ≥ attacker DoS ${attackDegrees}).`;
           }
         } else {
-          if (defSuccess) {
-            if (attackDegrees > defDegrees) {
-              hit = true;
-              outcome = `Hit (attacker DoS ${attackDegrees} > defender DoS ${defDegrees}).`;
-            } else {
-              hit = false;
-              outcome = `Defended (defender DoS ${defDegrees} ≥ attacker DoS ${attackDegrees}).`;
-            }
-          } else {
-            hit = true;
-            outcome = "Hit (defense failed).";
-          }
+          hit = true;
+          outcome = "Hit (defense failed).";
         }
       }
-    } else {
-      hit = true;
-      outcome = "Hit (standard test).";
     }
 
     if (!hit) {
@@ -395,24 +351,17 @@ export async function attackWithDialog(attacker, weapon) {
       return;
     }
 
-    // Hit location (RAW default: ones digit of attack roll)
     let locKey = hitLocFromOnesDigit(attackRoll.total);
-    if (result.precisionStrike) {
-      locKey = result.manualLoc || locKey;
-    }
+    if (result.precisionStrike) locKey = result.manualLoc || locKey;
 
-    // Roll weapon damage
     let dmgFormula = weapon?.system?.weapon2H ? weapon?.system?.damage2 : weapon?.system?.damage;
     dmgFormula = dmgFormula || "0";
     const dmgRoll = await evalRoll(dmgFormula);
     let rawDamage = Number(dmgRoll.total) || 0;
 
-    // Block BR reduction (if applicable)
     if (defenseResolved?.type === "block" && defenseResolved?.success && defenseResolved?.shield) {
       const br = Number(defenseResolved.shield.br ?? 0) || 0;
       let effectiveBR = br;
-
-      // Phase 1: assume non-physical halves shield BR (magic-BR specificity is Phase 2)
       const dt = String(result.damageType || "physical").toLowerCase();
       if (dt !== "physical") effectiveBR = Math.floor(br / 2);
 
@@ -429,19 +378,12 @@ export async function attackWithDialog(attacker, weapon) {
         return;
       }
 
-      // Damage goes through: apply to shield arm
       locKey = defenseResolved.shieldArm ?? "l_arm";
     }
 
     const dmgType = result.damageType || "physical";
     const applied = await applyDamageToTarget({ target, targetToken, raw: rawDamage, type: dmgType, locKey });
-
-    const wound = await maybeApplyWound({
-      target,
-      appliedDamage: applied.final,
-      attackerName: attacker.name,
-      hitLocKey: locKey
-    });
+    const wound = await maybeApplyWound({ target, appliedDamage: applied.final, attackerName: attacker.name, hitLocKey: locKey });
 
     await postChatSummary({
       attacker,
@@ -457,16 +399,8 @@ export async function attackWithDialog(attacker, weapon) {
   }
 }
 
-/**
- * Called from entrypoint.js (ready hook) to register socket + API.
- */
 export function initAutomatedCombat() {
   initCombatSocket();
-
-  // Public API for macros/sheets
   if (!game.uesrpg) game.uesrpg = {};
-  game.uesrpg.automatedCombat = {
-    attackWithDialog,
-    _busy: false
-  };
+  game.uesrpg.automatedCombat = { attackWithDialog, _busy: false };
 }
