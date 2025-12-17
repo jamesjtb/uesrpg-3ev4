@@ -28,6 +28,10 @@
               {{else}}
                 <span class="failure">FAILURE</span>
               {{/if}}
+              <div><strong>Degrees:</strong> {{degrees}}</div>
+              {{#if hitLocation}}
+                <div><strong>Hit Location:</strong> {{hitLocation}}</div>
+              {{/if}}
             </div>
           {{else}}
             <div class="waiting">Not yet rolled</div>

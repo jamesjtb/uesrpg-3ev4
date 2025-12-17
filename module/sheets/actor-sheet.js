@@ -1207,175 +1207,75 @@ export class SimpleActorSheet extends ActorSheet {
     let button = $(event.currentTarget);
     const li = button.parents(".item");
     const item = this.actor.getEmbeddedDocument("Item", li.data("itemId"));
-    const woundedValue =
-      item.system.value +
-      this.actor.system.woundPenalty +
-      this.actor.system.fatigue.penalty +
-      this.actor.system.carry_rating.penalty;
-    const regularValue =
-      item.system.value +
-      this.actor.system.fatigue.penalty +
-      this.actor.system.carry_rating.penalty;
-    let tags = [];
-    if (this.actor.system.wounded) {
-      tags.push(
-        `<span class="tag wound-tag">Wounded ${this.actor.system.woundPenalty}</span>`
-      );
-    }
-    if (this.actor.system.fatigue.penalty != 0) {
-      tags.push(
-        `<span class="tag fatigue-tag">Fatigued ${this.actor.system.fatigue.penalty}</span>`
-      );
-    }
-    if (this.actor.system.carry_rating.penalty != 0) {
-      tags.push(
-        `<span class="tag enc-tag">Encumbered ${this.actor.system.carry_rating.penalty}</span>`
-      );
-    }
 
     let d = new Dialog({
-      title: "Apply Roll Modifier",
+      title: `${item.name}`,
       content: `<form>
-                  <div class="dialogForm">
-                  <label><b>${item.name} Modifier: </b></label><input placeholder="ex. -20, +10" id="playerInput" value="0" style=" text-align: center; width: 50%; border-style: groove; float: right;" type="text"></input></div>
+                  <div class="flexrow">
+                    <div>
+                      <label><b>Modifier:</b></label><input placeholder="ex. +10, -10" id="playerInput" value="0" style=" text-align: center; width: 50%; border-style: groove; float: right;" type="text"></input>
+                    </div>
+                  </div>
+                  <div class="flexrow">
+                    <div>
+                      <label><b>Precision Strike:</b></label><input id="precisionToggle" type="checkbox"></input>
+                    </div>
+                  </div>
+                  <div class="flexrow">
+                    <div>
+                      <label><b>Hit Location:</b></label>
+                      <select id="hit-location">
+                        <option value="body">Body</option>
+                        <option value="head">Head</option>
+                        <option value="r_arm">Right Arm</option>
+                        <option value="l_arm">Left Arm</option>
+                        <option value="r_leg">Right Leg</option>
+                        <option value="l_leg">Left Leg</option>
+                      </select>
+                    </div>
+                  </div>
                 </form>`,
       buttons: {
         one: {
-          label: "Roll!",
-          callback: async (html) => {
-            const playerInput = parseInt(html.find('[id="playerInput"]').val());
-
-            let roll = new Roll("1d100");
-            await roll.evaluate();
-            let contentString = "";
-
-            if (isLucky(this.actor, roll.result)) {
-              contentString = `<h2><img src="${item.img}"</img>${item.name}</h2>
-            <p></p><b>Target Number: [[${regularValue} + ${playerInput} + ${this.actor.system.wounded ? this.actor.system.woundPenalty : 0
-                }]]</b> <p></p>
-            <b>Result: [[${roll.result}]]</b><p></p>
-            <span style='color:green; font-size:120%;'> <b>LUCKY NUMBER!</b></span>`;
-            } else if (isUnlucky(this.actor, roll.result)) {
-              contentString = `<h2><img src="${item.img}"</img>${item.name}</h2>
-            <p></p><b>Target Number: [[${regularValue} + ${playerInput} + ${this.actor.system.wounded ? this.actor.system.woundPenalty : 0
-                }]]</b> <p></p>
-            <b>Result: [[${roll.result}]]</b><p></p>
-            <span style='color:rgb(168, 5, 5); font-size:120%;'> <b>UNLUCKY NUMBER!</b></span>`;
-            } else if (this.actor.system.wounded === true) {
-              contentString = `<h2><img src="${item.img}"</img>${item.name}</h2>
-            <p></p><b>Target Number: [[${woundedValue} + ${playerInput}]]</b> <p></p>
-            <b>Result: [[${roll.result}]]</b><p></p>
-            <b>${roll.total <= woundedValue + playerInput
-                  ? " <span style='color:green; font-size: 120%;'> <b>SUCCESS!</b></span>"
-                  : " <span style='color: rgb(168, 5, 5); font-size: 120%;'> <b>FAILURE!</b></span>"
-                }`;
-            } else {
-              contentString = `<h2><img src="${item.img}"</img>${item.name}</h2>
-            <p></p><b>Target Number: [[${regularValue} + ${playerInput}]]</b> <p></p>
-            <b>Result: [[${roll.result}]]</b><p></p>
-            <b>${roll.total <= regularValue + playerInput
-                  ? " <span style='color:green; font-size: 120%;'> <b>SUCCESS!</b></span>"
-                  : " <span style='color: rgb(168, 5, 5); font-size: 120%;'> <b>FAILURE!</b></span>"
-                }`;
-            }
-
-            // NEW: Check if there's a pending opposed card (Phase 1 manual system)
-            const pendingCard = this.actor.getFlag('uesrpg-3ev4', 'pendingOpposedCard');
-            if (pendingCard) {
-              // Add to opposed card instead of posting new message
-              await OpposedCardManager.addRoll(pendingCard, this.actor, roll, item);
-              ui.notifications.info("Roll added to opposed test");
-              return; // Early return - don't proceed with other roll logic
-            }
-
-            // Check if this is a defending roll (actor has an opposed message flag)
-            const opposedMessageId = await OpposedRollHandler.getOpposedMessageId(this.actor);
-            
-            if (opposedMessageId) {
-              // This is a defending roll - link it to the opposed message
-              console.log("UESRPG | This is a defending roll, opposedMessageId:", opposedMessageId);
-              const opposedMessage = game.messages.get(opposedMessageId);
-              
-              if (opposedMessage) {
-                const chatMessage = await roll.toMessage({
-                  async: false,
-                  user: game.user.id,
-                  speaker: ChatMessage.getSpeaker(),
-                  roll: roll,
-                  content: contentString,
-                  flavor: `<div class="tag-container">${tags.join("")}</div>`,
-                  rollMode: game.settings.get("core", "rollMode"),
-                });
-                
-                console.log("UESRPG | Defender chat message created:", chatMessage);
-                
-                // Retrieve the handler and link the defender's roll
-                const handler = await OpposedRollHandler.fromMessage(opposedMessage);
-                if (handler) {
-                  console.log("UESRPG | Setting defender on handler");
-                  await handler.setDefender(chatMessage);
-                } else {
-                  console.warn("UESRPG | Could not retrieve handler from opposed message");
-                }
-              } else {
-                console.warn("UESRPG | Could not find opposed message with ID:", opposedMessageId);
-              }
-            } else {
-              // Check if there are targeted tokens for opposed roll
-              const targets = Array.from(game.user.targets);
-              
-              if (targets.length > 0) {
-                // Create opposed roll for the first target
-                const targetToken = targets[0];
-                const targetActor = targetToken.actor;
-                
-                if (targetActor && targetActor.id !== this.actor.id) {
-                  // Create the opposed roll handler
-                  const handler = new OpposedRollHandler({
-                    attackerActor: this.actor,
-                    attackerRoll: roll,
-                    attackerItem: item,
-                    defenderActor: targetActor,
-                    defenderToken: targetToken
-                  });
-                  
-                  // Create the opposed message
-                  await handler.createOpposedMessage();
-                  
-                  // Emit socket event to notify the defender's client
-                  emitOpposedRollRequest({
-                    attackerActorId: this.actor.id,
-                    attackerName: this.actor.name,
-                    attackerRoll: roll.total,
-                    defenderActorId: targetActor.id,
-                    itemName: item.name,
-                    itemImg: item.img,
-                    messageId: handler.attackerMessage.id
-                  });
-                  
-                  return; // Don't create a separate message, the opposed handler did it
-                }
-              }
-              
-              // No targets or not an opposed roll - create normal message
-              await roll.toMessage({
-                async: false,
-                user: game.user.id,
-                speaker: ChatMessage.getSpeaker(),
-                roll: roll,
-                content: contentString,
-                flavor: `<div class="tag-container">${tags.join("")}</div>`,
-                rollMode: game.settings.get("core", "rollMode"),
-              });
-            }
-          },
-        },
-        two: {
           label: "Cancel",
           callback: (html) => console.log("Cancelled"),
         },
+        two: {
+          label: "Roll",
+          callback: async (html) => {
+            const playerInput = parseInt(html.find('[id="playerInput"]').val()) || 0;
+            const precisionStrike = html.find('[id="precisionToggle"]').prop("checked");
+            const manualLoc = html.find('[id="hit-location"]').val();
+
+            // Calculate modifier including wounds, fatigue, encumbrance
+            const totalModifier = playerInput + 
+              this.actor.system.fatigue.penalty + 
+              this.actor.system.carry_rating.penalty +
+              (this.actor.system.wounded ? this.actor.system.woundPenalty : 0);
+
+            // NEW: Create and execute test
+            const { UESRPGTest } = await import("../tests/test-uesrpg.js");
+            
+            const test = new UESRPGTest({
+              actor: this.actor,
+              item: item,
+              modifier: totalModifier,
+              precisionStrike: precisionStrike,
+              manualLocation: precisionStrike ? manualLoc : null,
+              context: {
+                targets: Array.from(game.user.targets).map(t => ({
+                  id: t.id,
+                  actorId: t.actor?.id,
+                  name: t.name
+                }))
+              }
+            });
+            
+            await test.roll();
+          },
+        },
       },
-      default: "one",
+      default: "two",
       close: (html) => console.log(),
     });
     d.render(true);

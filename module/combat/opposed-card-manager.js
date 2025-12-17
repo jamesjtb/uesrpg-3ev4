@@ -134,8 +134,66 @@ export class OpposedCardManager {
   }
 
   /**
-   * Resolve the opposed test and determine winner
+   * Add a test to an existing opposed card
    * @param {string} messageId - Chat message ID of the card
+   * @param {UESRPGTest} test - The test object
+   */
+  static async addTest(messageId, test) {
+    const message = game.messages.get(messageId);
+    if (!message) {
+      ui.notifications.error("Opposed card not found");
+      return;
+    }
+
+    const cardData = message.flags['uesrpg-3ev4'].opposedCard;
+    if (cardData.state !== 'open') {
+      ui.notifications.warn("This opposed test is already closed");
+      return;
+    }
+
+    // Find participant or add new one
+    let participant = cardData.participants.find(p => p.particId === test.actor.id);
+    
+    if (!participant) {
+      // Add as new participant
+      participant = {
+        particId: test.actor.id,
+        particName: test.actor.name,
+        particImg: test.actor.img,
+        skillId: test.item.id,
+        skillLabel: test.item.name,
+        targetNumber: test.targetNumber,
+        rolled: false,
+        rollResult: null,
+        success: null,
+        degrees: null,
+        hitLocation: null,
+        testData: null
+      };
+      cardData.participants.push(participant);
+    }
+
+    // Update participant with test results
+    participant.rolled = true;
+    participant.rollResult = test.result.total;
+    participant.success = test.result.success;
+    participant.degrees = test.result.degrees;
+    participant.hitLocation = test._formatLocation(test.result.hitLocation);  // Format for display
+    participant.skillId = test.item.id;
+    participant.skillLabel = test.item.name;
+    participant.targetNumber = test.targetNumber;
+    participant.testData = test.toObject();  // Store complete test data!
+
+    // Re-render card
+    await this._updateCard(message, cardData);
+    
+    // Clear pending flag
+    await test.actor.unsetFlag('uesrpg-3ev4', 'pendingOpposedCard');
+  }
+
+  /**
+   * Resolve the opposed test and determine winner
+   * Uses stored test data for future damage calculation
    */
   static async resolve(messageId) {
     const message = game.messages.get(messageId);
@@ -150,23 +208,43 @@ export class OpposedCardManager {
       return;
     }
 
-    // Sort by success, then by roll value (lower = better in d100 "roll under" systems)
+    // Sort by success, then by degrees (if available) or roll value
+    // Success always beats failure
+    // If both succeed or both fail, higher degrees wins (or lower roll for legacy)
     rolled.sort((a, b) => {
-      // Both succeeded or both failed - compare roll values
-      if (a.success === b.success) {
-        return a.rollResult - b.rollResult; // Lower is better
+      if (a.success !== b.success) return b.success ? 1 : -1;
+      
+      // Both same success state
+      // If we have degrees, use them; otherwise fall back to roll comparison
+      if (a.degrees !== null && a.degrees !== undefined && 
+          b.degrees !== null && b.degrees !== undefined) {
+        return b.degrees - a.degrees;  // Higher degrees wins
+      } else {
+        // Legacy: lower roll wins in d100 roll-under
+        return a.rollResult - b.rollResult;
       }
-      // One succeeded, one failed - success wins
-      return b.success ? 1 : -1;
     });
 
     const winner = rolled[0];
-    const margin = Math.abs(rolled[0].rollResult - rolled[1].rollResult);
+    const runnerUp = rolled[1];
+    
+    // Calculate margin based on available data
+    let margin;
+    if (winner.degrees !== null && winner.degrees !== undefined &&
+        runnerUp.degrees !== null && runnerUp.degrees !== undefined) {
+      margin = Math.abs(winner.degrees - runnerUp.degrees);
+    } else {
+      margin = Math.abs(winner.rollResult - runnerUp.rollResult);
+    }
 
     cardData.state = 'resolved';
     cardData.winner = winner.particName;
     cardData.winnerName = winner.particName;
     cardData.margin = margin;
+    
+    // Store winner's test data for future damage calculation (Phase 3)
+    cardData.winnerTestData = winner.testData;
+    cardData.defenderTestData = runnerUp.testData;
 
     await this._updateCard(message, cardData);
 
