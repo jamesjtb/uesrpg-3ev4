@@ -154,6 +154,9 @@ export default async function initHandler() {
 
   await registerSettings();
   await registerSheets();
+  
+  // Register socket listeners early in init hook to catch all emissions
+  registerSocketListeners();
 
   // Applying Font to system
   function applyFont(fontFamily) {
@@ -164,8 +167,5 @@ export default async function initHandler() {
   Hooks.once("ready", () => {
     const fontFamily = game.settings.get("uesrpg-3ev4", "changeUiFont");
     applyFont(fontFamily);
-    
-    // Register socket listeners for opposed rolls
-    registerSocketListeners();
   });
 }
