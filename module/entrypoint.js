@@ -2,6 +2,7 @@
  import initHandler from './handlers/init.js';
  import { runMigrations } from './migrations.js';
  import { initAutomatedCombat } from './combat/automated-combat.js';
+ import { registerChatListeners } from './combat/chat-listeners.js';
 
  Hooks.once("init", async function() {
    console.log(`UESRPG | Initializing`);
@@ -13,4 +14,7 @@
    initAutomatedCombat();
    await runMigrations();
    await startupHandler();
+   
+   // Initialize opposed card listeners
+   registerChatListeners();
  });

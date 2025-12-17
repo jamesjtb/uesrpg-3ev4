@@ -14,6 +14,7 @@ import khajiitFurstocks from './racemenu/data/khajiit-furstocks.js';
 import expandedRaces from "./racemenu/data/expanded-races.js";
 import { OpposedRollHandler } from "../combat/opposed-handler.js";
 import { emitOpposedRollRequest } from "../handlers/socket-handler.js";
+import { OpposedCardManager } from "../combat/opposed-card-manager.js";
 
 export class SimpleActorSheet extends ActorSheet {
   /** @override */
@@ -255,6 +256,42 @@ export class SimpleActorSheet extends ActorSheet {
     html.find("#birthSignMenu").click(this._onBirthSignMenu.bind(this));
     html.find("#xpMenu").click(this._onXPMenu.bind(this));
     html.find(".rank-select").click(this._selectCombatRank.bind(this));
+
+    // Context menu for combat styles - opposed roll options
+    new ContextMenu(html, ".combat-roll", [
+      {
+        name: "Start Opposed Test",
+        icon: '<i class="fas fa-handshake"></i>',
+        condition: () => game.user.targets.size > 0 || game.user.isGM,
+        callback: async (li) => {
+          const itemId = li.closest(".item").data("item-id");
+          const item = this.actor.items.get(itemId);
+          if (!item) return;
+
+          const targets = Array.from(game.user.targets);
+          await OpposedCardManager.createCard(this.actor, item, targets);
+        }
+      },
+      {
+        name: "Add to Opposed Card",
+        icon: '<i class="fas fa-plus"></i>',
+        condition: () => {
+          return !!OpposedCardManager.getOpenCard();
+        },
+        callback: async (li) => {
+          const itemId = li.closest(".item").data("item-id");
+          const item = this.actor.items.get(itemId);
+          if (!item) return;
+
+          // Get the open card and set pending flag
+          const openCard = OpposedCardManager.getOpenCard();
+          if (openCard) {
+            await this.actor.setFlag('uesrpg-3ev4', 'pendingOpposedCard', openCard.id);
+            ui.notifications.info("Next combat roll will be added to the opposed card");
+          }
+        }
+      }
+    ]);
 
     //Update Item Attributes from Actor Sheet
     html.find(".toggle2H").click(await this._onToggle2H.bind(this));
@@ -1240,6 +1277,15 @@ export class SimpleActorSheet extends ActorSheet {
                   ? " <span style='color:green; font-size: 120%;'> <b>SUCCESS!</b></span>"
                   : " <span style='color: rgb(168, 5, 5); font-size: 120%;'> <b>FAILURE!</b></span>"
                 }`;
+            }
+
+            // NEW: Check if there's a pending opposed card (Phase 1 manual system)
+            const pendingCard = this.actor.getFlag('uesrpg-3ev4', 'pendingOpposedCard');
+            if (pendingCard) {
+              // Add to opposed card instead of posting new message
+              await OpposedCardManager.addRoll(pendingCard, this.actor, roll, item);
+              ui.notifications.info("Roll added to opposed test");
+              return; // Early return - don't proceed with other roll logic
             }
 
             // Check if this is a defending roll (actor has an opposed message flag)

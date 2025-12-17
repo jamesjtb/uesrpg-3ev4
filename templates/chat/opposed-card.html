@@ -1,0 +1,240 @@
+<div class="uesrpg-opposed-card">
+  <header>
+    <h3>Opposed Test</h3>
+    <div class="state-indicator {{state}}">
+      {{#if (eq state "open")}}
+        Waiting for participants...
+      {{else if (eq state "resolved")}}
+        Resolved
+      {{else}}
+        Closed
+      {{/if}}
+    </div>
+  </header>
+
+  <ol class="participants-list">
+    {{#each participants}}
+      <li class="participant" data-participant-id="{{particId}}">
+        <img src="{{particImg}}" width="40" height="40" alt="{{particName}}"/>
+        <div class="participant-details">
+          <div class="participant-name">{{particName}}</div>
+          <div class="skill-label">{{skillLabel}} ({{targetNumber}})</div>
+          
+          {{#if rolled}}
+            <div class="roll-result">
+              <strong>Roll:</strong> {{rollResult}}
+              {{#if success}}
+                <span class="success">SUCCESS</span>
+              {{else}}
+                <span class="failure">FAILURE</span>
+              {{/if}}
+            </div>
+          {{else}}
+            <div class="waiting">Not yet rolled</div>
+          {{/if}}
+        </div>
+        
+        {{#unless ../isResolved}}
+          {{#if @root.isGM}}
+            <a class="remove-participant" data-participant-id="{{particId}}" title="Remove Participant">
+              <i class="fas fa-times"></i>
+            </a>
+          {{/if}}
+        {{/unless}}
+      </li>
+    {{/each}}
+  </ol>
+
+  {{#unless (eq state "resolved")}}
+    {{#if isGM}}
+      <footer class="card-buttons">
+        <button class="resolve-opposed" data-action="resolve-opposed">
+          Resolve Opposed Test
+        </button>
+        <button class="close-card" data-action="close-card">
+          Close Card
+        </button>
+      </footer>
+    {{/if}}
+  {{/unless}}
+
+  {{#if winner}}
+    <div class="opposed-result">
+      <h4>Result</h4>
+      <p><strong>Winner:</strong> {{winnerName}}</p>
+      <p><strong>Margin:</strong> {{margin}}</p>
+    </div>
+  {{/if}}
+</div>
+
+<style>
+.uesrpg-opposed-card {
+  padding: 10px;
+  border: 2px solid #444;
+  border-radius: 5px;
+  background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
+}
+
+.uesrpg-opposed-card header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid #444;
+}
+
+.uesrpg-opposed-card header h3 {
+  margin: 0;
+  color: #ffa500;
+}
+
+.state-indicator {
+  padding: 5px 10px;
+  border-radius: 3px;
+  font-size: 0.9em;
+  font-weight: bold;
+}
+
+.state-indicator.open {
+  background: #ffa500;
+  color: #000;
+}
+
+.state-indicator.resolved {
+  background: #4CAF50;
+  color: #fff;
+}
+
+.state-indicator.closed {
+  background: #666;
+  color: #fff;
+}
+
+.participants-list {
+  list-style: none;
+  margin: 10px 0;
+  padding: 0;
+}
+
+.participant {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px;
+  margin: 5px 0;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 5px;
+  position: relative;
+}
+
+.participant img {
+  border-radius: 50%;
+  border: 2px solid #444;
+}
+
+.participant-details {
+  flex: 1;
+}
+
+.participant-name {
+  font-weight: bold;
+  font-size: 1.1em;
+  margin-bottom: 3px;
+}
+
+.skill-label {
+  color: #aaa;
+  font-size: 0.9em;
+  margin-bottom: 5px;
+}
+
+.roll-result {
+  margin-top: 5px;
+}
+
+.roll-result .success {
+  color: #4CAF50;
+  font-weight: bold;
+  margin-left: 10px;
+}
+
+.roll-result .failure {
+  color: #f44336;
+  font-weight: bold;
+  margin-left: 10px;
+}
+
+.waiting {
+  color: #ffa500;
+  font-style: italic;
+  margin-top: 5px;
+}
+
+.remove-participant {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  color: #f44336;
+  cursor: pointer;
+  padding: 5px;
+}
+
+.remove-participant:hover {
+  color: #ff6b6b;
+}
+
+.card-buttons {
+  display: flex;
+  gap: 10px;
+  margin-top: 15px;
+  padding-top: 10px;
+  border-top: 1px solid #444;
+}
+
+.card-buttons button {
+  flex: 1;
+  padding: 8px;
+  border: none;
+  border-radius: 3px;
+  cursor: pointer;
+  font-weight: bold;
+  transition: background 0.2s;
+}
+
+.resolve-opposed {
+  background: #4CAF50;
+  color: #fff;
+}
+
+.resolve-opposed:hover {
+  background: #45a049;
+}
+
+.close-card {
+  background: #666;
+  color: #fff;
+}
+
+.close-card:hover {
+  background: #777;
+}
+
+.opposed-result {
+  margin-top: 15px;
+  padding: 10px;
+  background: rgba(76, 175, 80, 0.1);
+  border: 1px solid #4CAF50;
+  border-radius: 5px;
+  text-align: center;
+}
+
+.opposed-result h4 {
+  margin: 0 0 10px 0;
+  color: #4CAF50;
+}
+
+.opposed-result p {
+  margin: 5px 0;
+}
+</style>
