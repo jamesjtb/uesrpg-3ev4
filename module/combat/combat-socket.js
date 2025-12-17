@@ -31,8 +31,8 @@ function _getActorById(actorId) {
   return game.actors?.get(actorId) ?? null;
 }
 
-async function _renderDefenseDialog({ requestId, attackerUserId, targetActorId, suggestedDefense }) {
-  const actor = _getActorById(targetActorId);
+async function _renderDefenseDialog({ requestId, attackerUserId, targetTokenUuid, targetActorUuid, targetActorId, suggestedDefense }) {
+  const actor = await _resolveTargetActor({ targetTokenUuid, targetActorUuid, targetActorId });
   if (!actor) return;
 
   // Only the owner of the defender (or GM) should answer.
@@ -59,6 +59,27 @@ async function _renderDefenseDialog({ requestId, attackerUserId, targetActorId, 
     { v: "counter", l: "Counter-Attack" }
   ];
 
+// (combat-socket.js) ~lines 45–70
+async function _resolveTargetActor({ targetTokenUuid, targetActorUuid, targetActorId }) {
+  // Prefer token UUID (works for synthetic/unlinked token actors)
+  if (targetTokenUuid) {
+    const doc = await fromUuid(targetTokenUuid);
+    const actor = doc?.actor ?? doc?._object?.actor ?? null;
+    if (actor) return actor;
+  }
+
+  // Fallback: actor UUID (works for linked actors)
+  if (targetActorUuid) {
+    const actor = await fromUuid(targetActorUuid);
+    if (actor) return actor;
+  }
+
+  // Last resort: actorId (only for world actors)
+  if (targetActorId) return _getActorById(targetActorId);
+
+  return null;
+}
+  
   const defenseTypeOptions = defenseTypes.map(d => {
     const sel = (d.v === (suggestedDefense ?? "parry")) ? "selected" : "";
     return `<option value="${d.v}" ${sel}>${d.l}</option>`;
@@ -129,7 +150,8 @@ async function _renderDefenseDialog({ requestId, attackerUserId, targetActorId, 
             requestId,
             toUserId: attackerUserId,
             fromUserId: game.user.id,
-            targetActorId,
+            targetTokenUuid,
+              targetActorUuid: actor.uuid,
             defenseType,
             tn,
             combatStyle: cs ? { id: cs.id, name: cs.name } : null,
@@ -149,7 +171,8 @@ async function _renderDefenseDialog({ requestId, attackerUserId, targetActorId, 
             requestId,
             toUserId: attackerUserId,
             fromUserId: game.user.id,
-            targetActorId,
+            targetTokenUuid,
+              targetActorUuid: actor.uuid,
             defenseType: "none",
             tn: 0,
             combatStyle: null,
@@ -192,8 +215,8 @@ export function initCombatSocket() {
 
     // Defender prompt: show only on defender's owning client(s)
     if (payload.type === "uesrpgDefensePrompt") {
-      const { requestId, attackerUserId, targetActorId, suggestedDefense } = payload;
-      await _renderDefenseDialog({ requestId, attackerUserId, targetActorId, suggestedDefense });
+      const { requestId, attackerUserId, targetTokenUuid, targetActorUuid, targetActorId, suggestedDefense } = payload;
+      await _renderDefenseDialog({ requestId, attackerUserId, targetTokenUuid, targetActorUuid, targetActorId, suggestedDefense });
       return;
     }
 
@@ -219,7 +242,7 @@ export function initCombatSocket() {
 }
 
 // (combat-socket.js) around lines ~220–260
-export function requestDefenseReaction({ attackerUserId, targetActorId, suggestedDefense = "parry" } = {}) {
+export function requestDefenseReaction({ attackerUserId, targetTokenUuid, suggestedDefense = "parry" } = {}) {
   const requestId = _uuid();
 
   /** @type {(payload: any) => void} */
@@ -233,7 +256,7 @@ export function requestDefenseReaction({ attackerUserId, targetActorId, suggeste
     type: "uesrpgDefensePrompt",
     requestId,
     attackerUserId,
-    targetActorId,
+    targetTokenUuid,
     suggestedDefense
   });
 
