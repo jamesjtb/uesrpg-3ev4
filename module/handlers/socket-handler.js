@@ -28,6 +28,8 @@ export function registerSocketListeners() {
  * Shows dialog to defender to prompt for defense roll
  */
 async function handleOpposedRollRequest(data) {
+  console.log("UESRPG | Received opposed roll request:", data);
+  
   const {
     attackerActorId,
     attackerName,
@@ -44,9 +46,12 @@ async function handleOpposedRollRequest(data) {
     console.warn('UESRPG | Cannot find defender actor for opposed roll');
     return;
   }
+  
+  console.log("UESRPG | Target actor:", defenderActor.name, "Is owner:", defenderActor?.isOwner, "Is GM:", game.user.isGM);
 
-  // Only show to users who own the defending actor
-  if (!defenderActor.isOwner) {
+  // Show to users who own the defending actor OR to GMs (for solo testing)
+  const canView = defenderActor.isOwner || game.user.isGM;
+  if (!canView) {
     return;
   }
 
@@ -135,6 +140,7 @@ async function showDefenderDialog({
  * Emit an opposed roll request to other clients
  */
 export function emitOpposedRollRequest(data) {
+  console.log("UESRPG | Emitting opposed roll request:", data);
   game.socket.emit(SOCKET_NAME, {
     type: 'OPPOSED_ROLL_REQUEST',
     ...data

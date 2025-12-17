@@ -1247,6 +1247,7 @@ export class SimpleActorSheet extends ActorSheet {
             
             if (opposedMessageId) {
               // This is a defending roll - link it to the opposed message
+              console.log("UESRPG | This is a defending roll, opposedMessageId:", opposedMessageId);
               const opposedMessage = game.messages.get(opposedMessageId);
               
               if (opposedMessage) {
@@ -1260,11 +1261,18 @@ export class SimpleActorSheet extends ActorSheet {
                   rollMode: game.settings.get("core", "rollMode"),
                 });
                 
+                console.log("UESRPG | Defender chat message created:", chatMessage);
+                
                 // Retrieve the handler and link the defender's roll
                 const handler = await OpposedRollHandler.fromMessage(opposedMessage);
                 if (handler) {
+                  console.log("UESRPG | Setting defender on handler");
                   await handler.setDefender(chatMessage);
+                } else {
+                  console.warn("UESRPG | Could not retrieve handler from opposed message");
                 }
+              } else {
+                console.warn("UESRPG | Could not find opposed message with ID:", opposedMessageId);
               }
             } else {
               // Check if there are targeted tokens for opposed roll

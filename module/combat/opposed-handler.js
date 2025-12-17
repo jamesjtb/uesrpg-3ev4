@@ -40,7 +40,7 @@ export class OpposedRollHandler {
       state: 'waiting'
     };
 
-    const content = await renderTemplate(
+    const content = await foundry.applications.handlebars.renderTemplate(
       'systems/uesrpg-3ev4/templates/chat/opposed-start.html',
       templateData
     );
@@ -49,8 +49,7 @@ export class OpposedRollHandler {
       user: game.user.id,
       speaker: ChatMessage.getSpeaker({ actor: this.attackerActor }),
       content: content,
-      type: CONST.CHAT_MESSAGE_TYPES.ROLL,
-      roll: this.attackerRoll,
+      rolls: [this.attackerRoll],
       flags: {
         'uesrpg-3ev4': {
           opposedRoll: {
@@ -81,6 +80,11 @@ export class OpposedRollHandler {
    * Link defender's roll and compute result
    */
   async setDefender(defenderMessage) {
+    console.log("UESRPG | OpposedRollHandler.setDefender called", {
+      state: this.state,
+      defenderMessage: defenderMessage
+    });
+    
     if (this.state !== 'waiting') {
       console.warn('OpposedRollHandler: Cannot set defender, state is not waiting');
       return;
@@ -107,8 +111,32 @@ export class OpposedRollHandler {
    */
   async computeResult() {
     const attackRoll = this.attackerRoll.total;
-    const defendRoll = this.defenderMessage ? 
-      (this.defenderMessage.rolls?.[0]?.total || 0) : 0;
+    
+    // Support both message.roll.total and message.rolls[0].total patterns
+    let defendRoll = 0;
+    if (this.defenderMessage) {
+      if (this.defenderMessage.roll?.total !== undefined) {
+        defendRoll = this.defenderMessage.roll.total;
+      } else if (this.defenderMessage.rolls?.[0]?.total !== undefined) {
+        defendRoll = this.defenderMessage.rolls[0].total;
+      }
+    }
+    
+    // Add null check with error logging
+    if (!attackRoll && attackRoll !== 0) {
+      console.error("UESRPG | Opposed roll missing attacker roll data", {
+        attacker: this.attackerMessage,
+        attackerRoll: this.attackerRoll
+      });
+      return;
+    }
+    
+    if (!defendRoll && defendRoll !== 0) {
+      console.error("UESRPG | Opposed roll missing defender roll data", {
+        defender: this.defenderMessage
+      });
+      return;
+    }
 
     // Determine winner - higher roll wins in this d100 system
     let winner;
@@ -136,7 +164,7 @@ export class OpposedRollHandler {
       state: 'complete'
     };
 
-    const content = await renderTemplate(
+    const content = await foundry.applications.handlebars.renderTemplate(
       'systems/uesrpg-3ev4/templates/chat/opposed-result.html',
       templateData
     );
@@ -189,7 +217,7 @@ export class OpposedRollHandler {
       state: 'unopposed'
     };
 
-    const content = await renderTemplate(
+    const content = await foundry.applications.handlebars.renderTemplate(
       'systems/uesrpg-3ev4/templates/chat/opposed-unopposed.html',
       templateData
     );
