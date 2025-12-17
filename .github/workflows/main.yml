@@ -4,6 +4,7 @@ on:
   push:
     tags:
       - v*
+  workflow_dispatch:
 
 permissions:
   contents: write
@@ -64,8 +65,8 @@ jobs:
               "id": "uesrpg-3ev4",
               "release": {
                 "version": "${{ github.ref_name }}",
-                "manifest": "https://raw.githubusercontent.com/jamesjtb/uesrpg-3ev4/refs/tags/${{ github.ref_name }}/system.json",
-                "notes": "https://github.com/jamesjtb/uesrpg-3ev4/releases/tag/${{ github.ref_name }}",
+                "manifest": "https://raw.githubusercontent.com/varys1337/uesrpg-3ev4/refs/tags/${{ github.ref_name }}/system.json",
+                "notes": "https://github.com/varys1337/uesrpg-3ev4/releases/tag/${{ github.ref_name }}",
                 "compatibility": {
                   "minimum": "${{ steps.foundry_compatibility.outputs.minimum }}",
                   "verified": "${{ steps.foundry_compatibility.outputs.verified }}",
