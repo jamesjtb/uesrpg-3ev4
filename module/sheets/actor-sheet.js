@@ -1332,7 +1332,14 @@ export class SimpleActorSheet extends ActorSheet {
       "Item",
       itemElement.dataset.itemId
     );
+    
+// Phase 1: use system-native automated combat workflow (Shift+Click preserves legacy damage-only behavior).
+ if (!event.shiftKey && game.uesrpg?.automatedCombat?.attackWithDialog) {
+await game.uesrpg.automatedCombat.attackWithDialog(this.actor, shortcutWeapon);
+return;
+}
 
+    
     let hit_loc = "";
     let hit = new Roll("1d10");
     await hit.evaluate();
