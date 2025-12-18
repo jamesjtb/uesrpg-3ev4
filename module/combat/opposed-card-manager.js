@@ -263,11 +263,18 @@ export class OpposedCardManager {
       winner = second;
       runnerUp = first;
     } else {
-      // Tie or both failed => no winner
-      winner = null;
-      runnerUp = null;
-    }
-
+  // Both succeed OR both fail:
+  // - both succeed: tie (no winner) if you want RAW
+  // - both fail: winner is the one closer to success (lower DoF / lower roll)
+  if (!first.success && !second.success) {
+    winner = first;
+    runnerUp = second;
+  } else {
+    winner = null;
+    runnerUp = null;
+  }
+}
+    
     // Calculate margin only if there is a winner
     let margin = 0;
     if (winner && runnerUp) {
