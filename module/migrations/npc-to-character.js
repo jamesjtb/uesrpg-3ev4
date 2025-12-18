@@ -28,7 +28,7 @@ export async function migrateNPCToCharacter(actor) {
     // Step 1: Change type to character with isNPC flag
     // Use recursive: false to allow type changes
     await actor.update({
-      type: 'character',
+      type: 'Player Character',
       'system.isNPC':  true
     }, { 
       recursive:  false,  // Required for Document type changes
@@ -75,7 +75,7 @@ export async function runNPCToCharacterMigration() {
     await migrateNPCToCharacter(actor);
     
     // Check if migration succeeded
-    if (actor.type === 'character' && actor.system?. isNPC) {
+   if (actor.type === 'Player Character' && actor.system?.isNPC) {
       migratedCount++;
     } else if (actor.type === 'NPC') {
       // Migration didn't happen (likely already migrated or error)
