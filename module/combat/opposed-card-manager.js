@@ -228,20 +228,21 @@ export class OpposedCardManager {
     rolled.sort((a, b) => {
       if (a.success !== b.success) return b.success ? 1 : -1;
       
-      // Both same success state
+           // Both same success state
       // If we have degrees, use them; otherwise fall back to roll comparison
-      if (a.degrees !== null && a.degrees !== undefined &&
+      if (a.degrees !== null && a.degrees !== undefined && 
           b.degrees !== null && b.degrees !== undefined) {
 
-        // UESRPG Opposed Tests:
-        // - both succeed: tie
-        // - both fail: no winner
-        // We keep deterministic ordering for display, but winner is handled below.
-        if (a.success) return b.degrees - a.degrees;      // higher DoS first
-        return a.degrees - b.degrees;                    // lower DoF first (closer to success)
+        // If both succeed: higher DoS wins
+        // If both fail: LOWER DoF wins (closer to success)
+        if (a.success) {
+          return b.degrees - a.degrees;   // higher DoS first
+        } else {
+          return a.degrees - b.degrees;   // lower DoF first
+        }
 
       } else {
-        // Legacy: lower roll wins in d100 roll-under (also "closer" ordering)
+        // Legacy: lower roll is closer to success in d100 roll-under
         return a.rollResult - b.rollResult;
       }
     });
@@ -249,20 +250,35 @@ export class OpposedCardManager {
     const first = rolled[0];
     const second = rolled[1];
 
-    // Determine winner per UESRPG RAW:
-    // - only one success => that participant wins
-    // - both success => tie (no winner)
-    // - both fail => no winner
-    let winner = null;
-    let runnerUp = null;
-
-    if (first.success && !second.success) {
-      winner = first;
-      runnerUp = second;
-    } else if (!first.success && second.success) {
-      winner = second;
-      runnerUp = first;
+    // Winner rules for your workflow:
+    // - one success => that actor wins
+    // - both succeed => higher DoS wins (already sorted)
+    // - both fail => lower DoF wins (already sorted)
+    const winner = first;
+    const runnerUp = second;
+    
+    // Calculate margin based on available data
+    let margin;
+    if (winner.degrees !== null && winner.degrees !== undefined &&
+        runnerUp.degrees !== null && runnerUp.degrees !== undefined) {
+      margin = Math.abs(winner.degrees - runnerUp.degrees);
     } else {
+      margin = Math.abs(winner.rollResult - runnerUp.rollResult);
+    }
+
+    cardData.state = 'resolved';
+    cardData.winner = winner.particName;
+    cardData.winnerName = winner.particName;
+    cardData.margin = margin;
+    
+    // Store winner's test data for future damage calculation (Phase 3)
+    cardData.winnerTestData = winner.testData;
+    cardData.defenderTestData = runnerUp.testData;
+
+    await this._updateCard(message, cardData);
+
+    // Clear all participant flags
+
   // Both succeed OR both fail:
   // - both succeed: tie (no winner) if you want RAW
   // - both fail: winner is the one closer to success (lower DoF / lower roll)
