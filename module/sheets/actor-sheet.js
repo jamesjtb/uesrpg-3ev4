@@ -325,6 +325,45 @@ export class SimpleActorSheet extends ActorSheet {
       }
     ]);
 
+// Context menu for skills - opposed test options
+new ContextMenu(html, ".skill-roll", [
+  {
+    name: "Start Opposed Test",
+    icon: '<i class="fas fa-handshake"></i>',
+    condition: () => game.user.targets.size > 0 || game.user.isGM,
+    callback: async (li) => {
+      const itemId = li.closest(".item").data("item-id");
+      const item = this.actor.items.get(itemId);
+      if (!item) return;
+
+      const targets = Array.from(game.user.targets);
+      await OpposedCardManager.createCard(this.actor, item, targets);
+    }
+  },
+  {
+    name: "Add to Opposed Card",
+    icon: '<i class="fas fa-plus"></i>',
+    condition: () => {
+      const openCard = game.messages.contents.filter(m => {
+        const cardData = m.flags?.['uesrpg-3ev4']?.opposedCard;
+        return cardData?.state === 'open';
+      })[0];
+      return !!openCard;
+    },
+    callback: async () => {
+      const openCard = game.messages.contents.filter(m => {
+        const cardData = m.flags?.['uesrpg-3ev4']?.opposedCard;
+        return cardData?.state === 'open';
+      })[0];
+
+      if (openCard) {
+        await this.actor.setFlag('uesrpg-3ev4', 'pendingOpposedCard', openCard.id);
+        ui.notifications.info("Roll a skill to add it to the opposed test");
+      }
+    }
+  }
+], { jQuery: false });
+    
     //Update Item Attributes from Actor Sheet
     html.find(".toggle2H").click(await this._onToggle2H.bind(this));
     html.find(".plusQty").click(await this._onPlusQty.bind(this));
