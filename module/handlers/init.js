@@ -142,6 +142,7 @@ Actors.registerSheet("uesrpg-3ev4", merchantSheet, {
   makeDefault: false,
   label: "Default UESRPG Merchant Sheet",
 });
+}
 
 export default async function initHandler() {
   /**
