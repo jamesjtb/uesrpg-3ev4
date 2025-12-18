@@ -259,12 +259,14 @@ export class npcSheet extends ActorSheet {
     actorData.container = container;
   }
 
-  get template() {
-    const path = "systems/uesrpg-3ev4/templates";
-    if (!game.user.isGM && this.actor.limited)
-      return "systems/uesrpg-3ev4/templates/limited-npc-sheet.html";
-    return `${path}/${this.actor.type.toLowerCase()}-sheet.html`;
+get template() {
+  const path = "systems/uesrpg-3ev4/templates";
+  if (!game.user.isGM && this.actor.limited) {
+    return `${path}/limited-npc-sheet.html`;
   }
+  // This sheet class always uses the NPC template.
+  return `${path}/npc-sheet.html`;
+}
 
   /* -------------------------------------------- */
 
