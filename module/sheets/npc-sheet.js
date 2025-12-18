@@ -196,8 +196,6 @@ export class npcSheet extends ActorSheet {
       style.system.value = baseCharScore + rankBonus + (style.system.bonus || 0);
     }
 
-    }
-
     // Alphabetically sort all item lists
     if (game.settings.get("uesrpg-3ev4", "sortAlpha")) {
       const itemCats = [
