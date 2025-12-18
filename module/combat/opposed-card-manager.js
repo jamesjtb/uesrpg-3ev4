@@ -228,21 +228,18 @@ export class OpposedCardManager {
     rolled.sort((a, b) => {
       if (a.success !== b.success) return b.success ? 1 : -1;
       
-           // Both same success state
+      // Both same success state
       // If we have degrees, use them; otherwise fall back to roll comparison
-      if (a.degrees !== null && a.degrees !== undefined && 
+      if (a.degrees !== null && a.degrees !== undefined &&
           b.degrees !== null && b.degrees !== undefined) {
 
-        // If both succeed: higher DoS wins
-        // If both fail: LOWER DoF wins (closer to success)
-        if (a.success) {
-          return b.degrees - a.degrees;   // higher DoS first
-        } else {
-          return a.degrees - b.degrees;   // lower DoF first
-        }
+        // If both succeed: higher DoS first
+        // If both fail: lower DoF first (closer to success)
+        if (a.success) return b.degrees - a.degrees;
+        return a.degrees - b.degrees;
 
       } else {
-        // Legacy: lower roll is closer to success in d100 roll-under
+        // Legacy: lower roll wins in d100 roll-under ("closer" ordering)
         return a.rollResult - b.rollResult;
       }
     });
@@ -250,19 +247,49 @@ export class OpposedCardManager {
     const first = rolled[0];
     const second = rolled[1];
 
-    // Winner rules for your workflow:
-    // - one success => that actor wins
-    // - both succeed => higher DoS wins (already sorted)
-    // - both fail => lower DoF wins (already sorted)
-    const winner = first;
-    const runnerUp = second;
-    
-    // Calculate margin based on available data
-    let margin;
-    if (winner.degrees !== null && winner.degrees !== undefined &&
-        runnerUp.degrees !== null && runnerUp.degrees !== undefined) {
-      margin = Math.abs(winner.degrees - runnerUp.degrees);
+    // Winner rules you requested:
+    // - one success beats failure
+    // - if both succeed: higher DoS wins
+    // - if both fail: lower DoF wins (closer to success)
+    let winner = null;
+    let runnerUp = null;
+
+    if (first.success && !second.success) {
+      winner = first;
+      runnerUp = second;
+    } else if (!first.success && second.success) {
+      winner = second;
+      runnerUp = first;
     } else {
+      // both succeed OR both fail: ordering already handled by sort()
+      winner = first;
+      runnerUp = second;
+    }
+
+    // Calculate margin based on available data
+    let margin = 0;
+    if (winner && runnerUp) {
+      if (winner.degrees !== null && winner.degrees !== undefined &&
+          runnerUp.degrees !== null && runnerUp.degrees !== undefined) {
+        margin = Math.abs(winner.degrees - runnerUp.degrees);
+      } else {
+        margin = Math.abs(winner.rollResult - runnerUp.rollResult);
+      }
+    }
+
+    cardData.state = 'resolved';
+    cardData.winner = winner ? winner.particName : null;
+    cardData.winnerName = winner ? winner.particName : null;
+    cardData.margin = margin;
+
+    // Store winner's test data for future damage calculation (Phase 3)
+    cardData.winnerTestData = winner ? winner.testData : null;
+    cardData.defenderTestData = runnerUp ? runnerUp.testData : null;
+
+    await this._updateCard(message, cardData);
+
+    // Clear all participant flags
+
       margin = Math.abs(winner.rollResult - runnerUp.rollResult);
     }
 
