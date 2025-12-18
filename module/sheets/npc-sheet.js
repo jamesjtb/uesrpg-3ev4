@@ -465,6 +465,9 @@ new ContextMenu(html, ".professions-roll", [
     icon: '<i class="fas fa-handshake"></i>',
     condition: () => game.user.targets.size > 0 || game.user.isGM,
     callback: async (li) => {
+      
+      const { OpposedCardManager } = await import("../combat/opposed-card-manager.js");
+      
       const el = li[0] ?? li;
       const profKey = el.id;
       const profName = el.getAttribute?.("name") || profKey;
