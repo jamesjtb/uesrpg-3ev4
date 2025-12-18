@@ -3,7 +3,7 @@
  * Phase 1: Manual participation, GM-triggered resolution
  */
 export class OpposedCardManager {
-  
+
   /**
    * Create a new opposed test card
    * @param {Actor} initiator - Actor starting the opposed test
@@ -67,7 +67,7 @@ export class OpposedCardManager {
     };
 
     const message = await ChatMessage.create(messageData);
-    
+
     // Flag participants that they have a pending opposed card
     for (const p of participants) {
       const actor = game.actors.get(p.particId);
@@ -101,7 +101,7 @@ export class OpposedCardManager {
 
     // Find participant or add new one
     let participant = cardData.participants.find(p => p.particId === actor.id);
-    
+
     if (!participant) {
       // Add as new participant
       participant = {
@@ -128,7 +128,7 @@ export class OpposedCardManager {
 
     // Re-render card
     await this._updateCard(message, cardData);
-    
+
     // Clear pending flag
     await actor.unsetFlag('uesrpg-3ev4', 'pendingOpposedCard');
   }
@@ -152,7 +152,7 @@ export class OpposedCardManager {
 
     // Find participant or add new one
     let participant = cardData.participants.find(p => p.particId === test.actor.id);
-    
+
     if (!participant) {
       // Add as new participant
       participant = {
@@ -178,18 +178,16 @@ export class OpposedCardManager {
     participant.skillId = test.item.id;
     participant.skillLabel = test.item.name;
     participant.targetNumber = test.targetNumber;
-    participant.hitLocation = test._formatLocation(test.result.hitLocation);  // Format for display
-    participant.testData = test.toObject();  // Store complete test data!
-    
+    participant.hitLocation = test._formatLocation(test.result.hitLocation); // Format for display
+    participant.testData = test.toObject(); // Store complete test data!
+
     // Handle weapon tests vs combat style tests
     if (test.isWeaponTest) {
       participant.isWeaponTest = true;
       participant.damage = test.result.damage;
       participant.qualities = test.result.qualities;
-      participant.rollResult = test.result.damage;  // Use damage as "roll" for sorting
-      participant.success = true;  // Weapons always "hit" in NPC system
-      // Approximate degrees of success from damage (1 DoS per 10 damage)
-      // This allows weapon tests to be compared with combat style tests in opposed resolution
+      participant.rollResult = test.result.damage; // Use damage as "roll" for sorting
+      participant.success = true; // Weapons always "hit" in NPC system
       participant.degrees = Math.floor(test.result.damage / 10);
     } else {
       participant.isWeaponTest = false;
@@ -200,7 +198,7 @@ export class OpposedCardManager {
 
     // Re-render card
     await this._updateCard(message, cardData);
-    
+
     // Clear pending flag
     await test.actor.unsetFlag('uesrpg-3ev4', 'pendingOpposedCard');
   }
@@ -214,7 +212,7 @@ export class OpposedCardManager {
     if (!message) return;
 
     const cardData = message.flags['uesrpg-3ev4'].opposedCard;
-    
+
     // Check minimum participants
     const rolled = cardData.participants.filter(p => p.rolled);
     if (rolled.length < 2) {
@@ -224,124 +222,45 @@ export class OpposedCardManager {
 
     // Sort by success, then by degrees (if available) or roll value
     // Success always beats failure
-    // If both succeed or both fail, higher degrees wins (or lower roll for legacy)
+    // Both succeed: higher DoS wins
+    // Both fail: lower DoF wins (closer to success)  <-- your requested automation behavior
     rolled.sort((a, b) => {
       if (a.success !== b.success) return b.success ? 1 : -1;
-      
-      // Both same success state
-      // If we have degrees, use them; otherwise fall back to roll comparison
+
       if (a.degrees !== null && a.degrees !== undefined &&
           b.degrees !== null && b.degrees !== undefined) {
-
-        // If both succeed: higher DoS first
-        // If both fail: lower DoF first (closer to success)
-        if (a.success) return b.degrees - a.degrees;
-        return a.degrees - b.degrees;
-
-      } else {
-        // Legacy: lower roll wins in d100 roll-under ("closer" ordering)
-        return a.rollResult - b.rollResult;
+        if (a.success) return b.degrees - a.degrees; // higher DoS first
+        return a.degrees - b.degrees;                // lower DoF first
       }
+
+      // Legacy: lower roll is closer to success in roll-under systems
+      return (a.rollResult ?? 0) - (b.rollResult ?? 0);
     });
 
-    const first = rolled[0];
-    const second = rolled[1];
+    const winner = rolled[0];
+    const runnerUp = rolled[1];
 
-    // Winner rules you requested:
-    // - one success beats failure
-    // - if both succeed: higher DoS wins
-    // - if both fail: lower DoF wins (closer to success)
-    let winner = null;
-    let runnerUp = null;
-
-    if (first.success && !second.success) {
-      winner = first;
-      runnerUp = second;
-    } else if (!first.success && second.success) {
-      winner = second;
-      runnerUp = first;
-    } else {
-      // both succeed OR both fail: ordering already handled by sort()
-      winner = first;
-      runnerUp = second;
-    }
-
-    // Calculate margin based on available data
+    // Calculate margin
     let margin = 0;
-    if (winner && runnerUp) {
-      if (winner.degrees !== null && winner.degrees !== undefined &&
-          runnerUp.degrees !== null && runnerUp.degrees !== undefined) {
-        margin = Math.abs(winner.degrees - runnerUp.degrees);
-      } else {
-        margin = Math.abs(winner.rollResult - runnerUp.rollResult);
-      }
-    }
-
-    cardData.state = 'resolved';
-    cardData.winner = winner ? winner.particName : null;
-    cardData.winnerName = winner ? winner.particName : null;
-    cardData.margin = margin;
-
-    // Store winner's test data for future damage calculation (Phase 3)
-    cardData.winnerTestData = winner ? winner.testData : null;
-    cardData.defenderTestData = runnerUp ? runnerUp.testData : null;
-
-    await this._updateCard(message, cardData);
-
-    // Clear all participant flags
-
-      margin = Math.abs(winner.rollResult - runnerUp.rollResult);
+    if (winner.degrees !== null && winner.degrees !== undefined &&
+        runnerUp.degrees !== null && runnerUp.degrees !== undefined) {
+      margin = Math.abs(winner.degrees - runnerUp.degrees);
+    } else {
+      margin = Math.abs((winner.rollResult ?? 0) - (runnerUp.rollResult ?? 0));
     }
 
     cardData.state = 'resolved';
     cardData.winner = winner.particName;
     cardData.winnerName = winner.particName;
     cardData.margin = margin;
-    
+
     // Store winner's test data for future damage calculation (Phase 3)
-    cardData.winnerTestData = winner.testData;
-    cardData.defenderTestData = runnerUp.testData;
+    cardData.winnerTestData = winner.testData ?? null;
+    cardData.defenderTestData = runnerUp.testData ?? null;
 
     await this._updateCard(message, cardData);
 
     // Clear all participant flags
-
-  // Both succeed OR both fail:
-  // - both succeed: tie (no winner) if you want RAW
-  // - both fail: winner is the one closer to success (lower DoF / lower roll)
-  if (!first.success && !second.success) {
-    winner = first;
-    runnerUp = second;
-  } else {
-    winner = null;
-    runnerUp = null;
-  }
-}
-    
-    // Calculate margin only if there is a winner
-    let margin = 0;
-    if (winner && runnerUp) {
-      if (winner.degrees !== null && winner.degrees !== undefined &&
-          runnerUp.degrees !== null && runnerUp.degrees !== undefined) {
-        margin = Math.abs(winner.degrees - runnerUp.degrees);
-      } else {
-        margin = Math.abs(winner.rollResult - runnerUp.rollResult);
-      }
-    }
-
-    cardData.state = 'resolved';
-    cardData.winner = winner ? winner.particName : null;
-    cardData.winnerName = winner ? winner.particName : null;
-    cardData.margin = margin;
-
-    // Store winner's test data for future damage calculation (Phase 3)
-    cardData.winnerTestData = winner ? winner.testData : null;
-    cardData.defenderTestData = runnerUp ? runnerUp.testData : null;
-
-    await this._updateCard(message, cardData);
-
-    // Clear all participant flags
-
     for (const p of cardData.participants) {
       const actor = game.actors.get(p.particId);
       if (actor) {
@@ -428,7 +347,7 @@ export class OpposedCardManager {
       const timestamp = cardData.timestamp;
       const now = Date.now();
       const oneDayMs = 24 * 60 * 60 * 1000;
-      
+
       return (now - timestamp) < oneDayMs;
     });
 
