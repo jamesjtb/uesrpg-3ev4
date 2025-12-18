@@ -186,25 +186,29 @@ async function migrateNPCProfessionsV1() {
     const sys = actor.system ?? {};
     const professions = sys.professions ?? {};
 
-    // Check if already in new format (has object structure)
-    const firstProf = professions.combat;
-    if (typeof firstProf === 'object' && firstProf !== null) {
-      // Already in new format, just mark as migrated
-      await actor.setFlag(NS, "migrations.professionsV1", true);
-      continue;
-    }
+// Normalize EVERY profession key to a valid object so no nulls remain
+const newProfessions = {};
+for (const [profKey, defaultChar] of Object.entries(professionDefaults)) {
+  const cur = professions?.[profKey];
 
-    // Build new profession structure from old flat numbers
-    const newProfessions = {};
-    for (const [profKey, defaultChar] of Object.entries(professionDefaults)) {
-      const oldValue = typeof professions[profKey] === 'number' ? professions[profKey] : 0;
-      newProfessions[profKey] = {
-        value: oldValue,
-        rank: 0,
-        governingCha: defaultChar,
-        auto: false  // Preserve manual values
-      };
-    }
+  if (typeof cur === "number") {
+    newProfessions[profKey] = { value: cur, rank: 0, governingCha: defaultChar, auto: false };
+    continue;
+  }
+
+  if (cur && typeof cur === "object") {
+    newProfessions[profKey] = {
+      value: Number(cur.value ?? 0) || 0,
+      rank: Number(cur.rank ?? 0) || 0,
+      governingCha: cur.governingCha ?? defaultChar,
+      auto: Boolean(cur.auto ?? false)
+    };
+    continue;
+  }
+
+  // null/undefined/garbage -> default object
+  newProfessions[profKey] = { value: 0, rank: 0, governingCha: defaultChar, auto: false };
+}
 
     await actor.update({
       "system.professions": newProfessions,
