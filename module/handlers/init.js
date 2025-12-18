@@ -121,18 +121,27 @@ async function registerSheets() {
 
   // NPC sheet handles both legacy NPC type and unified Player Character type with isNPC flag
   // Uses canUse method to determine appropriate sheet based on actor data
-  Actors.registerSheet("uesrpg-3ev4", npcSheet, {
-    types: ["NPC", "Player Character"],
-    makeDefault: true,  // Default for NPC type
-    label: "Default UESRPG NPC Sheet",
-  });
+// NPC sheet: default only for legacy NPC type
+Actors.registerSheet("uesrpg-3ev4", npcSheet, {
+  types: ["NPC"],
+  makeDefault: true,
+  label: "Default UESRPG NPC Sheet",
+});
 
-  Actors.registerSheet("uesrpg-3ev4", merchantSheet, {
-    types: ["NPC", "Player Character"],
-    makeDefault: false,
-    label: "Default UESRPG Merchant Sheet",
-  });
-}
+// NPC sheet: also available for unified Player Character type when actor.system.isNPC === true (see npcSheet.canUse)
+Actors.registerSheet("uesrpg-3ev4", npcSheet, {
+  types: ["Player Character"],
+  makeDefault: false,
+  label: "Default UESRPG NPC Sheet",
+});
+
+// Merchant sheet should not become default for Player Character; keep it optional.
+// (merchantSheet.canUse also gates usage to NPC / isNPC actors)
+Actors.registerSheet("uesrpg-3ev4", merchantSheet, {
+  types: ["NPC", "Player Character"],
+  makeDefault: false,
+  label: "Default UESRPG Merchant Sheet",
+});
 
 export default async function initHandler() {
   /**
