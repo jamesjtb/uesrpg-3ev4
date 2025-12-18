@@ -193,8 +193,10 @@
                                 </div>
                                 <div class="item-controls">
                                     {{#if (eq (typeof actor.system.professions.combat) "number")}}
+                                        {{!-- Legacy format: show simple number input --}}
                                         <div class="item-value profession"><input type="number" name="system.professions.combat" value="{{actor.system.professions.combat}}"/>%</div>
                                     {{else}}
+                                        {{!-- New hybrid format --}}
                                         {{#if actor.system.professions.combat.auto}}
                                             <div class="item-value profession">{{actor.system.professions.combat.value}}% (Auto)</div>
                                         {{else}}
@@ -203,7 +205,6 @@
                                     {{/if}}
                                 </div>
                             </li>
-
                             <li class="npc-item">
                                 <div class="itemInfo">
                                     <i class="fas fa-dice-d20 professions-roll" name="Evade" id="evade"></i>
@@ -222,7 +223,6 @@
                                     {{/if}}
                                 </div>
                             </li>
-
                             <li class="npc-item">
                                 <div class="itemInfo">
                                     <i class="fas fa-dice-d20 professions-roll" name="Knowledge" id="knowledge"></i>
@@ -241,7 +241,6 @@
                                     {{/if}}
                                 </div>
                             </li>
-
                             <li class="npc-item">
                                 <div class="itemInfo">
                                     <i class="fas fa-dice-d20 professions-roll" name="Magic" id="magic"></i>
@@ -260,7 +259,6 @@
                                     {{/if}}
                                 </div>
                             </li>
-
                             <li class="npc-item">
                                 <div class="itemInfo">
                                     <i class="fas fa-dice-d20 professions-roll" name="Observe" id="observe"></i>
@@ -279,7 +277,6 @@
                                     {{/if}}
                                 </div>
                             </li>
-
                             <li class="npc-item">
                                 <div class="itemInfo">
                                     <i class="fas fa-dice-d20 professions-roll" name="Physical" id="physical"></i>
@@ -298,7 +295,6 @@
                                     {{/if}}
                                 </div>
                             </li>
-
                             <li class="npc-item">
                                 <div class="itemInfo">
                                     <i class="fas fa-dice-d20 professions-roll" name="Social" id="social"></i>
@@ -317,7 +313,6 @@
                                     {{/if}}
                                 </div>
                             </li>
-
                             <li class="npc-item">
                                 <div class="itemInfo">
                                     <i class="fas fa-dice-d20 professions-roll" name="Stealth" id="stealth"></i>
@@ -336,10 +331,9 @@
                                     {{/if}}
                                 </div>
                             </li>
-
                             <li class="npc-item">
                                 <div class="itemInfo">
-                                    <i class="fas fa-dice-d20 professions-roll" name="Commerce" id="commerce"></i>
+                                    <i class="fas fa-dice-d20 professions-roll" name="{{actor.system.skills.commerce.specialization}}" id="commerce"></i>
                                     <img class="item-img" src="icons/skills/social/trading-justice-scale-yellow.webp" title="Send to Chat"/>
                                     <div class="skill-name">
                                         <div class="skill-name">Commerce</div>
@@ -349,10 +343,9 @@
                                     <div class="item-value profession"><input type="number" name="system.skills.commerce.tn" value="{{actor.system.skills.commerce.tn}}"/>%</div>
                                 </div>
                             </li>
-
                             <li class="npc-item">
                                 <div class="itemInfo">
-                                    <i class="fas fa-dice-d20 professions-roll" name="Profession 1" id="profession1"></i>
+                                    <i class="fas fa-dice-d20 professions-roll" name="{{actor.system.skills.profession1.specialization}}" id="profession1"></i>
                                     <img class="item-img" src="icons/skills/social/trading-justice-scale-yellow.webp" title="Send to Chat"/>
                                     <div class="skill-name">
                                         <input type="text" placeholder="Profession 1" name="system.skills.profession1.specialization" value="{{actor.system.skills.profession1.specialization}}">
@@ -362,10 +355,9 @@
                                     <div class="item-value profession"><input type="number" name="system.skills.profession1.tn" value="{{actor.system.skills.profession1.tn}}"/>%</div>
                                 </div>
                             </li>
-
                             <li class="npc-item">
                                 <div class="itemInfo">
-                                    <i class="fas fa-dice-d20 professions-roll" name="Profession 2" id="profession2"></i>
+                                    <i class="fas fa-dice-d20 professions-roll" name="{{actor.system.skills.profession2.specialization}}" id="profession2"></i>
                                     <img class="item-img" src="icons/skills/social/trading-justice-scale-yellow.webp" title="Send to Chat"/>
                                     <div class="skill-name">
                                         <input type="text" placeholder="Profession 2" name="system.skills.profession2.specialization" value="{{actor.system.skills.profession2.specialization}}">
@@ -375,10 +367,9 @@
                                     <div class="item-value profession"><input type="number" name="system.skills.profession2.tn" value="{{actor.system.skills.profession2.tn}}"/>%</div>
                                 </div>
                             </li>
-
                             <li class="npc-item">
                                 <div class="itemInfo">
-                                    <i class="fas fa-dice-d20 professions-roll" name="Profession 3" id="profession3"></i>
+                                    <i class="fas fa-dice-d20 professions-roll" name="{{actor.system.skills.profession3.specialization}}" id="profession3"></i>
                                     <img class="item-img" src="icons/skills/social/trading-justice-scale-yellow.webp" title="Send to Chat"/>
                                     <div class="skill-name">
                                         <input type="text" placeholder="Profession 3" name="system.skills.profession3.specialization" value="{{actor.system.skills.profession3.specialization}}">
@@ -390,12 +381,6 @@
                             </li>
                         </ul>
                     </div>
-                </div>
-            </div>
-        </section>
-    </div>
-</form>
-
 
                     <div class="two-column-flex-container">
                         <div class="languageContainer">
@@ -577,97 +562,49 @@
                         <div class="combat-button-container">
                             <div class="combat-button professions-roll" name="Combat" id="combat">
                                 <div class="flex-container">
-                                    <div class="combat-button-value">
-                                        {{#if (eq (typeof actor.system.professions.combat) "number")}}
-                                            {{actor.system.professions.combat}}
-                                        {{else}}
-                                            {{actor.system.professions.combat.value}}
-                                        {{/if}}
-                                    </div>
+                                    <div class="combat-button-value">{{actor.system.professions.combat}}</div>
                                     <div class="combat-button-label">Combat</div>
                                 </div>
                             </div>
                             <div class="combat-button professions-roll" name="Magic" id="magic">
                                 <div class="flex-container">
-                                    <div class="combat-button-value">
-                                        {{#if (eq (typeof actor.system.professions.magic) "number")}}
-                                            {{actor.system.professions.magic}}
-                                        {{else}}
-                                            {{actor.system.professions.magic.value}}
-                                        {{/if}}
-                                    </div>
+                                    <div class="combat-button-value">{{actor.system.professions.magic}}</div>
                                     <div class="combat-button-label">Magic</div>
                                 </div>
                             </div>
                             <div class="combat-button professions-roll" name="Evade" id="evade">
                                 <div class="flex-container">
-                                    <div class="combat-button-value">
-                                        {{#if (eq (typeof actor.system.professions.evade) "number")}}
-                                            {{actor.system.professions.evade}}
-                                        {{else}}
-                                            {{actor.system.professions.evade.value}}
-                                        {{/if}}
-                                    </div>
+                                    <div class="combat-button-value">{{actor.system.professions.evade}}</div>
                                     <div class="combat-button-label">Evade</div>
                                 </div>
                             </div>
                             <div class="combat-button professions-roll" name="Physical" id="physical">
                                 <div class="flex-container">
-                                    <div class="combat-button-value">
-                                        {{#if (eq (typeof actor.system.professions.physical) "number")}}
-                                            {{actor.system.professions.physical}}
-                                        {{else}}
-                                            {{actor.system.professions.physical.value}}
-                                        {{/if}}
-                                    </div>
+                                    <div class="combat-button-value">{{actor.system.professions.physical}}</div>
                                     <div class="combat-button-label">Physical</div>
                                 </div>
                             </div>
                             <div class="combat-button professions-roll" name="Observe" id="observe">
                                 <div class="flex-container">
-                                    <div class="combat-button-value">
-                                        {{#if (eq (typeof actor.system.professions.observe) "number")}}
-                                            {{actor.system.professions.observe}}
-                                        {{else}}
-                                            {{actor.system.professions.observe.value}}
-                                        {{/if}}
-                                    </div>
+                                    <div class="combat-button-value">{{actor.system.professions.observe}}</div>
                                     <div class="combat-button-label">Observe</div>
                                 </div>
                             </div>
                             <div class="combat-button professions-roll" name="Stealth" id="stealth">
                                 <div class="flex-container">
-                                    <div class="combat-button-value">
-                                        {{#if (eq (typeof actor.system.professions.stealth) "number")}}
-                                            {{actor.system.professions.stealth}}
-                                        {{else}}
-                                            {{actor.system.professions.stealth.value}}
-                                        {{/if}}
-                                    </div>
+                                    <div class="combat-button-value">{{actor.system.professions.stealth}}</div>
                                     <div class="combat-button-label">Stealth</div>
                                 </div>
                             </div>
                             <div class="combat-button professions-roll" name="Social" id="social">
                                 <div class="flex-container">
-                                    <div class="combat-button-value">
-                                        {{#if (eq (typeof actor.system.professions.social) "number")}}
-                                            {{actor.system.professions.social}}
-                                        {{else}}
-                                            {{actor.system.professions.social.value}}
-                                        {{/if}}
-                                    </div>
+                                    <div class="combat-button-value">{{actor.system.professions.social}}</div>
                                     <div class="combat-button-label">Social</div>
                                 </div>
                             </div>
                             <div class="combat-button professions-roll" name="Knowledge" id="knowledge">
                                 <div class="flex-container">
-                                    <div class="combat-button-value">
-                                        {{#if (eq (typeof actor.system.professions.knowledge) "number")}}
-                                            {{actor.system.professions.knowledge}}
-                                        {{else}}
-                                            {{actor.system.professions.knowledge.value}}
-                                        {{/if}}
-                                    </div>
+                                    <div class="combat-button-value">{{actor.system.professions.knowledge}}</div>
                                     <div class="combat-button-label">Knowledge</div>
                                 </div>
                             </div>
@@ -885,97 +822,49 @@
                     <div class="combat-button-container">
                         <div class="combat-button professions-roll" name="Combat" id="combat">
                             <div class="flex-container">
-                                <div class="combat-button-value">
-                                    {{#if (eq (typeof actor.system.professions.combat) "number")}}
-                                        {{actor.system.professions.combat}}
-                                    {{else}}
-                                        {{actor.system.professions.combat.value}}
-                                    {{/if}}
-                                </div>
+                                <div class="combat-button-value">{{actor.system.professions.combat}}</div>
                                 <div class="combat-button-label">Combat</div>
                             </div>
                         </div>
                         <div class="combat-button professions-roll" name="Magic" id="magic">
                             <div class="flex-container">
-                                <div class="combat-button-value">
-                                    {{#if (eq (typeof actor.system.professions.magic) "number")}}
-                                        {{actor.system.professions.magic}}
-                                    {{else}}
-                                        {{actor.system.professions.magic.value}}
-                                    {{/if}}
-                                </div>
+                                <div class="combat-button-value">{{actor.system.professions.magic}}</div>
                                 <div class="combat-button-label">Magic</div>
                             </div>
                         </div>
                         <div class="combat-button professions-roll" name="Evade" id="evade">
                             <div class="flex-container">
-                                <div class="combat-button-value">
-                                    {{#if (eq (typeof actor.system.professions.evade) "number")}}
-                                        {{actor.system.professions.evade}}
-                                    {{else}}
-                                        {{actor.system.professions.evade.value}}
-                                    {{/if}}
-                                </div>
+                                <div class="combat-button-value">{{actor.system.professions.evade}}</div>
                                 <div class="combat-button-label">Evade</div>
                             </div>
                         </div>
                         <div class="combat-button professions-roll" name="Physical" id="physical">
                             <div class="flex-container">
-                                <div class="combat-button-value">
-                                    {{#if (eq (typeof actor.system.professions.physical) "number")}}
-                                        {{actor.system.professions.physical}}
-                                    {{else}}
-                                        {{actor.system.professions.physical.value}}
-                                    {{/if}}
-                                </div>
+                                <div class="combat-button-value">{{actor.system.professions.physical}}</div>
                                 <div class="combat-button-label">Physical</div>
                             </div>
                         </div>
                         <div class="combat-button professions-roll" name="Observe" id="observe">
                             <div class="flex-container">
-                                <div class="combat-button-value">
-                                    {{#if (eq (typeof actor.system.professions.observe) "number")}}
-                                        {{actor.system.professions.observe}}
-                                    {{else}}
-                                        {{actor.system.professions.observe.value}}
-                                    {{/if}}
-                                </div>
+                                <div class="combat-button-value">{{actor.system.professions.observe}}</div>
                                 <div class="combat-button-label">Observe</div>
                             </div>
                         </div>
                         <div class="combat-button professions-roll" name="Stealth" id="stealth">
                             <div class="flex-container">
-                                <div class="combat-button-value">
-                                    {{#if (eq (typeof actor.system.professions.stealth) "number")}}
-                                        {{actor.system.professions.stealth}}
-                                    {{else}}
-                                        {{actor.system.professions.stealth.value}}
-                                    {{/if}}
-                                </div>
+                                <div class="combat-button-value">{{actor.system.professions.stealth}}</div>
                                 <div class="combat-button-label">Stealth</div>
                             </div>
                         </div>
                         <div class="combat-button professions-roll" name="Social" id="social">
                             <div class="flex-container">
-                                <div class="combat-button-value">
-                                    {{#if (eq (typeof actor.system.professions.social) "number")}}
-                                        {{actor.system.professions.social}}
-                                    {{else}}
-                                        {{actor.system.professions.social.value}}
-                                    {{/if}}
-                                </div>
+                                <div class="combat-button-value">{{actor.system.professions.social}}</div>
                                 <div class="combat-button-label">Social</div>
                             </div>
                         </div>
                         <div class="combat-button professions-roll" name="Knowledge" id="knowledge">
                             <div class="flex-container">
-                                <div class="combat-button-value">
-                                    {{#if (eq (typeof actor.system.professions.knowledge) "number")}}
-                                        {{actor.system.professions.knowledge}}
-                                    {{else}}
-                                        {{actor.system.professions.knowledge.value}}
-                                    {{/if}}
-                                </div>
+                                <div class="combat-button-value">{{actor.system.professions.knowledge}}</div>
                                 <div class="combat-button-label">Knowledge</div>
                             </div>
                         </div>
