@@ -130,18 +130,125 @@ Superrior => Weapon Gets proven quality => +200%
 
 
 /// Melee Weapons table ///
+Type              | Dam        | H    | Reach  | Qualities                                                       | ENC | Price
+------------------+------------+------+--------+-----------------------------------------------------------------+-----+------
+Great Sword       | 1d12       | 2H   | 3m     | Slashing, Concussive                                            | 4   | 300
+Longsword         | 1d8 (1d10) | 1.5H | 2m     | Slashing                                                        | 2   | 175
+Broadsword        | 1d8        | 1H   | 2m     | Slashing                                                        | 1   | 100
+Sabre             | 1d8        | 1H   | 2m     | Slashing, Dueling Weapon                                        | 1   | 125
+Scimitar          | 1d8        | 1H   | 2m     | Slashing, Concussive, Unwieldy                                  | 3   | 135
+Shortsword        | 1d6        | 1H   | 1m     | Slashing, Exploit Weakness                                      | 1   | 75
+Rapier            | 1d6        | 1H   | 2m     | Slashing, Dueling Weapon, Exploit Weakness                      | 1   | 105
+Dagger            | 1d4        | 1H   | 1m     | Slashing, Exploit Weakness, Thrown (5/10/15), Small              | 1   | 45
+Great Axe         | 1d12       | 2H   | 3m     | Splitting, Unwieldy, Shield Splitter, Concussive                | 4   | 300
+Battle Axe        | 1d8 (1d10) | 1.5H | 2m     | Splitting, Unwieldy                                             | 2   | 175
+War Axe           | 1d8        | 1H   | 2m     | Splitting, Unwieldy                                             | 1   | 120
+Hand Axe          | 1d6        | 1H   | 1m     | Splitting, Thrown (5/10/15), Small                               | 1   | 75
+Great Flail       | 1d12       | 2H   | 3m     | Crushing, Flail, Shield Splitter, Concussive                    | 3   | 300
+Maul              | 1d12       | 2H   | 2m     | Crushing, Unwieldy, Shield Splitter, Concussive                 | 4   | 250
+Warhammer         | 1d8 (1d10) | 1.5H | 2m     | Crushing, Unwieldy                                              | 2   | 175
+Mace              | 1d8        | 1H   | 2m     | Crushing, Unwieldy                                              | 1   | 120
+Flail             | 1d8        | 1H   | 2m     | Crushing, Flail                                                 | 1   | 180
+Halberd           | 1d12       | 2H   | 2–3m   | Splitting, Impaling, Unwieldy                                   | 3   | 175
+Pike              | 1d12       | 2H   | 2–4m   | Impaling, Unwieldy                                              | 4   | 80
+Lance             | 1d12       | 1H   | 2–3m   | Splitting, Crushing (3), Mounted, Unwieldy                      | 3   | 140
+Spear             | 1d8 (1d10) | 1.5H | 2–3m   | Impaling, Unwieldy                                              | 2   | 40
+Trident           | 1d6 (1d8)  | 1.5H | 2m     | Impaling, Unwieldy                                              | 3   | 75
+Quarterstaff      | 1d6 (1d8)  | 1.5H | 2m     | Concussive                                                      | 2   | 35
+Javelin           | 1d8        | 1H   | 2m     | Thrown (5/15/25), Unwieldy                                      | 2   | 40
+Parrying Dagger   | 1d4        | 1H   | 1m     | Slashing (2), Exploit Weakness, Dueling Weapon, Small           | 1   | 50
+
+/// Exotic Weapons table ///
+Type                    | Dam              | H    | Reach | Qualities                                             | ENC | Price
+------------------------+------------------+------+-------+-------------------------------------------------------+-----+------
+Dai-Katana              | 1d12             | 2H   | 3m    | Slashing, Shield-Splitter                             | 4   | 350
+Tanto                   | 1d4              | 1H   | 1m    | Slashing, Exploit Weakness, Dueling Weapon, Small     | 1   | 75
+Katana                  | 1d6 (1d8)        | 1.5H | 2m    | Slashing, Exploit Weakness                            | 2   | 200
+Wakizashi               | 1d4 (1d6)        | 1.5H | 1m    | Slashing, Exploit Weakness                            | 1   | 90
+Punch Dagger / Talons   | Uses Nat. Weapon | 1H   | 1m    | Slashing (1), Exploit Weakness, Hand to Hand, Small   | 1   | 45
+Cestus                  | Uses Nat. Weapon | 1H   | 1m    | Crushing (1), Hand to Hand, Small                    | 1   | 45
+Hook Sword              | 1d6              | 1H   | 1m    | Slashing (1), Dueling Weapon, Hooked                 | 1   | 85
+Bill Hook               | 1d10             | 2H   | 2–3m  | Splitting, Hooked, Unwieldy                          | 3   | 120
+
 
 /// Melee Weapon Materials /// 
+Name        | Dam Mod | Qualities | ENC | Enchant Lvl | Price Mod
+------------+---------+-----------+-----+-------------+----------
+Chitin      | –       | –         | –   | 100         | 0.8 × Price
+Iron        | –       | –         | –   | 200         | 0.8 × Price
+Silver      | +1      | Silvered  | –   | 550         | 1.3 × Price
+Steel       | +1      | –         | –   | 300         | 1.0 × Price
+Dwemer      | +2      | Magic     | –   | 400         | 6.0 × Price
+Moonstone   | +2      | Magic     | –   | 500         | 5.0 × Price
+Orichalcum  | +2      | –         | –   | 400         | 4.0 × Price
+Adamantium  | +3      | –         | –   | 1000        | 8.0 × Price
+Malachite   | +3      | Magic     | –   | 200         | 7.0 × Price
+Stalhrim    | +3      | Magic     | –   | 1000        | 12.0 × Price
+Daedric     | +4      | Magic     | +1  | 1500        | 15.0 × Price
+Ebony       | +4      | Magic     | +1  | 1250        | 10.0 × Price
+Dragonbone  | +5      | Magic     | +1  | 1500        | 30.0 × Price
+
 
 ///Utility Weapons///
+Type   | Dam | H  | Reach/Range | Qualities                         | ENC | Price
+-------+-----+----+-------------+-----------------------------------+-----+------
+Net    | –   | 1H | 2m          | Entangling, Thrown (3/4/5)        | 1   | 10
+Bola   | –   | 1H | –           | Thrown (5/10/15), Snare           | 1   | 30
+Sling  | 1d4 | 1H | 5/25/50     | Reload (1), Small, Sling          | 0   | 15
+
 
 ///Sling Materials///
+Name            | Dam Mod | Enchant Lvl | Price Mod
+----------------+---------+-------------+----------
+Cloth           | –       | 50          | 1.0 × Price
+Hemp            | +1      | 100         | 2.0 × Price
+Leather Straps  | +2      | 150         | 3.0 × Price
+Netch L. Straps | +3      | 200         | 5.0 × Price
+Silk            | +4      | 250         | 10.0 × Price
+Dreugh Hide     | +5      | 300         | 15.0 × Price
+
 
 /// Ranged Weapons /// 
+Type                | Dam  | H  | Range         | Qualities                                      | ENC | Price
+--------------------+------+----+---------------+------------------------------------------------+-----+------
+Arbalest            | 1d12 | 2H | 20/150/300    | Complex, Reload (4, min 1), Crushing (6)       | 2   | 700
+Crossbow            | 1d10 | 2H | 20/100/250    | Complex, Reload (2, min 1), Crushing (4)       | 1   | 500
+Longbow             | 1d8  | 2H | 10/250/350    | Reload (2), Unwieldy                           | 2   | 200
+Shortbow            | 1d6  | 2H | 20/100/200    | Reload (1)                                    | 1   | 100
+Throwing Star/Dart  | 1d4  | 1H | 5/10/15       | Thrown, Small                                  | 0   | 10
+
 
 /// Ranged Weapon Materials /// 
+Name        | Range Mod          | EL   | ENC | Price Mod
+------------+--------------------+------+-----+----------
+Wood        | –                  | 100  | –   | 1.0 × P
+Bonemold    | +5m all ranges     | 300  | –   | 1.5 × P
+Chitin      | +5m all ranges     | 200  | –   | 1.25 × P
+Dwemer      | +5m all ranges     | 800  | –   | 6.0 × P
+Orichalcum  | +5m all ranges     | 400  | –   | 4.0 × P
+Moonstone   | +10m all ranges    | 500  | –   | 5.0 × P
+Daedric     | +15m all ranges    | 1500 | +1  | 15.0 × P
+Ebony       | +15m all ranges    | 1250 | +1  | 10.0 × P
+Malachite   | +15m all ranges    | 200  | –   | 7.0 × P
+Dragonbone  | +20m all ranges    | 1500 | +1  | 30.0 × P
+
 
 /// Ammunition Materials ///
+Name        | Dam Mod | Qualities | EL   | Price per 10 shots
+------------+---------+-----------+------+-------------------
+Chitin      | –       | –         | 200  | 16
+Iron        | –       | –         | 200  | 16
+Silver      | +1      | Silvered  | 550  | 26
+Steel       | +1      | –         | 300  | 20
+Dwemer      | +2      | Magic     | 400  | 120
+Moonstone   | +2      | Magic     | 500  | 100
+Orichalcum  | +2      | –         | 400  | 80
+Adamantium  | +3      | –         | 1000 | 160
+Malachite   | +3      | Magic     | 200  | 140
+Stalhrim    | +3      | Magic     | 1000 | 240
+Daedric     | +4      | Magic     | 1500 | 300
+Ebony       | +4      | Magic     | 1250 | 200
+Dragonbone  | +5      | Magic     | 1500 | 600
 
 
 Special Melee Weapon Materials
@@ -215,8 +322,80 @@ All armor pieces have these attributes associated with them:
 •	Price: The price of the armor piece in Drakes both for an individual piece (for one hit location) and the full suit.
 
 /// Partial Armor Types ///
+Type                     | AR | Magic AR        | Qualities        | ENC/Piece (Suit) | EL   | Price/Location (Suit)
+-------------------------+----+-----------------+------------------+------------------+------+----------------------
+Partial Chitin           | 1  | 1 fire          | -                | 1 (6)            | 200  | 30 limb / 60 body (210)
+Partial Leather          | 1  | 1 fire          | Light            | 2 (12)           | 150  | 25 limb / 50 body (175)
+Partial Fur              | 1  | 1 frost         | Light            | 2 (12)           | 100  | 20 limb / 40 body (140)
+Partial Netch Leather    | 1  | 1 shock         | Light            | 2 (12)           | 200  | 30 limb / 60 body (210)
+Partial Bone             | 2  | -               | Medium           | 3 (18)           | 100  | 25 limb / 50 body (175)
+Partial Bonemold         | 2  | -               | Light            | 2 (12)           | 300  | 50 limb / 100 body (350)
+Partial Iron             | 3  | -               | Medium           | 3 (18)           | 200  | 50 limb / 100 body (350)
+Partial Moonstone        | 3  | 1 magic         | Light, Magic     | 2 (12)           | 500  | 90 limb / 180 body (630)
+Partial Dreugh Hide      | 4  | 1 magic         | Medium, Magic    | 3 (18)           | 300  | 100 limb / 200 body (700)
+Partial Steel            | 4  | -               | Medium           | 3 (18)           | 300  | 75 limb / 150 body (525)
+Partial Mithril          | 4  | 1 magic         | Magic            | 1 (6)            | 900  | 300 limb / 600 body (2100)
+Partial Dwemer           | 5  | 1 magic         | Medium, Magic    | 4 (24)           | 400  | 150 limb / 300 body (1050)
+Partial Orichalcum       | 5  | -               | Medium           | 4 (24)           | 400  | 100 limb / 200 body (700)
+Partial Adamantium       | 5  | 2 magic         | Medium           | 4 (24)           | 1000 | 500 limb / 1000 body (3500)
+Partial Dragonscale      | 5  | 2 magic         | Light, Magic     | 2 (12)           | 1250 | 2500 limb / 5000 body (17500)
+Partial Malachite        | 5  | 2 magic         | Magic            | 1 (6)            | 200  | 750 limb / 1500 body (5250)
+Partial Ebony            | 6  | 3 magic         | Heavy, Magic     | 5 (30)           | 1250 | 1500 limb / 3000 body (10500)
+Partial Stalhrim         | 6  | 6 frost         | Medium, Magic    | 4 (24)           | 1000 | 2000 limb / 4000 body (14000)
+Partial Daedric          | 6  | 6 magic         | Heavy, Magic     | 5 (30)           | 1500 | 3000 limb / 6000 body (21000)
+Partial Dragonbone       | 7  | 7 magic         | Heavy, Magic     | 5 (30)           | 1500 | 5000 limb / 10000 body (35000)
+
 /// Full Armor Types ///
+Type                | AR | Magic AR | Qualities            | ENC/Piece (Suit) | EL   | Price/Location (Suit)
+--------------------+----+----------+----------------------+------------------+------+----------------------
+Full Padded         | 2  | -        | Medium               | 3 (18)           | 50   | 20 limb / 40 body (140)
+Full Hide           | 2  | 2 frost  | Medium               | 3 (18)           | 50   | 30 limb / 60 body (210)
+Full Chitin         | 3  | 1 fire   | Light                | 2 (12)           | 200  | 60 limb / 120 body (420)
+Full Leather        | 3  | 1 fire   | Medium               | 3 (18)           | 150  | 50 limb / 100 body (350)
+Full Netch Leather  | 3  | 1 shock  | Medium               | 3 (18)           | 200  | 60 limb / 120 body (420)
+Full Fur            | 3  | 1 frost  | Medium               | 3 (18)           | 100  | 40 limb / 80 body (280)
+Full Bone           | 4  | -        | Heavy                | 4 (24)           | 100  | 50 limb / 100 body (350)
+Full Bonemold       | 4  | -        | Medium               | 3 (18)           | 300  | 100 limb / 200 body (700)
+Full Iron           | 5  | -        | Heavy                | 4 (24)           | 200  | 100 limb / 200 body (700)
+Full Moonstone      | 5  | 2 magic  | Medium, Magic        | 3 (18)           | 500  | 180 limb / 360 body (1260)
+Full Dreugh Hide    | 6  | 2 magic  | Heavy, Magic         | 4 (24)           | 300  | 200 limb / 400 body (1400)
+Full Steel          | 6  | -        | Heavy                | 4 (24)           | 300  | 150 limb / 300 body (1050)
+Full Mithril        | 6  | 2 magic  | Light, Magic         | 2 (12)           | 900  | 600 limb / 1200 body (4200)
+Full Dwemer         | 7  | 2 magic  | Heavy, Magic         | 5 (30)           | 400  | 300 limb / 600 body (2100)
+Full Orichalcum     | 7  | -        | Heavy                | 5 (30)           | 400  | 200 limb / 400 body (1400)
+Full Adamantium     | 7  | 3 magic  | Heavy                | 5 (30)           | 1000 | 1000 limb / 2000 body (7000)
+Full Malachite      | 7  | 3 magic  | Light, Magic         | 2 (12)           | 200  | 1500 limb / 3000 body (10500)
+Full Dragonscale    | 7  | 5 magic  | Medium, Magic        | 3 (18)           | 1250 | 5000 limb / 10000 body (35000)
+Full Ebony          | 8  | 4 magic  | Super-Heavy, Magic   | 6 (36)           | 1250 | 3000 limb / 6000 body (21000)
+Full Stalhrim       | 8  | 8 frost  | Heavy, Magic         | 5 (30)           | 1000 | 4000 limb / 8000 body (28000)
+Full Daedric        | 8  | 8 magic  | Super-Heavy, Magic   | 6 (36)           | 1500 | 6000 limb / 12000 body (42000)
+Full Dragonbone     | 9  | 9 magic  | Super-Heavy, Magic   | 6 (36)           | 1500 | 10000 limb / 20000 body (70000)
+
 /// Shields ///
+Type                  | BR | Magic BR (1/2 base) | Qualities        | ENC | Enchant Lvl | Price
+----------------------+----+---------------------+------------------+-----+-------------+------
+Hide Shield           | 6  | (3) 4 vs frost      | Light            | 2   | 50          | 40
+Chitin Shield         | 7  | (4) 5 vs fire       | -                | 1   | 200         | 70
+Leather Shield        | 7  | (4) 5 vs fire       | Light            | 2   | 150         | 60
+Fur Shield            | 7  | (4) 5 vs frost      | Light            | 2   | 100         | 50
+Netch Leather Shield  | 7  | (4) 5 vs shock      | Light            | 2   | 200         | 70
+Bonemold Shield       | 8  | (4)                 | Light            | 2   | 300         | 120
+Iron Shield           | 9  | (5)                 | Medium           | 3   | 200         | 120
+Moonstone Shield      | 9  | 6                   | Light, Magic     | 2   | 500         | 200
+Dreugh Shield         | 10 | 6                   | Medium, Magic    | 3   | 300         | 220
+Steel Shield          | 10 | (5)                 | Medium           | 3   | 300         | 170
+Dwemer Shield         | 10 | 6                   | Medium, Magic    | 3   | 800         | 330
+Mithril Shield        | 10 | 6                   | Magic            | 1   | 900         | 650
+Orichalcum Shield     | 11 | (6)                 | Medium           | 3   | 400         | 240
+Adamantium Shield     | 11 | 8                   | Medium           | 3   | 1000        | 1100
+Malachite Shield      | 11 | 8                   | Magic            | 1   | 200         | 1700
+Dragonscale Shield    | 11 | 11                  | Medium, Magic    | 3   | 1250        | 7000
+Ebony Shield          | 12 | 9                   | Heavy, Magic     | 4   | 1250        | 3500
+Daedric Shield        | 12 | 12                  | Heavy, Magic     | 4   | 1500        | 6500
+Stalhrim Shield       | 12 | (6) 12 vs frost     | Medium, Magic    | 3   | 1000        | 4500
+Dragonbone Shield     | 13 | 13                  | Heavy, Magic     | 4   | 1500        | 12000
+
+
 Shields
 Shields are defensive weapons used to protect their wielders from enemy attack. They are considered a type of armor in this system but do not follow the normal rules for armor.
 Block Rating
@@ -230,5 +409,4 @@ All shields can be purchased as a targe instead. Targes are 1 weight class lower
 Buckler
 All shields can be purchased as a buckler instead. Bucklers are 1 weight class lower than a normal shield of their type, have 1 lower ENC, and cost 25% less. Bucklers can not block. Instead, they add an extra degree of success to all successful Parry tests. Additionally, when the defender wins an opposed Parry test they always gain Advantage, but they must pay the AP cost if picking the Special Action Advantage.
 
-
-
+TBD
