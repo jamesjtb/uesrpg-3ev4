@@ -1,74 +1,99 @@
 /**
- * Migration: Convert NPC actors to Player Character type with isNPC flag
+ * Migration:  Convert legacy NPC actors to unified Character type
  * 
- * This migration unifies the actor system by:
- * 1. Converting all NPC actors to Player Character type
- * 2. Setting isNPC: true flag
- * 3. Converting profession percentages to skill-based system
- * 4. Preserving all existing data (characteristics, items, etc.)
+ * This migration: 
+ * 1. Changes NPC type to 'character'
+ * 2. Sets isNPC flag to true
+ * 3. Preserves all existing data
+ * 4. Adds migration flag to prevent re-migration
+ * 
+ * @param {Actor} actor - The actor to migrate
  */
+export async function migrateNPCToCharacter(actor) {
+  try {
+    // Safety check:  Skip if already migrated
+    if (actor.type !== 'NPC') {
+      console.log(`UESRPG | Skipping ${actor.name} - already a ${actor.type}`);
+      return;
+    }
 
-const NS = "uesrpg-3ev4";
+    // Safety check: Skip if already has migration flag
+    if (actor.getFlag('uesrpg-3ev4', 'migratedFromNPC')) {
+      console.log(`UESRPG | Skipping ${actor.name} - already migrated`);
+      return;
+    }
 
-// Constants for rank calculation
-const MIN_RANK = 0;
-const MAX_RANK = 5;
-const RANK_MULTIPLIER = 10;
+    console.log(`UESRPG | Migrating NPC to Character:  ${actor.name}`);
+    
+    // Step 1: Change type to character with isNPC flag
+    // Use recursive: false to allow type changes
+    await actor.update({
+      type: 'character',
+      'system.isNPC':  true
+    }, { 
+      recursive:  false,  // Required for Document type changes
+      diff: false,       // Skip differential updates for type changes
+      render: false      // Don't render until migration complete
+    });
+    
+    // Step 2: Mark as migrated to prevent re-migration
+    await actor.setFlag('uesrpg-3ev4', 'migratedFromNPC', true);
+    
+    console.log(`UESRPG | ✓ Successfully migrated ${actor.name} to unified character type`);
+    
+  } catch (error) {
+    console.error(`UESRPG | ✗ Failed to migrate ${actor. name}:`, error);
+    ui.notifications.error(`Failed to migrate NPC "${actor.name}".  See console for details.`);
+    // Don't throw - allow migration to continue with other actors
+  }
+}
 
-export async function migrateNPCToCharacter() {
-  const actors = game.actors?.contents ?? [];
-  let migrated = 0;
+/**
+ * Run the NPC to Character migration on all NPC actors in the world
+ * Called from migrations.js during system initialization
+ */
+export async function runNPCToCharacterMigration() {
+  console.log('UESRPG | Starting NPC to Character migration...');
+  
+  let migratedCount = 0;
+  let skippedCount = 0;
+  let errorCount = 0;
 
-  for (const actor of actors) {
-    // Only migrate NPC type actors
-    if (actor.type !== "NPC") continue;
+  // Get all NPC actors (both in world and in compendia)
+  const npcActors = game.actors.filter(actor => actor.type === 'NPC');
+  
+  if (npcActors.length === 0) {
+    console.log('UESRPG | No NPCs found to migrate');
+    return;
+  }
 
-    // Check if already migrated
-    if (actor.getFlag(NS, "migrations.npcToCharacter")) continue;
+  console.log(`UESRPG | Found ${npcActors.length} NPC(s) to migrate`);
 
-    console.log(`UESRPG | Migrating NPC to Character: ${actor.name}`);
-
-    try {
-      // Build the update data
-      const updateData = {
-        type: "Player Character",
-        "system.isNPC": true,
-        [`flags.${NS}.migrations.npcToCharacter`]: true
-      };
-
-      // Convert profession percentages to combat style skills
-      // The profession system will be preserved but combat styles will use proper skill ranks
-      const professions = actor.system?.professions ?? {};
-      
-      // For each profession, if it's using the new hybrid format with auto=false,
-      // calculate the proper rank from the percentage value
-      for (const [profKey, profData] of Object.entries(professions)) {
-        if (typeof profData === 'object' && profData !== null && !profData.auto) {
-          const govCharKey = (profData.governingCha || 'str').toLowerCase();
-          const charScore = actor.system.characteristics?.[govCharKey]?.total || 0;
-          const profValue = profData.value || 0;
-          
-          // Calculate rank: (profession% - characteristic) / 10, clamped to 0-5
-          const calculatedRank = Math.max(MIN_RANK, Math.min(MAX_RANK, Math.floor((profValue - charScore) / RANK_MULTIPLIER)));
-          
-          updateData[`system.professions.${profKey}.rank`] = calculatedRank;
-          updateData[`system.professions.${profKey}.auto`] = true; // Enable auto-calculation going forward
-        }
+  // Migrate each NPC
+  for (const actor of npcActors) {
+    const initialType = actor.type;
+    await migrateNPCToCharacter(actor);
+    
+    // Check if migration succeeded
+    if (actor.type === 'character' && actor.system?. isNPC) {
+      migratedCount++;
+    } else if (actor.type === 'NPC') {
+      // Migration didn't happen (likely already migrated or error)
+      if (actor.getFlag('uesrpg-3ev4', 'migratedFromNPC')) {
+        skippedCount++;
+      } else {
+        errorCount++;
       }
-
-      // Perform the migration update
-      await actor.update(updateData);
-      
-      // Set the preferred sheet to npcSheet for this actor
-      await actor.setFlag("core", "sheetClass", "uesrpg-3ev4.npcSheet");
-      
-      migrated++;
-
-      console.log(`UESRPG | Successfully migrated ${actor.name} to unified character type`);
-    } catch (error) {
-      console.error(`UESRPG | Failed to migrate NPC ${actor.name}:`, error);
     }
   }
 
-  console.log(`UESRPG | Migration npcToCharacter: ${migrated} NPC(s) converted to Character type`);
+  // Report results
+  console.log(`UESRPG | Migration npcToCharacter complete:`);
+  console.log(`  ✓ Migrated:  ${migratedCount}`);
+  console.log(`  ⊘ Skipped: ${skippedCount}`);
+  console.log(`  ✗ Errors: ${errorCount}`);
+
+  if (migratedCount > 0) {
+    ui.notifications.info(`Migrated ${migratedCount} NPC(s) to unified character type`);
+  }
 }
