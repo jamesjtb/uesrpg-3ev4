@@ -458,7 +458,55 @@ get template() {
     ], {
       jQuery: false
     });
+// Context menu for professions - opposed test options
+new ContextMenu(html, ".professions-roll", [
+  {
+    name: "Start Opposed Test",
+    icon: '<i class="fas fa-handshake"></i>',
+    condition: () => game.user.targets.size > 0 || game.user.isGM,
+    callback: async (li) => {
+      const el = li[0] ?? li;
+      const profKey = el.id;
+      const profName = el.getAttribute?.("name") || profKey;
 
+      const prof = this.actor.system.professions?.[profKey];
+      const tn = (typeof prof === "number") ? prof : (prof?.value ?? 0);
+
+      // Create a pseudo-item so OpposedCardManager can reuse the item-based workflow
+      const pseudo = {
+        id: `profession:${profKey}`,
+        name: profName,
+        system: { value: tn }
+      };
+
+      const targets = Array.from(game.user.targets);
+      await OpposedCardManager.createCard(this.actor, pseudo, targets);
+    }
+  },
+  {
+    name: "Add to Opposed Card",
+    icon: '<i class="fas fa-plus"></i>',
+    condition: () => {
+      const openCard = game.messages.contents.filter(m => {
+        const cardData = m.flags?.['uesrpg-3ev4']?.opposedCard;
+        return cardData?.state === 'open';
+      })[0];
+      return !!openCard;
+    },
+    callback: async () => {
+      const openCard = game.messages.contents.filter(m => {
+        const cardData = m.flags?.['uesrpg-3ev4']?.opposedCard;
+        return cardData?.state === 'open';
+      })[0];
+
+      if (openCard) {
+        await this.actor.setFlag('uesrpg-3ev4', 'pendingOpposedCard', openCard.id);
+        ui.notifications.info("Roll a profession to add it to the opposed test");
+      }
+    }
+  }
+], { jQuery: false });
+    
     //Item Create Buttons
     html.find(".item-create").click(await this._onItemCreate.bind(this));
 
