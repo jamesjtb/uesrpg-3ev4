@@ -443,18 +443,78 @@
       }
     },
     "professions": {
-      "combat": 0,
-      "magic": 0,
-      "evade": 0,
-      "observe": 0,
-      "stealth": 0,
-      "knowledge": 0,
-      "social": 0,
-      "physical": 0,
-      "commerce": 0,
-      "profession1": 0,
-      "profession2": 0,
-      "profession3": 0
+      "combat": {
+        "value": 0,
+        "rank": 0,
+        "governingCha": "str",
+        "auto": false
+      },
+      "magic": {
+        "value": 0,
+        "rank": 0,
+        "governingCha": "int",
+        "auto": false
+      },
+      "evade": {
+        "value": 0,
+        "rank": 0,
+        "governingCha": "agi",
+        "auto": false
+      },
+      "observe": {
+        "value": 0,
+        "rank": 0,
+        "governingCha": "prc",
+        "auto": false
+      },
+      "stealth": {
+        "value": 0,
+        "rank": 0,
+        "governingCha": "agi",
+        "auto": false
+      },
+      "knowledge": {
+        "value": 0,
+        "rank": 0,
+        "governingCha": "int",
+        "auto": false
+      },
+      "social": {
+        "value": 0,
+        "rank": 0,
+        "governingCha": "prs",
+        "auto": false
+      },
+      "physical": {
+        "value": 0,
+        "rank": 0,
+        "governingCha": "str",
+        "auto": false
+      },
+      "commerce": {
+        "value": 0,
+        "rank": 0,
+        "governingCha": "int",
+        "auto": false
+      },
+      "profession1": {
+        "value": 0,
+        "rank": 0,
+        "governingCha": "str",
+        "auto": false
+      },
+      "profession2": {
+        "value": 0,
+        "rank": 0,
+        "governingCha": "str",
+        "auto": false
+      },
+      "profession3": {
+        "value": 0,
+        "rank": 0,
+        "governingCha": "str",
+        "auto": false
+      }
     },
     "professionsWound": {
       "combat": 0,

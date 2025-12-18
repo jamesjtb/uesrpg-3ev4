@@ -152,6 +152,15 @@ export default async function initHandler() {
   CONFIG.Actor.documentClass = SimpleActor;
   CONFIG.Item.documentClass = SimpleItem;
 
+  // Register Handlebars helpers for templates
+  Handlebars.registerHelper('eq', function(a, b) {
+    return a === b;
+  });
+  
+  Handlebars.registerHelper('typeof', function(obj) {
+    return typeof obj;
+  });
+
   await registerSettings();
   await registerSheets();
   

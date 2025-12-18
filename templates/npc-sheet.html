@@ -192,7 +192,17 @@
                                     <div class="skill-name">Combat</div>
                                 </div>
                                 <div class="item-controls">
-                                    <div class="item-value profession"><input type="number" name="system.professions.combat" value="{{actor.system.professions.combat}}"/>%</div>
+                                    {{#if (eq (typeof actor.system.professions.combat) "number")}}
+                                        {{!-- Legacy format: show simple number input --}}
+                                        <div class="item-value profession"><input type="number" name="system.professions.combat" value="{{actor.system.professions.combat}}"/>%</div>
+                                    {{else}}
+                                        {{!-- New hybrid format --}}
+                                        {{#if actor.system.professions.combat.auto}}
+                                            <div class="item-value profession">{{actor.system.professions.combat.value}}% (Auto)</div>
+                                        {{else}}
+                                            <div class="item-value profession"><input type="number" name="system.professions.combat.value" value="{{actor.system.professions.combat.value}}"/>%</div>
+                                        {{/if}}
+                                    {{/if}}
                                 </div>
                             </li>
                             <li class="npc-item">
@@ -202,7 +212,15 @@
                                     <div class="skill-name">Evade</div>
                                 </div>
                                 <div class="item-controls">
-                                    <div class="item-value profession"><input type="number" name="system.professions.evade" value="{{actor.system.professions.evade}}"/>%</div>
+                                    {{#if (eq (typeof actor.system.professions.evade) "number")}}
+                                        <div class="item-value profession"><input type="number" name="system.professions.evade" value="{{actor.system.professions.evade}}"/>%</div>
+                                    {{else}}
+                                        {{#if actor.system.professions.evade.auto}}
+                                            <div class="item-value profession">{{actor.system.professions.evade.value}}% (Auto)</div>
+                                        {{else}}
+                                            <div class="item-value profession"><input type="number" name="system.professions.evade.value" value="{{actor.system.professions.evade.value}}"/>%</div>
+                                        {{/if}}
+                                    {{/if}}
                                 </div>
                             </li>
                             <li class="npc-item">
@@ -212,7 +230,15 @@
                                     <div class="skill-name">Knowledge</div>
                                 </div>
                                 <div class="item-controls">
-                                    <div class="item-value profession"><input type="number" name="system.professions.knowledge" value="{{actor.system.professions.knowledge}}"/>%</div>
+                                    {{#if (eq (typeof actor.system.professions.knowledge) "number")}}
+                                        <div class="item-value profession"><input type="number" name="system.professions.knowledge" value="{{actor.system.professions.knowledge}}"/>%</div>
+                                    {{else}}
+                                        {{#if actor.system.professions.knowledge.auto}}
+                                            <div class="item-value profession">{{actor.system.professions.knowledge.value}}% (Auto)</div>
+                                        {{else}}
+                                            <div class="item-value profession"><input type="number" name="system.professions.knowledge.value" value="{{actor.system.professions.knowledge.value}}"/>%</div>
+                                        {{/if}}
+                                    {{/if}}
                                 </div>
                             </li>
                             <li class="npc-item">
@@ -222,7 +248,15 @@
                                     <div class="skill-name">Magic</div>
                                 </div>
                                 <div class="item-controls">
-                                    <div class="item-value profession"><input type="number" name="system.professions.magic" value="{{actor.system.professions.magic}}"/>%</div>
+                                    {{#if (eq (typeof actor.system.professions.magic) "number")}}
+                                        <div class="item-value profession"><input type="number" name="system.professions.magic" value="{{actor.system.professions.magic}}"/>%</div>
+                                    {{else}}
+                                        {{#if actor.system.professions.magic.auto}}
+                                            <div class="item-value profession">{{actor.system.professions.magic.value}}% (Auto)</div>
+                                        {{else}}
+                                            <div class="item-value profession"><input type="number" name="system.professions.magic.value" value="{{actor.system.professions.magic.value}}"/>%</div>
+                                        {{/if}}
+                                    {{/if}}
                                 </div>
                             </li>
                             <li class="npc-item">
@@ -232,7 +266,15 @@
                                     <div class="skill-name">Observe</div>
                                 </div>
                                 <div class="item-controls">
-                                    <div class="item-value profession"><input type="number" name="system.professions.observe" value="{{actor.system.professions.observe}}"/>%</div>
+                                    {{#if (eq (typeof actor.system.professions.observe) "number")}}
+                                        <div class="item-value profession"><input type="number" name="system.professions.observe" value="{{actor.system.professions.observe}}"/>%</div>
+                                    {{else}}
+                                        {{#if actor.system.professions.observe.auto}}
+                                            <div class="item-value profession">{{actor.system.professions.observe.value}}% (Auto)</div>
+                                        {{else}}
+                                            <div class="item-value profession"><input type="number" name="system.professions.observe.value" value="{{actor.system.professions.observe.value}}"/>%</div>
+                                        {{/if}}
+                                    {{/if}}
                                 </div>
                             </li>
                             <li class="npc-item">
@@ -242,7 +284,15 @@
                                     <div class="skill-name">Physical</div>
                                 </div>
                                 <div class="item-controls">
-                                    <div class="item-value profession"><input type="number" name="system.professions.physical" value="{{actor.system.professions.physical}}"/>%</div>
+                                    {{#if (eq (typeof actor.system.professions.physical) "number")}}
+                                        <div class="item-value profession"><input type="number" name="system.professions.physical" value="{{actor.system.professions.physical}}"/>%</div>
+                                    {{else}}
+                                        {{#if actor.system.professions.physical.auto}}
+                                            <div class="item-value profession">{{actor.system.professions.physical.value}}% (Auto)</div>
+                                        {{else}}
+                                            <div class="item-value profession"><input type="number" name="system.professions.physical.value" value="{{actor.system.professions.physical.value}}"/>%</div>
+                                        {{/if}}
+                                    {{/if}}
                                 </div>
                             </li>
                             <li class="npc-item">
@@ -252,7 +302,15 @@
                                     <div class="skill-name">Social</div>
                                 </div>
                                 <div class="item-controls">
-                                    <div class="item-value profession"><input type="number" name="system.professions.social" value="{{actor.system.professions.social}}"/>%</div>
+                                    {{#if (eq (typeof actor.system.professions.social) "number")}}
+                                        <div class="item-value profession"><input type="number" name="system.professions.social" value="{{actor.system.professions.social}}"/>%</div>
+                                    {{else}}
+                                        {{#if actor.system.professions.social.auto}}
+                                            <div class="item-value profession">{{actor.system.professions.social.value}}% (Auto)</div>
+                                        {{else}}
+                                            <div class="item-value profession"><input type="number" name="system.professions.social.value" value="{{actor.system.professions.social.value}}"/>%</div>
+                                        {{/if}}
+                                    {{/if}}
                                 </div>
                             </li>
                             <li class="npc-item">
@@ -262,7 +320,15 @@
                                     <div class="skill-name">Stealth</div>
                                 </div>
                                 <div class="item-controls">
-                                    <div class="item-value profession"><input type="number" name="system.professions.stealth" value="{{actor.system.professions.stealth}}"/>%</div>
+                                    {{#if (eq (typeof actor.system.professions.stealth) "number")}}
+                                        <div class="item-value profession"><input type="number" name="system.professions.stealth" value="{{actor.system.professions.stealth}}"/>%</div>
+                                    {{else}}
+                                        {{#if actor.system.professions.stealth.auto}}
+                                            <div class="item-value profession">{{actor.system.professions.stealth.value}}% (Auto)</div>
+                                        {{else}}
+                                            <div class="item-value profession"><input type="number" name="system.professions.stealth.value" value="{{actor.system.professions.stealth.value}}"/>%</div>
+                                        {{/if}}
+                                    {{/if}}
                                 </div>
                             </li>
                             <li class="npc-item">

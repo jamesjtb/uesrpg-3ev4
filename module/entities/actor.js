@@ -535,6 +535,25 @@ export class SimpleActor extends Actor {
       }
     }
 
+    // Calculate profession values (support hybrid auto/manual calculation)
+    for (let profKey in actorSystemData.professions) {
+      const prof = actorSystemData.professions[profKey];
+      
+      // Handle legacy flat number format (migration compatibility)
+      if (typeof prof === 'number') {
+        // Keep the old value as-is for legacy NPCs
+        continue;
+      }
+      
+      // Handle new hybrid structure
+      if (prof.auto) {
+        // Auto-calculate: characteristic score + (rank × 10)
+        const chaKey = prof.governingCha || 'str';
+        const baseCharScore = actorSystemData.characteristics[chaKey]?.total || 0;
+        prof.value = baseCharScore + (prof.rank || 0) * 10;
+      }
+      // else: use manual value (prof.value)
+    }
 
     // Wound Penalties
     if (actorSystemData.wounded === true) {
@@ -544,7 +563,10 @@ export class SimpleActor extends Actor {
 
       if (this._halfWoundPenalty(actorData) === true) {
         for (var skill in actorSystemData.professionsWound) {
-          actorSystemData.professionsWound[skill] = actorSystemData.professions[skill] + (woundPen / 2);
+          const profValue = typeof actorSystemData.professions[skill] === 'number' 
+            ? actorSystemData.professions[skill] 
+            : actorSystemData.professions[skill]?.value || 0;
+          actorSystemData.professionsWound[skill] = profValue + (woundPen / 2);
         }
 
         actorSystemData.woundPenalty = woundPen / 2
@@ -554,7 +576,10 @@ export class SimpleActor extends Actor {
 
       else if (this._halfWoundPenalty(actorData) === false) {
         for (var skill in actorSystemData.professionsWound) {
-          actorSystemData.professionsWound[skill] = actorSystemData.professions[skill] + woundPen;
+          const profValue = typeof actorSystemData.professions[skill] === 'number' 
+            ? actorSystemData.professions[skill] 
+            : actorSystemData.professions[skill]?.value || 0;
+          actorSystemData.professionsWound[skill] = profValue + woundPen;
         }
 
         actorSystemData.initiative.value = actorSystemData.initiative.base + woundIni;
@@ -565,7 +590,10 @@ export class SimpleActor extends Actor {
 
       else if (actorSystemData.wounded === false) {
           for (var skill in actorSystemData.professionsWound) {
-           actorSystemData.professionsWound[skill] = actorSystemData.professions[skill];
+            const profValue = typeof actorSystemData.professions[skill] === 'number' 
+              ? actorSystemData.professions[skill] 
+              : actorSystemData.professions[skill]?.value || 0;
+            actorSystemData.professionsWound[skill] = profValue;
         }
       }
 

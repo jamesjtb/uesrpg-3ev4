@@ -167,6 +167,32 @@ export class SimpleActorSheet extends ActorSheet {
       }
     }
 
+    // Calculate TN for PC combat styles
+    // TN = base characteristic score + (rank × 10)
+    const rankMap = {
+      'untrained': -2,  // Special case: untrained is -20
+      'novice': 0,
+      'apprentice': 1,
+      'journeyman': 2,
+      'adept': 3,
+      'expert': 4,
+      'master': 5
+    };
+    
+    for (let style of combatStyle) {
+      // Get the selected characteristic (baseCha is the player's choice: str or agi)
+      const govCharKey = (style.system.baseCha || 'str').toLowerCase();
+      const baseCharScore = actorData.system.characteristics[govCharKey]?.total || 0;
+      
+      // Get rank multiplier
+      const rankKey = style.system.rank || 'novice';
+      const rankValue = rankMap[rankKey] !== undefined ? rankMap[rankKey] : 0;
+      const rankBonus = (rankKey === 'untrained') ? -20 : (rankValue * 10);
+      
+      // Calculate TN: characteristic + rank bonus + misc bonus
+      style.system.value = baseCharScore + rankBonus + (style.system.bonus || 0);
+    }
+
     // Alphabetically sort all item lists
     if (game.settings.get("uesrpg-3ev4", "sortAlpha")) {
       const itemCats = [

@@ -8,6 +8,7 @@ const NS = "uesrpg-3ev4";
 export async function runMigrations() {
   await migrateArmorLocV1();          // existing NPC baked armor normalization
   await migrateArmorItemsCategoryV1(); // NEW: armor Item category defaults + normalization
+  await migrateNPCProfessionsV1();     // NEW: NPC profession hybrid structure
 }
 
 /**
@@ -142,4 +143,73 @@ async function migrateArmorItemsCategoryV1() {
   }
 
   console.log(`UESRPG | Migration armorItemsCategoryV1: updated ${updatedItems} armor item(s)`);
+}
+
+/**
+ * migrateNPCProfessionsV1:
+ * Converts existing flat NPC profession values to new hybrid structure.
+ * 
+ * - Sets auto: false to preserve existing manual values
+ * - Sets value to the old profession number
+ * - Sets rank: 0 and governingCha defaults
+ * - Sets a per-actor flag so it runs only once per NPC
+ */
+async function migrateNPCProfessionsV1() {
+  const actors = game.actors?.contents ?? [];
+  let migrated = 0;
+
+  // Default governing characteristics for each profession
+  const professionDefaults = {
+    combat: 'str',
+    magic: 'int',
+    evade: 'agi',
+    observe: 'prc',
+    stealth: 'agi',
+    knowledge: 'int',
+    social: 'prs',
+    physical: 'str',
+    commerce: 'int',
+    profession1: 'str',
+    profession2: 'str',
+    profession3: 'str'
+  };
+
+  for (const actor of actors) {
+    if (actor.type !== "NPC") continue;
+
+    // Already migrated?
+    if (actor.getFlag(NS, "migrations.professionsV1")) continue;
+
+    const sys = actor.system ?? {};
+    const professions = sys.professions ?? {};
+
+    // Check if already in new format (has object structure)
+    const firstProf = professions.combat;
+    if (typeof firstProf === 'object' && firstProf !== null) {
+      // Already in new format, just mark as migrated
+      await actor.setFlag(NS, "migrations.professionsV1", true);
+      continue;
+    }
+
+    // Build new profession structure from old flat numbers
+    const newProfessions = {};
+    for (const [profKey, defaultChar] of Object.entries(professionDefaults)) {
+      const oldValue = typeof professions[profKey] === 'number' ? professions[profKey] : 0;
+      newProfessions[profKey] = {
+        value: oldValue,
+        rank: 0,
+        governingCha: defaultChar,
+        auto: false  // Preserve manual values
+      };
+    }
+
+    await actor.update({
+      "system.professions": newProfessions,
+      [`flags.${NS}.migrations.professionsV1`]: true
+    });
+
+    migrated += 1;
+  }
+
+  console.log(`UESRPG | Migration professionsV1: ${migrated} NPC(s) migrated to hybrid profession structure`);
 }

@@ -155,6 +155,31 @@ export class npcSheet extends ActorSheet {
       }
     }
 
+    // Calculate TN for NPC combat styles based on combat profession
+    const combatProf = actorData.system.professions?.combat;
+    let combatValue = 0;
+    
+    if (typeof combatProf === 'number') {
+      // Legacy format: use the flat number
+      combatValue = combatProf;
+    } else if (combatProf) {
+      // New hybrid format
+      if (combatProf.auto) {
+        // Auto-calculate from characteristic + rank
+        const govCharKey = (combatProf.governingCha || 'str').toLowerCase();
+        const baseCharScore = actorData.system.characteristics[govCharKey]?.total || 0;
+        combatValue = baseCharScore + (combatProf.rank || 0) * 10;
+      } else {
+        // Use manual value
+        combatValue = combatProf.value || 0;
+      }
+    }
+    
+    // Apply combat value to all combat styles
+    for (let style of combatStyle) {
+      style.system.value = combatValue;
+    }
+
     // Alphabetically sort all item lists
     if (game.settings.get("uesrpg-3ev4", "sortAlpha")) {
       const itemCats = [
