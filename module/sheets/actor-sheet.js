@@ -53,6 +53,12 @@ export class SimpleActorSheet extends ActorSheet {
     });
   }
 
+  /** @override */
+  static canUse(actor) {
+    // Use this sheet only for Player Characters that are NOT NPCs
+    return actor.type === "Player Character" && !actor.system?.isNPC;
+  }
+
   /* -------------------------------------------- */
 
   /** @override */
@@ -2658,7 +2664,9 @@ return;
     for (let rankElement of [...this.form.querySelectorAll(".rank-select")]) {
       let item = this.actor.getEmbeddedDocument("Item", rankElement.id);
       let option = rankElement.querySelector(`[value="${item.system.rank}"]`);
-      option.selected = true;
+      if (option) {
+        option.selected = true;
+      }
     }
   }
 

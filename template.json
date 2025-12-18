@@ -53,6 +53,7 @@
   },
   "Player Character": {
     "templates": ["equippedWeapons", "favorites"],
+    "isNPC": false,
     "race": "",
     "birthsign": "",
     "age": "",

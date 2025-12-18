@@ -50,7 +50,7 @@ export class SimpleActor extends Actor {
     // Make separate methods for each Actor type (character, npc, etc.) to keep
     // things organized.
     if (actorData.type === 'Player Character') this._prepareCharacterData(actorData);
-    if (actorData.type === 'NPC') this._prepareNPCData(actorData);
+    if (actorData.type === 'NPC' || actorData.system?.isNPC) this._prepareNPCData(actorData);
     
     this._prepareArmorAndShield(actorData); 
   }
@@ -968,7 +968,7 @@ export class SimpleActor extends Actor {
     // --- Backward-compatible baked NPC armor fallback ---
     // If an NPC has no equipped armor items, but already has per-location AR saved on the actor,
     // do not wipe it. Keep old values (this avoids "NPC armor never changes / gets zeroed").
-    if (actorData.type === "NPC" && equippedArmor.length === 0) {
+    if ((actorData.type === "NPC" || actorData.system?.isNPC) && equippedArmor.length === 0) {
       // Restore any non-zero baked values
       for (const s of slots) {
         const baked = oldArmor?.[s];

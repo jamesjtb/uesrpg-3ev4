@@ -112,13 +112,13 @@ async getData() {
 
     // Create Options for Dropdown
     let modifierOptions = []
-    if (this.actor.type === 'Player Character') {
+    if (this.actor.type === 'Player Character' && !this.actor.system?.isNPC) {
       for (let skill of this.actor?.items?.filter(i => i.type === 'skill'||i.type === 'magicSkill'||i.type === 'combatStyle')) {
         modifierOptions.push(`<option value="${skill.name}">${skill.name}</option>`)
       }
     }
 
-    if (this.actor.type === 'NPC') {
+    if (this.actor.type === 'NPC' || this.actor.system?.isNPC) {
       for (let profession in this.actor.system.professions) {
         modifierOptions.push(`<option value="${profession}">${profession}</option>`)
       }

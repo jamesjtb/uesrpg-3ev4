@@ -38,6 +38,12 @@ export class merchantSheet extends ActorSheet {
     });
   }
 
+  /** @override */
+  static canUse(actor) {
+    // Use this sheet for legacy NPC types or Player Characters with isNPC flag
+    return actor.type === "NPC" || actor.system?.isNPC === true;
+  }
+
   /* -------------------------------------------- */
 
   /** @override */
@@ -46,7 +52,7 @@ export class merchantSheet extends ActorSheet {
     data.dtypes = ["String", "Number", "Boolean"];
     data.isGM = game.user.isGM;
     data.editable = data.options.editable;
-    if (this.actor.type === "NPC") {
+    if (this.actor.type === "NPC" || this.actor.system?.isNPC) {
       //Prepare character items
       this._prepareCharacterItems(data);
     }

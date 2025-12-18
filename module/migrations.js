@@ -3,12 +3,15 @@
  * Runs at world startup (Hooks.once('ready')) via entrypoint.js.
  */
 
+import { migrateNPCToCharacter } from './migrations/npc-to-character.js';
+
 const NS = "uesrpg-3ev4";
 
 export async function runMigrations() {
   await migrateArmorLocV1();          // existing NPC baked armor normalization
   await migrateArmorItemsCategoryV1(); // NEW: armor Item category defaults + normalization
   await migrateNPCProfessionsV1();     // NEW: NPC profession hybrid structure
+  await migrateNPCToCharacter();       // NEW: Unify NPC and PC actor types
 }
 
 /**

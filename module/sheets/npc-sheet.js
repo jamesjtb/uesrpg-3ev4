@@ -38,6 +38,21 @@ export class npcSheet extends ActorSheet {
     });
   }
 
+  /** @override */
+  static canUse(actor) {
+    // Use this sheet for legacy NPC types or Player Characters with isNPC flag
+    return actor.type === "NPC" || actor.system?.isNPC === true;
+  }
+
+  /** @override */
+  get template() {
+    // Use NPC template for NPCs (either legacy NPC type or Player Character with isNPC flag)
+    if (this.actor.type === "NPC" || this.actor.system?.isNPC) {
+      return "systems/uesrpg-3ev4/templates/npc-sheet.html";
+    }
+    return "systems/uesrpg-3ev4/templates/actor-sheet.html";
+  }
+
   /* -------------------------------------------- */
 
   /** @override */
@@ -61,8 +76,8 @@ export class npcSheet extends ActorSheet {
       }
     };
 
-    // Prepare Items
-    if (this.actor.type === "NPC") {
+    // Prepare Items - handle both NPC type and Player Character with isNPC flag
+    if (this.actor.type === "NPC" || this.actor.system?.isNPC) {
       this._prepareCharacterItems(data);
     }
 
@@ -155,29 +170,32 @@ export class npcSheet extends ActorSheet {
       }
     }
 
-    // Calculate TN for NPC combat styles based on combat profession
-    const combatProf = actorData.system.professions?.combat;
-    let combatValue = 0;
+    // Calculate TN for combat styles using the same logic as PC sheet
+    // This works for both legacy NPCs and migrated NPCs (Player Character with isNPC=true)
+    const rankMap = {
+      'untrained': -2,
+      'novice': 0,
+      'apprentice': 1,
+      'journeyman': 2,
+      'adept': 3,
+      'expert': 4,
+      'master': 5
+    };
     
-    if (typeof combatProf === 'number') {
-      // Legacy format: use the flat number
-      combatValue = combatProf;
-    } else if (combatProf) {
-      // New hybrid format
-      if (combatProf.auto) {
-        // Auto-calculate from characteristic + rank
-        const govCharKey = (combatProf.governingCha || 'str').toLowerCase();
-        const baseCharScore = actorData.system.characteristics[govCharKey]?.total || 0;
-        combatValue = baseCharScore + (combatProf.rank || 0) * 10;
-      } else {
-        // Use manual value
-        combatValue = combatProf.value || 0;
-      }
-    }
-    
-    // Apply combat value to all combat styles
     for (let style of combatStyle) {
-      style.system.value = combatValue;
+      // Get the selected characteristic (baseCha is the player's choice: str or agi)
+      const govCharKey = (style.system.baseCha || 'str').toLowerCase();
+      const baseCharScore = actorData.system.characteristics[govCharKey]?.total || 0;
+      
+      // Get rank multiplier
+      const rankKey = style.system.rank || 'novice';
+      const rankValue = rankMap[rankKey] !== undefined ? rankMap[rankKey] : 0;
+      const rankBonus = (rankKey === 'untrained') ? -20 : (rankValue * 10);
+      
+      // Calculate TN: characteristic + rank bonus + misc bonus
+      style.system.value = baseCharScore + rankBonus + (style.system.bonus || 0);
+    }
+
     }
 
     // Alphabetically sort all item lists
