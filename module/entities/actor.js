@@ -535,18 +535,24 @@ export class SimpleActor extends Actor {
       }
     }
 
-    // Calculate profession values (support hybrid auto/manual calculation)
-    for (let profKey in actorSystemData.professions) {
-      const prof = actorSystemData.professions[profKey];
-      
-      // Handle legacy flat number format (migration compatibility)
-      if (typeof prof === 'number') {
-        // Keep the old value as-is for legacy NPCs
-        continue;
-      }
-      
-      // Handle new hybrid structure
-      if (prof.auto) {
+for (let profKey in actorSystemData.professions) {
+  const prof = actorSystemData.professions[profKey];
+
+  // Guard against legacy/null/bad values so world boot can't crash
+  if (prof == null) continue;
+
+  // Handle legacy flat number format (migration compatibility)
+  if (typeof prof === 'number') {
+    // Keep the old value as-is for legacy NPCs
+    continue;
+  }
+
+  // Guard against unexpected non-object values
+  if (typeof prof !== 'object') continue;
+
+  // Handle new hybrid structure
+  if (prof.auto) {
+
         // Auto-calculate: characteristic score + (rank × 10)
         const chaKey = prof.governingCha || 'str';
         const baseCharScore = actorSystemData.characteristics[chaKey]?.total || 0;
