@@ -33,4 +33,15 @@ UESRPG.armorItemCat = {
   shield: "Shield"
 };
 
+UESRPG.characteristicAbbr = {
+  str: "Strength",
+  end: "Endurance",
+  agi: "Agility",
+  int: "Intelligence",
+  wp: "Willpower",
+  prc: "Perception",
+  prs: "Personality",
+  lck: "Luck"
+};
+
 export const systemRootPath = "systems/uesrpg-3ev4/";

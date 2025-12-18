@@ -235,7 +235,7 @@ export class UESRPGTest {
     
     const rollResult = this.result.total;
     for (let key in luckyNumbers) {
-      if (luckyNumbers[key] === rollResult) return true;
+      if (luckyNumbers.hasOwnProperty(key) && luckyNumbers[key] === rollResult) return true;
     }
     return false;
   }
@@ -249,7 +249,7 @@ export class UESRPGTest {
     
     const rollResult = this.result.total;
     for (let key in unluckyNumbers) {
-      if (unluckyNumbers[key] === rollResult) return true;
+      if (unluckyNumbers.hasOwnProperty(key) && unluckyNumbers[key] === rollResult) return true;
     }
     return false;
   }
@@ -299,180 +299,38 @@ export class UESRPGTest {
    * Reconstruct test from saved data (for future opposed resolution)
    */
   static recreate(data) {
-    const actor = game.actors.get(data.actorId);
-    const item = actor?.items.get(data.itemId);
-    
-    if (!actor || !item) {
-      console.error("Cannot recreate test: actor or item not found", data);
+    try {
+      const actor = game.actors.get(data.actorId);
+      const item = actor?.items.get(data.itemId);
+      
+      if (!actor || !item) {
+        console.warn("UESRPG | Cannot recreate test: actor or item not found", data);
+        return null;
+      }
+      
+      const test = new UESRPGTest({
+        actor,
+        item,
+        modifier: data.modifier || 0,
+        targetNumber: data.targetNumber,
+        precisionStrike: data.precisionStrike || false,
+        manualLocation: data.manualLocation || null,
+        context: data.context || {}
+      });
+      
+      // Restore result
+      test.result = {
+        roll: null, // Roll object can't be reconstructed
+        total: data.result?.total || 0,
+        success: data.result?.success || false,
+        degrees: data.result?.degrees || 0,
+        hitLocation: data.result?.hitLocation || null
+      };
+      
+      return test;
+    } catch (error) {
+      console.error("UESRPG | Error recreating test:", error, data);
       return null;
     }
-    
-    const test = new UESRPGTest({
-      actor,
-      item,
-      modifier: data.modifier,
-      targetNumber: data.targetNumber,
-      precisionStrike: data.precisionStrike,
-      manualLocation: data.manualLocation,
-      context: data.context || {}
-    });
-    
-    // Restore result
-    test.result = {
-      roll: null, // Roll object can't be reconstructed
-      total: data.result.total,
-      success: data.result.success,
-      degrees: data.result.degrees,
-      hitLocation: data.result.hitLocation
-    };
-    
-    return test;
-  }
-}
-
-/**
- * Weapon Test - for NPC weapon attacks and PC damage rolls
- * Simpler than combat style tests - directly uses weapon stats
- */
-export class UESRPGWeaponTest extends UESRPGTest {
-  constructor({
-    actor,
-    weapon,        // Weapon item
-    modifier = 0,
-    manualLocation = null
-  }) {
-    // Weapons don't have a TN - NPCs attack automatically
-    // For opposed tests, we compare damage/qualities
-    super({
-      actor,
-      item: weapon,
-      modifier,
-      targetNumber: 0,  // Weapons don't roll to-hit
-      precisionStrike: !!manualLocation,
-      manualLocation
-    });
-    
-    this.weapon = weapon;
-    this.isWeaponTest = true;
-  }
-  
-  async roll() {
-    // Weapon tests don't need success/failure - they auto-hit
-    // Just roll damage and determine hit location
-    
-    // Determine damage
-    let damageString = this.weapon.system.weapon2H 
-      ? this.weapon.system.damage2 
-      : this.weapon.system.damage;
-    
-    this.result.damageRoll = new Roll(damageString);
-    await this.result.damageRoll.evaluate();
-    this.result.damage = this.result.damageRoll.total;
-    
-    // Superior weapon (roll twice, take higher)
-    if (this.weapon.system.superior) {
-      let superiorRoll = new Roll(damageString);
-      await superiorRoll.evaluate();
-      if (superiorRoll.total > this.result.damage) {
-        this.result.damage = superiorRoll.total;
-        this.result.superiorUsed = true;
-      }
-    }
-    
-    // Determine hit location
-    this._determineHitLocation();
-    
-    // Store weapon qualities
-    this.result.qualities = this.weapon.system.qualities || "";
-    
-    // Create chat message
-    await this.renderMessage();
-    
-    return this;
-  }
-  
-  _determineHitLocation() {
-    // Manual location override
-    if (this.manualLocation) {
-      this.result.hitLocation = this.manualLocation;
-      return;
-    }
-    
-    // Roll 1d10 for hit location (NPC style)
-    // Use Foundry's Roll class for consistency and Dice So Nice integration
-    const hitLocationRoll = new Roll("1d10");
-    hitLocationRoll.evaluate({async: false});
-    const hitRoll = hitLocationRoll.total;
-    
-    if (hitRoll >= 1 && hitRoll <= 5) {
-      this.result.hitLocation = "body";
-    } else if (hitRoll === 6) {
-      this.result.hitLocation = "r_leg";
-    } else if (hitRoll === 7) {
-      this.result.hitLocation = "l_leg";
-    } else if (hitRoll === 8) {
-      this.result.hitLocation = "r_arm";
-    } else if (hitRoll === 9) {
-      this.result.hitLocation = "l_arm";
-    } else { // 10
-      this.result.hitLocation = "head";
-    }
-  }
-  
-  async _formatContent() {
-    // Match existing NPC damage roll format
-    const supRollTag = this.result.superiorUsed 
-      ? `[[${this.result.damage}]]` 
-      : '';
-    
-    const tags = [];
-    if (this.weapon.system.superior) {
-      tags.push(`<span style="border: none; border-radius: 30px; background-color: rgba(29, 97, 187, 0.80); color: white; text-align: center; font-size: xx-small; padding: 5px;" title="Damage was rolled twice and output was highest of the two">Superior</span>`);
-    }
-    
-    return `<div>
-      <h2>
-        <img src="${this.weapon.img}">
-        <div>${this.weapon.name}</div>
-      </h2>
-      <table>
-        <thead>
-          <tr>
-            <th>Damage</th>
-            <th class="tableCenterText">Result</th>
-            <th class="tableCenterText">Detail</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td class="tableAttribute">Damage</td>
-            <td class="tableCenterText">[[${this.result.damage}]] ${supRollTag}</td>
-            <td class="tableCenterText">${this.result.damageRoll.formula}</td>
-          </tr>
-          <tr>
-            <td class="tableAttribute">Hit Location</td>
-            <td class="tableCenterText">${this._formatLocation(this.result.hitLocation)}</td>
-            <td class="tableCenterText">-</td>
-          </tr>
-          <tr>
-            <td class="tableAttribute">Qualities</td>
-            <td class="tableCenterText" colspan="2">${this.result.qualities}</td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-    <div class="tag-container">${tags.join("")}</div>`;
-  }
-  
-  toObject() {
-    const baseData = super.toObject();
-    return {
-      ...baseData,
-      isWeaponTest: true,
-      weaponId: this.weapon.id,
-      damage: this.result.damage,
-      qualities: this.result.qualities,
-      superiorUsed: this.result.superiorUsed
-    };
   }
 }

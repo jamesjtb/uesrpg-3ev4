@@ -544,6 +544,50 @@
                             </div>
                         </div>
 
+                        {{!-- NPC Combat Styles Table --}}
+                        <div class="combat-styles-container">
+                            <table class="combat-style-table">
+                                <thead>
+                                    <tr>
+                                        <th class="item-name-cell">Combat Styles</th>
+                                        <th>Base Cha</th>
+                                        <th>Bonus</th>
+                                        <th>TN</th>
+                                        <th class="right-align-cell">
+                                            <button type="button" class="item-create" id="combatStyle" title="Add Combat Style">+</button>
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {{#each actor.combatStyle as |item id|}}
+                                        <tr class="item combat-style-item" data-item-id="{{item._id}}">
+                                            <td class="item-name-cell">
+                                                <div class="flex-container">
+                                                    <i class="fas fa-dice-d20 combat-style-roll rollable" title="Roll {{item.name}}"></i>
+                                                    <img class="item-img" src="{{item.img}}" title="{{item.name}}">
+                                                    <div class="item-name">{{item.name}}</div>
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <select name="items.{{item._id}}.system.baseCha" data-type="String">
+                                                    {{selectOptions ../config.characteristicAbbr selected=item.system.baseCha}}
+                                                </select>
+                                            </td>
+                                            <td>
+                                                <input type="number" name="items.{{item._id}}.system.bonus" value="{{item.system.bonus}}" style="width: 50px;">
+                                            </td>
+                                            <td class="styled-font red">{{item.system.value}}%</td>
+                                            <td class="right-align-cell">
+                                                <a class="item-control item-delete" title="Delete Item">
+                                                    <i class="fas fa-trash"></i>
+                                                </a>
+                                            </td>
+                                        </tr>
+                                    {{/each}}
+                                </tbody>
+                            </table>
+                        </div>
+
                         <table class="weapon-table">
                             <thead>
                                 <tr>

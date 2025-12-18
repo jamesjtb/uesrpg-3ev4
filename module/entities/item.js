@@ -61,26 +61,11 @@ export class SimpleItem extends Item {
     const legacyUntrained = game.settings.get("uesrpg-3ev4", "legacyUntrainedPenalty");
 
     //Combat Style Skill Bonus Calculation
-    if (legacyUntrained) {
-        if (itemData.rank === "untrained") {
-          itemData.bonus = -10 + this._untrainedException(actorData);
-        } else if (itemData.rank === "novice") {
-          itemData.bonus = 0;
-        } else if (itemData.rank === "apprentice") {
-          itemData.bonus = 10;
-        } else if (itemData.rank === "journeyman") {
-          itemData.bonus = 20;
-        } else if (itemData.rank === "adept") {
-          itemData.bonus = 30;
-        } else if (itemData.rank === "expert") {
-          itemData.bonus = 40;
-        } else if (itemData.rank === "master") {
-          itemData.bonus = 50;
-      }
-
-    } else {
-          if (itemData.rank == "untrained") {
-            itemData.bonus = -20 + this._untrainedException(actorData);
+    // Only apply rank-based bonus for Player Characters, not NPCs
+    if (actorData.type === 'Player Character') {
+      if (legacyUntrained) {
+          if (itemData.rank === "untrained") {
+            itemData.bonus = -10 + this._untrainedException(actorData);
           } else if (itemData.rank === "novice") {
             itemData.bonus = 0;
           } else if (itemData.rank === "apprentice") {
@@ -93,8 +78,27 @@ export class SimpleItem extends Item {
             itemData.bonus = 40;
           } else if (itemData.rank === "master") {
             itemData.bonus = 50;
+        }
+
+      } else {
+            if (itemData.rank == "untrained") {
+              itemData.bonus = -20 + this._untrainedException(actorData);
+            } else if (itemData.rank === "novice") {
+              itemData.bonus = 0;
+            } else if (itemData.rank === "apprentice") {
+              itemData.bonus = 10;
+            } else if (itemData.rank === "journeyman") {
+              itemData.bonus = 20;
+            } else if (itemData.rank === "adept") {
+              itemData.bonus = 30;
+            } else if (itemData.rank === "expert") {
+              itemData.bonus = 40;
+            } else if (itemData.rank === "master") {
+              itemData.bonus = 50;
+        }
       }
-  }
+    }
+    // For NPCs, bonus is manually set and not modified by rank
 
     // Combat Style Skill Calculation
     const woundPenalty = Number(actorData.system.woundPenalty)

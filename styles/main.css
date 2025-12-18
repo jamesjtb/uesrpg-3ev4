@@ -1058,6 +1058,35 @@
   width: 100%;
 }
 
+.worldbuilding .combat-styles-container {
+  margin-bottom: 1rem;
+}
+
+.worldbuilding .combat-style-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.worldbuilding .combat-style-table thead {
+  background: rgba(0, 0, 0, 0.3);
+  border-bottom: 2px solid var(--color-border-dark);
+}
+
+.worldbuilding .combat-style-table th,
+.worldbuilding .combat-style-table td {
+  padding: 0.5rem;
+  text-align: left;
+}
+
+.worldbuilding .combat-style-table .item-name-cell {
+  width: 50%;
+}
+
+.worldbuilding .combat-style-table .rollable:hover {
+  color: var(--color-text-highlight);
+  cursor: pointer;
+}
+
 
 /*----------------------------
   Merchant Sheets
