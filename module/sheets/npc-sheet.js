@@ -274,6 +274,8 @@ get template() {
   async activateListeners(html) {
     super.activateListeners(html);
 
+    const { OpposedCardManager } = await import("../combat/opposed-card-manager.js");
+
     // Rollable Buttons
     html
       .find(".characteristic-roll")
