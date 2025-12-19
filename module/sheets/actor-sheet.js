@@ -13,7 +13,7 @@ import { renderRaceCards } from "./racemenu/render-race-cards.js";
 import khajiitFurstocks from './racemenu/data/khajiit-furstocks.js';
 import expandedRaces from "./racemenu/data/expanded-races.js";
 
-export class SimpleActorSheet extends ActorSheet {
+export class SimpleActorSheet extends foundry.appv1.sheets.ActorSheet {
   /** @override */
   static get defaultOptions() {
     return foundry.utils.mergeObject(super.defaultOptions, {
@@ -60,7 +60,7 @@ export class SimpleActorSheet extends ActorSheet {
     data.isGM = game.user.isGM;
     data.editable = data.options.editable;
 
-    data.actor.system.enrichedBio = await TextEditor.enrichHTML(data.actor.system.bio, { async: true });
+    data.actor.system.enrichedBio = await foundry.applications.ux.TextEditor.implementation.enrichHTML(data.actor.system.bio, {async: true});
 
     // Prepare Items
     if (this.actor.type === 'Player Character') {
