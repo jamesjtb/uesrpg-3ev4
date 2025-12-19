@@ -2,7 +2,7 @@
  * Extend the basic ItemSheet with some very simple modifications
  * @extends {ItemSheet}
  */
-export class SimpleItemSheet extends ItemSheet {
+export class SimpleItemSheet extends foundry.appv1.sheets.ItemSheet {
 
   /** @override */
 	static get defaultOptions() {
