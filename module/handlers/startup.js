@@ -3,15 +3,10 @@ import { systemRootPath } from '../constants.js';
 export default async function startupHandler() {
   if (game.settings.get('uesrpg-3ev4', 'noStartUpDialog') === false) {
     const changelogTemplatePath = `${systemRootPath}/templates/partials/startup/changelog.html`;
-const changelogHtml = await foundry.applications.handlebars.renderTemplate(changelogTemplatePath);
+    const changelogHtml = await foundry.applications.handlebars.renderTemplate(changelogTemplatePath);
 
-const startupDialogTemplatePath = `${systemRootPath}/templates/partials/startup/startup-dialog.html`;
-const startupDialogHtml = await foundry.applications.handlebars.renderTemplate(startupDialogTemplatePath, {
-  discordInviteUrl: "https://discord.gg/pBRJwy3Ec5",
-  githubUrl: "https://github.com/jamesjtb/uesrpg-3ev4",
-  contentModLink: "https://github.com/95Gman/UESRPG-revised",
-  changelogHtml,
-});
+    const startupDialogTemplatePath = `${systemRootPath}/templates/partials/startup/startup-dialog.html`;
+    const startupDialogHtml = await foundry.applications.handlebars.renderTemplate(startupDialogTemplatePath, {
       discordInviteUrl: "https://discord.gg/pBRJwy3Ec5",
       githubUrl: "https://github.com/jamesjtb/uesrpg-3ev4",
       contentModLink: "https://github.com/95Gman/UESRPG-revised",
@@ -22,10 +17,10 @@ const startupDialogHtml = await foundry.applications.handlebars.renderTemplate(s
       title: "Welcome to the UESRPG Foundry System!",
       content: startupDialogHtml,
       buttons: {
-            one: {
-              label: "Close"
-            }
-          },
+        one: {
+          label: "Close"
+        }
+      },
       default: "one",
       close: () => console.log()
     });
