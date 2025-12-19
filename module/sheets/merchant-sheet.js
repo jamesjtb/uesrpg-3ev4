@@ -51,7 +51,7 @@ export class merchantSheet extends ActorSheet {
       this._prepareCharacterItems(data);
     }
 
-    data.actor.system.enrichedBio = await TextEditor.enrichHTML(data.actor.system.bio, {async: true});
+    data.item.system.enrichedDescription = await foundry.applications.ux.TextEditor.implementation.enrichHTML(itemData.system.description, {async: true});
 
 
     return data;
