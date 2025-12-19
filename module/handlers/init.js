@@ -105,27 +105,28 @@ async function registerSettings() {
 
 async function registerSheets () {
     // Register sheet application classes
-    foundry.documents.collections.Actors.unregisterSheet("core", foundry.appv1.sheets.ActorSheet);
-    foundry.documents.collections.Items.unregisterSheet("core", foundry.appv1.sheets.ItemSheet);
-    foundry.documents.collections.Actors.registerSheet("uesrpg-3ev4", SimpleActorSheet, {
-      types: ['Player Character'],
-      makeDefault: true,
-      label: "Default UESRPG Character Sheet",
-    });
-    foundry.documents.collections.Items.registerSheet("uesrpg-3ev4", SimpleItemSheet, {
-      makeDefault: true,
-      label: "Default UESRPG Item Sheet",
-    });
-    foundry.documents.collections.Actors.registerSheet("uesrpg-3ev4", npcSheet, {
-      types: ["NPC"],
-      makeDefault: true,
-      label: "Default UESRPG NPC Sheet",
-    });
-    foundry.documents.collections.Actors.registerSheet("uesrpg-3ev4", merchantSheet, {
-      types: ["NPC"],
-      makeDefault: false,
-      label: "Default UESRPG Merchant Sheet",
-    });
+foundry.documents.collections.Actors.unregisterSheet("core", foundry.appv1.sheets.ActorSheet);
+foundry.documents.collections.Items.unregisterSheet("core", foundry.appv1.sheets.ItemSheet);
+
+foundry.documents.collections.Actors.registerSheet("uesrpg-3ev4", SimpleActorSheet, {
+  types: ['Player Character'],
+  makeDefault: true,
+  label: "Default UESRPG Character Sheet",
+});
+foundry.documents.collections.Items.registerSheet("uesrpg-3ev4", SimpleItemSheet, {
+  makeDefault: true,
+  label: "Default UESRPG Item Sheet",
+});
+foundry.documents.collections.Actors.registerSheet("uesrpg-3ev4", npcSheet, {
+  types: ["NPC"],
+  makeDefault: true,
+  label: "Default UESRPG NPC Sheet",
+});
+foundry.documents.collections.Actors.registerSheet("uesrpg-3ev4", merchantSheet, {
+  types: ["NPC"],
+  makeDefault: false,
+  label: "Default UESRPG Merchant Sheet",
+});
 }
 
 export default async function initHandler() {
