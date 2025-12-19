@@ -3,7 +3,7 @@ import { systemRootPath } from '../constants.js';
 export default async function startupHandler() {
   if (game.settings.get('uesrpg-3ev4', 'noStartUpDialog') === false) {
     const changelogTemplatePath = `${systemRootPath}/templates/partials/startup/changelog.html`;
- const changelogHtml = await foundry.applications.handlebars.renderTemplate(changelogTemplatePath);
+const changelogHtml = await foundry.applications.handlebars.renderTemplate(changelogTemplatePath);
 
 const startupDialogTemplatePath = `${systemRootPath}/templates/partials/startup/startup-dialog.html`;
 const startupDialogHtml = await foundry.applications.handlebars.renderTemplate(startupDialogTemplatePath, {
