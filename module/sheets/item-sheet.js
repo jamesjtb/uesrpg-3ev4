@@ -29,7 +29,7 @@ export class SimpleItemSheet extends ItemSheet {
       data.editable = data.options.editable;
       const itemData = data.item;
 
-      data.item.system.enrichedDescription = await TextEditor.enrichHTML(itemData.system.description, {async: true});
+      data.item.system.enrichedDescription = await foundry.applications.ux.TextEditor.implementation.enrichHTML(itemData.system.description, {async: true});
       return data;
       }
 
