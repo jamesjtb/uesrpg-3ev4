@@ -52,7 +52,7 @@ export class npcSheet extends ActorSheet {
       this._prepareCharacterItems(data);
     }
 
-    data.actor.system.enrichedBio = await TextEditor.enrichHTML(data.actor.system.bio, {async: true});
+    data.actor.system.enrichedBio = await foundry.applications.ux.TextEditor.implementation.enrichHTML(data.actor.system.bio, {async: true});
 
     return data;
   }
