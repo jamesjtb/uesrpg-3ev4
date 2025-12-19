@@ -1,6 +1,6 @@
 /**
- * Extend the basic ActorSheet with some very simple modifications
- * @extends {ActorSheet}
+ * Extend the basic foundry.appv1.sheets.ActorSheet with some very simple modifications
+ * @extends {foundry.appv1.sheets.ActorSheet}
  */
 import { isLucky } from "../helpers/skillCalcHelper.js";
 import { isUnlucky } from "../helpers/skillCalcHelper.js";
@@ -13,7 +13,7 @@ import { renderRaceCards } from "./racemenu/render-race-cards.js";
 import khajiitFurstocks from './racemenu/data/khajiit-furstocks.js';
 import expandedRaces from "./racemenu/data/expanded-races.js";
 
-export class SimpleActorSheet extends foundry.appv1.sheets.ActorSheet {
+export class SimpleActorSheet extends foundry.appv1.sheets.foundry.appv1.sheets.ActorSheet {
   /** @override */
   static get defaultOptions() {
     return foundry.utils.mergeObject(super.defaultOptions, {
