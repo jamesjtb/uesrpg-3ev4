@@ -7,13 +7,13 @@ const handleDialogResult = (html) => {
 
 const getUserChoice = (choices, penalty, defaultChoice) => {
   return new Promise(async (resolve) => {
-    const choiceTemplatePath = `${systemRootPath}/templates/partials/dialogs/choose-birthsign-penalty.hbs`;
-    const choiceTemplateHtml = await renderTemplate(choiceTemplatePath, {
-      choices,
-      penalty,
-      chosen: defaultChoice,
-      groupName: "penaltyChoices"
-    });
+const choiceTemplatePath = `${systemRootPath}/templates/partials/dialogs/choose-birthsign-penalty.hbs`;
+const choiceTemplateHtml = await foundry.applications.handlebars.renderTemplate(choiceTemplatePath, {
+  choices,
+  penalty,
+  chosen: defaultChoice,
+  groupName: "penaltyChoices"
+});
     const dialog = new Dialog({
       title: "Choose Birthsign Penalty",
       content: choiceTemplateHtml,
