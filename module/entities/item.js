@@ -116,7 +116,9 @@ export class SimpleItem extends Item {
   }
 
   _prepareMerchantItem(actorData, itemData) {
-    itemData.modPrice = (itemData.price + (itemData.price * (actorData.system.priceMod / 100))).toFixed(0);
+    // Guard priceMod access and use Math.round for safe numeric conversion
+    const priceMod = Number(actorData?.system?.priceMod ?? 0);
+    itemData.modPrice = Math.round(itemData.price + (itemData.price * (priceMod / 100)));
   }
 
   _prepareArmorItem(actorData, itemData) {

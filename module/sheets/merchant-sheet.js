@@ -382,13 +382,15 @@ export class merchantSheet extends foundry.appv1.sheets.ActorSheet {
   }
 
   _updateModPrice() {
+    // Guard priceMod access and use Math.round for safe numeric conversion
+    const priceMod = Number(this.actor?.system?.priceMod ?? 0);
     for (let item of this.actor.items.filter((item) =>
       item.hasOwnProperty("modPrice")
     )) {
-      item.system.modPrice = (
+      item.system.modPrice = Math.round(
         item.system.price +
-        item.system.price * (this.actor.system.priceMod / 100)
-      ).toFixed(0);
+        item.system.price * (priceMod / 100)
+      );
       item.update({
         "system.modPrice": item.system.modPrice,
         "system.price": item.system.price,
@@ -530,14 +532,17 @@ export class merchantSheet extends foundry.appv1.sheets.ActorSheet {
     const merchantItems = this.actor.items.filter((item) =>
       item.system.hasOwnProperty("modPrice")
     );
-    this.actor.system.priceMod = Number(this.actor.system.priceMod + 5);
+    // Guard and safely increment priceMod
+    const currentPriceMod = Number(this.actor?.system?.priceMod ?? 0);
+    this.actor.system.priceMod = currentPriceMod + 5;
     this.actor.update({ "system.priceMod": this.actor.system.priceMod });
 
     for (let item of merchantItems) {
-      item.system.modPrice = (
+      // Use Math.round for safe numeric conversion
+      item.system.modPrice = Math.round(
         item.system.price +
         item.system.price * (this.actor.system.priceMod / 100)
-      ).toFixed(0);
+      );
       await item.update({ "system.modPrice": item.system.modPrice });
     }
   }
@@ -547,14 +552,17 @@ export class merchantSheet extends foundry.appv1.sheets.ActorSheet {
     const merchantItems = this.actor.items.filter((item) =>
       item.system.hasOwnProperty("modPrice")
     );
-    this.actor.system.priceMod = Number(this.actor.system.priceMod - 5);
+    // Guard and safely decrement priceMod
+    const currentPriceMod = Number(this.actor?.system?.priceMod ?? 0);
+    this.actor.system.priceMod = currentPriceMod - 5;
     this.actor.update({ "system.priceMod": this.actor.system.priceMod });
 
     for (let item of merchantItems) {
-      item.system.modPrice = (
+      // Use Math.round for safe numeric conversion
+      item.system.modPrice = Math.round(
         item.system.price +
         item.system.price * (this.actor.system.priceMod / 100)
-      ).toFixed(0);
+      );
       await item.update({ "system.modPrice": item.system.modPrice });
     }
   }
