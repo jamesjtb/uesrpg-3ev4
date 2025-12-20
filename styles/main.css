@@ -43,8 +43,9 @@
 .changelog h3{
   font-family: var(--main-font-family);
 }
-
-.worldbuilding h1, h1, h2 {
+/* --- UESRPG PATCH: scope heading rules to system sheets only --- */
+.worldbuilding h1,
+.worldbuilding h2 {
   font-family: var(--main-font-family);
   text-align: center;
 }
@@ -1270,3 +1271,38 @@
   height: auto !important;
   min-height: 0 !important;
 }
+/* --- UESRPG PATCH: AppV2-friendly sizing (avoid sheet windows stretching to viewport cap) --- */
+
+/* 1) Ensure the sheet window content can shrink and scroll */
+.worldbuilding .window-content {
+  overflow: hidden; /* prevents outer window-content from forcing layout */
+}
+
+/* 2) Sheet body should become the scroll container */
+.worldbuilding .sheet-section-container {
+  /* If you currently have height: 100%; it can cause growth. Prefer min-height. */
+  height: auto !important;
+  min-height: 0 !important;
+}
+
+.worldbuilding .sheet-body {
+  /* Make sheet-body the flexible area and allow scrolling */
+  flex: 1 1 auto;
+  min-height: 0;           /* critical in flex layouts for scroll to work */
+  overflow-y: auto;        /* internal scroll instead of stretching window */
+  overflow-x: hidden;
+}
+
+/* 3) ProseMirror/editor containers should not demand full height unless parent is constrained */
+.worldbuilding .editor,
+.worldbuilding .prosemirror {
+  height: auto !important;
+  min-height: 0 !important;
+}
+
+/* 4) Optional: tighten the biography container if it is known to be the offender */
+.worldbuilding .bioPage .contentContainer {
+  min-height: 0;
+  overflow-y: auto;
+}
+
