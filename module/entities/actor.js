@@ -817,33 +817,57 @@ export class SimpleActor extends Actor {
     return totalBonus
   }
 
+  // Replace the existing _calculateENC / _armorWeight / _excludeENC implementations with these:
+
   _calculateENC(actorData) {
-    let weighted = actorData.items.filter(item => item.system.hasOwnProperty("enc"));
+    // Only consider items that have a numeric enc (guard for missing fields)
+    const weighted = actorData.items.filter(item => {
+      return item && item.system && item.system.hasOwnProperty("enc") && !isNaN(Number(item.system.enc));
+    });
+
     let totalWeight = 0.0;
     for (let item of weighted) {
-      let containerAppliedENC = item.type == 'container' ? item.system.container_enc.applied_enc : 0
-      let containedItemReduction = item.type != 'container' && item.system.containerStats.contained ? (item.system.enc * item.system.quantity) : 0
-      totalWeight = totalWeight + (item.system.enc * item.system.quantity) + containerAppliedENC - containedItemReduction;
+      // Safely get the values, falling back to 0 when missing
+      const enc = Number(item.system.enc || 0);
+      const qty = Number(item.system.quantity || 0);
+
+      // If this item is a container and has container_enc, include applied_enc safely
+      const containerAppliedENC = (item.type === 'container' && item.system.container_enc && !isNaN(Number(item.system.container_enc.applied_enc)))
+        ? Number(item.system.container_enc.applied_enc)
+        : 0;
+
+      // If this item is contained inside a container, containerStats may be undefined — guard it
+      const contained = item.system.containerStats && item.system.containerStats.hasOwnProperty('contained') ? Boolean(item.system.containerStats.contained) : false;
+      const containedItemReduction = (item.type !== 'container' && contained) ? (enc * qty) : 0;
+
+      totalWeight += (enc * qty) + containerAppliedENC - containedItemReduction;
     }
-    return totalWeight
+
+    return totalWeight;
   }
 
   _armorWeight(actorData) {
-    let worn = actorData.items.filter(item => item.system.equipped == true);
+    // Guard for missing system or equipped flag
+    const worn = actorData.items.filter(item => item && item.system && (item.system.equipped === true));
     let armorENC = 0.0;
     for (let item of worn) {
-      armorENC = armorENC + ((item.system.enc / 2) * item.system.quantity);
+      const enc = Number(item.system.enc || 0);
+      const qty = Number(item.system.quantity || 0);
+      // divide by 2 per original logic; still guard against NaN
+      armorENC += ((enc / 2) * qty);
     }
-    return armorENC
+    return armorENC;
   }
 
   _excludeENC(actorData) {
-    let excluded = actorData.items.filter(item => item.system.excludeENC == true);
+    const excluded = actorData.items.filter(item => item && item.system && item.system.excludeENC === true);
     let totalWeight = 0.0;
     for (let item of excluded) {
-      totalWeight = totalWeight + (item.system.enc * item.system.quantity);
+      const enc = Number(item.system.enc || 0);
+      const qty = Number(item.system.quantity || 0);
+      totalWeight += (enc * qty);
     }
-    return totalWeight
+    return totalWeight;
   }
 
   _hpBonus(actorData) {
