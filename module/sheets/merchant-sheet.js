@@ -304,14 +304,17 @@ export class merchantSheet extends foundry.appv1.sheets.ActorSheet {
 
       // Logic for removing container linking if deleted item is the container
       if (itemToDelete.type == "container") {
-        // resets contained items status and then sets contained_items array to empty
-        itemToDelete.system.contained_items.forEach((item) => {
+        // Defensive guard: ensure contained_items exists and is an array
+        const containedItems = itemToDelete?.system?.contained_items || [];
+        containedItems.forEach((item) => {
           let sourceItem = this.actor.items.find((i) => i._id == item._id);
-          sourceItem.update({
-            "system.containerStats.container_id": "",
-            "system.containerStats.container_name": "",
-            "system.containerStats.contained": false,
-          });
+          if (sourceItem) {
+            sourceItem.update({
+              "system.containerStats.container_id": "",
+              "system.containerStats.container_name": "",
+              "system.containerStats.contained": false,
+            });
+          }
         });
 
         itemToDelete.update({ "system.contained_items": [] });
@@ -319,28 +322,30 @@ export class merchantSheet extends foundry.appv1.sheets.ActorSheet {
 
       // Logic for removing container linking if deleted item is in a container
       if (
-        itemToDelete.system.isPhysicalObject &&
+        itemToDelete?.system?.isPhysicalObject &&
         itemToDelete.type != "container" &&
-        itemToDelete.system.containerStats.contained
+        itemToDelete?.system?.containerStats?.contained
       ) {
         let containerObject = this.actor.items.find(
-          (item) => item._id == itemToDelete.system.containerStats.container_id
+          (item) => item._id == itemToDelete?.system?.containerStats?.container_id
         );
-        let indexToRemove = containerObject.system.contained_items.indexOf(
-          containerObject.system.contained_items.find(
-            (i) => i._id == itemToDelete._id
-          )
-        );
-        containerObject.system.contained_items.splice(indexToRemove, 1);
-        containerObject.update({
-          "system.contained_items": containerObject.system.contained_items,
-        });
+        if (containerObject && Array.isArray(containerObject?.system?.contained_items)) {
+          let indexToRemove = containerObject.system.contained_items.indexOf(
+            containerObject.system.contained_items.find(
+              (i) => i._id == itemToDelete._id
+            )
+          );
+          containerObject.system.contained_items.splice(indexToRemove, 1);
+          containerObject.update({
+            "system.contained_items": containerObject.system.contained_items,
+          });
 
-        itemToDelete.update({
-          "system.containerStats.container_id": "",
-          "system.containerStats.container_name": "",
-          "system.containerStats.contained": false,
-        });
+          itemToDelete.update({
+            "system.containerStats.container_id": "",
+            "system.containerStats.container_name": "",
+            "system.containerStats.contained": false,
+          });
+        }
       }
 
       this.actor.deleteEmbeddedDocuments("Item", [li.dataset.itemId]);
@@ -382,13 +387,13 @@ export class merchantSheet extends foundry.appv1.sheets.ActorSheet {
   }
 
   _updateModPrice() {
+    // Defensive guard: filter items with modPrice and safe property access
     for (let item of this.actor.items.filter((item) =>
-      item.hasOwnProperty("modPrice")
+      item?.system?.hasOwnProperty("modPrice")
     )) {
-      item.system.modPrice = (
-        item.system.price +
-        item.system.price * (this.actor.system.priceMod / 100)
-      ).toFixed(0);
+      const price = Number(item?.system?.price ?? 0);
+      const priceMod = Number(this.actor?.system?.priceMod ?? 0);
+      item.system.modPrice = Math.round(price + price * (priceMod / 100));
       item.update({
         "system.modPrice": item.system.modPrice,
         "system.price": item.system.price,
@@ -527,34 +532,34 @@ export class merchantSheet extends foundry.appv1.sheets.ActorSheet {
 
   async _onIncreasePriceMod(event) {
     event.preventDefault();
+    // Defensive guard: filter items with safe property access
     const merchantItems = this.actor.items.filter((item) =>
-      item.system.hasOwnProperty("modPrice")
+      item?.system?.hasOwnProperty("modPrice")
     );
     this.actor.system.priceMod = Number(this.actor.system.priceMod + 5);
     this.actor.update({ "system.priceMod": this.actor.system.priceMod });
 
     for (let item of merchantItems) {
-      item.system.modPrice = (
-        item.system.price +
-        item.system.price * (this.actor.system.priceMod / 100)
-      ).toFixed(0);
+      const price = Number(item?.system?.price ?? 0);
+      const priceMod = Number(this.actor?.system?.priceMod ?? 0);
+      item.system.modPrice = Math.round(price + price * (priceMod / 100));
       await item.update({ "system.modPrice": item.system.modPrice });
     }
   }
 
   async _onDecreasePriceMod(event) {
     event.preventDefault();
+    // Defensive guard: filter items with safe property access
     const merchantItems = this.actor.items.filter((item) =>
-      item.system.hasOwnProperty("modPrice")
+      item?.system?.hasOwnProperty("modPrice")
     );
     this.actor.system.priceMod = Number(this.actor.system.priceMod - 5);
     this.actor.update({ "system.priceMod": this.actor.system.priceMod });
 
     for (let item of merchantItems) {
-      item.system.modPrice = (
-        item.system.price +
-        item.system.price * (this.actor.system.priceMod / 100)
-      ).toFixed(0);
+      const price = Number(item?.system?.price ?? 0);
+      const priceMod = Number(this.actor?.system?.priceMod ?? 0);
+      item.system.modPrice = Math.round(price + price * (priceMod / 100));
       await item.update({ "system.modPrice": item.system.modPrice });
     }
   }
@@ -571,32 +576,34 @@ export class merchantSheet extends foundry.appv1.sheets.ActorSheet {
     const lckBonusArray = [];
 
     const bonusItems = this.actor.items.filter((item) =>
-      item.system.hasOwnProperty("characteristicBonus")
+      item?.system?.hasOwnProperty("characteristicBonus")
     );
 
     for (let item of bonusItems) {
-      if (item.system.characteristicBonus.strChaBonus !== 0) {
+      // Defensive guard: safe access to characteristicBonus properties
+      const charBonus = item?.system?.characteristicBonus ?? {};
+      if ((charBonus.strChaBonus ?? 0) !== 0) {
         let name = item.name;
         strBonusArray.push(name);
-      } else if (item.system.characteristicBonus.endChaBonus !== 0) {
+      } else if ((charBonus.endChaBonus ?? 0) !== 0) {
         let name = item.name;
         endBonusArray.push(name);
-      } else if (item.system.characteristicBonus.agiChaBonus !== 0) {
+      } else if ((charBonus.agiChaBonus ?? 0) !== 0) {
         let name = item.name;
         agiBonusArray.push(name);
-      } else if (item.system.characteristicBonus.intChaBonus !== 0) {
+      } else if ((charBonus.intChaBonus ?? 0) !== 0) {
         let name = item.name;
         intBonusArray.push(name);
-      } else if (item.system.characteristicBonus.wpChaBonus !== 0) {
+      } else if ((charBonus.wpChaBonus ?? 0) !== 0) {
         let name = item.name;
         wpBonusArray.push(name);
-      } else if (item.system.characteristicBonus.prcChaBonus !== 0) {
+      } else if ((charBonus.prcChaBonus ?? 0) !== 0) {
         let name = item.name;
         prcBonusArray.push(name);
-      } else if (item.system.characteristicBonus.prsChaBonus !== 0) {
+      } else if ((charBonus.prsChaBonus ?? 0) !== 0) {
         let name = item.name;
         prsBonusArray.push(name);
-      } else if (item.system.characteristicBonus.lckChaBonus !== 0) {
+      } else if ((charBonus.lckChaBonus ?? 0) !== 0) {
         let name = item.name;
         lckBonusArray.push(name);
       }

@@ -116,7 +116,10 @@ export class SimpleItem extends Item {
   }
 
   _prepareMerchantItem(actorData, itemData) {
-    itemData.modPrice = (itemData.price + (itemData.price * (actorData.system.priceMod / 100))).toFixed(0);
+    // Defensive guard: safe numeric calculations with defaults
+    const price = Number(itemData?.price ?? 0);
+    const priceMod = Number(actorData?.system?.priceMod ?? 0);
+    itemData.modPrice = Math.round(price + (price * (priceMod / 100)));
   }
 
   _prepareArmorItem(actorData, itemData) {
@@ -165,7 +168,8 @@ export class SimpleItem extends Item {
 
   _prepareContainerItem(actorData, itemData) {
     // Need to calculate container stats like current capacity, applied ENC, and item count
-    if (!Array.isArray(itemData.contained_items) || itemData.contained_items.length === 0) {
+    // Defensive guard: ensure contained_items array exists
+    if (!Array.isArray(itemData?.contained_items) || itemData.contained_items.length === 0) {
       itemData.container_enc = itemData.container_enc || { item_count: 0, current: 0, applied_enc: 0 };
       return
     }
@@ -175,9 +179,10 @@ export class SimpleItem extends Item {
     let currentCapacity = 0
     for (let containedItem of itemData.contained_items) {
       // containedItem might be { item: Item } or a plain stored object
+      // Defensive guard: safe property access with defaults
       const cItem = containedItem?.item || containedItem;
-      const enc = Number(cItem?.system?.enc || 0);
-      const qty = Number(cItem?.system?.quantity || 0);
+      const enc = Number(cItem?.system?.enc ?? 0);
+      const qty = Number(cItem?.system?.quantity ?? 0);
       const encProduct = enc * qty;
       currentCapacity = Math.ceil(currentCapacity + (encProduct))
     }
