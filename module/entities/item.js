@@ -169,7 +169,7 @@ export class SimpleItem extends Item {
   _prepareContainerItem(actorData, itemData) {
     // Need to calculate container stats like current capacity, applied ENC, and item count
     // Defensive guard: ensure contained_items array exists
-    if (!Array.isArray(itemData?.contained_items) || itemData.contained_items.length === 0) {
+    if (!Array.isArray(itemData?.contained_items) || (itemData?.contained_items?.length ?? 0) === 0) {
       itemData.container_enc = itemData.container_enc || { item_count: 0, current: 0, applied_enc: 0 };
       return
     }
