@@ -25,35 +25,42 @@ command: |-
             let roll = new Roll("1d100");
             roll.roll({async:false});
           
-            if (roll.total === lucky.ln1 || roll.total == lucky.ln2 || roll.total == lucky.ln3 || roll.total == lucky.ln4 || roll.total == lucky.ln5) {
+            // Defensive property access guards
+            const actorSys = token?.actor?.system;
+            const lucky = actorSys?.lucky_numbers;
+            const unlucky = actorSys?.unlucky_numbers;
+            const rideItem = token?.actor?.items?.find(entry => entry?.name === "Ride");
+            const skillValue = rideItem?.system?.value ?? 0;
+          
+            if (roll.total === lucky?.ln1 || roll.total == lucky?.ln2 || roll.total == lucky?.ln3 || roll.total == lucky?.ln4 || roll.total == lucky?.ln5) {
               const content = `Rolls for <b>Ride</b>!
-              <p></p><b>Target Number: [[${rideVal}]]</b> <p></p>
+              <p></p><b>Target Number: [[${skillValue}]]</b> <p></p>
               <b>Result: [[${roll.total}]]</b><p></p>
               <span style='color:green; font-size:120%;'> <b>LUCKY NUMBER!</b></span>`
           
               roll.toMessage({ user: game.user._id, speaker: ChatMessage.getSpeaker(), content: content});
           
-            } else if (roll.total === unlucky.ul1 || roll.total == unlucky.ul2 || roll.total == unlucky.ul3 || roll.total == unlucky.ul4 || roll.total == unlucky.ul5) {
+            } else if (roll.total === unlucky?.ul1 || roll.total == unlucky?.ul2 || roll.total == unlucky?.ul3 || roll.total == unlucky?.ul4 || roll.total == unlucky?.ul5) {
               const content = `Rolls for <b>Ride</b>!
-              <p></p><b>Target Number: [[${rideVal}]]</b> <p></p>
+              <p></p><b>Target Number: [[${skillValue}]]</b> <p></p>
               <b>Result: [[${roll.total}]]</b><p></p>
               <span style='color:red; font-size:120%;'> <b>UNLUCKY NUMBER!</b></span>`
           
               roll.toMessage({ user: game.user._id, speaker: ChatMessage.getSpeaker(), content: content});
           
-            } else if (actorSys.wounded === true) {
+            } else if (actorSys?.wounded === true) {
               const content = `Rolls for <b>Ride</b>!
-              <p></p><b>Target Number: [[${rideVal}]] </b> <p></p>
+              <p></p><b>Target Number: [[${skillValue}]] </b> <p></p>
               <b>Result: [[${roll.total}]]</b><p></p>
-              ${roll.total<=(rideVal + playerInput) ? " <span style='color:green; font-size: 120%;'> <b>SUCCESS!</b></span>" : " <span style='color:red; font-size: 120%;'> <b>FAILURE!</b></span>"}`
+              ${roll.total<=(skillValue + playerInput) ? " <span style='color:green; font-size: 120%;'> <b>SUCCESS!</b></span>" : " <span style='color:red; font-size: 120%;'> <b>FAILURE!</b></span>"}`
           
               roll.toMessage({ user: game.user._id, speaker: ChatMessage.getSpeaker(), content: content});
     
             } else {
               const content = `Rolls for <b>Ride</b>!
-              <p></p><b>Target Number: [[${rideVal}]]</b> <p></p>
+              <p></p><b>Target Number: [[${skillValue}]]</b> <p></p>
               <b>Result: [[${roll.total}]]</b><p></p>
-              ${roll.total<=(rideVal + playerInput) ? " <span style='color:green; font-size: 120%;'> <b>SUCCESS!</b></span>" : " <span style='color:red; font-size: 120%;'> <b>FAILURE!</b></span>"}`
+              ${roll.total<=(skillValue + playerInput) ? " <span style='color:green; font-size: 120%;'> <b>SUCCESS!</b></span>" : " <span style='color:red; font-size: 120%;'> <b>FAILURE!</b></span>"}`
           
               roll.toMessage({ user: game.user._id, speaker: ChatMessage.getSpeaker(), content: content});
               }
