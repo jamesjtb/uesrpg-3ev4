@@ -824,9 +824,10 @@ export class SimpleActor extends Actor {
       actorSystemData.resistance.natToughness = 5;
       actorSystemData.wound_threshold.value = actorSystemData.wound_threshold.value + 5;
       actorSystemData.action_points.max = actorSystemData.action_points.max - 1;
-      const surv = actorData.items.find(i => i.name === 'Survival'); if (surv) surv.system.miscValue = 30;
-      const nav = actorData.items.find(i => i.name === 'Navigate'); if (nav) nav.system.miscValue = 30;
-      const obs = actorData.items.find(i => i.name === 'Observe'); if (obs) obs.system.miscValue = 30;
+      // Safe defensive access to skill items and their system properties
+      const surv = actorData.items.find(i => i.name === 'Survival'); if (surv?.system) surv.system.miscValue = 30;
+      const nav = actorData.items.find(i => i.name === 'Navigate'); if (nav?.system) nav.system.miscValue = 30;
+      const obs = actorData.items.find(i => i.name === 'Observe'); if (obs?.system) obs.system.miscValue = 30;
     } else if (this._wereBatForm(actorData) === true) {
         actorSystemData.resistance.silverR = actorSystemData.resistance.silverR - 5;
         actorSystemData.resistance.diseaseR = actorSystemData.resistance.diseaseR + 200;
@@ -838,9 +839,10 @@ export class SimpleActor extends Actor {
         actorSystemData.resistance.natToughness = 5;
         actorSystemData.wound_threshold.value = actorSystemData.wound_threshold.value + 3;
         actorSystemData.action_points.max = actorSystemData.action_points.max - 1;
-        const surv2 = actorData.items.find(i => i.name === 'Survival'); if (surv2) surv2.system.miscValue = 30;
-      const nav2 = actorData.items.find(i => i.name === 'Navigate'); if (nav2) nav2.system.miscValue = 30;
-      const obs2 = actorData.items.find(i => i.name === 'Observe'); if (obs2) obs2.system.miscValue = 30;
+        // Safe defensive access to skill items and their system properties
+        const surv2 = actorData.items.find(i => i.name === 'Survival'); if (surv2?.system) surv2.system.miscValue = 30;
+      const nav2 = actorData.items.find(i => i.name === 'Navigate'); if (nav2?.system) nav2.system.miscValue = 30;
+      const obs2 = actorData.items.find(i => i.name === 'Observe'); if (obs2?.system) obs2.system.miscValue = 30;
     } else if (this._wereBoarForm(actorData) === true) {
         actorSystemData.resistance.silverR = actorSystemData.resistance.silverR - 5;
         actorSystemData.resistance.diseaseR = actorSystemData.resistance.diseaseR + 200;
@@ -851,9 +853,10 @@ export class SimpleActor extends Actor {
         actorSystemData.resistance.natToughness = 7;
         actorSystemData.wound_threshold.value = actorSystemData.wound_threshold.value + 5;
         actorSystemData.action_points.max = actorSystemData.action_points.max - 1;
-        const surv3 = actorData.items.find(i => i.name === 'Survival'); if (surv3) surv3.system.miscValue = 30;
-        const nav3 = actorData.items.find(i => i.name === 'Navigate'); if (nav3) nav3.system.miscValue = 30;
-        const obs3 = actorData.items.find(i => i.name === 'Observe'); if (obs3) obs3.system.miscValue = 30;
+        // Safe defensive access to skill items and their system properties
+        const surv3 = actorData.items.find(i => i.name === 'Survival'); if (surv3?.system) surv3.system.miscValue = 30;
+        const nav3 = actorData.items.find(i => i.name === 'Navigate'); if (nav3?.system) nav3.system.miscValue = 30;
+        const obs3 = actorData.items.find(i => i.name === 'Observe'); if (obs3?.system) obs3.system.miscValue = 30;
     } else if (this._wereBearForm(actorData) === true) {
         actorSystemData.resistance.silverR = actorSystemData.resistance.silverR - 5;
         actorSystemData.resistance.diseaseR = actorSystemData.resistance.diseaseR + 200;
@@ -865,9 +868,10 @@ export class SimpleActor extends Actor {
         actorSystemData.resistance.natToughness = 5;
         actorSystemData.wound_threshold.value = actorSystemData.wound_threshold.value + 5;
         actorSystemData.action_points.max = actorSystemData.action_points.max - 1;
-        const surv4 = actorData.items.find(i => i.name === 'Survival'); if (surv4) surv4.system.miscValue = 30;
-        const nav4 = actorData.items.find(i => i.name === 'Navigate'); if (nav4) nav4.system.miscValue = 30;
-        const obs4 = actorData.items.find(i => i.name === 'Observe'); if (obs4) obs4.system.miscValue = 30;
+        // Safe defensive access to skill items and their system properties
+        const surv4 = actorData.items.find(i => i.name === 'Survival'); if (surv4?.system) surv4.system.miscValue = 30;
+        const nav4 = actorData.items.find(i => i.name === 'Navigate'); if (nav4?.system) nav4.system.miscValue = 30;
+        const obs4 = actorData.items.find(i => i.name === 'Observe'); if (obs4?.system) obs4.system.miscValue = 30;
     } else if (this._wereCrocodileForm(actorData) === true) {
         actorSystemData.resistance.silverR = actorSystemData.resistance.silverR - 5;
         actorSystemData.resistance.diseaseR = actorSystemData.resistance.diseaseR + 200;
@@ -878,9 +882,10 @@ export class SimpleActor extends Actor {
         actorSystemData.resistance.natToughness = 5;
         actorSystemData.wound_threshold.value = actorSystemData.wound_threshold.value + 5;
         actorSystemData.action_points.max = actorSystemData.action_points.max - 1;
-        const surv5 = actorData.items.find(i => i.name === 'Survival'); if (surv5) surv5.system.miscValue = 30;
-        const nav5 = actorData.items.find(i => i.name === 'Navigate'); if (nav5) nav5.system.miscValue = 30;
-        const obs5 = actorData.items.find(i => i.name === 'Observe'); if (obs5) obs5.system.miscValue = 30;
+        // Safe defensive access to skill items and their system properties
+        const surv5 = actorData.items.find(i => i.name === 'Survival'); if (surv5?.system) surv5.system.miscValue = 30;
+        const nav5 = actorData.items.find(i => i.name === 'Navigate'); if (nav5?.system) nav5.system.miscValue = 30;
+        const obs5 = actorData.items.find(i => i.name === 'Observe'); if (obs5?.system) obs5.system.miscValue = 30;
     } else if (this._wereVultureForm(actorData) === true) {
         actorSystemData.resistance.silverR = actorSystemData.resistance.silverR - 5;
         actorSystemData.resistance.diseaseR = actorSystemData.resistance.diseaseR + 200;
@@ -892,9 +897,10 @@ export class SimpleActor extends Actor {
         actorSystemData.resistance.natToughness = 5;
         actorSystemData.wound_threshold.value = actorSystemData.wound_threshold.value + 3;
         actorSystemData.action_points.max = actorSystemData.action_points.max - 1;
-        const surv6 = actorData.items.find(i => i.name === 'Survival'); if (surv6) surv6.system.miscValue = 30;
-        const nav6 = actorData.items.find(i => i.name === 'Navigate'); if (nav6) nav6.system.miscValue = 30;
-        const obs6 = actorData.items.find(i => i.name === 'Observe'); if (obs6) obs6.system.miscValue = 30;
+        // Safe defensive access to skill items and their system properties
+        const surv6 = actorData.items.find(i => i.name === 'Survival'); if (surv6?.system) surv6.system.miscValue = 30;
+        const nav6 = actorData.items.find(i => i.name === 'Navigate'); if (nav6?.system) nav6.system.miscValue = 30;
+        const obs6 = actorData.items.find(i => i.name === 'Observe'); if (obs6?.system) obs6.system.miscValue = 30;
     } else if (this._vampireLordForm(actorData) === true) {
         actorSystemData.resistance.fireR = actorSystemData.resistance.fireR - 1;
         actorSystemData.resistance.sunlightR = actorSystemData.resistance.sunlightR - 1;

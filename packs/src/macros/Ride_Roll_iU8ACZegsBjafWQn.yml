@@ -5,6 +5,12 @@ author: KoTybT0dunV5wS6T
 img: icons/environment/creatures/horse-brown.webp
 scope: global
 command: |-
+  // Safe defensive access to actor system properties
+  const actorSys = token.actor?.system || {};
+  const lucky = actorSys.lucky_numbers || {};
+  const unlucky = actorSys.unlucky_numbers || {};
+  const rideVal = token.actor?.items?.find(e => e.name === 'Ride')?.system?.value ?? 0;
+  
   let d = new Dialog({
       title: "Apply Roll Modifier",
       content: `<form>

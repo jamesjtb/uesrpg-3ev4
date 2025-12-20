@@ -5,6 +5,12 @@ author: KoTybT0dunV5wS6T
 img: icons/skills/social/theft-pickpocket-bribery-brown.webp
 scope: global
 command: |-
+  // Safe defensive access to actor system properties
+  const actorSys = token.actor?.system || {};
+  const lucky = actorSys.lucky_numbers || {};
+  const unlucky = actorSys.unlucky_numbers || {};
+  const subterfugeVal = token.actor?.items?.find(e => e.name === 'Subterfuge')?.system?.value ?? 0;
+  
   let d = new Dialog({
       title: "Apply Roll Modifier",
       content: `<form>

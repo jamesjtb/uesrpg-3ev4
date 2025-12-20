@@ -536,7 +536,9 @@ export class merchantSheet extends foundry.appv1.sheets.ActorSheet {
     const merchantItems = this.actor.items.filter((item) =>
       item?.system?.hasOwnProperty("modPrice")
     );
-    this.actor.system.priceMod = Number(this.actor.system.priceMod + 5);
+    // Guard and safely increment priceMod
+    const currentPriceMod = Number(this.actor?.system?.priceMod ?? 0);
+    this.actor.system.priceMod = currentPriceMod + 5;
     this.actor.update({ "system.priceMod": this.actor.system.priceMod });
 
     for (let item of merchantItems) {
@@ -553,7 +555,9 @@ export class merchantSheet extends foundry.appv1.sheets.ActorSheet {
     const merchantItems = this.actor.items.filter((item) =>
       item?.system?.hasOwnProperty("modPrice")
     );
-    this.actor.system.priceMod = Number(this.actor.system.priceMod - 5);
+    // Guard and safely decrement priceMod
+    const currentPriceMod = Number(this.actor?.system?.priceMod ?? 0);
+    this.actor.system.priceMod = currentPriceMod - 5;
     this.actor.update({ "system.priceMod": this.actor.system.priceMod });
 
     for (let item of merchantItems) {
