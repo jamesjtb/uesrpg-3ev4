@@ -1265,3 +1265,8 @@
 .worldbuilding .basic-padding {
   padding: 0 5px;
 }
+/* --- UESRPG PATCH: prevent TinyMCE legacy viewport-height from inflating AppV2 windows --- */
+#tinymce body {
+  height: auto !important;
+  min-height: 0 !important;
+}
