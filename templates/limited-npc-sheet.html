@@ -9,9 +9,9 @@
                     <img class="profile-img" src="{{actor.img}}" data-edit="img" title="{{actor.name}}">
                     <div class="status-column">
                         <div class="vertical-flex-container">
-                            <img id="wound-icon" src="icons/skills/wounds/blood-drip-droplet-red.webp" title="Wounded {{actor.system.woundPenalty}}">
-                            <img id="fatigue-icon" src="icons/magic/control/debuff-energy-hold-green.webp" title="Fatigued {{actor.system.fatigue.penalty}}">
-                            <img id="enc-icon" src="icons/containers/bags/pack-leather-brown.webp" title="{{actor.system.carry_rating.label}} {{actor.system.carry_rating.penalty}}">
+                            <img id="wound-icon" src="icons/skills/wounds/blood-drip-droplet-red.webp" title="Wounded {{#if actor.system.woundPenalty}}{{actor.system.woundPenalty}}{{else}}0{{/if}}">
+                            <img id="fatigue-icon" src="icons/magic/control/debuff-energy-hold-green.webp" title="Fatigued {{#if actor.system.fatigue.penalty}}{{actor.system.fatigue.penalty}}{{else}}0{{/if}}">
+                            <img id="enc-icon" src="icons/containers/bags/pack-leather-brown.webp" title="{{#if actor.system.carry_rating.label}}{{actor.system.carry_rating.label}}{{else}}Normal{{/if}} {{#if actor.system.carry_rating.penalty}}{{actor.system.carry_rating.penalty}}{{else}}0{{/if}}">
                         </div>
                     </div>
                 </div>
