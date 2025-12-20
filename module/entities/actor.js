@@ -126,7 +126,7 @@ export class SimpleActor extends Actor {
 
       // ENC - defensive guards for nested property access
       stats.totalEnc += enc * qty;
-      if (item.type === 'container' && sys.container_enc && !isNaN(Number(sys?.container_enc?.applied_enc))) {
+      if (item.type === 'container' && sys?.container_enc && !isNaN(Number(sys?.container_enc?.applied_enc))) {
         stats.containersAppliedEnc += Number(sys.container_enc.applied_enc);
       }
       if (sys?.containerStats?.contained) {
@@ -280,7 +280,7 @@ export class SimpleActor extends Actor {
       const qty = Number(item?.system?.quantity || 0);
       // Defensive guard: safe nested access to container_enc.applied_enc
       const containerAppliedENC = (item.type == 'container' && item?.system?.container_enc && !isNaN(Number(item?.system?.container_enc?.applied_enc)))
-        ? Number(item.system.container_enc.applied_enc)
+        ? Number(item?.system?.container_enc?.applied_enc)
         : 0;
       const containedItemReduction = (item?.type !== 'container' && !!item?.system?.containerStats?.contained) ? (enc * qty) : 0;
       totalWeight = totalWeight + (enc * qty) + containerAppliedENC - containedItemReduction;
