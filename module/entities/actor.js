@@ -47,10 +47,34 @@ export class SimpleActor extends Actor {
     const actorSystemData = actorData.system;
     const flags = actorData.flags;
 
-    // Make separate methods for each Actor type (character, npc, etc.) to keep
-    // things organized.
-    if (actorData.type === 'Player Character') this._prepareCharacterData(actorData);
-    if (actorData.type === 'NPC') this._prepareNPCData(actorData);
+    // Call specialized preparation functions only if they exist.
+    // If neither exists, use a minimal safe fallback so Foundry initialization
+    // doesn't crash when documents are created.
+    try {
+      if (actorData.type === "Player Character" && typeof this._prepareCharacterData === "function") {
+        this._prepareCharacterData(actorData);
+      } else if (actorData.type === "NPC" && typeof this._prepareNPCData === "function") {
+        this._prepareNPCData(actorData);
+      } else {
+        // Minimal safe fallback to ensure required fields exist
+        this._legacyPrepareFallback(actorData);
+      }
+    } catch (err) {
+      console.error(`uesrpg-3ev4 | Error during prepareData for ${this.name || this.id}:`, err);
+      // Do not rethrow — we want Foundry to continue initializing other documents.
+    }
+  }
+
+  // Minimal fallback to provide safe defaults so downstream code doesn't throw.
+  _legacyPrepareFallback(actorData) {
+    actorData.system = actorData.system || {};
+    actorData.system.containerStats = actorData.system.containerStats || {};
+    actorData.system.carry_rating = actorData.system.carry_rating || { current: 0, max: 0, penalty: 0, bonus: 0 };
+    actorData.system.fatigue = actorData.system.fatigue || { level: 0, penalty: 0, bonus: 0 };
+    actorData.system.woundPenalty = actorData.system.woundPenalty || 0;
+    actorData.system.wounded = actorData.system.wounded || false;
+    // Ensure items collection exists (embedded collection); this prevents code that iterates items from failing
+    if (!actorData.items) actorData.items = new foundry.data.EmbeddedCollection(foundry.documents.Item, [], { parent: actorData });
   }
 
   /**
@@ -170,7 +194,10 @@ export class SimpleActor extends Actor {
   }
 
   _filterToEquippedBonusItems(items, bonusProperty) {
-    return items.filter(i => i.system && Object.prototype.hasOwnProperty.call(i.system, bonusProperty) && (Object.prototype.hasOwnProperty.call(i.system, 'equipped') ? i.system.equipped : true));
+    return (items || []).filter(i =>
+  i?.system && Object.prototype.hasOwnProperty.call(i.system, bonusProperty) &&
+  (Object.prototype.hasOwnProperty.call(i.system, 'equipped') ? i.system.equipped : true)
+);
   }
 
   _strBonusCalc(actorData) {
@@ -186,8 +213,8 @@ export class SimpleActor extends Actor {
     let endBonusItems = this._filterToEquippedBonusItems(actorData.items, 'characteristicBonus');
     let totalBonus = 0;
     for (let item of endBonusItems) {
-      totalBonus = totalBonus + (Number(item.system.characteristicBonus.endChaBonus) || 0);
-    }
+  totalBonus += Number(item?.system?.characteristicBonus?.endChaBonus || 0);
+}
     return totalBonus
   }
 
@@ -195,17 +222,17 @@ export class SimpleActor extends Actor {
     let agiBonusItems = this._filterToEquippedBonusItems(actorData.items, 'characteristicBonus');
     let totalBonus = 0;
     for (let item of agiBonusItems) {
-      totalBonus = totalBonus + (Number(item.system.characteristicBonus.agiChaBonus) || 0);
-    }
+  totalBonus += Number(item?.system?.characteristicBonus?.agiChaBonus || 0);
+}
     return totalBonus
   }
 
   _intBonusCalc(actorData) {
     let intBonusItems = this._filterToEquippedBonusItems(actorData.items, 'characteristicBonus');
     let totalBonus = 0;
-    for (let item of intBonusItems) {
-      totalBonus = totalBonus + (Number(item.system.characteristicBonus.intChaBonus) || 0);
-    }
+   for (let item of intBonusItems) {
+  totalBonus += Number(item?.system?.characteristicBonus?.intChaBonus || 0);
+}
     return totalBonus
   }
 
@@ -213,8 +240,8 @@ export class SimpleActor extends Actor {
     let wpBonusItems = this._filterToEquippedBonusItems(actorData.items, 'characteristicBonus');
     let totalBonus = 0;
     for (let item of wpBonusItems) {
-      totalBonus = totalBonus + (Number(item.system.characteristicBonus.wpChaBonus) || 0);
-    }
+  totalBonus = totalBonus + item.system.characteristicBonus.wpChaBonus;
+}
     return totalBonus
   }
 
@@ -222,17 +249,17 @@ export class SimpleActor extends Actor {
     let prcBonusItems = this._filterToEquippedBonusItems(actorData.items, 'characteristicBonus');
     let totalBonus = 0;
     for (let item of prcBonusItems) {
-      totalBonus = totalBonus + (Number(item.system.characteristicBonus.prcChaBonus) || 0);
-    }
+  totalBonus += Number(item?.system?.characteristicBonus?.prcChaBonus || 0);
+}
     return totalBonus
   }
 
   _prsBonusCalc(actorData) {
     let prsBonusItems = this._filterToEquippedBonusItems(actorData.items, 'characteristicBonus');
     let totalBonus = 0;
-    for (let item of prsBonusItems) {
-      totalBonus = totalBonus + (Number(item.system.characteristicBonus.prsChaBonus) || 0);
-    }
+   for (let item of prsBonusItems) {
+  totalBonus += Number(item?.system?.characteristicBonus?.prsChaBonus || 0);
+}
     return totalBonus
   }
 
@@ -240,8 +267,8 @@ export class SimpleActor extends Actor {
     let lckBonusItems = this._filterToEquippedBonusItems(actorData.items, 'characteristicBonus');
     let totalBonus = 0;
     for (let item of lckBonusItems) {
-      totalBonus = totalBonus + (Number(item.system.characteristicBonus.lckChaBonus) || 0);
-    }
+  totalBonus += Number(item?.system?.characteristicBonus?.lckChaBonus || 0);
+}
     return totalBonus
   }
 
@@ -254,7 +281,7 @@ export class SimpleActor extends Actor {
       const containerAppliedENC = (item.type == 'container' && item.system.container_enc && !isNaN(Number(item.system.container_enc.applied_enc)))
         ? Number(item.system.container_enc.applied_enc)
         : 0;
-      const containedItemReduction = (item.type != 'container' && item.system.containerStats && item.system.containerStats.contained) ? (enc * qty) : 0;
+      const containedItemReduction = (item?.type !== 'container' && !!item?.system?.containerStats?.contained) ? (enc * qty) : 0;
       totalWeight = totalWeight + (enc * qty) + containerAppliedENC - containedItemReduction;
     }
     return totalWeight
@@ -1426,15 +1453,18 @@ export class SimpleActor extends Actor {
   }
 
   _filterToEquippedBonusItems(items, bonusProperty) {
-    return items.filter(i => i.system.hasOwnProperty(bonusProperty) && (i.system.hasOwnProperty('equipped') ? i.system.equipped : true));
+    return (items || []).filter(i =>
+  i?.system && Object.prototype.hasOwnProperty.call(i.system, bonusProperty) &&
+  (Object.prototype.hasOwnProperty.call(i.system, 'equipped') ? i.system.equipped : true)
+);
   }
 
   _strBonusCalc(actorData) {
     const strBonusItems = this._filterToEquippedBonusItems(actorData.items, 'characteristicBonus');
     let totalBonus = 0;
     for (let item of strBonusItems) {
-      totalBonus = totalBonus + item.system.characteristicBonus.strChaBonus;
-    }
+  totalBonus += Number(item?.system?.characteristicBonus?.strChaBonus || 0);
+}
     return totalBonus
   }
 
@@ -1442,8 +1472,8 @@ export class SimpleActor extends Actor {
     let endBonusItems = this._filterToEquippedBonusItems(actorData.items, 'characteristicBonus');
     let totalBonus = 0;
     for (let item of endBonusItems) {
-      totalBonus = totalBonus + item.system.characteristicBonus.endChaBonus;
-    }
+  totalBonus += Number(item?.system?.characteristicBonus?.endChaBonus || 0);
+}
     return totalBonus
   }
 
@@ -1451,8 +1481,8 @@ export class SimpleActor extends Actor {
     let agiBonusItems = this._filterToEquippedBonusItems(actorData.items, 'characteristicBonus');
     let totalBonus = 0;
     for (let item of agiBonusItems) {
-      totalBonus = totalBonus + item.system.characteristicBonus.agiChaBonus;
-    }
+  totalBonus += Number(item?.system?.characteristicBonus?.agiChaBonus || 0);
+}
     return totalBonus
   }
 
@@ -1460,8 +1490,8 @@ export class SimpleActor extends Actor {
     let intBonusItems = this._filterToEquippedBonusItems(actorData.items, 'characteristicBonus');
     let totalBonus = 0;
     for (let item of intBonusItems) {
-      totalBonus = totalBonus + item.system.characteristicBonus.intChaBonus;
-    }
+  totalBonus += Number(item?.system?.characteristicBonus?.intChaBonus || 0);
+}
     return totalBonus
   }
 
@@ -1469,8 +1499,8 @@ export class SimpleActor extends Actor {
     let wpBonusItems = this._filterToEquippedBonusItems(actorData.items, 'characteristicBonus');
     let totalBonus = 0;
     for (let item of wpBonusItems) {
-      totalBonus = totalBonus + item.system.characteristicBonus.wpChaBonus;
-    }
+  totalBonus = totalBonus + item.system.characteristicBonus.wpChaBonus;
+}
     return totalBonus
   }
 
@@ -1478,8 +1508,8 @@ export class SimpleActor extends Actor {
     let prcBonusItems = this._filterToEquippedBonusItems(actorData.items, 'characteristicBonus');
     let totalBonus = 0;
     for (let item of prcBonusItems) {
-      totalBonus = totalBonus + item.system.characteristicBonus.prcChaBonus;
-    }
+  totalBonus += Number(item?.system?.characteristicBonus?.prcChaBonus || 0);
+}
     return totalBonus
   }
 
@@ -1487,8 +1517,8 @@ export class SimpleActor extends Actor {
     let prsBonusItems = this._filterToEquippedBonusItems(actorData.items, 'characteristicBonus');
     let totalBonus = 0;
     for (let item of prsBonusItems) {
-      totalBonus = totalBonus + item.system.characteristicBonus.prsChaBonus;
-    }
+  totalBonus += Number(item?.system?.characteristicBonus?.prsChaBonus || 0);
+}
     return totalBonus
   }
 
@@ -1496,8 +1526,8 @@ export class SimpleActor extends Actor {
     let lckBonusItems = this._filterToEquippedBonusItems(actorData.items, 'characteristicBonus');
     let totalBonus = 0;
     for (let item of lckBonusItems) {
-      totalBonus = totalBonus + item.system.characteristicBonus.lckChaBonus;
-    }
+  totalBonus += Number(item?.system?.characteristicBonus?.lckChaBonus || 0);
+}
     return totalBonus
   }
 
