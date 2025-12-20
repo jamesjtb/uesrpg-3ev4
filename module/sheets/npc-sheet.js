@@ -424,8 +424,9 @@ export class npcSheet extends foundry.appv1.sheets.ActorSheet {
     const prsBonusArray = [];
     const lckBonusArray = [];
 
+    // Defensive guard: safe hasOwnProperty for characteristicBonus
     const bonusItems = this.actor.items.filter((item) =>
-      item?.system?.hasOwnProperty("characteristicBonus")
+      item?.system && Object.prototype.hasOwnProperty.call(item.system, "characteristicBonus")
     );
 
     for (let item of bonusItems) {
@@ -452,12 +453,12 @@ export class npcSheet extends foundry.appv1.sheets.ActorSheet {
                           let tokenActor = game.scenes.find(scene => scene.active === true)?.tokens?.find(token => token.system.actorId === actorID)
 
                           if (!tokenActor?.actorLink) {
-                            let actorBonusItems = actor.items.filter(item => item.system.hasOwnProperty('characteristicBonus'))
+                            let actorBonusItems = actor.items.filter(item => item?.system && Object.prototype.hasOwnProperty.call(item.system, 'characteristicBonus'))
                             let item = actorBonusItems.find(i => i.id === itemID)
                             item.sheet.render(true)
                           }
                           else {
-                            let tokenBonusItems = tokenActor._actor.items.filter(item => item.system.hasOwnProperty('characteristicBonus'))
+                            let tokenBonusItems = tokenActor._actor.items.filter(item => item?.system && Object.prototype.hasOwnProperty.call(item.system, 'characteristicBonus'))
                             let item = tokenBonusItems.find(i => i.id === itemID)
                             item.sheet.render(true)
                           }
@@ -1788,8 +1789,9 @@ export class npcSheet extends foundry.appv1.sheets.ActorSheet {
   }
 
   _createItemFilterOptions() {
+    // Defensive guard: safe hasOwnProperty for equipped
     for (let item of this.actor.items.filter(
-      (i) => i.system.hasOwnProperty("equipped") && i.system.equipped === false
+      (i) => i?.system && Object.prototype.hasOwnProperty.call(i.system, "equipped") && i.system.equipped === false
     )) {
       if (
         [...this.form.querySelectorAll("#itemFilter option")].some(

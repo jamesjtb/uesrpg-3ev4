@@ -33,14 +33,14 @@ export class SimpleItem extends Item {
     const itemData = this.system
     const actorData = this.actor ? this.actor : {}
 
-    // Prepare data based on item type
+    // Prepare data based on item type - defensive guards for hasOwnProperty
     if (this.isEmbedded && this.actor?.system != null) {
-      if (this.system.hasOwnProperty('modPrice')) { this._prepareMerchantItem(actorData, itemData) }
-      if (this.system.hasOwnProperty('damaged')) { this._prepareArmorItem(actorData, itemData) }
+      if (this.system && Object.prototype.hasOwnProperty.call(this.system, 'modPrice')) { this._prepareMerchantItem(actorData, itemData) }
+      if (this.system && Object.prototype.hasOwnProperty.call(this.system, 'damaged')) { this._prepareArmorItem(actorData, itemData) }
       if (this.type === 'item') { this._prepareNormalItem(actorData, itemData) }
       if (this.type === 'weapon') { this._prepareWeaponItem(actorData, itemData) }
-      if (this.system.hasOwnProperty('skillArray') && actorData.type === 'Player Character') { this._prepareModSkillItems(actorData, itemData) }
-      if (this.system.hasOwnProperty('baseCha')) { this._prepareCombatStyleData(actorData, itemData) }
+      if (this.system && Object.prototype.hasOwnProperty.call(this.system, 'skillArray') && actorData.type === 'Player Character') { this._prepareModSkillItems(actorData, itemData) }
+      if (this.system && Object.prototype.hasOwnProperty.call(this.system, 'baseCha')) { this._prepareCombatStyleData(actorData, itemData) }
       if (this.type == 'container') { this._prepareContainerItem(actorData, itemData) }
     }
   }
@@ -103,8 +103,10 @@ export class SimpleItem extends Item {
     let itemChaBonus = skillHelper(actorData, itemData.baseCha)
     let itemSkillBonus = skillModHelper(actorData, this.name)
     let chaTotal = 0;
+    // Defensive guard: verify nested characteristics structure
     if (itemData.baseCha !== undefined && itemData.baseCha !== "" && itemData.baseCha !== "none") {
-      chaTotal = Number((actorData.system.characteristics[itemData.baseCha].total || 0) + itemData.bonus + (itemData.miscValue || 0) + itemChaBonus);
+      const characteristics = actorData?.system?.characteristics?.[itemData.baseCha];
+      chaTotal = Number((characteristics?.total || 0) + itemData.bonus + (itemData.miscValue || 0) + itemChaBonus);
     }
 
     if (actorData.system?.wounded) {
@@ -235,7 +237,8 @@ export class SimpleItem extends Item {
    */
 
   _untrainedException(actorData) {
-    let attribute = actorData.items?.filter(item => item.system.untrainedException == true);
+    // Defensive guard: safe property access and array filtering
+    let attribute = actorData.items?.filter(item => item?.system?.untrainedException == true) || [];
     const legacyUntrained = game.settings.get("uesrpg-3ev4", "legacyUntrainedPenalty");
     let x = 0;
     if (this.type === "combatStyle") {
