@@ -387,9 +387,9 @@ export class merchantSheet extends foundry.appv1.sheets.ActorSheet {
   }
 
   _updateModPrice() {
-    // Defensive guard: filter items with modPrice and safe property access
+    // Defensive guard: filter items with modPrice using safe hasOwnProperty
     for (let item of this.actor.items.filter((item) =>
-      item?.system?.hasOwnProperty("modPrice")
+      item?.system && Object.prototype.hasOwnProperty.call(item.system, "modPrice")
     )) {
       const price = Number(item?.system?.price ?? 0);
       const priceMod = Number(this.actor?.system?.priceMod ?? 0);
@@ -532,9 +532,9 @@ export class merchantSheet extends foundry.appv1.sheets.ActorSheet {
 
   async _onIncreasePriceMod(event) {
     event.preventDefault();
-    // Defensive guard: filter items with safe property access
+    // Defensive guard: filter items using safe hasOwnProperty
     const merchantItems = this.actor.items.filter((item) =>
-      item?.system?.hasOwnProperty("modPrice")
+      item?.system && Object.prototype.hasOwnProperty.call(item.system, "modPrice")
     );
     // Guard and safely increment priceMod
     const currentPriceMod = Number(this.actor?.system?.priceMod ?? 0);
@@ -551,9 +551,9 @@ export class merchantSheet extends foundry.appv1.sheets.ActorSheet {
 
   async _onDecreasePriceMod(event) {
     event.preventDefault();
-    // Defensive guard: filter items with safe property access
+    // Defensive guard: filter items using safe hasOwnProperty
     const merchantItems = this.actor.items.filter((item) =>
-      item?.system?.hasOwnProperty("modPrice")
+      item?.system && Object.prototype.hasOwnProperty.call(item.system, "modPrice")
     );
     // Guard and safely decrement priceMod
     const currentPriceMod = Number(this.actor?.system?.priceMod ?? 0);
@@ -579,8 +579,9 @@ export class merchantSheet extends foundry.appv1.sheets.ActorSheet {
     const prsBonusArray = [];
     const lckBonusArray = [];
 
+    // Defensive guard: safe hasOwnProperty for characteristicBonus
     const bonusItems = this.actor.items.filter((item) =>
-      item?.system?.hasOwnProperty("characteristicBonus")
+      item?.system && Object.prototype.hasOwnProperty.call(item.system, "characteristicBonus")
     );
 
     for (let item of bonusItems) {
@@ -1880,8 +1881,9 @@ export class merchantSheet extends foundry.appv1.sheets.ActorSheet {
   }
 
   _createItemFilterOptions() {
+    // Defensive guard: safe hasOwnProperty for price
     for (let item of this.actor.items.filter((i) =>
-      i.system.hasOwnProperty("price")
+      i?.system && Object.prototype.hasOwnProperty.call(i.system, "price")
     )) {
       if (
         [...this.form.querySelectorAll("#itemFilter option")].some(
