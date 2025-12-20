@@ -116,7 +116,8 @@
                             <div class="grid-container">
                                 <div>Container</div>
                                 <div class="right-align-content">
-                                    <div>{{item.system.containerStats.container_name}}</div>
+                                    {{!-- Defensive guard: only show container_name if containerStats exists --}}
+                                    <div>{{#if item.system.containerStats}}{{item.system.containerStats.container_name}}{{else}}(none){{/if}}</div>
                                 </div>
                             </div>
                         </div>
@@ -128,35 +129,35 @@
                                 {{#if item.system.characteristicBonus}}
                                 <div class="grid-container">
                                     <div>Strength</div>
-                                    <div><input type="number" name="system.characteristicBonus.strChaBonus" value="{{item.system.characteristicBonus.strChaBonus}}"></div>
+                                    <div><input type="number" name="system.characteristicBonus.strChaBonus" value="{{#if item.system.characteristicBonus.strChaBonus}}{{item.system.characteristicBonus.strChaBonus}}{{else}}0{{/if}}"></div>
                                 </div>
                                 <div class="grid-container">
                                     <div>Endurance</div>
-                                    <div><input type="number" name="system.characteristicBonus.endChaBonus" value="{{item.system.characteristicBonus.endChaBonus}}"></div>
+                                    <div><input type="number" name="system.characteristicBonus.endChaBonus" value="{{#if item.system.characteristicBonus.endChaBonus}}{{item.system.characteristicBonus.endChaBonus}}{{else}}0{{/if}}"></div>
                                 </div>
                                 <div class="grid-container">
                                     <div>Agility</div>
-                                    <div><input type="number" name="system.characteristicBonus.agiChaBonus" value="{{item.system.characteristicBonus.agiChaBonus}}"></div>
+                                    <div><input type="number" name="system.characteristicBonus.agiChaBonus" value="{{#if item.system.characteristicBonus.agiChaBonus}}{{item.system.characteristicBonus.agiChaBonus}}{{else}}0{{/if}}"></div>
                                 </div>
                                 <div class="grid-container">
                                     <div>Intelligence</div>
-                                    <div><input type="number" name="system.characteristicBonus.intChaBonus" value="{{item.system.characteristicBonus.intChaBonus}}"></div>
+                                    <div><input type="number" name="system.characteristicBonus.intChaBonus" value="{{#if item.system.characteristicBonus.intChaBonus}}{{item.system.characteristicBonus.intChaBonus}}{{else}}0{{/if}}"></div>
                                 </div>
                                 <div class="grid-container">
                                     <div>Willpower</div>
-                                    <div><input type="number" name="system.characteristicBonus.wpChaBonus" value="{{item.system.characteristicBonus.wpChaBonus}}"></div>
+                                    <div><input type="number" name="system.characteristicBonus.wpChaBonus" value="{{#if item.system.characteristicBonus.wpChaBonus}}{{item.system.characteristicBonus.wpChaBonus}}{{else}}0{{/if}}"></div>
                                 </div>
                                 <div class="grid-container">
                                     <div>Perception</div>
-                                    <div><input type="number" name="system.characteristicBonus.prcChaBonus" value="{{item.system.characteristicBonus.prcChaBonus}}"></div>
+                                    <div><input type="number" name="system.characteristicBonus.prcChaBonus" value="{{#if item.system.characteristicBonus.prcChaBonus}}{{item.system.characteristicBonus.prcChaBonus}}{{else}}0{{/if}}"></div>
                                 </div>
                                 <div class="grid-container">
                                     <div>Personality</div>
-                                    <div><input type="number" name="system.characteristicBonus.prsChaBonus" value="{{item.system.characteristicBonus.prsChaBonus}}"></div>
+                                    <div><input type="number" name="system.characteristicBonus.prsChaBonus" value="{{#if item.system.characteristicBonus.prsChaBonus}}{{item.system.characteristicBonus.prsChaBonus}}{{else}}0{{/if}}"></div>
                                 </div>
                                 <div class="grid-container">
                                     <div>Luck</div>
-                                    <div><input type="number" name="system.characteristicBonus.lckChaBonus" value="{{item.system.characteristicBonus.lckChaBonus}}"></div>
+                                    <div><input type="number" name="system.characteristicBonus.lckChaBonus" value="{{#if item.system.characteristicBonus.lckChaBonus}}{{item.system.characteristicBonus.lckChaBonus}}{{else}}0{{/if}}"></div>
                                 </div>
                                 {{else}}
                                 <div style="padding: 10px; text-align: center; font-style: italic;">
