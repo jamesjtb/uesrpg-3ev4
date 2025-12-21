@@ -407,27 +407,38 @@ export class merchantSheet extends foundry.appv1.sheets.ActorSheet {
     const button = event.currentTarget;
     const li = button.closest(".item");
     const merchantItem = this.actor.items.get(li?.dataset.itemId);
-    const itemPrice = Number(merchantItem.system.modPrice);
+    // Guard: defensive check for merchantItem existence
+    if (!merchantItem) {
+      ui.notifications.warn("Item not found");
+      return;
+    }
+    const itemPrice = Number(merchantItem?.system?.modPrice ?? 0);
 
     //{--- Start of the GM Buy Item Function ---}
 
     //Designate Buyer as Active Token if user is GM
     if (game.user.isGM) {
       const controlledToken = game.canvas.tokens.controlled[0];
+      // Guard: defensive check for controlledToken and actor
+      if (!controlledToken || !controlledToken.actor) {
+        ui.notifications.warn("No token selected or token has no actor");
+        return;
+      }
       const buyer = controlledToken.actor;
       const buyerData = controlledToken.actor.system;
 
-      if (merchantItem.system.quantity <= 0) {
+      if (Number(merchantItem?.system?.quantity ?? 0) <= 0) {
         ui.notifications.info(
           "This Merchant is out of stock! How unfortunate..."
         );
-      } else if (buyerData.wealth < itemPrice) {
+      } else if (Number(buyerData?.wealth ?? 0) < itemPrice) {
         ui.notifications.info(
           "You cannot afford this item. Try coming back with more jingle in your pockets."
         );
       } else {
         //Create Purchased Item on Buyer's Sheet
         const itemDuplicate = merchantItem.toObject();
+        itemDuplicate.system = itemDuplicate.system || {};
         itemDuplicate.system.quantity = 1;
         itemDuplicate.system.equipped = false;
         const qtyUpdateItem = buyer.items.find(
@@ -441,22 +452,26 @@ export class merchantSheet extends foundry.appv1.sheets.ActorSheet {
         ) {
           buyer.createEmbeddedDocuments("Item", [itemDuplicate]);
         } else {
-          qtyUpdateItem.system.quantity = qtyUpdateItem.system.quantity + 1;
+          const currentQty = Number(qtyUpdateItem?.system?.quantity ?? 0);
+          qtyUpdateItem.system.quantity = currentQty + 1;
           qtyUpdateItem.update({
             "system.quantity": qtyUpdateItem.system.quantity,
           });
         }
 
         //Update Transaction Values on Merchant/Buyer
-        merchantItem.system.quantity = merchantItem.system.quantity - 1;
+        const currentMerchantQty = Number(merchantItem?.system?.quantity ?? 0);
+        merchantItem.system.quantity = currentMerchantQty - 1;
         merchantItem.update({
           "system.quantity": merchantItem.system.quantity,
         });
 
-        merchant.wealth = merchant.wealth + itemPrice;
+        const currentMerchantWealth = Number(merchant?.wealth ?? 0);
+        merchant.wealth = currentMerchantWealth + itemPrice;
         this.actor.update({ "system.wealth": merchant.wealth });
 
-        buyerData.wealth = buyerData.wealth - itemPrice;
+        const currentBuyerWealth = Number(buyerData?.wealth ?? 0);
+        buyerData.wealth = currentBuyerWealth - itemPrice;
         buyer.update({ "system.wealth": buyerData.wealth });
 
         //Output Chat Message
@@ -464,7 +479,7 @@ export class merchantSheet extends foundry.appv1.sheets.ActorSheet {
           user: game.user.id,
           speaker: ChatMessage.getSpeaker(),
           content: `<h2 style='font-size: large'><img src="${merchantItem.img}" height=20 width=20 style='margin-right: 5px;'</img>${merchantItem.name}</h2><p></p>
-              <i>${buyer.name} spent ${merchantItem.system.modPrice} on this ${merchantItem.type}</i>`,
+              <i>${buyer.name} spent ${Number(merchantItem?.system?.modPrice ?? 0)} on this ${merchantItem.type}</i>`,
           sound: "systems/uesrpg-3ev4/sounds/coinJingle.mp3",
         });
       }
@@ -473,20 +488,26 @@ export class merchantSheet extends foundry.appv1.sheets.ActorSheet {
     } else {
       //Designate Buyer as owned character if Player
       const buyer = game.user.character;
+      // Guard: defensive check for buyer existence
+      if (!buyer) {
+        ui.notifications.warn("No character assigned to player");
+        return;
+      }
       const buyerData = game.user.character.system;
 
       //Chat and Notification Outputs on Purchase
-      if (merchantItem.system.quantity === 0) {
+      if (Number(merchantItem?.system?.quantity ?? 0) === 0) {
         ui.notifications.info(
           "This Merchant is out of stock! How unfortunate..."
         );
-      } else if (buyerData.wealth < itemPrice) {
+      } else if (Number(buyerData?.wealth ?? 0) < itemPrice) {
         ui.notifications.info(
           "You cannot afford this item. Try coming back with more jingle in your pockets."
         );
       } else {
         //Create Purchased Item and Update Buyer Wealth
         const itemDuplicate = merchantItem.toObject();
+        itemDuplicate.system = itemDuplicate.system || {};
         itemDuplicate.system.quantity = 1;
         itemDuplicate.system.equipped = false;
         const qtyUpdateItem = game.user.character.items.find(
@@ -500,22 +521,26 @@ export class merchantSheet extends foundry.appv1.sheets.ActorSheet {
         ) {
           game.user.character.createEmbeddedDocuments("Item", [itemDuplicate]);
         } else {
-          qtyUpdateItem.system.quantity = qtyUpdateItem.system.quantity + 1;
+          const currentQty = Number(qtyUpdateItem?.system?.quantity ?? 0);
+          qtyUpdateItem.system.quantity = currentQty + 1;
           qtyUpdateItem.update({
             "system.quantity": qtyUpdateItem.system.quantity,
           });
         }
 
         //Update Transaction Values on Merchant/Buyer
-        merchantItem.system.quantity = merchantItem.system.quantity - 1;
+        const currentMerchantQty = Number(merchantItem?.system?.quantity ?? 0);
+        merchantItem.system.quantity = currentMerchantQty - 1;
         merchantItem.update({ "system.quantity": merchantItem.system.quantity });
 
-        merchant.wealth = merchant.wealth + itemPrice;
+        const currentMerchantWealth = Number(merchant?.wealth ?? 0);
+        merchant.wealth = currentMerchantWealth + itemPrice;
         this.actor.update({ "system.wealth": merchant.wealth });
 
-        buyerData.wealth = buyerData.wealth - itemPrice;
+        const currentBuyerWealth = Number(buyerData?.wealth ?? 0);
+        buyerData.wealth = currentBuyerWealth - itemPrice;
         game.user.character.update({
-          "system.wealth": game.user.character.system.wealth,
+          "system.wealth": Number(buyerData?.wealth ?? 0),
         });
 
         //Output Chat Message
@@ -523,7 +548,7 @@ export class merchantSheet extends foundry.appv1.sheets.ActorSheet {
           user: game.user.id,
           speaker: ChatMessage.getSpeaker(),
           content: `<h2 style='font-size: large'><img src="${merchantItem.img}" height=20 width=20 style='margin-right: 5px;'</img>${merchantItem.name}</h2><p></p>
-          <i>${game.user.character.name} spent ${merchantItem.system.modPrice} on this ${merchantItem.type}</i>`,
+          <i>${game.user.character.name} spent ${Number(merchantItem?.system?.modPrice ?? 0)} on this ${merchantItem.type}</i>`,
           sound: "systems/uesrpg-3ev4/sounds/coinJingle.mp3",
         });
       }
