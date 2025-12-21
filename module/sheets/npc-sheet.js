@@ -818,9 +818,9 @@ async _onSetBaseCharacteristics(event) {
     }
 
     let damageString;
-    shortcutWeapon.system.weapon2H
-      ? (damageString = shortcutWeapon.system.damage2)
-      : (damageString = shortcutWeapon.system.damage);
+    shortcutWeapon?.system?.weapon2H
+      ? (damageString = shortcutWeapon?.system?.damage2)
+      : (damageString = shortcutWeapon?.system?.damage);
     let weaponRoll = new Roll(damageString);
     await weaponRoll.evaluate();
 
@@ -830,11 +830,11 @@ async _onSetBaseCharacteristics(event) {
     await superiorRoll.evaluate();
 
     // Use higher roll for superior weapons
-    const finalDamage = shortcutWeapon.system.superior 
+    const finalDamage = shortcutWeapon?.system?.superior 
       ? Math.max(weaponRoll.result, superiorRoll.result)
       : weaponRoll.result;
 
-    if (shortcutWeapon.system.superior) {
+    if (shortcutWeapon?.system?.superior) {
       supRollTag = `[[${superiorRoll.result}]]`;
     }
 
@@ -884,7 +884,7 @@ async _onSetBaseCharacteristics(event) {
                                       </tr>
                                       <tr>
                                           <td class="tableAttribute">Qualities</td>
-                                          <td class="tableCenterText" colspan="2">${shortcutWeapon.system.qualities}</td>
+                                          <td class="tableCenterText" colspan="2">${shortcutWeapon?.system?.qualities || ''}</td>
                                       </tr>
                                   </tbody>
                               </table>
