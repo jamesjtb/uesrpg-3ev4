@@ -321,13 +321,16 @@ export class SimpleActorSheet extends foundry.appv1.sheets.ActorSheet {
       // Logic for removing container linking if deleted item is the container
       if (itemToDelete.type == "container") {
         // resets contained items status and then sets contained_items array to empty
-        itemToDelete.system.contained_items.forEach((item) => {
+        const containedItems = Array.isArray(itemToDelete?.system?.contained_items) ? itemToDelete.system.contained_items : [];
+        containedItems.forEach((item) => {
           let sourceItem = this.actor.items.find((i) => i._id == item._id);
-          sourceItem.update({
-            "system.containerStats.container_id": "",
-            "system.containerStats.container_name": "",
-            "system.containerStats.contained": false,
-          });
+          if (sourceItem) {
+            sourceItem.update({
+              "system.containerStats.container_id": "",
+              "system.containerStats.container_name": "",
+              "system.containerStats.contained": false,
+            });
+          }
         });
 
         itemToDelete.update({ "system.contained_items": [] });
@@ -335,22 +338,26 @@ export class SimpleActorSheet extends foundry.appv1.sheets.ActorSheet {
 
       // Logic for removing container linking if deleted item is in a container
       if (
-        itemToDelete.system.isPhysicalObject &&
+        itemToDelete?.system?.isPhysicalObject &&
         itemToDelete.type != "container" &&
-        itemToDelete.system.containerStats.contained
+        itemToDelete?.system?.containerStats?.contained
       ) {
         let containerObject = this.actor.items.find(
-          (item) => item._id == itemToDelete.system.containerStats.container_id
+          (item) => item._id == itemToDelete?.system?.containerStats?.container_id
         );
-        let indexToRemove = containerObject.system.contained_items.indexOf(
-          containerObject.system.contained_items.find(
-            (i) => i._id == itemToDelete._id
-          )
-        );
-        containerObject.system.contained_items.splice(indexToRemove, 1);
-        containerObject.update({
-          "system.contained_items": containerObject.system.contained_items,
-        });
+        if (containerObject && Array.isArray(containerObject?.system?.contained_items)) {
+          let indexToRemove = containerObject.system.contained_items.indexOf(
+            containerObject.system.contained_items.find(
+              (i) => i._id == itemToDelete._id
+            )
+          );
+          if (indexToRemove !== -1) {
+            containerObject.system.contained_items.splice(indexToRemove, 1);
+            containerObject.update({
+              "system.contained_items": containerObject.system.contained_items,
+            });
+          }
+        }
 
         itemToDelete.update({
           "system.containerStats.container_id": "",

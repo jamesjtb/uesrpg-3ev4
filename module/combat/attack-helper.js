@@ -38,7 +38,7 @@ export async function performWeaponAttack(attackerToken, defenderToken, weapon, 
   const defenseSkill = getDefenseSkill(defender, options.defenseType);
 
   // Determine damage roll
-  const damageRoll = weapon.system.weapon2H 
+  const damageRoll = weapon?.system?.weapon2H 
     ? weapon.system.damage2 
     : weapon.system.damage;
 
@@ -46,7 +46,7 @@ export async function performWeaponAttack(attackerToken, defenderToken, weapon, 
   const damageType = getDamageTypeFromWeapon(weapon);
 
   // Get penetration if weapon has it
-  const penetration = Number(weapon.system.penetration || 0);
+  const penetration = Number(weapon?.system?.penetration ?? 0);
 
   // Check if auto-apply is enabled
   const autoApplyDamage = game.settings.get("uesrpg-3ev4", "autoApplyDamage");
@@ -76,7 +76,7 @@ function getAttackSkill(actor, weapon) {
   if (!actor?.system || !weapon) return 50;
 
   // Try to find combat style that matches weapon
-  const weaponStyle = weapon.system.combatStyle || weapon.system.skill;
+  const weaponStyle = weapon?.system?.combatStyle ?? weapon?.system?.skill ?? null;
   
   if (weaponStyle) {
     // Look for combat style item

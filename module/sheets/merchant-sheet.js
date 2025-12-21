@@ -641,53 +641,7 @@ export class merchantSheet extends foundry.appv1.sheets.ActorSheet {
       }
     }
 
-    async _onSetBaseCharacteristics(event) {
-  event.preventDefault();
-  const strBonusArray = [];
-  const endBonusArray = [];
-  const agiBonusArray = [];
-  const intBonusArray = [];
-  const wpBonusArray = [];
-  const prcBonusArray = [];
-  const prsBonusArray = [];
-  const lckBonusArray = [];
-
-  // Defensive guard: safe hasOwnProperty for characteristicBonus
-  const bonusItems = this.actor.items.filter((item) =>
-    item?.system && Object.prototype.hasOwnProperty.call(item.system, "characteristicBonus")
-  );
-
-  for (let item of bonusItems) {
-    // Defensive guard: safe access to characteristicBonus properties
-    const charBonus = item?.system?.characteristicBonus ?? {};
-    if ((charBonus.strChaBonus ?? 0) !== 0) {
-      let name = item.name;
-      strBonusArray.push(name);
-    } else if ((charBonus.endChaBonus ?? 0) !== 0) {
-      let name = item.name;
-      endBonusArray.push(name);
-    } else if ((charBonus.agiChaBonus ?? 0) !== 0) {
-      let name = item.name;
-      agiBonusArray.push(name);
-    } else if ((charBonus.intChaBonus ?? 0) !== 0) {
-      let name = item.name;
-      intBonusArray.push(name);
-    } else if ((charBonus.wpChaBonus ?? 0) !== 0) {
-      let name = item.name;
-      wpBonusArray.push(name);
-    } else if ((charBonus.prcChaBonus ?? 0) !== 0) {
-      let name = item.name;
-      prcBonusArray.push(name);
-    } else if ((charBonus.prsChaBonus ?? 0) !== 0) {
-      let name = item.name;
-      prsBonusArray.push(name);
-    } else if ((charBonus.lckChaBonus ?? 0) !== 0) {
-      let name = item.name;
-      lckBonusArray.push(name);
-    }
-  }
-
-  let d = new Dialog({
+    let d = new Dialog({
     title: "Set Base Characteristics",
     content: `<form>
                   <h2>Set the Character's Base Characteristics.</h2>
@@ -878,7 +832,6 @@ export class merchantSheet extends foundry.appv1.sheets.ActorSheet {
   });
   d.render(true);
 }
-  }
 
 async _onClickCharacteristic(event) {
   event.preventDefault();
@@ -1380,6 +1333,10 @@ async _onClickCharacteristic(event) {
       );
     }
 
+    // Defensive guard: safe access to actor.system properties
+    const wpTotal = Number(this.actor?.system?.characteristics?.wp?.total ?? 0);
+    const wpBonus = Math.floor(wpTotal / 10);
+
     // const spellToCast = this.actor.items.find(spell => spell.id === event.currentTarget.closest('.item').dataset.itemId)
     const hasCreative = this.actor.items.find(
       (i) => i.type === "talent" && i.name === "Creative"
@@ -1462,9 +1419,7 @@ async _onClickCharacteristic(event) {
                                 <tbody style="text-align: center;">
                                     <tr>
                                         <td>${spellToCast.system.cost}</td>
-                                        <td>${Math.floor(
-                                          this.actor.system.characteristics.wp
-                                            .total / 10
+                                        <td>${wpBonus}
                                         )}</td>
                                         <td>${spellToCast.system.level}</td>
                                     </tr>
@@ -1551,8 +1506,9 @@ async _onClickCharacteristic(event) {
                 stackCostMod = stackCostMod - 1;
               }
 
+              const wpTotal = Number(this.actor?.system?.characteristics?.wp?.total ?? 0);
               spellRestraint =
-                0 - Math.floor(this.actor.system.characteristics.wp.total / 10);
+                0 - Math.floor(wpTotal / 10);
             }
 
             if (isOverloaded) {
@@ -1563,9 +1519,10 @@ async _onClickCharacteristic(event) {
             if (isMagickaCycled) {
               let cycled = `<span style="border: none; border-radius: 30px; background-color: rgba(126, 40, 224, 0.80); color: white; text-align: center; font-size: xx-small; padding: 5px;">Magicka Cycle</span>`;
               tags.push(cycled);
+              const wpTotal = Number(this.actor?.system?.characteristics?.wp?.total ?? 0);
               spellRestraint =
                 0 -
-                2 * Math.floor(this.actor.system.characteristics.wp.total / 10);
+                2 * Math.floor(wpTotal / 10);
             }
 
             //If spell has damage value it outputs to Chat, otherwise no damage will be shown in Chat Output
@@ -1621,7 +1578,8 @@ async _onClickCharacteristic(event) {
 
             // Stop The Function if the user does not have enough Magicka to Cast the Spell
             if (game.settings.get("uesrpg-3ev4", "automateMagicka")) {
-              if (displayCost > this.actor.system.magicka.value) {
+              const currentMagicka = Number(this.actor?.system?.magicka?.value ?? 0);
+              if (displayCost > currentMagicka) {
                 return ui.notifications.info(
                   `You do not have enough Magicka to cast this spell: Cost: ${spellToCast.system.cost} || Restraint: ${spellRestraint} || Other: ${stackCostMod}`
                 );
@@ -1665,9 +1623,10 @@ async _onClickCharacteristic(event) {
 
             // If Automate Magicka Setting is on, reduce the character's magicka by the calculated output cost
             if (game.settings.get("uesrpg-3ev4", "automateMagicka")) {
+              const currentMagicka = Number(this.actor?.system?.magicka?.value ?? 0);
               this.actor.update({
                 "system.magicka.value":
-                  this.actor.system.magicka.value - displayCost,
+                  currentMagicka - displayCost,
               });
             }
           },
@@ -1688,6 +1647,12 @@ async _onClickCharacteristic(event) {
   _onResistanceRoll(event) {
     event.preventDefault();
     const element = event.currentTarget;
+    
+    // Defensive guards for actor/system and nested properties
+    const actorSys = this.actor?.system || {};
+    const lucky = actorSys.lucky_numbers || {};
+    const unlucky = actorSys.unlucky_numbers || {};
+    const resistance = actorSys.resistance || {};
 
     let d = new Dialog({
       title: "Apply Roll Modifier",
@@ -1699,49 +1664,51 @@ async _onClickCharacteristic(event) {
         one: {
           label: "Roll!",
           callback: async (html) => {
-            const playerInput = parseInt(html.find('[id="playerInput"]').val());
+            const playerInput = parseInt(html.find('[id="playerInput"]').val()) || 0;
 
             let contentString = "";
             let roll = new Roll("1d100");
             await roll.evaluate();
 
+            const resistanceValue = Number(resistance[element.id] ?? 0);
+
             if (
-              roll.total == this.actor.system.lucky_numbers.ln1 ||
-              roll.total == this.actor.system.lucky_numbers.ln2 ||
-              roll.total == this.actor.system.lucky_numbers.ln3 ||
-              roll.total == this.actor.system.lucky_numbers.ln4 ||
-              roll.total == this.actor.system.lucky_numbers.ln5
+              roll.total == lucky.ln1 ||
+              roll.total == lucky.ln2 ||
+              roll.total == lucky.ln3 ||
+              roll.total == lucky.ln4 ||
+              roll.total == lucky.ln5
             ) {
               contentString = `<h2 style='font-size: large;'${
                 element.name
               } Resistance</h2>
             <p></p><b>Target Number: [[${
-              this.actor.system.resistance[element.id]
+              resistanceValue
             } + ${playerInput}]]</b> <p></p>
             <b>Result: [[${roll.result}]]</b><p></p>
             <span style='color:green; font-size:120%;'> <b>LUCKY NUMBER!</b></span>`;
             } else if (
-              roll.total == this.actor.system.unlucky_numbers.ul1 ||
-              roll.total == this.actor.system.unlucky_numbers.ul2 ||
-              roll.total == this.actor.system.unlucky_numbers.ul3 ||
-              roll.total == this.actor.system.unlucky_numbers.ul4 ||
-              roll.total == this.actor.system.unlucky_numbers.ul5
+              roll.total == unlucky.ul1 ||
+              roll.total == unlucky.ul2 ||
+              roll.total == unlucky.ul3 ||
+              roll.total == unlucky.ul4 ||
+              roll.total == unlucky.ul5
             ) {
               contentString = `<h4>${element.name} Resistance</h4>
             <p></p><b>Target Number: [[${
-              this.actor.system.resistance[element.id]
+              resistanceValue
             } + ${playerInput}]]</b> <p></p>
             <b>Result: [[${roll.result}]]</b><p></p>
             <span style='color:rgb(168, 5, 5); font-size:120%;'> <b>UNLUCKY NUMBER!</b></span>`;
             } else {
               contentString = `<h4>${element.name} Resistance</h4>
             <p></p><b>Target Number: [[${
-              this.actor.system.resistance[element.id]
+              resistanceValue
             } + ${playerInput}]]</b> <p></p>
             <b>Result: [[${roll.result}]]</b><p></p>
             <b>${
               roll.total <=
-              this.actor.system.resistance[element.id] + playerInput
+              resistanceValue + playerInput
                 ? " <span style='color:green; font-size: 120%;'> <b>SUCCESS!</b></span>"
                 : " <span style='color: rgb(168, 5, 5); font-size: 120%;'> <b>FAILURE!</b></span>"
             }`;
