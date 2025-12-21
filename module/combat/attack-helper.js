@@ -118,6 +118,42 @@ function getDefenseSkill(actor, defenseType = 'evade') {
   return agiTotal;
 }
 
+/**
+ * Quick attack macro - attacks selected target with specified weapon
+ * @param {string} weaponName - Name of weapon to use
+ * @param {Object} options - Additional options
+ */
+export async function quickAttack(weaponName, options = {}) {
+  // Get controlled token
+  const controlled = canvas.tokens.controlled;
+  if (controlled.length === 0) {
+    ui.notifications.warn("Please select your token");
+    return;
+  }
+  const attackerToken = controlled[0];
+
+  // Get targeted token
+  const targets = game.user.targets;
+  if (targets.size === 0) {
+    ui.notifications.warn("Please target an enemy");
+    return;
+  }
+  const defenderToken = Array.from(targets)[0];
+
+  // Find weapon
+  const weapon = attackerToken.actor.items.find(i => 
+    i.type === 'weapon' && i.name.toLowerCase().includes(weaponName.toLowerCase())
+  );
+
+  if (!weapon) {
+    ui.notifications.warn(`Weapon "${weaponName}" not found`);
+    return;
+  }
+
+  // Perform attack
+  return await performWeaponAttack(attackerToken, defenderToken, weapon, options);
+}
+
 // Global exposure for macros
 window.Uesrpg3e = window.Uesrpg3e || {};
 window.Uesrpg3e.combat = window.Uesrpg3e.combat || {};

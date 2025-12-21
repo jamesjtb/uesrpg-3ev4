@@ -44,6 +44,9 @@ The system will:
 Use the OpposedRoll API for contested attacks:
 
 ```javascript
+// Import the opposed roll module
+import { OpposedRoll } from "./module/combat/opposed-rolls.js";
+
 // Get tokens
 const attacker = canvas.tokens.controlled[0];
 const defender = Array.from(game.user.targets)[0];
@@ -52,7 +55,7 @@ const defender = Array.from(game.user.targets)[0];
 const weapon = attacker.actor.items.find(i => i.name === "Longsword");
 
 // Perform opposed attack roll
-await UesrpgOpposed.perform(attacker, defender, {
+await OpposedRoll.perform(attacker, defender, {
   attackerTarget: 65,  // Combat skill
   defenderTarget: 60,  // Evade skill
   weapon: weapon,
