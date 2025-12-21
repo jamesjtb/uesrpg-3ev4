@@ -811,7 +811,8 @@ export class SimpleActor extends Actor {
     actorSystemData.luck_points.max = lckBonus + actorSystemData.luck_points.bonus;
 
     actorSystemData.carry_rating.max = Math.floor((4 * strBonus) + (2 * endBonus)) + actorSystemData.carry_rating.bonus;
-    actorSystemData.carry_rating.current = (agg.totalEnc - agg.armorEnc - agg.excludedEnc).toFixed(1);
+    // Guard: Use Number() to ensure numeric value after toFixed for safe carry rating calculations
+    actorSystemData.carry_rating.current = Number((agg.totalEnc - agg.armorEnc - agg.excludedEnc).toFixed(1));
 
     //Form Shift Calcs
     if (this._wereWolfForm(actorData) === true) {
@@ -821,7 +822,7 @@ export class SimpleActor extends Actor {
       actorSystemData.stamina.max = actorSystemData.stamina.max + 1;
       actorSystemData.speed.base = actorSystemData.speed.base + 9;
       actorSystemData.speed.value = this._speedCalc(actorData);
-      actorSystemData.speed.swimSpeed = (actorSystemData.speed.value/2).toFixed(0);
+      actorSystemData.speed.swimSpeed = Math.round(actorSystemData.speed.value/2);
       actorSystemData.resistance.natToughness = 5;
       actorSystemData.wound_threshold.value = actorSystemData.wound_threshold.value + 5;
       actorSystemData.action_points.max = actorSystemData.action_points.max - 1;
@@ -834,9 +835,9 @@ export class SimpleActor extends Actor {
         actorSystemData.resistance.diseaseR = actorSystemData.resistance.diseaseR + 200;
         actorSystemData.hp.max = actorSystemData.hp.max + 5;
         actorSystemData.stamina.max = actorSystemData.stamina.max + 1;
-        actorSystemData.speed.value = (this._speedCalc(actorData)/2).toFixed(0);
+        actorSystemData.speed.value = Math.round(this._speedCalc(actorData)/2);
         actorSystemData.speed.flySpeed = actorSystemData.speed.base + 9;
-        actorSystemData.speed.swimSpeed = (actorSystemData.speed.value/2).toFixed(0);
+        actorSystemData.speed.swimSpeed = Math.round(actorSystemData.speed.value/2);
         actorSystemData.resistance.natToughness = 5;
         actorSystemData.wound_threshold.value = actorSystemData.wound_threshold.value + 3;
         actorSystemData.action_points.max = actorSystemData.action_points.max - 1;
@@ -850,7 +851,7 @@ export class SimpleActor extends Actor {
         actorSystemData.hp.max = actorSystemData.hp.max + 5;
         actorSystemData.speed.base = actorSystemData.speed.base + 9;
         actorSystemData.speed.value = this._speedCalc(actorData);
-        actorSystemData.speed.swimSpeed = (actorSystemData.speed.value/2).toFixed(0);
+        actorSystemData.speed.swimSpeed = Math.round(actorSystemData.speed.value/2);
         actorSystemData.resistance.natToughness = 7;
         actorSystemData.wound_threshold.value = actorSystemData.wound_threshold.value + 5;
         actorSystemData.action_points.max = actorSystemData.action_points.max - 1;
@@ -865,7 +866,7 @@ export class SimpleActor extends Actor {
         actorSystemData.stamina.max = actorSystemData.stamina.max + 1;
         actorSystemData.speed.base = actorSystemData.speed.base + 5;
         actorSystemData.speed.value = this._speedCalc(actorData);
-        actorSystemData.speed.swimSpeed = (actorSystemData.speed.value/2).toFixed(0);
+        actorSystemData.speed.swimSpeed = Math.round(actorSystemData.speed.value/2);
         actorSystemData.resistance.natToughness = 5;
         actorSystemData.wound_threshold.value = actorSystemData.wound_threshold.value + 5;
         actorSystemData.action_points.max = actorSystemData.action_points.max - 1;
@@ -878,7 +879,7 @@ export class SimpleActor extends Actor {
         actorSystemData.resistance.diseaseR = actorSystemData.resistance.diseaseR + 200;
         actorSystemData.hp.max = actorSystemData.hp.max + 5;
         actorSystemData.stamina.max = actorSystemData.stamina.max + 1;
-        actorSystemData.speed.value = (this._addHalfSpeed(actorData)).toFixed(0);
+        actorSystemData.speed.value = Math.round(this._addHalfSpeed(actorData));
         actorSystemData.speed.swimSpeed = parseFloat(this._speedCalc(actorData)) + 9;
         actorSystemData.resistance.natToughness = 5;
         actorSystemData.wound_threshold.value = actorSystemData.wound_threshold.value + 5;
@@ -892,9 +893,9 @@ export class SimpleActor extends Actor {
         actorSystemData.resistance.diseaseR = actorSystemData.resistance.diseaseR + 200;
         actorSystemData.hp.max = actorSystemData.hp.max + 5;
         actorSystemData.stamina.max = actorSystemData.stamina.max + 1;
-        actorSystemData.speed.value = (this._speedCalc(actorData)/2).toFixed(0);
+        actorSystemData.speed.value = Math.round(this._speedCalc(actorData)/2);
         actorSystemData.speed.flySpeed = actorSystemData.speed.base + 9;
-        actorSystemData.speed.swimSpeed = (actorSystemData.speed.value/2).toFixed(0);
+        actorSystemData.speed.swimSpeed = Math.round(actorSystemData.speed.value/2);
         actorSystemData.resistance.natToughness = 5;
         actorSystemData.wound_threshold.value = actorSystemData.wound_threshold.value + 3;
         actorSystemData.action_points.max = actorSystemData.action_points.max - 1;
@@ -1096,7 +1097,8 @@ export class SimpleActor extends Actor {
         actorSystemData.speed.base = strBonus + (2 * agiBonus) + (actorSystemData.speed.bonus);
     }
     actorSystemData.speed.value = this._speedCalc(actorData);
-    actorSystemData.speed.swimSpeed = parseFloat((actorSystemData.speed.value/2).toFixed(0));
+    // Guard: Use Math.round for safe numeric conversion instead of parseFloat(toFixed)
+    actorSystemData.speed.swimSpeed = Math.round(actorSystemData.speed.value/2);
     actorSystemData.speed.swimSpeed += agg.doubleSwimSpeed ? (agg.swimBonus * 2) : agg.swimBonus;
     actorSystemData.speed.flySpeed = agg.flyBonus || this._flyCalc(actorData);
 
@@ -1114,7 +1116,8 @@ export class SimpleActor extends Actor {
     actorSystemData.luck_points.max = lckBonus + actorSystemData.luck_points.bonus;
 
     actorSystemData.carry_rating.max = Math.floor((4 * strBonus) + (2 * endBonus)) + actorSystemData.carry_rating.bonus;
-    actorSystemData.carry_rating.current = (agg.totalEnc - agg.armorEnc - agg.excludedEnc).toFixed(1)
+    // Guard: Use Number() to ensure numeric value after toFixed for safe carry rating calculations
+    actorSystemData.carry_rating.current = Number((agg.totalEnc - agg.armorEnc - agg.excludedEnc).toFixed(1))
 
     //Form Shift Calcs
     if (this._wereWolfForm(actorData) === true) {
@@ -1124,7 +1127,7 @@ export class SimpleActor extends Actor {
       actorSystemData.stamina.max = actorSystemData.stamina.max + 1;
       actorSystemData.speed.base = actorSystemData.speed.base + 9;
       actorSystemData.speed.value = this._speedCalc(actorData);
-      actorSystemData.speed.swimSpeed = (actorSystemData.speed.value/2).toFixed(0);
+      actorSystemData.speed.swimSpeed = Math.round(actorSystemData.speed.value/2);
       actorSystemData.resistance.natToughness = 5;
       actorSystemData.wound_threshold.value = actorSystemData.wound_threshold.value + 5;
       actorSystemData.action_points.max = actorSystemData.action_points.max - 1;
@@ -1133,9 +1136,9 @@ export class SimpleActor extends Actor {
         actorSystemData.resistance.diseaseR = actorSystemData.resistance.diseaseR + 200;
         actorSystemData.hp.max = actorSystemData.hp.max + 5;
         actorSystemData.stamina.max = actorSystemData.stamina.max + 1;
-        actorSystemData.speed.value = (this._speedCalc(actorData)/2).toFixed(0);
+        actorSystemData.speed.value = Math.round(this._speedCalc(actorData)/2);
         actorSystemData.speed.flySpeed = actorSystemData.speed.base + 9;
-        actorSystemData.speed.swimSpeed = (actorSystemData.speed.value/2).toFixed(0);
+        actorSystemData.speed.swimSpeed = Math.round(actorSystemData.speed.value/2);
         actorSystemData.resistance.natToughness = 5;
         actorSystemData.wound_threshold.value = actorSystemData.wound_threshold.value + 3;
         actorSystemData.action_points.max = actorSystemData.action_points.max - 1;
@@ -1145,7 +1148,7 @@ export class SimpleActor extends Actor {
         actorSystemData.hp.max = actorSystemData.hp.max + 5;
         actorSystemData.speed.base = actorSystemData.speed.base + 9;
         actorSystemData.speed.value = this._speedCalc(actorData);
-        actorSystemData.speed.swimSpeed = (actorSystemData.speed.value/2).toFixed(0);
+        actorSystemData.speed.swimSpeed = Math.round(actorSystemData.speed.value/2);
         actorSystemData.resistance.natToughness = 7;
         actorSystemData.wound_threshold.value = actorSystemData.wound_threshold.value + 5;
         actorSystemData.action_points.max = actorSystemData.action_points.max - 1;
@@ -1156,7 +1159,7 @@ export class SimpleActor extends Actor {
         actorSystemData.stamina.max = actorSystemData.stamina.max + 1;
         actorSystemData.speed.base = actorSystemData.speed.base + 5;
         actorSystemData.speed.value = this._speedCalc(actorData);
-        actorSystemData.speed.swimSpeed = (actorSystemData.speed.value/2).toFixed(0);
+        actorSystemData.speed.swimSpeed = Math.round(actorSystemData.speed.value/2);
         actorSystemData.resistance.natToughness = 5;
         actorSystemData.wound_threshold.value = actorSystemData.wound_threshold.value + 5;
         actorSystemData.action_points.max = actorSystemData.action_points.max - 1;
@@ -1165,7 +1168,7 @@ export class SimpleActor extends Actor {
         actorSystemData.resistance.diseaseR = actorSystemData.resistance.diseaseR + 200;
         actorSystemData.hp.max = actorSystemData.hp.max + 5;
         actorSystemData.stamina.max = actorSystemData.stamina.max + 1;
-        actorSystemData.speed.value = (this._addHalfSpeed(actorData)).toFixed(0);
+        actorSystemData.speed.value = Math.round(this._addHalfSpeed(actorData));
         actorSystemData.speed.swimSpeed = parseFloat(this._speedCalc(actorData)) + 9;
         actorSystemData.resistance.natToughness = 5;
         actorSystemData.wound_threshold.value = actorSystemData.wound_threshold.value + 5;
@@ -1176,9 +1179,9 @@ export class SimpleActor extends Actor {
         actorSystemData.resistance.diseaseR = actorSystemData.resistance.diseaseR + 200;
         actorSystemData.hp.max = actorSystemData.hp.max + 5;
         actorSystemData.stamina.max = actorSystemData.stamina.max + 1;
-        actorSystemData.speed.value = (this._speedCalc(actorData)/2).toFixed(0);
+        actorSystemData.speed.value = Math.round(this._speedCalc(actorData)/2);
         actorSystemData.speed.flySpeed = actorSystemData.speed.base + 9;
-        actorSystemData.speed.swimSpeed = (actorSystemData.speed.value/2).toFixed(0);
+        actorSystemData.speed.swimSpeed = Math.round(actorSystemData.speed.value/2);
         actorSystemData.resistance.natToughness = 5;
         actorSystemData.wound_threshold.value = actorSystemData.wound_threshold.value + 3;
         actorSystemData.action_points.max = actorSystemData.action_points.max - 1;
