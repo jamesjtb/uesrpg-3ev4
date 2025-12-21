@@ -33,9 +33,8 @@ export function initializeChatHandlers() {
       const sourceActor = game.actors.get(speaker.actor);
       const source = sourceActor?.name || "Unknown";
       
-      // Apply damage directly (already calculated with reductions)
+      // Apply damage with full calculation (damage from buttons is raw damage)
       await applyDamage(actor, damage, damageType, {
-        ignoreReduction: true, // Damage was already reduced
         source: source,
         hitLocation: hitLocation
       });

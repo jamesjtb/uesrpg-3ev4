@@ -2,6 +2,8 @@
  * Extend the basic ActorSheet with some very simple modifications
  * @extends {ActorSheet}
  */
+import { getDamageTypeFromWeapon } from "../combat/combat-utils.js";
+
 export class merchantSheet extends foundry.appv1.sheets.ActorSheet {
   /** @override */
   static get defaultOptions() {
@@ -1222,7 +1224,7 @@ export class merchantSheet extends foundry.appv1.sheets.ActorSheet {
 
     // Get targeted actors for damage application
     const targets = game.user.targets;
-    const damageType = this._getDamageTypeFromWeapon(item);
+    const damageType = getDamageTypeFromWeapon(item);
     let applyDamageButtons = "";
 
     if (item.system.weapon2H) {
@@ -1320,23 +1322,6 @@ export class merchantSheet extends foundry.appv1.sheets.ActorSheet {
         });
       }
     }
-  }
-
-  /**
-   * Helper to determine damage type from weapon qualities
-   */
-  _getDamageTypeFromWeapon(weapon) {
-    if (!weapon?.system?.qualities) return 'physical';
-    
-    const qualities = weapon.system.qualities.toLowerCase();
-    
-    if (qualities.includes('fire') || qualities.includes('flame')) return 'fire';
-    if (qualities.includes('frost') || qualities.includes('ice')) return 'frost';
-    if (qualities.includes('shock') || qualities.includes('lightning')) return 'shock';
-    if (qualities.includes('poison')) return 'poison';
-    if (qualities.includes('magic')) return 'magic';
-    
-    return 'physical';
   }
 
   _onSpellRoll(event) {

@@ -7,6 +7,7 @@
 import { doTestRoll } from "../helpers/degree-roll-helper.js";
 import { OpposedRoll } from "./opposed-rolls.js";
 import { DAMAGE_TYPES } from "./damage-automation.js";
+import { getDamageTypeFromWeapon } from "./combat-utils.js";
 
 /**
  * Perform a weapon attack
@@ -115,63 +116,6 @@ function getDefenseSkill(actor, defenseType = 'evade') {
   // Fallback to agility-based defense
   const agiTotal = Number(actor.system.characteristics?.agi?.total || 50);
   return agiTotal;
-}
-
-/**
- * Determine damage type from weapon qualities
- * @param {Item} weapon - The weapon
- * @returns {string} - Damage type
- */
-function getDamageTypeFromWeapon(weapon) {
-  if (!weapon?.system?.qualities) return DAMAGE_TYPES.PHYSICAL;
-
-  const qualities = weapon.system.qualities.toLowerCase();
-
-  // Check for special damage types
-  if (qualities.includes('fire') || qualities.includes('flame')) return DAMAGE_TYPES.FIRE;
-  if (qualities.includes('frost') || qualities.includes('ice')) return DAMAGE_TYPES.FROST;
-  if (qualities.includes('shock') || qualities.includes('lightning')) return DAMAGE_TYPES.SHOCK;
-  if (qualities.includes('poison')) return DAMAGE_TYPES.POISON;
-  if (qualities.includes('magic')) return DAMAGE_TYPES.MAGIC;
-  
-  // Default to physical
-  return DAMAGE_TYPES.PHYSICAL;
-}
-
-/**
- * Quick attack macro - attacks selected target with specified weapon
- * @param {string} weaponName - Name of weapon to use
- * @param {Object} options - Additional options
- */
-export async function quickAttack(weaponName, options = {}) {
-  // Get controlled token
-  const controlled = canvas.tokens.controlled;
-  if (controlled.length === 0) {
-    ui.notifications.warn("Please select your token");
-    return;
-  }
-  const attackerToken = controlled[0];
-
-  // Get targeted token
-  const targets = game.user.targets;
-  if (targets.size === 0) {
-    ui.notifications.warn("Please target an enemy");
-    return;
-  }
-  const defenderToken = Array.from(targets)[0];
-
-  // Find weapon
-  const weapon = attackerToken.actor.items.find(i => 
-    i.type === 'weapon' && i.name.toLowerCase().includes(weaponName.toLowerCase())
-  );
-
-  if (!weapon) {
-    ui.notifications.warn(`Weapon "${weaponName}" not found`);
-    return;
-  }
-
-  // Perform attack
-  return await performWeaponAttack(attackerToken, defenderToken, weapon, options);
 }
 
 // Global exposure for macros

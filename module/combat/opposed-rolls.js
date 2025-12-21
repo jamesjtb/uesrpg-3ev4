@@ -8,6 +8,7 @@
 
 import { doTestRoll, resolveOpposed } from "../helpers/degree-roll-helper.js";
 import { applyDamage, calculateDamage, DAMAGE_TYPES } from "./damage-automation.js";
+import { rollHitLocation } from "./combat-utils.js";
 
 export const OpposedRoll = {
   /**
@@ -58,9 +59,11 @@ export const OpposedRoll = {
       const roll = await new Roll(damageRoll).evaluate({ async: true });
       const rawDamage = Number(roll.total);
       
-      // Calculate DoS bonus if enabled (attacker's degree on success)
+      // Calculate DoS bonus if enabled and attacker won
       const useDosBonus = game.settings.get("uesrpg-3ev4", "useDosBonus");
-      const dosBonus = (useDosBonus && aRes.isSuccess) ? Math.floor(aRes.degree / 2) : 0;
+      const dosBonus = (useDosBonus && outcome.winner === "attacker" && aRes.isSuccess) 
+        ? Math.floor(aRes.degree / 2) 
+        : 0;
       
       // Calculate hit location if not provided
       const hitLoc = hitLocation || await rollHitLocation();
@@ -154,22 +157,6 @@ export const OpposedRoll = {
     };
   }
 };
-
-/**
- * Roll for hit location (1d100)
- * @returns {Promise<string>} Hit location description
- */
-async function rollHitLocation() {
-  const roll = await new Roll("1d100").evaluate({ async: true });
-  const result = roll.total;
-  
-  if (result <= 15) return "Head";
-  if (result <= 35) return "Right Arm";
-  if (result <= 55) return "Left Arm";
-  if (result <= 80) return "Body";
-  if (result <= 90) return "Right Leg";
-  return "Left Leg";
-}
 
 // Helpful console binding
 window.UesrpgOpposed = window.UesrpgOpposed || {};

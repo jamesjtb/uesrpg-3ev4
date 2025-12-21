@@ -12,6 +12,7 @@ import coreVariants from "./racemenu/data/core-variants.js";
 import { renderRaceCards } from "./racemenu/render-race-cards.js";
 import khajiitFurstocks from './racemenu/data/khajiit-furstocks.js';
 import expandedRaces from "./racemenu/data/expanded-races.js";
+import { getDamageTypeFromWeapon } from "../combat/combat-utils.js";
 
 export class SimpleActorSheet extends foundry.appv1.sheets.ActorSheet {
   /** @override */
@@ -1379,7 +1380,7 @@ export class SimpleActorSheet extends foundry.appv1.sheets.ActorSheet {
     let applyDamageButtons = "";
     
     if (targets.size > 0) {
-      const damageType = this._getDamageTypeFromWeapon(shortcutWeapon);
+      const damageType = getDamageTypeFromWeapon(shortcutWeapon);
       targets.forEach(target => {
         applyDamageButtons += `
           <button class="apply-damage-btn" 
@@ -1443,23 +1444,6 @@ export class SimpleActorSheet extends foundry.appv1.sheets.ActorSheet {
       roll: weaponRoll,
       rollMode: game.settings.get("core", "rollMode"),
     });
-  }
-
-  /**
-   * Helper to determine damage type from weapon qualities
-   */
-  _getDamageTypeFromWeapon(weapon) {
-    if (!weapon?.system?.qualities) return 'physical';
-    
-    const qualities = weapon.system.qualities.toLowerCase();
-    
-    if (qualities.includes('fire') || qualities.includes('flame')) return 'fire';
-    if (qualities.includes('frost') || qualities.includes('ice')) return 'frost';
-    if (qualities.includes('shock') || qualities.includes('lightning')) return 'shock';
-    if (qualities.includes('poison')) return 'poison';
-    if (qualities.includes('magic')) return 'magic';
-    
-    return 'physical';
   }
 
   async _onAmmoRoll(event) {
