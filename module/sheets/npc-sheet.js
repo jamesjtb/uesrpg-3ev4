@@ -910,10 +910,6 @@ async _onSetBaseCharacteristics(event) {
   }
 
 _onSpellRoll(event) {
-  // Defensive/guarded implementation
-  // Search for "_onSpellRoll(event) {" and replace the whole function with this block.
-  // Uses actorSys to safely read actor data.
-  // If you have an async/await pattern in your original, keep this signature (it can be async if needed).
   let spellToCast;
 
   if (
@@ -1407,15 +1403,6 @@ _onResetResource(event) {
   const dataPath = `system.${resourceLabel}.value`;
   this.actor.update({ [dataPath]: Number(resource.max ?? 0) });
 }
-
-  _onResetResource(event) {
-    event.preventDefault();
-    const resourceLabel = event.currentTarget.dataset.resource;
-    const resource = this.actor.system[resourceLabel];
-    let dataPath = `system.${resourceLabel}.value`;
-
-    this.actor.update({ [dataPath]: (resource.value = resource.max) });
-  }
 
   _createSpellFilterOptions() {
     for (let spell of this.actor.items.filter(
