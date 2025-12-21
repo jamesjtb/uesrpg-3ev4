@@ -1968,4 +1968,38 @@ export class SimpleActor extends Actor {
     return speed
   }
 
+  /**
+   * Apply damage to this actor with automatic reductions and tracking
+   * @param {number} damage - Raw damage amount
+   * @param {string} damageType - Type of damage (physical, fire, frost, etc.)
+   * @param {Object} options - Additional options
+   * @returns {Promise<Object>} - Damage application result
+   */
+  async applyDamage(damage, damageType = 'physical', options = {}) {
+    // Import damage automation module dynamically to avoid circular dependencies
+    const { applyDamage: applyDamageFunc } = await import('../combat/damage-automation.js');
+    return await applyDamageFunc(this, damage, damageType, options);
+  }
+
+  /**
+   * Apply healing to this actor
+   * @param {number} healing - Amount of HP to restore
+   * @param {Object} options - Additional options
+   * @returns {Promise<Object>} - Healing result
+   */
+  async applyHealing(healing, options = {}) {
+    const { applyHealing: applyHealingFunc } = await import('../combat/damage-automation.js');
+    return await applyHealingFunc(this, healing, options);
+  }
+
+  /**
+   * Get damage reduction values for this actor
+   * @param {string} damageType - Type of damage
+   * @returns {Object} - Damage reduction breakdown
+   */
+  async getDamageReduction(damageType = 'physical') {
+    const { getDamageReduction: getDamageReductionFunc } = await import('../combat/damage-automation.js');
+    return getDamageReductionFunc(this, damageType);
+  }
+
 }
