@@ -39,8 +39,8 @@ export async function performWeaponAttack(attackerToken, defenderToken, weapon, 
 
   // Determine damage roll
   const damageRoll = weapon?.system?.weapon2H 
-    ? weapon.system.damage2 
-    : weapon.system.damage;
+    ? weapon?.system?.damage2 
+    : weapon?.system?.damage;
 
   // Determine damage type from weapon qualities
   const damageType = getDamageTypeFromWeapon(weapon);
@@ -90,7 +90,7 @@ function getAttackSkill(actor, weapon) {
   }
 
   // Fallback to a generic combat skill or attribute
-  return Number(actor.system.combat?.value || actor.system.attributes?.initiative?.value || 50);
+  return Number(actor?.system?.combat?.value || actor?.system?.attributes?.initiative?.value || 50);
 }
 
 /**
@@ -114,7 +114,7 @@ function getDefenseSkill(actor, defenseType = 'evade') {
   }
 
   // Fallback to agility-based defense
-  const agiTotal = Number(actor.system.characteristics?.agi?.total || 50);
+  const agiTotal = Number(actor?.system?.characteristics?.agi?.total || 50);
   return agiTotal;
 }
 

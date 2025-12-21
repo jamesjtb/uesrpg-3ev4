@@ -187,8 +187,8 @@ export async function applyDamage(actor, damage, damageType = DAMAGE_TYPES.PHYSI
   const finalDamage = damageCalc.finalDamage;
 
   // Get current HP
-  const currentHP = Number(actor.system.health?.value || 0);
-  const maxHP = Number(actor.system.health?.max || 1);
+  const currentHP = Number(actor?.system?.health?.value || 0);
+  const maxHP = Number(actor?.system?.health?.max || 1);
   const newHP = Math.max(0, currentHP - finalDamage);
 
   // Update actor HP
@@ -261,8 +261,8 @@ export async function applyHealing(actor, healing, options = {}) {
     return null;
   }
 
-  const currentHP = Number(actor.system.health?.value || 0);
-  const maxHP = Number(actor.system.health?.max || 1);
+  const currentHP = Number(actor?.system?.health?.value || 0);
+  const maxHP = Number(actor?.system?.health?.max || 1);
   const healAmount = Number(healing);
   const newHP = Math.min(maxHP, currentHP + healAmount);
   const actualHealing = newHP - currentHP;
