@@ -56,7 +56,7 @@ export class SimpleItemSheet extends foundry.appv1.sheets.ItemSheet {
     html.find(".addToContainer").click(this._addToContainer.bind(this));
 
     // Register listeners for items that have modifier arrays
-    if (this.item.system.hasOwnProperty('skillArray')) {
+    if (this.item?.system && Object.prototype.hasOwnProperty.call(this.item.system, 'skillArray')) {
       html.find(".modifier-create").click(this._onModifierCreate.bind(this))
       this._createModifierEntries()
       html.find('.item-delete').click(this._onDeleteModifier.bind(this))
@@ -77,7 +77,7 @@ export class SimpleItemSheet extends foundry.appv1.sheets.ItemSheet {
     // Update contained Items elements list (this keeps the contents list updated if items are updated themselves)
     this.item.type == 'container' && this.item.isOwned ? this._updateContainedItemsList() : {}
 
-    this.item.system.hasOwnProperty('containerStats') && this.item.type != 'container' ? this._pushContainedItemData() : {}
+    this.item?.system && Object.prototype.hasOwnProperty.call(this.item.system, 'containerStats') && this.item.type != 'container' ? this._pushContainedItemData() : {}
   }
 
   /**
