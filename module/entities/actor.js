@@ -135,7 +135,7 @@ export class SimpleActor extends Actor {
         stats.containedWeightReduction += enc * qty;
       }
       if (sys.excludeENC === true) stats.excludedEnc += enc * qty;
-      if (sys.equipped === true) stats.armorEnc += ((enc / 2) * qty);
+      if (isEquipped) stats.armorEnc += ((enc / 2) * qty);
 
       // Characteristic bonuses (only if equipped)
       if (isEquipped && sys.characteristicBonus) {
