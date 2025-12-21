@@ -58,8 +58,9 @@ export const OpposedRoll = {
       const roll = await new Roll(damageRoll).evaluate({ async: true });
       const rawDamage = Number(roll.total);
       
-      // Calculate DoS bonus (attacker's degree on success)
-      const dosBonus = aRes.isSuccess ? Math.floor(aRes.degree / 2) : 0; // Half of DoS as bonus damage
+      // Calculate DoS bonus if enabled (attacker's degree on success)
+      const useDosBonus = game.settings.get("uesrpg-3ev4", "useDosBonus");
+      const dosBonus = (useDosBonus && aRes.isSuccess) ? Math.floor(aRes.degree / 2) : 0;
       
       // Calculate hit location if not provided
       const hitLoc = hitLocation || await rollHitLocation();

@@ -48,14 +48,22 @@ export function getDamageReduction(actor, damageType = DAMAGE_TYPES.PHYSICAL) {
 
   // Physical damage: uses armor and natural toughness
   if (damageType === DAMAGE_TYPES.PHYSICAL) {
-    // Calculate total armor from equipped items
-    const equippedArmor = actor.items?.filter(i => 
-      i.type === 'armor' && i.system?.equipped === true
-    ) || [];
-    
-    for (let item of equippedArmor) {
-      armor += Number(item.system?.armor_rating || 0);
+    // Calculate total armor from equipped items (cached for performance)
+    if (!actor._armorCache || actor._armorCacheVersion !== actor.system._version) {
+      const equippedArmor = actor.items?.filter(i => 
+        i.type === 'armor' && i.system?.equipped === true
+      ) || [];
+      
+      let totalArmor = 0;
+      for (let item of equippedArmor) {
+        totalArmor += Number(item.system?.armor_rating || 0);
+      }
+      
+      actor._armorCache = totalArmor;
+      actor._armorCacheVersion = actor.system._version;
     }
+    
+    armor = actor._armorCache || 0;
 
     // Natural toughness resistance
     resistance = Number(actorData.resist?.natToughnessR || 0);

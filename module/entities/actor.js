@@ -1997,8 +1997,8 @@ export class SimpleActor extends Actor {
    * @param {string} damageType - Type of damage
    * @returns {Object} - Damage reduction breakdown
    */
-  getDamageReduction(damageType = 'physical') {
-    const { getDamageReduction: getDamageReductionFunc } = require('../combat/damage-automation.js');
+  async getDamageReduction(damageType = 'physical') {
+    const { getDamageReduction: getDamageReductionFunc } = await import('../combat/damage-automation.js');
     return getDamageReductionFunc(this, damageType);
   }
 

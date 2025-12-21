@@ -1225,8 +1225,8 @@ export class merchantSheet extends foundry.appv1.sheets.ActorSheet {
     const damageType = this._getDamageTypeFromWeapon(item);
     let applyDamageButtons = "";
 
-    if (item.system.weapon2H === true) {
-      const finalDamage = item.system.superior === true 
+    if (item.system.weapon2H) {
+      const finalDamage = item.system.superior 
         ? Math.max(roll2H.result, supRoll2H.result)
         : roll2H.result;
 
@@ -1244,7 +1244,7 @@ export class merchantSheet extends foundry.appv1.sheets.ActorSheet {
         });
       }
 
-      if (item.system.superior === true) {
+      if (item.system.superior) {
         contentString = `<h2 style='font-size: large'><img src="${item.img}" height=20 width=20 style='margin-right: 5px;'</img>${item.name}</h2>
           <p></p>
           <b>Damage:</b> <b> [[${roll2H.result}]] [[${supRoll2H.result}]]</b> ${roll2H._formula}<p></p>
@@ -1273,7 +1273,7 @@ export class merchantSheet extends foundry.appv1.sheets.ActorSheet {
         });
       }
     } else {
-      const finalDamage = item.system.superior === true 
+      const finalDamage = item.system.superior 
         ? Math.max(roll.result, supRoll.result)
         : roll.result;
 
@@ -1291,7 +1291,7 @@ export class merchantSheet extends foundry.appv1.sheets.ActorSheet {
         });
       }
 
-      if (item.system.superior === true) {
+      if (item.system.superior) {
         contentString = `<h2 style='font-size: large'><img src="${item.img}" height=20 width=20 style='margin-right: 5px;'</img>${item.name}</h2>
             <p></p>
             <b>Damage:</b> <b> [[${roll.result}]] [[${supRoll.result}]]</b> ${roll._formula}<p></p>
