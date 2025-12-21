@@ -1329,7 +1329,7 @@ async _onClickCharacteristic(event) {
     } else {
       spellToCast = this.actor.getEmbeddedDocument(
         "Item",
-        this.actor.system.favorites[event.currentTarget.dataset.hotkey].id
+        this.actor?.system?.favorites?.[event.currentTarget.dataset.hotkey]?.id
       );
     }
 
@@ -1945,7 +1945,7 @@ async _onClickCharacteristic(event) {
           label: "Submit",
           callback: async (html) => {
             const playerInput = parseInt(html.find('[id="playerInput"]').val());
-            let wealth = this.actor.system.wealth;
+            let wealth = Number(this.actor?.system?.wealth ?? 0);
 
             wealth = wealth + playerInput;
             this.actor.update({ "system.wealth": wealth });
