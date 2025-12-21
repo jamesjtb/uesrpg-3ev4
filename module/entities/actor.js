@@ -963,7 +963,8 @@ export class SimpleActor extends Actor {
     // Apply aggregated item skill modifiers (one-pass)
     if (agg.skillModifiers && Object.keys(agg.skillModifiers).length > 0) {
       for (let [skillName, value] of Object.entries(agg.skillModifiers)) {
-        if (actorSystemData.professions?.hasOwnProperty(skillName)) {
+        // Guard: safe hasOwnProperty check for profession skill
+        if (actorSystemData.professions && Object.prototype.hasOwnProperty.call(actorSystemData.professions, skillName)) {
           actorSystemData.professions[skillName] = Number(actorSystemData.professions[skillName] || 0) + Number(value);
           actorSystemData.professionsWound[skillName] = Number(actorSystemData.professionsWound[skillName] || 0) + Number(value);
         }
