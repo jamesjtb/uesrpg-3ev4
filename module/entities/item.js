@@ -189,36 +189,36 @@ export class SimpleItem extends Item {
     }
 
     // let currentCapacity = itemData.contained_items.reduce((a, b) => {a + (b.item.system.enc * b.item.system.quantity)}, 0)
-    let appliedENC = (currentCapacity / 2)
+    let appliedENC = Math.ceil(currentCapacity / 2);
 
     itemData.container_enc = itemData.container_enc || {};
-    itemData.container_enc.item_count = itemCount
-    itemData.container_enc.current = currentCapacity
-    itemData.container_enc.applied_enc = appliedENC
+    itemData.container_enc.item_count = itemCount;
+    itemData.container_enc.current = currentCapacity;
+    itemData.container_enc.applied_enc = appliedENC;
 
   }
 
   async _duplicateContainedItemsOnActor(actorData, itemData) {
-    if (!actorData || !itemData?.system?.contained_items) return;
+    if (!actorData || !Array.isArray(itemData?.system?.contained_items)) return;
 
-    let itemsToDuplicate = []
-    let containedItems = []
+    let itemsToDuplicate = [];
+    let containedItems = [];
     for (let containedItem of itemData.system.contained_items) {
       // Guard for structure; ensure we clone an Item-like object
       const clone = containedItem?.item ? containedItem.item.toObject ? containedItem.item.toObject() : containedItem.item : containedItem;
       if (!clone) continue;
       clone.system = clone.system || {};
       clone.system.containerStats = clone.system.containerStats || {};
-      clone.system.containerStats.container_id = itemData._id
-      itemsToDuplicate.push(clone)
-      containedItems.push(containedItem)
+      clone.system.containerStats.container_id = itemData._id;
+      itemsToDuplicate.push(clone);
+      containedItems.push(containedItem);
     }
 
-    if (itemsToDuplicate.length == 0 || !actorData) return
-    let createdContainedItems = await actorData.createEmbeddedDocuments("Item", itemsToDuplicate)
+    if (itemsToDuplicate.length == 0 || !actorData) return;
+    let createdContainedItems = await actorData.createEmbeddedDocuments("Item", itemsToDuplicate);
 
     // Loop through newly created items and grab their new ID's to store in the container contained_items array
-    this.system.contained_items = await this._assignNewlyCreatedItemDataToContainer(createdContainedItems, actorData, itemData)
+    this.system.contained_items = await this._assignNewlyCreatedItemDataToContainer(createdContainedItems, actorData, itemData);
   }
 
   async _assignNewlyCreatedItemDataToContainer(createdContainedItems, actorData, itemData) {
