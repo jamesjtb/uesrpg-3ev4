@@ -127,82 +127,84 @@
                         <div class="item-resistance-container">
                             <h2>Resistances</h2>
                             <div class="modifier-container single-column-grid">
+                                {{!-- Guard: defensive access for resistance values with default 0 --}}
                                 <div class="grid-container">
                                     <div>Disease</div>
-                                    <div><input type="number" name="system.diseaseR" value="{{item.system.diseaseR}}"></div>
+                                    <div><input type="number" name="system.diseaseR" value="{{#if item.system.diseaseR}}{{item.system.diseaseR}}{{else}}0{{/if}}"></div>
                                 </div>
                                 <div class="grid-container">
                                     <div>Fire</div>
-                                    <div><input type="number" name="system.fireR" value="{{item.system.fireR}}"></div>
+                                    <div><input type="number" name="system.fireR" value="{{#if item.system.fireR}}{{item.system.fireR}}{{else}}0{{/if}}"></div>
                                 </div>
                                 <div class="grid-container">
                                     <div>Frost</div>
-                                    <div><input type="number" name="system.frostR" value="{{item.system.frostR}}"></div>
+                                    <div><input type="number" name="system.frostR" value="{{#if item.system.frostR}}{{item.system.frostR}}{{else}}0{{/if}}"></div>
                                 </div>
                                 <div class="grid-container">
                                     <div>Shock</div>
-                                    <div><input type="number" name="system.shockR" value="{{item.system.shockR}}"></div>
+                                    <div><input type="number" name="system.shockR" value="{{#if item.system.shockR}}{{item.system.shockR}}{{else}}0{{/if}}"></div>
                                 </div>
                                 <div class="grid-container">
                                     <div>Poison</div>
-                                    <div><input type="number" name="system.poisonR" value="{{item.system.poisonR}}"></div>
+                                    <div><input type="number" name="system.poisonR" value="{{#if item.system.poisonR}}{{item.system.poisonR}}{{else}}0{{/if}}"></div>
                                 </div>
                                 <div class="grid-container">
                                     <div>Magic</div>
-                                    <div><input type="number" name="system.magicR" value="{{item.system.magicR}}"></div>
+                                    <div><input type="number" name="system.magicR" value="{{#if item.system.magicR}}{{item.system.magicR}}{{else}}0{{/if}}"></div>
                                 </div>
                                 <div class="grid-container">
                                     <div>Toughness</div>
-                                    <div><input type="number" name="system.natToughnessR" value="{{item.system.natToughnessR}}"></div>
+                                    <div><input type="number" name="system.natToughnessR" value="{{#if item.system.natToughnessR}}{{item.system.natToughnessR}}{{else}}0{{/if}}"></div>
                                 </div>
                                 <div class="grid-container">
                                     <div>Silver</div>
-                                    <div><input type="number" name="system.silverR" value="{{item.system.silverR}}"></div>
+                                    <div><input type="number" name="system.silverR" value="{{#if item.system.silverR}}{{item.system.silverR}}{{else}}0{{/if}}"></div>
                                 </div>
                                 <div class="grid-container">
                                     <div>Sunlight</div>
-                                    <div><input type="number" name="system.sunlightR" value="{{item.system.sunlightR}}"></div>
+                                    <div><input type="number" name="system.sunlightR" value="{{#if item.system.sunlightR}}{{item.system.sunlightR}}{{else}}0{{/if}}"></div>
                                 </div>
                             </div>
                         </div>
                         <div class="item-resistance-container">
                             <h2>Stats</h2>
                             <div class="modifier-container single-column-grid">
+                                {{!-- Guard: defensive access for stat bonus values with default 0 --}}
                                 <div class="grid-container">
                                     <div>HP+</div>
-                                    <div><input type="number" name="system.hpBonus" value="{{item.system.hpBonus}}"></div>
+                                    <div><input type="number" name="system.hpBonus" value="{{#if item.system.hpBonus}}{{item.system.hpBonus}}{{else}}0{{/if}}"></div>
                                 </div>
                                 <div class="grid-container">
                                     <div>Stamina+</div>
-                                    <div><input type="number" name="system.spBonus" value="{{item.system.spBonus}}"></div>
+                                    <div><input type="number" name="system.spBonus" value="{{#if item.system.spBonus}}{{item.system.spBonus}}{{else}}0{{/if}}"></div>
                                 </div>
                                 <div class="grid-container">
                                     <div>Magicka+</div>
-                                    <div><input type="number" name="system.mpBonus" value="{{item.system.mpBonus}}"></div>
+                                    <div><input type="number" name="system.mpBonus" value="{{#if item.system.mpBonus}}{{item.system.mpBonus}}{{else}}0{{/if}}"></div>
                                 </div>
                                 <div class="grid-container">
                                     <div>Luck+</div>
-                                    <div><input type="number" name="system.lpBonus" value="{{item.system.lpBonus}}"></div>
+                                    <div><input type="number" name="system.lpBonus" value="{{#if item.system.lpBonus}}{{item.system.lpBonus}}{{else}}0{{/if}}"></div>
                                 </div>
                                 <div class="grid-container">
                                     <div>Wound+</div>
-                                    <div><input type="number" name="system.wtBonus" value="{{item.system.wtBonus}}"></div>
+                                    <div><input type="number" name="system.wtBonus" value="{{#if item.system.wtBonus}}{{item.system.wtBonus}}{{else}}0{{/if}}"></div>
                                 </div>
                                 <div class="grid-container">
                                     <div>Initiative+</div>
-                                    <div><input type="number" name="system.iniBonus" value="{{item.system.iniBonus}}"></div>
+                                    <div><input type="number" name="system.iniBonus" value="{{#if item.system.iniBonus}}{{item.system.iniBonus}}{{else}}0{{/if}}"></div>
                                 </div>
                                 <div class="grid-container">
                                     <div>Speed+</div>
-                                    <div><input type="number" name="system.speedBonus" value="{{item.system.speedBonus}}"></div>
+                                    <div><input type="number" name="system.speedBonus" value="{{#if item.system.speedBonus}}{{item.system.speedBonus}}{{else}}0{{/if}}"></div>
                                 </div>
                                 <div class="grid-container">
                                     <div>Swim+</div>
-                                    <div><input type="number" name="system.swimBonus" value="{{item.system.swimBonus}}"></div>
+                                    <div><input type="number" name="system.swimBonus" value="{{#if item.system.swimBonus}}{{item.system.swimBonus}}{{else}}0{{/if}}"></div>
                                 </div>
                                 <div class="grid-container">
                                     <div>Fly+</div>
-                                    <div><input type="number" name="system.flyBonus" value="{{item.system.flyBonus}}"></div>
+                                    <div><input type="number" name="system.flyBonus" value="{{#if item.system.flyBonus}}{{item.system.flyBonus}}{{else}}0{{/if}}"></div>
                                 </div>
                             </div>
                         </div>

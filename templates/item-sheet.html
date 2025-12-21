@@ -10,7 +10,8 @@
                     <div class="item-resource-row">
                         <div class="item-resource">
                             <div class="stat-value-label">
-                                <input type="number" name="system.quantity" value="{{item.system.quantity}}"/>
+                                {{!-- Guard: defensive access for quantity with default 0 --}}
+                                <input type="number" name="system.quantity" value="{{#if item.system.quantity}}{{item.system.quantity}}{{else}}0{{/if}}"/>
                             </div>
                             <div class="flex-container">
                                 <div class="small-text-label">Quantity</div>
@@ -18,7 +19,8 @@
                         </div>
                         <div class="item-resource">
                             <div class="stat-value-label">
-                                <input type="number" name="system.enc" value="{{item.system.enc}}"/>
+                                {{!-- Guard: defensive access for enc with default 0 --}}
+                                <input type="number" name="system.enc" value="{{#if item.system.enc}}{{item.system.enc}}{{else}}0{{/if}}"/>
                             </div>
                             <div class="flex-container">
                                 <div class="small-text-label">ENC</div>
@@ -26,7 +28,8 @@
                         </div>
                         <div class="item-resource">
                             <div class="stat-value-label">
-                                <input type="number" name="system.price" value="{{item.system.price}}"/>
+                                {{!-- Guard: defensive access for price with default 0 --}}
+                                <input type="number" name="system.price" value="{{#if item.system.price}}{{item.system.price}}{{else}}0{{/if}}"/>
                             </div>
                             <div class="flex-container">
                                 <div class="small-text-label">Price</div>
@@ -34,7 +37,8 @@
                         </div>
                         <div class="item-resource">
                             <div class="stat-value-label">
-                                <input type="number" name="system.enchant_level" value="{{item.system.enchant_level}}"/>
+                                {{!-- Guard: defensive access for enchant_level with default 0 --}}
+                                <input type="number" name="system.enchant_level" value="{{#if item.system.enchant_level}}{{item.system.enchant_level}}{{else}}0{{/if}}"/>
                             </div>
                             <div class="flex-container">
                                 <div class="small-text-label">Enchant Lv.</div>
@@ -43,7 +47,8 @@
                         <div class="item-resource">
                             <div class="stat-value-label">
                                 <div class="flex-container">
-                                    <input type="number" name="system.charge.value" value="{{item.system.charge.value}}"> / <input type="number" name="system.charge.max" value="{{item.system.charge.max}}">
+                                    {{!-- Guard: defensive access for charge values with default 0 --}}
+                                    <input type="number" name="system.charge.value" value="{{#if item.system.charge.value}}{{item.system.charge.value}}{{else}}0{{/if}}"> / <input type="number" name="system.charge.max" value="{{#if item.system.charge.max}}{{item.system.charge.max}}{{else}}0{{/if}}">
                                 </div>
                             </div>
                             <div class="flex-container">
