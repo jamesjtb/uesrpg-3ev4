@@ -19,9 +19,17 @@
                         <div class="item-resource">
                             <div class="stat-value-label">
                                 <div class="flex-container">
-                                    {{item.system.container_enc.current}}
+                                    {{#if item.system.container_enc}}
+                                        {{item.system.container_enc.current}}
+                                    {{else}}
+                                        0
+                                    {{/if}}
                                     /
-                                    <input type="number" name="system.container_enc.max" value="{{item.system.container_enc.max}}"/>
+                                    {{#if item.system.container_enc}}
+                                        <input type="number" name="system.container_enc.max" value="{{item.system.container_enc.max}}"/>
+                                    {{else}}
+                                        <input type="number" name="system.container_enc.max" value="0"/>
+                                    {{/if}}
                                 </div>
                             </div>
                             <div class="flex-container">
@@ -38,7 +46,11 @@
                         </div>
                         <div class="item-resource">
                             <div class="stat-value-label">
-                                <input type="number" name="system.container_enc.item_count" value="{{item.system.container_enc.item_count}}"/>
+                                {{#if item.system.container_enc}}
+                                    <input type="number" name="system.container_enc.item_count" value="{{item.system.container_enc.item_count}}"/>
+                                {{else}}
+                                    <input type="number" name="system.container_enc.item_count" value="0"/>
+                                {{/if}}
                             </div>
                             <div class="flex-container">
                                 <div class="small-text-label">Item Count</div>
@@ -47,7 +59,11 @@
                         <div class="item-resource">
                             <div class="stat-value-label">
                                 <div class="flex-container">
-                                    <input type="number" name="system.container_enc.applied_enc" value="{{item.system.container_enc.applied_enc}}">
+                                    {{#if item.system.container_enc}}
+                                        <input type="number" name="system.container_enc.applied_enc" value="{{item.system.container_enc.applied_enc}}">
+                                    {{else}}
+                                        <input type="number" name="system.container_enc.applied_enc" value="0">
+                                    {{/if}}
                                 </div>
                             </div>
                             <div class="flex-container">
@@ -89,21 +105,25 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                {{#each item.system.contained_items as |item id|}}
-                                    <tr class="item active" data-item-id="{{item._id}}" data-item-type="{{item.item.type}}">
-                                        <td>
-                                            <div class="tableItemNameCell">
-                                                <img class="item-img" src="{{item.item.img}}" title="Send to Chat"/>
-                                                <div class="item-name">{{item.item.name}}</div>
-                                            </div>
-                                        </td>
-                                        <td>{{item.item.system.quantity}}</td>
-                                        <td>{{item.item.system.enc}}</td>
-                                        <td>
-                                            <a class="item-control item-delete remove-contained-item" title="Delete Item"><i class="fas fa-trash"></i></a>
-                                        </td>
-                                    </tr>
-                                {{/each}}
+                                {{#if item.system.contained_items}}
+                                    {{#each item.system.contained_items as |item id|}}
+                                        <tr class="item active" data-item-id="{{item._id}}" data-item-type="{{#if item.item}}{{item.item.type}}{{/if}}">
+                                            <td>
+                                                <div class="tableItemNameCell">
+                                                    {{#if item.item}}
+                                                        <img class="item-img" src="{{item.item.img}}" title="Send to Chat"/>
+                                                        <div class="item-name">{{item.item.name}}</div>
+                                                    {{/if}}
+                                                </div>
+                                            </td>
+                                            <td>{{#if item.item.system}}{{item.item.system.quantity}}{{else}}0{{/if}}</td>
+                                            <td>{{#if item.item.system}}{{item.item.system.enc}}{{else}}0{{/if}}</td>
+                                            <td>
+                                                <a class="item-control item-delete remove-contained-item" title="Delete Item"><i class="fas fa-trash"></i></a>
+                                            </td>
+                                        </tr>
+                                    {{/each}}
+                                {{/if}}
                             </tbody>
                         </table>
                     </div>
