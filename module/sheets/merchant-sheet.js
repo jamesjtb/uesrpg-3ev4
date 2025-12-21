@@ -641,196 +641,243 @@ export class merchantSheet extends foundry.appv1.sheets.ActorSheet {
       }
     }
 
-    let d = new Dialog({
-      title: "Set Base Characteristics",
-      content: `<form>
-                    <h2>Set the Character's Base Characteristics.</h2>
+    async _onSetBaseCharacteristics(event) {
+  event.preventDefault();
+  const strBonusArray = [];
+  const endBonusArray = [];
+  const agiBonusArray = [];
+  const intBonusArray = [];
+  const wpBonusArray = [];
+  const prcBonusArray = [];
+  const prsBonusArray = [];
+  const lckBonusArray = [];
 
-                    <div style="border: inset; margin-bottom: 10px; padding: 5px;">
-                    <i>Use this menu to adjust characteristic values on the character
-                       when first creating a character or when spending XP to increase
-                       their characteristics.
-                    </i>
-                    </div>
+  // Defensive guard: safe hasOwnProperty for characteristicBonus
+  const bonusItems = this.actor.items.filter((item) =>
+    item?.system && Object.prototype.hasOwnProperty.call(item.system, "characteristicBonus")
+  );
 
-                    <div style="margin-bottom: 10px;">
-                      <label><b>Points Total: </b></label>
-                      <label>
-                      ${
-                        this.actor.system.characteristics.str.base +
-                        this.actor.system.characteristics.end.base +
-                        this.actor.system.characteristics.agi.base +
-                        this.actor.system.characteristics.int.base +
-                        this.actor.system.characteristics.wp.base +
-                        this.actor.system.characteristics.prc.base +
-                        this.actor.system.characteristics.prs.base +
-                        this.actor.system.characteristics.lck.base
-                      }
-                      </label>
-                      <table style="table-layout: fixed; text-align: center;">
-                        <tr>
-                          <th>STR</th>
-                          <th>END</th>
-                          <th>AGI</th>
-                          <th>INT</th>
-                          <th>WP</th>
-                          <th>PRC</th>
-                          <th>PRS</th>
-                          <th>LCK</th>
-                        </tr>
-                        <tr>
-                          <td><input type="number" id="strInput" value="${
-                            this.actor.system.characteristics.str.base
-                          }"></td>
-                          <td><input type="number" id="endInput" value="${
-                            this.actor.system.characteristics.end.base
-                          }"></td>
-                          <td><input type="number" id="agiInput" value="${
-                            this.actor.system.characteristics.agi.base
-                          }"></td>
-                          <td><input type="number" id="intInput" value="${
-                            this.actor.system.characteristics.int.base
-                          }"></td>
-                          <td><input type="number" id="wpInput" value="${
-                            this.actor.system.characteristics.wp.base
-                          }"></td>
-                          <td><input type="number" id="prcInput" value="${
-                            this.actor.system.characteristics.prc.base
-                          }"></td>
-                          <td><input type="number" id="prsInput" value="${
-                            this.actor.system.characteristics.prs.base
-                          }"></td>
-                          <td><input type="number" id="lckInput" value="${
-                            this.actor.system.characteristics.lck.base
-                          }"></td>
-                        </tr>
-                      </table>
-                    </div>
+  for (let item of bonusItems) {
+    // Defensive guard: safe access to characteristicBonus properties
+    const charBonus = item?.system?.characteristicBonus ?? {};
+    if ((charBonus.strChaBonus ?? 0) !== 0) {
+      let name = item.name;
+      strBonusArray.push(name);
+    } else if ((charBonus.endChaBonus ?? 0) !== 0) {
+      let name = item.name;
+      endBonusArray.push(name);
+    } else if ((charBonus.agiChaBonus ?? 0) !== 0) {
+      let name = item.name;
+      agiBonusArray.push(name);
+    } else if ((charBonus.intChaBonus ?? 0) !== 0) {
+      let name = item.name;
+      intBonusArray.push(name);
+    } else if ((charBonus.wpChaBonus ?? 0) !== 0) {
+      let name = item.name;
+      wpBonusArray.push(name);
+    } else if ((charBonus.prcChaBonus ?? 0) !== 0) {
+      let name = item.name;
+      prcBonusArray.push(name);
+    } else if ((charBonus.prsChaBonus ?? 0) !== 0) {
+      let name = item.name;
+      prsBonusArray.push(name);
+    } else if ((charBonus.lckChaBonus ?? 0) !== 0) {
+      let name = item.name;
+      lckBonusArray.push(name);
+    }
+  }
 
-                    <div style="border: inset; padding: 5px;">
-                      <h2 style="font-size: small; font-weight: bold;">STR Modifiers</h2>
-                      <span style="font-size: small">${strBonusArray}</span>
-                    </div>
+  let d = new Dialog({
+    title: "Set Base Characteristics",
+    content: `<form>
+                  <h2>Set the Character's Base Characteristics.</h2>
 
-                    <div style="border: inset; padding: 5px;">
-                      <h2 style="font-size: small; font-weight: bold;">END Modifiers</h2>
-                      <span style="font-size: small">${endBonusArray}</span>
-                    </div>
+                  <div style="border: inset; margin-bottom: 10px; padding: 5px;">
+                  <i>Use this menu to adjust characteristic values on the character
+                     when first creating a character or when spending XP to increase
+                     their characteristics.
+                  </i>
+                  </div>
 
-                    <div style="border: inset; padding: 5px;">
-                      <h2 style="font-size: small; font-weight: bold;">AGI Modifiers</h2>
-                      <span style="font-size: small">${agiBonusArray}</span>
-                    </div>
+                  <div style="margin-bottom: 10px;">
+                    <label><b>Points Total: </b></label>
+                    <label>
+                    ${
+                      Number(this.actor?.system?.characteristics?.str?.base ?? 0) +
+                      Number(this.actor?.system?.characteristics?.end?.base ?? 0) +
+                      Number(this.actor?.system?.characteristics?.agi?.base ?? 0) +
+                      Number(this.actor?.system?.characteristics?.int?.base ?? 0) +
+                      Number(this.actor?.system?.characteristics?.wp?.base ?? 0) +
+                      Number(this.actor?.system?.characteristics?.prc?.base ?? 0) +
+                      Number(this.actor?.system?.characteristics?.prs?.base ?? 0) +
+                      Number(this.actor?.system?.characteristics?.lck?.base ?? 0)
+                    }
+                    </label>
+                    <table style="table-layout: fixed; text-align: center;">
+                      <tr>
+                        <th>STR</th>
+                        <th>END</th>
+                        <th>AGI</th>
+                        <th>INT</th>
+                        <th>WP</th>
+                        <th>PRC</th>
+                        <th>PRS</th>
+                        <th>LCK</th>
+                      </tr>
+                      <tr>
+                        <td><input type="number" id="strInput" value="${
+                          this.actor.system.characteristics.str.base
+                        }"></td>
+                        <td><input type="number" id="endInput" value="${
+                          this.actor.system.characteristics.end.base
+                        }"></td>
+                        <td><input type="number" id="agiInput" value="${
+                          this.actor.system.characteristics.agi.base
+                        }"></td>
+                        <td><input type="number" id="intInput" value="${
+                          this.actor.system.characteristics.int.base
+                        }"></td>
+                        <td><input type="number" id="wpInput" value="${
+                          this.actor.system.characteristics.wp.base
+                        }"></td>
+                        <td><input type="number" id="prcInput" value="${
+                          this.actor.system.characteristics.prc.base
+                        }"></td>
+                        <td><input type="number" id="prsInput" value="${
+                          this.actor.system.characteristics.prs.base
+                        }"></td>
+                        <td><input type="number" id="lckInput" value="${
+                          this.actor.system.characteristics.lck.base
+                        }"></td>
+                      </tr>
+                    </table>
+                  </div>
 
-                    <div style="border: inset; padding: 5px;">
-                      <h2 style="font-size: small; font-weight: bold;">INT Modifiers</h2>
-                      <span style="font-size: small">${intBonusArray}</span>
-                    </div>
+                  <div style="border: inset; padding: 5px;">
+                    <h2 style="font-size: small; font-weight: bold;">STR Modifiers</h2>
+                    <span style="font-size: small">${strBonusArray}</span>
+                  </div>
 
-                    <div style="border: inset; padding: 5px;">
-                      <h2 style="font-size: small; font-weight: bold;">WP Modifiers</h2>
-                      <span style="font-size: small">${wpBonusArray}</span>
-                    </div>
+                  <div style="border: inset; padding: 5px;">
+                    <h2 style="font-size: small; font-weight: bold;">END Modifiers</h2>
+                    <span style="font-size: small">${endBonusArray}</span>
+                  </div>
 
-                    <div style="border: inset; padding: 5px;">
-                      <h2 style="font-size: small; font-weight: bold;">PRC Modifiers</h2>
-                      <span style="font-size: small">${prcBonusArray}</span>
-                    </div>
+                  <div style="border: inset; padding: 5px;">
+                    <h2 style="font-size: small; font-weight: bold;">AGI Modifiers</h2>
+                    <span style="font-size: small">${agiBonusArray}</span>
+                  </div>
 
-                    <div style="border: inset; padding: 5px;">
-                      <h2 style="font-size: small; font-weight: bold;">PRS Modifiers</h2>
-                      <span style="font-size: small">${prsBonusArray}</span>
-                    </div>
+                  <div style="border: inset; padding: 5px;">
+                    <h2 style="font-size: small; font-weight: bold;">INT Modifiers</h2>
+                    <span style="font-size: small">${intBonusArray}</span>
+                  </div>
 
-                    <div style="border: inset; padding: 5px;">
-                      <h2 style="font-size: small; font-weight: bold;">LCK Modifiers</h2>
-                      <span style="font-size: small">${lckBonusArray}</span>
-                    </div>
+                  <div style="border: inset; padding: 5px;">
+                    <h2 style="font-size: small; font-weight: bold;">WP Modifiers</h2>
+                    <span style="font-size: small">${wpBonusArray}</span>
+                  </div>
 
-                  </form>`,
-      buttons: {
-        one: {
-          label: "Submit",
-          callback: async (html) => {
-            const strInput = parseInt(html.find('[id="strInput"]').val());
-            const endInput = parseInt(html.find('[id="endInput"]').val());
-            const agiInput = parseInt(html.find('[id="agiInput"]').val());
-            const intInput = parseInt(html.find('[id="intInput"]').val());
-            const wpInput = parseInt(html.find('[id="wpInput"]').val());
-            const prcInput = parseInt(html.find('[id="prcInput"]').val());
-            const prsInput = parseInt(html.find('[id="prsInput"]').val());
-            const lckInput = parseInt(html.find('[id="lckInput"]').val());
+                  <div style="border: inset; padding: 5px;">
+                    <h2 style="font-size: small; font-weight: bold;">PRC Modifiers</h2>
+                    <span style="font-size: small">${prcBonusArray}</span>
+                  </div>
 
-            //Shortcut for characteristics
-            const chaPath = this.actor.system.characteristics;
+                  <div style="border: inset; padding: 5px;">
+                    <h2 style="font-size: small; font-weight: bold;">PRS Modifiers</h2>
+                    <span style="font-size: small">${prsBonusArray}</span>
+                  </div>
 
-            //Assign values to characteristics
-            chaPath.str.base = strInput;
-            chaPath.str.total = strInput;
-            await this.actor.update({
-              "system.characteristics.str.base": strInput,
-              "system.characteristics.str.total": chaPath.str.total,
-            });
+                  <div style="border: inset; padding: 5px;">
+                    <h2 style="font-size: small; font-weight: bold;">LCK Modifiers</h2>
+                    <span style="font-size: small">${lckBonusArray}</span>
+                  </div>
 
-            chaPath.end.base = endInput;
-            chaPath.end.total = endInput;
-            await this.actor.update({
-              "system.characteristics.end.base": endInput,
-              "system.characteristics.end.total": chaPath.end.total,
-            });
+                </form>`,
+    buttons: {
+      one: {
+        label: "Submit",
+        callback: async (html) => {
+          const strInput = parseInt(html.find('[id="strInput"]').val());
+          const endInput = parseInt(html.find('[id="endInput"]').val());
+          const agiInput = parseInt(html.find('[id="agiInput"]').val());
+          const intInput = parseInt(html.find('[id="intInput"]').val());
+          const wpInput = parseInt(html.find('[id="wpInput"]').val());
+          const prcInput = parseInt(html.find('[id="prcInput"]').val());
+          const prsInput = parseInt(html.find('[id="prsInput"]').val());
+          const lckInput = parseInt(html.find('[id="lckInput"]').val());
 
-            chaPath.agi.base = agiInput;
-            chaPath.agi.total = agiInput;
-            await this.actor.update({
-              "system.characteristics.agi.base": agiInput,
-              "system.characteristics.agi.total": chaPath.agi.total,
-            });
+          //Shortcut for characteristics
+          const chaPath = this.actor.system.characteristics;
 
-            chaPath.int.base = intInput;
-            chaPath.int.total = intInput;
-            await this.actor.update({
-              "system.characteristics.int.base": intInput,
-              "system.characteristics.int.total": chaPath.int.total,
-            });
+          //Assign values to characteristics
+          chaPath.str.base = strInput;
+          chaPath.str.total = strInput;
+          await this.actor.update({
+            "system.characteristics.str.base": strInput,
+            "system.characteristics.str.total": chaPath.str.total,
+          });
 
-            chaPath.wp.base = wpInput;
-            chaPath.wp.total = wpInput;
-            await this.actor.update({
-              "system.characteristics.wp.base": wpInput,
-              "system.characteristics.wp.total": chaPath.wp.total,
-            });
+          chaPath.end.base = endInput;
+          chaPath.end.total = endInput;
+          await this.actor.update({
+            "system.characteristics.end.base": endInput,
+            "system.characteristics.end.total": chaPath.end.total,
+          });
 
-            chaPath.prc.base = prcInput;
-            chaPath.prc.total = prcInput;
-            await this.actor.update({
-              "system.characteristics.prc.base": prcInput,
-              "system.characteristics.prc.total": chaPath.prc.total,
-            });
+          chaPath.agi.base = agiInput;
+          chaPath.agi.total = agiInput;
+          await this.actor.update({
+            "system.characteristics.agi.base": agiInput,
+            "system.characteristics.agi.total": chaPath.agi.total,
+          });
 
-            chaPath.prs.base = prsInput;
-            chaPath.prs.total = prsInput;
-            await this.actor.update({
-              "system.characteristics.prs.base": prsInput,
-              "system.characteristics.prs.total": chaPath.prs.total,
-            });
+          chaPath.int.base = intInput;
+          chaPath.int.total = intInput;
+          await this.actor.update({
+            "system.characteristics.int.base": intInput,
+            "system.characteristics.int.total": chaPath.int.total,
+          });
 
-            chaPath.lck.base = lckInput;
-            chaPath.lck.total = lckInput;
-            await this.actor.update({
-              "system.characteristics.lck.base": lckInput,
-              "system.characteristics.lck.total": chaPath.lck.total,
-            });
-          },
-        },
-        two: {
-          label: "Cancel",
-          callback: async (html) => console.log("Cancelled"),
+          chaPath.wp.base = wpInput;
+          chaPath.wp.total = wpInput;
+          await this.actor.update({
+            "system.characteristics.wp.base": wpInput,
+            "system.characteristics.wp.total": chaPath.wp.total,
+          });
+
+          chaPath.prc.base = prcInput;
+          chaPath.prc.total = prcInput;
+          await this.actor.update({
+            "system.characteristics.prc.base": prcInput,
+            "system.characteristics.prc.total": chaPath.prc.total,
+          });
+
+          chaPath.prs.base = prsInput;
+          chaPath.prs.total = prsInput;
+          await this.actor.update({
+            "system.characteristics.prs.base": prsInput,
+            "system.characteristics.prs.total": chaPath.prs.total,
+          });
+
+          chaPath.lck.base = lckInput;
+          chaPath.lck.total = lckInput;
+          await this.actor.update({
+            "system.characteristics.lck.base": lckInput,
+            "system.characteristics.lck.total": chaPath.lck.total,
+          });
         },
       },
-      default: "one",
-      close: async (html) => console.log(),
-    });
-    d.render(true);
+      two: {
+        label: "Cancel",
+        callback: async (html) => console.log("Cancelled"),
+      },
+    },
+    default: "one",
+    close: async (html) => console.log(),
+  });
+  d.render(true);
+}
   }
 
   async _onClickCharacteristic(event) {
