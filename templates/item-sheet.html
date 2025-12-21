@@ -115,7 +115,8 @@
                             <div class="grid-container">
                                 <div>Charge Reduction</div>
                                 <div class="right-align-content">
-                                    <input type="number" name="system.charge.reduction" value="{{item.system.charge.reduction}}">
+                                    {{!-- Guard: defensive access for charge.reduction with default 0 --}}
+                                    <input type="number" name="system.charge.reduction" value="{{#if item.system.charge.reduction}}{{item.system.charge.reduction}}{{else}}0{{/if}}">
                                 </div>
                             </div>
                             <div class="grid-container">
@@ -176,39 +177,48 @@
                             <div class="modifier-container">
                                 <div class="grid-container">
                                     <div>Disease</div>
-                                    <div><input type="number" name="system.diseaseR" value="{{item.system.diseaseR}}"></div>
+                                    {{!-- Guard: defensive access with default 0 --}}
+                                    <div><input type="number" name="system.diseaseR" value="{{#if item.system.diseaseR}}{{item.system.diseaseR}}{{else}}0{{/if}}"></div>
                                 </div>
                                 <div class="grid-container">
                                     <div>Fire</div>
-                                    <div><input type="number" name="system.fireR" value="{{item.system.fireR}}"></div>
+                                    {{!-- Guard: defensive access with default 0 --}}
+                                    <div><input type="number" name="system.fireR" value="{{#if item.system.fireR}}{{item.system.fireR}}{{else}}0{{/if}}"></div>
                                 </div>
                                 <div class="grid-container">
                                     <div>Frost</div>
-                                    <div><input type="number" name="system.frostR" value="{{item.system.frostR}}"></div>
+                                    {{!-- Guard: defensive access with default 0 --}}
+                                    <div><input type="number" name="system.frostR" value="{{#if item.system.frostR}}{{item.system.frostR}}{{else}}0{{/if}}"></div>
                                 </div>
                                 <div class="grid-container">
                                     <div>Shock</div>
-                                    <div><input type="number" name="system.shockR" value="{{item.system.shockR}}"></div>
+                                    {{!-- Guard: defensive access with default 0 --}}
+                                    <div><input type="number" name="system.shockR" value="{{#if item.system.shockR}}{{item.system.shockR}}{{else}}0{{/if}}"></div>
                                 </div>
                                 <div class="grid-container">
                                     <div>Poison</div>
-                                    <div><input type="number" name="system.poisonR" value="{{item.system.poisonR}}"></div>
+                                    {{!-- Guard: defensive access with default 0 --}}
+                                    <div><input type="number" name="system.poisonR" value="{{#if item.system.poisonR}}{{item.system.poisonR}}{{else}}0{{/if}}"></div>
                                 </div>
                                 <div class="grid-container">
                                     <div>Magic</div>
-                                    <div><input type="number" name="system.magicR" value="{{item.system.magicR}}"></div>
+                                    {{!-- Guard: defensive access with default 0 --}}
+                                    <div><input type="number" name="system.magicR" value="{{#if item.system.magicR}}{{item.system.magicR}}{{else}}0{{/if}}"></div>
                                 </div>
                                 <div class="grid-container">
                                     <div>Toughness</div>
-                                    <div><input type="number" name="system.natToughnessR" value="{{item.system.natToughnessR}}"></div>
+                                    {{!-- Guard: defensive access with default 0 --}}
+                                    <div><input type="number" name="system.natToughnessR" value="{{#if item.system.natToughnessR}}{{item.system.natToughnessR}}{{else}}0{{/if}}"></div>
                                 </div>
                                 <div class="grid-container">
                                     <div>Silver</div>
-                                    <div><input type="number" name="system.silverR" value="{{item.system.silverR}}"></div>
+                                    {{!-- Guard: defensive access with default 0 --}}
+                                    <div><input type="number" name="system.silverR" value="{{#if item.system.silverR}}{{item.system.silverR}}{{else}}0{{/if}}"></div>
                                 </div>
                                 <div class="grid-container">
                                     <div>Sunlight</div>
-                                    <div><input type="number" name="system.sunlightR" value="{{item.system.sunlightR}}"></div>
+                                    {{!-- Guard: defensive access with default 0 --}}
+                                    <div><input type="number" name="system.sunlightR" value="{{#if item.system.sunlightR}}{{item.system.sunlightR}}{{else}}0{{/if}}"></div>
                                 </div>
                             </div>
                         </div>
