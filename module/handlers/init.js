@@ -1,4 +1,3 @@
-// Import Modules
 import { UESRPG } from "../constants.js";
 import { SimpleActor } from "../entities/actor.js";
 import { npcSheet } from "../sheets/npc-sheet.js";
@@ -7,6 +6,7 @@ import { merchantSheet } from "../sheets/merchant-sheet.js";
 import { SimpleItem } from "../entities/item.js";
 import { SimpleItemSheet } from "../sheets/item-sheet.js";
 import { SystemCombat } from "../entities/combat.js";
+import { initializeChatHandlers, registerCombatChatHooks } from "../combat/chat-handlers.js";
 
 async function registerSettings() {
   // Register system settings
@@ -101,6 +101,24 @@ async function registerSettings() {
     type: Boolean,
     onChange: delayedReload,
   });
+
+  game.settings.register("uesrpg-3ev4", "autoApplyDamage", {
+    name: "Automatically Apply Damage",
+    hint: "When enabled, damage from opposed rolls will automatically be applied to the defender. Otherwise, a button will be shown to manually apply damage.",
+    scope: "world",
+    config: true,
+    default: false,
+    type: Boolean,
+  });
+
+  game.settings.register("uesrpg-3ev4", "useDosBonus", {
+    name: "Apply Degree of Success Damage Bonus",
+    hint: "When enabled, half of the attacker's Degree of Success is added as bonus damage.",
+    scope: "world",
+    config: true,
+    default: true,
+    type: Boolean,
+  });
 }
 
 async function registerSheets () {
@@ -152,6 +170,10 @@ export default async function initHandler() {
   await registerSettings();
 
   await registerSheets();
+
+  // Initialize combat automation chat handlers
+  initializeChatHandlers();
+  registerCombatChatHooks();
 
 // Applying Font to system
 function applyFont(fontFamily) {
