@@ -961,49 +961,23 @@ export class npcSheet extends foundry.appv1.sheets.ActorSheet {
     );
 
     let hit_loc = "";
-    let hit = new Roll("1d10");
+    let hit = new Roll("1d100");
     await hit.evaluate();
 
-    switch (hit.result) {
-      case "1":
-        hit_loc = "Body";
-        break;
-
-      case "2":
-        hit_loc = "Body";
-        break;
-
-      case "3":
-        hit_loc = "Body";
-        break;
-
-      case "4":
-        hit_loc = "Body";
-        break;
-
-      case "5":
-        hit_loc = "Body";
-        break;
-
-      case "6":
-        hit_loc = "Right Leg";
-        break;
-
-      case "7":
-        hit_loc = "Left Leg";
-        break;
-
-      case "8":
-        hit_loc = "Right Arm";
-        break;
-
-      case "9":
-        hit_loc = "Left Arm";
-        break;
-
-      case "10":
-        hit_loc = "Head";
-        break;
+    // Updated hit location table (1d100 instead of 1d10)
+    const hitResult = hit.total;
+    if (hitResult <= 15) {
+      hit_loc = "Head";
+    } else if (hitResult <= 35) {
+      hit_loc = "Right Arm";
+    } else if (hitResult <= 55) {
+      hit_loc = "Left Arm";
+    } else if (hitResult <= 80) {
+      hit_loc = "Body";
+    } else if (hitResult <= 90) {
+      hit_loc = "Right Leg";
+    } else {
+      hit_loc = "Left Leg";
     }
 
     let damageString;
@@ -1018,8 +992,32 @@ export class npcSheet extends foundry.appv1.sheets.ActorSheet {
     let superiorRoll = new Roll(damageString);
     await superiorRoll.evaluate();
 
+    // Use higher roll for superior weapons
+    const finalDamage = shortcutWeapon.system.superior 
+      ? Math.max(weaponRoll.result, superiorRoll.result)
+      : weaponRoll.result;
+
     if (shortcutWeapon.system.superior) {
       supRollTag = `[[${superiorRoll.result}]]`;
+    }
+
+    // Get targeted actors for damage application
+    const targets = game.user.targets;
+    let applyDamageButtons = "";
+    
+    if (targets.size > 0) {
+      const damageType = this._getDamageTypeFromWeapon(shortcutWeapon);
+      targets.forEach(target => {
+        applyDamageButtons += `
+          <button class="apply-damage-btn" 
+                  data-actor-id="${target.actor.id}" 
+                  data-damage="${finalDamage}" 
+                  data-type="${damageType}" 
+                  data-location="${hit_loc}"
+                  style="margin: 0.25rem;">
+            Apply ${finalDamage} damage to ${target.name}
+          </button>`;
+      });
     }
 
     let contentString = `<div>
@@ -1053,6 +1051,7 @@ export class npcSheet extends foundry.appv1.sheets.ActorSheet {
                                       </tr>
                                   </tbody>
                               </table>
+                              ${applyDamageButtons ? `<div style="margin-top: 0.5rem; border-top: 1px solid #ddd; padding-top: 0.5rem;">${applyDamageButtons}</div>` : ''}
                           <div>`;
 
     // tags for flavor on chat message
@@ -1071,6 +1070,23 @@ export class npcSheet extends foundry.appv1.sheets.ActorSheet {
       roll: weaponRoll,
       rollMode: game.settings.get("core", "rollMode"),
     });
+  }
+
+  /**
+   * Helper to determine damage type from weapon qualities
+   */
+  _getDamageTypeFromWeapon(weapon) {
+    if (!weapon?.system?.qualities) return 'physical';
+    
+    const qualities = weapon.system.qualities.toLowerCase();
+    
+    if (qualities.includes('fire') || qualities.includes('flame')) return 'fire';
+    if (qualities.includes('frost') || qualities.includes('ice')) return 'frost';
+    if (qualities.includes('shock') || qualities.includes('lightning')) return 'shock';
+    if (qualities.includes('poison')) return 'poison';
+    if (qualities.includes('magic')) return 'magic';
+    
+    return 'physical';
   }
 
   _onSpellRoll(event) {

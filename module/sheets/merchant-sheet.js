@@ -1191,21 +1191,23 @@ export class merchantSheet extends foundry.appv1.sheets.ActorSheet {
 
     let hit_loc = "";
 
-    let hit = new Roll("1d10");
+    let hit = new Roll("1d100");
     await hit.evaluate();
 
-    if (hit.total <= 5) {
-      hit_loc = "Body";
-    } else if (hit.total == 6) {
-      hit_loc = "Right Leg";
-    } else if (hit.total == 7) {
-      hit_loc = "Left Leg";
-    } else if (hit.total == 8) {
-      hit_loc = "Right Arm";
-    } else if (hit.total == 9) {
-      hit_loc = "Left Arm";
-    } else if (hit.total == 10) {
+    // Updated hit location table (1d100)
+    const hitResult = hit.total;
+    if (hitResult <= 15) {
       hit_loc = "Head";
+    } else if (hitResult <= 35) {
+      hit_loc = "Right Arm";
+    } else if (hitResult <= 55) {
+      hit_loc = "Left Arm";
+    } else if (hitResult <= 80) {
+      hit_loc = "Body";
+    } else if (hitResult <= 90) {
+      hit_loc = "Right Leg";
+    } else {
+      hit_loc = "Left Leg";
     }
 
     let roll = new Roll(d1);
@@ -1218,13 +1220,37 @@ export class merchantSheet extends foundry.appv1.sheets.ActorSheet {
     await roll2H.evaluate();
     await supRoll2H.evaluate();
 
+    // Get targeted actors for damage application
+    const targets = game.user.targets;
+    const damageType = this._getDamageTypeFromWeapon(item);
+    let applyDamageButtons = "";
+
     if (item.system.weapon2H === true) {
+      const finalDamage = item.system.superior === true 
+        ? Math.max(roll2H.result, supRoll2H.result)
+        : roll2H.result;
+
+      if (targets.size > 0) {
+        targets.forEach(target => {
+          applyDamageButtons += `
+            <button class="apply-damage-btn" 
+                    data-actor-id="${target.actor.id}" 
+                    data-damage="${finalDamage}" 
+                    data-type="${damageType}" 
+                    data-location="${hit_loc}"
+                    style="margin: 0.25rem;">
+              Apply ${finalDamage} damage to ${target.name}
+            </button>`;
+        });
+      }
+
       if (item.system.superior === true) {
         contentString = `<h2 style='font-size: large'><img src="${item.img}" height=20 width=20 style='margin-right: 5px;'</img>${item.name}</h2>
           <p></p>
           <b>Damage:</b> <b> [[${roll2H.result}]] [[${supRoll2H.result}]]</b> ${roll2H._formula}<p></p>
           <b>Hit Location:</b> <b> [[${hit.total}]] </b> ${hit_loc}<p></p>
-          <b>Qualities:</b> ${item.system.qualities}`;
+          <b>Qualities:</b> ${item.system.qualities}
+          ${applyDamageButtons ? `<div style="margin-top: 0.5rem; border-top: 1px solid #ddd; padding-top: 0.5rem;">${applyDamageButtons}</div>` : ''}`;
         ChatMessage.create({
           user: game.user.id,
           speaker: ChatMessage.getSpeaker(),
@@ -1237,7 +1263,8 @@ export class merchantSheet extends foundry.appv1.sheets.ActorSheet {
             <p></p>
             <b>Damage:</b> <b> [[${roll2H.result}]]</b> ${roll2H._formula}<p></p>
             <b>Hit Location:</b> <b> [[${hit.total}]] </b> ${hit_loc}<p></p>
-            <b>Qualities:</b> ${item.system.qualities}`;
+            <b>Qualities:</b> ${item.system.qualities}
+            ${applyDamageButtons ? `<div style="margin-top: 0.5rem; border-top: 1px solid #ddd; padding-top: 0.5rem;">${applyDamageButtons}</div>` : ''}`;
         ChatMessage.create({
           user: game.user.id,
           speaker: ChatMessage.getSpeaker(),
@@ -1246,12 +1273,31 @@ export class merchantSheet extends foundry.appv1.sheets.ActorSheet {
         });
       }
     } else {
+      const finalDamage = item.system.superior === true 
+        ? Math.max(roll.result, supRoll.result)
+        : roll.result;
+
+      if (targets.size > 0) {
+        targets.forEach(target => {
+          applyDamageButtons += `
+            <button class="apply-damage-btn" 
+                    data-actor-id="${target.actor.id}" 
+                    data-damage="${finalDamage}" 
+                    data-type="${damageType}" 
+                    data-location="${hit_loc}"
+                    style="margin: 0.25rem;">
+              Apply ${finalDamage} damage to ${target.name}
+            </button>`;
+        });
+      }
+
       if (item.system.superior === true) {
         contentString = `<h2 style='font-size: large'><img src="${item.img}" height=20 width=20 style='margin-right: 5px;'</img>${item.name}</h2>
             <p></p>
             <b>Damage:</b> <b> [[${roll.result}]] [[${supRoll.result}]]</b> ${roll._formula}<p></p>
             <b>Hit Location:</b> <b> [[${hit.total}]] </b> ${hit_loc}<p></p>
-            <b>Qualities:</b> ${item.system.qualities}`;
+            <b>Qualities:</b> ${item.system.qualities}
+            ${applyDamageButtons ? `<div style="margin-top: 0.5rem; border-top: 1px solid #ddd; padding-top: 0.5rem;">${applyDamageButtons}</div>` : ''}`;
         ChatMessage.create({
           user: game.user.id,
           speaker: ChatMessage.getSpeaker(),
@@ -1264,7 +1310,8 @@ export class merchantSheet extends foundry.appv1.sheets.ActorSheet {
             <p></p>
             <b>Damage:</b> <b> [[${roll.result}]]</b> ${roll._formula}<p></p>
             <b>Hit Location:</b> <b> [[${hit.total}]] </b> ${hit_loc}<p></p>
-            <b>Qualities:</b> ${item.system.qualities}`;
+            <b>Qualities:</b> ${item.system.qualities}
+            ${applyDamageButtons ? `<div style="margin-top: 0.5rem; border-top: 1px solid #ddd; padding-top: 0.5rem;">${applyDamageButtons}</div>` : ''}`;
         ChatMessage.create({
           user: game.user.id,
           speaker: ChatMessage.getSpeaker(),
@@ -1273,6 +1320,23 @@ export class merchantSheet extends foundry.appv1.sheets.ActorSheet {
         });
       }
     }
+  }
+
+  /**
+   * Helper to determine damage type from weapon qualities
+   */
+  _getDamageTypeFromWeapon(weapon) {
+    if (!weapon?.system?.qualities) return 'physical';
+    
+    const qualities = weapon.system.qualities.toLowerCase();
+    
+    if (qualities.includes('fire') || qualities.includes('flame')) return 'fire';
+    if (qualities.includes('frost') || qualities.includes('ice')) return 'frost';
+    if (qualities.includes('shock') || qualities.includes('lightning')) return 'shock';
+    if (qualities.includes('poison')) return 'poison';
+    if (qualities.includes('magic')) return 'magic';
+    
+    return 'physical';
   }
 
   _onSpellRoll(event) {
