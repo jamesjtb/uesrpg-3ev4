@@ -726,28 +726,28 @@ export class merchantSheet extends foundry.appv1.sheets.ActorSheet {
                       </tr>
                       <tr>
                         <td><input type="number" id="strInput" value="${
-                          this.actor.system.characteristics.str.base
+                          Number(this.actor?.system?.characteristics?.str?.base ?? 0)
                         }"></td>
                         <td><input type="number" id="endInput" value="${
-                          this.actor.system.characteristics.end.base
+                          Number(this.actor?.system?.characteristics?.end?.base ?? 0)
                         }"></td>
                         <td><input type="number" id="agiInput" value="${
-                          this.actor.system.characteristics.agi.base
+                          Number(this.actor?.system?.characteristics?.agi?.base ?? 0)
                         }"></td>
                         <td><input type="number" id="intInput" value="${
-                          this.actor.system.characteristics.int.base
+                          Number(this.actor?.system?.characteristics?.int?.base ?? 0)
                         }"></td>
                         <td><input type="number" id="wpInput" value="${
-                          this.actor.system.characteristics.wp.base
+                          Number(this.actor?.system?.characteristics?.wp?.base ?? 0)
                         }"></td>
                         <td><input type="number" id="prcInput" value="${
-                          this.actor.system.characteristics.prc.base
+                          Number(this.actor?.system?.characteristics?.prc?.base ?? 0)
                         }"></td>
                         <td><input type="number" id="prsInput" value="${
-                          this.actor.system.characteristics.prs.base
+                          Number(this.actor?.system?.characteristics?.prs?.base ?? 0)
                         }"></td>
                         <td><input type="number" id="lckInput" value="${
-                          this.actor.system.characteristics.lck.base
+                          Number(this.actor?.system?.characteristics?.lck?.base ?? 0)
                         }"></td>
                       </tr>
                     </table>
@@ -807,8 +807,8 @@ export class merchantSheet extends foundry.appv1.sheets.ActorSheet {
           const prsInput = parseInt(html.find('[id="prsInput"]').val());
           const lckInput = parseInt(html.find('[id="lckInput"]').val());
 
-          //Shortcut for characteristics
-          const chaPath = this.actor.system.characteristics;
+          //Shortcut for characteristics - with defensive guard
+          const chaPath = this.actor?.system?.characteristics || {};
 
           //Assign values to characteristics
           chaPath.str.base = strInput;
@@ -1075,7 +1075,7 @@ async _onClickCharacteristic(event) {
           ) {
             contentString = `<h2>${element.getAttribute("name")}</h2>
               <p></p><b>Target Number: [[${
-                this.actor.system.professionsWound[element.getAttribute("id")]
+                Number(actorSys?.professionsWound?.[element.getAttribute("id")] ?? 0)
               } + ${playerInput} + ${Number(actorSys?.fatigue?.penalty ?? 0)}]]</b> <p></p>
               <b>Result: [[${roll.result}]]</b><p></p>
               <span style='color:green; font-size:120%;'> <b>LUCKY NUMBER!</b></span>`;
@@ -1089,9 +1089,7 @@ async _onClickCharacteristic(event) {
           ) {
             contentString = `<h2>${element.getAttribute("name")}</h2>
                   <p></p><b>Target Number: [[${
-                    this.actor.system.professionsWound[
-                      element.getAttribute("id")
-                    ]
+                    Number(actorSys?.professionsWound?.[element.getAttribute("id")] ?? 0)
                   } + ${playerInput}  + ${
               Number(actorSys?.fatigue?.penalty ?? 0)
             } + ${Number(actorSys?.carry_rating?.penalty ?? 0)}]]</b> <p></p>
@@ -1100,16 +1098,12 @@ async _onClickCharacteristic(event) {
           } else {
             contentString = `<h2>${element.getAttribute("name")}</h2>
                   <p></p><b>Target Number: [[${
-                    this.actor.system.professionsWound[
-                      element.getAttribute("id")
-                    ]
+                    Number(actorSys?.professionsWound?.[element.getAttribute("id")] ?? 0)
                   } + ${playerInput} + ${Number(actorSys?.fatigue?.penalty ?? 0)} + ${Number(actorSys?.carry_rating?.penalty ?? 0)}]]</b> <p></p>
                   <b>Result: [[${roll.result}]]</b><p></p>
                   <b>${
                     roll.result <=
-                    this.actor.system.professionsWound[
-                      element.getAttribute("id")
-                    ] +
+                    Number(actorSys?.professionsWound?.[element.getAttribute("id")] ?? 0) +
                       playerInput +
                       Number(actorSys?.fatigue?.penalty ?? 0) +
                       Number(actorSys?.carry_rating?.penalty ?? 0)
@@ -1142,6 +1136,7 @@ async _onClickCharacteristic(event) {
   _onUnconventionalRoll(event) {
     event.preventDefault();
     const element = event.currentTarget;
+    const actorSys = this.actor?.system || {};
 
     let d = new Dialog({
       title: "Apply Roll Modifier",
@@ -1159,47 +1154,50 @@ async _onClickCharacteristic(event) {
             let roll = new Roll("1d100");
             await roll.evaluate();
 
+            const lucky = actorSys.lucky_numbers || {};
+            const unlucky = actorSys.unlucky_numbers || {};
+
             if (
-              roll.total == this.actor.system.lucky_numbers.ln1 ||
-              roll.total == this.actor.system.lucky_numbers.ln2 ||
-              roll.total == this.actor.system.lucky_numbers.ln3 ||
-              roll.total == this.actor.system.lucky_numbers.ln4 ||
-              roll.total == this.actor.system.lucky_numbers.ln5 ||
-              roll.total == this.actor.system.lucky_numbers.ln6 ||
-              roll.total == this.actor.system.lucky_numbers.ln7 ||
-              roll.total == this.actor.system.lucky_numbers.ln8 ||
-              roll.total == this.actor.system.lucky_numbers.ln9 ||
-              roll.total == this.actor.system.lucky_numbers.ln10
+              roll.total == lucky.ln1 ||
+              roll.total == lucky.ln2 ||
+              roll.total == lucky.ln3 ||
+              roll.total == lucky.ln4 ||
+              roll.total == lucky.ln5 ||
+              roll.total == lucky.ln6 ||
+              roll.total == lucky.ln7 ||
+              roll.total == lucky.ln8 ||
+              roll.total == lucky.ln9 ||
+              roll.total == lucky.ln10
             ) {
               contentString = `<h2 style='font-size: large'>${element.name}</h2>
               <p></p><b>Target Number: [[${
-                this.actor.system.skills[element.id].bonus
+                Number(actorSys?.skills?.[element.id]?.bonus ?? 0)
               } + ${playerInput}]]</b> <p></p>
               <b>Result: [[${roll.result}]]</b><p></p>
               <span style='color:green; font-size:120%;'> <b>LUCKY NUMBER!</b></span>`;
             } else if (
-              roll.total == this.actor.system.unlucky_numbers.ul1 ||
-              roll.total == this.actor.system.unlucky_numbers.ul2 ||
-              roll.total == this.actor.system.unlucky_numbers.ul3 ||
-              roll.total == this.actor.system.unlucky_numbers.ul4 ||
-              roll.total == this.actor.system.unlucky_numbers.ul5 ||
-              roll.total == this.actor.system.unlucky_numbers.ul6
+              roll.total == unlucky.ul1 ||
+              roll.total == unlucky.ul2 ||
+              roll.total == unlucky.ul3 ||
+              roll.total == unlucky.ul4 ||
+              roll.total == unlucky.ul5 ||
+              roll.total == unlucky.ul6
             ) {
               contentString = `<h2 style='font-size: large'>${element.name}</h2>
                 <p></p><b>Target Number: [[${
-                  this.actor.system.skills[element.id].bonus
+                  Number(actorSys?.skills?.[element.id]?.bonus ?? 0)
                 } + ${playerInput}]]</b> <p></p>
                 <b>Result: [[${roll.result}]]</b><p></p>
                 <span style='color:rgb(168, 5, 5); font-size:120%;'> <b>UNLUCKY NUMBER!</b></span>`;
             } else {
               contentString = `<h2 style='font-size: large'>${element.name}</h2>
                 <p></p><b>Target Number: [[${
-                  this.actor.system.skills[element.id].bonus
+                  Number(actorSys?.skills?.[element.id]?.bonus ?? 0)
                 } + ${playerInput}]]</b> <p></p>
                 <b>Result: [[${roll.result}]]</b><p></p>
                 <b>${
                   roll.total <=
-                  this.actor.system.skills[element.id].bonus + playerInput
+                  Number(actorSys?.skills?.[element.id]?.bonus ?? 0) + playerInput
                     ? " <span style='color:green; font-size: 120%;'> <b>SUCCESS!</b></span>"
                     : " <span style='color:rgb(168, 5, 5); font-size: 120%;'> <b>FAILURE!</b></span>"
                 }`;

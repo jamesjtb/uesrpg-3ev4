@@ -594,8 +594,8 @@ async _onSetBaseCharacteristics(event) {
           const prsInput = parseInt(html.find('[id="prsInput"]').val());
           const lckInput = parseInt(html.find('[id="lckInput"]').val());
 
-          // Shortcut for characteristics (ensure path exists)
-          const chaPath = this.actor.system.characteristics || {};
+          // Shortcut for characteristics (ensure path exists) - with defensive guard
+          const chaPath = this.actor?.system?.characteristics || {};
 
           // Use Number(...) with nullish fallback to avoid NaN
           await this.actor.update({
@@ -1538,8 +1538,9 @@ _onResetResource(event) {
     event.preventDefault();
     let element = event.currentTarget;
     let action = element.dataset.action;
-    let fatigueLevel = this.actor.system.fatigue.level;
-    let fatigueBonus = this.actor.system.fatigue.bonus;
+    const actorSys = this.actor?.system || {};
+    let fatigueLevel = Number(actorSys?.fatigue?.level ?? 0);
+    let fatigueBonus = Number(actorSys?.fatigue?.bonus ?? 0);
 
     if (action === "increase" && fatigueLevel < 5) {
       this.actor.update({ "system.fatigue.bonus": fatigueBonus + 1 });

@@ -95,7 +95,8 @@
                             </div>
                             <div>
                                 <div class="styled-font">Race</div>
-                                <input type="text" placeholder="Race" value="{{actor.system.race}}">
+                                {{!-- Guard: defensive access for race with default empty string --}}
+                                <input type="text" placeholder="Race" value="{{#if actor.system.race}}{{actor.system.race}}{{else}}{{/if}}">
                             </div>
                             <div>
                                 <div class="styled-font">Threat</div>

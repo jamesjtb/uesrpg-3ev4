@@ -492,24 +492,26 @@ export class SimpleActor extends Actor {
   _iniCalc(actorData) {
     let attribute = (actorData.items || []).filter(item => item && (item.type == "trait"|| item.type == "talent"));
     let init = Number(actorData?.system?.initiative?.base || 0);
+    // Local helper for safe characteristic access
+    const getTotal = (name) => Number(actorData?.system?.characteristics?.[name]?.total ?? 0);
       for (let item of attribute) {
         if (item?.system?.replace?.ini && item.system.replace.ini.characteristic != "none") {
           if (item.system.replace.ini.characteristic == "str") {
-            init = Math.floor(actorData.system.characteristics.str.total / 10) * 3;
+            init = Math.floor(getTotal("str") / 10) * 3;
           } else if (item.system.replace.ini.characteristic == "end") {
-            init = Math.floor(actorData.system.characteristics.end.total / 10) * 3;
+            init = Math.floor(getTotal("end") / 10) * 3;
           } else if (item.system.replace.ini.characteristic == "agi") {
-            init = Math.floor(actorData.system.characteristics.agi.total / 10) * 3;
+            init = Math.floor(getTotal("agi") / 10) * 3;
           } else if (item.system.replace.ini.characteristic == "int") {
-            init = Math.floor(actorData.system.characteristics.int.total / 10) * 3;
+            init = Math.floor(getTotal("int") / 10) * 3;
           } else if (item.system.replace.ini.characteristic == "wp") {
-            init = Math.floor(actorData.system.characteristics.wp.total / 10) * 3;
+            init = Math.floor(getTotal("wp") / 10) * 3;
           } else if (item.system.replace.ini.characteristic == "prc") {
-            init = Math.floor(actorData.system.characteristics.prc.total / 10) * 3;
+            init = Math.floor(getTotal("prc") / 10) * 3;
           } else if (item.system.replace.ini.characteristic == "prs") {
-            init = Math.floor(actorData.system.characteristics.prs.total / 10) * 3;
+            init = Math.floor(getTotal("prs") / 10) * 3;
           } else if (item.system.replace.ini.characteristic == "lck") {
-            init = Math.floor(actorData.system.characteristics.lck.total / 10) * 3;
+            init = Math.floor(getTotal("lck") / 10) * 3;
           }
         }
       }
@@ -519,24 +521,26 @@ export class SimpleActor extends Actor {
   _woundThresholdCalc(actorData) {
     let attribute = (actorData.items || []).filter(item => item && (item.type === "trait"|| item.type === "talent"));
     let wound = Number(actorData?.system?.wound_threshold?.base || 0);
+    // Local helper for safe characteristic access
+    const getTotal = (name) => Number(actorData?.system?.characteristics?.[name]?.total ?? 0);
       for (let item of attribute) {
         if (item?.system?.replace?.wt && item.system.replace.wt.characteristic != "none") {
           if (item.system.replace.wt.characteristic === "str") {
-            wound = Math.floor(actorData.system.characteristics.str.total / 10) * 3;
+            wound = Math.floor(getTotal("str") / 10) * 3;
           } else if (item.system.replace.wt.characteristic === "end") {
-            wound = Math.floor(actorData.system.characteristics.end.total / 10) * 3;
+            wound = Math.floor(getTotal("end") / 10) * 3;
           } else if (item.system.replace.wt.characteristic === "agi") {
-            wound = Math.floor(actorData.system.characteristics.agi.total / 10) * 3;
+            wound = Math.floor(getTotal("agi") / 10) * 3;
           } else if (item.system.replace.wt.characteristic === "int") {
-            wound = Math.floor(actorData.system.characteristics.int.total / 10) * 3;
+            wound = Math.floor(getTotal("int") / 10) * 3;
           } else if (item.system.replace.wt.characteristic === "wp") {
-            wound = Math.floor(actorData.system.characteristics.wp.total / 10) * 3;
+            wound = Math.floor(getTotal("wp") / 10) * 3;
           } else if (item.system.replace.wt.characteristic === "prc") {
-            wound = Math.floor(actorData.system.characteristics.prc.total / 10) * 3;
+            wound = Math.floor(getTotal("prc") / 10) * 3;
           } else if (item.system.replace.wt.characteristic === "prs") {
-            wound = Math.floor(actorData.system.characteristics.prs.total / 10) * 3;
+            wound = Math.floor(getTotal("prs") / 10) * 3;
           } else if (item.system.replace.wt.characteristic === "lck") {
-            wound = Math.floor(actorData.system.characteristics.lck.total / 10) * 3;
+            wound = Math.floor(getTotal("lck") / 10) * 3;
           }
         }
       }
@@ -1754,24 +1758,26 @@ export class SimpleActor extends Actor {
   _iniCalc(actorData) {
     let attribute = (actorData.items || []).filter(item => item && (item.type == "trait"|| item.type == "talent"));
     let init = Number(actorData?.system?.initiative?.base || 0);
+    // Local helper for safe characteristic access
+    const getTotal = (name) => Number(actorData?.system?.characteristics?.[name]?.total ?? 0);
       for (let item of attribute) {
         if (item?.system?.replace?.ini && item.system.replace.ini.characteristic != "none") {
           if (item.system.replace.ini.characteristic == "str") {
-            init = Math.floor(actorData.system.characteristics.str.total / 10) * 3;
+            init = Math.floor(getTotal("str") / 10) * 3;
           } else if (item.system.replace.ini.characteristic == "end") {
-            init = Math.floor(actorData.system.characteristics.end.total / 10) * 3;
+            init = Math.floor(getTotal("end") / 10) * 3;
           } else if (item.system.replace.ini.characteristic == "agi") {
-            init = Math.floor(actorData.system.characteristics.agi.total / 10) * 3;
+            init = Math.floor(getTotal("agi") / 10) * 3;
           } else if (item.system.replace.ini.characteristic == "int") {
-            init = Math.floor(actorData.system.characteristics.int.total / 10) * 3;
+            init = Math.floor(getTotal("int") / 10) * 3;
           } else if (item.system.replace.ini.characteristic == "wp") {
-            init = Math.floor(actorData.system.characteristics.wp.total / 10) * 3;
+            init = Math.floor(getTotal("wp") / 10) * 3;
           } else if (item.system.replace.ini.characteristic == "prc") {
-            init = Math.floor(actorData.system.characteristics.prc.total / 10) * 3;
+            init = Math.floor(getTotal("prc") / 10) * 3;
           } else if (item.system.replace.ini.characteristic == "prs") {
-            init = Math.floor(actorData.system.characteristics.prs.total / 10) * 3;
+            init = Math.floor(getTotal("prs") / 10) * 3;
           } else if (item.system.replace.ini.characteristic == "lck") {
-            init = Math.floor(actorData.system.characteristics.lck.total / 10) * 3;
+            init = Math.floor(getTotal("lck") / 10) * 3;
           }
         }
       }
@@ -1781,24 +1787,26 @@ export class SimpleActor extends Actor {
   _woundThresholdCalc(actorData) {
     let attribute = (actorData.items || []).filter(item => item && (item.type === "trait"|| item.type === "talent"));
     let wound = Number(actorData?.system?.wound_threshold?.base || 0);
+    // Local helper for safe characteristic access
+    const getTotal = (name) => Number(actorData?.system?.characteristics?.[name]?.total ?? 0);
       for (let item of attribute) {
         if (item?.system?.replace?.wt && item.system.replace.wt.characteristic != "none") {
           if (item.system.replace.wt.characteristic === "str") {
-            wound = Math.floor(actorData.system.characteristics.str.total / 10) * 3;
+            wound = Math.floor(getTotal("str") / 10) * 3;
           } else if (item.system.replace.wt.characteristic === "end") {
-            wound = Math.floor(actorData.system.characteristics.end.total / 10) * 3;
+            wound = Math.floor(getTotal("end") / 10) * 3;
           } else if (item.system.replace.wt.characteristic === "agi") {
-            wound = Math.floor(actorData.system.characteristics.agi.total / 10) * 3;
+            wound = Math.floor(getTotal("agi") / 10) * 3;
           } else if (item.system.replace.wt.characteristic === "int") {
-            wound = Math.floor(actorData.system.characteristics.int.total / 10) * 3;
+            wound = Math.floor(getTotal("int") / 10) * 3;
           } else if (item.system.replace.wt.characteristic === "wp") {
-            wound = Math.floor(actorData.system.characteristics.wp.total / 10) * 3;
+            wound = Math.floor(getTotal("wp") / 10) * 3;
           } else if (item.system.replace.wt.characteristic === "prc") {
-            wound = Math.floor(actorData.system.characteristics.prc.total / 10) * 3;
+            wound = Math.floor(getTotal("prc") / 10) * 3;
           } else if (item.system.replace.wt.characteristic === "prs") {
-            wound = Math.floor(actorData.system.characteristics.prs.total / 10) * 3;
+            wound = Math.floor(getTotal("prs") / 10) * 3;
           } else if (item.system.replace.wt.characteristic === "lck") {
-            wound = Math.floor(actorData.system.characteristics.lck.total / 10) * 3;
+            wound = Math.floor(getTotal("lck") / 10) * 3;
           }
         }
       }
