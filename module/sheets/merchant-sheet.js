@@ -880,272 +880,264 @@ export class merchantSheet extends foundry.appv1.sheets.ActorSheet {
 }
   }
 
-  async _onClickCharacteristic(event) {
-    event.preventDefault();
-    const element = event.currentTarget;
-    const woundedValue =
-      this.actor.system.characteristics[element.id].total +
-      this.actor.system.woundPenalty +
-      this.actor.system.fatigue.penalty;
-    const regularValue =
-      this.actor.system.characteristics[element.id].total +
-      this.actor.system.fatigue.penalty;
-    let tags = [];
-    if (this.actor.system.wounded) {
-      tags.push(
-        `<span class="tag wound-tag">Wounded ${this.actor.system.woundPenalty}</span>`
-      );
-    }
-    if (this.actor.system.fatigue.penalty != 0) {
-      tags.push(
-        `<span class="tag fatigue-tag">Fatigued ${this.actor.system.fatigue.penalty}</span>`
-      );
-    }
-
-    let d = new Dialog({
-      title: "Apply Roll Modifier",
-      content: `<form>
-                    <div class="dialogForm">
-                    <label><b>${element.getAttribute(
-                      "name"
-                    )} Modifier: </b></label><input placeholder="ex. -20, +10" id="playerInput" value="0" style=" text-align: center; width: 50%; border-style: groove; float: right;" type="text"></input></div>
-                  </form>`,
-      buttons: {
-        one: {
-          label: "Roll!",
-          callback: async (html) => {
-            const playerInput = parseInt(html.find('[id="playerInput"]').val());
-
-            let contentString = "";
-            let roll = new Roll("1d100");
-            await roll.evaluate();
-
-            if (this.actor.system.wounded == true) {
-              if (
-                roll.total == this.actor.system.lucky_numbers.ln1 ||
-                roll.total == this.actor.system.lucky_numbers.ln2 ||
-                roll.total == this.actor.system.lucky_numbers.ln3 ||
-                roll.total == this.actor.system.lucky_numbers.ln4 ||
-                roll.total == this.actor.system.lucky_numbers.ln5 ||
-                roll.total == this.actor.system.lucky_numbers.ln6 ||
-                roll.total == this.actor.system.lucky_numbers.ln7 ||
-                roll.total == this.actor.system.lucky_numbers.ln8 ||
-                roll.total == this.actor.system.lucky_numbers.ln9 ||
-                roll.total == this.actor.system.lucky_numbers.ln10
-              ) {
-                contentString = `<h2>${element.getAttribute("name")}</h2
-                  <p></p><b>Target Number: [[${
-                    woundedValue + playerInput
-                  }]]</b> <p></p>
-                  <b>Result: [[${roll.result}]]</b><p></p>
-                  <span style='color:green; font-size:120%;'> <b>LUCKY NUMBER!</b></span>`;
-              } else if (
-                roll.total == this.actor.system.unlucky_numbers.ul1 ||
-                roll.total == this.actor.system.unlucky_numbers.ul2 ||
-                roll.total == this.actor.system.unlucky_numbers.ul3 ||
-                roll.total == this.actor.system.unlucky_numbers.ul4 ||
-                roll.total == this.actor.system.unlucky_numbers.ul5 ||
-                roll.total == this.actor.system.unlucky_numbers.ul6
-              ) {
-                contentString = `<h2>${element.getAttribute("name")}</h2
-                  <p></p><b>Target Number: [[${
-                    woundedValue + playerInput
-                  }]]</b> <p></p>
-                  <b>Result: [[${roll.result}]]</b><p></p>
-                  <span style='color:rgb(168, 5, 5); font-size:120%;'> <b>UNLUCKY NUMBER!</b></span>`;
-              } else {
-                contentString = `<h2>${element.getAttribute("name")}</h2
-                  <p></p><b>Target Number: [[${
-                    woundedValue + playerInput
-                  }]]</b> <p></p>
-                  <b>Result: [[${roll.result}]]</b><p></p>
-                  <b>${
-                    roll.total <= woundedValue + playerInput
-                      ? "<span style='color:green; font-size: 120%;'> <b>SUCCESS!</b></span>"
-                      : " <span style='color:rgb(168, 5, 5); font-size: 120%;'> <b>FAILURE!</b></span>"
-                  }`;
-              }
-            } else {
-              if (
-                roll.total == this.actor.system.lucky_numbers.ln1 ||
-                roll.total == this.actor.system.lucky_numbers.ln2 ||
-                roll.total == this.actor.system.lucky_numbers.ln3 ||
-                roll.total == this.actor.system.lucky_numbers.ln4 ||
-                roll.total == this.actor.system.lucky_numbers.ln5 ||
-                roll.total == this.actor.system.lucky_numbers.ln6 ||
-                roll.total == this.actor.system.lucky_numbers.ln7 ||
-                roll.total == this.actor.system.lucky_numbers.ln8 ||
-                roll.total == this.actor.system.lucky_numbers.ln9 ||
-                roll.total == this.actor.system.lucky_numbers.ln10
-              ) {
-                contentString = `<h2>${element.getAttribute("name")}</h2
-                <p></p><b>Target Number: [[${
-                  regularValue + playerInput
-                }]]</b> <p></p>
-                <b>Result: [[${roll.result}]]</b><p></p>
-                <span style='color:green; font-size:120%;'> <b>LUCKY NUMBER!</b></span>`;
-              } else if (
-                roll.total == this.actor.system.unlucky_numbers.ul1 ||
-                roll.total == this.actor.system.unlucky_numbers.ul2 ||
-                roll.total == this.actor.system.unlucky_numbers.ul3 ||
-                roll.total == this.actor.system.unlucky_numbers.ul4 ||
-                roll.total == this.actor.system.unlucky_numbers.ul5 ||
-                roll.total == this.actor.system.unlucky_numbers.ul6
-              ) {
-                contentString = `<h2>${element.getAttribute("name")}</h2
-                <p></p><b>Target Number: [[${
-                  regularValue + playerInput
-                }]]</b> <p></p>
-                <b>Result: [[${roll.result}]]</b><p></p>
-                <span style='color:rgb(168, 5, 5); font-size:120%;'> <b>UNLUCKY NUMBER!</b></span>`;
-              } else {
-                contentString = `<h2>${element.getAttribute("name")}</h2
-                <p></p><b>Target Number: [[${
-                  regularValue + playerInput
-                }]]</b> <p></p>
-                <b>Result: [[${roll.result}]]</b><p></p>
-                <b>${
-                  roll.total <= regularValue + playerInput
-                    ? "<span style='color:green; font-size: 120%;'> <b>SUCCESS!</b></span>"
-                    : " <span style='color:rgb(168, 5, 5); font-size: 120%;'> <b>FAILURE!</b></span>"
-                }`;
-              }
-            }
-
-            ChatMessage.create({
-              async: false,
-              user: game.user.id,
-              speaker: ChatMessage.getSpeaker(),
-              roll: roll,
-              content: contentString,
-              flavor: `<div class="tag-container">${tags.join("")}</div>`,
-            });
-          },
-        },
-        two: {
-          label: "Cancel",
-          callback: (html) => console.log("Cancelled"),
-        },
-      },
-      default: "one",
-      close: (html) => console.log(),
-    });
-    d.render(true);
+async _onClickCharacteristic(event) {
+  event.preventDefault();
+  const element = event.currentTarget;
+  // Defensive guards for actor/system and nested properties
+  const actorSys = this.actor?.system || {};
+  const charTotal = Number(actorSys?.characteristics?.[element.id]?.total ?? 0);
+  const woundPenalty = Number(actorSys?.woundPenalty ?? 0);
+  const fatiguePenalty = Number(actorSys?.fatigue?.penalty ?? 0);
+  const carryPenalty = Number(actorSys?.carry_rating?.penalty ?? 0);
+  const woundedValue = charTotal + woundPenalty + fatiguePenalty + carryPenalty;
+  const regularValue = charTotal + fatiguePenalty + carryPenalty;
+  const lucky = actorSys.lucky_numbers || {};
+  const unlucky = actorSys.unlucky_numbers || {};
+  let tags = [];
+  if (actorSys?.wounded) {
+    tags.push(`<span class="tag wound-tag">Wounded ${woundPenalty}</span>`);
+  }
+  if (fatiguePenalty !== 0) {
+    tags.push(`<span class="tag fatigue-tag">Fatigued ${fatiguePenalty}</span>`);
   }
 
-  _onProfessionsRoll(event) {
-    event.preventDefault();
-    const element = event.currentTarget;
-    let tags = [];
-    if (this.actor.system.wounded) {
-      tags.push(
-        `<span class="tag wound-tag">Wounded ${this.actor.system.woundPenalty}</span>`
-      );
-    }
-    if (this.actor.system.fatigue.penalty != 0) {
-      tags.push(
-        `<span class="tag fatigue-tag">Fatigued ${this.actor.system.fatigue.penalty}</span>`
-      );
-    }
+  let d = new Dialog({
+    title: "Apply Roll Modifier",
+    content: `<form>
+                  <div class="dialogForm">
+                  <label><b>${element.getAttribute(
+                    "name"
+                  )} Modifier: </b></label><input placeholder="ex. -20, +10" id="playerInput" value="0" style=" text-align: center; width: 50%; border-style: groove; float: right;" type="text">[...]
+                </form>`,
+    buttons: {
+      one: {
+        label: "Roll!",
+        callback: async (html) => {
+          const playerInput = parseInt(html.find('[id="playerInput"]').val());
 
-    let d = new Dialog({
-      title: "Apply Roll Modifier",
-      content: `<form>
-                    <div class="dialogForm">
-                    <label><b>${element.getAttribute(
-                      "name"
-                    )} Modifier: </b></label><input placeholder="ex. -20, +10" id="playerInput" value="0" style=" text-align: center; width: 50%; border-style: groove; float: right;" type="text"></input></div>
-                  </form>`,
-      buttons: {
-        one: {
-          label: "Roll!",
-          callback: async (html) => {
-            const playerInput = parseInt(html.find('[id="playerInput"]').val());
+          let contentString = "";
+          let roll = new Roll("1d100");
+          await roll.evaluate();
 
-            let contentString = "";
-            let roll = new Roll("1d100");
-            await roll.evaluate();
-
+          if (actorSys?.wounded == true) {
             if (
-              roll.result == this.actor.system.lucky_numbers.ln1 ||
-              roll.result == this.actor.system.lucky_numbers.ln2 ||
-              roll.result == this.actor.system.lucky_numbers.ln3 ||
-              roll.result == this.actor.system.lucky_numbers.ln4 ||
-              roll.result == this.actor.system.lucky_numbers.ln5 ||
-              roll.result == this.actor.system.lucky_numbers.ln6 ||
-              roll.result == this.actor.system.lucky_numbers.ln7 ||
-              roll.result == this.actor.system.lucky_numbers.ln8 ||
-              roll.result == this.actor.system.lucky_numbers.ln9 ||
-              roll.result == this.actor.system.lucky_numbers.ln10
+              roll.total == lucky.ln1 ||
+              roll.total == lucky.ln2 ||
+              roll.total == lucky.ln3 ||
+              roll.total == lucky.ln4 ||
+              roll.total == lucky.ln5 ||
+              roll.total == lucky.ln6 ||
+              roll.total == lucky.ln7 ||
+              roll.total == lucky.ln8 ||
+              roll.total == lucky.ln9 ||
+              roll.total == lucky.ln10
             ) {
-              contentString = `<h2>${element.getAttribute("name")}</h2>
+              contentString = `<h2>${element.getAttribute("name")}</h2
                 <p></p><b>Target Number: [[${
-                  this.actor.system.professionsWound[element.getAttribute("id")]
-                } + ${playerInput} + ${
-                this.actor.system.fatigue.penalty
-              }]]</b> <p></p>
+                  woundedValue + playerInput
+                }]]</b> <p></p>
                 <b>Result: [[${roll.result}]]</b><p></p>
                 <span style='color:green; font-size:120%;'> <b>LUCKY NUMBER!</b></span>`;
             } else if (
-              roll.result == this.actor.system.unlucky_numbers.ul1 ||
-              roll.result == this.actor.system.unlucky_numbers.ul2 ||
-              roll.result == this.actor.system.unlucky_numbers.ul3 ||
-              roll.result == this.actor.system.unlucky_numbers.ul4 ||
-              roll.result == this.actor.system.unlucky_numbers.ul5 ||
-              roll.result == this.actor.system.unlucky_numbers.ul6
+              roll.total == unlucky.ul1 ||
+              roll.total == unlucky.ul2 ||
+              roll.total == unlucky.ul3 ||
+              roll.total == unlucky.ul4 ||
+              roll.total == unlucky.ul5 ||
+              roll.total == unlucky.ul6
             ) {
-              contentString = `<h2>${element.getAttribute("name")}</h2>
-                    <p></p><b>Target Number: [[${
-                      this.actor.system.professionsWound[
-                        element.getAttribute("id")
-                      ]
-                    } + ${playerInput} + ${
-                this.actor.system.fatigue.penalty
-              }]]</b> <p></p>
-                    <b>Result: [[${roll.result}]]</b><p></p>
-                    <span style='color:rgb(168, 5, 5); font-size:120%;'> <b>UNLUCKY NUMBER!</b></span>`;
+              contentString = `<h2>${element.getAttribute("name")}</h2
+                <p></p><b>Target Number: [[${
+                  woundedValue + playerInput
+                }]]</b> <p></p>
+                <b>Result: [[${roll.result}]]</b><p></p>
+                <span style='color:rgb(168, 5, 5); font-size:120%;'> <b>UNLUCKY NUMBER!</b></span>`;
             } else {
-              contentString = `<h2>${element.getAttribute("name")}</h2>
-                    <p></p><b>Target Number: [[${
-                      this.actor.system.professionsWound[
-                        element.getAttribute("id")
-                      ]
-                    } + ${playerInput} + ${
-                this.actor.system.fatigue.penalty
-              }]]</b> <p></p>
-                    <b>Result: [[${roll.result}]]</b><p></p>
-                    <b>${
-                      roll.result <=
-                      this.actor.system.professionsWound[
-                        element.getAttribute("id")
-                      ] +
-                        playerInput +
-                        this.actor.system.fatigue.penalty
-                        ? " <span style='color:green; font-size: 120%;'> <b>SUCCESS!</b></span>"
-                        : " <span style='color:rgb(168, 5, 5); font-size: 120%;'> <b>FAILURE!</b></span>"
-                    }`;
+              contentString = `<h2>${element.getAttribute("name")}</h2
+                <p></p><b>Target Number: [[${
+                  woundedValue + playerInput
+                }]]</b> <p></p>
+                <b>Result: [[${roll.result}]]</b><p></p>
+                <b>${
+                  roll.total <= woundedValue + playerInput
+                    ? "<span style='color:green; font-size: 120%;'> <b>SUCCESS!</b></span>"
+                    : " <span style='color:rgb(168, 5, 5); font-size: 120%;'> <b>FAILURE!</b></span>"
+                }`;
             }
+          } else {
+            if (
+              roll.total == lucky.ln1 ||
+              roll.total == lucky.ln2 ||
+              roll.total == lucky.ln3 ||
+              roll.total == lucky.ln4 ||
+              roll.total == lucky.ln5 ||
+              roll.total == lucky.ln6 ||
+              roll.total == lucky.ln7 ||
+              roll.total == lucky.ln8 ||
+              roll.total == lucky.ln9 ||
+              roll.total == lucky.ln10
+            ) {
+              contentString = `<h2>${element.getAttribute("name")}</h2
+              <p></p><b>Target Number: [[${
+                regularValue + playerInput
+              }]]</b> <p></p>
+              <b>Result: [[${roll.result}]]</b><p></p>
+              <span style='color:green; font-size:120%;'> <b>LUCKY NUMBER!</b></span>`;
+            } else if (
+              roll.total == unlucky.ul1 ||
+              roll.total == unlucky.ul2 ||
+              roll.total == unlucky.ul3 ||
+              roll.total == unlucky.ul4 ||
+              roll.total == unlucky.ul5 ||
+              roll.total == unlucky.ul6
+            ) {
+              contentString = `<h2>${element.getAttribute("name")}</h2
+              <p></p><b>Target Number: [[${
+                regularValue + playerInput
+              }]]</b> <p></p>
+              <b>Result: [[${roll.result}]]</b><p></p>
+              <span style='color:rgb(168, 5, 5); font-size:120%;'> <b>UNLUCKY NUMBER!</b></span>`;
+            } else {
+              contentString = `<h2>${element.getAttribute("name")}</h2
+              <p></p><b>Target Number: [[${
+                regularValue + playerInput
+              }]]</b> <p></p>
+              <b>Result: [[${roll.result}]]</b><p></p>
+              <b>${
+                roll.total <= regularValue + playerInput
+                  ? "<span style='color:green; font-size: 120%;'> <b>SUCCESS!</b></span>"
+                  : " <span style='color:rgb(168, 5, 5); font-size: 120%;'> <b>FAILURE!</b></span>"
+              }`;
+            }
+          }
 
-            ChatMessage.create({
-              async: false,
-              user: game.user.id,
-              speaker: ChatMessage.getSpeaker(),
-              roll: roll,
-              content: contentString,
-              flavor: `<div class="tag-container">${tags.join("")}</div>`,
-            });
-          },
-        },
-        two: {
-          label: "Cancel",
-          callback: (html) => console.log("Cancelled"),
+          ChatMessage.create({
+            async: false,
+            user: game.user.id,
+            speaker: ChatMessage.getSpeaker(),
+            roll: roll,
+            content: contentString,
+            flavor: `<div class="tag-container">${tags.join("")}</div>`,
+          });
         },
       },
-      default: "one",
-      close: (html) => console.log(),
-    });
-    d.render(true);
-  }
+      two: {
+        label: "Cancel",
+        callback: (html) => console.log("Cancelled"),
+      },
+    },
+    default: "one",
+    close: (html) => console.log(),
+  });
+  d.render(true);
+}
+
+  _onProfessionsRoll(event) {
+  const actorSys = this.actor?.system || {};
+  event.preventDefault();
+  const element = event.currentTarget;
+  let tags = [];
+  if (actorSys?.wounded) { tags.push(`<span class="tag wound-tag">Wounded ${Number(actorSys?.woundPenalty ?? 0)}</span>`); }
+  if (Number(actorSys?.fatigue?.penalty ?? 0) !== 0) { tags.push(`<span class="tag fatigue-tag">Fatigued ${Number(actorSys?.fatigue?.penalty ?? 0)}</span>`); }
+
+  let d = new Dialog({
+    title: "Apply Roll Modifier",
+    content: `<form>
+                  <div class="dialogForm">
+                  <label><b>${element.getAttribute(
+                    "name"
+                  )} Modifier: </b></label><input placeholder="ex. -20, +10" id="playerInput" value="0" style=" text-align: center; width: 50%; border-style: groove; float: right;" type="text"></[...]
+                </form>`,
+    buttons: {
+      one: {
+        label: "Roll!",
+        callback: async (html) => {
+          const playerInput = parseInt(html.find('[id="playerInput"]').val());
+
+          let contentString = "";
+          let roll = new Roll("1d100");
+          await roll.evaluate();
+
+          const lucky = actorSys.lucky_numbers || {};
+          const unlucky = actorSys.unlucky_numbers || {};
+
+          if (
+            roll.result == lucky.ln1 ||
+            roll.result == lucky.ln2 ||
+            roll.result == lucky.ln3 ||
+            roll.result == lucky.ln4 ||
+            roll.result == lucky.ln5 ||
+            roll.result == lucky.ln6 ||
+            roll.result == lucky.ln7 ||
+            roll.result == lucky.ln8 ||
+            roll.result == lucky.ln9 ||
+            roll.result == lucky.ln10
+          ) {
+            contentString = `<h2>${element.getAttribute("name")}</h2>
+              <p></p><b>Target Number: [[${
+                this.actor.system.professionsWound[element.getAttribute("id")]
+              } + ${playerInput} + ${Number(actorSys?.fatigue?.penalty ?? 0)}]]</b> <p></p>
+              <b>Result: [[${roll.result}]]</b><p></p>
+              <span style='color:green; font-size:120%;'> <b>LUCKY NUMBER!</b></span>`;
+          } else if (
+            roll.result == unlucky.ul1 ||
+            roll.result == unlucky.ul2 ||
+            roll.result == unlucky.ul3 ||
+            roll.result == unlucky.ul4 ||
+            roll.result == unlucky.ul5 ||
+            roll.result == unlucky.ul6
+          ) {
+            contentString = `<h2>${element.getAttribute("name")}</h2>
+                  <p></p><b>Target Number: [[${
+                    this.actor.system.professionsWound[
+                      element.getAttribute("id")
+                    ]
+                  } + ${playerInput}  + ${
+              Number(actorSys?.fatigue?.penalty ?? 0)
+            } + ${Number(actorSys?.carry_rating?.penalty ?? 0)}]]</b> <p></p>
+                  <b>Result: [[${roll.result}]]</b><p></p>
+                  <span style='color:rgb(168, 5, 5); font-size:120%;'> <b>UNLUCKY NUMBER!</b></span>`;
+          } else {
+            contentString = `<h2>${element.getAttribute("name")}</h2>
+                  <p></p><b>Target Number: [[${
+                    this.actor.system.professionsWound[
+                      element.getAttribute("id")
+                    ]
+                  } + ${playerInput} + ${Number(actorSys?.fatigue?.penalty ?? 0)} + ${Number(actorSys?.carry_rating?.penalty ?? 0)}]]</b> <p></p>
+                  <b>Result: [[${roll.result}]]</b><p></p>
+                  <b>${
+                    roll.result <=
+                    this.actor.system.professionsWound[
+                      element.getAttribute("id")
+                    ] +
+                      playerInput +
+                      Number(actorSys?.fatigue?.penalty ?? 0) +
+                      Number(actorSys?.carry_rating?.penalty ?? 0)
+                      ? " <span style='color:green; font-size: 120%;'> <b>SUCCESS!</b></span>"
+                      : " <span style='color:rgb(168, 5, 5); font-size: 120%;'> <b>FAILURE!</b></span>"
+                  }`;
+          }
+
+          ChatMessage.create({
+            async: false,
+            user: game.user.id,
+            speaker: ChatMessage.getSpeaker(),
+            roll: roll,
+            content: contentString,
+            flavor: `<div class="tag-container">${tags.join("")}</div>`,
+          });
+        },
+      },
+      two: {
+        label: "Cancel",
+        callback: (html) => console.log("Cancelled"),
+      },
+    },
+    default: "one",
+    close: (html) => console.log(),
+  });
+  d.render(true);
+}
 
   _onUnconventionalRoll(event) {
     event.preventDefault();
@@ -2067,13 +2059,13 @@ export class merchantSheet extends foundry.appv1.sheets.ActorSheet {
     }
   }
 
-  _createStatusTags() {
-    this.actor.system.wounded
-      ? this.form.querySelector("#wound-icon").classList.add("active")
-      : this.form.querySelector("#wound-icon").classList.remove("active");
-    // this.actor.system.carry_rating.current > this.actor.system.carry_rating.max ? this.form.querySelector('#enc-icon').classList.add('active') : this.form.querySelector('#enc-icon').classList.remove('active')
-    this.actor.system.fatigue.level > 0
-      ? this.form.querySelector("#fatigue-icon").classList.add("active")
-      : this.form.querySelector("#fatigue-icon").classList.remove("active");
-  }
+_createStatusTags() {
+  const actorSys = this.actor?.system || {};
+  actorSys?.wounded
+    ? this.form.querySelector("#wound-icon").classList.add("active")
+    : this.form.querySelector("#wound-icon").classList.remove("active");
+  // this.actor.system.carry_rating.current > this.actor.system.carry_rating.max ? this.form.querySelector('#enc-icon').classList.add('active') : this.form.querySelector('#enc-icon').classList[...]
+  Number(actorSys?.fatigue?.level ?? 0) > 0
+    ? this.form.querySelector("#fatigue-icon").classList.add("active")
+    : this.form.querySelector("#fatigue-icon").classList.remove("active");
 }
