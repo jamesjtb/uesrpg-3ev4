@@ -274,11 +274,15 @@ export class SimpleItemSheet extends foundry.appv1.sheets.ItemSheet {
                     // push over the _id property for some reason. Need to find a way to add it back in
 
                     // If the item has an existing container, need to access that container and rewrite it's contained_items array
-                    if (thisItem.system.containerStats.container_id != "") {
+                    if (thisItem?.system?.containerStats?.container_id != "") {
                       let oldContainer = this.actor?.items?.get(thisItem.system.containerStats.container_id)
-                      let indexToRemove = oldContainer.system.contained_items.indexOf(oldContainer.system.contained_items.find(i => i._id == thisItem._id))
-                      oldContainer.system.contained_items.splice(indexToRemove, 1)
-                      oldContainer.update({'system.contained_items': oldContainer.system.contained_items})
+                      if (oldContainer && Array.isArray(oldContainer?.system?.contained_items)) {
+                        let indexToRemove = oldContainer.system.contained_items.indexOf(oldContainer.system.contained_items.find(i => i._id == thisItem._id))
+                        if (indexToRemove !== -1) {
+                          oldContainer.system.contained_items.splice(indexToRemove, 1)
+                          oldContainer.update({'system.contained_items': oldContainer.system.contained_items})
+                        }
+                      }
                     }
 
                     thisItem.update({
@@ -292,7 +296,7 @@ export class SimpleItemSheet extends foundry.appv1.sheets.ItemSheet {
                   )
 
                   } else {
-                      if (thisItem.system.containerStats.container_id == this.item._id) {
+                      if (thisItem?.system?.containerStats?.container_id == this.item._id) {
                         thisItem.update({
                           'system.containerStats.contained': false,
                           'system.containerStats.container_id': "",
@@ -341,8 +345,8 @@ export class SimpleItemSheet extends foundry.appv1.sheets.ItemSheet {
             //i.system.containerStats?.container_id != this.item._id)
           ) continue
 
-      i.system.enc > this.item.system.container_enc.max ? tooLarge = true : {}
-      if (i.system.enc <= this.item.system.container_enc.max && i.system.hasOwnProperty("containerStats")) {
+      Number(i?.system?.enc ?? 0) > Number(this.item?.system?.container_enc?.max ?? 0) ? tooLarge = true : {}
+      if (Number(i?.system?.enc ?? 0) <= Number(this.item?.system?.container_enc?.max ?? 0) && i?.system && Object.prototype.hasOwnProperty.call(i.system, "containerStats")) {
         bagListItems.push(i)
       }
     }
@@ -356,22 +360,31 @@ export class SimpleItemSheet extends foundry.appv1.sheets.ItemSheet {
     event.preventDefault()
     let element = event.currentTarget
     let removedItemId = element.closest('.item').dataset.itemId
+    if (!Array.isArray(this.item?.system?.contained_items)) return;
+    
     let indexToRemove = this.item.system.contained_items.indexOf(this.item.system.contained_items.find(item => item._id == removedItemId))
+    
+    if (indexToRemove === -1) return;
 
     // Update the container item contents list
     this.item.system.contained_items.splice(indexToRemove, 1)
     this.item.update({'system.contained_items': this.item.system.contained_items})
 
     // Update the contained item's status
-    this.actor?.items?.find(i => i._id == removedItemId).update({
-      'system.containerStats.contained': false,
-      'system.containerStats.container_id': "",
-      'system.containerStats.container_name': ""
-    })
+    const itemToUpdate = this.actor?.items?.find(i => i._id == removedItemId);
+    if (itemToUpdate) {
+      itemToUpdate.update({
+        'system.containerStats.contained': false,
+        'system.containerStats.container_id': "",
+        'system.containerStats.container_name': ""
+      })
+    }
     this._updateContainedItemsList()
   }
 
   _updateContainedItemsList() {
+    if (!Array.isArray(this.item?.system?.contained_items)) return;
+    
     let updatedContainedList = [];
 
     let wasChanged = false;

@@ -641,53 +641,7 @@ export class merchantSheet extends foundry.appv1.sheets.ActorSheet {
       }
     }
 
-    async _onSetBaseCharacteristics(event) {
-  event.preventDefault();
-  const strBonusArray = [];
-  const endBonusArray = [];
-  const agiBonusArray = [];
-  const intBonusArray = [];
-  const wpBonusArray = [];
-  const prcBonusArray = [];
-  const prsBonusArray = [];
-  const lckBonusArray = [];
-
-  // Defensive guard: safe hasOwnProperty for characteristicBonus
-  const bonusItems = this.actor.items.filter((item) =>
-    item?.system && Object.prototype.hasOwnProperty.call(item.system, "characteristicBonus")
-  );
-
-  for (let item of bonusItems) {
-    // Defensive guard: safe access to characteristicBonus properties
-    const charBonus = item?.system?.characteristicBonus ?? {};
-    if ((charBonus.strChaBonus ?? 0) !== 0) {
-      let name = item.name;
-      strBonusArray.push(name);
-    } else if ((charBonus.endChaBonus ?? 0) !== 0) {
-      let name = item.name;
-      endBonusArray.push(name);
-    } else if ((charBonus.agiChaBonus ?? 0) !== 0) {
-      let name = item.name;
-      agiBonusArray.push(name);
-    } else if ((charBonus.intChaBonus ?? 0) !== 0) {
-      let name = item.name;
-      intBonusArray.push(name);
-    } else if ((charBonus.wpChaBonus ?? 0) !== 0) {
-      let name = item.name;
-      wpBonusArray.push(name);
-    } else if ((charBonus.prcChaBonus ?? 0) !== 0) {
-      let name = item.name;
-      prcBonusArray.push(name);
-    } else if ((charBonus.prsChaBonus ?? 0) !== 0) {
-      let name = item.name;
-      prsBonusArray.push(name);
-    } else if ((charBonus.lckChaBonus ?? 0) !== 0) {
-      let name = item.name;
-      lckBonusArray.push(name);
-    }
-  }
-
-  let d = new Dialog({
+    let d = new Dialog({
     title: "Set Base Characteristics",
     content: `<form>
                   <h2>Set the Character's Base Characteristics.</h2>
@@ -878,7 +832,6 @@ export class merchantSheet extends foundry.appv1.sheets.ActorSheet {
   });
   d.render(true);
 }
-  }
 
 async _onClickCharacteristic(event) {
   event.preventDefault();
