@@ -127,17 +127,61 @@
                             <div class="grid-container">
                                 <div>Ignore ENC</div>
                                 <div class="right-align-content">
-                                    <input class="checkbox" type="checkbox" name="system.excludeENC" {{checked item.system.excludeENC}}>
+                                    <input class="checkbox" type="checkbox" name="system.excludeENC" {{checked item. system.excludeENC}}>
                                 </div>
                             </div>
                             <div class="grid-container">
                                 <div>Charge Reduction</div>
                                 <div class="right-align-content">
-                                    <input type="number" name="system.charge.reduction" value="{{item.system.charge.reduction}}">
+                                    <input type="number" name="system.charge.reduction" value="{{item. system.charge.reduction}}">
                                 </div>
                             </div>
                         </div>
                     </div>
+
+                    {{! -- HIT LOCATIONS SECTION --}}
+                    <div class="item-selection-container">
+                        <h2>Hit Locations Covered</h2>
+                        <div class="selection-container">
+                            <div class="grid-container">
+                                <div>Head</div>
+                                <div class="right-align-content">
+                                    <input class="checkbox" type="checkbox" name="system.hitLocations.Head" {{checked item.system.hitLocations.Head}}>
+                                </div>
+                            </div>
+                            <div class="grid-container">
+                                <div>Body</div>
+                                <div class="right-align-content">
+                                    <input class="checkbox" type="checkbox" name="system.hitLocations. Body" {{checked item.system. hitLocations.Body}}>
+                                </div>
+                            </div>
+                            <div class="grid-container">
+                                <div>Right Arm</div>
+                                <div class="right-align-content">
+                                    <input class="checkbox" type="checkbox" name="system.hitLocations.Right Arm" {{checked item.system.hitLocations.Right_Arm}}>
+                                </div>
+                            </div>
+                            <div class="grid-container">
+                                <div>Left Arm</div>
+                                <div class="right-align-content">
+                                    <input class="checkbox" type="checkbox" name="system.hitLocations.Left Arm" {{checked item.system.hitLocations. Left_Arm}}>
+                                </div>
+                            </div>
+                            <div class="grid-container">
+                                <div>Right Leg</div>
+                                <div class="right-align-content">
+                                    <input class="checkbox" type="checkbox" name="system. hitLocations.Right Leg" {{checked item.system.hitLocations.Right_Leg}}>
+                                </div>
+                            </div>
+                            <div class="grid-container">
+                                <div>Left Leg</div>
+                                <div class="right-align-content">
+                                    <input class="checkbox" type="checkbox" name="system.hitLocations.Left Leg" {{checked item.system. hitLocations.Left_Leg}}>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
                     <div class="attribute-container">
                         <div class="item-characteristic-container">
                             <h2>Characteristics</h2>
