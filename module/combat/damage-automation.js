@@ -196,14 +196,26 @@ export async function applyDamage(actor, damage, damageType = DAMAGE_TYPES.PHYSI
   const finalDamage = damageCalc.finalDamage;
 
   // Get current HP
-  const currentHP = Number(actor?. system?.hp?. value || 0);
+  const currentHP = Number(actor?. system?.hp?.value || 0);
   const maxHP = Number(actor?.system?. hp?.max || 1);
   const newHP = Math.max(0, currentHP - finalDamage);
 
-  // Update actor HP
-  await actor.update({
-    "system.hp.value": newHP
-  });
+  // ========== FIX: Update token actor if it exists ==========
+  // Check if this actor is linked to a token
+  const token = actor.token || actor.getActiveTokens()[0];
+  
+  if (token && ! actor.prototypeToken. actorLink) {
+    // Unlinked token:  update the token's actor data
+    await token.actor.update({
+      "system.hp.value": newHP
+    });
+  } else {
+    // Linked actor or no token: update the base actor
+    await actor.update({
+      "system.hp.value": newHP
+    });
+  }
+  // ==========================================================
 
   // Check for wounds (when HP drops below half, quarter, etc.)
   const hpPercentage = (newHP / maxHP) * 100;
@@ -211,6 +223,23 @@ export async function applyDamage(actor, damage, damageType = DAMAGE_TYPES.PHYSI
   
   if (newHP === 0) {
     woundStatus = "unconscious";
+    
+    // ========== FIX: Apply unconscious effect ==========
+    const unconsciousEffect = {
+      name: "Unconscious",
+      icon: "icons/svg/unconscious.svg",
+      changes: [],
+      flags: {
+        core: {
+          statusId: "unconscious"
+        }
+      }
+    };
+    
+    const targetActor = token?.actor || actor;
+    await targetActor.createEmbeddedDocuments("ActiveEffect", [unconsciousEffect]);
+    // ====================================================
+    
   } else if (hpPercentage <= 25) {
     woundStatus = "critically wounded";
   } else if (hpPercentage <= 50) {
@@ -220,8 +249,8 @@ export async function applyDamage(actor, damage, damageType = DAMAGE_TYPES.PHYSI
   // Create chat message about damage
   const messageContent = `
     <div class="uesrpg-damage-applied">
-      <h3>${actor.name} takes damage! </h3>
-      <div style="display: grid; grid-template-columns: 1fr 1fr; gap:  0.5rem; margin:  0.5rem 0;">
+      <h3>${actor.name} takes damage!</h3>
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap:  0.5rem; margin: 0.5rem 0;">
         <div><strong>Source:</strong></div><div>${source}</div>
         <div><strong>Hit Location: </strong></div><div>${hitLocation}</div>
         <div><strong>Damage Type:</strong></div><div>${damageType}</div>
@@ -229,7 +258,7 @@ export async function applyDamage(actor, damage, damageType = DAMAGE_TYPES.PHYSI
           <div><strong>Raw Damage:</strong></div><div>${damageCalc.rawDamage}${dosBonus > 0 ? ` + ${dosBonus} (DoS)` : ''}</div>
           <div><strong>Reduction:</strong></div><div>-${damageCalc.reductions.total} (Armor: ${damageCalc. reductions.armor}, Resist: ${damageCalc.reductions.resistance}, Tough: ${damageCalc.reductions.toughness})</div>
         ` : ''}
-        <div><strong>Final Damage: </strong></div><div style="color: #d32f2f; font-weight: bold;">${finalDamage}</div>
+        <div><strong>Final Damage:</strong></div><div style="color: #d32f2f; font-weight: bold;">${finalDamage}</div>
         <div><strong>HP: </strong></div><div>${newHP} / ${maxHP} ${currentHP > newHP ? `(-${currentHP - newHP})` : ''}</div>
         ${woundStatus !== "uninjured" ? `<div style="grid-column: 1 / -1; color: #f57c00; font-weight: bold; text-align: center; margin-top: 0.5rem;">Status: ${woundStatus. toUpperCase()}</div>` : ''}
       </div>
@@ -240,7 +269,7 @@ export async function applyDamage(actor, damage, damageType = DAMAGE_TYPES.PHYSI
     user: game.user.id,
     speaker: ChatMessage.getSpeaker({ actor }),
     content: messageContent,
-    type:  CONST.CHAT_MESSAGE_TYPES.OTHER
+    style:  CONST.CHAT_MESSAGE_STYLES.OTHER  // FIX: Use STYLES instead of TYPES
   });
 
   return {
@@ -281,9 +310,19 @@ export async function applyHealing(actor, healing, options = {}) {
     return null;
   }
 
-  await actor.update({
-    "system.hp.value": newHP
-  });
+  // ========== FIX: Update token actor if it exists ==========
+  const token = actor.token || actor. getActiveTokens()[0];
+  
+  if (token && ! actor.prototypeToken.actorLink) {
+    await token.actor.update({
+      "system.hp.value": newHP
+    });
+  } else {
+    await actor.update({
+      "system.hp.value": newHP
+    });
+  }
+  // ==========================================================
 
   const messageContent = `
     <div class="uesrpg-healing-applied">
@@ -300,7 +339,7 @@ export async function applyHealing(actor, healing, options = {}) {
     user: game.user.id,
     speaker: ChatMessage.getSpeaker({ actor }),
     content: messageContent,
-    type: CONST.CHAT_MESSAGE_TYPES.OTHER
+    style: CONST.CHAT_MESSAGE_STYLES.OTHER  // FIX: Use STYLES instead of TYPES
   });
 
   return {
