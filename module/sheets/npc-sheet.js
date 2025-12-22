@@ -808,17 +808,17 @@ async _onSetBaseCharacteristics(event) {
 async _onDefendRoll(event) {
   event.preventDefault();
   
-  const defenseType = event.currentTarget.dataset. defense || 'evade';
-  const actorSys = this.actor?. system || {};
+  const defenseType = event.currentTarget.dataset.defense || 'evade';
+  const actorSys = this.actor?.system || {};
   
   // Get defense skill value
   let defenseTN = 50;
   if (defenseType === 'evade') {
-    const evadeSkill = this.actor.items.find(i => i.type === 'skill' && i.name. toLowerCase() === 'evade');
-    defenseTN = Number(evadeSkill?.system?. value ??  Number(actorSys?. characteristics?. agi?. total ?? 50));
+    const evadeSkill = this.actor.items.find(i => i.type === 'skill' && i.name.toLowerCase() === 'evade');
+    defenseTN = Number(evadeSkill?.system?.value ??  Number(actorSys?.characteristics?.agi?.total ?? 50));
   } else if (defenseType === 'block') {
     const blockSkill = this.actor.items.find(i => i.type === 'combatStyle' && i.name.toLowerCase().includes('block'));
-    defenseTN = Number(blockSkill?. system?.value ?? Number(actorSys?.characteristics?.str?.total ?? 50));
+    defenseTN = Number(blockSkill?.system?.value ?? Number(actorSys?.characteristics?.str?.total ?? 50));
   }
   
   // Roll defense
@@ -832,7 +832,7 @@ async _onDefendRoll(event) {
   ChatMessage.create({
     speaker: ChatMessage.getSpeaker({actor: this.actor}),
     content: `
-      <h3>${defenseType. toUpperCase()} Defense</h3>
+      <h3>${defenseType.toUpperCase()} Defense</h3>
       <p><b>Target:</b> ${defenseTN}</p>
       <p><b>Roll:</b> [[${roll.total}]]</p>
       <p><b>${success ? 'SUCCESS' : 'FAILURE'}</b> (${dos} DoS)</p>
@@ -843,16 +843,16 @@ async _onDefendRoll(event) {
   async _onDamageRoll(event) {
   event.preventDefault();
   const button = event.currentTarget;
-  const li = button.closest(". item");
-  const item = this.actor.items.get(li?. dataset.itemId);
+  const li = button.closest(".item");
+  const item = this.actor.items.get(li?.dataset.itemId);
   
   if (!item) return;
 
   // ✅ Import helper functions at top of file if not already
-  // import { rollHitLocation, getDamageTypeFromWeapon } from "../combat/combat-utils. js";
+  // import { rollHitLocation, getDamageTypeFromWeapon } from "../combat/combat-utils.js";
   
   // Determine damage formula
-  const damageRoll = item.system?.weapon2H ?  item.system?. damage2 : item.system?.damage;
+  const damageRoll = item.system?.weapon2H ?  item.system?.damage2 : item.system?.damage;
   
   // Roll hit location
   const hitLocRoll = await new Roll("1d100").evaluate({ async: true });
@@ -872,7 +872,7 @@ async _onDefendRoll(event) {
   const finalDamage = supRoll ? Math.max(roll.total, supRoll.total) : roll.total;
   
   // Get damage type from weapon
-  const damageType = window. Uesrpg3e?. utils?.getDamageTypeFromWeapon(item) || 'physical';
+  const damageType = window.Uesrpg3e?.utils?.getDamageTypeFromWeapon(item) || 'physical';
   
   // Get targeted actors for damage application
   const targets = Array.from(game.user.targets || []);
@@ -886,7 +886,7 @@ async _onDefendRoll(event) {
                 data-damage="${finalDamage}" 
                 data-type="${damageType}" 
                 data-location="${hit_loc}"
-                style="margin:  0. 25rem; padding: 0.25rem 0.5rem; background: #8b0000; color: white; border:  none; border-radius: 3px; cursor: pointer;">
+                style="margin:  0.25rem; padding: 0.25rem 0.5rem; background: #8b0000; color: white; border:  none; border-radius: 3px; cursor: pointer;">
           Apply ${finalDamage} ${damageType} damage to ${target.name} (${hit_loc})
         </button>`;
     });
@@ -901,7 +901,7 @@ async _onDefendRoll(event) {
     <div class="uesrpg-damage-card">
       <h2><img src="${item.img}" height="20" width="20" style="margin-right: 5px;"/>${item.name}</h2>
       <p><b>Damage:</b> ${damageDisplay} (${damageRoll})</p>
-      <p><b>Hit Location:</b> [[${hitLocRoll. total}]] ${hit_loc}</p>
+      <p><b>Hit Location:</b> [[${hitLocRoll.total}]] ${hit_loc}</p>
       <p><b>Damage Type: </b> ${damageType}</p>
       <p><b>Qualities:</b> ${item.system?.qualities || 'None'}</p>
       ${applyDamageButtons ?  `<div style="margin-top: 0.5rem; border-top: 1px solid #666; padding-top: 0.5rem;">${applyDamageButtons}</div>` : ''}
@@ -1799,7 +1799,7 @@ html.on('click', '.apply-damage-btn', async (ev) => {
   const button = ev.currentTarget;
   const actorId = button.dataset.actorId;
   const damage = Number(button.dataset.damage);
-  const damageType = button. dataset.type;
+  const damageType = button.dataset.type;
   const location = button.dataset.location;
 
   const targetActor = game.actors.get(actorId);
@@ -1809,14 +1809,14 @@ html.on('click', '.apply-damage-btn', async (ev) => {
   }
 
   // Import helpers
-  const { getArmorForLocation, calculateFinalDamage } = await import('../helpers/damageHelper. js');
+  const { getArmorForLocation, calculateFinalDamage } = await import('../helpers/damageHelper.js');
 
   const armor = getArmorForLocation(targetActor, location);
   const damageResult = calculateFinalDamage(damage, armor, damageType, false);
 
-  const newHP = Math.max(0, (targetActor.system.hp. value || 0) - damageResult.finalDamage);
+  const newHP = Math.max(0, (targetActor.system.hp.value || 0) - damageResult.finalDamage);
 
-  await targetActor.update({'system. hp.value': newHP});
+  await targetActor.update({'system.hp.value': newHP});
 
   ChatMessage.create({
     content: `
