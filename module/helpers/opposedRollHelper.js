@@ -1,97 +1,110 @@
 // module/helpers/opposedRollHelper.js
-export async function resolveOpposedRoll(attacker, defender, attackRoll, defenseRoll, attackType, defenseType) {
-  // attackType: "melee", "ranged", "spell"
-  // defenseType: "evade", "parry", "block", "counter"
+
+export async function executeOpposedRoll(attackerData, defenderData) {
+  // Guard against missing data
+  if (!attackerData || !defenderData) {
+    ui.notifications.warn('Missing attacker or defender data for opposed roll');
+    return null;
+  }
   
-  const attackDoS = calculateDegreesOfSuccess(attackRoll);
-  const defenseDoS = calculateDegreesOfSuccess(defenseRoll);
+  const attackRoll = new Roll('1d100');
+  const defendRoll = new Roll('1d100');
   
-  // Determine advantage & result per Chapter 5 rules
+  await attackRoll.evaluate({async: true});
+  await defendRoll.evaluate({async: true});
+  
+  const attackTN = Number(attackerData.targetNumber || 0);
+  const defendTN = Number(defenderData.targetNumber || 0);
+  
+  const attackSuccess = attackRoll.total <= attackTN;
+  const defendSuccess = defendRoll.total <= defendTN;
+  
+  const attackDoS = attackSuccess ? Math.floor((attackTN - attackRoll.total) / 10) : 0;
+  const defendDoS = defendSuccess ? Math.floor((defendTN - defendRoll.total) / 10) : 0;
+  
   let result = {
-    attackerWon: false,
-    defenderWon: false,
-    advantage: null,
-    advantageCount: 0,
-    hitLocation: null,
-    armorPenetration: false
+    attackRoll:  attackRoll.total,
+    defendRoll: defendRoll.total,
+    attackTN,
+    defendTN,
+    attackSuccess,
+    defendSuccess,
+    attackDoS,
+    defendDoS,
+    winner: null,
+    advantage: false,
+    penetrateArmor: false
   };
   
-  // Logic per rules: 
-  // - Both fail: nothing
-  // - One fails: winner gains advantage
-  // - Both pass: compare DoS
-  // - Critical success/failure handling
-  
-  if (! attackRoll. success && !defenseRoll. success) {
-    // Both fail:  no result
-    return result;
-  }
-  
-  if (attackRoll.isCritical && ! defenseRoll.isCritical) {
-    result.attackerWon = true;
-    result.advantage = "attacker";
-    result.advantageCount = 2; // crit gives 2 advantages
-  } else if (defenseRoll.isCritical && !attackRoll.isCritical) {
-    result.defenderWon = true;
-    result.advantage = "defender";
-    result.advantageCount = 2;
-  } else if (attackRoll.success && ! defenseRoll.success) {
-    result.attackerWon = true;
-    result.advantage = "attacker";
-    result.advantageCount = 1;
-  } else if (defenseRoll.success && !attackRoll.success) {
-    result.defenderWon = true;
-    result.advantage = "defender";
-    result.advantageCount = 1;
-  } else if (attackRoll.success && defenseRoll.success) {
-    // Both passed: compare DoS
-    if (defenseType === "block") {
-      // Block:  defender wins regardless of DoS
-      result.defenderWon = true;
-      result.advantage = "defender";
-      result.advantageCount = 1;
-    } else if (defenseType === "parry" || defenseType === "evade") {
-      if (attackDoS > defenseDoS) {
-        result.attackerWon = true;
-        // No advantage when both pass and attacker wins by DoS
-      } else if (defenseDoS > attackDoS) {
-        result.defenderWon = true;
-        result.advantage = "defender";
-        result.advantageCount = 1;
-      } else {
-        // Tied DoS:  no result
-      }
-    } else if (defenseType === "counter") {
-      if (attackDoS > defenseDoS) {
-        result.attackerWon = true;
-      } else if (defenseDoS > attackDoS) {
-        result.defenderWon = true;
-      }
-      // Counter: whoever wins hits; no advantage
+  // Determine winner
+  if (! attackSuccess && !defendSuccess) {
+    result.winner = 'none'; // Both fail
+  } else if (attackSuccess && !defendSuccess) {
+    result.winner = 'attacker';
+    result.advantage = true;
+  } else if (!attackSuccess && defendSuccess) {
+    result.winner = 'defender';
+    result.advantage = true;
+  } else {
+    // Both succeed - higher DoS wins
+    if (attackDoS > defendDoS) {
+      result.winner = 'attacker';
+    } else if (defendDoS > attackDoS) {
+      result.winner = 'defender';
+    } else {
+      result.winner = 'tie'; // Both succeed, same DoS
     }
-  }
-  
-  // Determine hit location if attacker won (use ones digit of attack roll)
-  if (result.attackerWon) {
-    const onesDigit = attackRoll.total % 10;
-    result.hitLocation = getHitLocation(onesDigit);
   }
   
   return result;
 }
 
-function calculateDegreesOfSuccess(roll) {
-  if (! roll.success) return 0;
-  return Math.floor((roll.target - roll.total) / 10);
+export function displayOpposedRollResult(result, attackerName, defenderName) {
+  if (!result) return;
+  
+  let content = `
+    <div class="opposed-roll-result">
+      <h3>Opposed Roll</h3>
+      <table style="width: 100%; border-collapse: collapse;">
+        <tr>
+          <th style="border: 1px solid #ccc; padding: 0.5rem;">Character</th>
+          <th style="border: 1px solid #ccc; padding: 0.5rem;">Roll</th>
+          <th style="border: 1px solid #ccc; padding: 0.5rem;">TN</th>
+          <th style="border: 1px solid #ccc; padding: 0.5rem;">Success?</th>
+          <th style="border: 1px solid #ccc; padding: 0.5rem;">DoS</th>
+        </tr>
+        <tr>
+          <td style="border: 1px solid #ccc; padding: 0.5rem;"><b>${attackerName}</b> (Attacker)</td>
+          <td style="border: 1px solid #ccc; padding: 0.5rem;">${result.attackRoll}</td>
+          <td style="border: 1px solid #ccc; padding: 0.5rem;">${result.attackTN}</td>
+          <td style="border: 1px solid #ccc; padding: 0.5rem;">${result.attackSuccess ?  'Yes' : 'No'}</td>
+          <td style="border: 1px solid #ccc; padding: 0.5rem;">${result.attackDoS}</td>
+        </tr>
+        <tr>
+          <td style="border: 1px solid #ccc; padding: 0.5rem;"><b>${defenderName}</b> (Defender)</td>
+          <td style="border: 1px solid #ccc; padding: 0.5rem;">${result.defendRoll}</td>
+          <td style="border: 1px solid #ccc; padding: 0.5rem;">${result.defendTN}</td>
+          <td style="border: 1px solid #ccc; padding: 0.5rem;">${result.defendSuccess ? 'Yes' : 'No'}</td>
+          <td style="border: 1px solid #ccc; padding:  0.5rem;">${result.defendDoS}</td>
+        </tr>
+      </table>
+      <p style="margin-top: 1rem;"><b>Result:</b> ${getWinnerText(result.winner)}</p>
+      ${result.advantage ? '<p><b>Advantage gained! </b></p>' : ''}
+    </div>
+  `;
+  
+  ChatMessage.create({
+    content,
+    speaker: ChatMessage.getSpeaker()
+  });
 }
 
-function getHitLocation(onesDigit) {
-  // 1-5=Body; 6=Right Leg; 7=Left Leg; 8=Right Arm; 9=Left Arm; 10/0=Head
-  if (onesDigit >= 1 && onesDigit <= 5) return "body";
-  if (onesDigit === 6) return "rightLeg";
-  if (onesDigit === 7) return "leftLeg";
-  if (onesDigit === 8) return "rightArm";
-  if (onesDigit === 9) return "leftArm";
-  if (onesDigit === 0) return "head";
-  return "body"; // fallback
+function getWinnerText(winner) {
+  switch(winner) {
+    case 'attacker': return '<span style="color: green;">Attacker wins!</span>';
+    case 'defender': return '<span style="color: blue;">Defender wins!</span>';
+    case 'tie': return 'Tie (both succeeded with same DoS)';
+    case 'none': return 'Both failed';
+    default: return 'Unknown';
+  }
 }
