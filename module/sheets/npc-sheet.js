@@ -216,171 +216,187 @@ export class npcSheet extends foundry.appv1.sheets.ActorSheet {
   /* -------------------------------------------- */
 
   /** @override */
-  async activateListeners(html) {
-    super.activateListeners(html);
+async activateListeners(html) {
+  super.activateListeners(html);
 
-    // Rollable Buttons
-    html
-      .find(".characteristic-roll")
-      .click(await this._onClickCharacteristic.bind(this));
-    html
-      .find(".professions-roll")
-      .click(await this._onProfessionsRoll.bind(this));
-    html.find(".damage-roll").click(await this._onDamageRoll.bind(this));
-    html.find(".magic-roll").click(await this._onSpellRoll.bind(this));
-    html
-      .find(".resistance-roll")
-      .click(await this._onResistanceRoll.bind(this));
-    html.find(".ammo-roll").click(await this._onAmmoRoll.bind(this));
-    html
-      .find(".ability-list .item-img")
-      .click(await this._onTalentRoll.bind(this));
-    html
-      .find(".talent-container .item-img")
-      .click(await this._onTalentRoll.bind(this));
-    html
-      .find(".trait-container .item-img")
-      .click(await this._onTalentRoll.bind(this));
-    html
-      .find(".power-container .item-img")
-      .click(await this._onTalentRoll.bind(this));
-    html
-      .find(".spellList .item-img")
-      .click(await this._onTalentRoll.bind(this));
-    html
-      .find(".weapon-table .item-img")
-      .click(await this._onTalentRoll.bind(this));
-    html
-      .find(".ammunition-table .item-img")
-      .click(await this._onTalentRoll.bind(this));
-    html
-      .find(".armor-table .item-img")
-      .click(await this._onTalentRoll.bind(this));
-    html
-      .find(".equipmentList .item-img")
-      .click(await this._onTalentRoll.bind(this));
-    html
-      .find(".languageContainer .item-img")
-      .click(await this._onTalentRoll.bind(this));
-    html
-      .find(".factionContainer .item-img")
-      .click(await this._onTalentRoll.bind(this));
+  // Rollable Buttons
+  html.find(".characteristic-roll").click(this._onClickCharacteristic.bind(this));
+  html.find(".professions-roll").click(this._onProfessionsRoll.bind(this));
+  html.find(".damage-roll").click(this._onDamageRoll.bind(this));
+  html.find(".magic-roll").click(this._onSpellRoll.bind(this));
+  html.find(".resistance-roll").click(this._onResistanceRoll.bind(this));
+  html.find(".ammo-roll").click(this._onAmmoRoll.bind(this));
 
-    //Update Item Attributes from Actor Sheet
-    html.find(".toggle2H").click(await this._onToggle2H.bind(this));
-    html.find(".plusQty").click(await this._onPlusQty.bind(this));
-    html.find(".minusQty").contextmenu(await this._onMinusQty.bind(this));
-    html.find(".itemEquip").click(await this._onItemEquip.bind(this));
-    html
-      .find(".itemTabInfo .wealthCalc")
-      .click(await this._onWealthCalc.bind(this));
-    html
-      .find(".setBaseCharacteristics")
-      .click(await this._onSetBaseCharacteristics.bind(this));
-    html.find(".carryBonus").click(await this._onCarryBonus.bind(this));
-    html.find(".wealthCalc").click(await this._onWealthCalc.bind(this));
-    html.find(".incrementResource").click(this._onIncrementResource.bind(this));
-    html.find(".resourceLabel button").click(this._onResetResource.bind(this));
-    html.find("#spellFilter").click(this._filterSpells.bind(this));
-    html.find("#itemFilter").click(this._filterItems.bind(this));
-    html.find(".incrementFatigue").click(this._incrementFatigue.bind(this));
-    html.find(".equip-items").click(this._onEquipItems.bind(this));
+  html.find(".ability-list .item-img").click(this._onTalentRoll.bind(this));
+  html.find(".talent-container .item-img").click(this._onTalentRoll.bind(this));
+  html.find(".trait-container .item-img").click(this._onTalentRoll.bind(this));
+  html.find(".power-container .item-img").click(this._onTalentRoll.bind(this));
+  html.find(".spellList .item-img").click(this._onTalentRoll.bind(this));
+  html.find(".weapon-table .item-img").click(this._onTalentRoll.bind(this));
+  html.find(".ammunition-table .item-img").click(this._onTalentRoll.bind(this));
+  html.find(".armor-table .item-img").click(this._onTalentRoll.bind(this));
+  html.find(".equipmentList .item-img").click(this._onTalentRoll.bind(this));
+  html.find(".languageContainer .item-img").click(this._onTalentRoll.bind(this));
+  html.find(".factionContainer .item-img").click(this._onTalentRoll.bind(this));
 
-    // Checks UI Elements for update
-    this._createSpellFilterOptions();
-    this._createItemFilterOptions();
-    this._setDefaultSpellFilter();
-    this._setDefaultItemFilter();
-    this._setResourceBars();
-    this._createStatusTags();
+  // Update Item Attributes from Actor Sheet
+  html.find(".toggle2H").click(this._onToggle2H.bind(this));
+  html.find(".plusQty").click(this._onPlusQty.bind(this));
+  html.find(".minusQty").contextmenu(this._onMinusQty.bind(this));
+  html.find(".itemEquip").click(this._onItemEquip.bind(this));
 
-    //Item Create Buttons
-    html.find(".item-create").click(await this._onItemCreate.bind(this));
+  html.find(".itemTabInfo .wealthCalc").click(this._onWealthCalc.bind(this));
+  html.find(".setBaseCharacteristics").click(this._onSetBaseCharacteristics.bind(this));
+  html.find(".carryBonus").click(this._onCarryBonus.bind(this));
+  html.find(".wealthCalc").click(this._onWealthCalc.bind(this));
 
-    // Everything below here is only needed if the sheet is editable
-    if (!this.options.editable) return;
+  html.find(".incrementResource").click(this._onIncrementResource.bind(this));
+  html.find(".resourceLabel button").click(this._onResetResource.bind(this));
+  html.find("#spellFilter").click(this._filterSpells.bind(this));
+  html.find("#itemFilter").click(this._filterItems.bind(this));
+  html.find(".incrementFatigue").click(this._incrementFatigue.bind(this));
+  html.find(".equip-items").click(this._onEquipItems.bind(this));
 
-    // Update Inventory Item
-    html.find(".item-name").contextmenu(async (ev) => {
-      const li = ev.currentTarget.closest(".item");
-      const item = this.actor.items.get(li.dataset.itemId);
-      this._duplicateItem(item);
-    });
+  // Checks UI Elements for update
+  this._createSpellFilterOptions();
+  this._createItemFilterOptions();
+  this._setDefaultSpellFilter();
+  this._setDefaultItemFilter();
+  this._setResourceBars();
+  this._createStatusTags();
 
-    html.find(".item-name").click(async (ev) => {
-      const li = ev.currentTarget.closest(".item");
-      const item = this.actor.items.get(li.dataset.itemId);
-      item.sheet.render(true);
-      await item.update({ "system.value": item.system.value });
-    });
+  // Item Create Buttons
+  html.find(".item-create").click(this._onItemCreate.bind(this));
 
-    // Open Container of item
-    html.find(".fa-backpack").click(async (ev) => {
-      const li = ev.currentTarget.dataset.containerId;
-      const item = this.actor.items.get(li);
-      item.sheet.render(true);
-      await item.update({ "system.value": item.system.value });
-    });
+  // NEW: Handle apply damage button clicks in chat (avoid duplicate registrations)
+  $(document)
+    .off("click.uesrpgApplyDamage")
+    .on("click.uesrpgApplyDamage", ".apply-damage-btn", async (ev) => {
+      const button = ev.currentTarget;
 
-    // Delete Inventory Item
-    html.find(".item-delete").click((ev) => {
-      const li = ev.currentTarget.closest(".item");
-      // Detect if the deleted item is a container OR is contained in one
-      // Before deleting the item, update the container or contained item to remove the linking
-      let itemToDelete = this.actor.items.find(
-        (item) => item._id == li.dataset.itemId
-      );
+      // Match your chat button attributes: data-actor-id, data-damage, data-type, data-location
+      const actorId = button.dataset.actorId;
+      const damage = Number(button.dataset.damage);
+      const damageType = button.dataset.type || "physical";
+      const hitLocation = button.dataset.location;
 
-      // Logic for removing container linking if deleted item is the container
-      if (itemToDelete.type == "container") {
-        // Defensive guard: ensure contained_items exists and is an array
-        const containedItems = itemToDelete?.system?.contained_items || [];
-        containedItems.forEach((item) => {
-          let sourceItem = this.actor.items.find((i) => i._id == item._id);
-          if (sourceItem) {
-            sourceItem.update({
-              "system.containerStats.container_id": "",
-              "system.containerStats.container_name": "",
-              "system.containerStats.contained": false,
-            });
-          }
-        });
-
-        itemToDelete.update({ "system.contained_items": [] });
+      const targetActor = game.actors.get(actorId);
+      if (!targetActor) {
+        ui.notifications.warn("Target actor not found");
+        return;
       }
 
-      // Logic for removing container linking if deleted item is in a container
-      if (
-        itemToDelete?.system?.isPhysicalObject &&
-        itemToDelete.type != "container" &&
-        itemToDelete?.system?.containerStats?.contained
-      ) {
-        let containerObject = this.actor.items.find(
-          (item) => item._id == itemToDelete?.system?.containerStats?.container_id
-        );
-        if (containerObject && Array.isArray(containerObject?.system?.contained_items)) {
-          let indexToRemove = containerObject.system.contained_items.indexOf(
-            containerObject.system.contained_items.find(
-              (i) => i._id == itemToDelete._id
-            )
-          );
-          containerObject.system.contained_items.splice(indexToRemove, 1);
-          containerObject.update({
-            "system.contained_items": containerObject.system.contained_items,
-          });
+      // Import damage helper (adjust path if needed for your module structure)
+      const { applyDamageToActor } = await import("../helpers/damageHelper.js");
 
-          itemToDelete.update({
-            "system.containerStats.container_id": "",
-            "system.containerStats.container_name": "",
-            "system.containerStats.contained": false,
+      const result = await applyDamageToActor(
+        targetActor,
+        damage,
+        hitLocation,
+        damageType,
+        { penetrateArmor: false }
+      );
+
+      ui.notifications.info(
+        `${targetActor.name} takes ${result.finalDamage} damage (${result.ar} AR) to ${hitLocation}. HP: ${result.newHP}`
+      );
+
+      // Disable button after use
+      button.disabled = true;
+      button.textContent = "✓ Applied";
+    });
+
+  // Everything below here is only needed if the sheet is editable
+  if (!this.options.editable) return;
+
+  // Update Inventory Item
+  html.find(".item-name").contextmenu(async (ev) => {
+    const li = ev.currentTarget.closest(".item");
+    const item = this.actor.items.get(li?.dataset?.itemId);
+    if (!item) return;
+    this._duplicateItem(item);
+  });
+
+  html.find(".item-name").click(async (ev) => {
+    const li = ev.currentTarget.closest(".item");
+    const item = this.actor.items.get(li?.dataset?.itemId);
+    if (!item) return;
+    item.sheet.render(true);
+    await item.update({ "system.value": item.system.value });
+  });
+
+  // Open Container of item
+  html.find(".fa-backpack").click(async (ev) => {
+    const containerId = ev.currentTarget?.dataset?.containerId;
+    if (!containerId) return;
+    const item = this.actor.items.get(containerId);
+    if (!item) return;
+    item.sheet.render(true);
+    await item.update({ "system.value": item.system.value });
+  });
+
+  // Delete Inventory Item
+  html.find(".item-delete").click(async (ev) => {
+    const li = ev.currentTarget.closest(".item");
+    const itemId = li?.dataset?.itemId;
+    if (!itemId) return;
+
+    const itemToDelete = this.actor.items.find((i) => i._id == itemId);
+    if (!itemToDelete) return;
+
+    // If deleted item is the container: unlink all contained items, then clear list
+    if (itemToDelete.type === "container") {
+      const containedItems = Array.isArray(itemToDelete?.system?.contained_items)
+        ? itemToDelete.system.contained_items
+        : [];
+
+      for (const item of containedItems) {
+        const sourceItem = this.actor.items.find((i) => i._id == item._id);
+        if (!sourceItem) continue;
+
+        await sourceItem.update({
+          "system.containerStats.container_id": "",
+          "system.containerStats.container_name": "",
+          "system.containerStats.contained": false,
+        });
+      }
+
+      await itemToDelete.update({ "system.contained_items": [] });
+    }
+
+    // If deleted item is in a container: unlink from container and clear its containerStats
+    if (
+      itemToDelete?.system?.isPhysicalObject &&
+      itemToDelete.type !== "container" &&
+      itemToDelete?.system?.containerStats?.contained
+    ) {
+      const containerObject = this.actor.items.find(
+        (i) => i._id == itemToDelete?.system?.containerStats?.container_id
+      );
+
+      if (containerObject && Array.isArray(containerObject?.system?.contained_items)) {
+        const indexToRemove = containerObject.system.contained_items.findIndex(
+          (i) => i._id == itemToDelete._id
+        );
+
+        if (indexToRemove !== -1) {
+          containerObject.system.contained_items.splice(indexToRemove, 1);
+          await containerObject.update({
+            "system.contained_items": containerObject.system.contained_items,
           });
         }
       }
 
-      this.actor.deleteEmbeddedDocuments("Item", [li.dataset.itemId]);
-    });
-  }
+      await itemToDelete.update({
+        "system.containerStats.container_id": "",
+        "system.containerStats.container_name": "",
+        "system.containerStats.contained": false,
+      });
+    }
 
+    await this.actor.deleteEmbeddedDocuments("Item", [itemId]);
+  });
+}
   /**
    * Handle clickable rolls.
    * @param {Event} event   The originating click event
