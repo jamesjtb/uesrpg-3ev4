@@ -70,8 +70,8 @@ async getData() {
   }
   
   // Enrich biography
-  data.actor. system.enrichedBio = await foundry.applications. ux.TextEditor.implementation.enrichHTML(
-    data.actor?. system?. bio || "", 
+  data.actor.system.enrichedBio = await foundry.applications.ux.TextEditor.implementation.enrichHTML(
+    data.actor?.system?.bio || "", 
     {async: true}
   );
   
