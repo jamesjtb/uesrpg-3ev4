@@ -690,29 +690,26 @@ async getData() {
   ? woundedValue + playerInput
   : regularValue + playerInput;
 const { isSuccess, doS, doF } = calculateDegrees(Number(roll.result), tn);
+const { isSuccess, doS, doF } = calculateDegrees(Number(roll.result), tn);
 let degreesLine = `<br><b>${isSuccess ? "Degrees of Success" : "Degrees of Failure"}: ${isSuccess ? doS : doF}</b>`;
 
 if (isLucky(this.actor, roll.result)) {
-  contentString = `<h2>${element.getAttribute("name")}</h2>
+  contentString = `<h2>${element.name} Resistance</h2>
     <p></p><b>Target Number: [[${tn}]]</b> <p></p>
     <b>Result: [[${roll.result}]]</b><p></p>
-    <span style='color:green; font-size:120%;'>
-      <b>LUCKY NUMBER!</b>
-    </span>${degreesLine}`;
+    <span style='color:green; font-size:120%;'> <b>LUCKY NUMBER!</b></span>${degreesLine}`;
 } else if (isUnlucky(this.actor, roll.result)) {
-  contentString = `<h2>${element.getAttribute("name")}</h2>
+  contentString = `<h2>${element.name} Resistance</h2>
     <p></p><b>Target Number: [[${tn}]]</b> <p></p>
     <b>Result: [[${roll.result}]]</b><p></p>
-    <span style='color:rgb(168, 5, 5); font-size:120%;'>
-      <b>UNLUCKY NUMBER!</b>
-    </span>${degreesLine}`;
+    <span style='color:rgb(168, 5, 5); font-size:120%;'> <b>UNLUCKY NUMBER!</b></span>${degreesLine}`;
 } else {
-  contentString = `<h2>${element.getAttribute("name")}</h2>
+  contentString = `<h2>${element.name} Resistance</h2>
     <p></p><b>Target Number: [[${tn}]]</b> <p></p>
     <b>Result: [[${roll.result}]]</b><p></p>
     <b>${roll.total <= tn
       ? " <span style='color:green; font-size: 120%;'> <b>SUCCESS!</b></span>"
-      : " <span style='color:rgb(168,5,5); font-size: 120%;'> <b>FAILURE!</b></span>"
+      : " <span style='color: rgb(168, 5, 5); font-size: 120%;'> <b>FAILURE!</b></span>"
     }</b>${degreesLine}`;
 }
 
