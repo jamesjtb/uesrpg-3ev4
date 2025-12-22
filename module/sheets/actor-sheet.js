@@ -253,7 +253,7 @@ async getData() {
     html.find(".combat-roll").click(await this._onCombatRoll.bind(this));
     html.find(".magic-roll").click(await this._onSpellRoll.bind(this));
     html.find(".resistance-roll").click(this._onResistanceRoll.bind(this));
-    html.find(".damage-roll").click(this..bind(this));
+    html.find(".damage-roll").click(this._onDamageRoll.bind(this));
     html.find(".ammo-roll").click(await this._onAmmoRoll.bind(this));
     html.find(".item-img").click(await this._onTalentRoll.bind(this));
     html.find("#luckyMenu").click(this._onLuckyMenu.bind(this));
@@ -1488,6 +1488,7 @@ async _onDamageRoll(event) {
     rollMode: game.settings.get("core", "rollMode"),
   });
 }
+
 
   async _onAmmoRoll(event) {
     event.preventDefault();
