@@ -221,23 +221,47 @@ export async function applyDamage(actor, damage, damageType = DAMAGE_TYPES.PHYSI
   const hpPercentage = (newHP / maxHP) * 100;
   let woundStatus = "uninjured";
   
-  if (newHP === 0) {
+    if (newHP === 0) {
     woundStatus = "unconscious";
     
-    // ========== FIX: Apply unconscious effect ==========
-    const unconsciousEffect = {
-      name: "Unconscious",
-      icon: "icons/svg/unconscious.svg",
-      changes: [],
-      flags: {
-        core: {
-          statusId: "unconscious"
-        }
+    // ========== IMPROVED:  Apply unconscious effect ==========
+    try {
+      const targetActor = (token && ! actor. prototypeToken. actorLink) ? token.actor : actor;
+      
+      // Check if unconscious effect already exists
+      const hasUnconsciousEffect = targetActor.effects.some(e => 
+        e.statuses.has("unconscious") || e.name === "Unconscious"
+      );
+      
+      if (!hasUnconsciousEffect) {
+        const unconsciousEffect = {
+          name: "Unconscious",
+          icon: "icons/svg/unconscious.svg",
+          duration: {
+            rounds: undefined  // Permanent until removed
+          },
+          statuses:  ["unconscious"],  // Foundry v13 uses array for statuses
+          changes: [
+            {
+              key: "system. attributes.movement.all",
+              mode:  CONST. ACTIVE_EFFECT_MODES.MULTIPLY,
+              value: "0"
+            }
+          ],
+          flags: {
+            core: {
+              statusId: "unconscious"
+            }
+          }
+        };
+        
+        await targetActor.createEmbeddedDocuments("ActiveEffect", [unconsciousEffect]);
+        console.log(`Applied unconscious effect to ${targetActor.name}`);
       }
-    };
-    
-    const targetActor = token?.actor || actor;
-    await targetActor.createEmbeddedDocuments("ActiveEffect", [unconsciousEffect]);
+    } catch (err) {
+      console.error("Failed to apply unconscious effect:", err);
+      ui.notifications.warn(`${actor.name} is unconscious but effect could not be applied`);
+    }
     // ====================================================
     
   } else if (hpPercentage <= 25) {
