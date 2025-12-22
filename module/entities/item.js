@@ -167,61 +167,46 @@ export class SimpleItem extends Item {
     }
   }
 
-  _prepareContainerItem(actorData, itemData) {
-    // Need to calculate container stats like current capacity, applied ENC, and item count
-    // Defensive guard: ensure contained_items array exists
-    const contained = Array.isArray(itemData?.contained_items) ? itemData.contained_items : [];
-    
-    if (contained.length === 0) {
-      itemData.container_enc = itemData.container_enc || { item_count: 0, current: 0, applied_enc: 0 };
-      return;
-    }
-
-    let itemCount = contained.length;
-
-    let currentCapacity = 0;
-    for (let containedItem of contained) {
-      // containedItem might be { item: Item } or a plain stored object
-      // Defensive guard: safe property access with defaults
-      const cItem = containedItem?.item || containedItem;
-      const enc = Number(cItem?.system?.enc ?? 0);
-      const qty = Number(cItem?.system?.quantity ?? 0);
-      const encProduct = enc * qty;
-      currentCapacity = currentCapacity + encProduct;
-    }
-
-    // let currentCapacity = itemData.contained_items.reduce((a, b) => {a + (b.item.system.enc * b.item.system.quantity)}, 0)
-    let applied_enc = Math.ceil(currentCapacity / 2);
-
-    itemData.container_enc = itemData.container_enc || {};
-    itemData.container_enc.item_count = itemCount;
-    itemData.container_enc.current = currentCapacity;
-    itemData.container_enc.applied_enc = applied_enc;
-
+_prepareContainerItem(actorData, itemData) {
+  const contained = Array.isArray(itemData?.contained_items) ? itemData.contained_items : [];
+  if (contained.length === 0) {
+    itemData.container_enc = itemData.container_enc || { item_count: 0, current: 0, applied_enc: 0 };
+    return;
   }
 
-  async _duplicateContainedItemsOnActor(actorData, itemData) {
-    if (!actorData || !Array.isArray(itemData?.system?.contained_items)) return;
-
-    let itemsToDuplicate = [];
-    let containedItems = [];
-    for (let containedItem of itemData.system.contained_items) {
-      // Guard for structure; ensure we clone an Item-like object
-      const clone = containedItem?.item ? containedItem.item.toObject ? containedItem.item.toObject() : containedItem.item : containedItem;
-      if (!clone) continue;
-      clone.system = clone.system || {};
-      clone.system.containerStats = clone.system.containerStats || {};
-      clone.system.containerStats.container_id = itemData._id;
-      itemsToDuplicate.push(clone);
-      containedItems.push(containedItem);
-    }
-
-    if (itemsToDuplicate.length == 0 || !actorData) return;
-    let createdContainedItems = await actorData.createEmbeddedDocuments("Item", itemsToDuplicate);
-
-    // Loop through newly created items and grab their new ID's to store in the container contained_items array
-    this.system.contained_items = await this._assignNewlyCreatedItemDataToContainer(createdContainedItems, actorData, itemData);
+  const itemCount = contained.length;
+  let currentCapacity = 0;
+  for (const containedItem of contained) {
+    const cItem = containedItem?.item || containedItem || {};
+    const enc = Number(cItem?.system?.enc ?? 0);
+    const qty = Number(cItem?.system?.quantity ?? 0);
+    currentCapacity += enc * qty;
   }
+
+  const appliedENC = Math.ceil(currentCapacity / 2);
+  itemData.container_enc = itemData.container_enc || {};
+  itemData.container_enc.item_count = itemCount;
+  itemData.container_enc.current = currentCapacity;
+  itemData.container_enc.applied_enc = appliedENC;
+}
+
+async _duplicateContainedItemsOnActor(actorData, itemData) {
+  if (!actorData || !Array.isArray(itemData?.system?.contained_items)) return;
+
+  const itemsToDuplicate = [];
+  for (const containedItem of itemData.system.contained_items) {
+    const clone = containedItem?.item ? (containedItem.item.toObject ? containedItem.item.toObject() : containedItem.item) : containedItem;
+    if (!clone) continue;
+    clone.system = clone.system || {};
+    clone.system.containerStats = clone.system.containerStats || {};
+    clone.system.containerStats.container_id = itemData._id;
+    itemsToDuplicate.push(clone);
+  }
+
+  if (itemsToDuplicate.length === 0) return;
+  const createdContainedItems = await actorData.createEmbeddedDocuments("Item", itemsToDuplicate);
+  this.system.contained_items = await this._assignNewlyCreatedItemDataToContainer(createdContainedItems, actorData, itemData);
+}
 
   async _assignNewlyCreatedItemDataToContainer(createdContainedItems, actorData, itemData) {
     // Loop through newly created items and grab their new ID's to store in the container contained_items array
@@ -232,11 +217,37 @@ export class SimpleItem extends Item {
     return newContainedItems
   }
 
-  /**
-   * Prepare data specific to armor items
-   * @param {*} itemData
-   * @param {*} actorData
-   */
+ async _onIncreasePriceMod(event) {
+  event.preventDefault();
+  const merchantItems = (Array.isArray(this.actor?.items) ? this.actor.items : []).filter(item =>
+    item?.system && Object.prototype.hasOwnProperty.call(item.system, "modPrice")
+  );
+  const currentPriceMod = Number(this.actor?.system?.priceMod ?? 0);
+  const newPriceMod = currentPriceMod + 5;
+  await this.actor.update({ "system.priceMod": newPriceMod });
+
+  for (const item of merchantItems) {
+    const price = Number(item?.system?.price ?? 0);
+    const modPrice = Math.round(price + price * (Number(newPriceMod) / 100));
+    await item.update({ "system.modPrice": modPrice });
+  }
+}
+
+async _onDecreasePriceMod(event) {
+  event.preventDefault();
+  const merchantItems = (Array.isArray(this.actor?.items) ? this.actor.items : []).filter(item =>
+    item?.system && Object.prototype.hasOwnProperty.call(item.system, "modPrice")
+  );
+  const currentPriceMod = Number(this.actor?.system?.priceMod ?? 0);
+  const newPriceMod = currentPriceMod - 5;
+  await this.actor.update({ "system.priceMod": newPriceMod });
+
+  for (const item of merchantItems) {
+    const price = Number(item?.system?.price ?? 0);
+    const modPrice = Math.round(price + price * (Number(newPriceMod) / 100));
+    await item.update({ "system.modPrice": modPrice });
+  }
+}
 
   _untrainedException(actorData) {
     // Defensive guard: safe property access and array filtering
