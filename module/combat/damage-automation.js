@@ -1,7 +1,5 @@
 /**
- * module/combat/damage-automation.js
- * UESRPG 3e v4 — Damage Calculation and Application System
- *
+*
  * Handles:
  *  - Damage type calculations (physical, fire, frost, shock, poison, magic)
  *  - Armor and resistance reduction
