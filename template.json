@@ -745,11 +745,11 @@
   "armor": {
     "templates": ["resistanceArray", "characteristicArray", "replaceAttributesArray", "objectArrays", "physicalObject"],
     "description": "",
-    "quantity": 1,
-    "enc": 0,
+    "quantity":  1,
+    "enc":  0,
     "totalENC": 0,
     "reach": "",
-    "damage": "",
+    "damage":  "",
     "equipped": false,
     "carried": false,
     "hands": 0,
@@ -771,6 +771,14 @@
       "r_leg": "Right Leg",
       "body": "Chestplate",
       "shield": "Shield"
+     },
+     "hitLocations": {
+       "Head": true,
+       "Body": true,
+       "Right Arm": true,
+       "Left Arm": true,
+       "Right Leg": true,
+       "Left Leg": true
      },
      "charge": {
       "value": 0,
