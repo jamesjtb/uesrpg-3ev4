@@ -690,7 +690,6 @@ async getData() {
   ? woundedValue + playerInput
   : regularValue + playerInput;
 const { isSuccess, doS, doF } = calculateDegrees(Number(roll.result), tn);
-const { isSuccess, doS, doF } = calculateDegrees(Number(roll.result), tn);
 let degreesLine = `<br><b>${isSuccess ? "Degrees of Success" : "Degrees of Failure"}: ${isSuccess ? doS : doF}</b>`;
 
 if (isLucky(this.actor, roll.result)) {
@@ -1173,11 +1172,11 @@ let contentString = `<h2><img src=${spellToCast.img}></im>${spellToCast.name}</h
     m.render(true);
   }
 
-  async _onCombatRoll(event) {
-    event.preventDefault();
-    let button = $(event.currentTarget);
-    const li = button.parents(".item");
-    const item = this.actor.getEmbeddedDocument("Item", li.data("itemId"));
+async _onCombatRoll(event) {
+  event.preventDefault();
+  let button = $(event.currentTarget);
+  const li = button.parents(".item");
+  const item = this.actor.getEmbeddedDocument("Item", li.data("itemId"));
     const woundedValue =
       item.system.value +
       this.actor.system.woundPenalty +
@@ -1215,11 +1214,15 @@ let contentString = `<h2><img src=${spellToCast.img}></im>${spellToCast.name}</h
           label: "Roll!",
           callback: async (html) => {
             const playerInput = parseInt(html.find('[id="playerInput"]').val());
+let roll = new Roll("1d100");
+await roll.evaluate();
 
-            const tn = this.actor.system.wounded
+const tn = this.actor.system.wounded
   ? woundedValue + playerInput
   : regularValue + playerInput;
+
 const { isSuccess, doS, doF } = calculateDegrees(Number(roll.result), tn);
+
 let degreesLine = `<br><b>${isSuccess ? "Degrees of Success" : "Degrees of Failure"}: ${isSuccess ? doS : doF}</b>`;
 
 if (isLucky(this.actor, roll.result)) {
@@ -1281,34 +1284,38 @@ if (isLucky(this.actor, roll.result)) {
             const playerInput = parseInt(html.find('[id="playerInput"]').val());
 
             let roll = new Roll("1d100");
-            roll.evaluate();
+            await roll.evaluate();
             const tn = this.actor.system.resistance[element.id] + playerInput;
 const { isSuccess, doS, doF } = calculateDegrees(Number(roll.result), tn);
-let degreesLine = `<br><b>${isSuccess ?
+
+const degreesLine = `<br><b>${
+  isSuccess ? "Degrees of Success" : "Degrees of Failure"
+}: ${isSuccess ? doS : doF}</b>`;
 
             if (isLucky(this.actor, roll.result)) {
-              contentString = `<h2>${element.name} Resistance</h2>
-            <p></p><b>Target Number: [[${this.actor.system.resistance[element.id]
-                } + ${playerInput}]]</b> <p></p>
+ contentString = `<h2>${element.name} Resistance</h2>
+            <p></p><b>Target Number: [[${this.actor.system.resistance[element.id]} + ${playerInput}]]</b> <p></p>
             <b>Result: [[${roll.result}]]</b><p></p>
-            <span style='color:green; font-size:120%;'> <b>LUCKY NUMBER!</b></span>`;
-            } else if (isLucky(this.actor, roll.result)) {
-              contentString = `<h2>${element.name} Resistance</h2>
-            <p></p><b>Target Number: [[${this.actor.system.resistance[element.id]
-                } + ${playerInput}]]</b> <p></p>
+            <span style='color:green; font-size:120%;'> <b>LUCKY NUMBER!</b></span>
+            ${degreesLine}`;
+            } else if (isUnlucky(this.actor, roll.result)) {
+             contentString = `<h2>${element.name} Resistance</h2>
+            <p></p><b>Target Number: [[${this.actor.system.resistance[element.id]} + ${playerInput}]]</b> <p></p>
             <b>Result: [[${roll.result}]]</b><p></p>
-            <span style='color:rgb(168, 5, 5); font-size:120%;'> <b>UNLUCKY NUMBER!</b></span>`;
+            <span style='color:rgb(168, 5, 5); font-size:120%;'> <b>UNLUCKY NUMBER!</b></span>
+            ${degreesLine}`;
             } else {
               contentString = `<h2>${element.name} Resistance</h2>
-            <p></p><b>Target Number: [[${this.actor.system.resistance[element.id]
-                } + ${playerInput}]]</b> <p></p>
+            <p></p><b>Target Number: [[${this.actor.system.resistance[element.id]} + ${playerInput}]]</b> <p></p>
             <b>Result: [[${roll.result}]]</b><p></p>
-            <b>${roll.total <=
-                  this.actor.system.resistance[element.id] + playerInput
-                  ? " <span style='color:green; font-size: 120%;'> <b>SUCCESS!</b></span>"
-                  : " <span style='color: rgb(168, 5, 5); font-size: 120%;'> <b>FAILURE!</b></span>"
-                }`;
+            <b>${
+              roll.total <= this.actor.system.resistance[element.id] + playerInput
+                ? " <span style='color:green; font-size: 120%;'> <b>SUCCESS!</b></span>"
+                : " <span style='color: rgb(168, 5, 5); font-size: 120%;'> <b>FAILURE!</b></span>"
+            }</b>
+            ${degreesLine}`;
             }
+            
             await roll.toMessage({
               async: false,
               user: game.user.id,
@@ -1329,8 +1336,6 @@ let degreesLine = `<br><b>${isSuccess ?
     d.render(true);
   }
 
-// Example:  In your existing damage roll handler (e.g., in actor-sheet.js _onDamageRoll)
-// Replace direct damage application with opposed roll initiation:
 
 async _onDamageRoll(event) {
   event.preventDefault();
@@ -1344,107 +1349,44 @@ async _onDamageRoll(event) {
     return;
   }
 
-  // If you are switching to opposed rolls, you would do it HERE and then return.
-  // Example:
-  // const targetsArr = Array.from(game.user.targets);
-  // if (!targetsArr.length) return ui.notifications.warn("You must target an opponent first!");
-  // await CombatHelper.initiateOpposedRoll(this.actor, targetsArr[0].actor, { weapon, combatStyle: "nordChampion", modifier: 0, attackerName: this.actor.name });
-  // return;
-
   const shortcutWeapon = weapon;
 
-  // Hit location roll (1d100)
-  let hit_loc = "";
+  // Roll to hit (1d100)
   const hit = new Roll("1d100");
   await hit.evaluate({ async: true });
-const hitResult = Number(hit.total);
-const hit_loc = getHitLocationFromRoll(hitResult);
+  const hitResult = Number(hit.total);
+  const hit_loc = getHitLocationFromRoll(hitResult);
 
-// Target Number (TN) for attack roll in your system
-const attackTN =
-  (shortcutWeapon.system.value ?? 0) +
-  (this.actor.system.woundPenalty ?? 0) +
-  (this.actor.system.fatigue.penalty ?? 0) +
-  (this.actor.system.carry_rating.penalty ?? 0);
-// Add user modifiers here if you have any (e.g. playerInput/modifiers)
+  // Target Number
+  const attackTN =
+    (shortcutWeapon.system.value ?? 0) +
+    (this.actor.system.woundPenalty ?? 0) +
+    (this.actor.system.fatigue.penalty ?? 0) +
+    (this.actor.system.carry_rating.penalty ?? 0);
 
-// Calculate degrees of success/failure for this attack
-const { isSuccess, doS, doF } = calculateDegrees(hitResult, attackTN);
+  // Degrees of Success / Failure
+  const { isSuccess, doS, doF } = calculateDegrees(hitResult, attackTN);
 
-const degreesRow = `<tr>
-  <td class="tableAttribute">${isSuccess ? "Degrees of Success" : "Degrees of Failure"}</td>
-  <td class="tableCenterText" colspan="2">${isSuccess ? doS : doF}</td>
-</tr>`;
+  const degreesRow = `<tr>
+    <td class="tableAttribute">${isSuccess ? "Degrees of Success" : "Degrees of Failure"}</td>
+    <td class="tableCenterText" colspan="2">${isSuccess ? doS : doF}</td>
+  </tr>`;
 
-const attackSkill = shortcutWeapon.system.value ?? 0;
-const attackMods = 0; // <- Fill if you have more modifiers!
-const tn = attackSkill + attackMods;
-
-const { isSuccess, doS, doF } = calculateDegrees(hitResult, tn);
-const degreesRow = `<tr>
-  <td class="tableAttribute">${isSuccess ? "Degrees of Success" : "Degrees of Failure"}</td>
-  <td class="tableCenterText" colspan="2">${isSuccess ? doS : doF}</td>
-</tr>`;
-
-  // Damage formula selection (1H vs 2H)
-  const damageString = shortcutWeapon.system.weapon2H
-    ? shortcutWeapon.system.damage2
-    : shortcutWeapon.system.damage;
-
-  if (!damageString) {
-    ui.notifications.warn(`No damage formula found on ${shortcutWeapon.name}.`);
-    return;
-  }
-
-  // Base damage roll
+  // Damage roll
+  const damageString = shortcutWeapon.system.damage;
   const weaponRoll = new Roll(damageString);
   await weaponRoll.evaluate({ async: true });
 
-  // Superior weapon roll (roll twice, take highest)
   let supRollTag = "";
   let finalDamage = Number(weaponRoll.total);
 
   if (shortcutWeapon.system.superior) {
     const superiorRoll = new Roll(damageString);
     await superiorRoll.evaluate({ async: true });
-
-    const superiorTotal = Number(superiorRoll.total);
-    finalDamage = Math.max(Number(weaponRoll.total), superiorTotal);
-    supRollTag = `[[${superiorTotal}]]`;
+    finalDamage = Math.max(finalDamage, Number(superiorRoll.total));
+    supRollTag = `[[${superiorRoll.total}]]`;
   }
 
-  // Build "Apply damage" buttons for targeted tokens
-  const targets = game.user.targets; // Set<Token>
-  let applyDamageButtons = "";
-
-  if (targets?.size > 0) {
-    const damageType = getDamageTypeFromWeapon(shortcutWeapon);
-
-    targets.forEach((target) => {
-      if (!target?.actor) return;
-
-      applyDamageButtons += `
-        <button class="apply-damage-btn"
-                data-actor-id="${target.actor.id}"
-                data-damage="${finalDamage}"
-                data-type="${damageType}"
-                data-location="${hit_loc}"
-                style="margin: 0.25rem;">
-          Apply ${finalDamage} damage to ${target.name}
-        </button>`;
-    });
-  }
-
-  // Tags for flavor on chat message
-  const tags = [];
-  if (shortcutWeapon.system.superior) {
-    tags.push(
-      `<span style="border:none;border-radius:30px;background-color:rgba(29,97,187,0.80);color:white;text-align:center;font-size:xx-small;padding:5px;"
-             title="Damage was rolled twice and the higher result was used">Superior</span>`
-    );
-  }
-
-  // Chat card
   const contentString = `
     <div>
       <h2 style="display:flex;gap:0.5rem;align-items:center;">
@@ -1452,55 +1394,48 @@ const degreesRow = `<tr>
         <div>${shortcutWeapon.name}</div>
       </h2>
 
-<table>
-  <thead>
-    <tr>
-      <th>Damage</th>
-      <th class="tableCenterText">Result</th>
-      <th class="tableCenterText">Detail</th>
-    </tr>
-  </thead>
-  <tbody>
-  <tr>
-    <td class="tableAttribute">Damage</td>
-    <td class="tableCenterText">[[${weaponRoll.total}]] ${supRollTag}</td>
-    <td class="tableCenterText">${damageString}</td>
-  </tr>
-  <tr>
-    <td class="tableAttribute">Hit Location</td>
-    <td class="tableCenterText">${hit_loc}</td>
-    <td class="tableCenterText">[[${hit.total}]]</td>
-  </tr>
-  <tr>
-    <td class="tableAttribute">Qualities</td>
-    <td class="tableCenterText" colspan="2">
-      ${shortcutWeapon.system.qualities ?? ""}
-    </td>
-  </tr>
+      <table>
+        <thead>
+          <tr>
+            <th>Damage</th>
+            <th class="tableCenterText">Result</th>
+            <th class="tableCenterText">Detail</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="tableAttribute">Damage</td>
+            <td class="tableCenterText">[[${weaponRoll.total}]] ${supRollTag}</td>
+            <td class="tableCenterText">${damageString}</td>
+          </tr>
+          <tr>
+            <td class="tableAttribute">Hit Location</td>
+            <td class="tableCenterText">${hit_loc}</td>
+            <td class="tableCenterText">[[${hit.total}]]</td>
+          </tr>
+          <tr>
+            <td class="tableAttribute">Qualities</td>
+            <td class="tableCenterText" colspan="2">
+              ${shortcutWeapon.system.qualities ?? ""}
+            </td>
+          </tr>
 
-  ${degreesRow}
+          ${degreesRow}
 
-</tbody>
-
-</table>s
-
-      ${
-        applyDamageButtons
-          ? `<div style="margin-top:0.5rem;border-top:1px solid #ddd;padding-top:0.5rem;">${applyDamageButtons}</div>`
-          : ""
-      }
+        </tbody>
+      </table>
     </div>
   `;
 
   await weaponRoll.toMessage({
     user: game.user.id,
     speaker: ChatMessage.getSpeaker(),
-    flavor: tags.join(""),
     content: contentString,
     roll: weaponRoll,
     rollMode: game.settings.get("core", "rollMode"),
   });
 }
+
 
 
   async _onAmmoRoll(event) {
