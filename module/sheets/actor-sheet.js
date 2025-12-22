@@ -1103,33 +1103,42 @@ if (isLucky(this.actor, roll.result)) {
               }
             }
 
-            let contentString = `<h2><img src=${spellToCast.img}></im>${spellToCast.name}</h2>
-                                            <table>
-                                                <thead>
-                                                    <tr>
-                                                        <th style="min-width: 80px;">Name</th>
-                                                        <th style="min-width: 80px; text-align: center;">Result</th>
-                                                        <th style="min-width: 80px; text-align: center;">Detail</th>
-                                                    </tr>
-                                                </thead>
-                                                <tbody>
-                                                    ${damageEntry}
-                                                    <tr>
-                                                        <td style="font-weight: bold;">Hit Location</td>
-                                                        <td style="font-weight: bold; text-align: center;">[[${hitLocRoll.result}]]</td>
-                                                        <td style="text-align: center;">${hitLoc}</td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td style="font-weight: bold;">Spell Cost</td>
-                                                        <td style="font-weight: bold; text-align: center;">[[${displayCost}]]</td>
-                                                        <td title="Cost/Restraint Modifier/Other" style="text-align: center;">${spellToCast.system.cost} / ${spellRestraint} / ${stackCostMod}</td>
-                                                    </tr>
-                                                    <tr style="border-top: double 1px;">
-                                                        <td style="font-weight: bold;">Attributes</td>
-                                                        <td colspan="2">${spellToCast.system.attributes}</td>
-                                                    </tr>
-                                                </tbody>
-                                            </table>`;
+           // Calculate Degrees of Success/Failure for the spell cast
+const spellSuccessRoll = Number(hitLocRoll.result); // or whatever your d100 roll is!
+const spellSkillTN = spellToCast.system.value ?? Math.floor(this.actor.system.characteristics.wp.total / 10);
+const { isSuccess, doS, doF } = calculateDegrees(spellSuccessRoll, spellSkillTN);
+const degreesRow = `<tr>
+  <td class="tableAttribute">${isSuccess ? "Degrees of Success" : "Degrees of Failure"}</td>
+  <td class="tableCenterText" colspan="2">${isSuccess ? doS : doF}</td>
+</tr>`;
+let contentString = `<h2><img src=${spellToCast.img}></im>${spellToCast.name}</h2>
+    <table>
+      <thead>
+        <tr>
+          <th style="min-width: 80px;">Name</th>
+          <th style="min-width: 80px; text-align: center;">Result</th>
+          <th style="min-width: 80px; text-align: center;">Detail</th>
+        </tr>
+      </thead>
+      <tbody>
+        ${damageEntry}
+        <tr>
+          <td style="font-weight: bold;">Hit Location</td>
+          <td style="font-weight: bold; text-align: center;">[[${hitLocRoll.result}]]</td>
+          <td style="text-align: center;">${hitLoc}</td>
+        </tr>
+        <tr>
+          <td style="font-weight: bold;">Spell Cost</td>
+          <td style="font-weight: bold; text-align: center;">[[${displayCost}]]</td>
+          <td title="Cost/Restraint Modifier/Other" style="text-align: center;">${spellToCast.system.cost} / ${spellRestraint} / ${stackCostMod}</td>
+        </tr>
+        <tr style="border-top: double 1px;">
+          <td style="font-weight: bold;">Attributes</td>
+          <td colspan="2">${spellToCast.system.attributes}</td>
+        </tr>
+        ${degreesRow}
+      </tbody>
+    </table>`;
 
             await damageRoll.toMessage({
               user: game.user.id,
