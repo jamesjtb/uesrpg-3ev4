@@ -2020,11 +2020,26 @@ async _onClickCharacteristic(event) {
 
 _createStatusTags() {
   const actorSys = this.actor?.system || {};
-  actorSys?.wounded
-    ? this.form.querySelector("#wound-icon").classList.add("active")
-    : this.form.querySelector("#wound-icon").classList.remove("active");
-  // this.actor.system.carry_rating.current > this.actor.system.carry_rating.max ? this.form.querySelector('#enc-icon').classList.add('active') : this.form.querySelector('#enc-icon').classList[...]
-  Number(actorSys?.fatigue?.level ?? 0) > 0
-    ? this.form.querySelector("#fatigue-icon").classList.add("active")
-    : this.form.querySelector("#fatigue-icon").classList.remove("active");
+
+  // Wounded status
+  const woundIcon = this.form?.querySelector("#wound-icon");
+  if (woundIcon) {
+    if (actorSys.wounded) {
+      woundIcon.classList.add("active");
+    } else {
+      woundIcon.classList.remove("active");
+    }
+  }
+
+  // Fatigue status
+  const fatigueIcon = this.form?.querySelector("#fatigue-icon");
+  if (fatigueIcon) {
+    if (Number(actorSys?.fatigue?.level ?? 0) > 0) {
+      fatigueIcon.classList.add("active");
+    } else {
+      fatigueIcon.classList.remove("active");
+    }
+  }
 }
+
+} // ← THIS closes: export class MerchantSheet extends ...
