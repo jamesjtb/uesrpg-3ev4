@@ -217,38 +217,6 @@ async _duplicateContainedItemsOnActor(actorData, itemData) {
     return newContainedItems
   }
 
- async _onIncreasePriceMod(event) {
-  event.preventDefault();
-  const merchantItems = (Array.isArray(this.actor?.items) ? this.actor.items : []).filter(item =>
-    item?.system && Object.prototype.hasOwnProperty.call(item.system, "modPrice")
-  );
-  const currentPriceMod = Number(this.actor?.system?.priceMod ?? 0);
-  const newPriceMod = currentPriceMod + 5;
-  await this.actor.update({ "system.priceMod": newPriceMod });
-
-  for (const item of merchantItems) {
-    const price = Number(item?.system?.price ?? 0);
-    const modPrice = Math.round(price + price * (Number(newPriceMod) / 100));
-    await item.update({ "system.modPrice": modPrice });
-  }
-}
-
-async _onDecreasePriceMod(event) {
-  event.preventDefault();
-  const merchantItems = (Array.isArray(this.actor?.items) ? this.actor.items : []).filter(item =>
-    item?.system && Object.prototype.hasOwnProperty.call(item.system, "modPrice")
-  );
-  const currentPriceMod = Number(this.actor?.system?.priceMod ?? 0);
-  const newPriceMod = currentPriceMod - 5;
-  await this.actor.update({ "system.priceMod": newPriceMod });
-
-  for (const item of merchantItems) {
-    const price = Number(item?.system?.price ?? 0);
-    const modPrice = Math.round(price + price * (Number(newPriceMod) / 100));
-    await item.update({ "system.modPrice": modPrice });
-  }
-}
-
   _untrainedException(actorData) {
     // Defensive guard: safe property access and array filtering
     let attribute = actorData.items?.filter(item => item?.system?.untrainedException == true) || [];
