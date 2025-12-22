@@ -1342,13 +1342,34 @@ async getData() {
     d.render(true);
   }
 
-  async _onDamageRoll(event) {
-    event.preventDefault();
-    let itemElement = event.currentTarget.closest(".item");
-    let shortcutWeapon = this.actor.getEmbeddedDocument(
-      "Item",
-      itemElement.dataset.itemId
-    );
+// Example:  In your existing damage roll handler (e.g., in actor-sheet.js _onDamageRoll)
+// Replace direct damage application with opposed roll initiation:
+
+async _onDamageRoll(event) {
+  event.preventDefault();
+
+  const button = event.currentTarget;
+  const li = button.closest(".item");
+  const weapon = this.actor.items.get(li?.dataset.itemId);
+
+  const targets = Array.from(game.user.targets);
+  if (targets.length === 0) {
+    ui.notifications.warn("You must target an opponent first!");
+    return;
+  }
+  const target = targets[0];
+
+  // If you want to do your own damage chat card here, keep going here
+  // (hit location / weaponRoll / toMessage etc.)
+
+  // OR if opposed roll does it, call and return:
+  await CombatHelper.initiateOpposedRoll(this.actor, target.actor, {
+    weapon,
+    combatStyle: "nordChampion",
+    modifier: 0,
+    attackerName: this.actor.name,
+  });
+}
 
     let hit_loc = "";
     let hit = new Roll("1d100");
