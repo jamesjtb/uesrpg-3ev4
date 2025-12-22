@@ -1,6 +1,8 @@
 /**
-*
- * Handles:
+ * module/combat/damage-automation.js
+ * UESRPG 3e v4 — Damage Calculation and Application System
+ *
+ * Handles: 
  *  - Damage type calculations (physical, fire, frost, shock, poison, magic)
  *  - Armor and resistance reduction
  *  - Toughness bonus application
@@ -23,7 +25,7 @@ export const DAMAGE_TYPES = {
   FROST: 'frost',
   SHOCK: 'shock',
   POISON: 'poison',
-  MAGIC: 'magic',
+  MAGIC:  'magic',
   SILVER: 'silver',
   SUNLIGHT: 'sunlight'
 };
@@ -35,63 +37,78 @@ export const DAMAGE_TYPES = {
  * @returns {Object} - { armor, resistance, toughness, total }
  */
 export function getDamageReduction(actor, damageType = DAMAGE_TYPES.PHYSICAL, hitLocation = 'Body') {
-  if (! actor?.system) {
-    return { armor: 0, resistance:  0, toughness: 0, total: 0, penetrated: 0 };
+  if (!actor?. system) {
+    return { armor: 0, resistance: 0, toughness: 0, total: 0, penetrated: 0 };
   }
+
+  // Map display names to property names (for template.json compatibility)
+  const locationMap = {
+    'Head':  'Head',
+    'Body': 'Body',
+    'Right Arm': 'RightArm',
+    'Left Arm': 'LeftArm',
+    'Right Leg':  'RightLeg',
+    'Left Leg': 'LeftLeg'
+  };
+
+  const propertyName = locationMap[hitLocation] || hitLocation;
 
   const actorData = actor.system;
   let armor = 0;
   let resistance = 0;
   let toughness = 0;
 
-  // Toughness bonus (END bonus acts as damage reduction for all damage types)
-  const endBonus = Math.floor(Number(actorData.characteristics?.end?. total || 0) / 10);
-  toughness = Number(endBonus || 0);
-
-  // Physical damage: uses armor and natural toughness
-  if (damageType === DAMAGE_TYPES.PHYSICAL) {
+  // Physical damage:  uses armor and natural toughness
+  if (damageType === DAMAGE_TYPES. PHYSICAL) {
     // Get armor for specific hit location
-    const equippedArmor = actor.items?.filter(i => 
-      i.type === 'armor' && i. system?.equipped === true
+    const equippedArmor = actor.items?. filter(i => 
+      i.type === 'armor' && i. system?. equipped === true
     ) || [];
     
     for (let item of equippedArmor) {
       // Check if armor covers this hit location
-      const armorLocations = item.system?.hitLocations || {};
-      if (armorLocations[hitLocation] !== false) {
-        armor += Number(item.system?. armor_rating || 0);
+      const armorLocations = item.system?. hitLocations || {};
+      if (armorLocations[propertyName] !== false) {
+        armor += Number(item.system?. armor || 0);
       }
     }
+    
     // Natural toughness resistance
-    resistance = Number(actorData.resist?.natToughnessR || 0);
+    resistance = Number(actorData.resistance?. natToughness || 0);
+    const endBonus = Math.floor(Number(actorData.characteristics?.end?.total || 0) / 10);
+    toughness = Number(endBonus || 0);
   } 
   // Elemental and special damage types
   else {
     switch (damageType) {
-      case DAMAGE_TYPES.FIRE:
-        resistance = Number(actorData.resist?. fireR || 0);
+      case DAMAGE_TYPES. FIRE:
+        resistance = Number(actorData.resistance?.fireR || 0);
         break;
       case DAMAGE_TYPES.FROST:
-        resistance = Number(actorData. resist?.frostR || 0);
+        resistance = Number(actorData.resistance?. frostR || 0);
         break;
-      case DAMAGE_TYPES.SHOCK:  
-        resistance = Number(actorData.resist?.shockR || 0);
+      case DAMAGE_TYPES.SHOCK: 
+        resistance = Number(actorData.resistance?.shockR || 0);
         break;
-      case DAMAGE_TYPES.POISON:
-        resistance = Number(actorData.resist?. poisonR || 0);
+      case DAMAGE_TYPES. POISON:
+        resistance = Number(actorData.resistance?.poisonR || 0);
         break;
-      case DAMAGE_TYPES.MAGIC: 
-        resistance = Number(actorData.resist?.magicR || 0);
+      case DAMAGE_TYPES.MAGIC:
+        resistance = Number(actorData.resistance?.magicR || 0);
         break;
-      case DAMAGE_TYPES. SILVER:
-        resistance = Number(actorData.resist?.silverR || 0);
+      case DAMAGE_TYPES.SILVER: 
+        resistance = Number(actorData.resistance?.silverR || 0);
         break;
-      case DAMAGE_TYPES.SUNLIGHT:
-        resistance = Number(actorData.resist?.sunlightR || 0);
+      case DAMAGE_TYPES. SUNLIGHT:
+        resistance = Number(actorData.resistance?.sunlightR || 0);
         break;
-      default:
+      default: 
         resistance = 0;
     }
+    
+    // Toughness bonus (END bonus acts as damage reduction)
+    const endBonus = Math.floor(Number(actorData.characteristics?.end?.total || 0) / 10);
+    toughness = Number(endBonus || 0);
   }
 
   const total = armor + resistance + toughness;
@@ -120,14 +137,14 @@ export function calculateDamage(rawDamage, damageType, targetActor, options = {}
 
   let reductions = { armor: 0, resistance: 0, toughness: 0, total: 0 };
   
-  if (! ignoreArmor) {
+  if (!ignoreArmor) {
     reductions = getDamageReduction(targetActor, damageType, hitLocation);
     
     // Apply penetration (reduces armor only, not resistance/toughness)
     const penetratedArmor = Math.max(0, reductions. armor - penetration);
     reductions.penetrated = reductions.armor - penetratedArmor;
     reductions.armor = penetratedArmor;
-    reductions.total = reductions. armor + reductions.resistance + reductions.toughness;
+    reductions.total = reductions.armor + reductions. resistance + reductions.toughness;
   }
 
   const totalDamage = Math.max(0, rawDamage + dosBonus);
@@ -166,26 +183,26 @@ export async function applyDamage(actor, damage, damageType = DAMAGE_TYPES.PHYSI
     hitLocation = "Body"
   } = options;
 
-  if (!actor?.system) {
+  if (! actor?. system) {
     ui.notifications.error("Invalid actor for damage application");
     return null;
   }
 
   // Calculate damage with reductions
   const damageCalc = ignoreReduction 
-    ? { finalDamage: damage, rawDamage: damage, reduction: { total: 0 }, damageType }
-    : calculateDamage(damage, damageType, actor, { penetration, dosBonus });
+    ? { finalDamage: damage, rawDamage: damage, reductions: { total: 0, armor: 0, resistance: 0, toughness: 0 }, damageType }
+    : calculateDamage(damage, damageType, actor, { penetration, dosBonus, hitLocation });
 
   const finalDamage = damageCalc.finalDamage;
 
   // Get current HP
-  const currentHP = Number(actor?.system?.health?.value || 0);
-  const maxHP = Number(actor?.system?.health?.max || 1);
+  const currentHP = Number(actor?. system?.hp?. value || 0);
+  const maxHP = Number(actor?.system?. hp?.max || 1);
   const newHP = Math.max(0, currentHP - finalDamage);
 
   // Update actor HP
   await actor.update({
-    "system.health.value": newHP
+    "system.hp.value": newHP
   });
 
   // Check for wounds (when HP drops below half, quarter, etc.)
@@ -203,18 +220,18 @@ export async function applyDamage(actor, damage, damageType = DAMAGE_TYPES.PHYSI
   // Create chat message about damage
   const messageContent = `
     <div class="uesrpg-damage-applied">
-      <h3>${actor.name} takes damage!</h3>
-      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem; margin: 0.5rem 0;">
+      <h3>${actor.name} takes damage! </h3>
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap:  0.5rem; margin:  0.5rem 0;">
         <div><strong>Source:</strong></div><div>${source}</div>
-        <div><strong>Hit Location:</strong></div><div>${hitLocation}</div>
+        <div><strong>Hit Location: </strong></div><div>${hitLocation}</div>
         <div><strong>Damage Type:</strong></div><div>${damageType}</div>
-        ${!ignoreReduction ? `
+        ${! ignoreReduction ? `
           <div><strong>Raw Damage:</strong></div><div>${damageCalc.rawDamage}${dosBonus > 0 ? ` + ${dosBonus} (DoS)` : ''}</div>
-          <div><strong>Reduction:</strong></div><div>-${damageCalc.reduction.total} (Armor: ${damageCalc.reduction.armor}, Resist: ${damageCalc.reduction.resistance}, Tough: ${damageCalc.reduction.toughness})</div>
+          <div><strong>Reduction:</strong></div><div>-${damageCalc.reductions.total} (Armor: ${damageCalc. reductions.armor}, Resist: ${damageCalc.reductions.resistance}, Tough: ${damageCalc.reductions.toughness})</div>
         ` : ''}
-        <div><strong>Final Damage:</strong></div><div style="color: #d32f2f; font-weight: bold;">${finalDamage}</div>
-        <div><strong>HP:</strong></div><div>${newHP} / ${maxHP} ${currentHP > newHP ? `(-${currentHP - newHP})` : ''}</div>
-        ${woundStatus !== "uninjured" ? `<div style="grid-column: 1 / -1; color: #f57c00; font-weight: bold; text-align: center; margin-top: 0.5rem;">Status: ${woundStatus.toUpperCase()}</div>` : ''}
+        <div><strong>Final Damage: </strong></div><div style="color: #d32f2f; font-weight: bold;">${finalDamage}</div>
+        <div><strong>HP: </strong></div><div>${newHP} / ${maxHP} ${currentHP > newHP ? `(-${currentHP - newHP})` : ''}</div>
+        ${woundStatus !== "uninjured" ? `<div style="grid-column: 1 / -1; color: #f57c00; font-weight: bold; text-align: center; margin-top: 0.5rem;">Status: ${woundStatus. toUpperCase()}</div>` : ''}
       </div>
     </div>
   `;
@@ -223,13 +240,13 @@ export async function applyDamage(actor, damage, damageType = DAMAGE_TYPES.PHYSI
     user: game.user.id,
     speaker: ChatMessage.getSpeaker({ actor }),
     content: messageContent,
-    type: CONST.CHAT_MESSAGE_TYPES.OTHER
+    type:  CONST.CHAT_MESSAGE_TYPES.OTHER
   });
 
   return {
     actor,
     damage: finalDamage,
-    reduction: damageCalc.reduction,
+    reductions: damageCalc.reductions,
     oldHP: currentHP,
     newHP,
     woundStatus,
@@ -248,13 +265,13 @@ export async function applyDamage(actor, damage, damageType = DAMAGE_TYPES.PHYSI
 export async function applyHealing(actor, healing, options = {}) {
   const { source = "Healing" } = options;
 
-  if (!actor?.system) {
+  if (! actor?.system) {
     ui.notifications.error("Invalid actor for healing");
     return null;
   }
 
-  const currentHP = Number(actor?.system?.health?.value || 0);
-  const maxHP = Number(actor?.system?.health?.max || 1);
+  const currentHP = Number(actor?. system?.hp?.value || 0);
+  const maxHP = Number(actor?.system?.hp?.max || 1);
   const healAmount = Number(healing);
   const newHP = Math.min(maxHP, currentHP + healAmount);
   const actualHealing = newHP - currentHP;
@@ -265,7 +282,7 @@ export async function applyHealing(actor, healing, options = {}) {
   }
 
   await actor.update({
-    "system.health.value": newHP
+    "system.hp.value": newHP
   });
 
   const messageContent = `
@@ -273,7 +290,7 @@ export async function applyHealing(actor, healing, options = {}) {
       <h3>${actor.name} receives healing!</h3>
       <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem; margin: 0.5rem 0;">
         <div><strong>Source:</strong></div><div>${source}</div>
-        <div><strong>Healing:</strong></div><div style="color: #388e3c; font-weight: bold;">+${actualHealing}</div>
+        <div><strong>Healing: </strong></div><div style="color: #388e3c; font-weight:  bold;">+${actualHealing}</div>
         <div><strong>HP:</strong></div><div>${newHP} / ${maxHP}</div>
       </div>
     </div>
@@ -295,8 +312,8 @@ export async function applyHealing(actor, healing, options = {}) {
 }
 
 // Global exposure for macros and console
-window.Uesrpg3e = window.Uesrpg3e || {};
-window.Uesrpg3e.damage = {
+window. Uesrpg3e = window.Uesrpg3e || {};
+window. Uesrpg3e.damage = {
   DAMAGE_TYPES,
   getDamageReduction,
   calculateDamage,
