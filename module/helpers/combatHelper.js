@@ -1,308 +1,179 @@
-// ADD TO:  module/helpers/combatHelper.js (create this file)
-
+// Combat resolution helper for UESRPG opposed rolls
 export class CombatHelper {
   
   /**
-   * Initiate an opposed combat roll (attack vs. defense)
-   * @param {Actor} attacker - The attacking actor
-   * @param {Actor} defender - The defending actor
-   * @param {Object} attackData - Attack details (weapon, Combat Style, modifiers)
+   * Resolve an opposed combat roll between attacker and defender
+   * @param {Object} attacker - attacking actor
+   * @param {Object} defender - defending actor  
+   * @param {Object} attackRoll - the d100 roll result from attacker
+   * @param {Object} defendRoll - the d100 roll result from defender (or null if no defense)
+   * @param {String} attackType - 'melee', 'ranged', or 'spell'
+   * @returns {Object} result with winner, advantage, hit location
    */
-  static async initiateOpposedRoll(attacker, defender, attackData) {
-    // 1. Attacker makes attack test
-    const attackRoll = await this._makeAttackRoll(attacker, attackData);
+  static resolveOpposedRoll(attacker, defender, attackRoll, defendRoll, attackType = 'melee') {
+    // Guard against missing rolls
+    if (!attackRoll) return { success: false, message: 'No attack roll provided' };
     
-    // 2. Defender chooses defense method (dialog)
-    const defenseChoice = await this._promptDefenseChoice(defender, attackData);
+    const attackSuccess = attackRoll.total <= attackRoll.targetNumber;
+    const attackDoS = attackSuccess ? Math.floor((attackRoll.targetNumber - attackRoll.total) / 10) : 0;
     
-    if (! defenseChoice) {
-      // Defender chose not to defend or failed to respond
-      await this._resolveUndefendedAttack(attacker, defender, attackRoll, attackData);
-      return;
+    // If no defense (surprise, helpless, etc), attacker auto-wins
+    if (! defendRoll) {
+      return {
+        success: true,
+        winner: 'attacker',
+        advantage:  attackSuccess ? 1 : 0,
+        attackDoS: attackDoS,
+        defendDoS: 0,
+        hitLocation: this. getHitLocation(attackRoll. total),
+        message: attackSuccess ? 'Attack hits (no defense)!' : 'Attack missed!'
+      };
     }
     
-    // 3. Defender makes defense test
-    const defenseRoll = await this._makeDefenseRoll(defender, defenseChoice);
+    const defendSuccess = defendRoll.total <= defendRoll.targetNumber;
+    const defendDoS = defendSuccess ? Math.floor((defendRoll.targetNumber - defendRoll. total) / 10) : 0;
     
-    // 4. Compare results and determine outcome
-    await this._resolveOpposedRoll(attacker, defender, attackRoll, defenseRoll, attackData, defenseChoice);
-  }
-  
-  /**
-   * Make an attack roll for the attacker
-   */
-  static async _makeAttackRoll(attacker, attackData) {
-    const skill = attackData.combatStyle;
-    const skillValue = Number(attacker.system.professions? .[skill] ??  0);
-    const modifier = Number(attackData.modifier ??  0);
-    const targetNumber = skillValue + modifier;
+    // Both fail - no resolution
+    if (!attackSuccess && ! defendSuccess) {
+      return {
+        success: false,
+        winner: null,
+        advantage: 0,
+        attackDoS: 0,
+        defendDoS: 0,
+        message: 'Both attacker and defender failed their tests!'
+      };
+    }
     
-    const roll = new Roll("1d100");
-    await roll.evaluate();
+    // One fails - winner gains advantage
+    if (! attackSuccess && defendSuccess) {
+      return {
+        success: true,
+        winner: 'defender',
+        advantage: 1,
+        attackDoS: 0,
+        defendDoS:  defendDoS,
+        message: 'Defender wins with advantage!'
+      };
+    }
     
-    const result = {
-      roll: roll,
-      total: roll.total,
-      targetNumber: targetNumber,
-      passed: roll.total <= targetNumber,
-      degreesOfSuccess: this._calculateDoS(roll.total, targetNumber),
-      isCritical: roll.total <= 5,
-      isFumble: roll.total >= 96
-    };
+    if (attackSuccess && !defendSuccess) {
+      return {
+        success: true,
+        winner: 'attacker',
+        advantage:  1,
+        attackDoS: attackDoS,
+        defendDoS: 0,
+        hitLocation: this.getHitLocation(attackRoll.total),
+        message: 'Attacker wins with advantage!'
+      };
+    }
     
-    // Send attack roll to chat
-    await this._sendAttackRollMessage(attacker, result, attackData);
-    
-    return result;
-  }
-  
-  /**
-   * Prompt defender to choose defense method
-   */
-  static async _promptDefenseChoice(defender, attackData) {
-    return new Promise((resolve) => {
-      new Dialog({
-        title: `Defend Against Attack`,
-        content: `
-          <p><strong>${attackData.attackerName}</strong> is attacking you! </p>
-          <p>Choose your defense: </p>
-        `,
-        buttons: {
-          evade: {
-            label: "Evade",
-            callback: () => resolve({ method: "evade", skill: "evade" })
-          },
-          parry: {
-            label: "Parry",
-            callback:  () => resolve({ method: "parry", skill: attackData.combatStyle })
-          },
-          block: {
-            label: "Block (Shield)",
-            callback: () => resolve({ method: "block", skill:  attackData.combatStyle })
-          },
-          counter: {
-            label: "Counter-Attack",
-            callback: () => resolve({ method: "counter", skill: attackData.combatStyle })
-          },
-          none: {
-            label: "Don't Defend",
-            callback:  () => resolve(null)
-          }
-        },
-        default: "evade",
-        close: () => resolve(null)
-      }).render(true);
-    });
-  }
-  
-  /**
-   * Make a defense roll for the defender
-   */
-  static async _makeDefenseRoll(defender, defenseChoice) {
-    const skill = defenseChoice.skill;
-    const skillValue = Number(defender. system.professions?.[skill] ?? 0);
-    const modifier = 0; // Add modifiers as needed
-    const targetNumber = skillValue + modifier;
-    
-    const roll = new Roll("1d100");
-    await roll.evaluate();
-    
-    const result = {
-      roll: roll,
-      total: roll.total,
-      targetNumber: targetNumber,
-      passed: roll.total <= targetNumber,
-      degreesOfSuccess: this._calculateDoS(roll.total, targetNumber),
-      method: defenseChoice.method,
-      isCritical: roll. total <= 5,
-      isFumble: roll.total >= 96
-    };
-    
-    // Send defense roll to chat
-    await this._sendDefenseRollMessage(defender, result);
-    
-    return result;
-  }
-  
-  /**
-   * Resolve the opposed roll and determine outcome
-   */
-  static async _resolveOpposedRoll(attacker, defender, attackRoll, defenseRoll, attackData, defenseChoice) {
-    let outcome = {
-      winner: null,
-      advantage: false,
-      advantageCount: 0,
-      attackHits: false,
-      message: ""
-    };
-    
-    // Determine winner based on rules
-    if (! attackRoll.passed && ! defenseRoll.passed) {
-      outcome.message = "Both attacker and defender failed their tests.  No effect.";
-    } else if (attackRoll. isCritical && ! defenseRoll.isCritical) {
-      outcome.winner = "attacker";
-      outcome.advantage = true;
-      outcome.advantageCount = 2;
-      outcome.attackHits = true;
-      outcome.message = "Critical attack success!  Attacker gains 2 advantages.";
-    } else if (defenseRoll.isCritical && !attackRoll.isCritical) {
-      outcome.winner = "defender";
-      outcome.advantage = true;
-      outcome.advantageCount = 2;
-      outcome.message = "Critical defense success! Defender gains 2 advantages.";
-    } else if (attackRoll.passed && ! defenseRoll.passed) {
-      outcome.winner = "attacker";
-      outcome.advantage = true;
-      outcome.advantageCount = 1;
-      outcome.attackHits = true;
-      outcome.message = "Attack succeeds! Attacker gains advantage.";
-    } else if (defenseRoll.passed && ! attackRoll.passed) {
-      outcome.winner = "defender";
-      outcome.advantage = true;
-      outcome.advantageCount = 1;
-      outcome.message = "Defense succeeds! Defender gains advantage.";
-    } else if (attackRoll.degreesOfSuccess > defenseRoll.degreesOfSuccess) {
-      outcome.winner = "attacker";
-      outcome.attackHits = true;
-      
-      // Special case for block
-      if (defenseChoice.method === "block") {
-        outcome.message = "Attack blocked by shield.  Resolve block damage.";
-        await this._resolveBlockDefense(defender, attackData);
-        return; // Block prevents further damage
-      }
-      
-      outcome.message = `Attack hits!  (${attackRoll.degreesOfSuccess} DoS vs ${defenseRoll.degreesOfSuccess} DoS)`;
-    } else if (defenseRoll.degreesOfSuccess > attackRoll.degreesOfSuccess) {
-      outcome.winner = "defender";
-      outcome. message = `Defense succeeds! (${defenseRoll.degreesOfSuccess} DoS vs ${attackRoll.degreesOfSuccess} DoS)`;
+    // Both pass - compare DoS
+    if (attackDoS > defendDoS) {
+      return {
+        success: true,
+        winner: 'attacker',
+        advantage: 0,
+        attackDoS: attackDoS,
+        defendDoS: defendDoS,
+        hitLocation: this.getHitLocation(attackRoll.total),
+        message: `Attacker hits!  (DoS: ${attackDoS} vs ${defendDoS})`
+      };
+    } else if (defendDoS > attackDoS) {
+      return {
+        success: true,
+        winner:  'defender',
+        advantage:  0,
+        attackDoS: attackDoS,
+        defendDoS: defendDoS,
+        message: `Defender blocks/parries! (DoS: ${defendDoS} vs ${attackDoS})`
+      };
     } else {
-      // Tied DoS
-      outcome.message = "Both tests pass with equal success.  No effect.";
-    }
-    
-    // Send outcome message to chat
-    await this._sendOutcomeMessage(attacker, defender, outcome);
-    
-    // If attack hits, prompt for advantage use and then resolve damage
-    if (outcome.attackHits) {
-      if (outcome.advantage) {
-        await this._promptAdvantageUse(attacker, outcome. advantageCount);
-      }
-      await this._resolveDamage(attacker, defender, attackData, attackRoll);
-    } else if (outcome.winner === "defender" && outcome.advantage) {
-      await this._promptDefensiveAdvantage(defender, defenseChoice. method, outcome.advantageCount);
+      // Tie - no advantage
+      return {
+        success:  false,
+        winner: null,
+        advantage: 0,
+        attackDoS: attackDoS,
+        defendDoS: defendDoS,
+        message: 'Tied - no resolution!'
+      };
     }
   }
   
   /**
-   * Calculate degrees of success/failure
+   * Determine hit location from d100 roll (ones digit)
    */
-  static _calculateDoS(rollTotal, targetNumber) {
-    if (rollTotal <= targetNumber) {
-      return Math.floor((targetNumber - rollTotal) / 10) + 1;
-    }
-    return 0;
+  static getHitLocation(rollTotal) {
+    const ones = rollTotal % 10;
+    if (ones >= 1 && ones <= 5) return 'body';
+    if (ones === 6) return 'rightLeg';
+    if (ones === 7) return 'leftLeg';
+    if (ones === 8) return 'rightArm';
+    if (ones === 9) return 'leftArm';
+    if (ones === 0) return 'head';
+    return 'body'; // fallback
   }
   
   /**
-   * Resolve damage when attack hits
+   * Apply damage to actor after armor reduction
+   * @param {Actor} target - the actor taking damage
+   * @param {Number} rawDamage - damage before AR
+   * @param {String} hitLocation - where the hit landed
+   * @param {String} damageType - 'physical', 'fire', 'frost', 'shock', 'poison', 'magic'
+   * @returns {Object} damage applied, wounds caused
    */
-  static async _resolveDamage(attacker, defender, attackData, attackRoll) {
-    // Determine hit location
-    const hitLocation = this._determineHitLocation(attackRoll. total);
+  static async applyDamage(target, rawDamage, hitLocation = 'body', damageType = 'physical') {
+    const actorSys = target?. system || {};
+    const currentHP = Number(actorSys?. hp?. value ??  0);
+    const woundThreshold = Number(actorSys?.wound_threshold?.value ?? 0);
     
-    // Roll damage
-    const damageRoll = new Roll(attackData.weapon.damage);
-    await damageRoll. evaluate();
+    // Get AR for hit location and damage type
+    const ar = this.getArmorRating(target, hitLocation, damageType);
+    const finalDamage = Math.max(0, rawDamage - ar);
     
-    // Get armor rating for hit location
-    const armorRating = Number(defender.system.armor?.[hitLocation]?.ar ?? 0);
+    const newHP = Math.max(0, currentHP - finalDamage);
+    const causedWound = finalDamage > woundThreshold;
     
-    // Calculate final damage
-    const finalDamage = Math.max(0, damageRoll.total - armorRating);
+    await target.update({ 'system.hp. value': newHP });
     
-    // Apply damage to defender
-    const newHP = Math.max(0, Number(defender.system.hp. value ??  0) - finalDamage);
-    await defender.update({ "system.hp.value": newHP });
-    
-    // Check for wounds
-    const woundThreshold = Number(defender.system. wound_threshold. value ?? 0);
-    if (finalDamage > woundThreshold) {
-      await this._applyWound(defender, hitLocation, finalDamage);
-    }
-    
-    // Send damage message to chat
-    await this._sendDamageMessage(attacker, defender, {
-      hitLocation,
-      damageRoll,
-      armorRating,
+    return {
+      rawDamage,
+      ar,
       finalDamage,
       newHP,
-      wounded: finalDamage > woundThreshold
-    });
+      causedWound,
+      message: `${target.name} takes ${finalDamage} damage to ${hitLocation} (${rawDamage} - ${ar} AR). HP: ${currentHP} → ${newHP}${causedWound ? ' [WOUND! ]' : ''}`
+    };
   }
   
   /**
-   * Determine hit location from attack roll
+   * Get armor rating for a specific hit location and damage type
    */
-  static _determineHitLocation(attackTotal) {
-    const ones = attackTotal % 10;
-    if (ones >= 1 && ones <= 5) return "body";
-    if (ones === 6) return "rightLeg";
-    if (ones === 7) return "leftLeg";
-    if (ones === 8) return "rightArm";
-    if (ones === 9) return "leftArm";
-    if (ones === 0) return "head";
-    return "body"; // fallback
-  }
-  
-  /**
-   * Apply wound effects to defender
-   */
-  static async _applyWound(defender, hitLocation, damage) {
-    // Implement wound tracking based on your system
-    ui.notifications.warn(`${defender.name} has been wounded at ${hitLocation}! `);
+  static getArmorRating(actor, hitLocation, damageType) {
+    // Find equipped armor for that location
+    const equippedArmor = (actor.items || []).find(i => 
+      i.type === 'armor' && 
+      i?. system?.equipped === true && 
+      i?. system?.location === hitLocation
+    );
     
-    // Mark as wounded
-    await defender.update({ "system.wounded": true });
+    if (!equippedArmor) return 0;
     
-    // Apply wound penalties (-20 to tests, etc.)
-    // This can be tracked via active effects or manual flags
-  }
-  
-  // Additional helper methods for chat messages, advantage prompts, etc.
-  // (Implementation details omitted for brevity - these would format and send chat cards)
-  
-  static async _sendAttackRollMessage(attacker, result, attackData) {
-    // Create chat message for attack roll
-  }
-  
-  static async _sendDefenseRollMessage(defender, result) {
-    // Create chat message for defense roll
-  }
-  
-  static async _sendOutcomeMessage(attacker, defender, outcome) {
-    // Create chat message for outcome
-  }
-  
-  static async _sendDamageMessage(attacker, defender, damageData) {
-    // Create chat message for damage
-  }
-  
-  static async _promptAdvantageUse(attacker, advantageCount) {
-    // Dialog to choose how to use advantage
-  }
-  
-  static async _promptDefensiveAdvantage(defender, method, advantageCount) {
-    // Dialog for defensive advantage effects
-  }
-  
-  static async _resolveUndefendedAttack(attacker, defender, attackRoll, attackData) {
-    // Treat defender as failed - resolve direct hit
-  }
-  
-  static async _resolveBlockDefense(defender, attackData) {
-    // Special block resolution (check Block Rating vs damage)
+    const armorSys = equippedArmor?. system || {};
+    
+    // Physical damage uses standard AR
+    if (damageType === 'physical') {
+      return Number(armorSys?. armor ??  0);
+    }
+    
+    // Magic damage types use specific resistances if available
+    const magicARField = `${damageType}_ar`; // e.g., 'fire_ar'
+    const specificAR = Number(armorSys? .[magicARField] ??  0);
+    const genericMagicAR = Number(armorSys?.magic_ar ?? 0);
+    
+    // Use specific if available, otherwise fall back to generic magic AR
+    return specificAR > 0 ? specificAR : genericMagicAR;
   }
 }
