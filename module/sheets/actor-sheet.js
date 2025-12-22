@@ -55,21 +55,28 @@ export class SimpleActorSheet extends foundry.appv1.sheets.ActorSheet {
 
   /** @override */
 
-  async getData() {
-    const data = super.getData();
-    data.dtypes = ["String", "Number", "Boolean"];
-    data.isGM = game.user.isGM;
-    data.editable = data.options.editable;
-
-    data.actor.system.enrichedBio = await foundry.applications.ux.TextEditor.implementation.enrichHTML(data.actor.system.bio, {async: true});
-
-    // Prepare Items
-    if (this.actor.type === 'Player Character') {
-      this._prepareCharacterItems(data);
-    }
-
-    return data;
+// In actor-sheet.js, verify getData() looks like this:
+async getData() {
+  const data = super.getData();
+  
+  // Add safe defaults if needed
+  data.dtypes = ["String", "Number", "Boolean"];
+  data.isGM = game.user.isGM;
+  data.editable = data.options.editable;
+  
+  // Prepare character items (only if actor type matches)
+  if (this.actor.type === "Player Character") {
+    this._prepareCharacterItems(data);
   }
+  
+  // Enrich biography
+  data.actor. system.enrichedBio = await foundry.applications. ux.TextEditor.implementation.enrichHTML(
+    data.actor?. system?. bio || "", 
+    {async: true}
+  );
+  
+  return data;
+}
 
   _prepareCharacterItems(sheetData) {
     const actorData = sheetData.actor;
