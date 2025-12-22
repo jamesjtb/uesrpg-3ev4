@@ -170,31 +170,33 @@ export class SimpleItem extends Item {
   _prepareContainerItem(actorData, itemData) {
     // Need to calculate container stats like current capacity, applied ENC, and item count
     // Defensive guard: ensure contained_items array exists
-    if (!Array.isArray(itemData?.contained_items) || (itemData?.contained_items?.length ?? 0) === 0) {
+    const contained = Array.isArray(itemData?.contained_items) ? itemData.contained_items : [];
+    
+    if (contained.length === 0) {
       itemData.container_enc = itemData.container_enc || { item_count: 0, current: 0, applied_enc: 0 };
       return;
     }
 
-    let itemCount = itemData.contained_items.length
+    let itemCount = contained.length;
 
-    let currentCapacity = 0
-    for (let containedItem of itemData.contained_items) {
+    let currentCapacity = 0;
+    for (let containedItem of contained) {
       // containedItem might be { item: Item } or a plain stored object
       // Defensive guard: safe property access with defaults
       const cItem = containedItem?.item || containedItem;
       const enc = Number(cItem?.system?.enc ?? 0);
       const qty = Number(cItem?.system?.quantity ?? 0);
       const encProduct = enc * qty;
-      currentCapacity = Math.ceil(currentCapacity + (encProduct))
+      currentCapacity = currentCapacity + encProduct;
     }
 
     // let currentCapacity = itemData.contained_items.reduce((a, b) => {a + (b.item.system.enc * b.item.system.quantity)}, 0)
-    let appliedENC = Math.ceil(currentCapacity / 2);
+    let applied_enc = Math.ceil(currentCapacity / 2);
 
     itemData.container_enc = itemData.container_enc || {};
     itemData.container_enc.item_count = itemCount;
     itemData.container_enc.current = currentCapacity;
-    itemData.container_enc.applied_enc = appliedENC;
+    itemData.container_enc.applied_enc = applied_enc;
 
   }
 
