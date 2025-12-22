@@ -95,7 +95,7 @@ export class SimpleActor extends Actor {
    */
   _aggregateItemStats(actorData) {
     // Build a signature of items to detect changes
-    const items = actorData.items || [];
+    const items = Array.isArray(actorData?.items) ? actorData.items : [];
     let sigParts = [];
     for (let it of items) {
       sigParts.push(`${it?._id||''}:${Number(it?.system?.quantity||0)}:${Number(it?.system?.enc||0)}`);
@@ -123,6 +123,8 @@ export class SimpleActor extends Actor {
       const enc = Number(sys.enc || 0);
       const qty = Number(sys.quantity || 0);
       const id = item?._id || '';
+      // Check equipped status: if 'equipped' property exists, use its value; otherwise default to true
+      const isEquipped = Object.prototype.hasOwnProperty.call(sys, 'equipped') ? sys.equipped : true;
 
       // ENC - defensive guards for nested property access
       stats.totalEnc += enc * qty;
@@ -133,10 +135,10 @@ export class SimpleActor extends Actor {
         stats.containedWeightReduction += enc * qty;
       }
       if (sys.excludeENC === true) stats.excludedEnc += enc * qty;
-      if (sys.equipped === true) stats.armorEnc += ((enc / 2) * qty);
+      if (isEquipped) stats.armorEnc += ((enc / 2) * qty);
 
-      // Characteristic bonuses
-      if (sys.characteristicBonus) {
+      // Characteristic bonuses (only if equipped)
+      if (isEquipped && sys.characteristicBonus) {
         stats.charBonus.str += Number(sys.characteristicBonus.strChaBonus || 0);
         stats.charBonus.end += Number(sys.characteristicBonus.endChaBonus || 0);
         stats.charBonus.agi += Number(sys.characteristicBonus.agiChaBonus || 0);
@@ -147,39 +149,41 @@ export class SimpleActor extends Actor {
         stats.charBonus.lck += Number(sys.characteristicBonus.lckChaBonus || 0);
       }
 
-      // Resource/resist bonuses
-      stats.hpBonus += Number(sys.hpBonus || 0);
-      stats.mpBonus += Number(sys.mpBonus || 0);
-      stats.spBonus += Number(sys.spBonus || 0);
-      stats.lpBonus += Number(sys.lpBonus || 0);
-      stats.wtBonus += Number(sys.wtBonus || 0);
-      stats.speedBonus += Number(sys.speedBonus || 0);
-      stats.iniBonus += Number(sys.iniBonus || 0);
+      // Resource/resist bonuses (only if equipped)
+      if (isEquipped) {
+        stats.hpBonus += Number(sys.hpBonus || 0);
+        stats.mpBonus += Number(sys.mpBonus || 0);
+        stats.spBonus += Number(sys.spBonus || 0);
+        stats.lpBonus += Number(sys.lpBonus || 0);
+        stats.wtBonus += Number(sys.wtBonus || 0);
+        stats.speedBonus += Number(sys.speedBonus || 0);
+        stats.iniBonus += Number(sys.iniBonus || 0);
 
-      stats.resist.diseaseR += Number(sys.diseaseR || 0);
-      stats.resist.fireR += Number(sys.fireR || 0);
-      stats.resist.frostR += Number(sys.frostR || 0);
-      stats.resist.shockR += Number(sys.shockR || 0);
-      stats.resist.poisonR += Number(sys.poisonR || 0);
-      stats.resist.magicR += Number(sys.magicR || 0);
-      stats.resist.natToughnessR += Number(sys.natToughnessR || 0);
-      stats.resist.silverR += Number(sys.silverR || 0);
-      stats.resist.sunlightR += Number(sys.sunlightR || 0);
+        stats.resist.diseaseR += Number(sys.diseaseR || 0);
+        stats.resist.fireR += Number(sys.fireR || 0);
+        stats.resist.frostR += Number(sys.frostR || 0);
+        stats.resist.shockR += Number(sys.shockR || 0);
+        stats.resist.poisonR += Number(sys.poisonR || 0);
+        stats.resist.magicR += Number(sys.magicR || 0);
+        stats.resist.natToughnessR += Number(sys.natToughnessR || 0);
+        stats.resist.silverR += Number(sys.silverR || 0);
+        stats.resist.sunlightR += Number(sys.sunlightR || 0);
 
-      // swim / fly / flags
-      stats.swimBonus += Number(sys.swimBonus || 0);
-      stats.flyBonus += Number(sys.flyBonus || 0);
-      if (sys.doubleSwimSpeed) stats.doubleSwimSpeed = true;
-      if (sys.addHalfSpeed) stats.addHalfSpeed = true;
-      if (sys.halfSpeed) stats.halfSpeed = true;
+        // swim / fly / flags
+        stats.swimBonus += Number(sys.swimBonus || 0);
+        stats.flyBonus += Number(sys.flyBonus || 0);
+        if (sys.doubleSwimSpeed) stats.doubleSwimSpeed = true;
+        if (sys.addHalfSpeed) stats.addHalfSpeed = true;
+        if (sys.halfSpeed) stats.halfSpeed = true;
 
-      // skill modifiers
-      if (Array.isArray(sys.skillArray)) {
-        for (let entry of sys.skillArray) {
-          const name = entry && entry.name;
-          const value = Number(entry && entry.value || 0);
-          if (!name) continue;
-          stats.skillModifiers[name] = (stats.skillModifiers[name] || 0) + value;
+        // skill modifiers
+        if (Array.isArray(sys.skillArray)) {
+          for (let entry of sys.skillArray) {
+            const name = entry && entry.name;
+            const value = Number(entry && entry.value || 0);
+            if (!name) continue;
+            stats.skillModifiers[name] = (stats.skillModifiers[name] || 0) + value;
+          }
         }
       }
 
@@ -187,7 +191,7 @@ export class SimpleActor extends Actor {
       if (sys.shiftFormStyle) stats.shiftForms.push(sys.shiftFormStyle);
     }
 
-    stats.totalEnc = stats.totalEnc + stats.containersAppliedEnc - stats.containedWeightReduction;
+    stats.totalEnc += stats.containersAppliedEnc - stats.containedWeightReduction;
 
     this._aggCache = { signature, agg: stats };
     return stats;
