@@ -253,7 +253,7 @@ async getData() {
     html.find(".combat-roll").click(await this._onCombatRoll.bind(this));
     html.find(".magic-roll").click(await this._onSpellRoll.bind(this));
     html.find(".resistance-roll").click(this._onResistanceRoll.bind(this));
-    html.find(".damage-roll").click(this._onDamageRoll.bind(this));
+    html.find(".damage-roll").click(this..bind(this));
     html.find(".ammo-roll").click(await this._onAmmoRoll.bind(this));
     html.find(".item-img").click(await this._onTalentRoll.bind(this));
     html.find("#luckyMenu").click(this._onLuckyMenu.bind(this));
@@ -1350,138 +1350,144 @@ async _onDamageRoll(event) {
 
   const button = event.currentTarget;
   const li = button.closest(".item");
-  const weapon = this.actor.items.get(li?.dataset.itemId);
+  const weapon = this.actor.items.get(li?.dataset?.itemId);
 
-  const targets = Array.from(game.user.targets);
-  if (targets.length === 0) {
-    ui.notifications.warn("You must target an opponent first!");
+  if (!weapon) {
+    ui.notifications.warn("Weapon not found for damage roll.");
     return;
   }
-  const target = targets[0];
 
-  // If you want to do your own damage chat card here, keep going here
-  // (hit location / weaponRoll / toMessage etc.)
+  // If you are switching to opposed rolls, you would do it HERE and then return.
+  // Example:
+  // const targetsArr = Array.from(game.user.targets);
+  // if (!targetsArr.length) return ui.notifications.warn("You must target an opponent first!");
+  // await CombatHelper.initiateOpposedRoll(this.actor, targetsArr[0].actor, { weapon, combatStyle: "nordChampion", modifier: 0, attackerName: this.actor.name });
+  // return;
 
-  // OR if opposed roll does it, call and return:
-  await CombatHelper.initiateOpposedRoll(this.actor, target.actor, {
-    weapon,
-    combatStyle: "nordChampion",
-    modifier: 0,
-    attackerName: this.actor.name,
-  });
-}
+  const shortcutWeapon = weapon;
 
-    let hit_loc = "";
-    let hit = new Roll("1d100");
-    await hit.evaluate();
+  // Hit location roll (1d100)
+  let hit_loc = "";
+  const hit = new Roll("1d100");
+  await hit.evaluate({ async: true });
 
-    // Updated hit location table (1d100 instead of 1d10)
-    const hitResult = hit.total;
-    if (hitResult <= 15) {
-      hit_loc = "Head";
-    } else if (hitResult <= 35) {
-      hit_loc = "Right Arm";
-    } else if (hitResult <= 55) {
-      hit_loc = "Left Arm";
-    } else if (hitResult <= 80) {
-      hit_loc = "Body";
-    } else if (hitResult <= 90) {
-      hit_loc = "Right Leg";
-    } else {
-      hit_loc = "Left Leg";
-    }
+  const hitResult = Number(hit.total);
+  if (hitResult <= 15) hit_loc = "Head";
+  else if (hitResult <= 35) hit_loc = "Right Arm";
+  else if (hitResult <= 55) hit_loc = "Left Arm";
+  else if (hitResult <= 80) hit_loc = "Body";
+  else if (hitResult <= 90) hit_loc = "Right Leg";
+  else hit_loc = "Left Leg";
 
-    let damageString;
-    shortcutWeapon.system.weapon2H
-      ? (damageString = shortcutWeapon.system.damage2)
-      : (damageString = shortcutWeapon.system.damage);
-    let weaponRoll = new Roll(damageString);
-    await weaponRoll.evaluate();
+  // Damage formula selection (1H vs 2H)
+  const damageString = shortcutWeapon.system.weapon2H
+    ? shortcutWeapon.system.damage2
+    : shortcutWeapon.system.damage;
 
-    // Superior Weapon Roll
-    let supRollTag = ``;
-    let superiorRoll = new Roll(damageString);
-    await superiorRoll.evaluate();
+  if (!damageString) {
+    ui.notifications.warn(`No damage formula found on ${shortcutWeapon.name}.`);
+    return;
+  }
 
-    // Use higher roll for superior weapons
-    const finalDamage = shortcutWeapon.system.superior 
-      ? Math.max(weaponRoll.result, superiorRoll.result)
-      : weaponRoll.result;
+  // Base damage roll
+  const weaponRoll = new Roll(damageString);
+  await weaponRoll.evaluate({ async: true });
 
-    if (shortcutWeapon.system.superior) {
-      supRollTag = `[[${superiorRoll.result}]]`;
-    }
+  // Superior weapon roll (roll twice, take highest)
+  let supRollTag = "";
+  let finalDamage = Number(weaponRoll.total);
 
-    // Get targeted actors for damage application
-    const targets = game.user.targets;
-    let applyDamageButtons = "";
-    
-    if (targets.size > 0) {
-      const damageType = getDamageTypeFromWeapon(shortcutWeapon);
-      targets.forEach(target => {
-        applyDamageButtons += `
-          <button class="apply-damage-btn" 
-                  data-actor-id="${target.actor.id}" 
-                  data-damage="${finalDamage}" 
-                  data-type="${damageType}" 
-                  data-location="${hit_loc}"
-                  style="margin: 0.25rem;">
-            Apply ${finalDamage} damage to ${target.name}
-          </button>`;
-      });
-    }
+  if (shortcutWeapon.system.superior) {
+    const superiorRoll = new Roll(damageString);
+    await superiorRoll.evaluate({ async: true });
 
-    let contentString = `<div>
-                              <h2>
-                                  <img src="${shortcutWeapon.img}">
-                                  <div>${shortcutWeapon.name}</div>
-                              </h2>
+    const superiorTotal = Number(superiorRoll.total);
+    finalDamage = Math.max(Number(weaponRoll.total), superiorTotal);
+    supRollTag = `[[${superiorTotal}]]`;
+  }
 
-                              <table>
-                                  <thead>
-                                      <tr>
-                                          <th>Damage</th>
-                                          <th class="tableCenterText">Result</th>
-                                          <th class="tableCenterText">Detail</th>
-                                      </tr>
-                                  </thead>
-                                  <tbody>
-                                      <tr>
-                                          <td class="tableAttribute">Damage</td>
-                                          <td class="tableCenterText">[[${weaponRoll.result}]] ${supRollTag}</td>
-                                          <td class="tableCenterText">${damageString}</td>
-                                      </tr>
-                                      <tr>
-                                          <td class="tableAttribute">Hit Location</td>
-                                          <td class="tableCenterText">${hit_loc}</td>
-                                          <td class="tableCenterText">[[${hit.result}]]</td>
-                                      </tr>
-                                      <tr>
-                                          <td class="tableAttribute">Qualities</td>
-                                          <td class="tableCenterText" colspan="2">${shortcutWeapon.system.qualities}</td>
-                                      </tr>
-                                  </tbody>
-                              </table>
-                              ${applyDamageButtons ? `<div style="margin-top: 0.5rem; border-top: 1px solid #ddd; padding-top: 0.5rem;">${applyDamageButtons}</div>` : ''}
-                          <div>`;
+  // Build "Apply damage" buttons for targeted tokens
+  const targets = game.user.targets; // Set<Token>
+  let applyDamageButtons = "";
 
-    // tags for flavor on chat message
-    let tags = [];
+  if (targets?.size > 0) {
+    const damageType = getDamageTypeFromWeapon(shortcutWeapon);
 
-    if (shortcutWeapon.system.superior) {
-      let tagEntry = `<span style="border: none; border-radius: 30px; background-color: rgba(29, 97, 187, 0.80); color: white; text-align: center; font-size: xx-small; padding: 5px;" title="Damage was rolled twice and output was highest of the two">Superior</span>`;
-      tags.push(tagEntry);
-    }
+    targets.forEach((target) => {
+      if (!target?.actor) return;
 
-    await weaponRoll.toMessage({
-      user: game.user.id,
-      speaker: ChatMessage.getSpeaker(),
-      flavor: tags.join(""),
-      content: contentString,
-      roll: weaponRoll,
-      rollMode: game.settings.get("core", "rollMode"),
+      applyDamageButtons += `
+        <button class="apply-damage-btn"
+                data-actor-id="${target.actor.id}"
+                data-damage="${finalDamage}"
+                data-type="${damageType}"
+                data-location="${hit_loc}"
+                style="margin: 0.25rem;">
+          Apply ${finalDamage} damage to ${target.name}
+        </button>`;
     });
   }
+
+  // Tags for flavor on chat message
+  const tags = [];
+  if (shortcutWeapon.system.superior) {
+    tags.push(
+      `<span style="border:none;border-radius:30px;background-color:rgba(29,97,187,0.80);color:white;text-align:center;font-size:xx-small;padding:5px;"
+             title="Damage was rolled twice and the higher result was used">Superior</span>`
+    );
+  }
+
+  // Chat card
+  const contentString = `
+    <div>
+      <h2 style="display:flex;gap:0.5rem;align-items:center;">
+        <img src="${shortcutWeapon.img}" style="height:32px;width:32px;">
+        <div>${shortcutWeapon.name}</div>
+      </h2>
+
+      <table>
+        <thead>
+          <tr>
+            <th>Damage</th>
+            <th class="tableCenterText">Result</th>
+            <th class="tableCenterText">Detail</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="tableAttribute">Damage</td>
+            <td class="tableCenterText">[[${weaponRoll.total}]] ${supRollTag}</td>
+            <td class="tableCenterText">${damageString}</td>
+          </tr>
+          <tr>
+            <td class="tableAttribute">Hit Location</td>
+            <td class="tableCenterText">${hit_loc}</td>
+            <td class="tableCenterText">[[${hit.total}]]</td>
+          </tr>
+          <tr>
+            <td class="tableAttribute">Qualities</td>
+            <td class="tableCenterText" colspan="2">${shortcutWeapon.system.qualities ?? ""}</td>
+          </tr>
+        </tbody>
+      </table>
+
+      ${
+        applyDamageButtons
+          ? `<div style="margin-top:0.5rem;border-top:1px solid #ddd;padding-top:0.5rem;">${applyDamageButtons}</div>`
+          : ""
+      }
+    </div>
+  `;
+
+  await weaponRoll.toMessage({
+    user: game.user.id,
+    speaker: ChatMessage.getSpeaker(),
+    flavor: tags.join(""),
+    content: contentString,
+    roll: weaponRoll,
+    rollMode: game.settings.get("core", "rollMode"),
+  });
+}
 
   async _onAmmoRoll(event) {
     event.preventDefault();
