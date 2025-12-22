@@ -1357,8 +1357,25 @@ async _onDamageRoll(event) {
   let hit_loc = "";
   const hit = new Roll("1d100");
   await hit.evaluate({ async: true });
-
+const hitResult = Number(hit.total);
 const hit_loc = getHitLocationFromRoll(hitResult);
+
+// Target Number (TN) for attack roll in your system
+const attackTN =
+  (shortcutWeapon.system.value ?? 0) +
+  (this.actor.system.woundPenalty ?? 0) +
+  (this.actor.system.fatigue.penalty ?? 0) +
+  (this.actor.system.carry_rating.penalty ?? 0);
+// Add user modifiers here if you have any (e.g. playerInput/modifiers)
+
+// Calculate degrees of success/failure for this attack
+const { isSuccess, doS, doF } = calculateDegrees(hitResult, attackTN);
+
+const degreesRow = `<tr>
+  <td class="tableAttribute">${isSuccess ? "Degrees of Success" : "Degrees of Failure"}</td>
+  <td class="tableCenterText" colspan="2">${isSuccess ? doS : doF}</td>
+</tr>`;
+
 const attackSkill = shortcutWeapon.system.value ?? 0;
 const attackMods = 0; // <- Fill if you have more modifiers!
 const tn = attackSkill + attackMods;
