@@ -75,8 +75,9 @@ export function getDamageReduction(actor, damageType = DAMAGE_TYPES.PHYSICAL, hi
     
     // Natural toughness resistance
     resistance = Number(actorData.resistance?. natToughness || 0);
-    const endBonus = Math.floor(Number(actorData.characteristics?.end?.total || 0) / 10);
-    toughness = Number(endBonus || 0);
+// New:
+toughness = Number(actorData.resistance?.natToughness || 0);
+// (Optionally, sum traits/items for natToughness if needed)
   } 
   // Elemental and special damage types
   else {
