@@ -12,7 +12,8 @@ import coreVariants from "./racemenu/data/core-variants.js";
 import { renderRaceCards } from "./racemenu/render-race-cards.js";
 import khajiitFurstocks from './racemenu/data/khajiit-furstocks.js';
 import expandedRaces from "./racemenu/data/expanded-races.js";
-import { getDamageTypeFromWeapon } from "../combat/combat-utils.js";
+import { calculateDegrees } from "../helpers/diceHelper.js";
+import { getHitLocationFromRoll } from "../combat/combat-utils.js";
 
 export class SimpleActorSheet extends foundry.appv1.sheets.ActorSheet {
   /** @override */
