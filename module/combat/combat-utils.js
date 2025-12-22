@@ -30,16 +30,21 @@ export function getDamageTypeFromWeapon(weapon) {
  * Roll for hit location using 1d100
  * @returns {Promise<string>} Hit location description
  */
-export async function rollHitLocation() {
-  const roll = await new Roll("1d100").evaluate({ async: true });
-  const result = roll.total;
-  
-  if (result <= 15) return "Head";
-  if (result <= 35) return "Right Arm";
-  if (result <= 55) return "Left Arm";
-  if (result <= 80) return "Body";
-  if (result <= 90) return "Right Leg";
-  return "Left Leg";
+/**
+ * Return hit location using ones digit of d100 roll as per UESRPG rules.
+ * @param {number} attackRollResult
+ * @returns {string}
+ */
+export function getHitLocationFromRoll(attackRollResult) {
+  const digit = attackRollResult % 10;
+  switch (digit) {
+    case 0: return "Head";
+    case 1: case 2: case 3: case 4: case 5: return "Body";
+    case 6: return "Right Leg";
+    case 7: return "Left Leg";
+    case 8: return "Right Arm";
+    case 9: return "Left Arm";
+  }
 }
 
 // Global exposure for macros
