@@ -806,62 +806,44 @@ async _onSetBaseCharacteristics(event) {
 }
 
   async _onDamageRoll(event) {
-  event. preventDefault();
-  let itemElement = event.currentTarget. closest(". item");
-  let shortcutWeapon = this.actor.getEmbeddedDocument(
-    "Item",
-    itemElement.dataset.itemId
-  );
+  event.preventDefault();
+  const button = event.currentTarget;
+  const li = button.closest(". item");
+  const item = this.actor.items.get(li?. dataset.itemId);
+  
+  if (!item) return;
 
-  // Import helpers
-  const { getDamageTypeFromWeapon } = await import('../helpers/damageHelper. js');
-
+  // ✅ Import helper functions at top of file if not already
+  // import { rollHitLocation, getDamageTypeFromWeapon } from "../combat/combat-utils. js";
+  
+  // Determine damage formula
+  const damageRoll = item.system?.weapon2H ?  item.system?. damage2 : item.system?.damage;
+  
+  // Roll hit location
+  const hitLocRoll = await new Roll("1d100").evaluate({ async: true });
+  const hitResult = hitLocRoll.total;
   let hit_loc = "";
-  let hit = new Roll("1d100");
-  await hit.evaluate({async: true});
+  if (hitResult <= 15) hit_loc = "Head";
+  else if (hitResult <= 35) hit_loc = "Right Arm";
+  else if (hitResult <= 55) hit_loc = "Left Arm";
+  else if (hitResult <= 80) hit_loc = "Body";
+  else if (hitResult <= 90) hit_loc = "Right Leg";
+  else hit_loc = "Left Leg";
 
-  // Updated hit location table (1d100)
-  const hitResult = hit.total;
-  if (hitResult <= 15) {
-    hit_loc = "Head";
-  } else if (hitResult <= 35) {
-    hit_loc = "Right Arm";
-  } else if (hitResult <= 55) {
-    hit_loc = "Left Arm";
-  } else if (hitResult <= 80) {
-    hit_loc = "Body";
-  } else if (hitResult <= 90) {
-    hit_loc = "Right Leg";
-  } else {
-    hit_loc = "Left Leg";
-  }
-
-  let damageString;
-  damageString = shortcutWeapon.system. weapon2H ? shortcutWeapon.system. damage2 : shortcutWeapon. system.damage;
-  let weaponRoll = new Roll(damageString);
-  await weaponRoll.evaluate({async: true});
-
-  // Superior Weapon Roll
-  let supRollTag = ``;
-  let superiorRoll = new Roll(damageString);
-  await superiorRoll.evaluate({async: true});
-
-  if (shortcutWeapon.system. superior) {
-    supRollTag = `[[${superiorRoll.result}]]`;
-  }
-
-  // Get damage type
-  const damageType = getDamageTypeFromWeapon(shortcutWeapon);
-
-  // Build apply damage buttons for targeted actors
-  const targets = game.user.targets;
+  // Roll damage
+  const roll = await new Roll(damageRoll).evaluate({ async: true });
+  const supRoll = item.system?.superior ?  await new Roll(damageRoll).evaluate({ async: true }) : null;
+  
+  const finalDamage = supRoll ? Math.max(roll.total, supRoll.total) : roll.total;
+  
+  // Get damage type from weapon
+  const damageType = window. Uesrpg3e?. utils?.getDamageTypeFromWeapon(item) || 'physical';
+  
+  // Get targeted actors for damage application
+  const targets = Array.from(game.user.targets || []);
   let applyDamageButtons = "";
 
-  if (targets.size > 0) {
-    const finalDamage = shortcutWeapon.system. superior 
-      ? Math.max(weaponRoll.result, superiorRoll.result)
-      : weaponRoll.result;
-
+  if (targets.length > 0) {
     targets.forEach(target => {
       applyDamageButtons += `
         <button class="apply-damage-btn" 
@@ -869,65 +851,34 @@ async _onSetBaseCharacteristics(event) {
                 data-damage="${finalDamage}" 
                 data-type="${damageType}" 
                 data-location="${hit_loc}"
-                style="margin: 0.25rem; padding: 0.25rem 0.5rem; background:  #4CAF50; color: white; border: none; cursor: pointer;">
-          Apply ${finalDamage} dmg to ${target.name}
+                style="margin:  0. 25rem; padding: 0.25rem 0.5rem; background: #8b0000; color: white; border:  none; border-radius: 3px; cursor: pointer;">
+          Apply ${finalDamage} ${damageType} damage to ${target.name} (${hit_loc})
         </button>`;
     });
   }
 
-  let contentString = `<div>
-                            <h2>
-                                <img src="${shortcutWeapon.img}">
-                                <div>${shortcutWeapon.name}</div>
-                            </h2>
+  // Build chat message
+  const damageDisplay = supRoll 
+    ? `[[${roll.total}]] [[${supRoll.total}]]` 
+    : `[[${roll.total}]]`;
+  
+  const contentString = `
+    <div class="uesrpg-damage-card">
+      <h2><img src="${item.img}" height="20" width="20" style="margin-right: 5px;"/>${item.name}</h2>
+      <p><b>Damage:</b> ${damageDisplay} (${damageRoll})</p>
+      <p><b>Hit Location:</b> [[${hitLocRoll. total}]] ${hit_loc}</p>
+      <p><b>Damage Type: </b> ${damageType}</p>
+      <p><b>Qualities:</b> ${item.system?.qualities || 'None'}</p>
+      ${applyDamageButtons ?  `<div style="margin-top: 0.5rem; border-top: 1px solid #666; padding-top: 0.5rem;">${applyDamageButtons}</div>` : ''}
+    </div>
+  `;
 
-                            <table>
-                                <thead>
-                                    <tr>
-                                        <th>Damage</th>
-                                        <th class="tableCenterText">Result</th>
-                                        <th class="tableCenterText">Detail</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr>
-                                        <td class="tableAttribute">Damage</td>
-                                        <td class="tableCenterText">[[${weaponRoll.result}]] ${supRollTag}</td>
-                                        <td class="tableCenterText">${damageString}</td>
-                                    </tr>
-                                    <tr>
-                                        <td class="tableAttribute">Hit Location</td>
-                                        <td class="tableCenterText">${hit_loc}</td>
-                                        <td class="tableCenterText">[[${hit. result}]]</td>
-                                    </tr>
-                                    <tr>
-                                        <td class="tableAttribute">Damage Type</td>
-                                        <td class="tableCenterText" colspan="2">${damageType}</td>
-                                    </tr>
-                                    <tr>
-                                        <td class="tableAttribute">Qualities</td>
-                                        <td class="tableCenterText" colspan="2">${shortcutWeapon. system.qualities}</td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                            ${applyDamageButtons ?  `<div style="margin-top: 0.5rem; border-top: 1px solid #ddd; padding-top: 0.5rem;">${applyDamageButtons}</div>` : ''}
-                        <div>`;
-
-  // tags for flavor on chat message
-  let tags = [];
-
-  if (shortcutWeapon.system.superior) {
-    let tagEntry = `<span style="border:  none; border-radius: 30px; background-color: rgba(29, 97, 187, 0.80); color: white; text-align: center; font-size: xx-small; padding: 5px;" title="Damage Rolled Twice">Superior</span>`;
-    tags.push(tagEntry);
-  }
-
-  await weaponRoll.toMessage({
+  await ChatMessage.create({
     user: game.user.id,
-    speaker: ChatMessage.getSpeaker(),
-    flavor: tags.join(""),
+    speaker: ChatMessage.getSpeaker({ actor: this.actor }),
     content: contentString,
-    roll: weaponRoll,
-    rollMode: game.settings.get("core", "rollMode"),
+    rolls: supRoll ? [roll, supRoll] : [roll],
+    rollMode: game.settings.get("core", "rollMode")
   });
 }
 
