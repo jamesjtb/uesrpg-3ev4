@@ -1461,22 +1461,27 @@ const degreesRow = `<tr>
     </tr>
   </thead>
   <tbody>
-    <tr>
-      <td class="tableAttribute">Damage</td>
-      <td class="tableCenterText">[[${weaponRoll.total}]] ${supRollTag}</td>
-      <td class="tableCenterText">${damageString}</td>
-    </tr>
-    <tr>
-      <td class="tableAttribute">Hit Location</td>
-      <td class="tableCenterText">${hit_loc}</td>
-      <td class="tableCenterText">[[${hit.total}]]</td>
-    </tr>
-    <tr>
-      <td class="tableAttribute">Qualities</td>
-      <td class="tableCenterText" colspan="2">${shortcutWeapon.system.qualities ?? ""}</td>
-    </tr>
-    ${degreesRow}
-  </tbody>
+  <tr>
+    <td class="tableAttribute">Damage</td>
+    <td class="tableCenterText">[[${weaponRoll.total}]] ${supRollTag}</td>
+    <td class="tableCenterText">${damageString}</td>
+  </tr>
+  <tr>
+    <td class="tableAttribute">Hit Location</td>
+    <td class="tableCenterText">${hit_loc}</td>
+    <td class="tableCenterText">[[${hit.total}]]</td>
+  </tr>
+  <tr>
+    <td class="tableAttribute">Qualities</td>
+    <td class="tableCenterText" colspan="2">
+      ${shortcutWeapon.system.qualities ?? ""}
+    </td>
+  </tr>
+
+  ${degreesRow}
+
+</tbody>
+
 </table>s
 
       ${
