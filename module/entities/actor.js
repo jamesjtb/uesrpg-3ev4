@@ -40,30 +40,88 @@ export class SimpleActor extends Actor {
     }
   }
 
-  prepareData() {
-    super.prepareData();
+// In actor.js, replace the entire prepareData() method: 
+prepareData() {
+  super.prepareData();
 
-    const actorData = this;
-    const actorSystemData = actorData.system;
-    const flags = actorData.flags;
+  const actorData = this;
+  
+  // CRITICAL: Initialize required system data structures FIRST
+  this._ensureSystemData(actorData);
 
-    // Call specialized preparation functions only if they exist.
-    // If neither exists, use a minimal safe fallback so Foundry initialization
-    // doesn't crash when documents are created.
-    try {
-      if (actorData.type === "Player Character" && typeof this._prepareCharacterData === "function") {
-        this._prepareCharacterData(actorData);
-      } else if (actorData.type === "NPC" && typeof this._prepareNPCData === "function") {
-        this._prepareNPCData(actorData);
-      } else {
-        // Minimal safe fallback to ensure required fields exist
-        this._legacyPrepareFallback(actorData);
-      }
-    } catch (err) {
-      console.error(`uesrpg-3ev4 | Error during prepareData for ${this.name || this.id}:`, err);
-      // Do not rethrow — we want Foundry to continue initializing other documents.
+  // Then call type-specific preparation
+  try {
+    if (actorData.type === "Player Character" && typeof this._prepareCharacterData === "function") {
+      this._prepareCharacterData(actorData);
+    } else if (actorData.type === "NPC" && typeof this._prepareNPCData === "function") {
+      this._prepareNPCData(actorData);
+    }
+  } catch (err) {
+    console.error(`uesrpg-3ev4 | Error during prepareData for ${this.name || this.id}:`, err);
+    // Ensure fallback data exists even after error
+    this._ensureSystemData(actorData);
+  }
+}
+
+// ADD THIS NEW METHOD to actor.js (place before _aggregateItemStats):
+_ensureSystemData(actorData) {
+  // Ensure system object exists
+  actorData.system = actorData.system || {};
+  
+  // Ensure characteristics exist with safe defaults
+  actorData.system.characteristics = actorData.system.characteristics || {};
+  const chars = ['str', 'end', 'agi', 'int', 'wp', 'prc', 'prs', 'lck'];
+  for (const char of chars) {
+    actorData.system.characteristics[char] = actorData.system. characteristics[char] || {
+      base: 0,
+      total: 0,
+      bonus: 0
+    };
+  }
+  
+  // Ensure resources exist
+  actorData.system.hp = actorData.system.hp || { value: 0, max: 0, base: 0, bonus: 0 };
+  actorData.system.stamina = actorData.system. stamina || { value: 0, max: 0, bonus: 0 };
+  actorData.system.magicka = actorData.system.magicka || { value: 0, max: 0, bonus: 0 };
+  actorData.system.luck_points = actorData.system.luck_points || { value: 0, max: 0, bonus:  0 };
+  
+  // Ensure derived stats exist
+  actorData. system.initiative = actorData.system.initiative || { base: 0, value: 0, bonus: 0 };
+  actorData.system.wound_threshold = actorData.system.wound_threshold || { base: 0, value: 0, bonus:  0 };
+  actorData.system.speed = actorData.system.speed || { base: 0, value: 0, bonus: 0, swimSpeed: 0, flySpeed: 0 };
+  actorData.system.carry_rating = actorData.system.carry_rating || { current: 0, max: 0, penalty: 0, bonus: 0, label: "Minimal" };
+  
+  // Ensure combat data exists
+  actorData. system.fatigue = actorData.system. fatigue || { level: 0, penalty: 0, bonus: 0 };
+  actorData. system.woundPenalty = actorData.system.woundPenalty || 0;
+  actorData.system.wounded = actorData.system.wounded || false;
+  
+  // Ensure lucky/unlucky numbers exist (for NPCs)
+  actorData.system.lucky_numbers = actorData.system.lucky_numbers || {
+    ln1: 0, ln2: 0, ln3: 0, ln4: 0, ln5: 0, ln6: 0, ln7: 0, ln8: 0, ln9: 0, ln10: 0
+  };
+  actorData. system.unlucky_numbers = actorData.system.unlucky_numbers || {
+    ul1: 0, ul2: 0, ul3: 0, ul4: 0, ul5: 0, ul6: 0
+  };
+  
+  // Ensure resistance exists
+  actorData.system. resistance = actorData.system. resistance || {
+    diseaseR: 0, fireR: 0, frostR: 0, shockR: 0, poisonR: 0, magicR: 0, natToughness: 0, silverR: 0, sunlightR: 0
+  };
+  
+  // Ensure professions/skills exist
+  actorData. system.professions = actorData.system.professions || {};
+  actorData.system. professionsWound = actorData.system.professionsWound || {};
+  actorData.system. skills = actorData.system.skills || {};
+  
+  // Ensure items collection exists
+  if (!actorData.items || !(actorData.items instanceof foundry.utils.Collection)) {
+    // Use the actual embedded collection if available, otherwise create empty array
+    if (! actorData.items) {
+      actorData.items = [];
     }
   }
+}
 
   // Minimal fallback to provide safe defaults so downstream code doesn't throw.
   _legacyPrepareFallback(actorData) {
