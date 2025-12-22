@@ -824,6 +824,24 @@ async _onSetBaseCharacteristics(event) {
     let weaponRoll = new Roll(damageString);
     await weaponRoll.evaluate();
 
+        // --- NEW:  Apply damage using combat helper ---
+    const { CombatHelper } = await import("../helpers/combatHelper.js");
+    
+    // Determine hit location from roll
+    const hitLoc = CombatHelper.getHitLocation(hit.result);
+    
+    // Apply damage (assumes physical damage for now)
+    const damageResult = await CombatHelper.applyDamage(
+      this.actor,
+      weaponRoll.total,
+      hitLoc,
+      'physical'
+    );
+    
+    // Append damage result to chat message
+    contentString += `<tr><td colspan="3" class="damage-result">${damageResult. message}</td></tr>`;
+    // --- END NEW ---
+
     // Superior Weapon Roll
     let supRollTag = ``;
     let superiorRoll = new Roll(damageString);
@@ -999,7 +1017,17 @@ _onSpellRoll(event) {
 
           const damageFormula = spellToCast?.system?.damage ?? "";
           const damageRoll = damageFormula ? new Roll(damageFormula) : null;
+              // --- NEW: Check for advantage/penetration ---
+    const hasPenetration = false; // TODO: wire to advantage from opposed roll or talent
+    let arMultiplier = 1.0;
+    
+    if (hasPenetration) {
+      arMultiplier = 0.5; // Penetrate Armor:  treat full as partial
+      ui.notifications.info("Armor Penetration active - AR halved!");
+    }
+    // --- END NEW ---
           if (damageRoll) await damageRoll.evaluate();
+          
 
           const hitLocRoll = new Roll("1d10");
           await hitLocRoll.evaluate();
