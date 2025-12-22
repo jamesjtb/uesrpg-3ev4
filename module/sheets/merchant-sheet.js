@@ -558,42 +558,36 @@ export class merchantSheet extends foundry.appv1.sheets.ActorSheet {
   }
 
   async _onIncreasePriceMod(event) {
-    event.preventDefault();
-    // Defensive guard: filter items using safe hasOwnProperty
-    const merchantItems = this.actor.items.filter((item) =>
-      item?.system && Object.prototype.hasOwnProperty.call(item.system, "modPrice")
-    );
-    // Guard and safely increment priceMod
-    const currentPriceMod = Number(this.actor?.system?.priceMod ?? 0);
-    this.actor.system.priceMod = currentPriceMod + 5;
-    this.actor.update({ "system.priceMod": this.actor.system.priceMod });
+  event.preventDefault();
+  const merchantItems = (Array.isArray(this.actor?.items) ? this.actor.items : []).filter(item =>
+    item?.system && Object.prototype.hasOwnProperty.call(item.system, "modPrice")
+  );
+  const currentPriceMod = Number(this.actor?.system?.priceMod ?? 0);
+  const newPriceMod = currentPriceMod + 5;
+  await this.actor.update({ "system.priceMod": newPriceMod });
 
-    for (let item of merchantItems) {
-      const price = Number(item?.system?.price ?? 0);
-      const priceMod = Number(this.actor?.system?.priceMod ?? 0);
-      item.system.modPrice = Math.round(price + price * (priceMod / 100));
-      await item.update({ "system.modPrice": item.system.modPrice });
-    }
+  for (const item of merchantItems) {
+    const price = Number(item?.system?.price ?? 0);
+    const modPrice = Math.round(price + price * (Number(newPriceMod) / 100));
+    await item.update({ "system.modPrice": modPrice });
   }
+}
 
-  async _onDecreasePriceMod(event) {
-    event.preventDefault();
-    // Defensive guard: filter items using safe hasOwnProperty
-    const merchantItems = this.actor.items.filter((item) =>
-      item?.system && Object.prototype.hasOwnProperty.call(item.system, "modPrice")
-    );
-    // Guard and safely decrement priceMod
-    const currentPriceMod = Number(this.actor?.system?.priceMod ?? 0);
-    this.actor.system.priceMod = currentPriceMod - 5;
-    this.actor.update({ "system.priceMod": this.actor.system.priceMod });
+async _onDecreasePriceMod(event) {
+  event.preventDefault();
+  const merchantItems = (Array.isArray(this.actor?.items) ? this.actor.items : []).filter(item =>
+    item?.system && Object.prototype.hasOwnProperty.call(item.system, "modPrice")
+  );
+  const currentPriceMod = Number(this.actor?.system?.priceMod ?? 0);
+  const newPriceMod = currentPriceMod - 5;
+  await this.actor.update({ "system.priceMod": newPriceMod });
 
-    for (let item of merchantItems) {
-      const price = Number(item?.system?.price ?? 0);
-      const priceMod = Number(this.actor?.system?.priceMod ?? 0);
-      item.system.modPrice = Math.round(price + price * (priceMod / 100));
-      await item.update({ "system.modPrice": item.system.modPrice });
-    }
+  for (const item of merchantItems) {
+    const price = Number(item?.system?.price ?? 0);
+    const modPrice = Math.round(price + price * (Number(newPriceMod) / 100));
+    await item.update({ "system.modPrice": modPrice });
   }
+}
 
   async _onSetBaseCharacteristics(event) {
     event.preventDefault();
