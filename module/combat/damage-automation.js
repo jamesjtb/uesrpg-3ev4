@@ -37,8 +37,8 @@ export const DAMAGE_TYPES = {
  * @returns {Object} - { armor, resistance, toughness, total }
  */
 export function getDamageReduction(actor, damageType = DAMAGE_TYPES.PHYSICAL, hitLocation = 'Body') {
-  if (!actor?. system) {
-    return { armor: 0, resistance: 0, toughness: 0, total: 0, penetrated: 0 };
+  if (! actor?.system) {
+    return { armor: 0, resistance:  0, toughness: 0, total: 0, penetrated: 0 };
   }
 
   const actorData = actor.system;
@@ -46,11 +46,15 @@ export function getDamageReduction(actor, damageType = DAMAGE_TYPES.PHYSICAL, hi
   let resistance = 0;
   let toughness = 0;
 
+  // Toughness bonus (END bonus acts as damage reduction for all damage types)
+  const endBonus = Math.floor(Number(actorData.characteristics?.end?. total || 0) / 10);
+  toughness = Number(endBonus || 0);
+
   // Physical damage: uses armor and natural toughness
- if (damageType === DAMAGE_TYPES.PHYSICAL) {
+  if (damageType === DAMAGE_TYPES.PHYSICAL) {
     // Get armor for specific hit location
-    const equippedArmor = actor. items?. filter(i => 
-      i.type === 'armor' && i.system?.equipped === true
+    const equippedArmor = actor.items?.filter(i => 
+      i.type === 'armor' && i. system?.equipped === true
     ) || [];
     
     for (let item of equippedArmor) {
@@ -61,33 +65,27 @@ export function getDamageReduction(actor, damageType = DAMAGE_TYPES.PHYSICAL, hi
       }
     }
     // Natural toughness resistance
-    resistance = Number(actorData.resist?. natToughnessR || 0);
-    const endBonus = Math.floor(Number(actorData.characteristics?.end?. total || 0) / 10);
-    toughness = Number(endBonus || 0);
-  } else {
-        // Toughness bonus (END bonus acts as damage reduction)
-    const endBonus = Math.floor(Number(actorData.characteristics?.end?.total || 0) / 10);
-    toughness = Number(endBonus || 0);
-  }
+    resistance = Number(actorData.resist?.natToughnessR || 0);
+  } 
   // Elemental and special damage types
   else {
     switch (damageType) {
       case DAMAGE_TYPES.FIRE:
-        resistance = Number(actorData.resist?.fireR || 0);
+        resistance = Number(actorData.resist?. fireR || 0);
         break;
       case DAMAGE_TYPES.FROST:
-        resistance = Number(actorData.resist?.frostR || 0);
+        resistance = Number(actorData. resist?.frostR || 0);
         break;
-      case DAMAGE_TYPES.SHOCK:
+      case DAMAGE_TYPES.SHOCK:  
         resistance = Number(actorData.resist?.shockR || 0);
         break;
       case DAMAGE_TYPES.POISON:
-        resistance = Number(actorData.resist?.poisonR || 0);
+        resistance = Number(actorData.resist?. poisonR || 0);
         break;
-      case DAMAGE_TYPES.MAGIC:
+      case DAMAGE_TYPES.MAGIC: 
         resistance = Number(actorData.resist?.magicR || 0);
         break;
-      case DAMAGE_TYPES.SILVER:
+      case DAMAGE_TYPES. SILVER:
         resistance = Number(actorData.resist?.silverR || 0);
         break;
       case DAMAGE_TYPES.SUNLIGHT:
@@ -96,6 +94,17 @@ export function getDamageReduction(actor, damageType = DAMAGE_TYPES.PHYSICAL, hi
       default:
         resistance = 0;
     }
+  }
+
+  const total = armor + resistance + toughness;
+
+  return { armor, resistance, toughness, total };
+}
+
+  const total = armor + resistance + toughness;
+
+  return { armor, resistance, toughness, total };
+}
   }
 
   const total = armor + resistance + toughness;
