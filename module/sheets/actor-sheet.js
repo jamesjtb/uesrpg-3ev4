@@ -1352,13 +1352,16 @@ async _onDamageRoll(event) {
   const hit = new Roll("1d100");
   await hit.evaluate({ async: true });
 
-  const hitResult = Number(hit.total);
-  if (hitResult <= 15) hit_loc = "Head";
-  else if (hitResult <= 35) hit_loc = "Right Arm";
-  else if (hitResult <= 55) hit_loc = "Left Arm";
-  else if (hitResult <= 80) hit_loc = "Body";
-  else if (hitResult <= 90) hit_loc = "Right Leg";
-  else hit_loc = "Left Leg";
+const hit_loc = getHitLocationFromRoll(hitResult);
+const attackSkill = shortcutWeapon.system.value ?? 0;
+const attackMods = 0; // <- Fill if you have more modifiers!
+const tn = attackSkill + attackMods;
+
+const { isSuccess, doS, doF } = calculateDegrees(hitResult, tn);
+const degreesRow = `<tr>
+  <td class="tableAttribute">${isSuccess ? "Degrees of Success" : "Degrees of Failure"}</td>
+  <td class="tableCenterText" colspan="2">${isSuccess ? doS : doF}</td>
+</tr>`;
 
   // Damage formula selection (1H vs 2H)
   const damageString = shortcutWeapon.system.weapon2H
@@ -1426,31 +1429,32 @@ async _onDamageRoll(event) {
         <div>${shortcutWeapon.name}</div>
       </h2>
 
-      <table>
-        <thead>
-          <tr>
-            <th>Damage</th>
-            <th class="tableCenterText">Result</th>
-            <th class="tableCenterText">Detail</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td class="tableAttribute">Damage</td>
-            <td class="tableCenterText">[[${weaponRoll.total}]] ${supRollTag}</td>
-            <td class="tableCenterText">${damageString}</td>
-          </tr>
-          <tr>
-            <td class="tableAttribute">Hit Location</td>
-            <td class="tableCenterText">${hit_loc}</td>
-            <td class="tableCenterText">[[${hit.total}]]</td>
-          </tr>
-          <tr>
-            <td class="tableAttribute">Qualities</td>
-            <td class="tableCenterText" colspan="2">${shortcutWeapon.system.qualities ?? ""}</td>
-          </tr>
-        </tbody>
-      </table>
+<table>
+  <thead>
+    <tr>
+      <th>Damage</th>
+      <th class="tableCenterText">Result</th>
+      <th class="tableCenterText">Detail</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td class="tableAttribute">Damage</td>
+      <td class="tableCenterText">[[${weaponRoll.total}]] ${supRollTag}</td>
+      <td class="tableCenterText">${damageString}</td>
+    </tr>
+    <tr>
+      <td class="tableAttribute">Hit Location</td>
+      <td class="tableCenterText">${hit_loc}</td>
+      <td class="tableCenterText">[[${hit.total}]]</td>
+    </tr>
+    <tr>
+      <td class="tableAttribute">Qualities</td>
+      <td class="tableCenterText" colspan="2">${shortcutWeapon.system.qualities ?? ""}</td>
+    </tr>
+    ${degreesRow}
+  </tbody>
+</table>s
 
       ${
         applyDamageButtons
