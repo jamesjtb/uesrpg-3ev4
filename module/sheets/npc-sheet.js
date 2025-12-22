@@ -226,7 +226,7 @@ async activateListeners(html) {
   html.find(".magic-roll").click(this._onSpellRoll.bind(this));
   html.find(".resistance-roll").click(this._onResistanceRoll.bind(this));
   html.find(".ammo-roll").click(this._onAmmoRoll.bind(this));
-
+  html.find(".defend-roll").click(this._onDefendRoll.bind(this));
   html.find(".ability-list .item-img").click(this._onTalentRoll.bind(this));
   html.find(".talent-container .item-img").click(this._onTalentRoll.bind(this));
   html.find(".trait-container .item-img").click(this._onTalentRoll.bind(this));
@@ -805,6 +805,41 @@ async _onSetBaseCharacteristics(event) {
   d.render(true);
 }
 
+async _onDefendRoll(event) {
+  event.preventDefault();
+  
+  const defenseType = event.currentTarget.dataset. defense || 'evade';
+  const actorSys = this.actor?. system || {};
+  
+  // Get defense skill value
+  let defenseTN = 50;
+  if (defenseType === 'evade') {
+    const evadeSkill = this.actor.items.find(i => i.type === 'skill' && i.name. toLowerCase() === 'evade');
+    defenseTN = Number(evadeSkill?.system?. value ??  Number(actorSys?. characteristics?. agi?. total ?? 50));
+  } else if (defenseType === 'block') {
+    const blockSkill = this.actor.items.find(i => i.type === 'combatStyle' && i.name.toLowerCase().includes('block'));
+    defenseTN = Number(blockSkill?. system?.value ?? Number(actorSys?.characteristics?.str?.total ?? 50));
+  }
+  
+  // Roll defense
+  const roll = new Roll("1d100");
+  await roll.evaluate({async:  true});
+  
+  const success = roll.total <= defenseTN;
+  const dos = success ? Math.floor((defenseTN - roll.total) / 10) : 0;
+  
+  // Chat message
+  ChatMessage.create({
+    speaker: ChatMessage.getSpeaker({actor: this.actor}),
+    content: `
+      <h3>${defenseType. toUpperCase()} Defense</h3>
+      <p><b>Target:</b> ${defenseTN}</p>
+      <p><b>Roll:</b> [[${roll.total}]]</p>
+      <p><b>${success ? 'SUCCESS' : 'FAILURE'}</b> (${dos} DoS)</p>
+    `
+  });
+}
+  
   async _onDamageRoll(event) {
   event.preventDefault();
   const button = event.currentTarget;
