@@ -682,53 +682,39 @@ async getData() {
         one: {
           label: "Roll!",
           callback: async (html) => {
-            const playerInput = parseInt(html.find('[id="playerInput"]').val());
-
-            let contentString = "";
+           const playerInput = parseInt(html.find('[id="playerInput"]').val());
             let roll = new Roll("1d100");
             await roll.evaluate();
 
-            if (this.actor.system.wounded == true) {
-              if (isLucky(this.actor, roll.result)) {
-                contentString = `<h2>${element.getAttribute("name")}</h2
-          <p></p><b>Target Number: [[${woundedValue + playerInput}]]</b> <p></p>
-          <b>Result: [[${roll.result}]]</b><p></p>
-          <span style='color:green; font-size:120%;'> <b>LUCKY NUMBER!</b></span>`;
-              } else if (isUnlucky(this.actor, roll.result)) {
-                contentString = `<h2>${element.getAttribute("name")}</h2
-          <p></p><b>Target Number: [[${woundedValue + playerInput}]]</b> <p></p>
-          <b>Result: [[${roll.result}]]</b><p></p>
-          <span style='color:rgb(168, 5, 5); font-size:120%;'> <b>UNLUCKY NUMBER!</b></span>`;
-              } else {
-                contentString = `<h2>${element.getAttribute("name")}</h2
-          <p></p><b>Target Number: [[${woundedValue + playerInput}]]</b> <p></p>
-          <b>Result: [[${roll.result}]]</b><p></p>
-          <b>${roll.total <= woundedValue + playerInput
-                    ? "<span style='color:green; font-size: 120%;'> <b>SUCCESS!</b></span>"
-                    : " <span style='color:rgb(168, 5, 5); font-size: 120%;'> <b>FAILURE!</b></span>"
-                  }`;
-              }
-            } else {
-              if (isLucky(this.actor, roll.result)) {
-                contentString = `<h2>${element.getAttribute("name")}</h2
-        <p></p><b>Target Number: [[${regularValue + playerInput}]]</b> <p></p>
-        <b>Result: [[${roll.result}]]</b><p></p>
-        <span style='color:green; font-size:120%;'> <b>LUCKY NUMBER!</b></span>`;
-              } else if (isUnlucky(this.actor, roll.result)) {
-                contentString = `<h2>${element.getAttribute("name")}</h2
-        <p></p><b>Target Number: [[${regularValue + playerInput}]]</b> <p></p>
-        <b>Result: [[${roll.result}]]</b><p></p>
-        <span style='color:rgb(168, 5, 5); font-size:120%;'> <b>UNLUCKY NUMBER!</b></span>`;
-              } else {
-                contentString = `<h2>${element.getAttribute("name")}</h2
-        <p></p><b>Target Number: [[${regularValue + playerInput}]]</b> <p></p>
-        <b>Result: [[${roll.result}]]</b><p></p>
-        <b>${roll.total <= regularValue + playerInput
-                    ? "<span style='color:green; font-size: 120%;'> <b>SUCCESS!</b></span>"
-                    : " <span style='color:rgb(168, 5, 5); font-size: 120%;'> <b>FAILURE!</b></span>"
-                  }`;
-              }
-            }
+           const tn = this.actor.system.wounded
+  ? woundedValue + playerInput
+  : regularValue + playerInput;
+const { isSuccess, doS, doF } = calculateDegrees(Number(roll.result), tn);
+let degreesLine = `<br><b>${isSuccess ? "Degrees of Success" : "Degrees of Failure"}: ${isSuccess ? doS : doF}</b>`;
+
+if (isLucky(this.actor, roll.result)) {
+  contentString = `<h2>${element.getAttribute("name")}</h2>
+    <p></p><b>Target Number: [[${tn}]]</b> <p></p>
+    <b>Result: [[${roll.result}]]</b><p></p>
+    <span style='color:green; font-size:120%;'>
+      <b>LUCKY NUMBER!</b>
+    </span>${degreesLine}`;
+} else if (isUnlucky(this.actor, roll.result)) {
+  contentString = `<h2>${element.getAttribute("name")}</h2>
+    <p></p><b>Target Number: [[${tn}]]</b> <p></p>
+    <b>Result: [[${roll.result}]]</b><p></p>
+    <span style='color:rgb(168, 5, 5); font-size:120%;'>
+      <b>UNLUCKY NUMBER!</b>
+    </span>${degreesLine}`;
+} else {
+  contentString = `<h2>${element.getAttribute("name")}</h2>
+    <p></p><b>Target Number: [[${tn}]]</b> <p></p>
+    <b>Result: [[${roll.result}]]</b><p></p>
+    <b>${roll.total <= tn
+      ? " <span style='color:green; font-size: 120%;'> <b>SUCCESS!</b></span>"
+      : " <span style='color:rgb(168,5,5); font-size: 120%;'> <b>FAILURE!</b></span>"
+    }</b>${degreesLine}`;
+}
 
             await roll.toMessage({
               async: false,
@@ -1224,39 +1210,31 @@ async getData() {
           callback: async (html) => {
             const playerInput = parseInt(html.find('[id="playerInput"]').val());
 
-            let roll = new Roll("1d100");
-            await roll.evaluate();
-            let contentString = "";
+            const tn = this.actor.system.wounded
+  ? woundedValue + playerInput
+  : regularValue + playerInput;
+const { isSuccess, doS, doF } = calculateDegrees(Number(roll.result), tn);
+let degreesLine = `<br><b>${isSuccess ? "Degrees of Success" : "Degrees of Failure"}: ${isSuccess ? doS : doF}</b>`;
 
-            if (isLucky(this.actor, roll.result)) {
-              contentString = `<h2><img src="${item.img}"</img>${item.name}</h2>
-            <p></p><b>Target Number: [[${regularValue} + ${playerInput} + ${this.actor.system.wounded ? this.actor.system.woundPenalty : 0
-                }]]</b> <p></p>
-            <b>Result: [[${roll.result}]]</b><p></p>
-            <span style='color:green; font-size:120%;'> <b>LUCKY NUMBER!</b></span>`;
-            } else if (isUnlucky(this.actor, roll.result)) {
-              contentString = `<h2><img src="${item.img}"</img>${item.name}</h2>
-            <p></p><b>Target Number: [[${regularValue} + ${playerInput} + ${this.actor.system.wounded ? this.actor.system.woundPenalty : 0
-                }]]</b> <p></p>
-            <b>Result: [[${roll.result}]]</b><p></p>
-            <span style='color:rgb(168, 5, 5); font-size:120%;'> <b>UNLUCKY NUMBER!</b></span>`;
-            } else if (this.actor.system.wounded === true) {
-              contentString = `<h2><img src="${item.img}"</img>${item.name}</h2>
-            <p></p><b>Target Number: [[${woundedValue} + ${playerInput}]]</b> <p></p>
-            <b>Result: [[${roll.result}]]</b><p></p>
-            <b>${roll.total <= woundedValue + playerInput
-                  ? " <span style='color:green; font-size: 120%;'> <b>SUCCESS!</b></span>"
-                  : " <span style='color: rgb(168, 5, 5); font-size: 120%;'> <b>FAILURE!</b></span>"
-                }`;
-            } else {
-              contentString = `<h2><img src="${item.img}"</img>${item.name}</h2>
-            <p></p><b>Target Number: [[${regularValue} + ${playerInput}]]</b> <p></p>
-            <b>Result: [[${roll.result}]]</b><p></p>
-            <b>${roll.total <= regularValue + playerInput
-                  ? " <span style='color:green; font-size: 120%;'> <b>SUCCESS!</b></span>"
-                  : " <span style='color: rgb(168, 5, 5); font-size: 120%;'> <b>FAILURE!</b></span>"
-                }`;
-            }
+if (isLucky(this.actor, roll.result)) {
+  contentString = `<h2><img src="${item.img}"</img>${item.name}</h2>
+    <p></p><b>Target Number: [[${tn}]]</b> <p></p>
+    <b>Result: [[${roll.result}]]</b><p></p>
+    <span style='color:green; font-size:120%;'> <b>LUCKY NUMBER!</b></span>${degreesLine}`;
+} else if (isUnlucky(this.actor, roll.result)) {
+  contentString = `<h2><img src="${item.img}"</img>${item.name}</h2>
+    <p></p><b>Target Number: [[${tn}]]</b> <p></p>
+    <b>Result: [[${roll.result}]]</b><p></p>
+    <span style='color:rgb(168, 5, 5); font-size:120%;'> <b>UNLUCKY NUMBER!</b></span>${degreesLine}`;
+} else {
+  contentString = `<h2><img src="${item.img}"</img>${item.name}</h2>
+    <p></p><b>Target Number: [[${tn}]]</b> <p></p>
+    <b>Result: [[${roll.result}]]</b><p></p>
+    <b>${roll.total <= tn
+      ? " <span style='color:green; font-size: 120%;'> <b>SUCCESS!</b></span>"
+      : " <span style='color: rgb(168, 5, 5); font-size: 120%;'> <b>FAILURE!</b></span>"
+    }</b>${degreesLine}`;
+}
 
             await roll.toMessage({
               async: false,
@@ -1298,7 +1276,9 @@ async getData() {
 
             let roll = new Roll("1d100");
             roll.evaluate();
-            let contentString = "";
+            const tn = this.actor.system.resistance[element.id] + playerInput;
+const { isSuccess, doS, doF } = calculateDegrees(Number(roll.result), tn);
+let degreesLine = `<br><b>${isSuccess ?
 
             if (isLucky(this.actor, roll.result)) {
               contentString = `<h2>${element.name} Resistance</h2>
