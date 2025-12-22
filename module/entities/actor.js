@@ -276,21 +276,170 @@ export class SimpleActor extends Actor {
     return totalBonus
   }
 
-  _calculateENC(actorData) {
-    let weighted = (actorData.items || []).filter(item => item?.system && Object.prototype.hasOwnProperty.call(item.system, "enc"));
-    let totalWeight = 0.0;
-    for (let item of weighted) {
-      const enc = Number(item?.system?.enc || 0);
-      const qty = Number(item?.system?.quantity || 0);
-      // Defensive guard: safe nested access to container_enc.applied_enc
-      const containerAppliedENC = (item.type == 'container' && item?.system?.container_enc && !isNaN(Number(item?.system?.container_enc?.applied_enc)))
-        ? Number(item?.system?.container_enc?.applied_enc)
-        : 0;
-      const containedItemReduction = (item?.type !== 'container' && !!item?.system?.containerStats?.contained) ? (enc * qty) : 0;
-      totalWeight = totalWeight + (enc * qty) + containerAppliedENC - containedItemReduction;
-    }
-    return totalWeight
+_calculateENC(actorData) {
+  const items = Array.isArray(actorData?.items) ? actorData.items : [];
+  const weighted = items.filter(item => item?.system && Object.prototype.hasOwnProperty.call(item.system, "enc"));
+  let totalWeight = 0.0;
+  for (const item of weighted) {
+    const enc = Number(item?.system?.enc ?? 0);
+    const qty = Number(item?.system?.quantity ?? 0);
+    const containerAppliedENC = (item.type === 'container' && item?.system?.container_enc && !isNaN(Number(item?.system?.container_enc?.applied_enc)))
+      ? Number(item.system.container_enc.applied_enc)
+      : 0;
+    const containedItemReduction = (item?.type !== 'container' && !!item?.system?.containerStats?.contained) ? (enc * qty) : 0;
+    totalWeight += (enc * qty) + containerAppliedENC - containedItemReduction;
   }
+  return totalWeight;
+}
+
+_armorWeight(actorData) {
+  const items = Array.isArray(actorData?.items) ? actorData.items : [];
+  const worn = items.filter(item => item?.system?.equipped === true);
+  let armorENC = 0.0;
+  for (const item of worn) {
+    const enc = Number(item?.system?.enc ?? 0);
+    const qty = Number(item?.system?.quantity ?? 0);
+    armorENC += ((enc / 2) * qty);
+  }
+  return armorENC;
+}
+
+_excludeENC(actorData) {
+  const items = Array.isArray(actorData?.items) ? actorData.items : [];
+  const excluded = items.filter(item => item?.system?.excludeENC === true);
+  let totalWeight = 0.0;
+  for (const item of excluded) {
+    const enc = Number(item?.system?.enc ?? 0);
+    const qty = Number(item?.system?.quantity ?? 0);
+    totalWeight += (enc * qty);
+  }
+  return totalWeight;
+}
+
+_iniCalc(actorData) {
+  const items = Array.isArray(actorData?.items) ? actorData.items : [];
+  const attribute = items.filter(item => item && (item.type === "trait" || item.type === "talent"));
+  let init = Number(actorData?.system?.initiative?.base ?? 0);
+  const getTotal = (name) => Number(actorData?.system?.characteristics?.[name]?.total ?? 0);
+  for (const item of attribute) {
+    if (item?.system?.replace?.ini && item.system.replace.ini.characteristic !== "none") {
+      const ch = item.system.replace.ini.characteristic;
+      if (ch === "str") init = Math.floor(getTotal("str") / 10) * 3;
+      else if (ch === "end") init = Math.floor(getTotal("end") / 10) * 3;
+      else if (ch === "agi") init = Math.floor(getTotal("agi") / 10) * 3;
+      else if (ch === "int") init = Math.floor(getTotal("int") / 10) * 3;
+      else if (ch === "wp") init = Math.floor(getTotal("wp") / 10) * 3;
+      else if (ch === "prc") init = Math.floor(getTotal("prc") / 10) * 3;
+      else if (ch === "prs") init = Math.floor(getTotal("prs") / 10) * 3;
+      else if (ch === "lck") init = Math.floor(getTotal("lck") / 10) * 3;
+    }
+  }
+  return init;
+}
+
+_woundThresholdCalc(actorData) {
+  const items = Array.isArray(actorData?.items) ? actorData.items : [];
+  const attribute = items.filter(item => item && (item.type === "trait" || item.type === "talent"));
+  let wound = Number(actorData?.system?.wound_threshold?.base ?? 0);
+  const getTotal = (name) => Number(actorData?.system?.characteristics?.[name]?.total ?? 0);
+  for (const item of attribute) {
+    if (item?.system?.replace?.wt && item.system.replace.wt.characteristic !== "none") {
+      const ch = item.system.replace.wt.characteristic;
+      if (ch === "str") wound = Math.floor(getTotal("str") / 10) * 3;
+      else if (ch === "end") wound = Math.floor(getTotal("end") / 10) * 3;
+      else if (ch === "agi") wound = Math.floor(getTotal("agi") / 10) * 3;
+      else if (ch === "int") wound = Math.floor(getTotal("int") / 10) * 3;
+      else if (ch === "wp") wound = Math.floor(getTotal("wp") / 10) * 3;
+      else if (ch === "prc") wound = Math.floor(getTotal("prc") / 10) * 3;
+      else if (ch === "prs") wound = Math.floor(getTotal("prs") / 10) * 3;
+      else if (ch === "lck") wound = Math.floor(getTotal("lck") / 10) * 3;
+    }
+  }
+  return wound;
+}
+
+_aggregateItemStats(actorData) {
+  const items = Array.isArray(actorData?.items) ? actorData.items : [];
+  // Simple cache to avoid re-calculation if items unchanged in the same actor instance
+  const signature = items.map(it => `${it?._id||''}:${Number(it?.system?.quantity ?? 0)}:${Number(it?.system?.enc ?? 0)}`).join('|');
+  if (this._aggCache && this._aggCache.signature === signature) return this._aggCache.agg;
+
+  const stats = {
+    charBonus: { str:0, end:0, agi:0, int:0, wp:0, prc:0, prs:0, lck:0 },
+    hpBonus:0, mpBonus:0, spBonus:0, lpBonus:0, wtBonus:0, speedBonus:0, iniBonus:0,
+    resist: { diseaseR:0, fireR:0, frostR:0, shockR:0, poisonR:0, magicR:0, natToughnessR:0, silverR:0, sunlightR:0 },
+    swimBonus:0, flyBonus:0, doubleSwimSpeed:false, addHalfSpeed:false, halfSpeed:false,
+    totalEnc:0, containersAppliedEnc:0, containedWeightReduction:0, armorEnc:0, excludedEnc:0,
+    skillModifiers: {}, traitsAndTalents: [], shiftForms: [], itemCount: items.length
+  };
+
+  for (const item of items) {
+    const sys = item?.system ?? {};
+    const enc = Number(sys?.enc ?? 0);
+    const qty = Number(sys?.quantity ?? 0);
+
+    // ENC contributions
+    stats.totalEnc += enc * qty;
+    if (item.type === 'container' && sys?.container_enc && !isNaN(Number(sys?.container_enc?.applied_enc))) {
+      stats.containersAppliedEnc += Number(sys.container_enc.applied_enc);
+    }
+    if (sys?.containerStats?.contained) stats.containedWeightReduction += enc * qty;
+    if (sys?.excludeENC === true) stats.excludedEnc += enc * qty;
+    if (sys?.equipped === true) stats.armorEnc += ((enc / 2) * qty);
+
+    // Characteristic bonuses, resource/resistances, flags
+    if (sys?.characteristicBonus) {
+      stats.charBonus.str += Number(sys.characteristicBonus.strChaBonus ?? 0);
+      stats.charBonus.end += Number(sys.characteristicBonus.endChaBonus ?? 0);
+      stats.charBonus.agi += Number(sys.characteristicBonus.agiChaBonus ?? 0);
+      stats.charBonus.int += Number(sys.characteristicBonus.intChaBonus ?? 0);
+      stats.charBonus.wp += Number(sys.characteristicBonus.wpChaBonus ?? 0);
+      stats.charBonus.prc += Number(sys.characteristicBonus.prcChaBonus ?? 0);
+      stats.charBonus.prs += Number(sys.characteristicBonus.prsChaBonus ?? 0);
+      stats.charBonus.lck += Number(sys.characteristicBonus.lckChaBonus ?? 0);
+    }
+
+    stats.hpBonus += Number(sys.hpBonus ?? 0);
+    stats.mpBonus += Number(sys.mpBonus ?? 0);
+    stats.spBonus += Number(sys.spBonus ?? 0);
+    stats.lpBonus += Number(sys.lpBonus ?? 0);
+    stats.wtBonus += Number(sys.wtBonus ?? 0);
+    stats.speedBonus += Number(sys.speedBonus ?? 0);
+    stats.iniBonus += Number(sys.iniBonus ?? 0);
+
+    stats.resist.diseaseR += Number(sys.diseaseR ?? 0);
+    stats.resist.fireR += Number(sys.fireR ?? 0);
+    stats.resist.frostR += Number(sys.frostR ?? 0);
+    stats.resist.shockR += Number(sys.shockR ?? 0);
+    stats.resist.poisonR += Number(sys.poisonR ?? 0);
+    stats.resist.magicR += Number(sys.magicR ?? 0);
+    stats.resist.natToughnessR += Number(sys.natToughnessR ?? 0);
+    stats.resist.silverR += Number(sys.silverR ?? 0);
+    stats.resist.sunlightR += Number(sys.sunlightR ?? 0);
+
+    stats.swimBonus += Number(sys.swimBonus ?? 0);
+    stats.flyBonus += Number(sys.flyBonus ?? 0);
+    if (sys.doubleSwimSpeed) stats.doubleSwimSpeed = true;
+    if (sys.addHalfSpeed) stats.addHalfSpeed = true;
+    if (sys.halfSpeed) stats.halfSpeed = true;
+
+    if (Array.isArray(sys?.skillArray)) {
+      for (const entry of sys.skillArray) {
+        const name = entry?.name;
+        const value = Number(entry?.value ?? 0);
+        if (!name) continue;
+        stats.skillModifiers[name] = (stats.skillModifiers[name] || 0) + value;
+      }
+    }
+
+    if (item.type === 'trait' || item.type === 'talent') stats.traitsAndTalents.push(item);
+    if (sys?.shiftFormStyle) stats.shiftForms.push(sys.shiftFormStyle);
+  }
+
+  stats.totalEnc = stats.totalEnc + stats.containersAppliedEnc - stats.containedWeightReduction;
+  this._aggCache = { signature, agg: stats };
+  return stats;
+}
 
   _armorWeight(actorData) {
     let worn = (actorData.items || []).filter(item => item?.system && item.system.equipped == true);
