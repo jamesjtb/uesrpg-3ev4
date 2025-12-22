@@ -36,9 +36,9 @@ export const DAMAGE_TYPES = {
  * @param {string} damageType - Type of damage (fire, frost, shock, poison, magic, etc.)
  * @returns {Object} - { armor, resistance, toughness, total }
  */
-export function getDamageReduction(actor, damageType = DAMAGE_TYPES.PHYSICAL) {
-  if (!actor?.system) {
-    return { armor: 0, resistance: 0, toughness: 0, total: 0 };
+export function getDamageReduction(actor, damageType = DAMAGE_TYPES.PHYSICAL, hitLocation = 'Body') {
+  if (!actor?. system) {
+    return { armor: 0, resistance: 0, toughness: 0, total: 0, penetrated: 0 };
   }
 
   const actorData = actor.system;
@@ -47,20 +47,25 @@ export function getDamageReduction(actor, damageType = DAMAGE_TYPES.PHYSICAL) {
   let toughness = 0;
 
   // Physical damage: uses armor and natural toughness
-  if (damageType === DAMAGE_TYPES.PHYSICAL) {
-    // Calculate total armor from equipped items
-    const equippedArmor = actor.items?.filter(i => 
+ if (damageType === DAMAGE_TYPES.PHYSICAL) {
+    // Get armor for specific hit location
+    const equippedArmor = actor. items?. filter(i => 
       i.type === 'armor' && i.system?.equipped === true
     ) || [];
     
     for (let item of equippedArmor) {
-      armor += Number(item.system?.armor_rating || 0);
+      // Check if armor covers this hit location
+      const armorLocations = item.system?.hitLocations || {};
+      if (armorLocations[hitLocation] !== false) {
+        armor += Number(item.system?. armor_rating || 0);
+      }
     }
-
     // Natural toughness resistance
-    resistance = Number(actorData.resist?.natToughnessR || 0);
-    
-    // Toughness bonus (END bonus acts as damage reduction)
+    resistance = Number(actorData.resist?. natToughnessR || 0);
+    const endBonus = Math.floor(Number(actorData.characteristics?.end?. total || 0) / 10);
+    toughness = Number(endBonus || 0);
+  } else {
+        // Toughness bonus (END bonus acts as damage reduction)
     const endBonus = Math.floor(Number(actorData.characteristics?.end?.total || 0) / 10);
     toughness = Number(endBonus || 0);
   }
@@ -95,12 +100,7 @@ export function getDamageReduction(actor, damageType = DAMAGE_TYPES.PHYSICAL) {
 
   const total = armor + resistance + toughness;
 
-  return {
-    armor,
-    resistance,
-    toughness,
-    total
-  };
+ return { armor, resistance, toughness, total: armor + resistance + toughness };
 }
 
 /**
@@ -114,41 +114,37 @@ export function getDamageReduction(actor, damageType = DAMAGE_TYPES.PHYSICAL) {
  * @param {boolean} options.ignoreArmor - Ignore armor completely
  * @returns {Object} - Damage calculation details
  */
-export function calculateDamage(rawDamage, damageType, target, options = {}) {
+export function calculateDamage(rawDamage, damageType, targetActor, options = {}) {
   const {
     penetration = 0,
     dosBonus = 0,
+    hitLocation = 'Body',
     ignoreArmor = false
   } = options;
 
-  // Get damage reduction
-  const reduction = getDamageReduction(target, damageType);
+  let reductions = { armor: 0, resistance: 0, toughness: 0, total: 0 };
   
-  // Calculate effective armor (can be penetrated)
-  let effectiveArmor = ignoreArmor ? 0 : Math.max(0, reduction.armor - penetration);
-  
-  // Resistance and toughness cannot be penetrated (unless specified otherwise)
-  const effectiveReduction = effectiveArmor + reduction.resistance + reduction.toughness;
+  if (! ignoreArmor) {
+    reductions = getDamageReduction(targetActor, damageType, hitLocation);
+    
+    // Apply penetration (reduces armor only, not resistance/toughness)
+    const penetratedArmor = Math.max(0, reductions. armor - penetration);
+    reductions.penetrated = reductions.armor - penetratedArmor;
+    reductions.armor = penetratedArmor;
+    reductions.total = reductions. armor + reductions.resistance + reductions.toughness;
+  }
 
-  // Apply DoS bonus
-  const totalRawDamage = Number(rawDamage) + Number(dosBonus);
-
-  // Calculate final damage (minimum 0)
-  const finalDamage = Math.max(0, totalRawDamage - effectiveReduction);
+  const totalDamage = Math.max(0, rawDamage + dosBonus);
+  const finalDamage = Math.max(0, totalDamage - reductions.total);
 
   return {
-    rawDamage: Number(rawDamage),
-    dosBonus: Number(dosBonus),
-    totalRawDamage,
-    reduction: {
-      armor: effectiveArmor,
-      resistance: reduction.resistance,
-      toughness: reduction.toughness,
-      total: effectiveReduction
-    },
+    rawDamage,
+    dosBonus,
+    totalDamage,
+    reductions,
     finalDamage,
-    damageType,
-    prevented: totalRawDamage - finalDamage
+    hitLocation,
+    damageType
   };
 }
 
