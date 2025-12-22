@@ -70,9 +70,10 @@ export const OpposedRoll = {
       
       // Calculate damage with all reductions
       const damageCalc = calculateDamage(rawDamage, damageType, defender, { 
-        penetration, 
-        dosBonus 
-      });
+           penetration: penetration || 0, 
+           dosBonus:  dosBonus,
+           hitLocation: hitLoc  // ← ADD THIS
+  });
       
       damageInfo = {
         roll,
