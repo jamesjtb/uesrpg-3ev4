@@ -775,10 +775,10 @@
      "hitLocations": {
        "Head": true,
        "Body": true,
-       "Right Arm": true,
-       "Left Arm": true,
-       "Right Leg": true,
-       "Left Leg": true
+       "RightArm": true,
+       "LeftArm": true,
+       "RightLeg":  true,
+       "LeftLeg": true
      },
      "charge": {
       "value": 0,
