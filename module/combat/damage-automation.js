@@ -101,17 +101,6 @@ export function getDamageReduction(actor, damageType = DAMAGE_TYPES.PHYSICAL, hi
   return { armor, resistance, toughness, total };
 }
 
-  const total = armor + resistance + toughness;
-
-  return { armor, resistance, toughness, total };
-}
-  }
-
-  const total = armor + resistance + toughness;
-
- return { armor, resistance, toughness, total: armor + resistance + toughness };
-}
-
 /**
  * Calculate final damage after reductions
  * @param {number} rawDamage - Raw damage value
