@@ -1794,39 +1794,4 @@ _createStatusTags() {
     : this.form.querySelector("#fatigue-icon").classList.remove("active");
   // Optionally guard encumbrance/icon logic similarly
 }
-  // Apply damage button click handler (add at end of activateListeners)
-html.on('click', '.apply-damage-btn', async (ev) => {
-  const button = ev.currentTarget;
-  const actorId = button.dataset.actorId;
-  const damage = Number(button.dataset.damage);
-  const damageType = button.dataset.type;
-  const location = button.dataset.location;
-
-  const targetActor = game.actors.get(actorId);
-  if (!targetActor) {
-    ui.notifications.warn('Target actor not found');
-    return;
-  }
-
-  // Import helpers
-  const { getArmorForLocation, calculateFinalDamage } = await import('../helpers/damageHelper.js');
-
-  const armor = getArmorForLocation(targetActor, location);
-  const damageResult = calculateFinalDamage(damage, armor, damageType, false);
-
-  const newHP = Math.max(0, (targetActor.system.hp.value || 0) - damageResult.finalDamage);
-
-  await targetActor.update({'system.hp.value': newHP});
-
-  ChatMessage.create({
-    content: `
-      <div>
-        <p><b>${targetActor.name}</b> takes <b>${damageResult.finalDamage}</b> damage to <b>${location}</b></p>
-        <p>Base Damage: ${damageResult.baseDamage} | Armor: ${damageResult.armorReduction} | Final:  ${damageResult.finalDamage}</p>
-        <p>HP: ${targetActor.system.hp.value} → ${newHP}</p>
-      </div>
-    `,
-    speaker: ChatMessage.getSpeaker()
-  });
-});
 }
