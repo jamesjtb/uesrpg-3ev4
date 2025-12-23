@@ -41,14 +41,18 @@ function _renderPendingCard(data) {
   const a = data.attacker;
   const d = data.defender;
 
+  // Back-compat: earlier code used `total`, current roll helper uses `rollTotal`
+  const aRollTotal = a?.result?.rollTotal ?? a?.result?.total;
+  const dRollTotal = d?.result?.rollTotal ?? d?.result?.total;
+
   const aLine = a.result
-    ? `<div><b>Target:</b> ${a.target}</div><div><b>Roll:</b> ${a.result.total} — ${_fmtDegree(a.result)}</div>`
+    ? `<div><b>Target:</b> ${a.target}</div><div><b>Roll:</b> ${aRollTotal} — ${_fmtDegree(a.result)}</div>`
     : `<div><b>Target:</b> ${a.target ?? "—"}</div>`;
 
   const dLine = d.noDefense
     ? `<div><b>Defense:</b> No Defense</div>`
     : d.result
-      ? `<div><b>Target:</b> ${d.target}</div><div><b>Roll:</b> ${d.result.total} — ${_fmtDegree(d.result)}</div>`
+      ? `<div><b>Test:</b> ${d.label ?? "Defense"}</div><div><b>Target:</b> ${d.target}</div><div><b>Roll:</b> ${dRollTotal} — ${_fmtDegree(d.result)}</div>`
       : `<div><b>Defense:</b> (choose)</div>`;
 
   const statusHtml = data.outcome
@@ -79,7 +83,7 @@ function _renderPendingCard(data) {
 async function _updateMessageCard(message, data) {
   await message.update({
     content: _renderPendingCard({ ...data, messageId: message.id }),
-    flags: { "uesrpg-3ev4": { opposed: data } }
+    ["flags.uesrpg-3ev4.opposed"]: data
   });
 }
 
@@ -230,7 +234,8 @@ export const OpposedWorkflow = {
       data.defender.noDefense = true;
       data.defender.target = 0;
       // Defender has no roll; treat as automatic failure in resolution step
-      data.defender.result = { total: 100, isSuccess: false, degree: 1 };
+      data.defender.label = "No Defense";
+      data.defender.result = { rollTotal: 100, target: 0, isSuccess: false, degree: 1, textual: null };
       await _updateMessageCard(message, data);
     }
 
