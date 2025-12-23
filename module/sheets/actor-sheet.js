@@ -14,6 +14,8 @@ import khajiitFurstocks from './racemenu/data/khajiit-furstocks.js';
 import expandedRaces from "./racemenu/data/expanded-races.js";
 import { calculateDegrees } from "../helpers/diceHelper.js";
 import { getHitLocationFromRoll } from "../combat/combat-utils.js";
+import { OpposedRoll } from "../combat/opposed-rolls.js";
+import { DefenseDialog } from "../combat/defense-dialog.js";
 
 export class SimpleActorSheet extends foundry.appv1.sheets.ActorSheet {
   /** @override */
@@ -57,6 +59,14 @@ export class SimpleActorSheet extends foundry.appv1.sheets.ActorSheet {
   /** @override */
 
 async getData(options = {}) {
+    // v13 migration / data normalization: legacy typos in rank values
+    const normalizeRankValue = (rank) => {
+      if (rank == null) return rank;
+      const r = String(rank).toLowerCase();
+      if (r === "journeymain") return "journeyman";
+      return r;
+    };
+
   // In modern Foundry versions, super.getData is async
   const data = await super.getData(options);
 
@@ -89,6 +99,16 @@ async getData(options = {}) {
     // Fallback: don’t crash rendering if API differs
     data.actor.system.enrichedBio = data.actor?.system?.bio ?? "";
   }
+    // Normalize rank values for rendering (prevents UI defaulting to 'untrained' due to legacy typos)
+    try {
+      const items = data?.items || [];
+      for (const it of items) {
+        if (it?.type === "combatStyle" && it?.system) {
+          it.system.rank = normalizeRankValue(it.system.rank);
+        }
+      }
+    } catch (e) { /* no-op */ }
+
 
   return data;
 }
@@ -715,7 +735,7 @@ if (targetArray) {
   const playerInput = Number.parseInt(playerInputRaw, 10) || 0;
 
   const roll = new Roll("1d100");
-  await roll.evaluate({ async: true });
+  await roll.evaluate();
 
   let contentString = "";
 
@@ -811,7 +831,7 @@ if (isLucky(this.actor, roll.result)) {
             const playerInput = parseInt(html.find('[id="playerInput"]').val());
             let contentString = "";
             let roll = new Roll("1d100");
-            await roll.evaluate({ async: true });
+            await roll.evaluate();
 
             if (isLucky(this.actor, roll.result)) {
               contentString = `<h2><img src="${item.img}"</img>${item.name}</h2>
@@ -1078,7 +1098,7 @@ let damageEntry = "";
 const damageFormula = String(spellToCast.system.damage ?? "").trim();
 if (damageFormula && damageFormula !== "0") {
   damageRoll = new Roll(damageFormula);
-  await damageRoll.evaluate({ async: true });
+  await damageRoll.evaluate();
 
   damageEntry = `<tr>
     <td style="font-weight: bold;">Damage</td>
@@ -1088,20 +1108,20 @@ if (damageFormula && damageFormula !== "0") {
 }
 
             const hitLocRoll = new Roll("1d10");
-            await hitLocRoll.evaluate({ async: true });
+            await hitLocRoll.evaluate();
             let hitLoc = "";
 
-            if (hitLocRoll.result <= 5) {
+            if (Number(hitLocRoll.total) <= 5) {
               hitLoc = "Body";
-            } else if (hitLocRoll.result == 6) {
+            } else if (Number(hitLocRoll.total) == 6) {
               hitLoc = "Right Leg";
-            } else if (hitLocRoll.result == 7) {
+            } else if (Number(hitLocRoll.total) == 7) {
               hitLoc = "Left Leg";
-            } else if (hitLocRoll.result == 8) {
+            } else if (Number(hitLocRoll.total) == 8) {
               hitLoc = "Right Arm";
-            } else if (hitLocRoll.result == 9) {
+            } else if (Number(hitLocRoll.total) == 9) {
               hitLoc = "Left Arm";
-            } else if (hitLocRoll.result == 10) {
+            } else if (Number(hitLocRoll.total) == 10) {
               hitLoc = "Head";
             }
 
@@ -1134,7 +1154,7 @@ if (damageFormula && damageFormula !== "0") {
 // Calculate Degrees of Success/Failure for the spell cast
 // Cast roll (d100) for spell success
 const castRoll = new Roll("1d100");
-await castRoll.evaluate({ async: true });
+await castRoll.evaluate();
 
 const spellSuccessRoll = Number(castRoll.total);
 const spellSkillTN =
@@ -1276,32 +1296,60 @@ async _onCombatRoll(event) {
           const raw = html.find('[id="playerInput"]').val();
           const playerInput = Number.isFinite(parseInt(raw)) ? parseInt(raw) : 0;
 
-          const roll = new Roll("1d100");
-          await roll.evaluate({ async: true });
-
           const tn = this.actor.system.wounded
             ? woundedValue + playerInput
             : regularValue + playerInput;
 
+          // If the user has a target selected, treat Combat Style rolls as opposed checks
+          const defenderToken = [...(game.user.targets ?? [])][0] ?? null;
+          if (defenderToken) {
+            const attackerToken =
+              canvas?.tokens?.controlled?.find(t => t.actor?.id === this.actor.id) ??
+              this.actor.getActiveTokens?.()[0] ??
+              null;
+
+            if (!attackerToken) {
+              ui.notifications.warn("No attacker token found on the canvas. Select your token and try again.");
+              return;
+            }
+
+            const defenseChoice = await DefenseDialog.show(defenderToken.actor);
+            if (!defenseChoice) return; // canceled
+
+            await OpposedRoll.perform(attackerToken, defenderToken, {
+              attackerTarget: tn,
+              defenderTarget: Number(defenseChoice.skill ?? 0),
+              flavor: `${item.name} vs ${defenseChoice.label ?? "Defense"}`,
+            });
+
+            return;
+          }
+
+          // Otherwise, perform a standard single combat test roll
+          const roll = new Roll("1d100");
+          await roll.evaluate();
+
           const { isSuccess, doS, doF } = calculateDegrees(Number(roll.total), tn);
 
-          const degreesLine = `<br><b>${
-            isSuccess ? "Degrees of Success" : "Degrees of Failure"
-          }: ${isSuccess ? doS : doF}</b>`;
+          const degreesLine = `<br><b>${isSuccess ? "Degrees of Success" : "Degrees of Failure"}: ${isSuccess ? doS : doF}</b>`;
+          const outcomeLine = `<br><b>${isSuccess
+            ? " <span style='color:green; font-size: 120%;'>SUCCESS!</span>"
+            : " <span style='color: rgb(168, 5, 5); font-size: 120%;'>FAILURE!</span>"
+          }</b>`;
 
           const contentString = `<h2>${item.name}</h2>
               <p></p><b>Target Number: [[${tn}]]</b><p></p>
               <b>Result: [[${roll.total}]]</b>
-              ${degreesLine}`;
+              ${outcomeLine}${degreesLine}`;
 
-         await roll.toMessage({
-  user: game.user.id,
-  speaker: ChatMessage.getSpeaker(),
-  content: contentString,
-  flavor: `<div class="tag-container">${tags.join("")}</div>`,
-  rollMode: game.settings.get("core", "rollMode"),
-});
-        },
+          await roll.toMessage({
+            user: game.user.id,
+            speaker: ChatMessage.getSpeaker(),
+            content: contentString,
+            flavor: `<div class="tag-container">${tags.join("")}</div>`,
+            rollMode: game.settings.get("core", "rollMode"),
+          });
+        }
       },
       two: {
         label: "Cancel",
@@ -1331,7 +1379,7 @@ async _onCombatRoll(event) {
             const playerInput = parseInt(html.find('[id="playerInput"]').val());
 
             let roll = new Roll("1d100");
-            await roll.evaluate({ async: true });
+            await roll.evaluate();
             const tn = this.actor.system.resistance[element.id] + playerInput;
 const { isSuccess, doS, doF } = calculateDegrees(Number(roll.total), tn);
 
@@ -1400,7 +1448,7 @@ async _onDamageRoll(event) {
 
   // Roll to hit (1d100)
   const hit = new Roll("1d100");
-  await hit.evaluate({ async: true });
+  await hit.evaluate();
   const hitResult = Number(hit.total);
   const hit_loc = getHitLocationFromRoll(hitResult);
 
@@ -1422,14 +1470,15 @@ async _onDamageRoll(event) {
   // Damage roll
   const damageString = shortcutWeapon.system.damage;
   const weaponRoll = new Roll(damageString);
-  await weaponRoll.evaluate({ async: true });
+  await weaponRoll.evaluate();
 
   let superiorTotal = null;
+  let superiorRoll = null;
   let finalDamage = Number(weaponRoll.total);
 
   if (shortcutWeapon.system.superior) {
-    const superiorRoll = new Roll(damageString);
-    await superiorRoll.evaluate({ async: true });
+    superiorRoll = new Roll(damageString);
+    await superiorRoll.evaluate();
     superiorTotal = Number(superiorRoll.total);
     finalDamage = Math.max(finalDamage, superiorTotal);
   }
@@ -1480,11 +1529,14 @@ async _onDamageRoll(event) {
     </div>
   `;
 
-  await weaponRoll.toMessage({
+  const rollsToSend = [weaponRoll, hit];
+  if (superiorRoll) rollsToSend.push(superiorRoll);
+
+  await ChatMessage.create({
     user: game.user.id,
     speaker: ChatMessage.getSpeaker(),
     content: contentString,
-    roll: weaponRoll,
+    rolls: rollsToSend,
     rollMode: game.settings.get("core", "rollMode"),
   });
 }
