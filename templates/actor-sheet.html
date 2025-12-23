@@ -390,17 +390,7 @@
                                             </div>
                                         </td>
                                         <td>{{item.system.value}}%</td>
-                                        <td>
-                                            <select class="rank-select" id="{{item._id}}" name="rank-select" value="{{item.system.rank}}">
-                                                <option value="untrained">Untrained</option>
-                                                <option value="novice">Novice</option>
-                                                <option value="apprentice">Apprentice</option>
-                                                <option value="journeyman">Journeyman</option>
-                                                <option value="adept">Adept</option>
-                                                <option value="expert">Expert</option>
-                                                <option value="master">Master</option>
-                                            </select>
-                                        </td>
+                                        <td>{{item.system.rank}}</td>
                                         <td class="right-align-cell"><a class="item-control item-delete" title="Delete Item"><i class="fas fa-trash"></i></a></td>
                                     </tr>
                                 {{/each}}
