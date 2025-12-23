@@ -99,6 +99,7 @@ export const OpposedRoll = {
           ${!autoApplyDamage ? `
             <br><button class="apply-damage-btn" 
               data-actor-id="${defender.id}" 
+              data-actor-uuid="${defender.uuid}" 
               data-damage="${rawDamage}" 
               data-type="${damageType}" 
               data-location="${hitLoc}"
@@ -154,11 +155,15 @@ export const OpposedRoll = {
           opposed: true,
           attackerId: attacker.id,
           defenderId: defender.id,
+          attackerUuid: attacker.uuid,
+          defenderUuid: defender.uuid,
+          attackerTokenUuid: attackerToken.document?.uuid,
+          defenderTokenUuid: defenderToken.document?.uuid,
           outcome,
           damageInfo
         }
       },
-      roll: aRes.roll
+      rolls: [aRes.roll]
     });
 
     return { 
