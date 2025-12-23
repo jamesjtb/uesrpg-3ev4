@@ -3,26 +3,31 @@
  */
 export class DefenseDialog extends Dialog {
   constructor(defender, options = {}) {
+    const getItemSkillValue = (name) => {
+      const item = defender?.items?.find(i => (i.type === "skill" || i.type === "combatStyle") && i.name?.toLowerCase() === String(name).toLowerCase());
+      return Number(item?.system?.value ?? item?.system?.total ?? 0);
+    };
+
     const defenseOptions = {
       evade: {
         label: "Evade",
-        skill: defender.system?. skills?.evade?. value || 0,
+        skill: getItemSkillValue("Evade") || Number(defender.system?.characteristics?.agi?.total ?? 0),
         description:  "Dodge the attack (AGI)"
       },
       block: {
         label: "Block (Shield)",
-        skill: defender.system?.skills?.block?.value || 0,
+        skill: getItemSkillValue("Block") || Number(defender.system?.characteristics?.str?.total ?? 0),
         description: "Block with shield (STR)",
-        disabled: !defender.items. find(i => i.type === 'shield' && i.system?.equipped)
+        disabled: !defender.items?.find(i => i.type === 'shield' && i.system?.equipped)
       },
       parry:  {
         label: "Parry",
-        skill: defender. system?.combat?.value || 0,
+        skill: getItemSkillValue("Combat Style") || Number(defender.system?.combat?.value ?? 0),
         description:  "Parry with melee weapon (STR/AGI)"
       },
       counterAttack: {
         label:  "Counter-Attack",
-        skill: defender.system?.combat?.value || 0,
+        skill: getItemSkillValue("Combat Style") || Number(defender.system?.combat?.value ?? 0),
         description:  "Attack while defending"
       }
     };
