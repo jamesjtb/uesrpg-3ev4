@@ -17,7 +17,8 @@
 
 export async function doTestRoll(actor, { rollFormula = "1d100", target = 0, allowLucky = true, allowUnlucky = true } = {}) {
   // Evaluate the roll
-  const roll = await new Roll(rollFormula).evaluate({ async: true });
+  // Foundry V13+: the `async` option was removed; Roll#evaluate is async by default.
+  const roll = await new Roll(rollFormula).evaluate();
   const total = Number(roll.total);
 
   // Determine actor type / NPC status (best-effort)
