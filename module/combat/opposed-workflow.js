@@ -2,278 +2,306 @@
  * module/combat/opposed-workflow.js
  * Opposed test workflow (WFRP-like) for UESRPG 3ev4.
  *
- * v3: Chat-card button wiring support
- *  - Attacker and Defender roll on their own clients (permission-gated)
- *  - Results stored on ChatMessage flags: flags["uesrpg-3ev4"].opposed
- *  - When both results are present, outcome is resolved using degree-roll-helper resolveOpposed()
+ * Second-order pass:
+ * - TN derivation guarantees (fallback derive from actor/item when TN not provided)
+ * - Defense option filtering via DefenseDialog (dynamic + basic ranged filtering)
+ * - Proper DoS when TN > 100 is already handled by degree-roll-helper.js
+ * - Critical handling: ensures allowLucky/allowUnlucky flags passed through
+ * - Safer flag updates (only update system namespace)
  *
- * NOTE: This does NOT yet implement weapon damage workflow; that comes next.
+ * NOTE: This file intentionally remains non-ApplicationV2 (v13-safe legacy approach).
  */
 
 import { doTestRoll, resolveOpposed } from "../helpers/degree-roll-helper.js";
+import { DefenseDialog } from "./defense-dialog.js";
 
-function _resolveDoc(uuid) {
+function _asNumber(v) {
+  if (v == null) return 0;
+  if (typeof v === "number" && Number.isFinite(v)) return v;
+  const m = String(v).match(/-?\d+(?:\.\d+)?/);
+  return m ? Number(m[0]) : 0;
+}
+
+async function _resolveDoc(uuid) {
   if (!uuid) return null;
-  try { return fromUuidSync(uuid); } catch (e) { return null; }
+  try { return await fromUuid(uuid); } catch (_e) { return null; }
 }
 
-function _resolveTokenFromDoc(doc) {
+async function _resolveActorFromDoc(uuid) {
+  const doc = await _resolveDoc(uuid);
   if (!doc) return null;
-  if (doc.documentName === "Token") return doc.object ?? null;
-  if (doc.actor && doc.document) return doc;
+  // TokenDocument / Token / Actor
+  if (doc?.actor) return doc.actor;
+  if (doc?.document?.actor) return doc.document.actor;
+  if (doc?.type && doc?.system) return doc; // Actor
   return null;
 }
 
-function _resolveActorFromDoc(doc) {
+async function _resolveItem(uuid) {
+  const doc = await _resolveDoc(uuid);
   if (!doc) return null;
-  if (doc.documentName === "Actor") return doc;
-  if (doc.documentName === "Token") return doc.actor ?? null;
-  if (doc.actor) return doc.actor;
+  // Item embedded or world item
+  if (doc?.type && doc?.system) return doc;
   return null;
 }
 
-function _fmtDegree(res) {
-  if (!res) return "—";
-  return res.isSuccess ? `${res.degree} DoS` : `${res.degree} DoF`;
+function _getItemTN(item) {
+  return _asNumber(item?.system?.value ?? item?.system?.total ?? item?.system?.tn ?? 0);
 }
 
-function _renderPendingCard(data) {
+function _getActorFallbackTN(actor) {
+  // Prefer combat total/value if present; fallback to STR/AGI max.
+  const combat = _asNumber(actor?.system?.combat?.total ?? actor?.system?.combat?.value ?? 0);
+  if (combat) return combat;
+  const str = _asNumber(actor?.system?.characteristics?.str?.total ?? actor?.system?.characteristics?.str?.value ?? 0);
+  const agi = _asNumber(actor?.system?.characteristics?.agi?.total ?? actor?.system?.characteristics?.agi?.value ?? 0);
+  return Math.max(str, agi, 0);
+}
+
+function _inferIsRangedFromItem(item) {
+  // Best-effort inference; your schema doesn't define a strict ranged flag in template.json.
+  const reach = String(item?.system?.reach ?? "").toLowerCase();
+  const name = String(item?.name ?? "").toLowerCase();
+  // Heuristics: "ranged", "bow", "crossbow", "gun", "rifle", "pistol", "throw"
+  if (reach.includes("ranged") || reach.includes("range")) return true;
+  if (/(bow|crossbow|rifle|pistol|gun|thrown|throw)/i.test(name)) return true;
+  return false;
+}
+
+function _renderResultLine(side) {
+  // side: {target, modifier, result}
+  const tgt = _asNumber(side?.target);
+  const mod = _asNumber(side?.modifier);
+  const tn = tgt + mod;
+
+  if (!side?.result) {
+    return `<div><b>Target:</b> ${tn}</div>`;
+  }
+
+  const total = (side.result.rollTotal ?? side.result.total ?? side.result?.roll?.total);
+  const deg = side.result.textual ?? (side.result.isSuccess ? `${side.result.degree} DoS` : `${side.result.degree} DoF`);
+  const crit = side.result.isCriticalSuccess ? " <b>(CRIT SUCCESS)</b>" : (side.result.isCriticalFailure ? " <b>(CRIT FAILURE)</b>" : "");
+  return `
+    <div><b>Target:</b> ${tn}</div>
+    <div><b>Roll:</b> ${total} — ${deg}${crit}</div>
+  `;
+}
+
+function _renderCard(data) {
   const a = data.attacker;
   const d = data.defender;
 
-  // Back-compat: earlier code used `total`, current roll helper uses `rollTotal`
-  const aRollTotal = a?.result?.rollTotal ?? a?.result?.total;
-  const dRollTotal = d?.result?.rollTotal ?? d?.result?.total;
-
-  const aLine = a.result
-    ? `<div><b>Target:</b> ${a.target}</div><div><b>Roll:</b> ${aRollTotal} — ${_fmtDegree(a.result)}</div>`
-    : `<div><b>Target:</b> ${a.target ?? "—"}</div>`;
-
+  const aLine = _renderResultLine(a);
   const dLine = d.noDefense
-    ? `<div><b>Defense:</b> No Defense</div>`
-    : d.result
-      ? `<div><b>Test:</b> ${d.label ?? "Defense"}</div><div><b>Target:</b> ${d.target}</div><div><b>Roll:</b> ${dRollTotal} — ${_fmtDegree(d.result)}</div>`
-      : `<div><b>Defense:</b> (choose)</div>`;
+    ? `<div><b>Defense:</b> No Defense</div><div><b>Target:</b> 0</div><div><b>Roll:</b> 100 — 1 DoF</div>`
+    : `
+      <div><b>Test:</b> ${d.label ?? "(choose)"}</div>
+      ${_renderResultLine(d)}
+    `;
 
-  const statusHtml = data.outcome
-    ? `<div class="ues-opposed-status"><b>Outcome:</b> ${data.outcome.text ?? ""}</div>`
-    : `<div class="ues-opposed-status"><i>Pending: waiting for rolls</i></div>`;
+  const outcome = data.outcome?.text
+    ? `<div style="margin-top:10px;"><b>Outcome:</b> ${data.outcome.text}</div>`
+    : "";
 
   return `
-  <div class="ues-opposed-card" data-message-id="${data.messageId ?? ""}">
-    <h2>Opposed Test</h2>
-    <div class="ues-opposed-row" style="display:flex; gap:16px;">
-      <div class="ues-opposed-side" style="flex:1;">
-        <h3>${a.name}</h3>
-        <div><b>Test:</b> ${a.label}</div>
-        ${aLine}
-        ${a.result ? "" : `<button type="button" data-ues-opposed-action="attacker-roll" data-side="attacker">Roll</button>`}
+    <div class="ues-opposed-card" data-message-id="${data.messageId ?? ""}">
+      <h2>Opposed Test</h2>
+      <div class="ues-opposed-row" style="display:flex; gap:16px;">
+        <div class="ues-opposed-side" style="flex:1;">
+          <h3>${a.name}</h3>
+          <div><b>Test:</b> ${a.label}</div>
+          ${aLine}
+          ${a.result ? "" : `<button type="button" data-ues-opposed-action="attacker-roll" data-side="attacker">Roll</button>`}
+        </div>
+
+        <div class="ues-opposed-side" style="flex:1;">
+          <h3>${d.name}</h3>
+          ${dLine}
+          ${(!d.result && !d.noDefense) ? `<button type="button" data-ues-opposed-action="defender-roll" data-side="defender">Defend</button>` : ""}
+          ${(!d.result && !d.noDefense) ? `<button type="button" data-ues-opposed-action="defender-nodef" data-side="defender">No Defense</button>` : ""}
+        </div>
       </div>
-      <div class="ues-opposed-side" style="flex:1;">
-        <h3>${d.name}</h3>
-        ${dLine}
-        ${(!d.result && !d.noDefense) ? `<button type="button" data-ues-opposed-action="defender-roll" data-side="defender">Defend</button>` : ""}
-        ${(!d.result && !d.noDefense) ? `<button type="button" data-ues-opposed-action="defender-nodefense" data-side="defender">No Defense</button>` : ""}
-      </div>
+      ${outcome}
     </div>
-    ${statusHtml}
-  </div>`;
+  `;
 }
 
-async function _updateMessageCard(message, data) {
+async function _updateMessageCard(message, opposedData) {
+  const content = _renderCard(opposedData);
   await message.update({
-    content: _renderPendingCard({ ...data, messageId: message.id }),
-    ["flags.uesrpg-3ev4.opposed"]: data
-  });
-}
-
-function _canControlActor(actor) {
-  return game.user.isGM || actor?.isOwner;
-}
-
-async function _chooseDefense(defenderActor) {
-  // Minimal v1: defender chooses among combat styles and skills
-  const items = defenderActor.items ?? [];
-  const options = [];
-  for (const it of items) {
-    if (it.type === "combatStyle" || it.type === "skill") {
-      const tn = Number(String(it.system?.value ?? it.system?.total ?? "").match(/-?\d+(?:\.\d+)?/)?.[0] ?? 0);
-      options.push({ uuid: it.uuid, label: `${it.name} (${tn})`, tn, name: it.name });
-    }
-  }
-
-  // Fallback to AGI for evade if no skills exist
-  if (options.length === 0) {
-    const agi = Number(defenderActor.system?.characteristics?.agi?.total ?? defenderActor.system?.characteristics?.agi?.value ?? 0);
-    options.push({ uuid: null, label: `Evade (AGI ${agi})`, tn: agi, name: "Evade" });
-  }
-
-  const select = options.map((o, i) => `<option value="${i}">${o.label}</option>`).join("");
-
-  const content = `
-    <form>
-      <div class="form-group">
-        <label>Defense</label>
-        <select name="defIndex">${select}</select>
-      </div>
-    </form>`;
-
-  const result = await Dialog.wait({
-    title: `${defenderActor.name}: Choose Defense`,
     content,
-    buttons: {
-      ok: {
-        label: "Defend",
-        callback: (html) => {
-          const i = Number((html instanceof HTMLElement ? html : html?.[0])?.querySelector('select[name="defIndex"]').value);
-          return options[i];
-        }
-      },
-      cancel: { label: "Cancel" }
-    },
-    default: "ok"
+    [`flags.uesrpg-3ev4.opposed`]: opposedData
   });
-
-  return result ?? null;
 }
 
-export const OpposedWorkflow = {
+export class OpposedWorkflow {
   /**
-   * Create a pending opposed test chat card.
-   * Expected cfg fields:
-   *  - attackerTokenUuid, defenderTokenUuid (preferred)
-   *  - attackerActorUuid, defenderActorUuid (fallback)
-   *  - attackerItemUuid, attackerLabel, attackerTarget
+   * Create a pending opposed test chat message.
+   * cfg: { attackerTokenUuid, defenderTokenUuid, attackerActorUuid, defenderActorUuid, attackerItemUuid, attackerLabel, attackerTarget, mode }
    */
-  async createPending(cfg = {}) {
-    const aDoc = _resolveDoc(cfg.attackerTokenUuid) ?? _resolveDoc(cfg.attackerActorUuid);
-    const dDoc = _resolveDoc(cfg.defenderTokenUuid) ?? _resolveDoc(cfg.defenderActorUuid);
-
-    const aToken = _resolveTokenFromDoc(aDoc);
-    const dToken = _resolveTokenFromDoc(dDoc);
-
-    const attacker = _resolveActorFromDoc(aDoc);
-    const defender = _resolveActorFromDoc(dDoc);
+  static async createPending(cfg) {
+    const attacker = await _resolveActorFromDoc(cfg.attackerTokenUuid || cfg.attackerActorUuid);
+    const defender = await _resolveActorFromDoc(cfg.defenderTokenUuid || cfg.defenderActorUuid);
 
     if (!attacker || !defender) {
-      ui.notifications.warn("Opposed test requires both an attacker and a defender (token or actor).");
+      ui.notifications.warn("Opposed Test: Could not resolve attacker/defender actor.");
       return null;
     }
 
-    const data = {
-      status: "pending",
+    const item = cfg.attackerItemUuid ? await _resolveItem(cfg.attackerItemUuid) : null;
+
+    // TN derivation guarantee: prefer provided attackerTarget; else derive from item; else fallback to actor combat.
+    const providedTN = (cfg.attackerTarget != null) ? _asNumber(cfg.attackerTarget) : null;
+    const derivedTN = item ? _getItemTN(item) : 0;
+    const attackerTarget = (providedTN != null && Number.isFinite(providedTN) && providedTN !== 0)
+      ? providedTN
+      : (derivedTN || _getActorFallbackTN(attacker));
+
+    const isRanged = _inferIsRangedFromItem(item);
+
+    const opposedData = {
+      schema: 2,
+      mode: cfg.mode ?? "opposed",
+      context: {
+        isRanged,
+        // Future extension points:
+        // difficultyMods: { attacker: 0, defender: 0 },
+        // advantage: { attacker: 0, defender: 0 },
+      },
       attacker: {
-        tokenUuid: aToken?.document?.uuid ?? null,
-        actorUuid: attacker.uuid,
         name: attacker.name,
-        label: cfg.attackerLabel ?? "Opposed Test",
-        target: Number(cfg.attackerTarget) || 0,
+        actorUuid: attacker.uuid,
+        tokenUuid: cfg.attackerTokenUuid ?? null,
         itemUuid: cfg.attackerItemUuid ?? null,
+        label: cfg.attackerLabel ?? item?.name ?? "Attack",
+        target: attackerTarget,
+        modifier: 0,
         result: null
       },
       defender: {
-        tokenUuid: dToken?.document?.uuid ?? null,
-        actorUuid: defender.uuid,
         name: defender.name,
-        label: null,
+        actorUuid: defender.uuid,
+        tokenUuid: cfg.defenderTokenUuid ?? null,
+        label: "(choose)",
         target: null,
+        modifier: 0,
         result: null,
         noDefense: false
       },
-      outcome: null
+      outcome: null,
+      messageId: null
     };
 
-    const message = await ChatMessage.create({
+    const content = _renderCard(opposedData);
+
+    const msg = await ChatMessage.create({
       user: game.user.id,
-      speaker: ChatMessage.getSpeaker({ actor: attacker, token: aToken?.document ?? null }),
-      content: _renderPendingCard({ ...data, messageId: "" }),
-      flags: { "uesrpg-3ev4": { opposed: data } }
+      speaker: ChatMessage.getSpeaker({ actor: attacker }),
+      content,
+      flags: { "uesrpg-3ev4": { opposed: opposedData } }
     });
 
-    await message.update({ content: _renderPendingCard({ ...data, messageId: message.id }) });
-    return message;
-  },
+    opposedData.messageId = msg.id;
+    await _updateMessageCard(msg, opposedData);
+    return msg;
+  }
 
   /**
-   * Handle a chat-card action click.
-   * @param {ChatMessage} message
-   * @param {string} action
+   * Handle button clicks from chat-handlers.js
    */
-  async handleAction(message, action) {
-    const data = message?.flags?.["uesrpg-3ev4"]?.opposed;
-    if (!data) return;
+  static async handleAction(message, action, user) {
+    const opposedData = message?.flags?.["uesrpg-3ev4"]?.opposed;
+    if (!opposedData) return;
 
-    const attacker = _resolveActorFromDoc(_resolveDoc(data.attacker.actorUuid));
-    const defender = _resolveActorFromDoc(_resolveDoc(data.defender.actorUuid));
+    const side = (action === "attacker-roll") ? "attacker"
+               : (action.startsWith("defender")) ? "defender"
+               : null;
 
-    if (!attacker || !defender) {
-      ui.notifications.warn("Opposed test actors could not be resolved.");
+    if (!side) return;
+
+    // Permission gate: GM or owner of the actor on that side.
+    const actor = await _resolveActorFromDoc(opposedData[side].tokenUuid || opposedData[side].actorUuid);
+    if (!actor) {
+      ui.notifications.warn("Opposed Test: Could not resolve actor for roll.");
+      return;
+    }
+    const canAct = game.user.isGM || actor.isOwner;
+    if (!canAct) {
+      ui.notifications.warn("You do not have permission to roll for that actor.");
       return;
     }
 
-    if (action === "attacker-roll") {
-      if (!_canControlActor(attacker)) {
-        ui.notifications.warn("You do not have permission to roll for the attacker.");
-        return;
-      }
-      if (data.attacker.result) return;
+    // Already rolled?
+    if (opposedData[side].result) return;
 
-      const tn = Number(data.attacker.target) || 0;
-      const res = await doTestRoll(attacker, { rollFormula: "1d100", target: tn, allowLucky: false, allowUnlucky: false });
-      data.attacker.result = { rollTotal: res.rollTotal, target: res.target, isSuccess: res.isSuccess, degree: res.degree, textual: res.textual };
-      await _updateMessageCard(message, data);
-    }
-
-    if (action === "defender-nodefense") {
-      if (!_canControlActor(defender)) {
-        ui.notifications.warn("You do not have permission to choose defender actions.");
-        return;
-      }
-      if (data.defender.result || data.defender.noDefense) return;
-
-      data.defender.noDefense = true;
-      data.defender.target = 0;
-      // Defender has no roll; treat as automatic failure in resolution step
-      data.defender.label = "No Defense";
-      data.defender.result = { rollTotal: 100, target: 0, isSuccess: false, degree: 1, textual: null };
-      await _updateMessageCard(message, data);
+    if (action === "defender-nodef") {
+      opposedData.defender.noDefense = true;
+      opposedData.defender.label = "No Defense";
+      opposedData.defender.target = 0;
+      opposedData.defender.modifier = 0;
+      opposedData.defender.result = {
+        roll: null,
+        rollTotal: 100,
+        target: 0,
+        isSuccess: false,
+        isCriticalSuccess: false,
+        isCriticalFailure: false,
+        degree: 1,
+        textual: "1 DoF"
+      };
+      await _maybeResolve(message, opposedData);
+      return;
     }
 
     if (action === "defender-roll") {
-      if (!_canControlActor(defender)) {
-        ui.notifications.warn("You do not have permission to roll for the defender.");
-        return;
+      // Choose defense option (dynamic and context-aware).
+      const choice = await DefenseDialog.show(actor, {
+        isRanged: Boolean(opposedData?.context?.isRanged)
+      });
+
+      if (choice.defenseType === "none") {
+        // Equivalent to defender-nodef, but preserve the same path.
+        return await OpposedWorkflow.handleAction(message, "defender-nodef", user);
       }
-      if (data.defender.result || data.defender.noDefense) return;
 
-      const choice = await _chooseDefense(defender);
-      if (!choice) return;
-
-      data.defender.label = choice.name;
-      data.defender.target = Number(choice.tn) || 0;
-
-      const res = await doTestRoll(defender, { rollFormula: "1d100", target: data.defender.target, allowLucky: false, allowUnlucky: false });
-      data.defender.result = { rollTotal: res.rollTotal, target: res.target, isSuccess: res.isSuccess, degree: res.degree, textual: res.textual };
-      await _updateMessageCard(message, data);
+      opposedData.defender.label = choice.label ?? "Defense";
+      opposedData.defender.target = _asNumber(choice.skill);
+      opposedData.defender.modifier = 0;
     }
 
-    // Resolve if both are present
-    if (data.attacker.result && data.defender.result && !data.outcome) {
-      const aRes = { ...data.attacker.result, target: data.attacker.target, label: data.attacker.label };
-      const dRes = { ...data.defender.result, target: data.defender.target, label: data.defender.label ?? "Defense" };
-      const outcome = resolveOpposed(aRes, dRes);
+    // Roll for attacker or defender.
+    const baseTN = _asNumber(opposedData[side].target);
+    const modTN = _asNumber(opposedData[side].modifier);
+    const tn = baseTN + modTN;
 
-      // Produce a readable outcome line
-      let text = "";
-      if (outcome?.winner === "attacker") text = `${data.attacker.name} wins`;
-      else if (outcome?.winner === "defender") text = `${data.defender.name} wins`;
-      else text = `Draw`;
+    const res = await doTestRoll(actor, {
+      rollFormula: "1d100",
+      target: tn,
+      allowLucky: true,
+      allowUnlucky: true
+    });
 
-      if (outcome?.reason) text += ` — ${outcome.reason}`;
+    opposedData[side].result = res;
 
-      data.outcome = { winner: outcome?.winner ?? null, reason: outcome?.reason ?? null, text };
-      data.status = "resolved";
-      await _updateMessageCard(message, data);
-    }
+    await _maybeResolve(message, opposedData);
   }
-};
+}
+
+async function _maybeResolve(message, opposedData) {
+  // Update after each change
+  if (!opposedData.attacker.result || (!opposedData.defender.result && !opposedData.defender.noDefense)) {
+    await _updateMessageCard(message, opposedData);
+    return;
+  }
+
+  const outcome = resolveOpposed(opposedData.attacker.result, opposedData.defender.result);
+
+  let text = "Tie";
+  if (outcome.winner === "attacker") text = `${opposedData.attacker.name} wins — ${outcome.reason}`;
+  else if (outcome.winner === "defender") text = `${opposedData.defender.name} wins — ${outcome.reason}`;
+  else text = `Draw — ${outcome.reason}`;
+
+  opposedData.outcome = { ...outcome, text };
+
+  await _updateMessageCard(message, opposedData);
+}
