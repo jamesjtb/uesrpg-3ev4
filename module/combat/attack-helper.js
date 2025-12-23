@@ -8,6 +8,7 @@ import { doTestRoll } from "../helpers/degree-roll-helper.js";
 import { OpposedRoll } from "./opposed-rolls.js";
 import { DAMAGE_TYPES } from "./damage-automation.js";
 import { getDamageTypeFromWeapon } from "./combat-utils.js";
+import { DefenseDialog } from "./defense-dialog.js";
 
 /**
  * Perform a weapon attack
@@ -35,7 +36,16 @@ export async function performWeaponAttack(attackerToken, defenderToken, weapon, 
   const attackSkill = getAttackSkill(attacker, weapon);
   
   // Determine defense skill for defender (typically Evade or Block)
-  const defenseSkill = getDefenseSkill(defender, options.defenseType);
+  // If requested, prompt for the defense choice (GM/attacker workflow).
+  let defenseType = options.defenseType;
+  let defenseSkill;
+  if (!defenseType || defenseType === "prompt") {
+    const choice = await DefenseDialog.show(defender);
+    defenseType = choice?.defenseType ?? "evade";
+    defenseSkill = Number(choice?.skill ?? 0);
+  } else {
+    defenseSkill = getDefenseSkill(defender, defenseType);
+  }
 
   // Determine damage roll
   const damageRoll = weapon?.system?.weapon2H 
