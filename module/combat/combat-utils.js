@@ -36,7 +36,7 @@ export function getDamageTypeFromWeapon(weapon) {
  * @returns {string}
  */
 export function getHitLocationFromRoll(attackRollResult) {
-  const digit = attackRollResult % 10;
+  const digit = Math.abs(Number(attackRollResult) || 0) % 10;
   switch (digit) {
     case 0: return "Head";
     case 1: case 2: case 3: case 4: case 5: return "Body";
@@ -45,6 +45,9 @@ export function getHitLocationFromRoll(attackRollResult) {
     case 8: return "Right Arm";
     case 9: return "Left Arm";
   }
+
+  // Defensive fallback (should never be reached)
+  return "Body";
 }
 
 /**
