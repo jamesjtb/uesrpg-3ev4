@@ -18,9 +18,13 @@ export function initializeChatHandlers() {
       const button = event.currentTarget;
       
       const actorId = button.dataset.actorId;
+      // NOTE: data-damage is expected to be RAW damage (pre-reduction).
+      // applyDamage() will apply armor/resistance/toughness reductions.
       const damage = Number(button.dataset.damage);
       const damageType = button.dataset.type || 'physical';
       const hitLocation = button.dataset.location || 'Body';
+      const dosBonus = Number(button.dataset.dosBonus || 0);
+      const penetration = Number(button.dataset.penetration || 0);
       
       const actor = game.actors.get(actorId);
       if (!actor) {
@@ -28,15 +32,18 @@ export function initializeChatHandlers() {
         return;
       }
       
-      // Get source from chat message speaker
+      // Prefer explicit source passed on the button; fall back to chat speaker.
+      const explicitSource = button.dataset.source;
       const speaker = message.speaker;
       const sourceActor = game.actors.get(speaker.actor);
-      const source = sourceActor?.name || "Unknown";
+      const source = explicitSource || sourceActor?.name || "Unknown";
       
       // Apply damage with full calculation (damage from buttons is raw damage)
       await applyDamage(actor, damage, damageType, {
-        source: source,
-        hitLocation: hitLocation
+        source,
+        hitLocation,
+        dosBonus,
+        penetration
       });
       
       // Disable the button after use
