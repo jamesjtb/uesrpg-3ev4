@@ -47,8 +47,30 @@ export function getHitLocationFromRoll(attackRollResult) {
   }
 }
 
+/**
+ * Backwards-compatible helper.
+ *
+ * Historically the system exposed `rollHitLocation()` globally and some modules/macros
+ * still import/call it. RAW hit-location in UESRPG 3e v4 is based on the ones digit
+ * of the attack roll result.
+ *
+ * If an attack roll result is provided, we derive hit location from it.
+ * If not provided, we roll 1d100 (only to obtain a ones digit) and derive from that.
+ *
+ * @param {number} [attackRollResult]
+ * @returns {Promise<string>} Hit location
+ */
+export async function rollHitLocation(attackRollResult) {
+  if (Number.isFinite(attackRollResult)) return getHitLocationFromRoll(Number(attackRollResult));
+
+  console.warn("UESRPG | rollHitLocation() called without attack roll result; rolling 1d100 as fallback.");
+  const r = await new Roll("1d100").evaluate({ async: true });
+  return getHitLocationFromRoll(Number(r.total));
+}
+
 // Global exposure for macros
 window.Uesrpg3e = window.Uesrpg3e || {};
 window.Uesrpg3e.utils = window.Uesrpg3e.utils || {};
 window.Uesrpg3e.utils.getDamageTypeFromWeapon = getDamageTypeFromWeapon;
+window.Uesrpg3e.utils.getHitLocationFromRoll = getHitLocationFromRoll;
 window.Uesrpg3e.utils.rollHitLocation = rollHitLocation;
