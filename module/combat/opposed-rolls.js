@@ -56,7 +56,8 @@ export const OpposedRoll = {
     
     if (outcome.winner === "attacker" && damageRoll) {
       // Roll damage
-      const roll = await new Roll(damageRoll).evaluate({ async: true });
+      // Foundry V13+: Roll#evaluate is async by default; do not pass the removed `{async:true}` option.
+      const roll = await new Roll(damageRoll).evaluate();
       const rawDamage = Number(roll.total);
       
       // Calculate DoS bonus if enabled and attacker won
@@ -99,7 +100,6 @@ export const OpposedRoll = {
           ${!autoApplyDamage ? `
             <br><button class="apply-damage-btn" 
               data-actor-id="${defender.id}" 
-              data-actor-uuid="${defender.uuid}" 
               data-damage="${rawDamage}" 
               data-type="${damageType}" 
               data-location="${hitLoc}"
@@ -155,15 +155,11 @@ export const OpposedRoll = {
           opposed: true,
           attackerId: attacker.id,
           defenderId: defender.id,
-          attackerUuid: attacker.uuid,
-          defenderUuid: defender.uuid,
-          attackerTokenUuid: attackerToken.document?.uuid,
-          defenderTokenUuid: defenderToken.document?.uuid,
           outcome,
           damageInfo
         }
       },
-      rolls: [aRes.roll]
+      roll: aRes.roll
     });
 
     return { 
