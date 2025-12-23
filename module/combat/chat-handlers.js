@@ -1,17 +1,27 @@
 /**
  * module/combat/chat-handlers.js
- * v13-compatible chat handlers for UESRPG 3ev4.
+ * Foundry VTT v13-compatible chat card handlers for UESRPG 3ev4.
  *
  * Exports expected by init.js:
  *  - initializeChatHandlers()
  *  - registerCombatChatHooks()
+ *
+ * Notes:
+ *  - Uses Hooks.on("renderChatMessageHTML") (v13) instead of deprecated renderChatMessage
+ *  - Registers only once (guards against double-calls from init.js)
  */
 
 import { applyDamage, applyHealing, DAMAGE_TYPES } from "./damage-automation.js";
 import { OpposedWorkflow } from "./opposed-workflow.js";
 
-let _chatHandlersInitialized = false;
+let _chatHooksRegistered = false;
 
+/**
+ * Resolve an Actor from a UUID or speaker.
+ * @param {ChatMessage} message
+ * @param {string|null} uuid
+ * @returns {Actor|null}
+ */
 function _resolveActor(message, uuid) {
   if (uuid) {
     const doc = fromUuidSync(uuid);
@@ -26,6 +36,7 @@ function _resolveActor(message, uuid) {
 
 async function _onApplyDamage(ev, message) {
   ev.preventDefault();
+
   const btn = ev.currentTarget;
   const targetUuid = btn.dataset.targetUuid || null;
   const dmg = Number(btn.dataset.damage || 0);
@@ -41,11 +52,17 @@ async function _onApplyDamage(ev, message) {
     return;
   }
 
-  await applyDamage(targetActor, dmg, damageType, { dosBonus, penetration, hitLocation, source });
+  await applyDamage(targetActor, dmg, damageType, {
+    dosBonus,
+    penetration,
+    hitLocation,
+    source
+  });
 }
 
 async function _onApplyHealing(ev, message) {
   ev.preventDefault();
+
   const btn = ev.currentTarget;
   const targetUuid = btn.dataset.targetUuid || null;
   const healing = Number(btn.dataset.healing || 0);
@@ -67,11 +84,15 @@ async function _onOpposedAction(ev, message) {
   await OpposedWorkflow.handleAction(message, action);
 }
 
+/**
+ * Register chat handlers (v13).
+ */
 export function initializeChatHandlers() {
-  // Guard to avoid double-registration (init.js currently calls this twice).
-  if (_chatHandlersInitialized) return;
-  _chatHandlersInitialized = true;
-  Hooks.on("renderChatMessage", (message, html) => {
+  if (_chatHooksRegistered) return;
+  _chatHooksRegistered = true;
+
+  Hooks.on("renderChatMessageHTML", (message, html) => {
+    // html is an HTMLElement in v13, but some modules provide a jQuery wrapper.
     const root = html instanceof HTMLElement ? html : html?.[0];
     if (!root) return;
 
@@ -87,17 +108,11 @@ export function initializeChatHandlers() {
       el.addEventListener("click", (ev) => _onOpposedAction(ev, message));
     });
   });
-
-    root.querySelectorAll(".apply-healing-btn").forEach((el) => {
-      el.addEventListener("click", (ev) => _onApplyHealing(ev, message));
-    });
-
-    root.querySelectorAll("[data-ues-opposed-action]").forEach((el) => {
-      el.addEventListener("click", (ev) => _onOpposedAction(ev, message));
-    });
-  });
 }
 
+/**
+ * Backwards-compatible export expected by some init scripts.
+ */
 export function registerCombatChatHooks() {
   initializeChatHandlers();
 }
