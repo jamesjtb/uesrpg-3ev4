@@ -96,7 +96,17 @@ export const OpposedRoll = {
             <br><strong>Reduction:</strong> -${damageCalc.reductions.total} (Armor: ${damageCalc.reductions.armor}, Resist: ${damageCalc.reductions.resistance}, Tough: ${damageCalc.reductions.toughness})
           ` : ''}
           <br><strong>Final Damage:</strong> <span style="color:#d32f2f; font-weight:bold;">${damageCalc.finalDamage}</span>
-          ${!autoApplyDamage ? `<br><button class="apply-damage-btn" data-actor-id="${defender.id}" data-damage="${damageCalc.finalDamage}" data-type="${damageType}" data-location="${hitLoc}">Apply Damage</button>` : ''}
+          ${!autoApplyDamage ? `
+            <br><button class="apply-damage-btn" 
+              data-actor-id="${defender.id}" 
+              data-damage="${rawDamage}" 
+              data-type="${damageType}" 
+              data-location="${hitLoc}"
+              data-dos-bonus="${dosBonus}"
+              data-penetration="${penetration || 0}"
+              data-source="${weapon ? weapon.name : attacker.name}">
+              Apply Damage
+            </button>` : ''}
         </div>
       `;
       
