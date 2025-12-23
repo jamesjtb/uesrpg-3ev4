@@ -1,119 +1,137 @@
 /**
  * module/combat/chat-handlers.js
- * Chat message handlers for combat automation
- * Handles "Apply Damage" button clicks and other combat-related chat interactions
+ * Foundry VTT v13-compatible chat card handlers for UESRPG 3ev4.
+ *
+ * Exports expected by module/handlers/init.js:
+ *  - initializeChatHandlers()
+ *  - registerCombatChatHooks()
+ *
+ * Notes:
+ *  - Uses Hooks.on("renderChatMessageHTML") (v13) instead of deprecated renderChatMessage
+ *  - Attaches delegated click handlers for:
+ *      - Apply Damage
+ *      - Apply Healing
+ *      - Future opposed-roll actions via [data-ues-opposed-action]
  */
 
-import { applyDamage, applyHealing } from './damage-automation.js';
+import { applyDamage, applyHealing, DAMAGE_TYPES } from "./damage-automation.js";
 
 /**
- * Initialize chat listeners for combat automation
+ * Resolve an Actor from a UUID or speaker.
+ * @param {ChatMessage} message
+ * @param {string|null} uuid
+ * @returns {Actor|null}
+ */
+function _resolveActor(message, uuid) {
+  if (uuid) {
+    const doc = fromUuidSync(uuid);
+    if (doc?.actor) return doc.actor;
+    if (doc?.documentName === "Actor") return doc;
+  }
+  const sp = message?.speaker;
+  if (sp?.token) return canvas?.tokens?.get(sp.token)?.actor ?? null;
+  if (sp?.actor) return game.actors?.get(sp.actor) ?? null;
+  return null;
+}
+
+/**
+ * Handle Apply Damage click.
+ * Expects dataset attributes:
+ *  - data-target-uuid (optional)
+ *  - data-damage (raw)
+ *  - data-damage-type
+ *  - data-dos-bonus
+ *  - data-penetration
+ *  - data-hit-location
+ *  - data-source
+ */
+async function _onApplyDamage(ev, message) {
+  ev.preventDefault();
+
+  const btn = ev.currentTarget;
+  const targetUuid = btn.dataset.targetUuid || null;
+  const dmg = Number(btn.dataset.damage || 0);
+  const damageType = btn.dataset.damageType || DAMAGE_TYPES.PHYSICAL;
+  const dosBonus = Number(btn.dataset.dosBonus || 0);
+  const penetration = Number(btn.dataset.penetration || 0);
+  const hitLocation = btn.dataset.hitLocation || "Body";
+  const source = btn.dataset.source || (message?.speaker?.alias ?? "Unknown");
+
+  const targetActor = _resolveActor(message, targetUuid);
+  if (!targetActor) {
+    ui.notifications.warn("No valid target actor found for damage application.");
+    return;
+  }
+
+  await applyDamage(targetActor, dmg, damageType, {
+    dosBonus,
+    penetration,
+    hitLocation,
+    source
+  });
+}
+
+/**
+ * Handle Apply Healing click.
+ * Expects dataset attributes:
+ *  - data-target-uuid (optional)
+ *  - data-healing
+ *  - data-source
+ */
+async function _onApplyHealing(ev, message) {
+  ev.preventDefault();
+
+  const btn = ev.currentTarget;
+  const targetUuid = btn.dataset.targetUuid || null;
+  const healing = Number(btn.dataset.healing || 0);
+  const source = btn.dataset.source || (message?.speaker?.alias ?? "Healing");
+
+  const targetActor = _resolveActor(message, targetUuid);
+  if (!targetActor) {
+    ui.notifications.warn("No valid target actor found for healing.");
+    return;
+  }
+
+  await applyHealing(targetActor, healing, { source });
+}
+
+/**
+ * Stub for opposed workflow chat actions.
+ * We will implement these actions in the opposed workflow phase.
+ */
+async function _onOpposedAction(ev, message) {
+  ev.preventDefault();
+  const btn = ev.currentTarget;
+  const action = btn.dataset.uesOpposedAction;
+  console.warn("UESRPG | Opposed action clicked but not yet implemented:", action, btn.dataset);
+}
+
+/**
+ * Register chat handlers (v13).
  */
 export function initializeChatHandlers() {
-  // Listen for chat message renders to add click handlers
-  Hooks.on('renderChatMessage', (message, html, data) => {
-    // Add handler for "Apply Damage" buttons
-    html.find('.apply-damage-btn').click(async (event) => {
-      event.preventDefault();
-      const button = event.currentTarget;
-      
-      const actorId = button.dataset.actorId;
-      // NOTE: data-damage is expected to be RAW damage (pre-reduction).
-      // applyDamage() will apply armor/resistance/toughness reductions.
-      const damage = Number(button.dataset.damage);
-      const damageType = button.dataset.type || 'physical';
-      const hitLocation = button.dataset.location || 'Body';
-      const dosBonus = Number(button.dataset.dosBonus || 0);
-      const penetration = Number(button.dataset.penetration || 0);
-      
-      const actor = game.actors.get(actorId);
-      if (!actor) {
-        ui.notifications.error("Actor not found");
-        return;
-      }
-      
-      // Prefer explicit source passed on the button; fall back to chat speaker.
-      const explicitSource = button.dataset.source;
-      const speaker = message.speaker;
-      const sourceActor = game.actors.get(speaker.actor);
-      const source = explicitSource || sourceActor?.name || "Unknown";
-      
-      // Apply damage with full calculation (damage from buttons is raw damage)
-      await applyDamage(actor, damage, damageType, {
-        source,
-        hitLocation,
-        dosBonus,
-        penetration
-      });
-      
-      // Disable the button after use
-      button.disabled = true;
-      button.textContent = "Damage Applied";
-      button.style.opacity = "0.5";
+  Hooks.on("renderChatMessageHTML", (message, html) => {
+    // html is an HTMLElement in v13
+    const root = html instanceof HTMLElement ? html : html?.[0];
+    if (!root) return;
+
+    root.querySelectorAll(".apply-damage-btn").forEach((el) => {
+      el.addEventListener("click", (ev) => _onApplyDamage(ev, message));
     });
 
-    // Add handler for "Apply Healing" buttons (for future use)
-    html.find('.apply-healing-btn').click(async (event) => {
-      event.preventDefault();
-      const button = event.currentTarget;
-      
-      const actorId = button.dataset.actorId;
-      const healing = Number(button.dataset.healing);
-      
-      const actor = game.actors.get(actorId);
-      if (!actor) {
-        ui.notifications.error("Actor not found");
-        return;
-      }
-      
-      const speaker = message.speaker;
-      const sourceActor = game.actors.get(speaker.actor);
-      const source = sourceActor?.name || "Healing";
-      
-      await applyHealing(actor, healing, { source });
-      
-      button.disabled = true;
-      button.textContent = "Healing Applied";
-      button.style.opacity = "0.5";
+    root.querySelectorAll(".apply-healing-btn").forEach((el) => {
+      el.addEventListener("click", (ev) => _onApplyHealing(ev, message));
+    });
+
+    root.querySelectorAll("[data-ues-opposed-action]").forEach((el) => {
+      el.addEventListener("click", (ev) => _onOpposedAction(ev, message));
     });
   });
 }
 
 /**
- * Register hooks for chat-based combat automation
+ * Backwards-compatible export expected by init.js.
  */
 export function registerCombatChatHooks() {
-  // Hook to add context menu options to chat messages with damage info
-  Hooks.on('getChatLogEntryContext', (html, options) => {
-    options.push({
-      name: "Apply Damage to Target",
-      icon: '<i class="fas fa-heart-broken"></i>',
-      condition: li => {
-        const message = game.messages.get(li.data("messageId"));
-        return message?.flags?.['uesrpg-3ev4']?.damageInfo;
-      },
-      callback: async li => {
-        const message = game.messages.get(li.data("messageId"));
-        const damageInfo = message?.flags?.['uesrpg-3ev4']?.damageInfo;
-        const defenderId = message?.flags?.['uesrpg-3ev4']?.defenderId;
-        
-        if (!damageInfo || !defenderId) {
-          ui.notifications.error("No damage information found");
-          return;
-        }
-        
-        const defender = game.actors.get(defenderId);
-        if (!defender) {
-          ui.notifications.error("Defender not found");
-          return;
-        }
-        
-        await applyDamage(defender, damageInfo.rawDamage, damageInfo.damageType, {
-          dosBonus: damageInfo.dosBonus,
-          source: message.speaker?.alias || "Attack",
-          hitLocation: damageInfo.hitLocation
-        });
-      }
-    });
-  });
+  initializeChatHandlers();
 }
