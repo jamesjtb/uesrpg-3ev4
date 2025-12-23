@@ -15,7 +15,7 @@ import expandedRaces from "./racemenu/data/expanded-races.js";
 import { calculateDegrees } from "../helpers/diceHelper.js";
 import { getHitLocationFromRoll } from "../combat/combat-utils.js";
 import { OpposedRoll } from "../combat/opposed-rolls.js";
-import { DefenseDialog } from "../combat/defense-dialog.js";
+import { OpposedWorkflow } from "../combat/opposed-workflow.js";
 
 export class SimpleActorSheet extends foundry.appv1.sheets.ActorSheet {
   /** @override */
@@ -1300,7 +1300,9 @@ async _onCombatRoll(event) {
             ? woundedValue + playerInput
             : regularValue + playerInput;
 
-          // If the user has a target selected, treat Combat Style rolls as opposed checks
+                    // If the user has a target selected, create a pending opposed test in chat.
+          // The defender will choose and roll their defense on their own client (WFRP-style),
+          // which avoids permission issues (attackers often cannot read defender items/skills).
           const defenderToken = [...(game.user.targets ?? [])][0] ?? null;
           if (defenderToken) {
             const attackerToken =
@@ -1313,19 +1315,22 @@ async _onCombatRoll(event) {
               return;
             }
 
-            const defenseChoice = await DefenseDialog.show(defenderToken.actor);
-            if (!defenseChoice) return; // canceled
-
-            await OpposedRoll.perform(attackerToken, defenderToken, {
+            await OpposedWorkflow.createPending({
+              attackerTokenUuid: attackerToken.document?.uuid ?? attackerToken.uuid,
+              defenderTokenUuid: defenderToken.document?.uuid ?? defenderToken.uuid,
+              attackerActorUuid: this.actor.uuid,
+              defenderActorUuid: defenderToken.actor?.uuid ?? null,
+              attackerItemUuid: item.uuid,
+              attackerLabel: item.name,
               attackerTarget: tn,
-              defenderTarget: Number(defenseChoice.skill ?? 0),
-              flavor: `${item.name} vs ${defenseChoice.label ?? "Defense"}`,
+              // Mark this as an attack-style opposed test so later we can enable damage workflow.
+              mode: "attack"
             });
 
             return;
           }
 
-          // Otherwise, perform a standard single combat test roll
+          // Otherwise, perform a standard single combat test roll// Otherwise, perform a standard single combat test roll
           const roll = new Roll("1d100");
           await roll.evaluate();
 
