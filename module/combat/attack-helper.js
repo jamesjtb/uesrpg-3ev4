@@ -4,9 +4,7 @@
  * Integrates combat rolls, damage calculation, and automation
  */
 
-import { doTestRoll } from "../helpers/degree-roll-helper.js";
 import { OpposedRoll } from "./opposed-rolls.js";
-import { DAMAGE_TYPES } from "./damage-automation.js";
 import { getDamageTypeFromWeapon } from "./combat-utils.js";
 import { DefenseDialog } from "./defense-dialog.js";
 
@@ -42,15 +40,19 @@ export async function performWeaponAttack(attackerToken, defenderToken, weapon, 
   if (!defenseType || defenseType === "prompt") {
     const choice = await DefenseDialog.show(defender);
     defenseType = choice?.defenseType ?? "evade";
-    defenseSkill = Number(choice?.skill ?? 0);
+    defenseSkill = Number(choice?.skill ?? 0) || getDefenseSkill(defender, defenseType);
   } else {
     defenseSkill = getDefenseSkill(defender, defenseType);
   }
 
   // Determine damage roll
-  const damageRoll = weapon?.system?.weapon2H 
-    ? weapon?.system?.damage2 
+  const damageRoll = weapon?.system?.weapon2H
+    ? (weapon?.system?.damage2 || weapon?.system?.damage)
     : weapon?.system?.damage;
+
+  if (!damageRoll) {
+    ui.notifications.warn(`Weapon "${weapon.name}" has no damage formula configured.`);
+  }
 
   // Determine damage type from weapon qualities
   const damageType = getDamageTypeFromWeapon(weapon);
