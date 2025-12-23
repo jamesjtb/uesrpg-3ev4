@@ -56,28 +56,43 @@ export class SimpleActorSheet extends foundry.appv1.sheets.ActorSheet {
 
   /** @override */
 
-// In actor-sheet.js, verify getData() looks like this:
-async getData() {
-  const data = super.getData();
-  
-  // Add safe defaults if needed
+async getData(options = {}) {
+  // In modern Foundry versions, super.getData is async
+  const data = await super.getData(options);
+
+  // Safe defaults
   data.dtypes = ["String", "Number", "Boolean"];
   data.isGM = game.user.isGM;
-  data.editable = data.options.editable;
-  
+
+  // Editable flags differ by Foundry generation; make it robust
+  data.editable =
+    this.isEditable ??
+    this.options?.editable ??
+    data.options?.editable ??
+    false;
+
   // Prepare character items (only if actor type matches)
   if (this.actor.type === "Player Character") {
     this._prepareCharacterItems(data);
   }
-  
-  // Enrich biography
-  data.actor.system.enrichedBio = await foundry.applications.ux.TextEditor.implementation.enrichHTML(
-    data.actor?.system?.bio || "", 
-    {async: true}
-  );
-  
+
+  // Enrich biography using the most stable API available
+  const enrichFn =
+    globalThis.TextEditor?.enrichHTML ??
+    foundry?.applications?.ux?.TextEditor?.implementation?.enrichHTML;
+
+  if (typeof enrichFn === "function") {
+    data.actor.system.enrichedBio = await enrichFn(data.actor?.system?.bio ?? "", {
+      async: true,
+    });
+  } else {
+    // Fallback: don’t crash rendering if API differs
+    data.actor.system.enrichedBio = data.actor?.system?.bio ?? "";
+  }
+
   return data;
 }
+
 
   _prepareCharacterItems(sheetData) {
     const actorData = sheetData.actor;
@@ -114,7 +129,7 @@ async getData() {
     //let totaWeight = 0;
     for (let i of sheetData.items) {
       let item = i.system;
-      i.img = i.img || DEFAULT_TOKEN;
+      i.img = i.img || CONST.DEFAULT_TOKEN;
       //Append to item
       if (i.type === "item") {
         i.system.equipped ? gear.equipped.push(i) : gear.unequipped.push(i);
@@ -243,129 +258,123 @@ async getData() {
   /* -------------------------------------------- */
 
   /** @override */
-  async activateListeners(html) {
-    super.activateListeners(html);
+activateListeners(html) {
+  super.activateListeners(html);
 
-    // Rollable Buttons & Menus
-    html
-      .find(".characteristic-roll")
-      .click(await this._onClickCharacteristic.bind(this));
-    html.find(".skill-roll").click(await this._onSkillRoll.bind(this));
-    html.find(".combat-roll").click(await this._onCombatRoll.bind(this));
-    html.find(".magic-roll").click(await this._onSpellRoll.bind(this));
-    html.find(".resistance-roll").click(this._onResistanceRoll.bind(this));
-    html.find(".damage-roll").click(this._onDamageRoll.bind(this));
-    html.find(".ammo-roll").click(await this._onAmmoRoll.bind(this));
-    html.find(".item-img").click(await this._onTalentRoll.bind(this));
-    html.find("#luckyMenu").click(this._onLuckyMenu.bind(this));
-    html.find("#raceMenu").click(this._onRaceMenu.bind(this));
-    html.find("#birthSignMenu").click(this._onBirthSignMenu.bind(this));
-    html.find("#xpMenu").click(this._onXPMenu.bind(this));
-    html.find(".rank-select").click(this._selectCombatRank.bind(this));
+  // Rollable Buttons & Menus
+  html.find(".characteristic-roll").click(this._onClickCharacteristic.bind(this));
+  html.find(".skill-roll").click(this._onSkillRoll.bind(this));
+  html.find(".combat-roll").click(this._onCombatRoll.bind(this));
+  html.find(".magic-roll").click(this._onSpellRoll.bind(this));
+  html.find(".resistance-roll").click(this._onResistanceRoll.bind(this));
+  html.find(".damage-roll").click(this._onDamageRoll.bind(this));
+  html.find(".ammo-roll").click(this._onAmmoRoll.bind(this));
+  html.find(".item-img").click(this._onTalentRoll.bind(this));
+  html.find("#luckyMenu").click(this._onLuckyMenu.bind(this));
+  html.find("#raceMenu").click(this._onRaceMenu.bind(this));
+  html.find("#birthSignMenu").click(this._onBirthSignMenu.bind(this));
+  html.find("#xpMenu").click(this._onXPMenu.bind(this));
+  html.find(".rank-select").click(this._selectCombatRank.bind(this));
 
-    //Update Item Attributes from Actor Sheet
-    html.find(".toggle2H").click(await this._onToggle2H.bind(this));
-    html.find(".plusQty").click(await this._onPlusQty.bind(this));
-    html.find(".minusQty").contextmenu(await this._onMinusQty.bind(this));
-    html.find(".itemEquip").click(await this._onItemEquip.bind(this));
-    html.find(".wealthCalc").click(await this._onWealthCalc.bind(this));
-    html
-      .find(".setBaseCharacteristics")
-      .click(await this._onSetBaseCharacteristics.bind(this));
-    html.find(".carryBonus").click(await this._onCarryBonus.bind(this));
-    html.find(".incrementResource").click(this._onIncrementResource.bind(this));
-    html.find(".resourceLabel button").click(this._onResetResource.bind(this));
-    html.find("#spellFilter").click(this._filterSpells.bind(this));
-    html.find("#itemFilter").click(this._filterItems.bind(this));
-    html.find(".incrementFatigue").click(this._incrementFatigue.bind(this));
-    html.find(".equip-items").click(this._onEquipItems.bind(this));
+  // Update Item Attributes from Actor Sheet
+  html.find(".toggle2H").click(this._onToggle2H.bind(this));
+  html.find(".plusQty").click(this._onPlusQty.bind(this));
+  html.find(".minusQty").contextmenu(this._onMinusQty.bind(this));
+  html.find(".itemEquip").click(this._onItemEquip.bind(this));
+  html.find(".wealthCalc").click(this._onWealthCalc.bind(this));
+  html.find(".setBaseCharacteristics").click(this._onSetBaseCharacteristics.bind(this));
+  html.find(".carryBonus").click(this._onCarryBonus.bind(this));
+  html.find(".incrementResource").click(this._onIncrementResource.bind(this));
+  html.find(".resourceLabel button").click(this._onResetResource.bind(this));
+  html.find("#spellFilter").click(this._filterSpells.bind(this));
+  html.find("#itemFilter").click(this._filterItems.bind(this));
+  html.find(".incrementFatigue").click(this._incrementFatigue.bind(this));
+  html.find(".equip-items").click(this._onEquipItems.bind(this));
 
-    //Item Create Buttons
-    html.find(".item-create").click(await this._onItemCreate.bind(this));
+  // Item Create Buttons
+  html.find(".item-create").click(this._onItemCreate.bind(this));
 
-    // Checks for UI Elements on Sheets and Updates
-    this._createSpellFilterOptions();
-    this._createItemFilterOptions();
-    this._setDefaultSpellFilter();
-    this._setDefaultItemFilter();
-    this._setResourceBars();
-    this._createStatusTags();
-    this._setDefaultCombatRank();
+  // Checks for UI Elements on Sheets and Updates
+  this._createSpellFilterOptions();
+  this._createItemFilterOptions();
+  this._setDefaultSpellFilter();
+  this._setDefaultItemFilter();
+  this._setResourceBars();
 
-    // Everything below here is only needed if the sheet is editable
-    if (!this.options.editable) return;
+  // Everything below here is only needed if the sheet is editable
+  if (!this.options.editable) return;
 
-    // Update Inventory Item
-    html.find(".item-name").contextmenu(async (ev) => {
-      const li = ev.currentTarget.closest(".item");
-      const item = this.actor.items.get(li.dataset.itemId);
-      this._duplicateItem(item);
-    });
+  // Update Inventory Item
+  html.find(".item-name").contextmenu(async (ev) => {
+    const li = ev.currentTarget.closest(".item");
+    const item = this.actor.items.get(li.dataset.itemId);
+    this._duplicateItem(item);
+  });
 
-    html.find(".item-name").click(async (ev) => {
-      const li = ev.currentTarget.closest(".item");
-      const item = this.actor.items.get(li.dataset.itemId);
-      item.sheet.render(true);
-      await item.update({ "system.value": item.system.value });
-    });
+  html.find(".item-name").click(async (ev) => {
+    const li = ev.currentTarget.closest(".item");
+    const item = this.actor.items.get(li.dataset.itemId);
+    item.sheet.render(true);
+    await item.update({ "system.value": item.system.value });
+  });
 
-    // Open Container of item
-    html.find(".fa-backpack").click(async (ev) => {
-      const li = ev.currentTarget.dataset.containerId;
-      const item = this.actor.items.get(li);
-      item.sheet.render(true);
-      await item.update({ "system.value": item.system.value });
-    });
+  // Open Container of item
+  html.find(".fa-backpack").click(async (ev) => {
+    const li = ev.currentTarget.dataset.containerId;
+    const item = this.actor.items.get(li);
+    item.sheet.render(true);
+    await item.update({ "system.value": item.system.value });
+  });
 
-    // Delete Inventory Item
-    html.find(".item-delete").click(async (ev) => {
-  const li = ev.currentTarget.closest(".item");
+  // Delete Inventory Item
+  html.find(".item-delete").click(async (ev) => {
+    const li = ev.currentTarget.closest(".item");
 
-  const itemToDelete = this.actor.items.find(
-    (item) => item._id == li.dataset.itemId
-  );
-  if (!itemToDelete) return;
+    const itemToDelete = this.actor.items.find((item) => item._id == li.dataset.itemId);
+    if (!itemToDelete) return;
 
-  // If deleted item is the container: unlink all contained items, then clear container list
-  if (itemToDelete.type === "container") {
-    const containedItems = Array.isArray(itemToDelete?.system?.contained_items)
-      ? itemToDelete.system.contained_items
-      : [];
+    // If deleted item is the container: unlink all contained items, then clear container list
+    if (itemToDelete.type === "container") {
+      const containedItems = Array.isArray(itemToDelete?.system?.contained_items)
+        ? itemToDelete.system.contained_items
+        : [];
 
-    for (const item of containedItems) {
-      const sourceItem = this.actor.items.find((i) => i._id == item._id);
-      if (!sourceItem) continue;
+      for (const item of containedItems) {
+        const sourceItem = this.actor.items.find((i) => i._id == item._id);
+        if (!sourceItem) continue;
 
-      await sourceItem.update({
-        "system.containerStats.container_id": "",
-        "system.containerStats.container_name": "",
-        "system.containerStats.contained": false,
-      });
+        await sourceItem.update({
+          "system.containerStats.container_id": "",
+          "system.containerStats.container_name": "",
+          "system.containerStats.contained": false,
+        });
+      }
+
+      // Close the "itemToDelete.type === 'container'" block
+      // (Optional defensive cleanup; item is being deleted immediately after)
+      await itemToDelete.update({ "system.contained_items": [] });
     }
-
-    await itemToDelete.update({ "system.contained_items": [] });
-  }
 
   // If deleted item is inside a container: unlink from container and clear its containerStats
   if (
+
     itemToDelete?.system?.isPhysicalObject &&
     itemToDelete.type !== "container" &&
     itemToDelete?.system?.containerStats?.contained
   ) {
-    const containerObject = this.actor.items.find(
-      (item) => item._id == itemToDelete?.system?.containerStats?.container_id
-    );
+    const containerObject = this.actor.items.get(itemToDelete.system.containerStats.container_id);
 
     if (containerObject && Array.isArray(containerObject?.system?.contained_items)) {
       const indexToRemove = containerObject.system.contained_items.findIndex(
         (i) => i._id == itemToDelete._id
       );
 
-      if (indexToRemove !== -1) {
-        containerObject.system.contained_items.splice(indexToRemove, 1);
-        await containerObject.update({
-          "system.contained_items": containerObject.system.contained_items,
-        });
+if (indexToRemove !== -1) {
+  const nextContained = containerObject.system.contained_items.filter(
+    (i) => i._id !== itemToDelete._id
+  );
+
+  await containerObject.update({ "system.contained_items": nextContained });
       }
     }
 
@@ -378,6 +387,7 @@ async getData() {
 
   await this.actor.deleteEmbeddedDocuments("Item", [li.dataset.itemId]);
 });
+
 }
 
   /**
@@ -425,6 +435,18 @@ async getData() {
     const prcBonusArray = [];
     const prsBonusArray = [];
     const lckBonusArray = [];
+	
+	const bonusMap = {
+  str: strBonusArray,
+  end: endBonusArray,
+  agi: agiBonusArray,
+  int: intBonusArray,
+  wpC: wpCBonusArray,
+  prc: prcBonusArray,
+  prs: prsBonusArray,
+  lck: lckBonusArray,
+};
+
 
     const bonusItems = this.actor.items.filter((item) =>
       item?.system && Object.prototype.hasOwnProperty.call(item.system, "characteristicBonus")
@@ -437,8 +459,14 @@ async getData() {
           let itemButton = `<button style="width: auto;" onclick="getItem(this.id, this.dataset.actor)" id="${item.id
             }" data-actor="${item.actor.id}">${item.name} ${itemBonus >= 0 ? `+${itemBonus}` : itemBonus
             }</button>`;
-          let bonusName = eval([...key].splice(0, 3).join("") + "BonusArray");
-          bonusName.push(itemButton);
+          const prefix = [...key].splice(0, 3).join(""); // e.g. "str", "end", "wpC"
+
+const targetArray = bonusMap[prefix];
+if (targetArray) {
+  targetArray.push(itemButton);
+}
+
+
         }
       }
     }
@@ -482,6 +510,7 @@ async getData() {
         this.actor.system.characteristics.prc.base +
         this.actor.system.characteristics.prs.base
         }
+		
                       </label>
                       <table style="table-layout: fixed; text-align: center;">
                         <tr>
@@ -682,45 +711,47 @@ async getData() {
         one: {
           label: "Roll!",
           callback: async (html) => {
-           const playerInput = parseInt(html.find('[id="playerInput"]').val());
-            let roll = new Roll("1d100");
-            await roll.evaluate();
+  const playerInputRaw = html.find('[id="playerInput"]').val();
+  const playerInput = Number.parseInt(playerInputRaw, 10) || 0;
+
+  const roll = new Roll("1d100");
+  await roll.evaluate({ async: true });
+
+  let contentString = "";
 
            const tn = this.actor.system.wounded
   ? woundedValue + playerInput
   : regularValue + playerInput;
-const { isSuccess, doS, doF } = calculateDegrees(Number(roll.result), tn);
+const { isSuccess, doS, doF } = calculateDegrees(Number(roll.total), tn);
 let degreesLine = `<br><b>${isSuccess ? "Degrees of Success" : "Degrees of Failure"}: ${isSuccess ? doS : doF}</b>`;
 
 if (isLucky(this.actor, roll.result)) {
-  contentString = `<h2>${element.name} Resistance</h2>
+  contentString = `<h2>${element.getAttribute("name")}</h2>
     <p></p><b>Target Number: [[${tn}]]</b> <p></p>
-    <b>Result: [[${roll.result}]]</b><p></p>
+    <b>Result: [[${roll.total}]]</b><p></p>
     <span style='color:green; font-size:120%;'> <b>LUCKY NUMBER!</b></span>${degreesLine}`;
 } else if (isUnlucky(this.actor, roll.result)) {
-  contentString = `<h2>${element.name} Resistance</h2>
+  contentString = `<h2>${element.getAttribute("name")}</h2>
     <p></p><b>Target Number: [[${tn}]]</b> <p></p>
-    <b>Result: [[${roll.result}]]</b><p></p>
+    <b>Result: [[${roll.total}]]</b><p></p>
     <span style='color:rgb(168, 5, 5); font-size:120%;'> <b>UNLUCKY NUMBER!</b></span>${degreesLine}`;
 } else {
-  contentString = `<h2>${element.name} Resistance</h2>
+  contentString = `<h2>${element.getAttribute("name")}</h2>
     <p></p><b>Target Number: [[${tn}]]</b> <p></p>
-    <b>Result: [[${roll.result}]]</b><p></p>
+    <b>Result: [[${roll.total}]]</b><p></p>
     <b>${roll.total <= tn
       ? " <span style='color:green; font-size: 120%;'> <b>SUCCESS!</b></span>"
       : " <span style='color: rgb(168, 5, 5); font-size: 120%;'> <b>FAILURE!</b></span>"
     }</b>${degreesLine}`;
 }
 
-            await roll.toMessage({
-              async: false,
-              user: game.user.id,
-              speaker: ChatMessage.getSpeaker(),
-              roll: roll,
-              content: contentString,
-              flavor: `<div class="tag-container">${tags.join("")}</div>`,
-              rollMode: game.settings.get("core", "rollMode"),
-            });
+          await roll.toMessage({
+  user: game.user.id,
+  speaker: ChatMessage.getSpeaker(),
+  content: contentString,
+  flavor: `<div class="tag-container">${tags.join("")}</div>`,
+  rollMode: game.settings.get("core", "rollMode"),
+});
           },
         },
         two: {
@@ -780,25 +811,25 @@ if (isLucky(this.actor, roll.result)) {
             const playerInput = parseInt(html.find('[id="playerInput"]').val());
             let contentString = "";
             let roll = new Roll("1d100");
-            await roll.evaluate();
+            await roll.evaluate({ async: true });
 
             if (isLucky(this.actor, roll.result)) {
               contentString = `<h2><img src="${item.img}"</img>${item.name}</h2>
             <p></p><b>Target Number: [[${regularValue} + ${playerInput} + ${this.actor.system.wounded ? this.actor.system.woundPenalty : 0
                 }]]</b> <p></p>
-            <b>Result: [[${roll.result}]]</b><p></p>
+            <b>Result: [[${roll.total}]]</b><p></p>
             <span style='color:green; font-size:120%;'> <b>LUCKY NUMBER!</b></span>`;
             } else if (isUnlucky(this.actor, roll.result)) {
               contentString = `<h2><img src="${item.img}"</img>${item.name}</h2>
             <p></p><b>Target Number: [[${regularValue} + ${playerInput} + ${this.actor.system.wounded ? this.actor.system.woundPenalty : 0
                 }]]</b> <p></p>
-            <b>Result: [[${roll.result}]]</b><p></p>
+            <b>Result: [[${roll.total}]]</b><p></p>
             <span style='color:rgb(168, 5, 5); font-size:120%;'> <b>UNLUCKY NUMBER!</b></span>`;
             } else if (this.actor.system.wounded === true) {
               contentString = `<h2><img src="${item.img}"</img>${item.name}</h2>
             <p></p><b>Target Number: [[${woundedValue + playerInput
                 }]]</b> <p></p>
-            <b>Result: [[${roll.result}]]</b><p></p>
+            <b>Result: [[${roll.total}]]</b><p></p>
             <b>${roll.total <= woundedValue + playerInput
                   ? " <span style='color:green; font-size: 120%;'> <b>SUCCESS!</b></span>"
                   : " <span style='color: rgb(168, 5, 5); font-size: 120%;'> <b>FAILURE!</b></span>"
@@ -807,22 +838,20 @@ if (isLucky(this.actor, roll.result)) {
               contentString = `<h2><img src="${item.img}"</img>${item.name}</h2>
             <p></p><b>Target Number: [[${regularValue + playerInput
                 }]]</b> <p></p>
-            <b>Result: [[${roll.result}]]</b><p></p>
+            <b>Result: [[${roll.total}]]</b><p></p>
             <b>${roll.total <= regularValue + playerInput
                   ? " <span style='color:green; font-size: 120%;'> <b>SUCCESS!</b></span>"
                   : " <span style='color: rgb(168, 5, 5); font-size: 120%;'> <b>FAILURE!</b></span>"
                 }`;
             }
 
-            await roll.toMessage({
-              async: false,
-              user: game.user.id,
-              speaker: ChatMessage.getSpeaker(),
-              roll: roll,
-              content: contentString,
-              flavor: `<div class="tag-container">${tags.join("")}</div>`,
-              rollMode: game.settings.get("core", "rollMode"),
-            });
+           await roll.toMessage({
+  user: game.user.id,
+  speaker: ChatMessage.getSpeaker(),
+  content: contentString,
+  flavor: `<div class="tag-container">${tags.join("")}</div>`,
+  rollMode: game.settings.get("core", "rollMode"),
+});
           },
         },
         two: {
@@ -1042,24 +1071,24 @@ if (isLucky(this.actor, roll.result)) {
                 2 * Math.floor(this.actor.system.characteristics.wp.total / 10);
             }
 
-            //If spell has damage value it outputs to Chat, otherwise no damage will be shown in Chat Output
-            const damageRoll = new Roll(spellToCast.system.damage);
-            let damageEntry = "";
+// If spell has a damage formula, include damage in chat output (otherwise omit)
+let damageRoll = null;
+let damageEntry = "";
 
-            if (
-              spellToCast.system.damage != "" &&
-              spellToCast.system.damage != 0
-            ) {
-              await damageRoll.evaluate();
-              damageEntry = `<tr>
-                                            <td style="font-weight: bold;">Damage</td>
-                                            <td style="font-weight: bold; text-align: center;">[[${damageRoll.result}]]</td>
-                                            <td style="text-align: center;">${damageRoll.formula}</td>
-                                        </tr>`;
-            }
+const damageFormula = String(spellToCast.system.damage ?? "").trim();
+if (damageFormula && damageFormula !== "0") {
+  damageRoll = new Roll(damageFormula);
+  await damageRoll.evaluate({ async: true });
+
+  damageEntry = `<tr>
+    <td style="font-weight: bold;">Damage</td>
+    <td style="font-weight: bold; text-align: center;">[[${damageRoll.total}]]</td>
+    <td style="text-align: center;">${damageRoll.formula}</td>
+  </tr>`;
+}
 
             const hitLocRoll = new Roll("1d10");
-            await hitLocRoll.evaluate();
+            await hitLocRoll.evaluate({ async: true });
             let hitLoc = "";
 
             if (hitLocRoll.result <= 5) {
@@ -1102,60 +1131,80 @@ if (isLucky(this.actor, roll.result)) {
               }
             }
 
-           // Calculate Degrees of Success/Failure for the spell cast
-const spellSuccessRoll = Number(hitLocRoll.result); // or whatever your d100 roll is!
-const spellSkillTN = spellToCast.system.value ?? Math.floor(this.actor.system.characteristics.wp.total / 10);
+// Calculate Degrees of Success/Failure for the spell cast
+// Cast roll (d100) for spell success
+const castRoll = new Roll("1d100");
+await castRoll.evaluate({ async: true });
+
+const spellSuccessRoll = Number(castRoll.total);
+const spellSkillTN =
+  spellToCast.system.value ??
+  Math.floor(this.actor.system.characteristics.wp.total / 10);
+
 const { isSuccess, doS, doF } = calculateDegrees(spellSuccessRoll, spellSkillTN);
+
 const degreesRow = `<tr>
-  <td class="tableAttribute">${isSuccess ? "Degrees of Success" : "Degrees of Failure"}</td>
-  <td class="tableCenterText" colspan="2">${isSuccess ? doS : doF}</td>
+  <td class="tableAttribute">
+    ${isSuccess ? "Degrees of Success" : "Degrees of Failure"}
+  </td>
+  <td class="tableCenterText" colspan="2">
+    ${isSuccess ? doS : doF}
+  </td>
 </tr>`;
-let contentString = `<h2><img src=${spellToCast.img}></im>${spellToCast.name}</h2>
-    <table>
+
+const hitLocRow = damageEntry
+  ? `<tr>
+      <td style="font-weight: bold;">Hit Location</td>
+      <td style="font-weight: bold; text-align: center;" colspan="2">${hitLoc}</td>
+    </tr>`
+  : "";
+
+// Build actual chat HTML
+let contentString = `
+  <div style="padding: 5px;">
+    <h2 style="margin: 0 0 6px 0;">${spellToCast.name}</h2>
+    <table style="width: 100%; text-align: center;">
       <thead>
         <tr>
-          <th style="min-width: 80px;">Name</th>
-          <th style="min-width: 80px; text-align: center;">Result</th>
-          <th style="min-width: 80px; text-align: center;">Detail</th>
+          <th>Attribute</th>
+          <th class="tableCenterText">Result</th>
+          <th class="tableCenterText">Detail</th>
         </tr>
       </thead>
       <tbody>
-        ${damageEntry}
         <tr>
-          <td style="font-weight: bold;">Hit Location</td>
-          <td style="font-weight: bold; text-align: center;">[[${hitLocRoll.result}]]</td>
-          <td style="text-align: center;">${hitLoc}</td>
+          <td style="font-weight: bold;">Target Number</td>
+          <td style="font-weight: bold; text-align: center;" colspan="2">${spellSkillTN}</td>
         </tr>
         <tr>
-          <td style="font-weight: bold;">Spell Cost</td>
-          <td style="font-weight: bold; text-align: center;">[[${displayCost}]]</td>
-          <td title="Cost/Restraint Modifier/Other" style="text-align: center;">${spellToCast.system.cost} / ${spellRestraint} / ${stackCostMod}</td>
-        </tr>
-        <tr style="border-top: double 1px;">
-          <td style="font-weight: bold;">Attributes</td>
-          <td colspan="2">${spellToCast.system.attributes}</td>
+          <td style="font-weight: bold;">Cast Roll</td>
+          <td style="font-weight: bold; text-align: center;" colspan="2">[[${castRoll.total}]]</td>
         </tr>
         ${degreesRow}
+        <tr>
+          <td style="font-weight: bold;">Magicka Cost</td>
+          <td style="font-weight: bold; text-align: center;" colspan="2">${displayCost}</td>
+        </tr>
+        ${hitLocRow}
+        ${damageEntry}
       </tbody>
-    </table>`;
+    </table>
+  </div>
+`;
 
-            await damageRoll.toMessage({
-              user: game.user.id,
-              speaker: ChatMessage.getSpeaker(),
-              flavor: tags.join(""),
-              content: contentString,
-              rollMode: game.settings.get("core", "rollMode"),
-            });
+await castRoll.toMessage({
+  user: game.user.id,
+  speaker: ChatMessage.getSpeaker(),
+  flavor: tags.join(""),
+  content: contentString,
+  rollMode: game.settings.get("core", "rollMode"),
+});
 
             // If Automate Magicka Setting is on, reduce the character's magicka by the calculated output cost
             if (game.settings.get("uesrpg-3ev4", "automateMagicka")) {
-              this.actor.update({
-                system: {
-                  magicka: {
-                    value: this.actor.system.magicka.value - displayCost,
-                  },
-                },
-              });
+              await this.actor.update({
+  "system.magicka.value": this.actor.system.magicka.value - displayCost,
+});
             }
           },
         },
@@ -1174,103 +1223,101 @@ let contentString = `<h2><img src=${spellToCast.img}></im>${spellToCast.name}</h
 
 async _onCombatRoll(event) {
   event.preventDefault();
-  let button = $(event.currentTarget);
+
+  const button = $(event.currentTarget);
   const li = button.parents(".item");
   const item = this.actor.getEmbeddedDocument("Item", li.data("itemId"));
-    const woundedValue =
-      item.system.value +
-      this.actor.system.woundPenalty +
-      this.actor.system.fatigue.penalty +
-      this.actor.system.carry_rating.penalty;
-    const regularValue =
-      item.system.value +
-      this.actor.system.fatigue.penalty +
-      this.actor.system.carry_rating.penalty;
-    let tags = [];
-    if (this.actor.system.wounded) {
-      tags.push(
-        `<span class="tag wound-tag">Wounded ${this.actor.system.woundPenalty}</span>`
-      );
-    }
-    if (this.actor.system.fatigue.penalty != 0) {
-      tags.push(
-        `<span class="tag fatigue-tag">Fatigued ${this.actor.system.fatigue.penalty}</span>`
-      );
-    }
-    if (this.actor.system.carry_rating.penalty != 0) {
-      tags.push(
-        `<span class="tag enc-tag">Encumbered ${this.actor.system.carry_rating.penalty}</span>`
-      );
-    }
 
-    let d = new Dialog({
-      title: "Apply Roll Modifier",
-      content: `<form>
-                  <div class="dialogForm">
-                  <label><b>${item.name} Modifier: </b></label><input placeholder="ex. -20, +10" id="playerInput" value="0" style=" text-align: center; width: 50%; border-style: groove; float: right;" type="text"></input></div>
-                </form>`,
-      buttons: {
-        one: {
-          label: "Roll!",
-          callback: async (html) => {
-            const playerInput = parseInt(html.find('[id="playerInput"]').val());
-let roll = new Roll("1d100");
-await roll.evaluate();
+  if (!item) {
+    ui.notifications.warn("Combat item not found.");
+    return;
+  }
 
-const tn = this.actor.system.wounded
-  ? woundedValue + playerInput
-  : regularValue + playerInput;
+  const woundedValue =
+    item.system.value +
+    this.actor.system.woundPenalty +
+    this.actor.system.fatigue.penalty +
+    this.actor.system.carry_rating.penalty;
 
-const { isSuccess, doS, doF } = calculateDegrees(Number(roll.result), tn);
+  const regularValue =
+    item.system.value +
+    this.actor.system.fatigue.penalty +
+    this.actor.system.carry_rating.penalty;
 
-let degreesLine = `<br><b>${isSuccess ? "Degrees of Success" : "Degrees of Failure"}: ${isSuccess ? doS : doF}</b>`;
+  let tags = [];
+  if (this.actor.system.wounded) {
+    tags.push(
+      `<span class="tag wound-tag">Wounded ${this.actor.system.woundPenalty}</span>`
+    );
+  }
+  if (this.actor.system.fatigue.penalty != 0) {
+    tags.push(
+      `<span class="tag fatigue-tag">Fatigued ${this.actor.system.fatigue.penalty}</span>`
+    );
+  }
+  if (this.actor.system.carry_rating.penalty != 0) {
+    tags.push(
+      `<span class="tag enc-tag">Encumbered ${this.actor.system.carry_rating.penalty}</span>`
+    );
+  }
 
-if (isLucky(this.actor, roll.result)) {
-  contentString = `<h2><img src="${item.img}"</img>${item.name}</h2>
-    <p></p><b>Target Number: [[${tn}]]</b> <p></p>
-    <b>Result: [[${roll.result}]]</b><p></p>
-    <span style='color:green; font-size:120%;'> <b>LUCKY NUMBER!</b></span>${degreesLine}`;
-} else if (isUnlucky(this.actor, roll.result)) {
-  contentString = `<h2><img src="${item.img}"</img>${item.name}</h2>
-    <p></p><b>Target Number: [[${tn}]]</b> <p></p>
-    <b>Result: [[${roll.result}]]</b><p></p>
-    <span style='color:rgb(168, 5, 5); font-size:120%;'> <b>UNLUCKY NUMBER!</b></span>${degreesLine}`;
-} else {
-  contentString = `<h2><img src="${item.img}"</img>${item.name}</h2>
-    <p></p><b>Target Number: [[${tn}]]</b> <p></p>
-    <b>Result: [[${roll.result}]]</b><p></p>
-    <b>${roll.total <= tn
-      ? " <span style='color:green; font-size: 120%;'> <b>SUCCESS!</b></span>"
-      : " <span style='color: rgb(168, 5, 5); font-size: 120%;'> <b>FAILURE!</b></span>"
-    }</b>${degreesLine}`;
-}
+  const d = new Dialog({
+    title: "Apply Roll Modifier",
+    content: `<form>
+                <div class="dialogForm">
+                  <label><b>${item.name} Modifier: </b></label>
+                  <input style="width: 50%; border-style: groove; float: right;" id="playerInput" type="text" value="0"></input>
+                </div>
+              </form>`,
+    buttons: {
+      one: {
+        label: "Roll!",
+        callback: async (html) => {
+          const raw = html.find('[id="playerInput"]').val();
+          const playerInput = Number.isFinite(parseInt(raw)) ? parseInt(raw) : 0;
 
-            await roll.toMessage({
-              async: false,
-              user: game.user.id,
-              speaker: ChatMessage.getSpeaker(),
-              roll: roll,
-              content: contentString,
-              flavor: `<div class="tag-container">${tags.join("")}</div>`,
-              rollMode: game.settings.get("core", "rollMode"),
-            });
-          },
-        },
-        two: {
-          label: "Cancel",
-          callback: (html) => console.log("Cancelled"),
+          const roll = new Roll("1d100");
+          await roll.evaluate({ async: true });
+
+          const tn = this.actor.system.wounded
+            ? woundedValue + playerInput
+            : regularValue + playerInput;
+
+          const { isSuccess, doS, doF } = calculateDegrees(Number(roll.total), tn);
+
+          const degreesLine = `<br><b>${
+            isSuccess ? "Degrees of Success" : "Degrees of Failure"
+          }: ${isSuccess ? doS : doF}</b>`;
+
+          const contentString = `<h2>${item.name}</h2>
+              <p></p><b>Target Number: [[${tn}]]</b><p></p>
+              <b>Result: [[${roll.total}]]</b>
+              ${degreesLine}`;
+
+         await roll.toMessage({
+  user: game.user.id,
+  speaker: ChatMessage.getSpeaker(),
+  content: contentString,
+  flavor: `<div class="tag-container">${tags.join("")}</div>`,
+  rollMode: game.settings.get("core", "rollMode"),
+});
         },
       },
-      default: "one",
-      close: (html) => console.log(),
-    });
-    d.render(true);
-  }
+      two: {
+        label: "Cancel",
+        callback: () => console.log("Cancelled"),
+      },
+    },
+    default: "one",
+  });
+
+  d.render(true);
+}
 
   async _onResistanceRoll(event) {
     event.preventDefault();
     const element = event.currentTarget;
-
+	let tags = [];
     let d = new Dialog({
       title: "Apply Roll Modifier",
       content: `<form>
@@ -1284,30 +1331,30 @@ if (isLucky(this.actor, roll.result)) {
             const playerInput = parseInt(html.find('[id="playerInput"]').val());
 
             let roll = new Roll("1d100");
-            await roll.evaluate();
+            await roll.evaluate({ async: true });
             const tn = this.actor.system.resistance[element.id] + playerInput;
-const { isSuccess, doS, doF } = calculateDegrees(Number(roll.result), tn);
+const { isSuccess, doS, doF } = calculateDegrees(Number(roll.total), tn);
 
 const degreesLine = `<br><b>${
   isSuccess ? "Degrees of Success" : "Degrees of Failure"
 }: ${isSuccess ? doS : doF}</b>`;
-
+let contentString = "";
             if (isLucky(this.actor, roll.result)) {
- contentString = `<h2>${element.name} Resistance</h2>
+ contentString = `<h2>${element.getAttribute("name")}</h2>
             <p></p><b>Target Number: [[${this.actor.system.resistance[element.id]} + ${playerInput}]]</b> <p></p>
-            <b>Result: [[${roll.result}]]</b><p></p>
+            <b>Result: [[${roll.total}]]</b><p></p>
             <span style='color:green; font-size:120%;'> <b>LUCKY NUMBER!</b></span>
             ${degreesLine}`;
             } else if (isUnlucky(this.actor, roll.result)) {
-             contentString = `<h2>${element.name} Resistance</h2>
+             contentString = `<h2>${element.getAttribute("name")}</h2>
             <p></p><b>Target Number: [[${this.actor.system.resistance[element.id]} + ${playerInput}]]</b> <p></p>
-            <b>Result: [[${roll.result}]]</b><p></p>
+            <b>Result: [[${roll.total}]]</b><p></p>
             <span style='color:rgb(168, 5, 5); font-size:120%;'> <b>UNLUCKY NUMBER!</b></span>
             ${degreesLine}`;
             } else {
-              contentString = `<h2>${element.name} Resistance</h2>
+              contentString = `<h2>${element.getAttribute("name")}</h2>
             <p></p><b>Target Number: [[${this.actor.system.resistance[element.id]} + ${playerInput}]]</b> <p></p>
-            <b>Result: [[${roll.result}]]</b><p></p>
+            <b>Result: [[${roll.total}]]</b><p></p>
             <b>${
               roll.total <= this.actor.system.resistance[element.id] + playerInput
                 ? " <span style='color:green; font-size: 120%;'> <b>SUCCESS!</b></span>"
@@ -1317,12 +1364,12 @@ const degreesLine = `<br><b>${
             }
             
             await roll.toMessage({
-              async: false,
-              user: game.user.id,
-              speaker: ChatMessage.getSpeaker(),
-              content: contentString,
-              rollMode: game.settings.get("core", "rollMode"),
-            });
+  user: game.user.id,
+  speaker: ChatMessage.getSpeaker(),
+  content: contentString,
+  flavor: `<div class="tag-container">${tags.join("")}</div>`,
+  rollMode: game.settings.get("core", "rollMode"),
+});
           },
         },
         two: {
@@ -1377,15 +1424,21 @@ async _onDamageRoll(event) {
   const weaponRoll = new Roll(damageString);
   await weaponRoll.evaluate({ async: true });
 
-  let supRollTag = "";
+  let superiorTotal = null;
   let finalDamage = Number(weaponRoll.total);
 
   if (shortcutWeapon.system.superior) {
     const superiorRoll = new Roll(damageString);
     await superiorRoll.evaluate({ async: true });
-    finalDamage = Math.max(finalDamage, Number(superiorRoll.total));
-    supRollTag = `[[${superiorRoll.total}]]`;
+    superiorTotal = Number(superiorRoll.total);
+    finalDamage = Math.max(finalDamage, superiorTotal);
   }
+
+  const supRollTag =
+    superiorTotal !== null
+      ? `<br><span style="font-size: x-small;">Base: ${weaponRoll.total} | Superior: ${superiorTotal}</span>`
+      : "";
+
 
   const contentString = `
     <div>
@@ -1405,7 +1458,7 @@ async _onDamageRoll(event) {
         <tbody>
           <tr>
             <td class="tableAttribute">Damage</td>
-            <td class="tableCenterText">[[${weaponRoll.total}]] ${supRollTag}</td>
+            <td class="tableCenterText">${finalDamage}${supRollTag}</td>
             <td class="tableCenterText">${damageString}</td>
           </tr>
           <tr>
@@ -1456,13 +1509,13 @@ async _onDamageRoll(event) {
       });
     }
 
-    item.system.quantity = item.system.quantity - 1;
-    if (item.system.quantity < 0) {
-      item.system.quantity = 0;
-      ui.notifications.info("Out of Ammunition!");
-    }
+const currentQty = Number(item.system.quantity ?? 0);
+const newQty = Math.max(currentQty - 1, 0);
 
-    await item.update({ system: { quantity: item.system.quantity } });
+if (newQty === 0) ui.notifications.info("Out of Ammunition!");
+
+await item.update({ "system.quantity": newQty });
+
   }
 
   async _onToggle2H(event) {
@@ -1480,8 +1533,8 @@ async _onDamageRoll(event) {
     const li = toggle.parents(".item");
     const item = this.actor.getEmbeddedDocument("Item", li.data("itemId"));
 
-    item.system.quantity = item.system.quantity + 1;
-    await item.update({ "system.quantity": item.system.quantity });
+const currentQty = Number(item.system.quantity ?? 0);
+await item.update({ "system.quantity": currentQty + 1 });
   }
 
   async _onMinusQty(event) {
@@ -1490,13 +1543,15 @@ async _onDamageRoll(event) {
     const li = toggle.parents(".item");
     const item = this.actor.getEmbeddedDocument("Item", li.data("itemId"));
 
-    item.system.quantity = item.system.quantity - 1;
-    if (item.system.quantity <= 0) {
-      item.system.quantity = 0;
-      ui.notifications.info(`You have used your last ${item.name}!`);
-    }
+const currentQty = Number(item.system.quantity ?? 0);
+const newQty = Math.max(currentQty - 1, 0);
 
-    await item.update({ "system.quantity": item.system.quantity });
+if (newQty === 0 && currentQty > 0) {
+  ui.notifications.info(`You have used your last ${item.name}!`);
+}
+
+await item.update({ "system.quantity": newQty });
+
   }
 
   async _onItemEquip(event) {
@@ -2529,8 +2584,7 @@ async _onDamageRoll(event) {
 
   _setDefaultItemFilter() {
     let filterBy = sessionStorage.getItem("savedItemFilter");
-
-    if (filterBy !== null || filterBy !== undefined) {
+    if (filterBy !== null && filterBy !== undefined) {
       this.form.querySelector("#itemFilter").value = filterBy;
       for (let item of [
         ...this.form.querySelectorAll(".equipmentList tbody .item"),
@@ -2552,8 +2606,7 @@ async _onDamageRoll(event) {
 
   _setDefaultSpellFilter() {
     let filterBy = sessionStorage.getItem("savedSpellFilter");
-
-    if (filterBy !== null || filterBy !== undefined) {
+    if (filterBy !== null && filterBy !== undefined) {
       this.form.querySelector("#spellFilter").value = filterBy;
       for (let spellItem of [
         ...this.form.querySelectorAll(".spellList tbody .item"),
