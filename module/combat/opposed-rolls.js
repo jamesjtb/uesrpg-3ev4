@@ -8,7 +8,7 @@
 
 import { doTestRoll, resolveOpposed } from "../helpers/degree-roll-helper.js";
 import { applyDamage, calculateDamage, DAMAGE_TYPES } from "./damage-automation.js";
-import { rollHitLocation } from "./combat-utils.js";
+import { getHitLocationFromRoll } from "./combat-utils.js";
 
 export const OpposedRoll = {
   /**
@@ -61,19 +61,20 @@ export const OpposedRoll = {
       
       // Calculate DoS bonus if enabled and attacker won
       const useDosBonus = game.settings.get("uesrpg-3ev4", "useDosBonus");
-      const dosBonus = (useDosBonus && outcome.winner === "attacker" && aRes.isSuccess) 
-        ? Math.floor(aRes.degree / 2) 
+      const dosBonus = (useDosBonus && aRes.isSuccess)
+        ? Math.floor(aRes.degree / 2)
         : 0;
       
       // Calculate hit location if not provided
-      const hitLoc = hitLocation || await rollHitLocation();
+      // RAW: hit location comes from the ones digit of the *attack roll*
+      const hitLoc = hitLocation || getHitLocationFromRoll(aRes.rollTotal);
       
       // Calculate damage with all reductions
-      const damageCalc = calculateDamage(rawDamage, damageType, defender, { 
-           penetration: penetration || 0, 
-           dosBonus:  dosBonus,
-           hitLocation: hitLoc  // ← ADD THIS
-  });
+      const damageCalc = calculateDamage(rawDamage, damageType, defender, {
+        penetration: penetration || 0,
+        dosBonus,
+        hitLocation: hitLoc
+      });
       
       damageInfo = {
         roll,
@@ -91,8 +92,8 @@ export const OpposedRoll = {
           ${dosBonus > 0 ? `<br><strong>DoS Bonus:</strong> +${dosBonus}` : ''}
           <br><strong>Hit Location:</strong> ${hitLoc}
           <br><strong>Type:</strong> ${damageType}
-          ${damageCalc.reduction.total > 0 ? `
-            <br><strong>Reduction:</strong> -${damageCalc.reduction.total} (Armor: ${damageCalc.reduction.armor}, Resist: ${damageCalc.reduction.resistance}, Tough: ${damageCalc.reduction.toughness})
+          ${damageCalc.reductions.total > 0 ? `
+            <br><strong>Reduction:</strong> -${damageCalc.reductions.total} (Armor: ${damageCalc.reductions.armor}, Resist: ${damageCalc.reductions.resistance}, Tough: ${damageCalc.reductions.toughness})
           ` : ''}
           <br><strong>Final Damage:</strong> <span style="color:#d32f2f; font-weight:bold;">${damageCalc.finalDamage}</span>
           ${!autoApplyDamage ? `<br><button class="apply-damage-btn" data-actor-id="${defender.id}" data-damage="${damageCalc.finalDamage}" data-type="${damageType}" data-location="${hitLoc}">Apply Damage</button>` : ''}
@@ -135,9 +136,9 @@ export const OpposedRoll = {
 
     await ChatMessage.create({
       user: game.user.id,
-      speaker: ChatMessage.getSpeaker({ actor: attacker.id, token: attackerToken.id, scene: canvas.scene?.id }),
+      speaker: ChatMessage.getSpeaker({ actor: attacker, token: attackerToken.document?.id, scene: canvas.scene?.id }),
       content: html,
-      type: CONST.CHAT_MESSAGE_TYPES.OTHER,
+      style: CONST.CHAT_MESSAGE_STYLES.OTHER,
       flags: {
         'uesrpg-3ev4': {
           opposed: true,
