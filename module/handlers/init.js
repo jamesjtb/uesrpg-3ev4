@@ -119,6 +119,16 @@ async function registerSettings() {
     default: true,
     type: Boolean,
   });
+
+  // Opposed workflow diagnostics
+  game.settings.register("uesrpg-3ev4", "opposedDebug", {
+    name: "Opposed Debug Logging",
+    hint: "When enabled, the opposed-roll workflow logs detailed diagnostic information to the browser console.",
+    scope: "world",
+    config: true,
+    default: false,
+    type: Boolean,
+  });
 }
 
 async function registerSheets () {
