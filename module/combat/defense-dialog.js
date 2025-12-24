@@ -92,8 +92,8 @@ export class DefenseDialog extends Dialog {
       title: `${defender?.name ?? "Defender"} - Choose Defense`,
       content,
       buttons: {
-        defend: {
-          label: "Defend",
+        ok: {
+          label: "Continue",
           callback: (html) => {
             const res = this._readSelection(html);
             // If invalid selection (e.g., missing style), keep dialog open.
@@ -103,17 +103,20 @@ export class DefenseDialog extends Dialog {
             return true;
           }
         },
-        noDefense: {
-          label: "No Defense",
+        cancel: {
+          label: "Cancel",
           callback: () => {
-            const res = { defenseType: "none", label: "No Defense", tn: 0 };
             this._resolved = true;
-            if (typeof this._resolveFn === "function") this._resolveFn(res);
+            if (typeof this._resolveFn === "function") this._resolveFn(null);
             return true;
           }
         }
       },
-      default: "defend"
+      default: "ok",
+      close: () => {
+        // Ensure Dialog.wait-like behavior: closing via X/ESC should resolve null cleanly.
+        if (!this._resolved && typeof this._resolveFn === "function") this._resolveFn(null);
+      }
     }, {
       classes: ["uesrpg", "uesrpg-defense-dialog"],
       width: 700
@@ -142,11 +145,6 @@ export class DefenseDialog extends Dialog {
 
     // 2x2 layout; we update TN text live in activateListeners.
     return `
-      <style>
-  /* Force dialog footer buttons to be a single row, 2 columns */
-  .dialog .dialog-buttons { display:grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-  .dialog .dialog-buttons button { width: 100%; }
-</style>
       <form class="uesrpg-defense-dialog-form">
         ${styleSelect}
 
