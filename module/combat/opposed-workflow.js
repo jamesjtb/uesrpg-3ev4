@@ -16,6 +16,7 @@
 
 import { doTestRoll } from "../helpers/degree-roll-helper.js";
 import { DefenseDialog } from "./defense-dialog.js";
+import { computeTN, listCombatStyles, variantMod as computeVariantMod } from "./tn.js";
 
 function _asNumber(v) {
   if (v == null) return 0;
@@ -24,11 +25,7 @@ function _asNumber(v) {
   return m ? Number(m[0]) : 0;
 }
 
-function _listCombatStyles(actor) {
-  return (actor?.items ?? [])
-    .filter(i => i.type === "combatStyle")
-    .map(i => ({ uuid: i.uuid, id: i.id, name: i.name, tn: _asNumber(i.system?.value ?? 0), item: i }));
-}
+// Combat style listing is centralized in module/combat/tn.js
 
 function _resolveDoc(uuid) {
   if (!uuid) return null;
@@ -84,6 +81,33 @@ function _btn(label, action, extraDataset = {}) {
   return `<button type="button" data-ues-opposed-action="${action}" ${ds}>${label}</button>`;
 }
 
+function _debugEnabled() {
+  return Boolean(game.settings.get("uesrpg-3ev4", "opposedDebug"));
+}
+
+function _logDebug(event, payload) {
+  if (!_debugEnabled()) return;
+  try {
+    // eslint-disable-next-line no-console
+    console.log(`UESRPG Opposed | ${event}`, payload);
+  } catch (_e) {}
+}
+
+function _renderBreakdown(tnObj) {
+  if (!_debugEnabled()) return "";
+  const rows = (tnObj?.breakdown ?? []).map(b => {
+    const v = Number(b.value ?? 0);
+    const sign = v >= 0 ? "+" : "";
+    return `<div style="display:flex; justify-content:space-between; gap:10px;"><span>${b.label}</span><span>${sign}${v}</span></div>`;
+  }).join("");
+  if (!rows) return "";
+  return `
+    <details style="margin-top:4px;">
+      <summary style="cursor:pointer; user-select:none;">TN breakdown</summary>
+      <div style="margin-top:4px; font-size:12px; opacity:0.9;">${rows}</div>
+    </details>`;
+}
+
 function _renderCard(data, messageId) {
   const a = data.attacker;
   const d = data.defender;
@@ -133,6 +157,7 @@ function _renderCard(data, messageId) {
           <div><b>Test:</b> ${a.label}</div>
           <div><b>Attack:</b> ${aVariantText}</div>
           <div><b>TN:</b> ${aTargetLabel}${a.result ? ` &nbsp; <b>Roll:</b> ${a.result.rollTotal} — ${_fmtDegree(a.result)}` : ""}</div>
+          ${_renderBreakdown(a.tn)}
         </div>
         ${attackerActions}
       </div>
@@ -144,6 +169,7 @@ function _renderCard(data, messageId) {
         <div style="margin-top:4px; font-size:13px; line-height:1.25;">
           <div><b>Test:</b> ${dTestLabel}</div>
           <div><b>TN:</b> ${dTargetLabel}${(d.noDefense || d.result) ? ` &nbsp; <b>Roll:</b> ${d.noDefense ? 100 : d.result.rollTotal} — ${d.noDefense ? "1 DoF" : _fmtDegree(d.result)}` : ""}</div>
+          ${_renderBreakdown(d.tn)}
         </div>
         ${defenderActions}
       </div>
@@ -153,6 +179,12 @@ function _renderCard(data, messageId) {
 }
 
 async function _updateCard(message, data) {
+  // Touch context for diagnostics
+  data.context = data.context ?? {};
+  data.context.schemaVersion = data.context.schemaVersion ?? 1;
+  data.context.updatedAt = Date.now();
+  data.context.updatedBy = game.user.id;
+
   await message.update({
     content: _renderCard(data, message.id),
     flags: { "uesrpg-3ev4": { opposed: data } }
@@ -230,9 +262,8 @@ async function _attackerDeclareDialog(attackerLabel, { styles = [], selectedStyl
   </form>
 `;
 
-  let result = null;
   try {
-    result = await Dialog.wait({
+    const result = await Dialog.wait({
       title: `${attackerLabel} — Attack Options`,
       content,
       buttons: {
@@ -240,7 +271,9 @@ async function _attackerDeclareDialog(attackerLabel, { styles = [], selectedStyl
           label: "Continue",
           callback: (html) => {
             const root = html instanceof HTMLElement ? html : html?.[0];
-            const styleUuid = root?.querySelector('select[name="styleUuid"]')?.value ?? root?.querySelector('input[name="styleUuid"]')?.value ?? "";
+            const styleUuid = root?.querySelector('select[name="styleUuid"]')?.value
+              ?? root?.querySelector('input[name="styleUuid"]')?.value
+              ?? "";
             const variant = root?.querySelector('input[name="attackVariant"]:checked')?.value ?? "normal";
             const raw = root?.querySelector('input[name="manualMod"]')?.value ?? "0";
             const manualMod = Number.parseInt(String(raw), 10) || 0;
@@ -252,25 +285,12 @@ async function _attackerDeclareDialog(attackerLabel, { styles = [], selectedStyl
           callback: () => null
         }
       },
-      default: "ok",
-      close: () => null
+      default: "ok"
     }, { width: 460 });
-  } catch (err) {
-    // Dialog.wait rejects if closed via X/ESC without a choice.
-    // Treat as a clean cancel.
-    result = null;
-  }
-
-  return result ?? null;
-}
-
-function _variantMod(variant) {
-  switch (variant) {
-    case "allOut": return 20;
-    case "precision": return -20;
-    case "coup": return 0;
-    case "normal":
-    default: return 0;
+    return result ?? null;
+  } catch (_e) {
+    // Dialog.wait rejects when closed via X/ESC without a choice.
+    return null;
   }
 }
 
@@ -351,6 +371,13 @@ export const OpposedWorkflow = {
     const baseTarget = Number(cfg.attackerTarget ?? 0);
 
     const data = {
+      context: {
+        schemaVersion: 1,
+        createdAt: Date.now(),
+        createdBy: game.user.id,
+        updatedAt: Date.now(),
+        updatedBy: game.user.id
+      },
       status: "pending",
       mode: cfg.mode ?? "attack",
       attacker: {
@@ -367,6 +394,7 @@ export const OpposedWorkflow = {
         manualMod: 0,
         totalMod: 0,
         target: baseTarget,
+        tn: null,
         result: null
       },
       defender: {
@@ -378,7 +406,8 @@ export const OpposedWorkflow = {
         target: null,
         defenseType: null,
         result: null,
-        noDefense: false
+        noDefense: false,
+        tn: null
       },
       outcome: null
     };
@@ -391,6 +420,13 @@ export const OpposedWorkflow = {
     });
 
     await message.update({ content: _renderCard(data, message.id) });
+
+    _logDebug("createPending", {
+      attackerUuid: data.attacker.actorUuid,
+      defenderUuid: data.defender.actorUuid,
+      mode: data.mode
+    });
+
     return message;
   },
 
@@ -417,7 +453,7 @@ export const OpposedWorkflow = {
       }
 
       // One dialog only: (optional) combat style selector + attack variant + manual modifier.
-      const styles = _listCombatStyles(attacker);
+      const styles = listCombatStyles(attacker);
       const selectedStyleUuid = styles.find(s => s.uuid === data.attacker.itemUuid)?.uuid ?? styles[0]?.uuid ?? data.attacker.itemUuid ?? null;
 
       const decl = await _attackerDeclareDialog(data.attacker.label ?? "Attack", {
@@ -434,23 +470,38 @@ export const OpposedWorkflow = {
         if (chosen) {
           data.attacker.itemUuid = chosen.uuid;
           data.attacker.label = chosen.name;
-          data.attacker.baseTarget = _asNumber(chosen.tn);
         }
       }
 
-      const variantMod = _variantMod(decl.variant);
       const manualMod = Number(decl.manualMod) || 0;
-      const base = Number(data.attacker.baseTarget ?? 0);
-      const totalMod = variantMod + manualMod;
-      const finalTN = base + totalMod;
+      const tn = computeTN({
+        actor: attacker,
+        role: "attacker",
+        styleUuid: data.attacker.itemUuid,
+        variant: decl.variant,
+        manualMod
+      });
+
+      const finalTN = tn.finalTN;
+      const totalMod = tn.totalMod;
+      const vMod = computeVariantMod(decl.variant);
 
       data.attacker.hasDeclared = true;
       data.attacker.variant = decl.variant;
       data.attacker.variantLabel = _variantLabel(decl.variant);
-      data.attacker.variantMod = variantMod;
+      data.attacker.variantMod = vMod;
       data.attacker.manualMod = manualMod;
       data.attacker.totalMod = totalMod;
+      data.attacker.baseTarget = tn.baseTN;
       data.attacker.target = finalTN;
+      data.attacker.tn = tn;
+
+      _logDebug("attackerDeclare", {
+        attackerUuid: data.attacker.actorUuid,
+        defenderUuid: data.defender.actorUuid,
+        attackVariant: data.attacker.variant,
+        tn
+      });
 
       // Perform a real Foundry roll + message so Dice So Nice triggers.
       const res = await doTestRoll(attacker, { rollFormula: "1d100", target: finalTN, allowLucky: false, allowUnlucky: false });
@@ -485,7 +536,13 @@ export const OpposedWorkflow = {
       data.defender.defenseType = "none";
       data.defender.label = "No Defense";
       data.defender.target = 0;
+      data.defender.tn = { finalTN: 0, baseTN: 0, totalMod: 0, breakdown: [{ key: "base", label: "No Defense", value: 0, source: "base" }] };
       data.defender.result = { rollTotal: 100, target: 0, isSuccess: false, degree: 1 };
+
+      _logDebug("defenderNoDefense", {
+        defenderUuid: data.defender.actorUuid,
+        attackerUuid: data.attacker.actorUuid
+      });
       await _updateCard(message, data);
     }
 
@@ -502,13 +559,28 @@ export const OpposedWorkflow = {
 
       data.defender.defenseType = choice.defenseType;
       data.defender.label = choice.label;
-      const baseTN = _asNumber(choice.baseTN ?? choice.tn ?? 0);
+
       const manualMod = _asNumber(choice.manualMod ?? 0);
-      const finalTN = _asNumber(choice.tn ?? (baseTN + manualMod));
-      data.defender.target = finalTN;
+      const tn = computeTN({
+        actor: defender,
+        role: "defender",
+        defenseType: choice.defenseType,
+        styleUuid: choice.styleUuid ?? choice.styleId ?? null,
+        manualMod
+      });
+
+      data.defender.target = tn.finalTN;
       data.defender.targetLabel = manualMod
-        ? `${finalTN} (${manualMod >= 0 ? "+" : ""}${manualMod})`
-        : `${finalTN}`;
+        ? `${tn.finalTN} (${manualMod >= 0 ? "+" : ""}${manualMod})`
+        : `${tn.finalTN}`;
+      data.defender.tn = tn;
+
+      _logDebug("defenderDeclare", {
+        defenderUuid: data.defender.actorUuid,
+        attackerUuid: data.attacker.actorUuid,
+        defenseType: data.defender.defenseType,
+        tn
+      });
 
       // Defender "none" is handled by the separate button, but keep safe.
       if (choice.defenseType === "none") {
@@ -541,6 +613,19 @@ export const OpposedWorkflow = {
       const outcome = _resolveOutcomeRAW(data);
       data.outcome = outcome ?? { winner: "tie", text: "" };
       data.status = "resolved";
+
+      _logDebug("resolve", {
+        attackerUuid: data.attacker.actorUuid,
+        defenderUuid: data.defender.actorUuid,
+        outcome: data.outcome,
+        attackerResult: data.attacker
+          ? { rollTotal: data.attacker.result?.rollTotal, isSuccess: data.attacker.result?.isSuccess, degree: data.attacker.result?.degree }
+          : null,
+        defenderResult: data.defender
+          ? { rollTotal: data.defender.result?.rollTotal, isSuccess: data.defender.result?.isSuccess, degree: data.defender.result?.degree, noDefense: data.defender.noDefense }
+          : null
+      });
+
       await _updateCard(message, data);
     }
   }
