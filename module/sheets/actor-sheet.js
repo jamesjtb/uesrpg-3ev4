@@ -1281,6 +1281,38 @@ async _onCombatRoll(event) {
     );
   }
 
+  // IMPORTANT WORKFLOW:
+  // If the user has a target selected, we start an opposed test immediately WITHOUT prompting for modifiers.
+  // All attack options + manual modifier are declared later from the chat card "Roll Attack" button.
+  const defenderToken = [...(game.user.targets ?? [])][0] ?? null;
+  if (defenderToken) {
+    const attackerToken =
+      canvas?.tokens?.controlled?.find(t => t.actor?.id === this.actor.id) ??
+      this.actor.getActiveTokens?.()[0] ??
+      null;
+
+    if (!attackerToken) {
+      ui.notifications.warn("No attacker token found on the canvas. Select your token and try again.");
+      return;
+    }
+
+    const tn = this.actor.system.wounded ? woundedValue : regularValue;
+
+    await OpposedWorkflow.createPending({
+      attackerTokenUuid: attackerToken.document?.uuid ?? attackerToken.uuid,
+      defenderTokenUuid: defenderToken.document?.uuid ?? defenderToken.uuid,
+      attackerActorUuid: this.actor.uuid,
+      defenderActorUuid: defenderToken.actor?.uuid ?? null,
+      attackerItemUuid: item.uuid,
+      attackerLabel: item.name,
+      attackerTarget: tn,
+      mode: "attack"
+    });
+
+    return;
+  }
+
+  // No target selected -> standard single roll with a manual modifier dialog (unchanged behavior).
   const d = new Dialog({
     title: "Apply Roll Modifier",
     content: `<form>
@@ -1300,37 +1332,6 @@ async _onCombatRoll(event) {
             ? woundedValue + playerInput
             : regularValue + playerInput;
 
-                    // If the user has a target selected, create a pending opposed test in chat.
-          // The defender will choose and roll their defense on their own client (WFRP-style),
-          // which avoids permission issues (attackers often cannot read defender items/skills).
-          const defenderToken = [...(game.user.targets ?? [])][0] ?? null;
-          if (defenderToken) {
-            const attackerToken =
-              canvas?.tokens?.controlled?.find(t => t.actor?.id === this.actor.id) ??
-              this.actor.getActiveTokens?.()[0] ??
-              null;
-
-            if (!attackerToken) {
-              ui.notifications.warn("No attacker token found on the canvas. Select your token and try again.");
-              return;
-            }
-
-            await OpposedWorkflow.createPending({
-              attackerTokenUuid: attackerToken.document?.uuid ?? attackerToken.uuid,
-              defenderTokenUuid: defenderToken.document?.uuid ?? defenderToken.uuid,
-              attackerActorUuid: this.actor.uuid,
-              defenderActorUuid: defenderToken.actor?.uuid ?? null,
-              attackerItemUuid: item.uuid,
-              attackerLabel: item.name,
-              attackerTarget: tn,
-              // Mark this as an attack-style opposed test so later we can enable damage workflow.
-              mode: "attack"
-            });
-
-            return;
-          }
-
-          // Otherwise, perform a standard single combat test roll// Otherwise, perform a standard single combat test roll
           const roll = new Roll("1d100");
           await roll.evaluate();
 
