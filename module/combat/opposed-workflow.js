@@ -230,25 +230,36 @@ async function _attackerDeclareDialog(attackerLabel, { styles = [], selectedStyl
   </form>
 `;
 
-  const result = await Dialog.wait({
-    title: `${attackerLabel} — Attack Options`,
-    content,
-    buttons: {
-      ok: {
-        label: "Continue",
-        callback: (html) => {
-          const root = html instanceof HTMLElement ? html : html?.[0];
-          const styleUuid = root?.querySelector('select[name="styleUuid"]')?.value ?? root?.querySelector('input[name="styleUuid"]')?.value ?? "";
-          const variant = root?.querySelector('select[name="attackVariant"]')?.value ?? "normal";
-          const raw = root?.querySelector('input[name="manualMod"]')?.value ?? "0";
-          const manualMod = Number.parseInt(String(raw), 10) || 0;
-          return { styleUuid, variant, manualMod };
+  let result = null;
+  try {
+    result = await Dialog.wait({
+      title: `${attackerLabel} — Attack Options`,
+      content,
+      buttons: {
+        ok: {
+          label: "Continue",
+          callback: (html) => {
+            const root = html instanceof HTMLElement ? html : html?.[0];
+            const styleUuid = root?.querySelector('select[name="styleUuid"]')?.value ?? root?.querySelector('input[name="styleUuid"]')?.value ?? "";
+            const variant = root?.querySelector('input[name="attackVariant"]:checked')?.value ?? "normal";
+            const raw = root?.querySelector('input[name="manualMod"]')?.value ?? "0";
+            const manualMod = Number.parseInt(String(raw), 10) || 0;
+            return { styleUuid, variant, manualMod };
+          }
+        },
+        cancel: {
+          label: "Cancel",
+          callback: () => null
         }
       },
-      cancel: { label: "Cancel" }
-    },
-    default: "ok"
-  }, { width: 460 });
+      default: "ok",
+      close: () => null
+    }, { width: 460 });
+  } catch (err) {
+    // Dialog.wait rejects if closed via X/ESC without a choice.
+    // Treat as a clean cancel.
+    result = null;
+  }
 
   return result ?? null;
 }
