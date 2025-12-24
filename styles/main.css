@@ -1306,3 +1306,20 @@
   overflow-y: auto;
 }
 
+/* ------------------------------------------------------------------------- */
+/* Opposed workflow dialogs                                                   */
+/* ------------------------------------------------------------------------- */
+
+/* Defender dialog: match the attack dialog's compact two-button footer */
+.uesrpg-defense-dialog .dialog-buttons {
+  display: grid !important;
+  grid-template-columns: 1fr 1fr !important;
+  gap: 10px !important;
+}
+
+.uesrpg-defense-dialog .dialog-buttons button {
+  width: 100% !important;
+  text-transform: none !important; /* prevent "CONTINUE" styling */
+}
+
+
