@@ -11,7 +11,7 @@
  *  - RAW: Block is a Combat Style test using Strength (STR), not a separate Block skill.
  */
 
-import { skillHelper, skillModHelper } from "../helpers/skillCalcHelper.js";
+import { computeTN, listCombatStyles, hasEquippedShield } from "./tn.js";
 
 function asNumber(v) {
   if (v == null) return 0;
@@ -20,71 +20,17 @@ function asNumber(v) {
   return m ? Number(m[0]) : 0;
 }
 
-function getCharTotal(actor, key) {
-  return asNumber(actor?.system?.characteristics?.[key]?.total ?? actor?.system?.characteristics?.[key]?.value ?? 0);
-}
-
-function hasEquippedShield(actor) {
-  // UESRPG shields are implemented as Armor items with a Block field (per your item sample).
-  // We treat: type === "armor" AND equipped AND (system.block > 0 OR name contains "shield")
-  return (actor?.items ?? []).some(i => {
-    if (i.type !== "armor") return false;
-    if (!i.system?.equipped) return false;
-    const block = asNumber(i.system?.block ?? 0);
-    if (block > 0) return true;
-    return String(i.name ?? "").toLowerCase().includes("shield");
-  });
-}
-
-function listCombatStyles(actor) {
-  return (actor?.items ?? [])
-    .filter(i => i.type === "combatStyle")
-    .map(i => ({ id: i.id, uuid: i.uuid, name: i.name, item: i }));
-}
-
-function computeCombatStyleTN(styleItem) {
-  // styleItem.system.value is already computed in prepareData with wound/fatigue and bonuses.
-  return asNumber(styleItem?.system?.value ?? 0);
-}
-
-function computeBlockTN(defender, styleItem) {
-  // RAW: Combat Style test using Strength.
-  // We rebuild TN similarly to SimpleItem._prepareCombatStyleData but force baseCha=str.
-  const woundPenalty = asNumber(defender?.system?.woundPenalty ?? 0);
-  const fatiguePenalty = asNumber(defender?.system?.fatigue?.penalty ?? 0);
-
-  const strTotal = getCharTotal(defender, "str");
-  const styleBonus = asNumber(styleItem?.system?.bonus ?? 0);
-  const miscValue = asNumber(styleItem?.system?.miscValue ?? 0);
-  const itemChaBonus = asNumber(skillHelper(defender, "str") ?? 0);
-  const itemSkillBonus = asNumber(skillModHelper(defender, styleItem?.name ?? "") ?? 0);
-
-  let tn = strTotal + styleBonus + miscValue + itemChaBonus + itemSkillBonus + fatiguePenalty;
-  if (defender?.system?.wounded) tn += woundPenalty;
-  return tn;
-}
-
-function computeEvadeTN(defender) {
-  // Prefer an Evade skill item if present; fallback to AGI.
-  const evadeItem = (defender?.items ?? []).find(i => i.type === "skill" && String(i.name ?? "").toLowerCase() === "evade");
-  const evadeTN = asNumber(evadeItem?.system?.value ?? 0);
-  if (evadeTN) return evadeTN;
-  // If there's no explicit evade skill, use AGI plus actor's normal penalties already baked into characteristics totals.
-  // (Your system applies fatigue/wound to combatStyle items; characteristics totals remain raw, which is expected.)
-  return getCharTotal(defender, "agi");
-}
+// NOTE: TN math is centralized in module/combat/tn.js (computeTN).
+// This dialog only previews *base TNs* for each defense choice, and returns the user's selection.
 
 export class DefenseDialog extends Dialog {
   constructor(defender, { attackerContext } = {}, resolveFn = null) {
     const styles = listCombatStyles(defender);
-    const hasStyles = styles.length > 0;
-    const defaultStyle = styles[0]?.id ?? "";
-    const shieldOk = hasEquippedShield(defender);
+    const defaultStyleUuid = styles[0]?.uuid ?? "";
 
     const content = DefenseDialog._renderContent(defender, {
       styles,
-      defaultStyle,
-      shieldOk,
+      defaultStyleUuid,
       attackerContext
     });
 
@@ -112,11 +58,7 @@ export class DefenseDialog extends Dialog {
           }
         }
       },
-      default: "ok",
-      close: () => {
-        // Ensure Dialog.wait-like behavior: closing via X/ESC should resolve null cleanly.
-        if (!this._resolved && typeof this._resolveFn === "function") this._resolveFn(null);
-      }
+      default: "ok"
     }, {
       classes: ["uesrpg", "uesrpg-defense-dialog"],
       width: 700
@@ -124,27 +66,31 @@ export class DefenseDialog extends Dialog {
 
     this._defender = defender;
     this._styles = styles;
-    this._defaultStyle = defaultStyle;
-    this._shieldOk = shieldOk;
+    this._defaultStyleUuid = defaultStyleUuid;
     this._resolveFn = resolveFn;
     this._resolved = false;
   }
 
-  static _renderContent(defender, { styles, defaultStyle, shieldOk }) {
+  static _renderContent(defender, { styles, defaultStyleUuid }) {
     const styleSelect = (styles.length >= 2)
       ? `
         <div class="form-group">
           <label><b>Combat Style</b></label>
-          <select name="styleId" style="width:100%;">
-            ${styles.map(s => `<option value="${s.id}" ${s.id === defaultStyle ? "selected" : ""}>${s.name}</option>`).join("\n")}
+          <select name="styleUuid" style="width:100%;">
+            ${styles.map(s => `<option value="${s.uuid}" ${s.uuid === defaultStyleUuid ? "selected" : ""}>${s.name}</option>`).join("\n")}
           </select>
         </div>`
       : (styles.length === 1)
-        ? `<input type="hidden" name="styleId" value="${defaultStyle}" />`
+        ? `<input type="hidden" name="styleUuid" value="${defaultStyleUuid}" />`
         : `<div class="form-group"><i>No Combat Style item found; Parry/Block/Counter-Attack will be unavailable.</i></div>`;
 
     // 2x2 layout; we update TN text live in activateListeners.
     return `
+      <style>
+  /* Force dialog footer buttons to be a single row, 2 columns */
+  .dialog .dialog-buttons { display:grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  .dialog .dialog-buttons button { width: 100%; }
+</style>
       <form class="uesrpg-defense-dialog-form">
         ${styleSelect}
 
@@ -155,9 +101,9 @@ export class DefenseDialog extends Dialog {
             <span class="hint">Dodge the attack (AGI)</span>
           </label>
 
-          <label class="def-opt ${shieldOk ? "" : "disabled"}" style="border:1px solid #888; padding:10px; border-radius:6px; opacity:${shieldOk ? "1" : "0.5"};">
-            <input type="radio" name="defenseType" value="block" ${shieldOk ? "" : "disabled"} />
-            <b>Block</b> — TN <span class="tn" data-tn-for="block">0</span>${shieldOk ? "" : " (unavailable)"}<br/>
+          <label class="def-opt" style="border:1px solid #888; padding:10px; border-radius:6px;">
+            <input type="radio" name="defenseType" value="block" />
+            <b>Block</b> — TN <span class="tn" data-tn-for="block">0</span><br/>
             <span class="hint">Block with shield (Combat Style using STR)</span>
           </label>
 
@@ -186,7 +132,7 @@ export class DefenseDialog extends Dialog {
   activateListeners(html) {
     super.activateListeners(html);
     this._html = html;
-    const styleSelect = html.find('select[name="styleId"]');
+    const styleSelect = html.find('select[name="styleUuid"]');
     if (styleSelect.length) {
       styleSelect.on("change", () => this._refreshTN(html));
     }
@@ -194,17 +140,34 @@ export class DefenseDialog extends Dialog {
   }
 
   _getSelectedStyle(html) {
-    const styleId = html.find('[name="styleId"]').val() ?? this._defaultStyle;
-    return this._styles.find(s => s.id === styleId)?.item ?? null;
+    const styleUuid = html.find('[name="styleUuid"]').val() ?? this._defaultStyleUuid;
+    return this._styles.find(s => s.uuid === styleUuid) ?? null;
   }
 
   _refreshTN(html) {
-    const styleItem = this._getSelectedStyle(html);
+    const style = this._getSelectedStyle(html);
+    const styleUuid = style?.uuid ?? null;
 
-    const evadeTN = computeEvadeTN(this._defender);
-    const parryTN = styleItem ? computeCombatStyleTN(styleItem) : 0;
-    const counterTN = styleItem ? computeCombatStyleTN(styleItem) : 0;
-    const blockTN = (styleItem && this._shieldOk) ? computeBlockTN(this._defender, styleItem) : 0;
+    // Eligibility: Block requires an equipped shield.
+    const shieldOk = hasEquippedShield(this._defender);
+    const blockRadio = html.find('input[name="defenseType"][value="block"]');
+    const blockLabel = blockRadio.closest("label.def-opt");
+    if (blockRadio.length) {
+      blockRadio.prop("disabled", !shieldOk);
+      // Visually fade when illegal.
+      blockLabel.css({ opacity: shieldOk ? 1 : 0.45, filter: shieldOk ? "" : "grayscale(0.2)" });
+      // If currently selected but illegal, switch to Evade.
+      if (!shieldOk && blockRadio.prop("checked")) {
+        html.find('input[name="defenseType"][value="evade"]').prop("checked", true);
+      }
+    }
+
+    const evadeTN = computeTN({ actor: this._defender, role: "defender", defenseType: "evade", manualMod: 0 }).finalTN;
+    const parryTN = computeTN({ actor: this._defender, role: "defender", defenseType: "parry", styleUuid, manualMod: 0 }).finalTN;
+    const counterTN = computeTN({ actor: this._defender, role: "defender", defenseType: "counter", styleUuid, manualMod: 0 }).finalTN;
+    const blockTN = shieldOk
+      ? computeTN({ actor: this._defender, role: "defender", defenseType: "block", styleUuid, manualMod: 0 }).finalTN
+      : 0;
 
     const setTN = (k, v) => {
       html.find(`[data-tn-for="${k}"]`).text(String(asNumber(v)));
@@ -221,40 +184,28 @@ export class DefenseDialog extends Dialog {
     const manualMod = Number.parseInt(String(rawMod), 10) || 0;
 
     const defenseType = html.find('input[name="defenseType"]:checked').val() ?? "evade";
-    const styleItem = this._getSelectedStyle(html);
+    const style = this._getSelectedStyle(html);
+    const styleUuid = style?.uuid ?? null;
 
-    // Compute TN based on current selection (must match what is shown).
-    if (defenseType === "evade") {
-      const baseTN = computeEvadeTN(this._defender);
-      return { defenseType: "evade", label: "Evade", baseTN, manualMod, tn: baseTN + manualMod };
-    }
+    // Evade does not require a combat style.
+    if (defenseType === "evade") return { defenseType: "evade", label: "Evade", manualMod };
 
-    if (!styleItem) {
+    // Other defenses require a combat style.
+    if (!styleUuid) {
       ui.notifications.warn("No combat style available for this defense.");
       return null;
     }
 
-    if (defenseType === "block") {
-      if (!this._shieldOk) {
-        ui.notifications.warn("Block is unavailable: no equipped shield.");
-        return null;
-      }
-      const baseTN = computeBlockTN(this._defender, styleItem);
-      return { defenseType: "block", label: "Block", baseTN, manualMod, tn: baseTN + manualMod, styleId: styleItem.id };
+    // Eligibility guard: Block requires a shield.
+    if (defenseType === "block" && !hasEquippedShield(this._defender)) {
+      ui.notifications.warn("Block requires an equipped shield.");
+      return null;
     }
 
-    if (defenseType === "parry") {
-      const baseTN = computeCombatStyleTN(styleItem);
-      return { defenseType: "parry", label: "Parry", baseTN, manualMod, tn: baseTN + manualMod, styleId: styleItem.id };
-    }
-
-    if (defenseType === "counter") {
-      const baseTN = computeCombatStyleTN(styleItem);
-      return { defenseType: "counter", label: "Counter-Attack", baseTN, manualMod, tn: baseTN + manualMod, styleId: styleItem.id };
-    }
-
-    const baseTN = computeEvadeTN(this._defender);
-    return { defenseType: "evade", label: "Evade", baseTN, manualMod, tn: baseTN + manualMod };
+    if (defenseType === "block") return { defenseType: "block", label: "Block", manualMod, styleUuid };
+    if (defenseType === "parry") return { defenseType: "parry", label: "Parry", manualMod, styleUuid };
+    if (defenseType === "counter") return { defenseType: "counter", label: "Counter-Attack", manualMod, styleUuid };
+    return { defenseType: "evade", label: "Evade", manualMod };
   }
 
   static async show(defender, options = {}) {
