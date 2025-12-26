@@ -4,6 +4,49 @@
  */
 import { skillHelper } from "../helpers/skillCalcHelper.js";
 import { skillModHelper } from "../helpers/skillCalcHelper.js";
+import { UESRPG } from "../constants.js";
+
+/**
+ * Add a flat bonus to a dice string.
+ * - Accepts numeric values or strings (e.g. "1d8", "1d10+2").
+ * - Returns a string suitable for Foundry dice rolling.
+ */
+function addDiceBonus(dice, bonus) {
+  const b = Number(bonus || 0);
+  if (!b) return String(dice ?? "");
+  const d = String(dice ?? "").trim();
+  if (!d) return String(b);
+
+  // If the value is a plain number, just add.
+  if (/^-?\d+(?:\.\d+)?$/.test(d)) return String(Number(d) + b);
+
+  // Normalize existing trailing bonus.
+  const m = d.match(/^(.*?)([+-])\s*(\d+(?:\.\d+)?)\s*$/);
+  if (m) {
+    const base = m[1].trim();
+    const sign = m[2] === "-" ? -1 : 1;
+    const existing = sign * Number(m[3]);
+    const total = existing + b;
+    if (total === 0) return base;
+    return `${base}${total >= 0 ? "+" : ""}${total}`;
+  }
+  return `${d}${b >= 0 ? "+" : ""}${b}`;
+}
+
+function safeNumber(v, fallback = 0) {
+  const n = Number(v);
+  return Number.isFinite(n) ? n : fallback;
+}
+
+function hasLegacyQuality(qualitiesText, needle) {
+  const q = String(qualitiesText ?? "").toLowerCase();
+  return q.includes(String(needle).toLowerCase());
+}
+
+function hasStructuredQuality(qualitiesStructured, key) {
+  if (!Array.isArray(qualitiesStructured)) return false;
+  return qualitiesStructured.some(q => (q?.key ?? q) === key);
+}
 
 export class SimpleItem extends Item {
   async _preCreate(data, options, user) {
@@ -36,14 +79,60 @@ export class SimpleItem extends Item {
     // Prepare data based on item type - defensive guards for hasOwnProperty
     if (this.isEmbedded && this.actor?.system != null) {
       if (this.system && Object.prototype.hasOwnProperty.call(this.system, 'modPrice')) { this._prepareMerchantItem(actorData, itemData) }
-      if (this.system && Object.prototype.hasOwnProperty.call(this.system, 'damaged')) { this._prepareArmorItem(actorData, itemData) }
+      if (this.type === 'armor') { this._prepareArmorItem(actorData, itemData) }
       if (this.type === 'item') { this._prepareNormalItem(actorData, itemData) }
       if (this.type === 'weapon') { this._prepareWeaponItem(actorData, itemData) }
+      if (this.type === 'ammunition') { this._prepareAmmunitionItem(actorData, itemData) }
       if (this.system && Object.prototype.hasOwnProperty.call(this.system, 'skillArray') && actorData.type === 'Player Character') { this._prepareModSkillItems(actorData, itemData) }
       if (this.system && Object.prototype.hasOwnProperty.call(this.system, 'baseCha')) { this._prepareCombatStyleData(actorData, itemData) }
-      if (this.type == 'container') { this._prepareContainerItem(actorData, itemData) }
+      if (this.type == 'container') { this._prepareContainerItem(actorData, itemData) }}
+    // Step 7: Inject auto-granted qualities into a computed structured list for automation.
+    // This must run for world items as well as embedded items so automation helpers can rely on it.
+    if (['weapon','armor','ammunition'].includes(this.type)) {
+      this._injectAutoQualities(itemData);
     }
+
   }
+
+  /**
+   * Build a computed structured qualities array that includes both manual qualitiesStructured
+   * and autoQualitiesStructured (material/quality-derived). This is NOT persisted.
+   *
+   * Contract:
+   * - Manual qualities take precedence over auto qualities for the same key.
+   * - Output is stable and de-duplicated by key.
+   * - Stored on `system.qualitiesStructuredInjected` for automation consumers.
+   */
+  _injectAutoQualities(itemData) {
+    const manual = Array.isArray(itemData.qualitiesStructured) ? itemData.qualitiesStructured : [];
+    const autoQ = Array.isArray(itemData.autoQualitiesStructured) ? itemData.autoQualitiesStructured : [];
+
+    const byKey = new Map();
+
+    // Manual first (authoritative for values)
+    for (const q of manual) {
+      if (!q) continue;
+      const key = String(q.key ?? "").trim();
+      if (!key) continue;
+      const entry = { key };
+      if (q.value !== undefined && q.value !== null && q.value !== "") entry.value = Number(q.value);
+      byKey.set(key, entry);
+    }
+
+    // Auto second (only if not already present)
+    for (const q of autoQ) {
+      if (!q) continue;
+      const key = String(q.key ?? q ?? "").trim();
+      if (!key) continue;
+      if (byKey.has(key)) continue;
+      const entry = { key };
+      if (q.value !== undefined && q.value !== null && q.value !== "") entry.value = Number(q.value);
+      byKey.set(key, entry);
+    }
+
+    itemData.qualitiesStructuredInjected = Array.from(byKey.values());
+  }
+
 
   /**
    * Prepare Character type specific data
@@ -124,7 +213,21 @@ export class SimpleItem extends Item {
   }
 
   _prepareArmorItem(actorData, itemData) {
+    // --- Derived (non-persisted) effective stats ---
+    const baseEnc = safeNumber(itemData.enc, 0);
+    const basePrice = safeNumber(itemData.price, 0);
 
+    // Armor quality affects effective weight class (already implemented elsewhere),
+    // but price is also generally driven by craftsmanship in the same way as weapons.
+    const qualityKey = String(itemData.qualityLevel || "common").toLowerCase();
+    const qRule = UESRPG.WEAPON_QUALITY_RULES?.[qualityKey] ?? UESRPG.WEAPON_QUALITY_RULES.common;
+    const priceMult = safeNumber(qRule?.priceMult, 1.0);
+
+    itemData.encEffective = baseEnc;
+    itemData.priceEffective = Math.round(basePrice * priceMult);
+
+    // Keep a computed list of auto-qualities for later automation (not persisted).
+    itemData.autoQualitiesStructured = Array.isArray(qRule?.autoQualities) ? qRule.autoQualities : [];
   }
 
   _prepareNormalItem(actorData, itemData) {
@@ -133,7 +236,86 @@ export class SimpleItem extends Item {
   }
 
   _prepareWeaponItem(actorData, itemData) {
+    // 2H fallback
     itemData.weapon2H ? itemData.damage3 = itemData.damage2 : itemData.damage3 = itemData.damage
+
+    // --- Derived (non-persisted) effective stats ---
+    const baseDamage = itemData.damage;
+    const baseDamage2 = itemData.damage2;
+    const baseEnc = safeNumber(itemData.enc, 0);
+    const basePrice = safeNumber(itemData.price, 0);
+
+    const qualityKey = String(itemData.qualityLevel || "common").toLowerCase();
+    const qRule = UESRPG.WEAPON_QUALITY_RULES?.[qualityKey] ?? UESRPG.WEAPON_QUALITY_RULES.common;
+
+    // Determine which material rule table applies.
+    const matKey = String(itemData.material || "iron").toLowerCase();
+    const attackMode = String(itemData.attackMode || "melee").toLowerCase();
+
+    // RAW: thrown ranged weapons count as melee for materials.
+    const isThrown = hasStructuredQuality(itemData.qualitiesStructured, "thrown") || hasLegacyQuality(itemData.qualities, "thrown");
+    const useMeleeMaterial = (attackMode === "melee") || (attackMode === "ranged" && isThrown);
+
+    const mRule = useMeleeMaterial
+      ? (UESRPG.WEAPON_MATERIAL_RULES_MELEE?.[matKey] ?? null)
+      : (UESRPG.WEAPON_MATERIAL_RULES_RANGED?.[matKey] ?? null);
+
+    const damageMod = safeNumber(mRule?.damageMod, 0);
+    const encDelta = safeNumber(mRule?.encDelta, 0);
+    const matPriceMult = safeNumber(mRule?.priceMult, 1.0);
+    const qualityPriceMult = safeNumber(qRule?.priceMult, 1.0);
+
+    // Special melee-only materials: wood/bone halve damage (with exceptions in RAW).
+    // We implement a conservative derived presentation:
+    // - Bone: halved damage
+    // - Wood: halved damage unless the weapon is a Quarterstaff or Mace (detected by name)
+    let special = null;
+    if (useMeleeMaterial && mRule?.autoQualities?.some(q => q?.key === "specialDamageRule")) {
+      special = mRule.autoQualities.find(q => q?.key === "specialDamageRule")?.value;
+    }
+
+    const nameLower = String(this.name ?? "").toLowerCase();
+    const woodException = nameLower.includes("quarterstaff") || nameLower.includes("mace");
+
+    const applyHalfDamage = (special === "bone") || (special === "wood" && !woodException);
+
+    // NOTE: We avoid rewriting base fields; these are used by sheets & future automation.
+    itemData.damageEffective = applyHalfDamage ? String(baseDamage) : addDiceBonus(baseDamage, damageMod);
+    itemData.damage2Effective = applyHalfDamage ? String(baseDamage2) : addDiceBonus(baseDamage2, damageMod);
+    itemData.damage3Effective = itemData.weapon2H ? itemData.damage2Effective : itemData.damageEffective;
+
+    itemData.encEffective = baseEnc + encDelta;
+    itemData.priceEffective = Math.round(basePrice * matPriceMult * qualityPriceMult);
+
+    // Enchant level is defined by material.
+    if (mRule?.enchantLevel != null) itemData.enchant_levelEffective = safeNumber(mRule.enchantLevel, 0);
+
+    // Store auto-qualities (material + quality), without mutating the user's toggle list.
+    const materialAuto = Array.isArray(mRule?.autoQualities) ? mRule.autoQualities : [];
+    const qualityAuto = Array.isArray(qRule?.autoQualities) ? qRule.autoQualities : [];
+    itemData.autoQualitiesStructured = [...qualityAuto, ...materialAuto]
+      .filter(q => q?.key && q.key !== "specialDamageRule")
+      .map(q => ({ key: q.key, value: q.value }));
+  }
+
+  _prepareAmmunitionItem(actorData, itemData) {
+    const baseDamage = itemData.damage;
+    const basePricePer10 = safeNumber(itemData.pricePer10, 0);
+    const matKey = String(itemData.ammoMaterial || "iron").toLowerCase();
+    const mRule = UESRPG.AMMO_MATERIAL_RULES?.[matKey] ?? null;
+
+    const damageMod = safeNumber(mRule?.damageMod, 0);
+
+    // Derived effective values; we do not overwrite stored user inputs.
+    itemData.damageEffective = addDiceBonus(baseDamage, damageMod);
+    itemData.enchant_levelEffective = safeNumber(mRule?.enchantLevel, 0);
+    itemData.pricePer10Effective = (mRule?.pricePer10 != null) ? safeNumber(mRule.pricePer10, 0) : basePricePer10;
+    itemData.pricePerShotEffective = Math.round((itemData.pricePer10Effective / 10) * 100) / 100;
+
+    const materialAuto = Array.isArray(mRule?.autoQualities) ? mRule.autoQualities : [];
+    itemData.autoQualitiesStructured = materialAuto
+      .filter(q => q?.key)
+      .map(q => ({ key: q.key, value: q.value }));
   }
 
   /**
