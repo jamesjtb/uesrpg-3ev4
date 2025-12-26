@@ -90,6 +90,15 @@ _ensureSystemData(actorData) {
   actorData.system.wound_threshold = actorData.system.wound_threshold || { base: 0, value: 0, bonus:  0 };
   actorData.system.speed = actorData.system.speed || { base: 0, value: 0, bonus: 0, swimSpeed: 0, flySpeed: 0 };
   actorData.system.carry_rating = actorData.system.carry_rating || { current: 0, max: 0, penalty: 0, bonus: 0, label: "Minimal" };
+
+  // Armor mobility penalties (derived) - used by automation; defaults are neutral
+  actorData.system.mobility = actorData.system.mobility || {
+    armorWeightClass: "none",
+    agilityTestPenalty: 0,
+    agilityPenaltyExemptSkills: ["combatstyle", "combat_style", "combat style"],
+    speedPenalty: 0,
+    sources: []
+  };
   
   // Ensure combat data exists
   actorData. system.fatigue = actorData.system. fatigue || { level: 0, penalty: 0, bonus: 0 };
@@ -153,10 +162,14 @@ _ensureSystemData(actorData) {
    */
   _aggregateItemStats(actorData) {
     // Build a signature of items to detect changes
-    const items = Array.isArray(actorData?.items) ? actorData.items : [];
+    const itemsRaw = actorData?.items;
+    const items = Array.isArray(itemsRaw) ? itemsRaw : (itemsRaw ? Array.from(itemsRaw) : []);
     let sigParts = [];
     for (let it of items) {
-      sigParts.push(`${it?._id||''}:${Number(it?.system?.quantity||0)}:${Number(it?.system?.enc||0)}`);
+            const sys = it?.system ?? {};
+      const cat = String(sys?.item_cat ?? sys?.category ?? "").trim().toLowerCase();
+    const isShield = (it?.type === 'armor') && (cat === "shield" || cat.startsWith("shield"));
+      sigParts.push(`${it?._id||''}:${Number(sys?.quantity||0)}:${Number(sys?.enc||0)}:${sys?.equipped?1:0}:${sys?.excludeENC?1:0}:${sys?.containerStats?.contained?1:0}:${isShield?1:0}`);
     }
     const signature = sigParts.join('|');
 
@@ -193,7 +206,9 @@ _ensureSystemData(actorData) {
         stats.containedWeightReduction += enc * qty;
       }
       if (sys.excludeENC === true) stats.excludedEnc += enc * qty;
-      if (isEquipped) stats.armorEnc += ((enc / 2) * qty);
+            const cat = String(sys?.item_cat ?? sys?.category ?? "").trim().toLowerCase();
+      const isShield = (item?.type === 'armor') && (cat === "shield" || cat.startsWith("shield"));
+      if (item?.type === 'armor' && isEquipped && !isShield) stats.armorEnc += ((enc / 2) * qty);
 
       // Characteristic bonuses (only if equipped)
       if (isEquipped && sys.characteristicBonus) {
@@ -253,6 +268,139 @@ _ensureSystemData(actorData) {
 
     this._aggCache = { signature, agg: stats };
     return stats;
+  }
+
+  /**
+   * Determine the heaviest *effective* armor weight class currently worn.
+   *
+   * Rules contract:
+   * - Automation uses effective values.
+   * - Armor quality modifies effective weight class (Inferior => +1 step, Superior => -1 step).
+   * - Shields are armor-type items but do NOT participate in worn-armor mobility penalties.
+   *
+   * This returns an object describing the result and derived penalties.
+   * We intentionally avoid guessing penalties for classes other than Heavy,
+   * because only Heavy is currently specified in the provided RAW excerpt.
+   */
+  _getArmorMobilityPenalties(actorData) {
+    const itemsRaw = actorData?.items;
+    const items = Array.isArray(itemsRaw) ? itemsRaw : (itemsRaw ? Array.from(itemsRaw) : []);
+
+    const order = ["none", "light", "medium", "heavy", "superheavy", "crippling"]; // must match constants
+    const clampIndex = (i) => Math.max(0, Math.min(order.length - 1, i));
+
+    // Normalize generic free-text fields
+    const norm = (v) => String(v ?? "").trim().toLowerCase();
+
+    // Normalize armor weight class values.
+    // We must be resilient to historic / UI-facing variants such as:
+    // - "Super Heavy"
+    // - "super_heavy"
+    // - "super-heavy"
+    // While still matching our canonical keys used throughout the system.
+    const normWeightClass = (v) => norm(v).replace(/[\s_-]+/g, "");
+
+    let maxIdx = 0; // none
+    let sources = [];
+
+    for (const it of items) {
+      if (!it || it.type !== "armor") continue;
+      const sys = it.system ?? {};
+      const isEquipped = Object.prototype.hasOwnProperty.call(sys, "equipped") ? !!sys.equipped : true;
+      if (!isEquipped) continue;
+
+      const cat = norm(sys?.item_cat ?? sys?.category);
+      const isShield = (cat === "shield" || cat.startsWith("shield"));
+      if (isShield) continue;
+
+      // Weight class can exist in a few places depending on item version and sheet usage.
+      // Canonical persisted field: system.weightClass (values like "light", "superheavy").
+      // Some legacy data or user-edited items may contain "super_heavy" or "Super Heavy".
+      // Some sheets compute an unpersisted derived field: system.effectiveWeightClass.
+      // As a last resort, if the item has no usable class, we *do not* guess here; we
+      // handle actor-level fallback after iterating items.
+      const baseWC = normWeightClass(
+        sys.weightClass ??
+        sys.effectiveWeightClass ??
+        sys.armorWeightClass ??
+        sys.armor_class ??
+        sys.armorClass
+      ) || "none";
+      const q = norm(sys.qualityLevel) || "common";
+      let idx = order.indexOf(baseWC);
+      if (idx < 0) idx = 0;
+
+      // Quality adjustment: Inferior => heavier; Superior => lighter
+      if (q === "inferior") idx = clampIndex(idx + 1);
+      else if (q === "superior") idx = clampIndex(idx - 1);
+
+      if (idx > maxIdx) {
+        maxIdx = idx;
+        sources = [it];
+      } else if (idx === maxIdx && idx > 0) {
+        sources.push(it);
+      }
+    }
+
+    // Actor-level fallback: some worlds historically tracked armor class on the actor (Status AC dropdown)
+    // rather than on each armor item. If no equipped armor item provided a usable weight class,
+    // fall back to actor.system.armor_class.
+    if (maxIdx === 0) {
+      const actorWC = normWeightClass(actorData?.system?.armor_class);
+      const actorIdx = order.indexOf(actorWC);
+      if (actorIdx > 0) maxIdx = actorIdx;
+    }
+
+    const effectiveWeightClass = order[maxIdx] ?? "none";
+
+    // Mobility penalties by effective armor weight class (RAW).
+    // Data contract consumed by skill TN logic:
+    // - armorWeightClass: string
+    // - agilityTestPenalty: number (applies to Agility-based skill tests, except Combat Style)
+    // - skillTestPenalties: { [lowerSkillName]: number } (skill-specific penalties, e.g. Acrobatics in Light)
+    // - allTestPenalty: number (applies to all tests; used for Crippling)
+    // - speedPenalty: number (applied elsewhere for movement)
+    const penalties = {
+      armorWeightClass: effectiveWeightClass,
+      agilityTestPenalty: 0,
+      agilityPenaltyExemptSkills: ["combatstyle", "combat_style", "combat style"],
+      skillTestPenalties: {},
+      allTestPenalty: 0,
+      speedPenalty: 0,
+      sources: sources.map(s => ({ id: s._id, name: s.name }))
+    };
+
+    // RAW table (Chapter 1, Weight Classes):
+    // - Light: -10 Acrobatics
+    // - Medium: -10 Agility-based (except Combat Style), Speed -1
+    // - Heavy: -20 Agility-based (except Combat Style), Speed -2
+    // - Super-Heavy: -30 Agility-based (except Combat Style), Speed -3
+    // - Crippling: -40 all tests, cannot move (speed handling elsewhere)
+    switch (effectiveWeightClass) {
+      case "light":
+        penalties.skillTestPenalties["acrobatics"] = -10;
+        break;
+      case "medium":
+        penalties.agilityTestPenalty = -10;
+        penalties.speedPenalty = -1;
+        break;
+      case "heavy":
+        penalties.agilityTestPenalty = -20;
+        penalties.speedPenalty = -2;
+        break;
+      case "superheavy":
+        penalties.agilityTestPenalty = -30;
+        penalties.speedPenalty = -3;
+        break;
+      case "crippling":
+        penalties.allTestPenalty = -40;
+        // Speed/movement restriction is handled in the actor's speed calculation pipeline.
+        break;
+      default:
+        break;
+    }
+
+    return penalties;
   }
 
   _filterToEquippedBonusItems(items, bonusProperty) {
@@ -335,7 +483,8 @@ _ensureSystemData(actorData) {
   }
 
 _calculateENC(actorData) {
-  const items = Array.isArray(actorData?.items) ? actorData.items : [];
+  const itemsRaw = actorData?.items;
+    const items = Array.isArray(itemsRaw) ? itemsRaw : (itemsRaw ? Array.from(itemsRaw) : []);
   const weighted = items.filter(item => item?.system && Object.prototype.hasOwnProperty.call(item.system, "enc"));
   let totalWeight = 0.0;
   for (const item of weighted) {
@@ -351,19 +500,30 @@ _calculateENC(actorData) {
 }
 
 _armorWeight(actorData) {
-  const items = Array.isArray(actorData?.items) ? actorData.items : [];
-  const worn = items.filter(item => item?.system?.equipped === true);
-  let armorENC = 0.0;
-  for (const item of worn) {
-    const enc = Number(item?.system?.enc ?? 0);
-    const qty = Number(item?.system?.quantity ?? 0);
+  const itemsRaw = actorData?.items;
+  const items = Array.isArray(itemsRaw) ? itemsRaw : (itemsRaw ? Array.from(itemsRaw) : []);
+  const wornArmor = items.filter(item => {
+    if (item?.type !== "armor") return false;
+    const sys = item.system ?? {};
+    if (sys.equipped !== true) return false;
+    const cat = String(sys.item_cat ?? sys.category ?? "").trim().toLowerCase();
+    const isShield = (cat === "shield" || cat.startsWith("shield"));
+    return !isShield;
+  });
+
+  let armorENC = 0;
+  for (const item of wornArmor) {
+    const sys = item.system ?? {};
+    const enc = Number(sys.enc ?? 0);
+    const qty = Number(sys.quantity ?? 0);
     armorENC += ((enc / 2) * qty);
   }
   return armorENC;
 }
 
 _excludeENC(actorData) {
-  const items = Array.isArray(actorData?.items) ? actorData.items : [];
+  const itemsRaw = actorData?.items;
+    const items = Array.isArray(itemsRaw) ? itemsRaw : (itemsRaw ? Array.from(itemsRaw) : []);
   const excluded = items.filter(item => item?.system?.excludeENC === true);
   let totalWeight = 0.0;
   for (const item of excluded) {
@@ -375,7 +535,8 @@ _excludeENC(actorData) {
 }
 
 _iniCalc(actorData) {
-  const items = Array.isArray(actorData?.items) ? actorData.items : [];
+  const itemsRaw = actorData?.items;
+    const items = Array.isArray(itemsRaw) ? itemsRaw : (itemsRaw ? Array.from(itemsRaw) : []);
   const attribute = items.filter(item => item && (item.type === "trait" || item.type === "talent"));
   let init = Number(actorData?.system?.initiative?.base ?? 0);
   const getTotal = (name) => Number(actorData?.system?.characteristics?.[name]?.total ?? 0);
@@ -396,7 +557,8 @@ _iniCalc(actorData) {
 }
 
 _woundThresholdCalc(actorData) {
-  const items = Array.isArray(actorData?.items) ? actorData.items : [];
+  const itemsRaw = actorData?.items;
+    const items = Array.isArray(itemsRaw) ? itemsRaw : (itemsRaw ? Array.from(itemsRaw) : []);
   const attribute = items.filter(item => item && (item.type === "trait" || item.type === "talent"));
   let wound = Number(actorData?.system?.wound_threshold?.base ?? 0);
   const getTotal = (name) => Number(actorData?.system?.characteristics?.[name]?.total ?? 0);
@@ -417,9 +579,15 @@ _woundThresholdCalc(actorData) {
 }
 
 _aggregateItemStats(actorData) {
-  const items = Array.isArray(actorData?.items) ? actorData.items : [];
+  const itemsRaw = actorData?.items;
+    const items = Array.isArray(itemsRaw) ? itemsRaw : (itemsRaw ? Array.from(itemsRaw) : []);
   // Simple cache to avoid re-calculation if items unchanged in the same actor instance
-  const signature = items.map(it => `${it?._id||''}:${Number(it?.system?.quantity ?? 0)}:${Number(it?.system?.enc ?? 0)}`).join('|');
+    const signature = items.map(it => {
+    const sys = it?.system ?? {};
+    const cat = String(sys?.item_cat ?? sys?.category ?? "").trim().toLowerCase();
+    const isShield = (it?.type === 'armor') && (cat === "shield" || cat.startsWith("shield"));
+    return `${it?._id||''}:${Number(sys?.quantity??0)}:${Number(sys?.enc??0)}:${sys?.equipped?1:0}:${sys?.excludeENC?1:0}:${sys?.containerStats?.contained?1:0}:${isShield?1:0}`;
+  }).join('|');
   if (this._aggCache && this._aggCache.signature === signature) return this._aggCache.agg;
 
   const stats = {
@@ -443,7 +611,9 @@ _aggregateItemStats(actorData) {
     }
     if (sys?.containerStats?.contained) stats.containedWeightReduction += enc * qty;
     if (sys?.excludeENC === true) stats.excludedEnc += enc * qty;
-    if (sys?.equipped === true) stats.armorEnc += ((enc / 2) * qty);
+        const cat = String(sys?.item_cat ?? sys?.category ?? "").trim().toLowerCase();
+      const isShield = (item?.type === 'armor') && (cat === "shield" || cat.startsWith("shield"));
+    if (item?.type === 'armor' && sys?.equipped === true && !isShield) stats.armorEnc += ((enc / 2) * qty);
 
     // Characteristic bonuses, resource/resistances, flags
     if (sys?.characteristicBonus) {
@@ -690,7 +860,8 @@ _aggregateItemStats(actorData) {
   }
 
   _speedCalc(actorData) {
-    const items = Array.isArray(actorData?.items) ? actorData.items : [];
+    const itemsRaw = actorData?.items;
+    const items = Array.isArray(itemsRaw) ? itemsRaw : (itemsRaw ? Array.from(itemsRaw) : []);
     const attribute = items.filter(item => item?.system?.halfSpeed === true);
     let speed = Number(actorData?.system?.speed?.base ?? 0);
     if (attribute.length >= 1) speed = Math.ceil(speed / 2);
@@ -698,7 +869,8 @@ _aggregateItemStats(actorData) {
   }
 
   _iniCalc(actorData) {
-    const items = Array.isArray(actorData?.items) ? actorData.items : [];
+    const itemsRaw = actorData?.items;
+    const items = Array.isArray(itemsRaw) ? itemsRaw : (itemsRaw ? Array.from(itemsRaw) : []);
     const attribute = items.filter(item => item && (item.type === "trait" || item.type === "talent"));
     let init = Number(actorData?.system?.initiative?.base ?? 0);
     const getTotal = (name) => Number(actorData?.system?.characteristics?.[name]?.total ?? 0);
@@ -719,7 +891,8 @@ _aggregateItemStats(actorData) {
   }
 
   _woundThresholdCalc(actorData) {
-    const items = Array.isArray(actorData?.items) ? actorData.items : [];
+    const itemsRaw = actorData?.items;
+    const items = Array.isArray(itemsRaw) ? itemsRaw : (itemsRaw ? Array.from(itemsRaw) : []);
     const attribute = items.filter(item => item && (item.type === "trait" || item.type === "talent"));
     let wound = Number(actorData?.system?.wound_threshold?.base ?? 0);
     const getTotal = (name) => Number(actorData?.system?.characteristics?.[name]?.total ?? 0);
@@ -913,6 +1086,19 @@ _aggregateItemStats(actorData) {
 
     // Aggregate items once to avoid many item.filter() passes
     const agg = this._aggregateItemStats(actorData);
+
+    // --- Mobility penalties from effective armor weight class (Step 9 scaffold) ---
+    // Compute once per prepare, store for later automation consumption.
+    // Note: We apply only speed penalties directly here; the Agility test penalty is
+    // stored on actor.system.mobility for skill-roll logic to consume later.
+    const mobility = this._getArmorMobilityPenalties(actorData);
+    actorSystemData.mobility = mobility;
+
+    // Normalize legacy armor_class field (used later in this file) to reflect *effective* class.
+    // This maintains backward compatibility with existing speed adjustment code paths.
+    // Mapping: superheavy -> super_heavy
+    const wc = String(mobility?.armorWeightClass ?? "none").toLowerCase();
+    actorSystemData.armor_class = (wc === "superheavy") ? "super_heavy" : wc;
 
     //Add bonuses from items to Characteristics (use aggregated sums)
     actorSystemData.characteristics.str.total = actorSystemData.characteristics.str.base + agg.charBonus.str;
@@ -1134,19 +1320,23 @@ _aggregateItemStats(actorData) {
       }
     }
 
-    //Armor Weight Class Calculations
-    if (actorSystemData.armor_class == "super_heavy") {
-      actorSystemData.speed.value = actorSystemData.speed.value - 3;
-      actorSystemData.speed.swimSpeed = actorSystemData.speed.swimSpeed - 3;
-    } else if (actorSystemData.armor_class == "heavy") {
-      actorSystemData.speed.value = actorSystemData.speed.value - 2;
-      actorSystemData.speed.swimSpeed = actorSystemData.speed.swimSpeed - 2;
-    } else if (actorSystemData.armor_class == "medium") {
-      actorSystemData.speed.value = actorSystemData.speed.value - 1;
-      actorSystemData.speed.swimSpeed = actorSystemData.speed.swimSpeed - 1;
-    } else {
-      actorSystemData.speed.value = actorSystemData.speed.value;
-      actorSystemData.speed.swimSpeed = actorSystemData.speed.swimSpeed;
+    // Armor Weight Class Calculations
+    // Use effective armor weight class as authoritative input (per contract).
+    // We apply speed penalties here to keep existing derived speed math intact.
+    const effWC = String(actorSystemData.mobility?.armorWeightClass ?? "none").toLowerCase();
+    let spdPenalty = 0;
+    if (effWC === "medium") spdPenalty = -1;
+    else if (effWC === "heavy") spdPenalty = -2;
+    else if (effWC === "superheavy") spdPenalty = -3;
+    else if (effWC === "crippling") {
+      // Do not guess the RAW value; keep 0 but warn (once per prepare).
+      console.warn("uesrpg-3ev4 | Armor weight class 'crippling' equipped; mobility penalty table not finalized. No speed penalty applied.", this);
+      spdPenalty = 0;
+    }
+
+    if (spdPenalty !== 0) {
+      actorSystemData.speed.value = Math.max(0, Number(actorSystemData.speed.value || 0) + spdPenalty);
+      actorSystemData.speed.swimSpeed = Math.max(0, Number(actorSystemData.speed.swimSpeed || 0) + spdPenalty);
     }
 
     // Set Skill professions to regular professions (This is a fucking mess, but it's the way it's done for now...)
@@ -1417,19 +1607,20 @@ _aggregateItemStats(actorData) {
       }
     }
 
-    //Armor Weight Class Calculations
-    if (actorSystemData.armor_class == "super_heavy") {
-      actorSystemData.speed.value = actorSystemData.speed.value - 3;
-      actorSystemData.speed.swimSpeed = actorSystemData.speed.swimSpeed - 3;
-    } else if (actorSystemData.armor_class == "heavy") {
-      actorSystemData.speed.value = actorSystemData.speed.value - 2;
-      actorSystemData.speed.swimSpeed = actorSystemData.speed.swimSpeed - 2;
-    } else if (actorSystemData.armor_class == "medium") {
-      actorSystemData.speed.value = actorSystemData.speed.value - 1;
-      actorSystemData.speed.swimSpeed = actorSystemData.speed.swimSpeed - 1;
-    } else {
-      actorSystemData.speed.value = actorSystemData.speed.value;
-      actorSystemData.speed.swimSpeed = actorSystemData.speed.swimSpeed;
+    // Armor Weight Class mobility penalties (effective, Step 9)
+    // - Apply speed penalty now.
+    // - Agility test penalty is stored on actorSystemData.mobility for roll logic to consume later.
+    //
+    // Existing code historically used actorSystemData.armor_class (derived elsewhere); we now normalize
+    // that field from the computed effective weight class earlier in _prepareCharacterData.
+    let spdPenalty = 0;
+    if (actorSystemData.armor_class === "super_heavy") spdPenalty = -3;
+    else if (actorSystemData.armor_class === "heavy") spdPenalty = -2;
+    else if (actorSystemData.armor_class === "medium") spdPenalty = -1;
+
+    if (spdPenalty !== 0) {
+      actorSystemData.speed.value = Math.max(0, Number(actorSystemData.speed.value || 0) + spdPenalty);
+      actorSystemData.speed.swimSpeed = Math.max(0, Number(actorSystemData.speed.swimSpeed || 0) + spdPenalty);
     }
 
     // Set Skill professions to regular professions (This is a fucking mess, but it's the way it's done for now...)
@@ -1750,13 +1941,28 @@ _aggregateItemStats(actorData) {
     return totalWeight
   }
 
+
   _armorWeight(actorData) {
-    let worn = (actorData.items || []).filter(item => item?.system && item.system.equipped == true);
-    let armorENC = 0.0;
-    for (let item of worn) {
-      armorENC = armorENC + ((Number(item?.system?.enc || 0) / 2) * Number(item?.system?.quantity || 0));
+    const itemsRaw = actorData?.items;
+    const items = Array.isArray(itemsRaw) ? itemsRaw : (itemsRaw ? Array.from(itemsRaw) : []);
+
+    const wornArmor = items.filter(item => {
+      if (item?.type !== "armor") return false;
+      const sys = item.system ?? {};
+      if (sys.equipped !== true) return false;
+      const cat = String(sys.item_cat ?? sys.category ?? "").trim().toLowerCase();
+      const isShield = (cat === "shield" || cat.startsWith("shield"));
+      return !isShield;
+    });
+
+    let armorENC = 0;
+    for (const item of wornArmor) {
+      const sys = item.system ?? {};
+      const enc = Number(sys.enc ?? 0);
+      const qty = Number(sys.quantity ?? 0);
+      armorENC += ((enc / 2) * qty);
     }
-    return armorENC
+    return armorENC;
   }
 
   _excludeENC(actorData) {
@@ -1937,7 +2143,8 @@ _aggregateItemStats(actorData) {
   }
 
   _speedCalc(actorData) {
-    const items = Array.isArray(actorData?.items) ? actorData.items : [];
+    const itemsRaw = actorData?.items;
+    const items = Array.isArray(itemsRaw) ? itemsRaw : (itemsRaw ? Array.from(itemsRaw) : []);
     const attribute = items.filter(item => item?.system?.halfSpeed === true);
     let speed = Number(actorData?.system?.speed?.base ?? 0);
     if (attribute.length >= 1) speed = Math.ceil(speed / 2);
@@ -1945,7 +2152,8 @@ _aggregateItemStats(actorData) {
   }
 
   _iniCalc(actorData) {
-    const items = Array.isArray(actorData?.items) ? actorData.items : [];
+    const itemsRaw = actorData?.items;
+    const items = Array.isArray(itemsRaw) ? itemsRaw : (itemsRaw ? Array.from(itemsRaw) : []);
     const attribute = items.filter(item => item && (item.type === "trait" || item.type === "talent"));
     let init = Number(actorData?.system?.initiative?.base ?? 0);
     const getTotal = (name) => Number(actorData?.system?.characteristics?.[name]?.total ?? 0);
@@ -1966,7 +2174,8 @@ _aggregateItemStats(actorData) {
   }
 
   _woundThresholdCalc(actorData) {
-    const items = Array.isArray(actorData?.items) ? actorData.items : [];
+    const itemsRaw = actorData?.items;
+    const items = Array.isArray(itemsRaw) ? itemsRaw : (itemsRaw ? Array.from(itemsRaw) : []);
     const attribute = items.filter(item => item && (item.type === "trait" || item.type === "talent"));
     let wound = Number(actorData?.system?.wound_threshold?.base ?? 0);
     const getTotal = (name) => Number(actorData?.system?.characteristics?.[name]?.total ?? 0);
