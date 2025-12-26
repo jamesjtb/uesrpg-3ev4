@@ -16,6 +16,11 @@ import { calculateDegrees } from "../helpers/diceHelper.js";
 import { getHitLocationFromRoll } from "../combat/combat-utils.js";
 import { OpposedRoll } from "../combat/opposed-rolls.js";
 import { OpposedWorkflow } from "../combat/opposed-workflow.js";
+import { SkillOpposedWorkflow } from "../skills/opposed-workflow.js";
+import { computeSkillTN, SKILL_DIFFICULTIES } from "../skills/skill-tn.js";
+import { doTestRoll, formatDegree } from "../helpers/degree-roll-helper.js";
+import { requireUserCanRollActor } from "../helpers/permissions.js";
+import { buildSkillRollRequest, normalizeSkillRollOptions, skillRollDebug } from "../skills/roll-request.js";
 
 export class SimpleActorSheet extends foundry.appv1.sheets.ActorSheet {
   /** @override */
@@ -692,15 +697,23 @@ if (targetArray) {
   async _onClickCharacteristic(event) {
     event.preventDefault();
     const element = event.currentTarget;
+
+    // Mobility: Heavy armor imposes -20 to Agility-based tests (except Combat Style).
+    // For characteristic rolls, apply only when rolling Agility.
+    const mobilityAgiPenalty = (String(element?.id || "").toLowerCase() === "agi")
+      ? Number(this.actor?.system?.mobility?.agilityTestPenalty || 0)
+      : 0;
     const woundedValue =
       this.actor.system.characteristics[element.id].total +
       this.actor.system.woundPenalty +
       this.actor.system.fatigue.penalty +
-      this.actor.system.carry_rating.penalty;
+      this.actor.system.carry_rating.penalty +
+      mobilityAgiPenalty;
     const regularValue =
       this.actor.system.characteristics[element.id].total +
       this.actor.system.fatigue.penalty +
-      this.actor.system.carry_rating.penalty;
+      this.actor.system.carry_rating.penalty +
+      mobilityAgiPenalty;
     let tags = [];
     if (this.actor.system.wounded) {
       tags.push(
@@ -715,6 +728,17 @@ if (targetArray) {
     if (this.actor.system.carry_rating.penalty != 0) {
       tags.push(
         `<span class="tag enc-tag">Encumbered ${this.actor.system.carry_rating.penalty}</span>`
+      );
+    }
+    if (mobilityAgiPenalty !== 0) {
+      tags.push(
+        `<span class="tag armor-tag">Heavy Armor ${mobilityAgiPenalty}</span>`
+      );
+    }
+
+    if (mobilityAgiPenalty !== 0) {
+      tags.push(
+        `<span class="tag armor-mobility-tag">Armor Mobility ${mobilityAgiPenalty}</span>`
       );
     }
 
@@ -785,104 +809,214 @@ if (isLucky(this.actor, roll.result)) {
     d.render(true);
   }
 
+
   async _onSkillRoll(event) {
     event.preventDefault();
+
+    if (!requireUserCanRollActor(game.user, this.actor)) {
+      return;
+    }
+
     const button = event.currentTarget;
     const li = button.closest(".item");
-    const item = this.actor.items.get(li?.dataset.itemId);
+    const skillItem = this.actor.items.get(li?.dataset.itemId);
 
-    const woundedValue =
-      item.system.value +
-      this.actor.system.woundPenalty +
-      this.actor.system.fatigue.penalty +
-      this.actor.system.carry_rating.penalty;
-    const regularValue =
-      item.system.value +
-      this.actor.system.fatigue.penalty +
-      this.actor.system.carry_rating.penalty;
-    let tags = [];
-    if (this.actor.system.wounded) {
-      tags.push(
-        `<span class="tag wound-tag">Wounded ${this.actor.system.woundPenalty}</span>`
-      );
-    }
-    if (this.actor.system.fatigue.penalty != 0) {
-      tags.push(
-        `<span class="tag fatigue-tag">Fatigued ${this.actor.system.fatigue.penalty}</span>`
-      );
-    }
-    if (this.actor.system.carry_rating.penalty != 0) {
-      tags.push(
-        `<span class="tag enc-tag">Encumbered ${this.actor.system.carry_rating.penalty}</span>`
-      );
+    if (!skillItem) {
+      ui.notifications.warn("Skill item not found.");
+      return;
     }
 
-    // Skill Roll Dialog Menu
-    let d = new Dialog({
-      title: "Apply Roll Modifier",
-      content: `<form>
-                  <div class="dialogForm">
-                  <label><b>${item.name} Modifier: </b></label><input placeholder="ex. -20, +10" id="playerInput" value="0" style=" text-align: center; width: 50%; border-style: groove; float: right;" type="text"></input></div>
-                </form>`,
-      buttons: {
-        one: {
-          label: "Roll!",
-          callback: async (html) => {
-            const playerInput = parseInt(html.find('[id="playerInput"]').val());
-            let contentString = "";
-            let roll = new Roll("1d100");
-            await roll.evaluate();
+    const quickShift = Boolean(event.shiftKey) && game.settings.get("uesrpg-3ev4", "skillRollQuickShift");
 
-            if (isLucky(this.actor, roll.result)) {
-              contentString = `<h2><img src="${item.img}"</img>${item.name}</h2>
-            <p></p><b>Target Number: [[${regularValue} + ${playerInput} + ${this.actor.system.wounded ? this.actor.system.woundPenalty : 0
-                }]]</b> <p></p>
-            <b>Result: [[${roll.total}]]</b><p></p>
-            <span style='color:green; font-size:120%;'> <b>LUCKY NUMBER!</b></span>`;
-            } else if (isUnlucky(this.actor, roll.result)) {
-              contentString = `<h2><img src="${item.img}"</img>${item.name}</h2>
-            <p></p><b>Target Number: [[${regularValue} + ${playerInput} + ${this.actor.system.wounded ? this.actor.system.woundPenalty : 0
-                }]]</b> <p></p>
-            <b>Result: [[${roll.total}]]</b><p></p>
-            <span style='color:rgb(168, 5, 5); font-size:120%;'> <b>UNLUCKY NUMBER!</b></span>`;
-            } else if (this.actor.system.wounded === true) {
-              contentString = `<h2><img src="${item.img}"</img>${item.name}</h2>
-            <p></p><b>Target Number: [[${woundedValue + playerInput
-                }]]</b> <p></p>
-            <b>Result: [[${roll.total}]]</b><p></p>
-            <b>${roll.total <= woundedValue + playerInput
-                  ? " <span style='color:green; font-size: 120%;'> <b>SUCCESS!</b></span>"
-                  : " <span style='color: rgb(168, 5, 5); font-size: 120%;'> <b>FAILURE!</b></span>"
-                }`;
-            } else {
-              contentString = `<h2><img src="${item.img}"</img>${item.name}</h2>
-            <p></p><b>Target Number: [[${regularValue + playerInput
-                }]]</b> <p></p>
-            <b>Result: [[${roll.total}]]</b><p></p>
-            <b>${roll.total <= regularValue + playerInput
-                  ? " <span style='color:green; font-size: 120%;'> <b>SUCCESS!</b></span>"
-                  : " <span style='color: rgb(168, 5, 5); font-size: 120%;'> <b>FAILURE!</b></span>"
-                }`;
-            }
+    const getLast = () => {
+      try { return game.settings.get("uesrpg-3ev4", "skillRollLastOptions") ?? {}; } catch (_e) { return {}; }
+    };
+    const setLast = async (patch={}) => {
+      const prev = getLast();
+      const next = { ...prev, ...patch };
+      next.lastSkillUuidByActor = { ...(prev.lastSkillUuidByActor||{}), ...(patch.lastSkillUuidByActor||{}) };
+      try { await game.settings.set("uesrpg-3ev4", "skillRollLastOptions", next); } catch (_e) {}
+    };
 
-           await roll.toMessage({
-  user: game.user.id,
-  speaker: ChatMessage.getSpeaker(),
-  content: contentString,
-  flavor: `<div class="tag-container">${tags.join("")}</div>`,
-  rollMode: game.settings.get("core", "rollMode"),
-});
+    // --- Targeted -> opposed workflow (supports multi-target deterministically) ---
+    const targets = [...(game.user.targets ?? [])];
+    if (targets.length > 0) {
+      const attackerToken =
+        canvas?.tokens?.controlled?.find(t => t.actor?.id === this.actor.id) ??
+        this.actor.getActiveTokens?.()[0] ??
+        null;
+
+      if (!attackerToken) {
+        ui.notifications.warn("No attacker token found on the canvas. Select your token and try again.");
+        return;
+      }
+
+      // One opposed card per target (deterministic and transparent).
+      const created = [];
+      for (const defenderToken of targets) {
+        const msg = await SkillOpposedWorkflow.createPending({
+          attackerTokenUuid: attackerToken.document?.uuid ?? attackerToken.uuid,
+          defenderTokenUuid: defenderToken.document?.uuid ?? defenderToken.uuid,
+          attackerActorUuid: this.actor.uuid,
+          defenderActorUuid: defenderToken.actor?.uuid ?? null,
+          attackerSkillUuid: skillItem.uuid,
+          attackerSkillLabel: skillItem.name
+        });
+        if (msg) created.push(msg);
+
+        // Shift-click: quick roll for the attacker using defaults/remembered options.
+        if (msg && quickShift) {
+          await SkillOpposedWorkflow.handleAction(msg, "attacker-roll", { event });
+        }
+      }
+
+      // If multiple targets are selected, it is intentional; no extra warning required.
+      return;
+    }
+
+    // --- Untargeted -> single skill test (dialog unless Shift quick-roll) ---
+    const hasSpec = String(skillItem?.system?.trainedItems ?? "").trim().length > 0;
+    const last = getLast();
+
+    const defaults = normalizeSkillRollOptions(last, { difficultyKey: "average", manualMod: 0, useSpec: false });
+
+    let decl = null;
+
+    if (quickShift) {
+      decl = { difficultyKey: defaults.difficultyKey, manualMod: defaults.manualMod, useSpec: defaults.useSpec };
+    } else {
+      const difficultyOptions = SKILL_DIFFICULTIES.map(d => {
+        const sign = d.mod >= 0 ? "+" : "";
+        const sel = d.key === defaults.difficultyKey ? "selected" : "";
+        return `<option value="${d.key}" ${sel}>${d.label} (${sign}${d.mod})</option>`;
+      }).join("\n");
+
+      const content = `
+        <form class="uesrpg-skill-roll">
+          <div class="form-group">
+            <label><b>Difficulty</b></label>
+            <select name="difficultyKey" style="width:100%;">${difficultyOptions}</select>
+          </div>
+          <div class="form-group" style="margin-top:8px;">
+            <label style="display:flex; align-items:center; gap:8px;">
+              <input type="checkbox" name="useSpec" ${hasSpec ? "" : "disabled"} ${defaults.useSpec ? "checked" : ""} />
+              <span><b>Use Specialization</b> (+10)${hasSpec ? "" : ' <span style="opacity:0.75;">(none on this skill)</span>'}</span>
+            </label>
+          </div>
+          <div class="form-group" style="margin-top:8px; display:flex; align-items:center; justify-content:space-between; gap:10px;">
+            <label style="margin:0;"><b>Manual Modifier</b></label>
+            <input name="manualMod" type="number" value="${Number(defaults.manualMod) || 0}" style="width:120px;" />
+          </div>
+        </form>`;
+
+      try {
+        decl = await Dialog.wait({
+          title: `${skillItem.name} — Roll Options`,
+          content,
+          buttons: {
+            ok: {
+              label: "Roll",
+              callback: (html) => {
+                const root = html instanceof HTMLElement ? html : html?.[0];
+                const difficultyKey = root?.querySelector('select[name="difficultyKey"]')?.value ?? "average";
+                const useSpec = Boolean(root?.querySelector('input[name="useSpec"]')?.checked);
+                const rawManual = root?.querySelector('input[name="manualMod"]')?.value ?? "0";
+                const manualMod = Number.parseInt(String(rawManual), 10) || 0;
+                return normalizeSkillRollOptions({ difficultyKey, useSpec, manualMod }, defaults);
+              }
+            },
+            cancel: { label: "Cancel", callback: () => null }
           },
-        },
-        two: {
-          label: "Cancel",
-          callback: (html) => console.log("Cancelled"),
-        },
-      },
-      default: "one",
-      close: (html) => console.log(),
+          default: "ok"
+        }, { width: 420 });
+      } catch (_e) {
+        decl = null;
+      }
+    }
+
+    if (!decl) return;
+
+    // Normalize + clamp UI inputs (and also normalizes the difficulty key).
+    decl = normalizeSkillRollOptions(decl, defaults);
+
+    await setLast({
+      difficultyKey: decl.difficultyKey,
+      manualMod: decl.manualMod,
+      useSpec: Boolean(decl.useSpec),
+      lastSkillUuidByActor: { [this.actor.uuid]: skillItem.uuid }
     });
-    d.render(true);
+
+    const request = buildSkillRollRequest({
+      actor: this.actor,
+      skillItem,
+      targetToken: null,
+      options: { difficultyKey: decl.difficultyKey, manualMod: decl.manualMod, useSpec: Boolean(decl.useSpec) },
+      context: { source: "sheet", quick: quickShift }
+    });
+    skillRollDebug("untargeted request", request);
+
+    const tn = computeSkillTN({
+      actor: this.actor,
+      skillItem,
+      difficultyKey: decl.difficultyKey,
+      manualMod: decl.manualMod,
+      useSpecialization: hasSpec && decl.useSpec
+    });
+
+    skillRollDebug("untargeted TN", { finalTN: tn.finalTN, breakdown: tn.breakdown });
+
+    // Tag bar (kept consistent with existing tags)
+    const tags = [];
+    if (this.actor.system.wounded) tags.push(`<span class="tag wound-tag">Wounded ${this.actor.system.woundPenalty}</span>`);
+    if (this.actor.system.fatigue.penalty != 0) tags.push(`<span class="tag fatigue-tag">Fatigued ${this.actor.system.fatigue.penalty}</span>`);
+    if (this.actor.system.carry_rating.penalty != 0) tags.push(`<span class="tag enc-tag">Encumbered ${this.actor.system.carry_rating.penalty}</span>`);
+
+    const armorMods = (tn.breakdown ?? []).filter(b => String(b.label || "").startsWith("Armor:") && Number(b.value) !== 0);
+    for (const m of armorMods) {
+      const v = Number(m.value) || 0;
+      tags.push(`<span class="tag armor-tag">${m.label} ${v}</span>`);
+    }
+
+    if (tn?.difficulty?.mod) tags.push(`<span class="tag">${tn.difficulty.label} ${tn.difficulty.mod >= 0 ? "+" : ""}${tn.difficulty.mod}</span>`);
+    if (hasSpec && decl.useSpec) tags.push(`<span class="tag">Specialization +10</span>`);
+    if (decl.manualMod) tags.push(`<span class="tag">Mod ${decl.manualMod >= 0 ? "+" : ""}${decl.manualMod}</span>`);
+
+    const res = await doTestRoll(this.actor, { rollFormula: "1d100", target: tn.finalTN, allowLucky: true, allowUnlucky: true });
+
+    skillRollDebug("untargeted result", { rollTotal: res.rollTotal, target: res.target, isSuccess: res.isSuccess, degree: res.degree, critS: res.isCriticalSuccess, critF: res.isCriticalFailure });
+
+    const degreeLine = res.isSuccess
+      ? `<b style="color:green;">SUCCESS — ${formatDegree(res)}</b>`
+      : `<b style="color:rgb(168, 5, 5);">FAILURE — ${formatDegree(res)}</b>`;
+
+    const breakdownRows = (tn.breakdown ?? []).map(b => {
+      const v = Number(b.value ?? 0);
+      const sign = v >= 0 ? "+" : "";
+      return `<div style="display:flex; justify-content:space-between; gap:10px;"><span>${b.label}</span><span>${sign}${v}</span></div>`;
+    }).join("");
+
+    const declaredParts = [];
+    if (tn?.difficulty?.label) declaredParts.push(`${tn.difficulty.label} (${tn.difficulty.mod >= 0 ? "+" : ""}${tn.difficulty.mod})`);
+    if (hasSpec && decl.useSpec) declaredParts.push("Spec +10");
+    if (decl.manualMod) declaredParts.push(`Mod ${decl.manualMod >= 0 ? "+" : ""}${decl.manualMod}`);
+
+    const flavor = `
+      <div>
+        <h2 style="margin:0 0 6px 0;"><img src="${skillItem.img}" style="height:24px; vertical-align:middle; margin-right:6px;"/>${skillItem.name}</h2>
+        <div><b>Target Number:</b> ${tn.finalTN}</div>
+        ${declaredParts.length ? `<div style="margin-top:2px; font-size:12px; opacity:0.85;"><b>Options:</b> ${declaredParts.join("; ")}</div>` : ""}
+        <div style="margin-top:4px;">${degreeLine}${res.isCriticalSuccess ? ' <span style="color:green;">(CRITICAL)</span>' : ''}${res.isCriticalFailure ? ' <span style="color:red;">(CRITICAL FAIL)</span>' : ''}</div>
+        <details style="margin-top:6px;"><summary style="cursor:pointer; user-select:none;">TN breakdown</summary><div style="margin-top:4px; font-size:12px; opacity:0.9;">${breakdownRows}</div></details>
+        <div class="tag-container" style="margin-top:6px;">${tags.join("")}</div>
+      </div>`;
+
+    await res.roll.toMessage({
+      user: game.user.id,
+      speaker: ChatMessage.getSpeaker({ actor: this.actor }),
+      flavor,
+      flags: { uesrpg: { rollRequest: request }, "uesrpg-3ev4": { rollRequest: request } },
+      rollMode: game.settings.get("core", "rollMode")
+    });
   }
 
   _onSpellRoll(event) {
