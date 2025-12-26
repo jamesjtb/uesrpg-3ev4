@@ -7,6 +7,7 @@ import { SimpleItem } from "../entities/item.js";
 import { SimpleItemSheet } from "../sheets/item-sheet.js";
 import { SystemCombat } from "../entities/combat.js";
 import { initializeChatHandlers, registerCombatChatHooks } from "../combat/chat-handlers.js";
+import { registerSkillTNDebug } from "../dev/skill-tn-debug.js";
 
 async function registerSettings() {
   // Register system settings
@@ -129,6 +130,52 @@ async function registerSettings() {
     default: false,
     type: Boolean,
   });
+
+  // Skill roll diagnostics
+  game.settings.register("uesrpg-3ev4", "skillRollDebug", {
+    name: "Skill Roll Debug Logging",
+    hint: "When enabled, skill rolls and skill-opposed workflows log structured diagnostic information to the browser console.",
+    scope: "world",
+    config: true,
+    default: false,
+    type: Boolean,
+  });
+
+
+  // Skill roll UI QoL (client-scoped)
+  game.settings.register("uesrpg-3ev4", "skillRollLastOptions", {
+    name: "Skill Roll: Remember Last Options",
+    hint: "Stores the last-used skill roll options (difficulty, manual modifier, specialization toggle, and last selected skill per actor) for this user only.",
+    scope: "client",
+    config: false,
+    type: Object,
+    default: {
+      difficultyKey: "average",
+      manualMod: 0,
+      useSpec: false,
+      lastSkillUuidByActor: {}
+    }
+  });
+
+  game.settings.register("uesrpg-3ev4", "skillRollQuickShift", {
+    name: "Skill Roll: Shift Quick Roll",
+    hint: "When enabled, holding Shift will bypass the roll options dialog and use remembered/default options.",
+    scope: "client",
+    config: false,
+    type: Boolean,
+    default: true
+  });
+
+  game.settings.register("uesrpg-3ev4", "debugSkillTN", {
+    name: "Debug: Skill TN Macro",
+    hint: "When enabled (GM only), exposes game.uesrpg.debugSkillTN(...) for diagnosing skill TN computation.",
+    scope: "client",
+    config: true,
+    type: Boolean,
+    default: false,
+    onChange: delayedReload
+  });
+
 }
 
 async function registerSheets () {
@@ -194,5 +241,10 @@ function applyFont(fontFamily) {
 Hooks.once("ready", () => {
   const fontFamily = game.settings.get("uesrpg-3ev4", "changeUiFont");
   applyFont(fontFamily);
+
+  // Developer-only: expose a skill TN debug helper for the GM.
+  if (game.user?.isGM && game.settings.get("uesrpg-3ev4", "debugSkillTN")) {
+    registerSkillTNDebug();
+  }
 });
 }
