@@ -10,21 +10,43 @@ import { DAMAGE_TYPES } from "./damage-automation.js";
  * @param {Item} weapon - The weapon item
  * @returns {string} - Damage type
  */
+
 export function getDamageTypeFromWeapon(weapon) {
-  if (!weapon?.system?.qualities) return DAMAGE_TYPES.PHYSICAL;
+  if (!weapon?.system) return DAMAGE_TYPES.PHYSICAL;
 
-  const qualities = weapon.system.qualities.toLowerCase();
+  // Prefer structured qualities (manual + auto-injected) for automation.
+  const structured = Array.isArray(weapon.system.qualitiesStructuredInjected)
+    ? weapon.system.qualitiesStructuredInjected
+    : Array.isArray(weapon.system.qualitiesStructured)
+      ? weapon.system.qualitiesStructured
+      : null;
 
-  // Check for special damage types
+  const keys = structured ? structured.map(q => String(q?.key ?? "").toLowerCase()).filter(Boolean) : [];
+
+  // Structured-driven fast path
+  if (keys.includes("fire") || keys.includes("flame")) return DAMAGE_TYPES.FIRE;
+  if (keys.includes("frost") || keys.includes("ice")) return DAMAGE_TYPES.FROST;
+  if (keys.includes("shock") || keys.includes("lightning")) return DAMAGE_TYPES.SHOCK;
+  if (keys.includes("poison")) return DAMAGE_TYPES.POISON;
+  if (keys.includes("magic")) return DAMAGE_TYPES.MAGIC;
+  if (keys.includes("silver")) return DAMAGE_TYPES.SILVER;
+  if (keys.includes("sunlight")) return DAMAGE_TYPES.SUNLIGHT;
+
+  // Fallback to legacy rich-text qualities (reference-only)
+  if (!weapon.system.qualities) return DAMAGE_TYPES.PHYSICAL;
+  const qualities = String(weapon.system.qualities).toLowerCase();
+
   if (qualities.includes('fire') || qualities.includes('flame')) return DAMAGE_TYPES.FIRE;
   if (qualities.includes('frost') || qualities.includes('ice')) return DAMAGE_TYPES.FROST;
   if (qualities.includes('shock') || qualities.includes('lightning')) return DAMAGE_TYPES.SHOCK;
   if (qualities.includes('poison')) return DAMAGE_TYPES.POISON;
   if (qualities.includes('magic')) return DAMAGE_TYPES.MAGIC;
-  
-  // Default to physical
+  if (qualities.includes('silver')) return DAMAGE_TYPES.SILVER;
+  if (qualities.includes('sunlight')) return DAMAGE_TYPES.SUNLIGHT;
+
   return DAMAGE_TYPES.PHYSICAL;
 }
+
 
 /**
  * Roll for hit location using 1d100
