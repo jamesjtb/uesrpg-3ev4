@@ -83,6 +83,16 @@ export async function doTestRoll(actor, { rollFormula = "1d100", target = 0, all
 }
 
 /**
+ * Format a DoS/DoF string consistently across the system.
+ * @param {object|null} result A result from doTestRoll.
+ * @returns {string}
+ */
+export function formatDegree(result) {
+  if (!result) return "—";
+  return result.isSuccess ? `${result.degree} DoS` : `${result.degree} DoF`;
+}
+
+/**
  * Resolve an opposed test between attacker and defender results.
  * Returns { winner: "attacker"|"defender"|"tie", reason: string }
  *
@@ -132,3 +142,4 @@ window.Uesrpg3e = window.Uesrpg3e || {};
 window.Uesrpg3e.roll = window.Uesrpg3e.roll || {};
 window.Uesrpg3e.roll.doTestRoll = window.Uesrpg3e.roll.doTestRoll || doTestRoll;
 window.Uesrpg3e.roll.resolveOpposed = window.Uesrpg3e.roll.resolveOpposed || resolveOpposed;
+window.Uesrpg3e.roll.formatDegree = window.Uesrpg3e.roll.formatDegree || formatDegree;
