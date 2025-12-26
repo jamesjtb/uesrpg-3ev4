@@ -45,10 +45,12 @@ export async function performWeaponAttack(attackerToken, defenderToken, weapon, 
     defenseSkill = getDefenseSkill(defender, defenseType);
   }
 
-  // Determine damage roll
-  const damageRoll = weapon?.system?.weapon2H
-    ? (weapon?.system?.damage2 || weapon?.system?.damage)
-    : weapon?.system?.damage;
+  // Determine damage roll (Automation Contract: fully effective damage)
+  const damageRoll = (weapon && typeof weapon.getDamageRoll === "function")
+    ? weapon.getDamageRoll({ twoHanded: Boolean(weapon?.system?.weapon2H) })
+    : (weapon?.system?.weapon2H
+        ? (weapon?.system?.damage2 || weapon?.system?.damage)
+        : weapon?.system?.damage);
 
   if (!damageRoll) {
     ui.notifications.warn(`Weapon "${weapon.name}" has no damage formula configured.`);
