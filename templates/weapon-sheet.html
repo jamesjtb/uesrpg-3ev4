@@ -19,6 +19,9 @@
                         <div class="item-resource">
                             <div class="stat-value-label">
                                 <input type="number" name="system.enc" value="{{item.system.enc}}"/>
+                                {{#if item.system.encEffective}}
+                                    <div class="effective-hint"><span class="label">Eff</span>{{item.system.encEffective}}</div>
+                                {{/if}}
                             </div>
                             <div class="flex-container">
                                 <div class="small-text-label">ENC</div>
@@ -27,6 +30,9 @@
                         <div class="item-resource">
                             <div class="stat-value-label">
                                 <input type="number" name="system.price" value="{{item.system.price}}"/>
+                                {{#if item.system.priceEffective}}
+                                    <div class="effective-hint"><span class="label">Eff</span>{{item.system.priceEffective}}</div>
+                                {{/if}}
                             </div>
                             <div class="flex-container">
                                 <div class="small-text-label">Price</div>
@@ -35,6 +41,9 @@
                         <div class="item-resource">
                             <div class="stat-value-label">
                                 <input type="number" name="system.enchant_level" value="{{item.system.enchant_level}}"/>
+                                {{#if item.system.enchant_levelEffective}}
+                                    <div class="effective-hint"><span class="label">Eff</span>{{item.system.enchant_levelEffective}}</div>
+                                {{/if}}
                             </div>
                             <div class="flex-container">
                                 <div class="small-text-label">Enchant Lv.</div>
@@ -42,7 +51,7 @@
                         </div>
                         <div class="item-resource">
                             <div class="stat-value-label">
-                                <input type="text" name="system.reach" value="{{item.system.reach}}"/>
+                                <input type="number" name="system.reach" value="{{item.system.reach}}"/>
                             </div>
                             <div class="flex-container">
                                 <div class="small-text-label">Reach</div>
@@ -61,6 +70,9 @@
                         <div class="item-resource">
                             <div class="stat-value-label">
                                 <input type="text" name="system.damage" value="{{item.system.damage}}"/>
+                                {{#if item.system.damageEffective}}
+                                    <div class="effective-hint"><span class="label">Eff</span>{{item.system.damageEffective}}</div>
+                                {{/if}}
                             </div>
                             <div class="flex-container">
                                 <div class="small-text-label">Damage</div>
@@ -69,6 +81,9 @@
                         <div class="item-resource">
                             <div class="stat-value-label">
                                 <input type="text" name="system.damage2" value="{{item.system.damage2}}"/>
+                                {{#if item.system.damage2Effective}}
+                                    <div class="effective-hint"><span class="label">Eff</span>{{item.system.damage2Effective}}</div>
+                                {{/if}}
                             </div>
                             <div class="flex-container">
                                 <div class="small-text-label">2H Damage</div>
@@ -123,34 +138,41 @@
                     <div class="item-selection-container">
                         <h2>Attributes</h2>
                         <div class="selection-container">
-                            <div class="grid-container">
-                                <div>Ignore ENC</div>
-                                <div class="right-align-content">
-                                    <input class="checkbox" type="checkbox" name="system.excludeENC" {{checked item.system.excludeENC}}>
+                            <div class="modifier-container">
+                                <div>
+                                    <div class="quality-material-block">
+                                        <h2>Quality &amp; Material</h2>
+
+                                        <div class="form-group">
+                                            <label>Quality</label>
+                                            <select name="system.qualityLevel">
+  {{selectOptions weaponQualityOptions selected=item.system.qualityLevel}}
+</select>
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label>Material</label>
+                                            <select name="system.material">
+  {{selectOptions weaponMaterialOptions selected=item.system.material}}
+</select>
+                                        </div>
+</div>
                                 </div>
+                                <div>
+                                    <div class="grid-container">
+                                        <div>Ignore ENC</div>
+                                        <div class="right-align-content">
+                                            <input class="checkbox" type="checkbox" name="system.excludeENC" {{checked item.system.excludeENC}}>
+                                        </div>
+                                    </div>
+                                    <div class="grid-container">
+                                        <div>Roll 2H Damage</div>
+                                        <div class="right-align-content">
+                                            <input class="checkbox" type="checkbox" name="system.weapon2H" {{checked item.system.weapon2H}}>
+                                        </div>
+                                    </div>
+</div>
                             </div>
-                            <div class="grid-container">
-                                <div title="Roll Damage Twice">Superior</div>
-                                <div class="right-align-content">
-                                    <input class="checkbox" type="checkbox" name="system.superior" {{checked item.system.superior}}>
-                                </div>
-                            </div>
-                            <div class="grid-container">
-                                <div>Roll 2H Damage</div>
-                                <div class="right-align-content">
-                                    <input class="checkbox" type="checkbox" name="system.weapon2H" {{checked item.system.weapon2H}}>
-                                </div>
-                            </div>
-                            <div class="grid-container">
-                                <div>Charge Reduction</div>
-                                <div class="right-align-content">
-                                    <input type="number" name="system.charge.reduction" value="{{item.system.charge.reduction}}">
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="attribute-container">
-                        <div class="item-characteristic-container">
                             <h2>Characteristics</h2>
                             <div class="modifier-container">
                                 <div class="grid-container">
@@ -186,6 +208,16 @@
                                     <div><input type="number" name="system.characteristicBonus.lckChaBonus" value="{{item.system.characteristicBonus.lckChaBonus}}"></div>
                                 </div>
                             </div>
+
+
+                                        <div class="form-group">
+                                            <label>Attack Mode</label>
+                                            <select name="system.attackMode">
+  {{selectOptions attackModeOptions selected=item.system.attackMode}}
+</select>
+                                        </div>
+                                    
+
                         </div>
                         <div class="item-resistance-container">
                             <h2>Resistances</h2>
@@ -231,8 +263,43 @@
                     </div>
                     <div class="quality-container">
                         <div class="flex-container">
-                            <h2>Qualities</h2>
-                            <div>{{editor item.system.qualities target="system.qualities" engine="prosemirror" button=true owner=owner editable=editable}}</div>
+                            <h2>Structured Qualities</h2>
+                        </div>
+
+                        <!-- Core qualities (kept as a compact grid for automation-critical toggles/values) -->
+                        <div class="structured-qualities-grid">
+                            {{#each coreQualitiesCatalog}}
+                                <div class="structured-qualities-cell">
+                                    <div>{{this.label}}</div>
+                                    <div class="right-align-content">
+                                        {{#if this.optionalValue}}
+                                            <div class="structured-optional-value">
+                                                <input class="checkbox" type="checkbox" name="qualitiesStructured.toggle.{{this.key}}" {{checked (lookup ../qualitiesSelectedToggle this.key)}} />
+                                                <input class="structured-value structured-value--opt" type="number" name="qualitiesStructured.value.{{this.key}}" value="{{lookup ../qualitiesSelectedValue this.key}}" min="0" step="1" placeholder="X" />
+                                            </div>
+                                        {{else}}
+                                            {{#if this.hasValue}}
+                                                <input class="structured-value" type="number" name="qualitiesStructured.value.{{this.key}}" value="{{lookup ../qualitiesSelectedValue this.key}}" min="0" step="1" />
+                                            {{else}}
+                                                <input class="checkbox" type="checkbox" name="qualitiesStructured.toggle.{{this.key}}" {{checked (lookup ../qualitiesSelectedToggle this.key)}} />
+                                            {{/if}}
+                                        {{/if}}
+                                    </div>
+                                </div>
+                            {{/each}}
+                        </div>
+
+                        <!-- Other traits (reference / future automation) -->
+                        <div class="structured-traits-block">
+                            <div class="structured-traits-label">Other Traits</div>
+                            <div class="structured-traits-pills">
+                                {{#each traitsCatalog}}
+                                    <label class="uesrpg-pill {{#if this.selected}}is-selected{{/if}}">
+                                        <input type="checkbox" name="qualitiesTraits.toggle.{{this.key}}" {{checked this.selected}} />
+                                        <span>{{this.label}}</span>
+                                    </label>
+                                {{/each}}
+                            </div>
                         </div>
                     </div>
                 </div>
