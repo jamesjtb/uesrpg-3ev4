@@ -13,6 +13,8 @@
 
 import { applyDamage, applyHealing, DAMAGE_TYPES } from "./damage-automation.js";
 import { OpposedWorkflow } from "./opposed-workflow.js";
+import { SkillOpposedWorkflow } from "../skills/opposed-workflow.js";
+import { canUserRollActor } from "../helpers/permissions.js";
 
 let _chatHooksRegistered = false;
 
@@ -77,6 +79,23 @@ async function _onApplyHealing(ev, message) {
   await applyHealing(targetActor, healing, { source });
 }
 
+
+
+async function _onSkillOpposedAction(ev, message) {
+  ev.preventDefault();
+  const btn = ev.currentTarget;
+  const action = btn.dataset.uesSkillOpposedAction;
+  await SkillOpposedWorkflow.handleAction(message, action, { event: ev });
+}
+
+function _getSkillOpposedState(message) {
+  const raw = message?.flags?.["uesrpg-3ev4"]?.skillOpposed;
+  if (!raw) return null;
+  if (raw && typeof raw === "object" && Number(raw.version) >= 1 && raw.state) return raw.state;
+  if (raw && typeof raw === "object" && raw.attacker && raw.defender) return raw;
+  return null;
+}
+
 async function _onOpposedAction(ev, message) {
   ev.preventDefault();
   const btn = ev.currentTarget;
@@ -106,6 +125,27 @@ export function initializeChatHandlers() {
 
     root.querySelectorAll("[data-ues-opposed-action]").forEach((el) => {
       el.addEventListener("click", (ev) => _onOpposedAction(ev, message));
+    });
+
+    // Skill opposed-roll chat card buttons
+    root.querySelectorAll("[data-ues-skill-opposed-action]").forEach((el) => {
+      const action = el.dataset.uesSkillOpposedAction;
+      const data = _getSkillOpposedState(message);
+      let actor = null;
+      try {
+        const actorUuid = (action === "attacker-roll") ? data?.attacker?.actorUuid : (action === "defender-roll") ? data?.defender?.actorUuid : null;
+        actor = actorUuid ? fromUuidSync(actorUuid) : null;
+      } catch (_e) {
+        actor = null;
+      }
+
+      // Permission-aware button state
+      if (actor && !canUserRollActor(game.user, actor)) {
+        el.setAttribute("disabled", "disabled");
+        el.setAttribute("title", "You do not have permission to roll for this actor.");
+      }
+
+      el.addEventListener("click", (ev) => _onSkillOpposedAction(ev, message));
     });
   });
 }
