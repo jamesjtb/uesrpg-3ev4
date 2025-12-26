@@ -675,6 +675,8 @@
 
 .worldbuilding .tab.active {
   height: 100%;
+  overflow-y: auto;
+  overflow-x: hidden;
 }
 
 /*----------------------------
@@ -1278,6 +1280,161 @@
   overflow: hidden; /* prevents outer window-content from forcing layout */
 }
 
+/* --- UESRPG PATCH: item sheets are not wrapped in .sheet-body, so make the form the scroll container --- */
+.worldbuilding.sheet.item .window-content {
+  display: flex;
+  flex-direction: column;
+}
+
+.worldbuilding.sheet.item .window-content > form {
+  flex: 1 1 auto;
+  min-height: 0;            /* critical for flex scroll containment */
+  overflow-y: auto;         /* prevent window growth */
+  overflow-x: hidden;
+}
+
+/* Structured qualities: multi-column grid instead of a single vertical list */
+.worldbuilding .structured-qualities-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 6px 12px;
+  align-items: center;
+}
+
+.worldbuilding .structured-qualities-cell {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  column-gap: 10px;
+  border-bottom: 1px solid rgba(128, 128, 128, 0.35);
+  padding: 2px 0;
+}
+
+.worldbuilding .structured-qualities-cell input[type="number"] {
+  width: 80px;
+}
+
+/* Structured qualities: "Other Traits" multiselect should not expand the sheet */
+.worldbuilding .structured-qualities-traits {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.worldbuilding .structured-qualities-traits label {
+  font-weight: 600;
+}
+
+.worldbuilding .qualities-traits-multiselect {
+  width: 100%;
+  max-width: 100%;
+  min-height: 90px;
+  max-height: 140px;
+  overflow-y: auto;
+}
+
+/* Structured qualities: pill-style toggles for "Other Traits" (more intuitive than multi-select) */
+.worldbuilding .structured-traits-block {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-top: 8px;
+}
+
+.worldbuilding .structured-traits-label {
+  font-weight: 600;
+}
+
+.worldbuilding .structured-traits-pills {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 6px 10px;
+}
+
+.worldbuilding label.uesrpg-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 3px 8px;
+  min-height: 24px;
+  box-sizing: border-box;
+  border: 1px solid rgba(128, 128, 128, 0.35);
+  border-radius: 8px;
+  cursor: pointer;
+  user-select: none;
+}
+
+.worldbuilding label.uesrpg-pill input[type="checkbox"] {
+  margin: 0;
+  height: 14px !important;
+  width: 14px !important;
+}
+
+/* Structured qualities value inputs should feel consistent with the system's existing sheet controls */
+.worldbuilding input.structured-value {
+  height: 20px;
+  padding: 1px 4px;
+  box-sizing: border-box;
+}
+
+/* Optional (X) value inputs shown next to a checkbox (e.g., Slashing (X)). */
+.worldbuilding input.structured-value--opt {
+  width: 64px;
+  text-align: center;
+}
+
+.worldbuilding .structured-optional-value {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.worldbuilding .structured-thrown-block {
+  margin-top: 8px;
+}
+
+.worldbuilding .structured-thrown-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(100px, 1fr));
+  gap: 6px 10px;
+}
+
+.worldbuilding .structured-thrown-cell label {
+  display: block;
+  font-size: 12px;
+  opacity: 0.85;
+  margin-bottom: 2px;
+}
+
+/* Armor structured qualities: force a compact 2x2 layout */
+.worldbuilding .structured-qualities-grid.is-armor {
+  grid-template-columns: repeat(2, minmax(180px, 1fr));
+}
+
+.worldbuilding label.uesrpg-pill.is-selected {
+  border-color: rgba(64, 64, 64, 0.55);
+  background: rgba(64, 64, 64, 0.12);
+}
+
+.worldbuilding .structured-qualities-grid.is-armor {
+  grid-template-columns: repeat(2, minmax(180px, 1fr));
+}
+
+.worldbuilding .structured-thrown-block {
+  margin-top: 8px;
+}
+
+.worldbuilding .structured-thrown-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(90px, 1fr));
+  gap: 6px 10px;
+}
+
+.worldbuilding .structured-thrown-cell label {
+  display: block;
+  font-size: 0.85em;
+  opacity: 0.8;
+}
+
 /* 2) Sheet body should become the scroll container */
 .worldbuilding .sheet-section-container {
   /* If you currently have height: 100%; it can cause growth. Prefer min-height. */
@@ -1306,20 +1463,29 @@
   overflow-y: auto;
 }
 
-/* ------------------------------------------------------------------------- */
-/* Opposed workflow dialogs                                                   */
-/* ------------------------------------------------------------------------- */
 
-/* Defender dialog: match the attack dialog's compact two-button footer */
-.uesrpg-defense-dialog .dialog-buttons {
-  display: grid !important;
-  grid-template-columns: 1fr 1fr !important;
-  gap: 10px !important;
+/* --- Patch: Effective hint positioning (prevents overlap with base values) --- */
+.worldbuilding .item-resource .stat-value-label {
+  position: relative;
 }
 
-.uesrpg-defense-dialog .dialog-buttons button {
-  width: 100% !important;
-  text-transform: none !important; /* prevent "CONTINUE" styling */
+.worldbuilding .item-resource .stat-value-label .effective-hint {
+  position: absolute;
+  top: 2px;
+  left: 4px;
+  font-size: 0.55em;
+  line-height: 1;
+  opacity: 0.8;
+  color: #000;
+  pointer-events: none;
+}
+
+.worldbuilding .item-resource .stat-value-label .effective-hint .label {
+  font-weight: 600;
+  margin-right: 4px;
 }
 
 
+/* Cleanup patch: keep first four weapon controls in neat 2x2 layout by moving Attack Mode below */
+.modifier-container { display: grid; grid-template-columns: 1fr 1fr; column-gap: 12px; }
+.modifier-container > div { min-width: 0; }
