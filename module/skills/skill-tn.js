@@ -31,6 +31,14 @@ function _asNumber(v) {
   return m ? Number(m[0]) : 0;
 }
 
+
+function _normalizeKey(s) {
+  return String(s ?? "")
+    .trim()
+    .toLowerCase()
+    .replace(/\s+/g, "")
+    .replace(/[^a-z0-9_]/g, "");
+}
 function _isAgilityBasedSkill(skillItem) {
   // Skills can encode governing characteristics as a single token ("Agi"),
   // a full word ("Agility"), or a comma/space separated list ("Str, Agi").
@@ -43,8 +51,55 @@ function _isAgilityBasedSkill(skillItem) {
   return /\bagi\b|\bagility\b/.test(governing);
 }
 
+function _collectItemSkillBonuses(actor, skill) {
+  const out = [];
+  if (!actor) return out;
+
+  const key = String(skill?._professionKey ?? "").trim();
+  const name = String(skill?.name ?? "").trim();
+
+  const candidates = new Set();
+  if (key) {
+    candidates.add(key.toLowerCase());
+    candidates.add(_normalizeKey(key));
+  }
+  if (name) {
+    candidates.add(name.toLowerCase());
+    candidates.add(_normalizeKey(name));
+  }
+
+  const seen = new Set(); // dedupe by itemId+entryKey+value
+
+  for (const item of (actor.items ?? [])) {
+    const sys = item?.system ?? {};
+    if (!sys.equipped) continue;
+
+    const arr = Array.isArray(sys.skillArray) ? sys.skillArray : [];
+    for (const entry of arr) {
+      const eName = String(entry?.name ?? "").trim();
+      const eValue = _asNumber(entry?.value);
+      if (!eName || !eValue) continue;
+
+      const lc = eName.toLowerCase();
+      const ek = _normalizeKey(eName);
+      if (!(candidates.has(lc) || candidates.has(ek))) continue;
+
+      const sig = `${item.id}|${ek}|${eValue}`;
+      if (seen.has(sig)) continue;
+      seen.add(sig);
+
+      out.push({ itemName: item.name, value: eValue });
+    }
+  }
+  return out;
+}
+
 function _isCombatStyle(skillItem) {
   return (skillItem?.type === "combatStyle") || /combat style/i.test(String(skillItem?.name || ""));
+}
+
+function _normSkillKey(s) {
+  return String(s ?? "").trim().toLowerCase().replace(/\s+/g, "");
 }
 
 export function computeSkillTN({
@@ -56,19 +111,38 @@ export function computeSkillTN({
 } = {}) {
   // Derive item-based skill bonuses from equipped items that use the legacy `system.skillArray` format.
   // This allows the chat card breakdown to attribute bonuses to specific items.
-  const skillName = String(skillItem?.name ?? "").trim();
-  const itemBonuses = [];
-  if (actor && skillName) {
-    for (const item of actor.items ?? []) {
-      const sys = item?.system;
-      if (!sys?.equipped) continue;
-      if (!Array.isArray(sys.skillArray) || sys.skillArray.length === 0) continue;
-      const match = sys.skillArray.find(e => String(e?.name ?? "").trim() === skillName);
-      const v = _asNumber(match?.value);
-      if (!v) continue;
-      itemBonuses.push({ itemName: item.name, value: v });
+  
+const skillName = String(skillItem?.name ?? "").trim();
+const profKey = String(skillItem?._professionKey ?? "").trim();
+const itemBonuses = [];
+const seen = new Set();
+
+if (actor && (skillName || profKey)) {
+  const candidates = new Set();
+  if (skillName) candidates.add(_normSkillKey(skillName));
+  if (profKey) candidates.add(_normSkillKey(profKey));
+
+  for (const item of actor.items ?? []) {
+    const sys = item?.system;
+    if (!sys?.equipped) continue;
+    if (!Array.isArray(sys.skillArray) || sys.skillArray.length === 0) continue;
+
+    for (const entry of sys.skillArray) {
+      const eName = String(entry?.name ?? "").trim();
+      const eVal = _asNumber(entry?.value);
+      if (!eName || !eVal) continue;
+
+      const k = _normSkillKey(eName);
+      if (!candidates.has(k)) continue;
+
+      const sig = `${item.id}|${k}|${eVal}`;
+      if (seen.has(sig)) continue;
+      seen.add(sig);
+
+      itemBonuses.push({ itemName: item.name, value: eVal });
     }
   }
+}
 
   return computeSkillTNFromData({
     actorSystem: actor?.system ?? {},
@@ -103,23 +177,19 @@ export function computeSkillTNFromData({
 
   const baseSkill = _asNumber(skill?.system?.value);
   breakdown.push({ label: "Base Skill", value: baseSkill, source: "base" });
-
   // Skill-linked item automation.
-  // Preferred (document-aware path): explicit per-item modifiers are supplied by computeSkillTN.
-  // Fallback: use the legacy aggregated delta in actor.system.professions (older data paths).
-  if (Array.isArray(itemBonuses) && itemBonuses.length) {
-    for (const b of itemBonuses) {
+  // NOTE: This function is pure-data; it cannot inspect Actor items. Any item-based bonuses must be
+  // collected by the caller and provided via `itemBonuses`.
+  const derivedItemBonuses = Array.isArray(itemBonuses) ? itemBonuses : [];
+
+  if (derivedItemBonuses.length) {
+    for (const b of derivedItemBonuses) {
       const v = _asNumber(b?.value);
       if (!v) continue;
       const itemName = String(b?.itemName ?? "").trim();
       const label = itemName ? `Item Bonus: ${itemName}` : "Item Bonus";
       breakdown.push({ label, value: v, source: "itemBonus" });
     }
-  } else {
-    const profName = String(skill?.name ?? "").trim();
-    const profValue = profName ? _asNumber(actorSystem?.professions?.[profName]) : 0;
-    const itemDelta = (profValue && Number.isFinite(profValue)) ? (profValue - baseSkill) : 0;
-    if (itemDelta) breakdown.push({ label: "Item Bonus", value: itemDelta, source: "itemBonus" });
   }
 
   const fatigue = _asNumber(actorSystem?.fatigue?.penalty);
