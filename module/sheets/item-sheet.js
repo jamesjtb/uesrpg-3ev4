@@ -57,6 +57,22 @@ export class SimpleItemSheet extends foundry.appv1.sheets.ItemSheet {
       data.armorWeightClassOptions = UESRPG.ARMOR_WEIGHT_CLASSES;
       data.ammoArrowTypeOptions = UESRPG.AMMO_ARROW_TYPES;
       data.ammoMaterialOptions = UESRPG.AMMO_MATERIALS;
+      data.armorMaterialOptions = UESRPG.ARMOR_MATERIALS;
+      data.armorClassOptions = UESRPG.ARMOR_CLASSES;
+      data.shieldTypeOptions = UESRPG.SHIELD_TYPES;
+
+      // --------------------------------------------
+      // Weapon (ranged): ammunition selection options (actor inventory)
+      // --------------------------------------------
+      if (data.item?.type === "weapon" && data.item?.actor) {
+        const ammoItems = data.item.actor.items.filter(i => i.type === "ammunition");
+        data.ammoOptions = ammoItems.map(i => ({
+          value: i.id,
+          label: `${i.name} (x${Number(i.system?.quantity ?? 0)})`
+        }));
+      } else {
+        data.ammoOptions = [];
+      }
 
       // --------------------------------------------
       // Ammunition: derived Price / Shot (from Price / 10)
