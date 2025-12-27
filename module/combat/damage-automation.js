@@ -58,6 +58,43 @@ export function getDamageReduction(actor, damageType = DAMAGE_TYPES.PHYSICAL, hi
 
   const propertyName = locationMap[hitLocation] ?? hitLocation;
 
+  // --- Armor coverage normalization ---
+  // Legacy data (and the base template) can create armor items where all hitLocations are set to true.
+  // This causes unrelated pieces (e.g. body armor) to incorrectly contribute AR to other locations.
+  // We normalize coverage deterministically using the armor item's "category" when possible.
+  //
+  // Rules:
+  // - For FULL armor pieces, category is authoritative.
+  // - For PARTIAL armor pieces, if hitLocations are "all true" (legacy default), fall back to category.
+  // - Otherwise, only explicit true values count as covered (undefined does not).
+  const ARMOR_CATEGORY_TO_LOCATIONS = {
+    head: ["Head"],
+    body: ["Body"],
+    l_arm: ["LeftArm"],
+    r_arm: ["RightArm"],
+    l_leg: ["LeftLeg"],
+    r_leg: ["RightLeg"],
+  };
+
+  const ARMOR_LOCATION_KEYS = ["Head", "Body", "RightArm", "LeftArm", "RightLeg", "LeftLeg"];
+
+  const getCoveredLocations = (item) => {
+    const sys = item?.system ?? {};
+    const armorClass = String(sys.armorClass || "partial").toLowerCase();
+    const category = String(sys.category || "").toLowerCase();
+    const hitLocs = sys.hitLocations ?? {};
+
+    const allTrue = ARMOR_LOCATION_KEYS.every(k => hitLocs?.[k] === true);
+
+    const catLocs = ARMOR_CATEGORY_TO_LOCATIONS[category] ?? null;
+    if (catLocs && (armorClass === "full" || (armorClass === "partial" && allTrue))) {
+      return new Set(catLocs);
+    }
+
+    // Only explicit true counts.
+    return new Set(ARMOR_LOCATION_KEYS.filter(k => hitLocs?.[k] === true));
+  };
+
   const actorData = actor.system;
 
   let armor = 0;
@@ -69,11 +106,18 @@ export function getDamageReduction(actor, damageType = DAMAGE_TYPES.PHYSICAL, hi
     const equippedArmor = actor.items?.filter((i) => i.type === "armor" && i.system?.equipped === true) ?? [];
 
     for (const item of equippedArmor) {
-      const armorLocations = item.system?.hitLocations ?? {};
-      // If location is explicitly false, it does not cover. Any other value counts as covered.
-      if (armorLocations[propertyName] !== false) {
-        armor += Number(item.system?.armor ?? 0);
-      }
+      // Shields do not contribute AR; they are handled via Block in later steps.
+      if (item.system?.isShield) continue;
+
+      const covered = getCoveredLocations(item);
+      if (!covered.has(propertyName)) continue;
+
+      // Automation should always prefer derived effective values.
+      const ar = (item.system?.armorEffective != null)
+        ? Number(item.system.armorEffective)
+        : Number(item.system?.armor ?? 0);
+
+      armor += Number.isFinite(ar) ? ar : 0;
     }
 
     // RAW per your decision: natToughness only; no END-bonus soak
@@ -135,23 +179,53 @@ export function getDamageReduction(actor, damageType = DAMAGE_TYPES.PHYSICAL, hi
  * }}
  */
 export function calculateDamage(rawDamage, damageType, targetActor, options = {}) {
-  const { penetration = 0, dosBonus = 0, hitLocation = "Body", ignoreArmor = false } = options;
+  const {
+    penetration = 0,
+    dosBonus = 0,
+    hitLocation = "Body",
+    ignoreArmor = false,
+    // Advantage: Penetrate Armor — does not change AR, but treats armored locations as less protected
+    // for the purpose of trigger-style effects (e.g., Slashing).
+    penetrateArmorForTriggers = false,
+    // Optional: provide weapon/attacker to enable RAW weapon-quality bonus damage
+    // ("The Big Three": Crushing, Splitting, Slashing).
+    weapon = null,
+    attackerActor = null,
+  } = options;
 
   /** @type {{armor:number,resistance:number,toughness:number,total:number,penetrated:number}} */
   let reductions = { armor: 0, resistance: 0, toughness: 0, total: 0, penetrated: 0 };
+
+  // Track the target's *pre-penetration* armor for RAW interactions (e.g., Crushing cap, Slashing trigger).
+  let originalArmor = 0;
 
   if (!ignoreArmor) {
     reductions = getDamageReduction(targetActor, damageType, hitLocation);
 
     // Penetration reduces ARMOR only (not resistance/toughness)
-    const originalArmor = Number(reductions.armor ?? 0);
+    originalArmor = Number(reductions.armor ?? 0);
     const penetratedArmor = Math.max(0, originalArmor - Number(penetration || 0));
     reductions.penetrated = Math.max(0, originalArmor - penetratedArmor);
     reductions.armor = penetratedArmor;
     reductions.total = reductions.armor + reductions.resistance + reductions.toughness;
   }
 
-  const totalDamage = Math.max(0, Number(rawDamage || 0) + Number(dosBonus || 0));
+  // Base damage = raw + DoS bonus (existing behavior)
+  const baseTotalDamage = Math.max(0, Number(rawDamage || 0) + Number(dosBonus || 0));
+
+  // --- Weapon quality bonuses (Step 1): Crushing, Splitting, Slashing
+  // These bonuses are only applied for PHYSICAL damage.
+  const qualBonus = computeBigThreeBonus({
+    damageType,
+    weapon,
+    attackerActor,
+    originalArmor,
+    triggerArmor: penetrateArmorForTriggers ? 0 : originalArmor,
+    baseTotalDamage,
+    reductionsTotal: reductions.total,
+  });
+
+  const totalDamage = Math.max(0, baseTotalDamage + qualBonus);
   const finalDamage = Math.max(0, totalDamage - reductions.total);
 
   return {
@@ -162,7 +236,73 @@ export function calculateDamage(rawDamage, damageType, targetActor, options = {}
     finalDamage,
     hitLocation,
     damageType,
+    weaponBonus: qualBonus,
   };
+}
+
+/**
+ * Compute the RAW weapon-quality bonus damage for "The Big Three":
+ *  - Crushing (X): +min(STR bonus (or X), target AR at hit location)
+ *  - Splitting (X): +STR bonus (or X) if the *initial* damage causes the target to lose >=1 HP
+ *  - Slashing (X): +STR bonus (or X) against *unarmored* hit locations
+ *
+ * Notes (implementation choices):
+ *  - Only applies to PHYSICAL damage.
+ *  - The cap for Crushing uses the target location's armor *before* penetration.
+ *  - Splitting triggers based on damage after reductions, before applying the Splitting bonus.
+ */
+function computeBigThreeBonus({ damageType, weapon, attackerActor, originalArmor, triggerArmor, baseTotalDamage, reductionsTotal }) {
+  if (String(damageType ?? "").toLowerCase() !== "physical") return 0;
+  if (!weapon || !attackerActor) return 0;
+
+  // Resolve attacker STR bonus (schema: actor.system.characteristics.str.bonus)
+  const strBonus = Number(attackerActor?.system?.characteristics?.str?.bonus ?? 0) || 0;
+
+  // Pull structured qualities (manual + injected) if available.
+  const structured = Array.isArray(weapon?.system?.qualitiesStructuredInjected)
+    ? weapon.system.qualitiesStructuredInjected
+    : Array.isArray(weapon?.system?.qualitiesStructured)
+      ? weapon.system.qualitiesStructured
+      : [];
+
+  const getQualityValue = (key) => {
+    const q = structured.find(e => String(e?.key ?? e ?? "").toLowerCase() === key);
+    if (!q) return null;
+    const v = q?.value;
+    const n = Number(v);
+    return Number.isFinite(n) && n !== 0 ? n : null;
+  };
+
+  const hasQuality = (key) => structured.some(e => String(e?.key ?? e ?? "").toLowerCase() === key);
+
+  let bonus = 0;
+
+  // Crushing (X)
+  if (hasQuality("crushing")) {
+    const x = getQualityValue("crushing") ?? strBonus;
+    const cap = Math.max(0, Number(originalArmor ?? 0));
+    bonus += Math.max(0, Math.min(Math.max(0, x), cap));
+  }
+
+  // Slashing (X)
+  if (hasQuality("slashing")) {
+    const isUnarmored = Number(triggerArmor ?? originalArmor ?? 0) <= 0;
+    if (isUnarmored) {
+      const x = getQualityValue("slashing") ?? strBonus;
+      bonus += Math.max(0, x);
+    }
+  }
+
+  // Splitting (X)
+  if (hasQuality("splitting")) {
+    const initialFinal = Math.max(0, Number(baseTotalDamage ?? 0) - Number(reductionsTotal ?? 0));
+    if (initialFinal >= 1) {
+      const x = getQualityValue("splitting") ?? strBonus;
+      bonus += Math.max(0, x);
+    }
+  }
+
+  return Number.isFinite(bonus) ? bonus : 0;
 }
 
 /**
@@ -194,6 +334,15 @@ export async function applyDamage(actor, damage, damageType = DAMAGE_TYPES.PHYSI
     dosBonus = 0,
     source = "Unknown",
     hitLocation = "Body",
+    penetrateArmorForTriggers = false,
+    // Advantage: Forceful Impact — applies/advances Damaged (1) on the armor piece protecting the hit location.
+    // Current implementation: increments the Damaged quality on ONE equipped armor piece covering the location.
+    forcefulImpact = false,
+    // Advantage: Press Advantage — currently informational only (advantage economy is handled in opposed workflow).
+    pressAdvantage = false,
+    // Optional: enable RAW weapon-quality bonuses.
+    weapon = null,
+    attackerActor = null,
   } = options;
 
   if (!actor?.system) {
@@ -216,7 +365,35 @@ export async function applyDamage(actor, damage, damageType = DAMAGE_TYPES.PHYSI
       }
     : calculateDamage(rawDamage, damageType, actor, { penetration, dosBonus, hitLocation });
 
+  // If weapon/attacker are provided, prefer the enriched calculation.
+  // (calculateDamage is backwards-compatible; extra keys are ignored by older callers.)
+  if (!ignoreReduction && (weapon || attackerActor)) {
+    Object.assign(damageCalc, calculateDamage(rawDamage, damageType, actor, {
+      penetration,
+      dosBonus,
+      hitLocation,
+      penetrateArmorForTriggers,
+      weapon,
+      attackerActor,
+    }));
+  }
+
   const finalDamage = Number(damageCalc.finalDamage || 0);
+
+  // Wound Threshold (RAW): WOUNDED is applied when a *single* instance of damage meets/exceeds
+  // the target's Wound Threshold value. This is not derived from remaining HP.
+  // Schema: actor.system.wound_threshold.value (PC + NPC).
+  const woundThreshold = (() => {
+    const wt = actor.system?.wound_threshold;
+    // Preferred
+    if (wt && typeof wt === "object") {
+      const v = Number(wt.value ?? wt.total ?? wt.base);
+      return Number.isFinite(v) ? v : 0;
+    }
+    // Defensive fallbacks
+    const v = Number(actor.system?.woundThreshold ?? actor.system?.wounds ?? 0);
+    return Number.isFinite(v) ? v : 0;
+  })();
 
   // HP state
   const currentHP = Number(actor.system?.hp?.value ?? 0);
@@ -229,12 +406,30 @@ export async function applyDamage(actor, damage, damageType = DAMAGE_TYPES.PHYSI
 
   const updateTarget = isUnlinkedToken ? activeToken.actor : actor;
 
-  await updateTarget.update({ "system.hp.value": newHP });
+  // Determine wound status from RAW threshold.
+  // NOTE: We intentionally do not auto-clear the flag on healing.
+  const isWounded = (finalDamage >= Math.max(0, woundThreshold)) && finalDamage > 0 && woundThreshold > 0;
 
-  // Simple wound status
   let woundStatus = "uninjured";
   if (newHP === 0) woundStatus = "unconscious";
-  else if (maxHP > 0 && newHP / maxHP <= 0.5) woundStatus = "wounded";
+  else if (isWounded) woundStatus = "wounded";
+
+  // Persist Wounded flag if the damage exceeded the threshold.
+  // Keep update minimal: only write the flag when it needs to be set.
+  const updateData = { "system.hp.value": newHP };
+  if (isWounded && !updateTarget.system?.wounded) updateData["system.wounded"] = true;
+
+  await updateTarget.update(updateData);
+
+  // Optional: Forceful Impact may damage the armor protecting the hit location.
+  // This is intentionally best-effort and should never block damage resolution.
+  if (forcefulImpact && String(damageType ?? "").toLowerCase() === DAMAGE_TYPES.PHYSICAL) {
+    try {
+      await _applyForcefulImpact(updateTarget, hitLocation);
+    } catch (err) {
+      console.warn("UESRPG | Forceful Impact armor update failed", err);
+    }
+  }
 
   // Optional: apply unconscious effect (safe + idempotent)
   if (woundStatus === "unconscious") {
@@ -261,33 +456,32 @@ export async function applyDamage(actor, damage, damageType = DAMAGE_TYPES.PHYSI
     }
   }
 
-  // Damage chat message
+  // Damage chat message (GM-only, blind by default)
+  const gmIds = game.users?.filter(u => u.isGM).map(u => u.id) ?? [];
+  const hpDelta = Math.max(0, currentHP - newHP);
+
+  const parts = [];
+  if (!ignoreReduction) {
+    const rd = Number(damageCalc.rawDamage ?? 0);
+    const db = Number(damageCalc.dosBonus ?? 0);
+    const wb = Number(damageCalc.weaponBonus ?? 0);
+    const rawLine = [rd, db ? `+${db} DoS` : null, wb ? `+${wb} Wpn` : null].filter(Boolean).join(" ");
+    parts.push(`<div class="uesrpg-da-row"><span class="k">Raw</span><span class="v">${rawLine}</span></div>`);
+    parts.push(`<div class="uesrpg-da-row"><span class="k">Reduction</span><span class="v">-${damageCalc.reductions.total} <span class="muted">(AR ${damageCalc.reductions.armor} / R ${damageCalc.reductions.resistance} / T ${damageCalc.reductions.toughness}${damageCalc.reductions.penetrated ? ` / Pen ${damageCalc.reductions.penetrated}` : ""})</span></span></div>`);
+  }
+
   const messageContent = `
-    <div class="uesrpg-damage-applied">
-      <h3>${updateTarget.name} takes damage!</h3>
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.5rem;margin:0.5rem 0;">
-        <div><strong>Source:</strong></div><div>${source}</div>
-        <div><strong>Hit Location:</strong></div><div>${hitLocation}</div>
-        <div><strong>Damage Type:</strong></div><div>${damageType}</div>
-        ${
-          !ignoreReduction
-            ? `
-          <div><strong>Raw Damage:</strong></div><div>${damageCalc.rawDamage}${damageCalc.dosBonus > 0 ? ` + ${damageCalc.dosBonus} (DoS)` : ""}</div>
-          <div><strong>Reduction:</strong></div>
-          <div>
-            -${damageCalc.reductions.total}
-            (Armor: ${damageCalc.reductions.armor}, Resist: ${damageCalc.reductions.resistance}, Tough: ${damageCalc.reductions.toughness}${damageCalc.reductions.penetrated ? `, Pen: ${damageCalc.reductions.penetrated}` : ""})
-          </div>
-        `
-            : ""
-        }
-        <div><strong>Final Damage:</strong></div><div style="color:#d32f2f;font-weight:bold;">${finalDamage}</div>
-        <div><strong>HP:</strong></div><div>${newHP} / ${maxHP} ${currentHP > newHP ? `(-${currentHP - newHP})` : ""}</div>
-        ${
-          woundStatus !== "uninjured"
-            ? `<div style="grid-column:1 / -1;color:#f57c00;font-weight:bold;text-align:center;margin-top:0.5rem;">Status: ${woundStatus.toUpperCase()}</div>`
-            : ""
-        }
+    <div class="uesrpg-damage-applied-card">
+      <div class="hdr">
+        <div class="title">${updateTarget.name}</div>
+        <div class="sub">${source}${hitLocation ? ` • ${hitLocation}` : ""}${damageType ? ` • ${damageType}` : ""}</div>
+      </div>
+      <div class="body">
+        ${parts.join("\n")}
+        <div class="uesrpg-da-row"><span class="k">Final</span><span class="v final">${finalDamage}</span></div>
+        <div class="uesrpg-da-row"><span class="k">HP</span><span class="v">${newHP} / ${maxHP}${hpDelta ? ` <span class="muted">(-${hpDelta})</span>` : ""}</span></div>
+        ${woundStatus === "wounded" ? `<div class="status wounded">WOUNDED <span class="muted">(WT ${woundThreshold})</span></div>` : ""}
+        ${woundStatus === "unconscious" ? `<div class="status unconscious">UNCONSCIOUS</div>` : ""}
       </div>
     </div>
   `;
@@ -297,6 +491,8 @@ export async function applyDamage(actor, damage, damageType = DAMAGE_TYPES.PHYSI
     speaker: ChatMessage.getSpeaker({ actor: updateTarget }),
     content: messageContent,
     style: CONST.CHAT_MESSAGE_STYLES.OTHER,
+    whisper: gmIds,
+    blind: true,
   });
 
   const prevented = Math.max(0, Number(damageCalc.totalDamage ?? rawDamage) - finalDamage);
@@ -310,6 +506,86 @@ export async function applyDamage(actor, damage, damageType = DAMAGE_TYPES.PHYSI
     woundStatus,
     prevented,
   };
+}
+
+/**
+ * Apply Forceful Impact: increment Damaged (X) on one armor item that covers the hit location.
+ * Selection policy: choose the single equipped, non-shield armor item with the highest effective AR at the location.
+ *
+ * This does NOT attempt to handle edge cases...<snip>
+ */
+async function _applyForcefulImpact(targetActor, hitLocation) {
+  if (!targetActor?.items) return;
+
+  const locationMap = {
+    Head: "Head",
+    Body: "Body",
+    "Right Arm": "RightArm",
+    "Left Arm": "LeftArm",
+    "Right Leg": "RightLeg",
+    "Left Leg": "LeftLeg",
+    RightArm: "RightArm",
+    LeftArm: "LeftArm",
+    RightLeg: "RightLeg",
+    LeftLeg: "LeftLeg",
+  };
+  const propertyName = locationMap[hitLocation] ?? hitLocation;
+
+  const ARMOR_CATEGORY_TO_LOCATIONS = {
+    head: ["Head"],
+    body: ["Body"],
+    l_arm: ["LeftArm"],
+    r_arm: ["RightArm"],
+    l_leg: ["LeftLeg"],
+    r_leg: ["RightLeg"],
+  };
+  const ARMOR_LOCATION_KEYS = ["Head", "Body", "RightArm", "LeftArm", "RightLeg", "LeftLeg"];
+
+  const getCoveredLocations = (item) => {
+    const sys = item?.system ?? {};
+    const armorClass = String(sys.armorClass || "partial").toLowerCase();
+    const category = String(sys.category || "").toLowerCase();
+    const hitLocs = sys.hitLocations ?? {};
+
+    const allTrue = ARMOR_LOCATION_KEYS.every(k => hitLocs?.[k] === true);
+    const catLocs = ARMOR_CATEGORY_TO_LOCATIONS[category] ?? null;
+    if (catLocs && (armorClass === "full" || (armorClass === "partial" && allTrue))) {
+      return new Set(catLocs);
+    }
+    return new Set(ARMOR_LOCATION_KEYS.filter(k => hitLocs?.[k] === true));
+  };
+
+  const equippedArmor = targetActor.items?.filter((i) => i.type === "armor" && i.system?.equipped === true) ?? [];
+  const candidates = [];
+
+  for (const item of equippedArmor) {
+    if (item.system?.isShield) continue;
+    const covered = getCoveredLocations(item);
+    if (!covered.has(propertyName)) continue;
+
+    const ar = (item.system?.armorEffective != null)
+      ? Number(item.system.armorEffective)
+      : Number(item.system?.armor ?? 0);
+    candidates.push({ item, ar: Number.isFinite(ar) ? ar : 0 });
+  }
+
+  if (!candidates.length) return;
+  candidates.sort((a, b) => (b.ar - a.ar));
+  const armorItem = candidates[0].item;
+
+  const current = Array.isArray(armorItem.system?.qualitiesStructured)
+    ? armorItem.system.qualitiesStructured
+    : [];
+  const next = current.map(q => ({ ...q }));
+  const idx = next.findIndex(q => String(q?.key ?? "").toLowerCase() === "damaged");
+  if (idx >= 0) {
+    const v = Number(next[idx].value ?? 0);
+    next[idx].value = Number.isFinite(v) ? v + 1 : 1;
+  } else {
+    next.push({ key: "damaged", value: 1 });
+  }
+
+  await armorItem.update({ "system.qualitiesStructured": next });
 }
 
 /**
