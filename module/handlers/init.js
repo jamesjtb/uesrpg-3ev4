@@ -8,6 +8,7 @@ import { SimpleItemSheet } from "../sheets/item-sheet.js";
 import { SystemCombat } from "../entities/combat.js";
 import { initializeChatHandlers, registerCombatChatHooks } from "../combat/chat-handlers.js";
 import { registerSkillTNDebug } from "../dev/skill-tn-debug.js";
+import { registerActorSelectDebug } from "../dev/actor-select-debug.js";
 
 async function registerSettings() {
   // Register system settings
@@ -245,6 +246,7 @@ Hooks.once("ready", () => {
   // Developer-only: expose a skill TN debug helper for the GM.
   if (game.user?.isGM && game.settings.get("uesrpg-3ev4", "debugSkillTN")) {
     registerSkillTNDebug();
+  registerActorSelectDebug();
   }
 });
 }
