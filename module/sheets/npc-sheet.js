@@ -274,43 +274,10 @@ async activateListeners(html) {
   // Item Create Buttons
   html.find(".item-create").click(this._onItemCreate.bind(this));
 
-  // NEW: Handle apply damage button clicks in chat (avoid duplicate registrations)
-  $(document)
-    .off("click.uesrpgApplyDamage")
-    .on("click.uesrpgApplyDamage", ".apply-damage-btn", async (ev) => {
-      const button = ev.currentTarget;
-
-      // Match your chat button attributes: data-actor-id, data-damage, data-type, data-location
-      const actorId = button.dataset.actorId;
-      const damage = Number(button.dataset.damage);
-      const damageType = button.dataset.type || "physical";
-      const hitLocation = button.dataset.location;
-
-      const targetActor = game.actors.get(actorId);
-      if (!targetActor) {
-        ui.notifications.warn("Target actor not found");
-        return;
-      }
-
-      // Import damage helper (adjust path if needed for your module structure)
-      const { applyDamageToActor } = await import("../helpers/damageHelper.js");
-
-      const result = await applyDamageToActor(
-        targetActor,
-        damage,
-        hitLocation,
-        damageType,
-        { penetrateArmor: false }
-      );
-
-      ui.notifications.info(
-        `${targetActor.name} takes ${result.finalDamage} damage (${result.ar} AR) to ${hitLocation}. HP: ${result.newHP}`
-      );
-
-      // Disable button after use
-      button.disabled = true;
-      button.textContent = "✓ Applied";
-    });
+  // NOTE:
+  // Damage/healing chat-card button handling is registered centrally in module/combat/chat-handlers.js.
+  // Do not bind per-sheet document-level handlers here (it causes duplicate execution and
+  // "Target actor not found" warnings for synthetic (unlinked) token actors.
 
   // Everything below here is only needed if the sheet is editable
   if (!this.options.editable) return;
@@ -940,7 +907,7 @@ async _onDefendRoll(event) {
   
   // Roll defense
   const roll = new Roll("1d100");
-  await roll.evaluate({async:  true});
+  await roll.evaluate();
   
   const success = roll.total <= defenseTN;
   const dos = success ? Math.floor((defenseTN - roll.total) / 10) : 0;
@@ -972,21 +939,24 @@ async _onDefendRoll(event) {
   const damageRoll = item.system?.weapon2H ?  item.system?.damage2 : item.system?.damage;
   
   // Roll hit location
-  const hitLocRoll = await new Roll("1d100").evaluate({ async: true });
-  const hitResult = hitLocRoll.total;
-  let hit_loc = "";
-  if (hitResult <= 15) hit_loc = "Head";
-  else if (hitResult <= 35) hit_loc = "Right Arm";
-  else if (hitResult <= 55) hit_loc = "Left Arm";
-  else if (hitResult <= 80) hit_loc = "Body";
-  else if (hitResult <= 90) hit_loc = "Right Leg";
-  else hit_loc = "Left Leg";
+  // RAW: Hit Location is the 1s digit of the attack roll, but can also be rolled as 1d10 (10 counts as 0).
+  // This NPC weapon card rolls hit location directly.
+  const hitLocRoll = new Roll("1d10");
+  await hitLocRoll.evaluate();
+  const hit_loc = window.Uesrpg3e?.utils?.getHitLocationFromRoll
+    ? window.Uesrpg3e.utils.getHitLocationFromRoll(Number(hitLocRoll.total))
+    : "Body";
 
   // Roll damage
-  const roll = await new Roll(damageRoll).evaluate({ async: true });
-  const supRoll = item.system?.superior ?  await new Roll(damageRoll).evaluate({ async: true }) : null;
-  
-  const finalDamage = supRoll ? Math.max(roll.total, supRoll.total) : roll.total;
+  const roll = new Roll(damageRoll);
+  await roll.evaluate();
+  let resolvedSupRoll = null;
+  if (item.system?.superior) {
+    resolvedSupRoll = new Roll(damageRoll);
+    await resolvedSupRoll.evaluate();
+  }
+
+  const finalDamage = resolvedSupRoll ? Math.max(roll.total, resolvedSupRoll.total) : roll.total;
   
   // Get damage type from weapon
   const damageType = window.Uesrpg3e?.utils?.getDamageTypeFromWeapon(item) || 'physical';
@@ -1010,8 +980,8 @@ async _onDefendRoll(event) {
   }
 
   // Build chat message
-  const damageDisplay = supRoll 
-    ? `[[${roll.total}]] [[${supRoll.total}]]` 
+  const damageDisplay = resolvedSupRoll 
+    ? `[[${roll.total}]] [[${resolvedSupRoll.total}]]` 
     : `[[${roll.total}]]`;
   
   const contentString = `
@@ -1029,7 +999,7 @@ async _onDefendRoll(event) {
     user: game.user.id,
     speaker: ChatMessage.getSpeaker({ actor: this.actor }),
     content: contentString,
-    rolls: supRoll ? [roll, supRoll] : [roll],
+    rolls: resolvedSupRoll ? [roll, resolvedSupRoll] : [roll],
     rollMode: game.settings.get("core", "rollMode")
   });
 }
