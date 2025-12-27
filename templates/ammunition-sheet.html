@@ -18,9 +18,11 @@
                     </div>
                     <div class="item-resource">
                         <div class="stat-value-label">
-                            <input type="text" name="system.enc" value="{{item.system.enc}}" data-dtype="Number"/>
                             {{#if item.system.encEffective}}
-                                <div class="effective-hint"><span class="label">Eff</span>{{item.system.encEffective}}</div>
+                                <input type="text" value="{{item.system.encEffective}}" readonly/>
+                                <input type="text" name="system.enc" value="{{item.system.enc}}" data-dtype="Number" style="display:none"/>
+                            {{else}}
+                                <input type="text" name="system.enc" value="{{item.system.enc}}" data-dtype="Number"/>
                             {{/if}}
                         </div>
                         <div class="flex-container">
@@ -29,9 +31,11 @@
                     </div>
                     <div class="item-resource">
                         <div class="stat-value-label">
-                            <input type="text" name="system.price" value="{{item.system.price}}" data-dtype="Number"/>
                             {{#if item.system.priceEffective}}
-                                <div class="effective-hint"><span class="label">Eff</span>{{item.system.priceEffective}}</div>
+                                <input type="text" value="{{item.system.priceEffective}}" readonly/>
+                                <input type="text" name="system.price" value="{{item.system.price}}" data-dtype="Number" style="display:none"/>
+                            {{else}}
+                                <input type="text" name="system.price" value="{{item.system.price}}" data-dtype="Number"/>
                             {{/if}}
                         </div>
                         <div class="flex-container">
@@ -40,9 +44,11 @@
                     </div>
                     <div class="item-resource">
                         <div class="stat-value-label">
-                            <input type="text" name="system.damage" value="{{item.system.damage}}" data-dtype="Number"/>
                             {{#if item.system.damageEffective}}
-                                <div class="effective-hint"><span class="label">Eff</span>{{item.system.damageEffective}}</div>
+                                <input type="text" value="{{item.system.damageEffective}}" readonly/>
+                                <input type="text" name="system.damage" value="{{item.system.damage}}" data-dtype="Number" style="display:none"/>
+                            {{else}}
+                                <input type="text" name="system.damage" value="{{item.system.damage}}" data-dtype="Number"/>
                             {{/if}}
                         </div>
                         <div class="flex-container">
