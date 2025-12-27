@@ -160,6 +160,137 @@ export const UESRPG = {
     dragonbone: { damageMod: 5, enchantLevel: 1500, pricePer10: 600, autoQualities: [{ key: "magic" }] }
   },
 
+  // Armor/Shield quality (Chapter 7)
+  ARMOR_QUALITY_RULES: {
+    // Inferior: increases weight class by one step; -25% price.
+    inferior: { priceMult: 0.75, weightClassDelta: +1 },
+    // Common: no profile change.
+    common: { priceMult: 1.0, weightClassDelta: 0 },
+    // Superior: decreases weight class by one step; +100% price.
+    superior: { priceMult: 2.0, weightClassDelta: -1 }
+  },
+
+  ARMOR_CLASSES: [
+    { value: "partial", label: "Partial" },
+    { value: "full", label: "Full" }
+  ],
+
+  SHIELD_TYPES: [
+    { value: "normal", label: "Normal" },
+    { value: "tower", label: "Tower" },
+    { value: "targe", label: "Targe" },
+    { value: "buckler", label: "Buckler" }
+  ],
+
+  // Armor materials (worn armor profiles) (Chapter 7)
+  ARMOR_MATERIALS: [
+    { value: "padded", label: "Padded" },
+    { value: "hide", label: "Hide" },
+    { value: "chitin", label: "Chitin" },
+    { value: "leather", label: "Leather" },
+    { value: "netchLeather", label: "Netch Leather" },
+    { value: "fur", label: "Fur" },
+    { value: "bone", label: "Bone" },
+    { value: "bonemold", label: "Bonemold" },
+    { value: "iron", label: "Iron" },
+    { value: "moonstone", label: "Moonstone" },
+    { value: "dreughHide", label: "Dreugh Hide" },
+    { value: "steel", label: "Steel" },
+    { value: "mithril", label: "Mithril" },
+    { value: "dwemer", label: "Dwemer" },
+    { value: "orichalcum", label: "Orichalcum" },
+    { value: "adamantium", label: "Adamantium" },
+    { value: "malachite", label: "Malachite" },
+    { value: "dragonscale", label: "Dragonscale" },
+    { value: "ebony", label: "Ebony" },
+    { value: "stalhrim", label: "Stalhrim" },
+    { value: "daedric", label: "Daedric" },
+    { value: "dragonbone", label: "Dragonbone" }
+  ],
+
+  // Derived profiles for worn armor. Values are *base* and are further modified by quality.
+  // magicARType is "magic" by default, but some entries are elemental ("fire"/"frost"/"shock").
+  ARMOR_PROFILES: {
+    partial: {
+      chitin: { ar: 1, magicAR: 1, magicARType: "fire", weightClass: "none", enc: 1, enchantLevel: 200, priceLimb: 30, priceBody: 60 },
+      leather: { ar: 1, magicAR: 1, magicARType: "fire", weightClass: "light", enc: 2, enchantLevel: 150, priceLimb: 25, priceBody: 50 },
+      fur: { ar: 1, magicAR: 1, magicARType: "frost", weightClass: "light", enc: 2, enchantLevel: 100, priceLimb: 20, priceBody: 40 },
+      netchLeather: { ar: 1, magicAR: 1, magicARType: "shock", weightClass: "light", enc: 2, enchantLevel: 200, priceLimb: 30, priceBody: 60 },
+      bone: { ar: 2, magicAR: 0, magicARType: null, weightClass: "medium", enc: 3, enchantLevel: 100, priceLimb: 25, priceBody: 50 },
+      bonemold: { ar: 2, magicAR: 0, magicARType: null, weightClass: "light", enc: 2, enchantLevel: 300, priceLimb: 50, priceBody: 100 },
+      iron: { ar: 3, magicAR: 0, magicARType: null, weightClass: "medium", enc: 3, enchantLevel: 200, priceLimb: 50, priceBody: 100 },
+      moonstone: { ar: 3, magicAR: 1, magicARType: "magic", weightClass: "light", enc: 2, enchantLevel: 500, priceLimb: 90, priceBody: 180 },
+      dreughHide: { ar: 4, magicAR: 1, magicARType: "magic", weightClass: "medium", enc: 3, enchantLevel: 300, priceLimb: 100, priceBody: 200 },
+      steel: { ar: 4, magicAR: 0, magicARType: null, weightClass: "medium", enc: 3, enchantLevel: 300, priceLimb: 75, priceBody: 150 },
+      mithril: { ar: 4, magicAR: 1, magicARType: "magic", weightClass: "none", enc: 1, enchantLevel: 900, priceLimb: 300, priceBody: 600 },
+      dwemer: { ar: 5, magicAR: 1, magicARType: "magic", weightClass: "medium", enc: 4, enchantLevel: 400, priceLimb: 150, priceBody: 300 },
+      orichalcum: { ar: 5, magicAR: 0, magicARType: null, weightClass: "medium", enc: 4, enchantLevel: 400, priceLimb: 100, priceBody: 200 },
+      adamantium: { ar: 5, magicAR: 2, magicARType: "magic", weightClass: "medium", enc: 4, enchantLevel: 1000, priceLimb: 500, priceBody: 1000 },
+      dragonscale: { ar: 5, magicAR: 2, magicARType: "magic", weightClass: "light", enc: 2, enchantLevel: 1250, priceLimb: 2500, priceBody: 5000 },
+      malachite: { ar: 5, magicAR: 2, magicARType: "magic", weightClass: "none", enc: 1, enchantLevel: 200, priceLimb: 750, priceBody: 1500 },
+      ebony: { ar: 6, magicAR: 3, magicARType: "magic", weightClass: "heavy", enc: 5, enchantLevel: 1250, priceLimb: 1500, priceBody: 3000 },
+      stalhrim: { ar: 6, magicAR: 6, magicARType: "frost", weightClass: "medium", enc: 4, enchantLevel: 1000, priceLimb: 2000, priceBody: 4000 },
+      daedric: { ar: 6, magicAR: 6, magicARType: "magic", weightClass: "heavy", enc: 5, enchantLevel: 1500, priceLimb: 3000, priceBody: 6000 },
+      dragonbone: { ar: 7, magicAR: 7, magicARType: "magic", weightClass: "heavy", enc: 5, enchantLevel: 1500, priceLimb: 5000, priceBody: 10000 }
+    },
+    full: {
+      padded: { ar: 2, magicAR: 0, magicARType: null, weightClass: "medium", enc: 3, enchantLevel: 50, priceLimb: 20, priceBody: 40 },
+      hide: { ar: 2, magicAR: 2, magicARType: "frost", weightClass: "medium", enc: 3, enchantLevel: 50, priceLimb: 30, priceBody: 60 },
+      chitin: { ar: 3, magicAR: 1, magicARType: "fire", weightClass: "light", enc: 2, enchantLevel: 200, priceLimb: 60, priceBody: 120 },
+      leather: { ar: 3, magicAR: 1, magicARType: "fire", weightClass: "medium", enc: 3, enchantLevel: 150, priceLimb: 50, priceBody: 100 },
+      netchLeather: { ar: 3, magicAR: 1, magicARType: "shock", weightClass: "medium", enc: 3, enchantLevel: 200, priceLimb: 60, priceBody: 120 },
+      fur: { ar: 3, magicAR: 1, magicARType: "frost", weightClass: "medium", enc: 3, enchantLevel: 100, priceLimb: 40, priceBody: 80 },
+      bone: { ar: 4, magicAR: 0, magicARType: null, weightClass: "heavy", enc: 4, enchantLevel: 100, priceLimb: 50, priceBody: 100 },
+      bonemold: { ar: 4, magicAR: 0, magicARType: null, weightClass: "medium", enc: 3, enchantLevel: 300, priceLimb: 100, priceBody: 200 },
+      iron: { ar: 5, magicAR: 0, magicARType: null, weightClass: "heavy", enc: 4, enchantLevel: 200, priceLimb: 100, priceBody: 200 },
+      moonstone: { ar: 5, magicAR: 2, magicARType: "magic", weightClass: "medium", enc: 3, enchantLevel: 500, priceLimb: 180, priceBody: 360 },
+      dreughHide: { ar: 6, magicAR: 2, magicARType: "magic", weightClass: "heavy", enc: 4, enchantLevel: 300, priceLimb: 200, priceBody: 400 },
+      steel: { ar: 6, magicAR: 0, magicARType: null, weightClass: "heavy", enc: 4, enchantLevel: 300, priceLimb: 150, priceBody: 300 },
+      mithril: { ar: 6, magicAR: 2, magicARType: "magic", weightClass: "light", enc: 2, enchantLevel: 900, priceLimb: 600, priceBody: 1200 },
+      dwemer: { ar: 7, magicAR: 2, magicARType: "magic", weightClass: "heavy", enc: 5, enchantLevel: 400, priceLimb: 300, priceBody: 600 },
+      orichalcum: { ar: 7, magicAR: 0, magicARType: null, weightClass: "heavy", enc: 5, enchantLevel: 400, priceLimb: 200, priceBody: 400 },
+      adamantium: { ar: 7, magicAR: 3, magicARType: "magic", weightClass: "heavy", enc: 5, enchantLevel: 1000, priceLimb: 1000, priceBody: 2000 },
+      malachite: { ar: 7, magicAR: 3, magicARType: "magic", weightClass: "light", enc: 2, enchantLevel: 200, priceLimb: 1500, priceBody: 3000 },
+      dragonscale: { ar: 7, magicAR: 5, magicARType: "magic", weightClass: "medium", enc: 3, enchantLevel: 1250, priceLimb: 5000, priceBody: 10000 },
+      ebony: { ar: 8, magicAR: 4, magicARType: "magic", weightClass: "superheavy", enc: 6, enchantLevel: 1250, priceLimb: 3000, priceBody: 6000 },
+      stalhrim: { ar: 8, magicAR: 8, magicARType: "frost", weightClass: "heavy", enc: 5, enchantLevel: 1000, priceLimb: 4000, priceBody: 8000 },
+      daedric: { ar: 8, magicAR: 8, magicARType: "magic", weightClass: "superheavy", enc: 6, enchantLevel: 1500, priceLimb: 6000, priceBody: 12000 },
+      dragonbone: { ar: 9, magicAR: 9, magicARType: "magic", weightClass: "superheavy", enc: 6, enchantLevel: 1500, priceLimb: 10000, priceBody: 20000 }
+    }
+  },
+
+  // Shields (Chapter 7)
+  SHIELD_PROFILES: {
+    hide: { br: 6, magicBRHalf: 3, magicBRSpecial: { type: "frost", value: 4 }, weightClass: "light", enc: 2, enchantLevel: 50, price: 40 },
+    chitin: { br: 7, magicBRHalf: 4, magicBRSpecial: { type: "fire", value: 5 }, weightClass: "none", enc: 1, enchantLevel: 200, price: 70 },
+    leather: { br: 7, magicBRHalf: 4, magicBRSpecial: { type: "fire", value: 5 }, weightClass: "light", enc: 2, enchantLevel: 150, price: 60 },
+    fur: { br: 7, magicBRHalf: 4, magicBRSpecial: { type: "frost", value: 5 }, weightClass: "light", enc: 2, enchantLevel: 100, price: 50 },
+    netchLeather: { br: 7, magicBRHalf: 4, magicBRSpecial: { type: "shock", value: 5 }, weightClass: "light", enc: 2, enchantLevel: 200, price: 70 },
+    bonemold: { br: 8, magicBRHalf: 4, magicBRSpecial: null, weightClass: "light", enc: 2, enchantLevel: 300, price: 120 },
+    iron: { br: 9, magicBRHalf: 5, magicBRSpecial: null, weightClass: "medium", enc: 3, enchantLevel: 200, price: 120 },
+    moonstone: { br: 9, magicBR: 6, magicBRType: "magic", weightClass: "light", enc: 2, enchantLevel: 500, price: 200 },
+    dreughHide: { br: 10, magicBR: 6, magicBRType: "magic", weightClass: "medium", enc: 3, enchantLevel: 300, price: 220 },
+    steel: { br: 10, magicBRHalf: 5, magicBRSpecial: null, weightClass: "medium", enc: 3, enchantLevel: 300, price: 170 },
+    dwemer: { br: 10, magicBR: 6, magicBRType: "magic", weightClass: "medium", enc: 3, enchantLevel: 800, price: 330 },
+    mithril: { br: 10, magicBR: 6, magicBRType: "magic", weightClass: "none", enc: 1, enchantLevel: 900, price: 650 },
+    orichalcum: { br: 11, magicBRHalf: 6, magicBRSpecial: null, weightClass: "medium", enc: 3, enchantLevel: 400, price: 240 },
+    adamantium: { br: 11, magicBR: 8, magicBRType: "magic", weightClass: "medium", enc: 3, enchantLevel: 1000, price: 1100 },
+    malachite: { br: 11, magicBR: 8, magicBRType: "magic", weightClass: "none", enc: 1, enchantLevel: 200, price: 1700 },
+    dragonscale: { br: 11, magicBR: 11, magicBRType: "magic", weightClass: "medium", enc: 3, enchantLevel: 1250, price: 7000 },
+    ebony: { br: 12, magicBR: 9, magicBRType: "magic", weightClass: "heavy", enc: 4, enchantLevel: 1250, price: 3500 },
+    daedric: { br: 12, magicBR: 12, magicBRType: "magic", weightClass: "heavy", enc: 4, enchantLevel: 1500, price: 6500 },
+    stalhrim: { br: 12, magicBRHalf: 6, magicBRSpecial: { type: "frost", value: 12 }, weightClass: "medium", enc: 3, enchantLevel: 1000, price: 4500 },
+    dragonbone: { br: 13, magicBR: 13, magicBRType: "magic", weightClass: "heavy", enc: 4, enchantLevel: 1500, price: 12000 }
+  },
+
+  // Shield type modifiers (Chapter 7)
+  SHIELD_TYPE_RULES: {
+    normal: { weightClassDelta: 0, encDelta: 0, priceMult: 1.0, brMult: 1.0, canBlock: true, blockTestBonus: 0, speedDelta: 0 },
+    tower: { weightClassDelta: +1, encDelta: +1, priceMult: 1.25, brMult: 1.0, canBlock: true, blockTestBonus: 10, speedDelta: -1 },
+    targe: { weightClassDelta: -1, encDelta: 0, priceMult: 0.75, brMult: 0.5, canBlock: true, blockTestBonus: 0, speedDelta: 0 },
+    buckler: { weightClassDelta: -1, encDelta: -1, priceMult: 0.75, brMult: 1.0, canBlock: false, blockTestBonus: 0, speedDelta: 0 }
+  },
+
   /**
    * Structured qualities v1
    * - key: canonical identifier stored in system.qualitiesStructured
