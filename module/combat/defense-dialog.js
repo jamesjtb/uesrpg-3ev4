@@ -61,7 +61,7 @@ export class DefenseDialog extends Dialog {
       default: "ok"
     }, {
       classes: ["uesrpg", "uesrpg-defense-dialog"],
-      width: 700
+      width: 520
     });
 
     this._defender = defender;
@@ -94,37 +94,35 @@ export class DefenseDialog extends Dialog {
       <form class="uesrpg-defense-dialog-form">
         ${styleSelect}
 
-        <div class="uesrpg-defense-grid" style="display:grid; grid-template-columns: 1fr 1fr; gap: 12px;">
-          <label class="def-opt" style="border:1px solid #888; padding:10px; border-radius:6px;">
-            <input type="radio" name="defenseType" value="evade" checked />
-            <b>Evade</b> — TN <span class="tn" data-tn-for="evade">0</span><br/>
-            <span class="hint">Dodge the attack (AGI)</span>
+        <div class="uesrpg-defense-grid" style="display:grid; grid-template-columns: 1fr 1fr; gap: 12px;"><label class="def-opt" style="border:1px solid #888; padding:10px; border-radius:6px;">
+            <input type="radio" name="defenseType" value="parry" checked />
+            <b>Parry</b> — TN <span class="tn" data-tn-for="parry">0</span><br/>
+            <span class="hint">Parry (melee only)</span>
           </label>
 
-          <label class="def-opt" style="border:1px solid #888; padding:10px; border-radius:6px;">
+<label class="def-opt" style="border:1px solid #888; padding:10px; border-radius:6px;">
             <input type="radio" name="defenseType" value="block" />
             <b>Block</b> — TN <span class="tn" data-tn-for="block">0</span><br/>
             <span class="hint">Block with shield (Combat Style using STR)</span>
           </label>
 
-          <label class="def-opt" style="border:1px solid #888; padding:10px; border-radius:6px;">
-            <input type="radio" name="defenseType" value="parry" />
-            <b>Parry</b> — TN <span class="tn" data-tn-for="parry">0</span><br/>
-            <span class="hint">Parry (melee only)</span>
+<label class="def-opt" style="border:1px solid #888; padding:10px; border-radius:6px;">
+            <input type="radio" name="defenseType" value="evade" />
+            <b>Evade</b> — TN <span class="tn" data-tn-for="evade">0</span><br/>
+            <span class="hint">Dodge the attack (AGI)</span>
           </label>
 
-          <label class="def-opt" style="border:1px solid #888; padding:10px; border-radius:6px;">
+<label class="def-opt" style="border:1px solid #888; padding:10px; border-radius:6px;">
             <input type="radio" name="defenseType" value="counter" />
             <b>Counter-Attack</b> — TN <span class="tn" data-tn-for="counter">0</span><br/>
             <span class="hint">Strike while defending (melee only)</span>
           </label>
-        </div>
+</div>
 
         <div class="form-group" style="margin-top:12px;">
-          <label><b>Manual Modifier</b> (TN adjustment, e.g. -20 / +10)</label>
+          <label><b>Manual Modifier</b></label>
           <input name="manualMod" type="number" value="0" style="width:100%;" />
-          <div style="font-size:12px; opacity:0.75; margin-top:4px;">Applied to the chosen defense TN before rolling.</div>
-        </div>
+</div>
       </form>
     `;
   }
