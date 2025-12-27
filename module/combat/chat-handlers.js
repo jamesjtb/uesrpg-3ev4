@@ -47,6 +47,14 @@ async function _onApplyDamage(ev, message) {
   const penetration = Number(btn.dataset.penetration || 0);
   const hitLocation = btn.dataset.hitLocation || "Body";
   const source = btn.dataset.source || (message?.speaker?.alias ?? "Unknown");
+  const penetrateArmorForTriggers = String(btn.dataset.penetrateArmor ?? "0") === "1";
+	const forcefulImpact = String(btn.dataset.forcefulImpact ?? "0") === "1";
+	const pressAdvantage = String(btn.dataset.pressAdvantage ?? "0") === "1";
+
+  // Optional enrichment for RAW weapon trait bonuses.
+  // If present, these are resolved safely and passed through to applyDamage().
+  const attackerActorUuid = btn.dataset.attackerActorUuid || null;
+  const weaponUuid = btn.dataset.weaponUuid || null;
 
   const targetActor = _resolveActor(message, targetUuid);
   if (!targetActor) {
@@ -54,11 +62,36 @@ async function _onApplyDamage(ev, message) {
     return;
   }
 
+  let attackerActor = null;
+  let weapon = null;
+
+  try {
+    if (attackerActorUuid) {
+      const a = fromUuidSync(attackerActorUuid);
+      attackerActor = (a?.documentName === "Actor") ? a : (a?.actor ?? null);
+    }
+  } catch (_e) {
+    attackerActor = null;
+  }
+
+  try {
+    if (weaponUuid) {
+      weapon = fromUuidSync(weaponUuid) ?? null;
+    }
+  } catch (_e) {
+    weapon = null;
+  }
+
   await applyDamage(targetActor, dmg, damageType, {
     dosBonus,
     penetration,
     hitLocation,
-    source
+    source,
+    penetrateArmorForTriggers,
+	  forcefulImpact,
+	  pressAdvantage,
+    weapon,
+    attackerActor,
   });
 }
 
