@@ -66,11 +66,12 @@ function _fmtDegree(res) {
 
 function _variantLabel(variant) {
   switch (variant) {
-    case "allOut": return "All Out Attack";
-    case "precision": return "Precision Strike";
-    case "coup": return "Coup de Grâce";
+    // Chat-card display should be concise (dialog retains full text).
+    case "allOut": return "All Out";
+    case "precision": return "Precision";
+    case "coup": return "Coup";
     case "normal":
-    default: return "Normal Attack";
+    default: return "Attack";
   }
 }
 
@@ -94,7 +95,6 @@ function _logDebug(event, payload) {
 }
 
 function _renderBreakdown(tnObj) {
-  if (!_debugEnabled()) return "";
   const rows = (tnObj?.breakdown ?? []).map(b => {
     const v = Number(b.value ?? 0);
     const sign = v >= 0 ? "+" : "";
@@ -120,14 +120,15 @@ function _renderCard(data, messageId) {
     : `${baseA}`;
 
   const aVariantText = a.hasDeclared
-    ? (a.variantLabel ?? "Normal Attack")
+    ? (a.variantLabel ?? "Attack")
     : "—";
 
   const dTargetLabel = d.noDefense
     ? "0"
     : (d.targetLabel ?? (d.target ?? "—"));
 
-  const dTestLabel = d.label ?? "(choose)";
+  const dTestLabel = d.testLabel ?? "(choose)";
+  const dDefenseLabel = d.defenseLabel ?? d.label ?? "(choose)";
 
   const attackerActions = a.result
     ? ""
@@ -156,7 +157,9 @@ function _renderCard(data, messageId) {
         <div style="margin-top:4px; font-size:13px; line-height:1.25;">
           <div><b>Test:</b> ${a.label}</div>
           <div><b>Attack:</b> ${aVariantText}</div>
-          <div><b>TN:</b> ${aTargetLabel}${a.result ? ` &nbsp; <b>Roll:</b> ${a.result.rollTotal} — ${_fmtDegree(a.result)}` : ""}</div>
+          <div><b>TN:</b> ${aTargetLabel}</div>
+
+          ${a.result ? `<div><b>Roll:</b> ${a.result.rollTotal} — ${_fmtDegree(a.result)}</div>` : ""}
           ${_renderBreakdown(a.tn)}
         </div>
         ${attackerActions}
@@ -168,7 +171,10 @@ function _renderCard(data, messageId) {
         </div>
         <div style="margin-top:4px; font-size:13px; line-height:1.25;">
           <div><b>Test:</b> ${dTestLabel}</div>
-          <div><b>TN:</b> ${dTargetLabel}${(d.noDefense || d.result) ? ` &nbsp; <b>Roll:</b> ${d.noDefense ? 100 : d.result.rollTotal} — ${d.noDefense ? "1 DoF" : _fmtDegree(d.result)}` : ""}</div>
+          <div><b>Defense:</b> ${dDefenseLabel}</div>
+          <div><b>TN:</b> ${dTargetLabel}</div>
+
+          ${(d.noDefense || d.result) ? `<div><b>Roll:</b> ${d.noDefense ? 100 : d.result.rollTotal} — ${d.noDefense ? "1 DoF" : _fmtDegree(d.result)}</div>` : ""}
           ${_renderBreakdown(d.tn)}
         </div>
         ${defenderActions}
@@ -256,7 +262,7 @@ async function _attackerDeclareDialog(attackerLabel, { styles = [], selectedStyl
     </div>
 
     <div class="form-group" style="margin-top:12px;">
-      <label><b>Manual Modifier</b> (TN adjustment, e.g. -20 / +10)</label>
+      <label><b>Manual Modifier</b></label>
       <input name="manualMod" type="number" value="${Number(defaultManual) || 0}" style="width:100%;" />
     </div>
   </form>
@@ -344,9 +350,9 @@ function _resolveOutcomeRAW(data) {
   if (D.isSuccess && !A.isSuccess) return { winner: "defender", text: `${d.name} wins — defends successfully.` };
 
   // both succeed
-  if (A.degree > D.degree) return { winner: "attacker", text: `${a.name} wins — attack hits.` };
-  if (D.degree > A.degree) return { winner: "defender", text: `${d.name} wins — defense holds.` };
-  return { winner: "tie", text: `Both pass — no resolution.` };
+  if (A.degree > D.degree) return { winner: "attacker", text: `Both succeed — attacker has more DoS; resolve the attack.` };
+  if (D.degree > A.degree) return { winner: "defender", text: `Both succeed — defense holds; attack is negated.` };
+  return { winner: "defender", text: `Both succeed — no advantage; defense holds.` };
 }
 
 export const OpposedWorkflow = {
@@ -402,7 +408,12 @@ export const OpposedWorkflow = {
         tokenUuid: dToken?.document?.uuid ?? null,
         tokenName: dToken?.name ?? null,
         name: defender.name,
+        // label: the chosen defense option label (e.g. Parry/Evade/Block/Counter-Attack)
         label: null,
+        // testLabel: the actual test used for the roll (Combat Style/Profession name or Evade)
+        testLabel: null,
+        // defenseLabel: the chosen defensive action (Parry/Evade/Block/Counter-Attack/No Defense)
+        defenseLabel: null,
         target: null,
         defenseType: null,
         result: null,
@@ -535,6 +546,8 @@ export const OpposedWorkflow = {
       data.defender.noDefense = true;
       data.defender.defenseType = "none";
       data.defender.label = "No Defense";
+      data.defender.testLabel = "No Defense";
+      data.defender.defenseLabel = "No Defense";
       data.defender.target = 0;
       data.defender.tn = { finalTN: 0, baseTN: 0, totalMod: 0, breakdown: [{ key: "base", label: "No Defense", value: 0, source: "base" }] };
       data.defender.result = { rollTotal: 100, target: 0, isSuccess: false, degree: 1 };
@@ -558,7 +571,24 @@ export const OpposedWorkflow = {
       if (!choice) return;
 
       data.defender.defenseType = choice.defenseType;
+      // label is used for roll flavor (e.g. "Parry — Defender Roll")
       data.defender.label = choice.label;
+      data.defender.defenseLabel = choice.label;
+
+      // For the chat card, "Test" must reflect the *actual test rolled*:
+      //  - Evade: Evade
+      //  - Parry/Block/Counter: the chosen Combat Style/Profession item name
+      if (choice.defenseType === "evade") {
+        data.defender.testLabel = "Evade";
+      } else if (choice.styleUuid || choice.styleId) {
+        const styleUuid = choice.styleUuid ?? choice.styleId;
+        const styles = listCombatStyles(defender);
+        const style = styles.find(s => s.uuid === styleUuid) ?? null;
+        data.defender.testLabel = style?.name ?? "(Combat Style)";
+      } else {
+        // Fallback: keep something readable rather than repeating the defense label.
+        data.defender.testLabel = "(Combat Style)";
+      }
 
       const manualMod = _asNumber(choice.manualMod ?? 0);
       const tn = computeTN({
