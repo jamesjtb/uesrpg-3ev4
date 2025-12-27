@@ -317,14 +317,65 @@ async function _skillRollDialog({
 }
 
 function _listSkills(actor) {
+  const out = [];
   const items = actor?.itemTypes?.skill ?? actor?.items?.filter(i => i.type === "skill") ?? [];
-  return items.map(i => ({ uuid: i.uuid, name: i.name, item: i, hasSpec: _hasSpecializations(i) }));
+  for (const i of items) out.push({ uuid: i.uuid, name: i.name, item: i, hasSpec: _hasSpecializations(i) });
+
+  if (actor?.type === "NPC") {
+    for (const p of _listProfessions(actor)) out.push({ uuid: p.uuid, name: p.name, item: p, hasSpec: false, isProfession: true });
+  }
+  return out;
 }
+
+function _listProfessions(actor) {
+  const out = [];
+  const sys = actor?.system ?? {};
+  const prof = sys?.professions ?? {};
+
+  const labelFor = (key) => {
+    if (key === "profession1" || key === "profession2" || key === "profession3") {
+      const spec = String(sys?.skills?.[key]?.specialization ?? "").trim();
+      return spec || key.replace("profession", "Profession ");
+    }
+    return key.charAt(0).toUpperCase() + key.slice(1);
+  };
+
+  for (const key of Object.keys(prof)) {
+    out.push({
+      uuid: `prof:${key}`,
+      id: `prof:${key}`,
+      type: "profession",
+      name: labelFor(key),
+      system: { value: Number(prof[key] ?? 0) },
+      _professionKey: key
+    });
+  }
+  return out;
+}
+
 
 function _findSkillByUuid(actor, uuid) {
   if (!uuid) return null;
+
+  if (typeof uuid === "string" && uuid.startsWith("prof:")) {
+    const key = uuid.slice(5);
+    const sys = actor?.system ?? {};
+    const val = Number(sys?.professions?.[key] ?? 0);
+
+    const labelFor = (k) => {
+      if (k === "profession1" || k === "profession2" || k === "profession3") {
+        const spec = String(sys?.skills?.[k]?.specialization ?? "").trim();
+        return spec || k.replace("profession", "Profession ");
+      }
+      return k.charAt(0).toUpperCase() + k.slice(1);
+    };
+
+    return { uuid, id: uuid, type: "profession", name: labelFor(key), system: { value: val }, _professionKey: key };
+  }
+
   return actor?.items?.find(i => i.uuid === uuid) ?? null;
 }
+
 
 function _resolveOutcome(data) {
   if (!data?.attacker?.result || !data?.defender?.result) return null;
