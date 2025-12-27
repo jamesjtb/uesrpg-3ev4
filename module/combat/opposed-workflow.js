@@ -15,14 +15,73 @@
  */
 
 import { doTestRoll } from "../helpers/degree-roll-helper.js";
+import { UESRPG } from "../constants.js";
 import { DefenseDialog } from "./defense-dialog.js";
 import { computeTN, listCombatStyles, variantMod as computeVariantMod } from "./tn.js";
+import { getDamageTypeFromWeapon, getHitLocationFromRoll } from "./combat-utils.js";
 
 function _asNumber(v) {
   if (v == null) return 0;
   if (typeof v === "number" && Number.isFinite(v)) return v;
   const m = String(v).match(/-?\d+(?:\.\d+)?/);
   return m ? Number(m[0]) : 0;
+}
+
+/**
+ * Normalize a user/system-provided dice expression into something safe to hand to Foundry's Roll parser.
+ * This is defensive: it strips annotations/import artefacts that can break Roll evaluation.
+ */
+function normalizeDiceExpression(expr) {
+  const raw = String(expr ?? "").trim();
+  if (!raw) return "0";
+
+  // Legacy annotation / import artefact.
+  if (/uses\s+nat\.?\s*weapon/i.test(raw)) return "0";
+
+  // Handle alternate damage formats like: "1d8 (1d10)" -> prefer the base.
+  const paren = raw.match(/^(.+?)\s*\((.+?)\)\s*$/);
+  const base = paren ? String(paren[1]).trim() : raw;
+
+  // Normalize unicode minus/en-dash to ASCII hyphen.
+  const ascii = base.replace(/[\u2012\u2013\u2014\u2212]/g, "-");
+
+  // Remove non-roll characters, keep basic math, dice letters, parentheses and whitespace.
+  let cleaned = ascii.replace(/[^0-9dDkKfFhHlL+\-*/().,\s@]/g, " ").trim();
+
+  // Normalize decimal comma to dot (common in some locales).
+  cleaned = cleaned.replace(/(\d),(\d)/g, "$1.$2");
+
+  // Collapse whitespace.
+  cleaned = cleaned.replace(/\s+/g, " ").trim();
+
+  // Strip trailing operators or punctuation that would invalidate a Roll formula.
+  cleaned = cleaned.replace(/[+\-*/.,\s]+$/g, "").trim();
+
+  // Strip leading operators.
+  cleaned = cleaned.replace(/^[+\-*/.,\s]+/g, "").trim();
+
+  return cleaned || "0";
+}
+
+async function safeEvaluateRoll(formula, { allowUnvalidated = false } = {}) {
+  const f = normalizeDiceExpression(formula);
+  const ok = (typeof Roll?.validate === "function") ? Roll.validate(f) : true;
+  if (!ok && !allowUnvalidated) {
+    console.warn(`UESRPG Opposed | Invalid roll formula "${String(formula)}" -> normalized "${f}". Falling back to 0.`);
+    const r = new Roll("0");
+    await r.evaluate();
+    return r;
+  }
+  try {
+    const r = new Roll(f);
+    await r.evaluate();
+    return r;
+  } catch (err) {
+    console.warn(`UESRPG Opposed | Failed to evaluate roll "${String(formula)}" -> normalized "${f}". Falling back to 0.`, err);
+    const r = new Roll("0");
+    await r.evaluate();
+    return r;
+  }
 }
 
 // Combat style listing is centralized in module/combat/tn.js
@@ -146,6 +205,46 @@ function _renderCard(data, messageId) {
     ? `<div style="margin-top:10px;"><b>Outcome:</b> ${data.outcome.text ?? ""}</div>`
     : `<div style="margin-top:10px;"><i>Pending</i></div>`;
 
+  const resolvedActions = (() => {
+    if (!data.outcome || data.status !== "resolved") return "";
+
+    // Gate damage resolution based on RAW outcome.
+    // Attacker wins => damage can be rolled/applied to defender.
+    // Defender wins via Block => special case: resolve block damage vs BR.
+    const advA = Number(data.advantage?.attacker ?? 0);
+    const advD = Number(data.advantage?.defender ?? 0);
+
+    if (data.outcome.winner === "attacker") {
+      return `
+        <div style="margin-top:10px; display:flex; gap:8px; flex-wrap:wrap; align-items:center;">
+          ${_btn("Roll Damage", "damage-roll")}
+          ${advA > 0 ? `<span style="opacity:0.85; font-size:12px;">Advantage: ${advA}</span>` : ``}
+        </div>
+      `;
+    }
+
+    // Defender wins via Counter-Attack => defender becomes the damage roller (attacker for this strike).
+    if (data.outcome.winner === "defender" && (d.defenseType ?? "none") === "counter") {
+      return `
+        <div style="margin-top:10px; display:flex; gap:8px; flex-wrap:wrap; align-items:center;">
+          ${_btn("Roll Damage", "counter-damage-roll")}
+          ${advD > 0 ? `<span style="opacity:0.85; font-size:12px;">Advantage: ${advD}</span>` : ``}
+        </div>
+      `;
+    }
+
+    if (data.outcome.winner === "defender" && (d.defenseType ?? "none") === "block") {
+      return `
+        <div style="margin-top:10px; display:flex; gap:8px; flex-wrap:wrap; align-items:center;">
+          ${_btn("Resolve Block", "block-resolve")}
+          ${advD > 0 ? `<span style="opacity:0.85; font-size:12px;">Advantage: ${advD}</span>` : ``}
+        </div>
+      `;
+    }
+
+    return "";
+  })();
+
   return `
   <div class="ues-opposed-card" data-message-id="${messageId}" style="padding:6px 6px;">
     <div style="display:grid; grid-template-columns: 1fr 1fr; gap:12px; align-items:start;">
@@ -181,6 +280,7 @@ function _renderCard(data, messageId) {
       </div>
     </div>
     ${outcomeLine}
+    ${resolvedActions}
   </div>`;
 }
 
@@ -214,6 +314,13 @@ async function _attackerDeclareDialog(attackerLabel, { styles = [], selectedStyl
     `
     : `<input type="hidden" name="styleUuid" value="${selectedStyleUuid ?? ""}" />`;
 
+  const allowedLocs = ["Head", "Body", "Right Arm", "Left Arm", "Right Leg", "Left Leg"];
+  const safeDefaultLoc = "Body";
+  const locOptions = allowedLocs.map(l => {
+    const sel = l === safeDefaultLoc ? "selected" : "";
+    return `<option value="${l}" ${sel}>${l}</option>`;
+  }).join("\n");
+
   const content = `
   <style>
     /* Match defender dialog feel + enforce 2-col button row */
@@ -223,8 +330,11 @@ async function _attackerDeclareDialog(attackerLabel, { styles = [], selectedStyl
     .uesrpg-attack-declare .form-row input { flex:1 1 auto; width:100%; }
 
     .uesrpg-attack-grid { display:grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 12px; }
-    .uesrpg-attack-grid label { border:1px solid #888; padding:10px; border-radius:6px; display:block; }
+	    .uesrpg-attack-grid label { border:1px solid #888; padding:10px; border-radius:6px; display:block; }
     .uesrpg-attack-grid .hint { font-size: 12px; opacity: 0.8; display:block; margin-top:4px; }
+	    .uesrpg-attack-grid .ps-location { margin-top:6px; }
+	    .uesrpg-attack-grid .ps-location select { width:100%; }
+	    .uesrpg-attack-grid .ps-location.disabled { opacity:0.65; }
 
     /* Force dialog footer buttons to be a single row, 2 columns */
     .dialog .dialog-buttons { display:grid; grid-template-columns: 1fr 1fr; gap: 10px; }
@@ -248,10 +358,15 @@ async function _attackerDeclareDialog(attackerLabel, { styles = [], selectedStyl
         <span class="hint">Melee only. Spend +1 AP to gain +20.</span>
       </label>
 
-      <label>
+	      <label class="uesrpg-precision-option">
         <input type="radio" name="attackVariant" value="precision" ${defaultVariant === "precision" ? "checked" : ""} />
         <b>Precision Strike</b> — -20
         <span class="hint">If successful, choose hit location.</span>
+	        <div class="ps-location ${defaultVariant === "precision" ? "" : "disabled"}">
+	          <select name="precisionLocation" ${defaultVariant === "precision" ? "" : "disabled"}>
+	            ${locOptions}
+	          </select>
+	        </div>
       </label>
 
       <label>
@@ -261,15 +376,23 @@ async function _attackerDeclareDialog(attackerLabel, { styles = [], selectedStyl
       </label>
     </div>
 
-    <div class="form-group" style="margin-top:12px;">
+	    <div class="form-group" style="margin-top:12px;">
       <label><b>Manual Modifier</b></label>
       <input name="manualMod" type="number" value="${Number(defaultManual) || 0}" style="width:100%;" />
     </div>
   </form>
 `;
 
-  try {
-    const result = await Dialog.wait({
+  // Use an explicit Dialog instance so we can wire listeners without inline JS.
+  return await new Promise((resolve) => {
+    let settled = false;
+    const settle = (v) => {
+      if (settled) return;
+      settled = true;
+      resolve(v);
+    };
+
+    const dialog = new Dialog({
       title: `${attackerLabel} — Attack Options`,
       content,
       buttons: {
@@ -277,27 +400,52 @@ async function _attackerDeclareDialog(attackerLabel, { styles = [], selectedStyl
           label: "Continue",
           callback: (html) => {
             const root = html instanceof HTMLElement ? html : html?.[0];
-            const styleUuid = root?.querySelector('select[name="styleUuid"]')?.value
-              ?? root?.querySelector('input[name="styleUuid"]')?.value
+            if (!root) return settle(null);
+            const styleUuid = root.querySelector('select[name="styleUuid"]')?.value
+              ?? root.querySelector('input[name="styleUuid"]')?.value
               ?? "";
-            const variant = root?.querySelector('input[name="attackVariant"]:checked')?.value ?? "normal";
-            const raw = root?.querySelector('input[name="manualMod"]')?.value ?? "0";
+            const variant = root.querySelector('input[name="attackVariant"]:checked')?.value ?? "normal";
+            const raw = root.querySelector('input[name="manualMod"]')?.value ?? "0";
             const manualMod = Number.parseInt(String(raw), 10) || 0;
-            return { styleUuid, variant, manualMod };
+            const precisionLocation = root.querySelector('select[name="precisionLocation"]')?.value ?? safeDefaultLoc;
+            return settle({ styleUuid, variant, manualMod, precisionLocation });
           }
         },
         cancel: {
           label: "Cancel",
-          callback: () => null
+          callback: () => settle(null)
         }
       },
-      default: "ok"
+      default: "ok",
+      close: () => settle(null)
     }, { width: 460 });
-    return result ?? null;
-  } catch (_e) {
-    // Dialog.wait rejects when closed via X/ESC without a choice.
-    return null;
-  }
+
+    Hooks.once("renderDialog", (app, html) => {
+      if (app !== dialog) return;
+      const root = html?.[0] instanceof Element ? html[0] : null;
+      const form = root?.querySelector("form.uesrpg-attack-declare");
+      if (!form) return;
+
+      const psSelect = form.querySelector('select[name="precisionLocation"]');
+      const psWrap = form.querySelector('.uesrpg-precision-option .ps-location');
+
+      const sync = () => {
+        const variant = form.querySelector('input[name="attackVariant"]:checked')?.value ?? "normal";
+        const on = variant === "precision";
+        if (psSelect) psSelect.disabled = !on;
+        if (psWrap) {
+          psWrap.classList.toggle("disabled", !on);
+        }
+      };
+
+      for (const r of form.querySelectorAll('input[name="attackVariant"]')) {
+        r.addEventListener("change", sync);
+      }
+      sync();
+    });
+
+    dialog.render(true);
+  });
 }
 
 function _resolveOutcomeRAW(data) {
@@ -353,6 +501,452 @@ function _resolveOutcomeRAW(data) {
   if (A.degree > D.degree) return { winner: "attacker", text: `Both succeed — attacker has more DoS; resolve the attack.` };
   if (D.degree > A.degree) return { winner: "defender", text: `Both succeed — defense holds; attack is negated.` };
   return { winner: "defender", text: `Both succeed — no advantage; defense holds.` };
+}
+
+function _computeAdvantageRAW(data, outcome) {
+  // RAW: advantage is only gained in melee when:
+  //  - exactly one character fails (winner gains 1 advantage)
+  //  - a critical success occurs (winner gains 1 advantage)
+  //  - critical success vs fail OR success vs critical fail (winner gains 2 advantages)
+  // No advantage is gained when both pass (even if attacker wins on higher DoS).
+  const A = data?.attacker?.result;
+  const D = data?.defender?.result;
+  if (!A || !D || !outcome) return { attacker: 0, defender: 0 };
+
+  // If neither side resolves, no advantage.
+  if (outcome.winner !== "attacker" && outcome.winner !== "defender") {
+    return { attacker: 0, defender: 0 };
+  }
+
+  const winnerKey = outcome.winner;
+  const loserKey = winnerKey === "attacker" ? "defender" : "attacker";
+  const W = winnerKey === "attacker" ? A : D;
+  const L = loserKey === "attacker" ? A : D;
+
+  // Attack vs Block special: block can win even when both succeed.
+  // RAW Step 3 states successful block resolves as if defender won; advantage is only gained when
+  // the other character fails OR via critical success rules.
+
+  let adv = 0;
+
+  // Critical interactions first.
+  // If both crit success or both crit fail: no advantage and neither resolves (handled earlier), but be defensive.
+  if ((W.isCriticalSuccess && L.isCriticalSuccess) || (W.isCriticalFailure && L.isCriticalFailure)) {
+    adv = 0;
+  } else if ((W.isCriticalSuccess && !L.isSuccess) || (W.isSuccess && L.isCriticalFailure)) {
+    adv = 2;
+  } else if (W.isCriticalSuccess) {
+    adv = 1;
+  } else if (W.isSuccess && !L.isSuccess) {
+    adv = 1;
+  } else {
+    adv = 0;
+  }
+
+  return winnerKey === "attacker"
+    ? { attacker: adv, defender: 0 }
+    : { attacker: 0, defender: adv };
+}
+
+function _listEquippedWeapons(actor) {
+  if (!actor?.items) return [];
+  return actor.items.filter(i => i.type === "weapon" && i.system?.equipped === true);
+}
+
+function _listEquippedShields(actor) {
+  if (!actor?.items) return [];
+  // Shields are modeled as Armor items with the "Is Shield" toggle enabled.
+  // Do not infer shield-ness from blockRating, since BR is now derived (effective) and may not be persisted.
+  return actor.items.filter(i => {
+    if (!(i.type === "armor" || i.type === "item")) return false;
+    if (i.system?.equipped !== true) return false;
+    if (!Boolean(i.system?.isShieldEffective ?? i.system?.isShield)) return false;
+
+    // RAW: bucklers cannot be used to Block.
+    const shieldType = String(i.system?.shieldType || "normal").toLowerCase();
+    if (shieldType === "buckler") return false;
+
+    return true;
+  });
+}
+
+/**
+ * Determine the effective Block Rating (BR) for a shield against a given incoming damage type.
+ *
+ * This prefers the derived (non-persisted) fields computed in Item#prepareData, but falls back
+ * to the legacy persisted fields when needed.
+ */
+function _getShieldBlockRating(shield, damageType = "physical") {
+  if (!shield) return 0;
+
+  const sys = shield.system ?? {};
+  const dt = String(damageType || "physical").toLowerCase();
+
+  const baseBR = Number(sys.blockRatingEffective ?? sys.blockRating ?? 0);
+  if (!Number.isFinite(baseBR)) return 0;
+
+  // Physical: use base BR.
+  if (dt === "physical") return Math.max(0, baseBR);
+
+  // Magic/Elemental: prefer derived magic BR, including special vs an element.
+  const special = sys.magic_brSpecial;
+  if (special && String(special.type || "").toLowerCase() === dt) {
+    const v = Number(special.value ?? 0);
+    return Math.max(0, Number.isFinite(v) ? v : 0);
+  }
+
+  const magicBR = Number(sys.magic_brEffective ?? sys.magic_br ?? 0);
+  return Math.max(0, Number.isFinite(magicBR) ? magicBR : 0);
+}
+
+async function _promptWeaponAndAdvantages({ attackerActor, advantageCount = 0, defaultWeaponUuid = null, defaultHitLocation = "Body" }) {
+  const weapons = _listEquippedWeapons(attackerActor);
+  if (!weapons.length) {
+    ui.notifications.warn("No equipped weapons found.");
+    return null;
+  }
+
+  const defaultWeapon = weapons.find(w => w.uuid === defaultWeaponUuid) ?? weapons[0];
+
+  const allowedLocs = ["Head", "Body", "Right Arm", "Left Arm", "Right Leg", "Left Leg"];
+  const safeDefaultLoc = allowedLocs.includes(defaultHitLocation) ? defaultHitLocation : "Body";
+  const locOptions = allowedLocs
+    .map(l => {
+      const sel = l === safeDefaultLoc ? "selected" : "";
+      return `<option value="${l}" ${sel}>${l}</option>`;
+    })
+    .join("\n");
+
+  // "Press Advantage" will be implemented later once Active Effects are introduced.
+  // For now, keep it hidden (but ensure we never reference an undefined symbol).
+  const hasPressAdvantage = false;
+
+  // IMPORTANT: Do not use inline onchange handlers inside Dialog HTML.
+  // In Foundry's Electron environment, HTML attribute handlers are not reliably parsed and
+  // can throw SyntaxError, which breaks the entire opposed workflow.
+  const content = `
+    <form class="uesrpg-opp-dmg">
+      <div class="form-group">
+        <label><b>Weapon</b></label>
+        <select name="weaponUuid" style="width:100%;">
+          ${weapons.map(w => {
+            const sel = w.uuid === defaultWeapon.uuid ? "selected" : "";
+            return `<option value="${w.uuid}" ${sel}>${w.name}</option>`;
+          }).join("\n")}
+        </select>
+      </div>
+
+      ${advantageCount > 0 ? `
+      <hr style="margin:0.5rem 0;" />
+      <div style="font-size:0.95em; opacity:0.9; margin-bottom:0.25rem;">
+        <b>Advantage</b>: ${advantageCount} available
+      </div>
+      <input type="hidden" name="defaultHitLocation" value="${safeDefaultLoc}" />
+
+            <style>
+        .uesrpg-adv-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: 8px; }
+        .uesrpg-adv-opt { border: 1px solid var(--color-border-light-tertiary); border-radius: 6px; padding: 6px 8px; }
+        .uesrpg-adv-opt label { margin: 0; white-space: nowrap; }
+        .uesrpg-adv-head { display: grid; grid-template-columns: 22px 1fr; gap: 8px; align-items: center; }
+        .uesrpg-adv-body { margin-top: 6px; }
+        .uesrpg-adv-opt select { width: 100%; }
+      </style>
+
+      <div class="form-group">
+        <div class="uesrpg-adv-grid">
+          <div class="uesrpg-adv-opt" data-adv="precisionStrike">
+            <div class="uesrpg-adv-head">
+              <input type="checkbox" name="precisionStrike" />
+              <label>Precision Strike</label>
+            </div>
+            <div class="uesrpg-adv-body">
+              <select name="precisionLocation" disabled>
+                ${locOptions}
+              </select>
+            </div>
+          </div>
+
+          <div class="uesrpg-adv-opt" data-adv="penetrateArmor">
+            <div class="uesrpg-adv-head">
+              <input type="checkbox" name="penetrateArmor" />
+              <label>Penetrate Armor</label>
+            </div>
+          </div>
+
+          <div class="uesrpg-adv-opt" data-adv="forcefulImpact">
+            <div class="uesrpg-adv-head">
+              <input type="checkbox" name="forcefulImpact" />
+              <label>Forceful Impact</label>
+            </div>
+          </div>
+
+          ${hasPressAdvantage ? `
+          <div class="uesrpg-adv-opt" data-adv="pressAdvantage">
+            <div class="uesrpg-adv-head">
+              <input type="checkbox" name="pressAdvantage" />
+              <label>Press Advantage</label>
+            </div>
+          </div>
+          ` : ``}
+        </div>
+      </div>
+      ` : ``}
+    </form>
+  `;
+
+  // Build a Dialog instance so we can attach listeners in a deterministic, CSP-safe way.
+  return await new Promise((resolve) => {
+    let settled = false;
+    const settle = (value) => {
+      if (settled) return;
+      settled = true;
+      resolve(value);
+    };
+
+    const dialog = new Dialog({
+      title: "Resolve Damage",
+      content,
+      buttons: {
+        continue: {
+          label: "Continue",
+          callback: (html) => {
+            const root = (html instanceof Element)
+              ? html
+              : (html && typeof html === "object" && "0" in html && html[0] instanceof Element)
+                ? html[0]
+                : null;
+            const form = root?.querySelector("form.uesrpg-opp-dmg");
+            if (!form) return settle(null);
+
+            const q = (name) => form.querySelector(`[name="${name}"]`);
+            const weaponUuid = String(q("weaponUuid")?.value ?? "");
+            const precisionStrike = Boolean(q("precisionStrike")?.checked);
+            const defaultLoc = String(q("defaultHitLocation")?.value ?? "Body");
+            const precisionLocation = precisionStrike
+              ? String(q("precisionLocation")?.value ?? defaultLoc)
+              : defaultLoc;
+            const penetrateArmor = Boolean(q("penetrateArmor")?.checked);
+            const forcefulImpact = Boolean(q("forcefulImpact")?.checked);
+            const pressAdvantage = Boolean(q("pressAdvantage")?.checked);
+
+            return settle({ weaponUuid, precisionStrike, precisionLocation, penetrateArmor, forcefulImpact, pressAdvantage });
+          }
+        },
+        cancel: {
+          label: "Cancel",
+          callback: () => settle(null)
+        }
+      },
+      default: "continue",
+      close: () => settle(null)
+    });
+
+    // Attach listeners after the dialog renders.
+    Hooks.once("renderDialog", (app, html) => {
+      if (app !== dialog) return;
+      const root = html?.[0] instanceof Element ? html[0] : null;
+      const form = root?.querySelector("form.uesrpg-opp-dmg");
+      if (!form) return;
+
+      const toggles = ["precisionStrike", "penetrateArmor", "forcefulImpact", "pressAdvantage"];
+      const checkbox = (name) => form.querySelector(`input[type="checkbox"][name="${name}"]`);
+      const precisionSelect = form.querySelector("select[name=\"precisionLocation\"]");
+      const defaultLoc = String(form.querySelector("input[name=\"defaultHitLocation\"]")?.value ?? "Body");
+
+      const setExclusive = (activeName, checked) => {
+        for (const k of toggles) {
+          const el = checkbox(k);
+          if (!el) continue;
+          if (!checked) {
+            el.disabled = false;
+            continue;
+          }
+          if (k === activeName) {
+            el.disabled = false;
+            continue;
+          }
+          el.checked = false;
+          el.disabled = true;
+        }
+
+        // Precision Strike enables its hit-location selector.
+        if (precisionSelect) {
+          const ps = checkbox("precisionStrike");
+          const psOn = Boolean(ps?.checked);
+          precisionSelect.disabled = !psOn;
+          if (!psOn) precisionSelect.value = defaultLoc;
+        }
+      };
+
+      // Wire all checkboxes.
+      for (const k of toggles) {
+        const el = checkbox(k);
+        if (!el) continue;
+        el.addEventListener("change", (ev) => {
+          const checked = Boolean(ev.currentTarget?.checked);
+          setExclusive(k, checked);
+        });
+      }
+
+      // Initial state.
+      setExclusive("precisionStrike", Boolean(checkbox("precisionStrike")?.checked));
+    });
+
+    dialog.render(true);
+  });
+}
+
+async function _rollWeaponDamage({ weapon }) {
+  const addFlatBonus = (expr, bonus) => {
+    const b = Number(bonus || 0);
+    if (!Number.isFinite(b) || b === 0) return String(expr ?? "0");
+    const e = String(expr ?? "0").trim();
+    // Keep the expression readable; do not attempt to parse dice groups.
+    return b > 0 ? `${e}+${b}` : `${e}${b}`;
+  };
+
+  let damageString =
+    (weapon.system.damage3Effective ?? weapon.system.damage3 ?? weapon.system.damage2Effective ?? weapon.system.damage2 ?? weapon.system.damageEffective ?? weapon.system.damage) || "0";
+
+  // Ranged: add ammunition material/quality contribution and optionally consume 1 shot.
+  if (String(weapon.system?.attackMode ?? "melee") === "ranged" && weapon.actor) {
+    const ammoId = String(weapon.system?.ammoId ?? "").trim();
+    if (ammoId) {
+      const ammo = weapon.actor.items.get(ammoId);
+      if (ammo?.type === "ammunition") {
+        const ammoExpr = normalizeDiceExpression(ammo.system?.damageEffective ?? ammo.system?.damage ?? "0");
+        let ammoBonus = 0;
+        try {
+          const r = await safeEvaluateRoll(ammoExpr);
+          ammoBonus = Number(r.total) || 0;
+        } catch (err) {
+          console.warn("UESRPG | Failed to evaluate ammunition damage expression", { ammoId, ammoExpr, err });
+        }
+        damageString = addFlatBonus(damageString, ammoBonus);
+
+        // Consume ammo after a successful roll creation; ensure we do not go negative.
+        if (weapon.system?.consumeAmmo !== false) {
+          const qty = Number(ammo.system?.quantity ?? 0);
+          if (qty > 0) {
+            await ammo.update({ "system.quantity": qty - 1 });
+          } else {
+            ui.notifications.warn(`${ammo.name}: no ammunition remaining.`);
+          }
+        }
+      }
+    }
+  }
+
+  const structured = Array.isArray(weapon.system.qualitiesStructuredInjected)
+    ? weapon.system.qualitiesStructuredInjected
+    : Array.isArray(weapon.system.qualitiesStructured)
+      ? weapon.system.qualitiesStructured
+      : [];
+  const hasQ = (key) => structured.some(q => String(q?.key ?? q ?? "").toLowerCase() === key);
+
+  const wantsProven = hasQ("proven");
+  const wantsPrimitive = hasQ("primitive");
+  const wantsSuperior = !!weapon.system.superior;
+
+  const a = await safeEvaluateRoll(damageString);
+  damageString = a.formula;
+  let b = null;
+  let total = Number(a.total);
+
+  if (wantsSuperior || wantsProven || wantsPrimitive) {
+    b = await safeEvaluateRoll(damageString);
+    const alt = Number(b.total);
+    if (wantsPrimitive && !wantsProven) total = Math.min(total, alt);
+    else total = Math.max(total, alt);
+  }
+
+  return { damageString, rollA: a, rollB: b, finalDamage: total };
+}
+
+/**
+ * Post a weapon damage chat card.
+ *
+ * This mirrors the standard "Roll Damage" output so that block-resolution flows
+ * still provide a clear record of hit location and rolled damage.
+ *
+ * Non-invasive: chat-only; does not mutate documents.
+ */
+async function _postWeaponDamageChatCard({
+  attacker,
+  aToken,
+  weapon,
+  dmg,
+  hitLocation,
+  applyButtonHtml = "",
+  extraNoteHtml = "",
+} = {}) {
+  if (!attacker || !weapon || !dmg) return;
+
+  const injected = Array.isArray(weapon.system?.qualitiesStructuredInjected)
+    ? weapon.system.qualitiesStructuredInjected
+    : Array.isArray(weapon.system?.qualitiesStructured)
+      ? weapon.system.qualitiesStructured
+      : [];
+
+  const structured = injected
+    .filter(q => q?.active)
+    .map(q => q?.name)
+    .filter(Boolean);
+
+  const traits = Array.isArray(weapon.system?.qualitiesTraits) ? weapon.system.qualitiesTraits : [];
+  const pills = [...structured, ...traits].filter(Boolean);
+  const pillsInline = pills
+    .map(p => `<span class="uesrpg-pill">${p}</span>`)
+    .join(" ");
+
+  const altTag = dmg?.usedAltDamage ? ` <span style="opacity:0.85; font-size:12px;">(2H)</span>` : "";
+
+  const cardHtml = `
+    <div class="uesrpg-weapon-damage-card">
+      <h2 style="display:flex;gap:0.5rem;align-items:center;">
+        <img src="${weapon.img}" style="height:32px;width:32px;">
+        <div>${weapon.name}</div>
+      </h2>
+
+      <table class="uesrpg-weapon-damage-table">
+        <thead>
+          <tr>
+            <th>Damage</th>
+            <th class="tableCenterText">Result</th>
+            <th class="tableCenterText">Detail</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="tableAttribute">Damage</td>
+            <td class="tableCenterText">${dmg.finalDamage}${altTag}</td>
+            <td class="tableCenterText">
+              <div>${dmg.damageString}</div>
+              <div style="margin-top:0.35rem;">${pillsInline}</div>
+            </td>
+          </tr>
+          <tr>
+            <td class="tableAttribute">Hit Location</td>
+            <td class="tableCenterText">${hitLocation}</td>
+            <td class="tableCenterText">from attack roll</td>
+          </tr>
+        </tbody>
+      </table>
+      ${extraNoteHtml ? `<div style="margin-top:0.5rem; opacity:0.9;">${extraNoteHtml}</div>` : ""}
+      ${applyButtonHtml ? `<div style="margin-top:0.75rem;display:flex;flex-wrap:wrap;gap:0.5rem;">${applyButtonHtml}</div>` : ""}
+    </div>
+  `;
+
+  // Return the created message so callers can enforce strict ordering when multiple
+  // chat cards are posted in sequence (e.g., Resolve Block -> weapon card -> block result).
+  return await ChatMessage.create({
+    user: game.user.id,
+    speaker: ChatMessage.getSpeaker({ actor: attacker, token: aToken?.document ?? null }),
+    content: cardHtml,
+    style: CONST.CHAT_MESSAGE_STYLES.OTHER,
+    rolls: [dmg.rollA, dmg.rollB].filter(Boolean),
+    rollMode: game.settings.get("core", "rollMode"),
+  });
 }
 
 export const OpposedWorkflow = {
@@ -638,16 +1232,326 @@ export const OpposedWorkflow = {
       }
     }
 
+    // --- Damage Roll (attacker won) ---
+    if (action === "damage-roll") {
+      if (data.status !== "resolved" || data.outcome?.winner !== "attacker") {
+        ui.notifications.warn("Damage cannot be rolled until the opposed test is resolved and the attacker wins.");
+        return;
+      }
+      if (!_canControlActor(attacker) && !game.user.isGM) {
+        ui.notifications.warn("You do not have permission to roll damage for this attacker.");
+        return;
+      }
+
+      const advCount = Number(data.advantage?.attacker ?? 0);
+      const baseHitLocation = getHitLocationFromRoll(data.attacker?.result?.rollTotal ?? 0);
+      const selection = await _promptWeaponAndAdvantages({
+        attackerActor: attacker,
+        advantageCount: advCount,
+        defaultWeaponUuid: data.context?.lastWeaponUuid ?? null,
+        defaultHitLocation: baseHitLocation,
+      });
+      if (!selection) return;
+
+      const weapon = await fromUuid(selection.weaponUuid);
+      if (!weapon) {
+        ui.notifications.warn("Selected weapon could not be resolved.");
+        return;
+      }
+
+      // Persist last weapon for convenience within this single opposed workflow.
+      data.context = data.context ?? {};
+      data.context.lastWeaponUuid = weapon.uuid;
+      await _updateCard(message, data);
+
+      // Hit location RAW: ones digit of attack roll, unless Precision Strike is used.
+      const hitLocation = (advCount > 0 && selection.precisionStrike)
+        ? selection.precisionLocation
+        : getHitLocationFromRoll(data.attacker?.result?.rollTotal ?? 0);
+
+      const dmg = await _rollWeaponDamage({ weapon });
+      const damageType = getDamageTypeFromWeapon(weapon);
+
+      // Render a weapon damage chat card, gated by the opposed result.
+      const pillsInline = (() => {
+        const injected = Array.isArray(weapon.system?.qualitiesStructuredInjected)
+          ? weapon.system.qualitiesStructuredInjected
+          : Array.isArray(weapon.system?.qualitiesStructured)
+            ? weapon.system.qualitiesStructured
+            : [];
+
+        const labelIndex = (() => {
+          const core = UESRPG?.QUALITIES_CORE_BY_TYPE?.weapon ?? UESRPG?.QUALITIES_CATALOG ?? [];
+          const traits = UESRPG?.TRAITS_BY_TYPE?.weapon ?? [];
+          const idx = new Map();
+          for (const q of [...core, ...traits, ...(UESRPG?.QUALITIES_CATALOG ?? [])]) {
+            if (!q?.key) continue;
+            idx.set(String(q.key).toLowerCase(), String(q.label ?? q.key));
+          }
+          return idx;
+        })();
+
+        const out = [];
+        for (const q of injected) {
+          const key = String(q?.key ?? q ?? "").toLowerCase().trim();
+          if (!key) continue;
+          const label = labelIndex.get(key) ?? key;
+          const v = (q?.value !== undefined && q?.value !== null && q?.value !== "") ? Number(q.value) : null;
+          out.push(`<span class="tag">${v != null && !Number.isNaN(v) ? `${label} (${v})` : label}</span>`);
+        }
+        const traits = Array.isArray(weapon.system?.qualitiesTraits) ? weapon.system.qualitiesTraits : [];
+        for (const t of traits) {
+          const key = String(t ?? "").toLowerCase().trim();
+          if (!key) continue;
+          const label = labelIndex.get(key) ?? key;
+          out.push(`<span class="tag">${label}</span>`);
+        }
+        if (!out.length) return "<span style=\"opacity:0.75;\">—</span>";
+        return `<span class="uesrpg-inline-tags">${out.join("")}</span>`;
+      })();
+
+      const altTag = dmg.rollB
+        ? `<div style="margin-top:0.25rem;font-size:x-small;line-height:1.2;">Roll A: ${dmg.rollA.total}<br>Roll B: ${dmg.rollB.total}</div>`
+        : "";
+
+      const applyBtn = `<button type="button" class="apply-damage-btn"
+        data-target-uuid="${defender.uuid}"
+        data-attacker-actor-uuid="${attacker.uuid}"
+        data-weapon-uuid="${weapon.uuid}"
+        data-damage="${dmg.finalDamage}"
+        data-damage-type="${damageType}"
+        data-hit-location="${hitLocation}"
+        data-dos-bonus="0"
+        data-penetration="0"
+        data-penetrate-armor="${selection.penetrateArmor ? "1" : "0"}"
+	        data-forceful-impact="${selection.forcefulImpact ? "1" : "0"}"
+	        data-press-advantage="${selection.pressAdvantage ? "1" : "0"}"
+        data-source="${weapon.name}">
+        Apply Damage → ${dToken?.name ?? defender.name}
+      </button>`;
+
+      const cardHtml = `
+        <div class="uesrpg-weapon-damage-card">
+          <h2 style="display:flex;gap:0.5rem;align-items:center;">
+            <img src="${weapon.img}" style="height:32px;width:32px;">
+            <div>${weapon.name}</div>
+          </h2>
+
+          <table class="uesrpg-weapon-damage-table">
+            <thead>
+              <tr>
+                <th>Damage</th>
+                <th class="tableCenterText">Result</th>
+                <th class="tableCenterText">Detail</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td class="tableAttribute">Damage</td>
+                <td class="tableCenterText">${dmg.finalDamage}${altTag}</td>
+                <td class="tableCenterText">
+                  <div>${dmg.damageString}</div>
+                  <div style="margin-top:0.35rem;">${pillsInline}</div>
+                </td>
+              </tr>
+              <tr>
+                <td class="tableAttribute">Hit Location</td>
+                <td class="tableCenterText">${hitLocation}</td>
+                <td class="tableCenterText">from attack roll</td>
+              </tr>
+            </tbody>
+          </table>
+          <div style="margin-top:0.75rem;display:flex;flex-wrap:wrap;gap:0.5rem;">
+            ${applyBtn}
+          </div>
+        </div>
+      `;
+
+      await ChatMessage.create({
+        user: game.user.id,
+        speaker: ChatMessage.getSpeaker({ actor: attacker, token: aToken?.document ?? null }),
+        content: cardHtml,
+        style: CONST.CHAT_MESSAGE_STYLES.OTHER,
+        rolls: [dmg.rollA, dmg.rollB].filter(Boolean),
+        rollMode: game.settings.get("core", "rollMode"),
+      });
+
+      return;
+    }
+
+    // --- Damage Roll (defender won via counter-attack) ---
+    if (action === "counter-damage-roll") {
+      if (data.status !== "resolved" || data.outcome?.winner !== "defender" || (data.defender.defenseType ?? "none") !== "counter") {
+        ui.notifications.warn("Counter-attack damage can only be rolled after the opposed test is resolved and the defender wins via Counter-Attack.");
+        return;
+      }
+      if (!_canControlActor(defender) && !game.user.isGM) {
+        ui.notifications.warn("You do not have permission to roll damage for this defender.");
+        return;
+      }
+
+      const advCount = Number(data.advantage?.defender ?? 0);
+      const baseHitLocation = getHitLocationFromRoll(data.defender?.result?.rollTotal ?? 0);
+      const selection = await _promptWeaponAndAdvantages({
+        attackerActor: defender,
+        advantageCount: advCount,
+        defaultWeaponUuid: data.context?.lastDefenderWeaponUuid ?? null,
+        defaultHitLocation: baseHitLocation,
+      });
+      if (!selection) return;
+
+      const weapon = await fromUuid(selection.weaponUuid);
+      if (!weapon) {
+        ui.notifications.warn("Selected weapon could not be resolved.");
+        return;
+      }
+
+      // Persist last defender weapon for convenience within this single opposed workflow.
+      data.context = data.context ?? {};
+      data.context.lastDefenderWeaponUuid = weapon.uuid;
+      await _updateCard(message, data);
+
+      // Hit location RAW: ones digit of counter-attack roll, unless Precision Strike is used.
+      const hitLocation = (advCount > 0 && selection.precisionStrike)
+        ? selection.precisionLocation
+        : getHitLocationFromRoll(data.defender?.result?.rollTotal ?? 0);
+
+      const dmg = await _rollWeaponDamage({ weapon });
+      const damageType = getDamageTypeFromWeapon(weapon);
+
+      // Counter-attack: defender is the striker, original attacker is the target.
+      const applyBtn = `<button type="button" class="apply-damage-btn"
+        data-target-uuid="${attacker.uuid}"
+        data-attacker-actor-uuid="${defender.uuid}"
+        data-weapon-uuid="${weapon.uuid}"
+        data-damage="${dmg.finalDamage}"
+        data-damage-type="${damageType}"
+        data-hit-location="${hitLocation}"
+        data-dos-bonus="0"
+        data-penetration="0"
+        data-penetrate-armor="${selection.penetrateArmor ? "1" : "0"}"
+        data-forceful-impact="${selection.forcefulImpact ? "1" : "0"}"
+        data-press-advantage="${selection.pressAdvantage ? "1" : "0"}"
+        data-source="${weapon.name}">
+        Apply Damage → ${aToken?.name ?? attacker.name}
+      </button>`;
+
+      await _postWeaponDamageChatCard({
+        attacker: defender,
+        aToken: dToken,
+        weapon,
+        dmg,
+        hitLocation,
+        applyButtonHtml: applyBtn,
+        extraNoteHtml: `<b>Strike:</b> Counter-Attack against ${aToken?.name ?? attacker.name}`,
+      });
+
+      return;
+    }
+
+    // --- Resolve Block (defender won via block) ---
+    if (action === "block-resolve") {
+      if (data.status !== "resolved" || data.outcome?.winner !== "defender" || (data.defender.defenseType ?? "none") !== "block") {
+        ui.notifications.warn("Block resolution is only available when the defender wins by blocking.");
+        return;
+      }
+      if (!_canControlActor(defender) && !game.user.isGM) {
+        ui.notifications.warn("You do not have permission to resolve this block.");
+        return;
+      }
+
+      const shields = _listEquippedShields(defender);
+      const shield = shields[0] ?? null;
+      if (!shield) {
+        ui.notifications.warn("No equipped shield found on the defender.");
+        return;
+      }
+
+      // Roll the incoming attack damage (attacker weapon selection).
+      const selection = await _promptWeaponAndAdvantages({
+        attackerActor: attacker,
+        advantageCount: 0,
+        defaultWeaponUuid: data.context?.lastWeaponUuid ?? null,
+      });
+      if (!selection) return;
+
+      const weapon = await fromUuid(selection.weaponUuid);
+      if (!weapon) {
+        ui.notifications.warn("Selected weapon could not be resolved.");
+        return;
+      }
+
+      const dmg = await _rollWeaponDamage({ weapon });
+      const damageType = getDamageTypeFromWeapon(weapon);
+      // Always post the weapon damage card so the chat log retains hit-location context,
+      // even when the defender wins by blocking.
+      const hitLocation = getHitLocationFromRoll(data.attacker?.result?.rollTotal ?? 100);
+      await _postWeaponDamageChatCard({
+        attacker,
+        aToken,
+        weapon,
+        dmg,
+        hitLocation,
+        extraNoteHtml: `<b>Defense:</b> Block (${shield?.name ?? "Shield"})`,
+      });
+      const br = _getShieldBlockRating(shield, damageType);
+      const blocked = dmg.finalDamage <= br;
+
+      if (blocked) {
+        await ChatMessage.create({
+          user: game.user.id,
+          speaker: ChatMessage.getSpeaker({ actor: defender, token: dToken?.document ?? null }),
+          content: `<div class="ues-opposed-card" style="padding:6px;">
+            <b>Block:</b> Incoming damage <b>${dmg.finalDamage}</b> does not exceed Block Rating <b>${br}</b>. No damage taken.
+          </div>`,
+          style: CONST.CHAT_MESSAGE_STYLES.OTHER,
+          rollMode: game.settings.get("core", "rollMode"),
+        });
+        return;
+      }
+
+      // RAW: if damage exceeds BR, take full damage to shield arm.
+      const shieldArm = "Left Arm";
+
+      const applyBtn = `<button type="button" class="apply-damage-btn"
+        data-target-uuid="${defender.uuid}"
+        data-attacker-actor-uuid="${attacker.uuid}"
+        data-weapon-uuid="${weapon.uuid}"
+        data-damage="${dmg.finalDamage}"
+        data-damage-type="${damageType}"
+        data-hit-location="${shieldArm}"
+        data-dos-bonus="0"
+        data-penetration="0"
+        data-source="${weapon.name}">
+        Apply Block Damage → ${dToken?.name ?? defender.name}
+      </button>`;
+
+      await ChatMessage.create({
+        user: game.user.id,
+        speaker: ChatMessage.getSpeaker({ actor: defender, token: dToken?.document ?? null }),
+        content: `<div class="uesrpg-weapon-damage-card">
+          <h2 style="margin:0 0 0.25rem 0;">Block Penetrated</h2>
+          <div style="opacity:0.9; margin-bottom:0.5rem;">Incoming damage <b>${dmg.finalDamage}</b> exceeds Block Rating <b>${br}</b> (${shield?.name ?? "No Shield"}).</div>
+          ${applyBtn}
+        </div>`,
+        style: CONST.CHAT_MESSAGE_STYLES.OTHER,
+        rollMode: game.settings.get("core", "rollMode"),
+      });
+      return;
+    }
+
     // --- Resolve ---
     if (data.attacker.result && data.defender.result && !data.outcome) {
       const outcome = _resolveOutcomeRAW(data);
       data.outcome = outcome ?? { winner: "tie", text: "" };
+      data.advantage = _computeAdvantageRAW(data, data.outcome);
       data.status = "resolved";
 
       _logDebug("resolve", {
         attackerUuid: data.attacker.actorUuid,
         defenderUuid: data.defender.actorUuid,
         outcome: data.outcome,
+        advantage: data.advantage,
         attackerResult: data.attacker
           ? { rollTotal: data.attacker.result?.rollTotal, isSuccess: data.attacker.result?.isSuccess, degree: data.attacker.result?.degree }
           : null,
