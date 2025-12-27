@@ -34,6 +34,8 @@ export function clampNumber(v, { min = -200, max = 200 } = {}) {
 }
 
 export function normalizeSkillRollOptions(raw = {}, fallback = {}) {
+  raw = raw ?? {};
+
   const diffKey = String(raw.difficultyKey ?? fallback.difficultyKey ?? "average");
   const diff = getDifficultyByKey(diffKey);
 
