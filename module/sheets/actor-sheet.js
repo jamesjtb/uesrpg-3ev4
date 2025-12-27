@@ -3,7 +3,7 @@
  * @extends {foundry.appv1.sheets.ActorSheet}
  */
 import { isLucky } from "../helpers/skillCalcHelper.js";
-import { SYSTEM_ROLL_FORMULA } from "../constants.js";
+import { SYSTEM_ROLL_FORMULA, UESRPG } from "../constants.js";
 import { isUnlucky } from "../helpers/skillCalcHelper.js";
 import chooseBirthsignPenalty from "../dialogs/choose-birthsign-penalty.js";
 import { characteristicAbbreviations } from "../maps/characteristics.js";
@@ -14,7 +14,7 @@ import { renderRaceCards } from "./racemenu/render-race-cards.js";
 import khajiitFurstocks from './racemenu/data/khajiit-furstocks.js';
 import expandedRaces from "./racemenu/data/expanded-races.js";
 import { calculateDegrees } from "../helpers/diceHelper.js";
-import { getHitLocationFromRoll } from "../combat/combat-utils.js";
+import { getDamageTypeFromWeapon, getHitLocationFromRoll } from "../combat/combat-utils.js";
 import { OpposedRoll } from "../combat/opposed-rolls.js";
 import { OpposedWorkflow } from "../combat/opposed-workflow.js";
 import { SkillOpposedWorkflow } from "../skills/opposed-workflow.js";
@@ -1636,57 +1636,122 @@ async _onDamageRoll(event) {
 
   const shortcutWeapon = weapon;
 
-  // Roll to hit (1d100)
-  const hit = new Roll("1d100");
+  // RAW: Hit Location is usually the 1s digit of the attack roll, but can also be determined by rolling 1d10 (10 counts as 0).
+  // This weapon card currently rolls hit location directly (opposed-roll wiring will supply the attack roll later).
+  const hit = new Roll("1d10");
   await hit.evaluate();
   const hitResult = Number(hit.total);
   const hit_loc = getHitLocationFromRoll(hitResult);
 
-  // Target Number
-  const attackTN =
-    (shortcutWeapon.system.value ?? 0) +
-    (this.actor.system.woundPenalty ?? 0) +
-    (this.actor.system.fatigue.penalty ?? 0) +
-    (this.actor.system.carry_rating.penalty ?? 0);
+  // Damage roll (prefer derived effective dice expressions)
+  const damageString =
+    (shortcutWeapon.system.damage3Effective ?? shortcutWeapon.system.damage3 ?? shortcutWeapon.system.damage2Effective ?? shortcutWeapon.system.damage2 ?? shortcutWeapon.system.damageEffective ?? shortcutWeapon.system.damage) || "0";
 
-  // Degrees of Success / Failure
-  const { isSuccess, doS, doF } = calculateDegrees(hitResult, attackTN);
+  // Resolve structured qualities to support Proven/Primitive and later automation.
+  const structured = Array.isArray(shortcutWeapon.system.qualitiesStructuredInjected)
+    ? shortcutWeapon.system.qualitiesStructuredInjected
+    : Array.isArray(shortcutWeapon.system.qualitiesStructured)
+      ? shortcutWeapon.system.qualitiesStructured
+      : [];
+  const hasQ = (key) => structured.some(q => String(q?.key ?? q ?? "").toLowerCase() === key);
 
-  const degreesRow = `<tr>
-    <td class="tableAttribute">${isSuccess ? "Degrees of Success" : "Degrees of Failure"}</td>
-    <td class="tableCenterText" colspan="2">${isSuccess ? doS : doF}</td>
-  </tr>`;
-
-  // Damage roll
-  const damageString = shortcutWeapon.system.damage;
   const weaponRoll = new Roll(damageString);
   await weaponRoll.evaluate();
-
-  let superiorTotal = null;
-  let superiorRoll = null;
+  let altRoll = null;
   let finalDamage = Number(weaponRoll.total);
 
-  if (shortcutWeapon.system.superior) {
-    superiorRoll = new Roll(damageString);
-    await superiorRoll.evaluate();
-    superiorTotal = Number(superiorRoll.total);
-    finalDamage = Math.max(finalDamage, superiorTotal);
+  // Superior quality level (legacy boolean) and Proven/Primitive qualities (structured)
+  const wantsProven = hasQ("proven");
+  const wantsPrimitive = hasQ("primitive");
+  const wantsSuperior = !!shortcutWeapon.system.superior;
+
+  if (wantsSuperior || wantsProven || wantsPrimitive) {
+    altRoll = new Roll(damageString);
+    await altRoll.evaluate();
+    const altTotal = Number(altRoll.total);
+
+    if (wantsPrimitive && !wantsProven) finalDamage = Math.min(finalDamage, altTotal);
+    else finalDamage = Math.max(finalDamage, altTotal);
   }
 
-  const supRollTag =
-    superiorTotal !== null
-      ? `<br><span style="font-size: x-small;">Base: ${weaponRoll.total} | Superior: ${superiorTotal}</span>`
-      : "";
+  const supRollTag = altRoll
+    ? `<div style="margin-top:0.25rem;font-size:x-small;line-height:1.2;">Roll A: ${weaponRoll.total}<br>Roll B: ${altRoll.total}</div>`
+    : "";
+
+  // Render qualities from Structured Qualities + Traits (no journal links).
+  const labelIndex = (() => {
+    const core = UESRPG?.QUALITIES_CORE_BY_TYPE?.weapon ?? UESRPG?.QUALITIES_CATALOG ?? [];
+    const traits = UESRPG?.TRAITS_BY_TYPE?.weapon ?? [];
+    const idx = new Map();
+    for (const q of [...core, ...traits, ...(UESRPG?.QUALITIES_CATALOG ?? [])]) {
+      if (!q?.key) continue;
+      idx.set(String(q.key).toLowerCase(), String(q.label ?? q.key));
+    }
+    return idx;
+  })();
+
+  const qualitiesHtml = (() => {
+    const pills = [];
+    const injected = Array.isArray(shortcutWeapon.system.qualitiesStructuredInjected)
+      ? shortcutWeapon.system.qualitiesStructuredInjected
+      : Array.isArray(shortcutWeapon.system.qualitiesStructured)
+        ? shortcutWeapon.system.qualitiesStructured
+        : [];
+
+    for (const q of injected) {
+      const key = String(q?.key ?? q ?? "").toLowerCase().trim();
+      if (!key) continue;
+      const label = labelIndex.get(key) ?? key;
+      const v = (q?.value !== undefined && q?.value !== null && q?.value !== "") ? Number(q.value) : null;
+      pills.push(`<span class="tag">${v != null && !Number.isNaN(v) ? `${label} (${v})` : label}</span>`);
+    }
+
+    const traits = Array.isArray(shortcutWeapon.system.qualitiesTraits) ? shortcutWeapon.system.qualitiesTraits : [];
+    for (const t of traits) {
+      const key = String(t ?? "").toLowerCase().trim();
+      if (!key) continue;
+      const label = labelIndex.get(key) ?? key;
+      pills.push(`<span class="tag">${label}</span>`);
+    }
+
+    if (!pills.length) return "<span style=\"opacity:0.75;\">—</span>";
+    return `<span class="uesrpg-inline-tags">${pills.join("")}</span>`;
+  })();
+
+  const damageType = getDamageTypeFromWeapon(shortcutWeapon);
+
+  // Optional: include target apply buttons if the user has one or more targets selected.
+  const targets = Array.from(game.user.targets ?? []);
+  const applyButtons = targets.length
+    ? `<div style="margin-top:0.75rem;display:flex;flex-wrap:wrap;gap:0.5rem;">
+        ${targets.map(t => {
+          const uuid = t?.actor?.uuid;
+          if (!uuid) return "";
+          return `<button type="button" class="apply-damage-btn" 
+                    data-target-uuid="${uuid}"
+                    data-attacker-actor-uuid="${this.actor.uuid}"
+                    data-weapon-uuid="${shortcutWeapon.uuid}"
+                    data-damage="${finalDamage}"
+                    data-damage-type="${damageType}"
+                    data-hit-location="${hit_loc}"
+                    data-dos-bonus="0"
+                    data-penetration="0"
+                    data-source="${shortcutWeapon.name}">
+                    Apply Damage → ${t.name}
+                  </button>`;
+        }).join("")}
+      </div>`
+    : "";
 
 
   const contentString = `
-    <div>
+    <div class="uesrpg-weapon-damage-card">
       <h2 style="display:flex;gap:0.5rem;align-items:center;">
         <img src="${shortcutWeapon.img}" style="height:32px;width:32px;">
         <div>${shortcutWeapon.name}</div>
       </h2>
 
-      <table>
+      <table class="uesrpg-weapon-damage-table">
         <thead>
           <tr>
             <th>Damage</th>
@@ -1698,29 +1763,24 @@ async _onDamageRoll(event) {
           <tr>
             <td class="tableAttribute">Damage</td>
             <td class="tableCenterText">${finalDamage}${supRollTag}</td>
-            <td class="tableCenterText">${damageString}</td>
+            <td class="tableCenterText">
+              <div>${damageString}</div>
+              <div style="margin-top:0.35rem;">${qualitiesHtml}</div>
+            </td>
           </tr>
           <tr>
             <td class="tableAttribute">Hit Location</td>
             <td class="tableCenterText">${hit_loc}</td>
             <td class="tableCenterText">[[${hit.total}]]</td>
           </tr>
-          <tr>
-            <td class="tableAttribute">Qualities</td>
-            <td class="tableCenterText" colspan="2">
-              ${shortcutWeapon.system.qualities ?? ""}
-            </td>
-          </tr>
-
-          ${degreesRow}
-
         </tbody>
       </table>
+      ${applyButtons}
     </div>
   `;
 
   const rollsToSend = [weaponRoll, hit];
-  if (superiorRoll) rollsToSend.push(superiorRoll);
+  if (altRoll) rollsToSend.push(altRoll);
 
   await ChatMessage.create({
     user: game.user.id,
