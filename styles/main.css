@@ -1489,3 +1489,23 @@
 /* Cleanup patch: keep first four weapon controls in neat 2x2 layout by moving Attack Mode below */
 .modifier-container { display: grid; grid-template-columns: 1fr 1fr; column-gap: 12px; }
 .modifier-container > div { min-width: 0; }
+
+
+/* UESRPG: Force defense dialog footer buttons to match attacker dialog (single row, 2 equal columns). */
+.uesrpg-defense-dialog .dialog-buttons {
+  display: flex !important;
+  flex-direction: row !important;
+  flex-wrap: nowrap !important;
+  gap: 10px !important;
+}
+.uesrpg-defense-dialog .dialog-buttons > button {
+  flex: 1 1 0 !important;
+  width: auto !important;
+  max-width: none !important;
+}
+
+
+/* UESRPG: Ensure defender dialog default button is not forced to uppercase by theme/core styles. */
+.uesrpg-defense-dialog .dialog-buttons > button.default {
+  text-transform: none !important;
+}
