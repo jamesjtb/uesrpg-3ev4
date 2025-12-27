@@ -18,9 +18,11 @@
                         </div>
                         <div class="item-resource">
                             <div class="stat-value-label">
-                                <input type="number" name="system.enc" value="{{item.system.enc}}"/>
                                 {{#if item.system.encEffective}}
-                                    <div class="effective-hint"><span class="label">Eff</span>{{item.system.encEffective}}</div>
+                                    <input type="text" value="{{item.system.encEffective}}" readonly/>
+                                    <input type="number" name="system.enc" value="{{item.system.enc}}" style="display:none"/>
+                                {{else}}
+                                    <input type="number" name="system.enc" value="{{item.system.enc}}"/>
                                 {{/if}}
                             </div>
                             <div class="flex-container">
@@ -29,9 +31,11 @@
                         </div>
                         <div class="item-resource">
                             <div class="stat-value-label">
-                                <input type="number" name="system.price" value="{{item.system.price}}"/>
                                 {{#if item.system.priceEffective}}
-                                    <div class="effective-hint"><span class="label">Eff</span>{{item.system.priceEffective}}</div>
+                                    <input type="text" value="{{item.system.priceEffective}}" readonly/>
+                                    <input type="number" name="system.price" value="{{item.system.price}}" style="display:none"/>
+                                {{else}}
+                                    <input type="number" name="system.price" value="{{item.system.price}}"/>
                                 {{/if}}
                             </div>
                             <div class="flex-container">
@@ -69,9 +73,11 @@
                         </div>
                         <div class="item-resource">
                             <div class="stat-value-label">
-                                <input type="text" name="system.damage" value="{{item.system.damage}}"/>
                                 {{#if item.system.damageEffective}}
-                                    <div class="effective-hint"><span class="label">Eff</span>{{item.system.damageEffective}}</div>
+                                    <input type="text" value="{{item.system.damageEffective}}" readonly/>
+                                    <input type="text" name="system.damage" value="{{item.system.damage}}" style="display:none"/>
+                                {{else}}
+                                    <input type="text" name="system.damage" value="{{item.system.damage}}"/>
                                 {{/if}}
                             </div>
                             <div class="flex-container">
@@ -80,9 +86,11 @@
                         </div>
                         <div class="item-resource">
                             <div class="stat-value-label">
-                                <input type="text" name="system.damage2" value="{{item.system.damage2}}"/>
                                 {{#if item.system.damage2Effective}}
-                                    <div class="effective-hint"><span class="label">Eff</span>{{item.system.damage2Effective}}</div>
+                                    <input type="text" value="{{item.system.damage2Effective}}" readonly/>
+                                    <input type="text" name="system.damage2" value="{{item.system.damage2}}" style="display:none"/>
+                                {{else}}
+                                    <input type="text" name="system.damage2" value="{{item.system.damage2}}"/>
                                 {{/if}}
                             </div>
                             <div class="flex-container">
@@ -216,6 +224,23 @@
   {{selectOptions attackModeOptions selected=item.system.attackMode}}
 </select>
                                         </div>
+
+                                        {{#if (eq item.system.attackMode "ranged")}}
+                                        <div class="form-group">
+                                            <label>Ammunition</label>
+                                            <select name="system.ammoId">
+                                                <option value="">—</option>
+                                                {{#each ammoOptions}}
+                                                    <option value="{{this.value}}" {{#if (eq ../item.system.ammoId this.value)}}selected{{/if}}>{{this.label}}</option>
+                                                {{/each}}
+                                            </select>
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label>Consume Ammo</label>
+                                            <input type="checkbox" name="system.consumeAmmo" {{checked item.system.consumeAmmo}}>
+                                        </div>
+                                        {{/if}}
                                     
 
                         </div>
