@@ -26,13 +26,50 @@ function getCharTotal(actor, key) {
 }
 
 export function listCombatStyles(actor) {
-  return (actor?.items ?? [])
+  const styles = (actor?.items ?? [])
     .filter(i => i.type === "combatStyle")
     .map(i => ({ uuid: i.uuid, id: i.id, name: i.name, item: i }));
+
+  if (actor?.type === "NPC") {
+    const sys = actor?.system ?? {};
+    const combatVal = Number(sys?.professions?.combat ?? 0);
+    styles.push({
+      uuid: "prof:combat",
+      id: "prof:combat",
+      name: "Combat (Profession)",
+      item: {
+        uuid: "prof:combat",
+        id: "prof:combat",
+        type: "combatStyle",
+        name: "Combat (Profession)",
+        system: { value: combatVal, bonus: 0, miscValue: 0 }
+      }
+    });
+  }
+
+  return styles;
 }
+
 
 export function getCombatStyleItem(actor, styleUuidOrId) {
   if (!actor || !styleUuidOrId) return null;
+if (typeof styleUuidOrId === "string" && styleUuidOrId.startsWith("prof:")) {
+  const key = styleUuidOrId.slice(5);
+  const sys = actor?.system ?? {};
+  const base = Number(sys?.professions?.[key] ?? 0);
+  const woundPenalty = Number(sys?.woundPenalty ?? 0);
+  const fatiguePenalty = Number(sys?.fatigue?.penalty ?? 0);
+
+  return {
+    uuid: styleUuidOrId,
+    id: styleUuidOrId,
+    type: "combatStyle",
+    name: key.charAt(0).toUpperCase() + key.slice(1),
+    system: { value: base + fatiguePenalty + (sys?.wounded ? woundPenalty : 0), bonus: 0, miscValue: 0 },
+    _professionKey: key
+  };
+}
+
   // Prefer UUID match when present
   const byUuid = (actor.items ?? []).find(i => i.uuid === styleUuidOrId);
   if (byUuid) return byUuid;
@@ -83,6 +120,14 @@ function computeBlockTN(defender, styleItem) {
 }
 
 function computeEvadeTN(defender) {
+if (defender?.type === "NPC") {
+  const sys = defender?.system ?? {};
+  const base = Number(sys?.professions?.evade ?? 0);
+  const woundPenalty = Number(sys?.woundPenalty ?? 0);
+  const fatiguePenalty = Number(sys?.fatigue?.penalty ?? 0);
+  return base + fatiguePenalty + (sys?.wounded ? woundPenalty : 0);
+}
+
   const evadeItem = (defender?.items ?? []).find(i => i.type === "skill" && String(i.name ?? "").toLowerCase() === "evade");
   const evadeTN = asNumber(evadeItem?.system?.value ?? 0);
   if (evadeTN) return evadeTN;
@@ -123,9 +168,16 @@ export function computeTN({
       baseTN = computeEvadeTN(actor);
       baseLabel = "Base TN";
     } else if (defenseType === "block") {
-      const styleItem = getCombatStyleItem(actor, styleUuid);
       const shieldOk = hasEquippedShield(actor);
-      baseTN = (styleItem && shieldOk) ? computeBlockTN(actor, styleItem) : 0;
+      if (!shieldOk) {
+        baseTN = 0;
+      } else if (typeof styleUuid === "string" && styleUuid.startsWith("prof:")) {
+        const styleItem = getCombatStyleItem(actor, styleUuid);
+        baseTN = Number(styleItem?.system?.value ?? 0);
+      } else {
+        const styleItem = getCombatStyleItem(actor, styleUuid);
+        baseTN = styleItem ? computeBlockTN(actor, styleItem) : 0;
+      }
       baseLabel = "Base TN";
     } else if (defenseType === "parry" || defenseType === "counter") {
       const styleItem = getCombatStyleItem(actor, styleUuid);
