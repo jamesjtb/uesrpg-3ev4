@@ -1,3 +1,4 @@
+import { SYSTEM_ROLL_FORMULA } from "../constants.js";
 /**
  * module/helpers/degree-roll-helper.js
  * UESRPG v3e — Degree of Success / Degree of Failure helper
@@ -15,7 +16,7 @@
  * Returns structured result objects suitable for chat rendering or further logic.
  */
 
-export async function doTestRoll(actor, { rollFormula = "1d100", target = 0, allowLucky = true, allowUnlucky = true } = {}) {
+export async function doTestRoll(actor, { rollFormula = SYSTEM_ROLL_FORMULA, target = 0, allowLucky = true, allowUnlucky = true } = {}) {
   // Evaluate the roll
   // Foundry V13+: the `async` option was removed; Roll#evaluate is async by default.
   const roll = await new Roll(rollFormula).evaluate();
