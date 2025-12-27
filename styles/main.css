@@ -193,6 +193,142 @@
   padding: 0 5px;
   border: 1px solid rgb(105, 105, 105);
   border-radius: 30px;
+  /* Prevent pills from splitting mid-label (e.g., "Proven (2)" wrapping badly). */
+  white-space: nowrap;
+  overflow-wrap: normal;
+  word-break: keep-all;
+}
+
+/* Inline pill wrapper used in compact weapon damage cards */
+.chat-message .uesrpg-inline-tags {
+  display: inline-flex;
+  flex-wrap: wrap;
+  gap: 4px;
+}
+
+/* Weapon damage chat card: slightly larger quality/trait pills for readability */
+.chat-message .uesrpg-weapon-damage-card .tag {
+  font-size: 0.7rem;
+  padding: 1px 7px;
+  line-height: 1.25;
+  display: inline-flex;
+  align-items: center;
+  /* Prevent mid-pill wrapping like "Proven" + "(2)" splitting across lines. */
+  white-space: nowrap;
+  overflow-wrap: normal;
+  word-break: keep-all;
+  flex: 0 0 auto;
+}
+
+/* Compact inline tags block for weapon damage cards (wrap as whole pills). */
+.chat-message .uesrpg-inline-tags {
+  display: inline-flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  align-items: center;
+}
+
+/* Weapon damage compact table: prevent ugly mid-word wrapping in headers/cells */
+.chat-message .uesrpg-weapon-damage-card .uesrpg-weapon-damage-table {
+  table-layout: auto;
+}
+
+.chat-message .uesrpg-weapon-damage-card .uesrpg-weapon-damage-table th {
+  white-space: nowrap;
+}
+
+.chat-message .uesrpg-weapon-damage-card .uesrpg-weapon-damage-table th,
+.chat-message .uesrpg-weapon-damage-card .uesrpg-weapon-damage-table td {
+  word-break: normal;
+  overflow-wrap: normal;
+  vertical-align: middle;
+}
+
+.chat-message .uesrpg-weapon-damage-card .uesrpg-weapon-damage-table th:nth-child(1),
+.chat-message .uesrpg-weapon-damage-card .uesrpg-weapon-damage-table td:nth-child(1) {
+  width: 34%;
+}
+
+.chat-message .uesrpg-weapon-damage-card .uesrpg-weapon-damage-table th:nth-child(2),
+.chat-message .uesrpg-weapon-damage-card .uesrpg-weapon-damage-table td:nth-child(2) {
+  width: 18%;
+}
+
+.chat-message .uesrpg-weapon-damage-card .uesrpg-weapon-damage-table th:nth-child(3),
+.chat-message .uesrpg-weapon-damage-card .uesrpg-weapon-damage-table td:nth-child(3) {
+  width: 48%;
+}
+
+/* Damage application summary card (GM-only, blind) */
+.chat-message .uesrpg-damage-applied-card {
+  border: 1px solid rgba(0, 0, 0, 0.25);
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.chat-message .uesrpg-damage-applied-card .hdr {
+  padding: 8px 10px;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.15);
+}
+
+.chat-message .uesrpg-damage-applied-card .hdr .title {
+  font-weight: 700;
+  font-size: 1.15em;
+  line-height: 1.1;
+}
+
+.chat-message .uesrpg-damage-applied-card .hdr .sub {
+  opacity: 0.85;
+  font-size: 0.9em;
+  margin-top: 2px;
+}
+
+.chat-message .uesrpg-damage-applied-card .body {
+  padding: 8px 10px;
+}
+
+.chat-message .uesrpg-damage-applied-card .uesrpg-da-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 2px 0;
+}
+
+.chat-message .uesrpg-damage-applied-card .uesrpg-da-row .k {
+  font-weight: 600;
+  opacity: 0.85;
+}
+
+.chat-message .uesrpg-damage-applied-card .uesrpg-da-row .v {
+  text-align: right;
+}
+
+.chat-message .uesrpg-damage-applied-card .uesrpg-da-row .v.final {
+  font-weight: 800;
+}
+
+.chat-message .uesrpg-damage-applied-card .muted {
+  opacity: 0.75;
+  font-size: 0.9em;
+}
+
+.chat-message .uesrpg-damage-applied-card .status {
+  margin-top: 6px;
+  text-align: center;
+  font-weight: 800;
+  letter-spacing: 0.02em;
+  padding: 4px 6px;
+  border-radius: 6px;
+}
+
+.chat-message .uesrpg-damage-applied-card .status.wounded {
+  background: rgba(245, 124, 0, 0.18);
+  border: 1px solid rgba(245, 124, 0, 0.35);
+}
+
+.chat-message .uesrpg-damage-applied-card .status.unconscious {
+  background: rgba(211, 47, 47, 0.14);
+  border: 1px solid rgba(211, 47, 47, 0.32);
 }
 
 .chat-message .wound-tag {
@@ -205,6 +341,82 @@
 
 .chat-message .enc-tag {
   background-color: black;
+}
+
+/* ----------------------------
+   Damage Applied (GM-only) Card
+------------------------------*/
+.chat-message .uesrpg-damage-applied-card {
+  border: 1px solid rgba(0, 0, 0, 0.25);
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.chat-message .uesrpg-damage-applied-card .hdr {
+  padding: 8px 10px;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.15);
+}
+
+.chat-message .uesrpg-damage-applied-card .hdr .title {
+  font-weight: 700;
+  font-size: 1.1rem;
+  line-height: 1.2;
+}
+
+.chat-message .uesrpg-damage-applied-card .hdr .sub {
+  opacity: 0.85;
+  font-size: 0.85rem;
+  margin-top: 2px;
+}
+
+.chat-message .uesrpg-damage-applied-card .body {
+  padding: 8px 10px 10px;
+}
+
+.chat-message .uesrpg-damage-applied-card .uesrpg-da-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 2px 0;
+}
+
+.chat-message .uesrpg-damage-applied-card .uesrpg-da-row .k {
+  font-weight: 600;
+  opacity: 0.9;
+}
+
+.chat-message .uesrpg-damage-applied-card .uesrpg-da-row .v {
+  text-align: right;
+  white-space: nowrap;
+}
+
+.chat-message .uesrpg-damage-applied-card .uesrpg-da-row .v.final {
+  font-weight: 800;
+  color: #b71c1c;
+}
+
+.chat-message .uesrpg-damage-applied-card .muted {
+  opacity: 0.75;
+  font-size: 0.85em;
+}
+
+.chat-message .uesrpg-damage-applied-card .status {
+  margin-top: 8px;
+  padding: 6px 8px;
+  border-radius: 6px;
+  text-align: center;
+  font-weight: 800;
+  letter-spacing: 0.02em;
+}
+
+.chat-message .uesrpg-damage-applied-card .status.wounded {
+  background: rgba(245, 124, 0, 0.15);
+  border: 1px solid rgba(245, 124, 0, 0.35);
+}
+
+.chat-message .uesrpg-damage-applied-card .status.unconscious {
+  background: rgba(33, 33, 33, 0.12);
+  border: 1px solid rgba(33, 33, 33, 0.25);
 }
 
 /*----------------------------
