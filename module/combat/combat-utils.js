@@ -88,8 +88,10 @@ export function getHitLocationFromRoll(attackRollResult) {
 export async function rollHitLocation(attackRollResult) {
   if (Number.isFinite(attackRollResult)) return getHitLocationFromRoll(Number(attackRollResult));
 
-  console.warn("UESRPG | rollHitLocation() called without attack roll result; rolling 1d100 as fallback.");
-  const r = await new Roll("1d100").evaluate({ async: true });
+  // RAW: hit location is the 1s digit of the attack roll, but can also be rolled as 1d10 (treat 10 as 0).
+  // We use 1d10 here as a deterministic fallback when an attack roll isn't provided.
+  console.warn("UESRPG | rollHitLocation() called without attack roll result; rolling 1d10 as fallback.");
+  const r = await new Roll("1d10").evaluate();
   return getHitLocationFromRoll(Number(r.total));
 }
 
