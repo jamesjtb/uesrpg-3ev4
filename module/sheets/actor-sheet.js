@@ -3,6 +3,7 @@
  * @extends {foundry.appv1.sheets.ActorSheet}
  */
 import { isLucky } from "../helpers/skillCalcHelper.js";
+import { SYSTEM_ROLL_FORMULA } from "../constants.js";
 import { isUnlucky } from "../helpers/skillCalcHelper.js";
 import chooseBirthsignPenalty from "../dialogs/choose-birthsign-penalty.js";
 import { characteristicAbbreviations } from "../maps/characteristics.js";
@@ -981,7 +982,7 @@ if (isLucky(this.actor, roll.result)) {
     if (hasSpec && decl.useSpec) tags.push(`<span class="tag">Specialization +10</span>`);
     if (decl.manualMod) tags.push(`<span class="tag">Mod ${decl.manualMod >= 0 ? "+" : ""}${decl.manualMod}</span>`);
 
-    const res = await doTestRoll(this.actor, { rollFormula: "1d100", target: tn.finalTN, allowLucky: true, allowUnlucky: true });
+    const res = await doTestRoll(this.actor, { rollFormula: SYSTEM_ROLL_FORMULA, target: tn.finalTN, allowLucky: true, allowUnlucky: true });
 
     skillRollDebug("untargeted result", { rollTotal: res.rollTotal, target: res.target, isSuccess: res.isSuccess, degree: res.degree, critS: res.isCriticalSuccess, critF: res.isCriticalFailure });
 
@@ -1446,58 +1447,107 @@ async _onCombatRoll(event) {
     return;
   }
 
-  // No target selected -> standard single roll with a manual modifier dialog (unchanged behavior).
+  // No target selected -> standard single roll with a manual modifier dialog.
+  // UI: match the unopposed skill roll card information density (Target Number, Options, DoS/DoF, TN breakdown).
   const d = new Dialog({
-    title: "Apply Roll Modifier",
+    title: `${item.name} — Roll Options`,
     content: `<form>
-                <div class="dialogForm">
-                  <label><b>${item.name} Modifier: </b></label>
-                  <input style="width: 50%; border-style: groove; float: right;" id="playerInput" type="text" value="0"></input>
+                <div class="form-group" style="margin-bottom:8px;">
+                  <label style="display:block;"><b>Difficulty</b></label>
+                  <select id="difficultyKey" style="width:100%;">
+                    ${SKILL_DIFFICULTIES.map(df => {
+                      const sign = df.mod >= 0 ? "+" : "";
+                      const sel = df.key === "average" ? "selected" : "";
+                      return `<option value="${df.key}" ${sel}>${df.label} (${sign}${df.mod})</option>`;
+                    }).join("\n")}
+                  </select>
+                </div>
+                <div class="form-group" style="display:flex; align-items:center; justify-content:space-between; gap:10px;">
+                  <label style="margin:0;"><b>Manual Modifier</b></label>
+                  <input id="playerInput" type="number" value="0" style="width:120px; text-align:center;" />
                 </div>
               </form>`,
     buttons: {
       one: {
-        label: "Roll!",
+        label: "Roll",
         callback: async (html) => {
-          const raw = html.find('[id="playerInput"]').val();
-          const playerInput = Number.isFinite(parseInt(raw)) ? parseInt(raw) : 0;
+          const playerInputRaw = html.find('[id="playerInput"]').val();
+          const playerInput = Number.parseInt(String(playerInputRaw ?? "0"), 10) || 0;
 
-          const tn = this.actor.system.wounded
-            ? woundedValue + playerInput
-            : regularValue + playerInput;
+          const difficultyKey = String(html.find('[id="difficultyKey"]').val() ?? "average");
+          const diff = (SKILL_DIFFICULTIES ?? []).find(dv => dv.key === difficultyKey) ?? { key: "average", label: "Average", mod: 0 };
+          const difficultyMod = Number(diff.mod ?? 0) || 0;
 
-          const roll = new Roll("1d100");
-          await roll.evaluate();
+          // Preserve existing TN semantics:
+          // - item.system.value is the Combat Style base (with its own internal bonuses)
+          // - add Wound/Fatigue/Encumbrance (as previously implemented)
+          const base = Number(item.system?.value ?? 0);
+          const fatigue = Number(this.actor.system?.fatigue?.penalty ?? 0);
+          const enc = Number(this.actor.system?.carry_rating?.penalty ?? 0);
+          const wound = this.actor.system?.wounded ? Number(this.actor.system?.woundPenalty ?? 0) : 0;
 
-          const { isSuccess, doS, doF } = calculateDegrees(Number(roll.total), tn);
+          const breakdown = [];
+          breakdown.push({ label: "Base Skill", value: base });
+          breakdown.push({ label: `Difficulty: ${diff.label}`, value: difficultyMod });
+          if (fatigue) breakdown.push({ label: "Fatigue", value: fatigue });
+          if (enc) breakdown.push({ label: "Encumbrance", value: enc });
+          if (wound) breakdown.push({ label: "Wounded", value: wound });
+          if (playerInput) breakdown.push({ label: "Manual Modifier", value: playerInput });
 
-          const degreesLine = `<br><b>${isSuccess ? "Degrees of Success" : "Degrees of Failure"}: ${isSuccess ? doS : doF}</b>`;
-          const outcomeLine = `<br><b>${isSuccess
-            ? " <span style='color:green; font-size: 120%;'>SUCCESS!</span>"
-            : " <span style='color: rgb(168, 5, 5); font-size: 120%;'>FAILURE!</span>"
-          }</b>`;
+          const tn = base + difficultyMod + fatigue + enc + wound + playerInput;
 
-          const contentString = `<h2>${item.name}</h2>
-              <p></p><b>Target Number: [[${tn}]]</b><p></p>
-              <b>Result: [[${roll.total}]]</b>
-              ${outcomeLine}${degreesLine}`;
+          const res = await doTestRoll(this.actor, {
+            rollFormula: SYSTEM_ROLL_FORMULA,
+            target: tn,
+            allowLucky: true,
+            allowUnlucky: true
+          });
 
-          await roll.toMessage({
+          const degreeLine = res.isSuccess
+            ? `<b style="color:green;">SUCCESS — ${formatDegree(res)}</b>`
+            : `<b style="color:rgb(168, 5, 5);">FAILURE — ${formatDegree(res)}</b>`;
+
+          const breakdownRows = breakdown.map(b => {
+            const v = Number(b.value ?? 0);
+            const sign = v >= 0 ? "+" : "";
+            return `<div style="display:flex; justify-content:space-between; gap:10px;"><span>${b.label}</span><span>${sign}${v}</span></div>`;
+          }).join("");
+
+          const declaredParts = [];
+          {
+            const sign = difficultyMod >= 0 ? "+" : "";
+            declaredParts.push(`${diff.label} (${sign}${difficultyMod})`);
+          }
+          if (playerInput) declaredParts.push(`Mod ${playerInput >= 0 ? "+" : ""}${playerInput}`);
+
+          const flavor = `
+            <div>
+              <h2 style="margin:0 0 6px 0;">
+                ${item.img ? `<img src="${item.img}" style="height:24px; vertical-align:middle; margin-right:6px;"/>` : ""}
+                ${item.name}
+              </h2>
+              <div><b>Target Number:</b> ${tn}</div>
+              <div style="margin-top:2px; font-size:12px; opacity:0.85;"><b>Options:</b> ${declaredParts.join("; ")}</div>
+              <div style="margin-top:4px;">${degreeLine}${res.isCriticalSuccess ? ' <span style="color:green;">(CRITICAL)</span>' : ''}${res.isCriticalFailure ? ' <span style="color:red;">(CRITICAL FAIL)</span>' : ''}</div>
+              <details style="margin-top:6px;"><summary style="cursor:pointer; user-select:none;">TN breakdown</summary><div style="margin-top:4px; font-size:12px; opacity:0.9;">${breakdownRows}</div></details>
+              <div class="tag-container" style="margin-top:6px;">${tags.join("")}</div>
+            </div>`;
+
+          await res.roll.toMessage({
             user: game.user.id,
-            speaker: ChatMessage.getSpeaker(),
-            content: contentString,
-            flavor: `<div class="tag-container">${tags.join("")}</div>`,
-            rollMode: game.settings.get("core", "rollMode"),
+            speaker: ChatMessage.getSpeaker({ actor: this.actor }),
+            flavor,
+            rollMode: game.settings.get("core", "rollMode")
           });
         }
       },
       two: {
         label: "Cancel",
-        callback: () => console.log("Cancelled"),
-      },
+        callback: () => null
+      }
     },
-    default: "one",
-  });
+    default: "one"
+  }, { width: 420 });
 
   d.render(true);
 }
