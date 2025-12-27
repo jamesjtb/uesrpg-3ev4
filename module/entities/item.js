@@ -11,10 +11,31 @@ import { UESRPG } from "../constants.js";
  * - Accepts numeric values or strings (e.g. "1d8", "1d10+2").
  * - Returns a string suitable for Foundry dice rolling.
  */
+function normalizeDiceExpression(expr) {
+  const raw = String(expr ?? "").trim();
+  if (!raw) return "0";
+
+  if (/uses\s+nat\.?\s*weapon/i.test(raw)) return "0";
+
+  const paren = raw.match(/^(.+?)\s*\((.+?)\)\s*$/);
+  const base = paren ? String(paren[1]).trim() : raw;
+
+  const ascii = base.replace(/[\u2012\u2013\u2014\u2212]/g, "-");
+
+  let cleaned = ascii.replace(/[^0-9dDkKfFhHlL+\-*/().,\s@]/g, " ").trim();
+  cleaned = cleaned.replace(/(\d),(\d)/g, "$1.$2");
+  cleaned = cleaned.replace(/\s+/g, " ").trim();
+  cleaned = cleaned.replace(/[+\-*/.,\s]+$/g, "").trim();
+  cleaned = cleaned.replace(/^[+\-*/.,\s]+/g, "").trim();
+
+  return cleaned || "0";
+}
+
+
 function addDiceBonus(dice, bonus) {
   const b = Number(bonus || 0);
   if (!b) return String(dice ?? "");
-  const d = String(dice ?? "").trim();
+  const d = normalizeDiceExpression(dice);
   if (!d) return String(b);
 
   // If the value is a plain number, just add.
@@ -213,21 +234,88 @@ export class SimpleItem extends Item {
   }
 
   _prepareArmorItem(actorData, itemData) {
-    // --- Derived (non-persisted) effective stats ---
+    // RAW: Armor has two classes (partial/full) and shields use BR; these profiles are derived
+    // from the Chapter 7 tables and then modified by quality and certain traits.
     const baseEnc = safeNumber(itemData.enc, 0);
     const basePrice = safeNumber(itemData.price, 0);
 
-    // Armor quality affects effective weight class (already implemented elsewhere),
-    // but price is also generally driven by craftsmanship in the same way as weapons.
     const qualityKey = String(itemData.qualityLevel || "common").toLowerCase();
-    const qRule = UESRPG.WEAPON_QUALITY_RULES?.[qualityKey] ?? UESRPG.WEAPON_QUALITY_RULES.common;
-    const priceMult = safeNumber(qRule?.priceMult, 1.0);
+    const qRule = UESRPG.ARMOR_QUALITY_RULES?.[qualityKey] ?? UESRPG.ARMOR_QUALITY_RULES.common;
+    const qualityPriceMult = safeNumber(qRule?.priceMult, 1.0);
+    const weightDelta = safeNumber(qRule?.weightClassDelta, 0);
 
-    itemData.encEffective = baseEnc;
-    itemData.priceEffective = Math.round(basePrice * priceMult);
+    const isShield = Boolean(itemData.isShield) || String(itemData.category || "").toLowerCase() === "shield";
+    itemData.isShieldEffective = isShield;
 
-    // Keep a computed list of auto-qualities for later automation (not persisted).
-    itemData.autoQualitiesStructured = Array.isArray(qRule?.autoQualities) ? qRule.autoQualities : [];
+    // Default: preserve current values when we cannot resolve a profile.
+    let derivedEnc = baseEnc;
+    let derivedPrice = Math.round(basePrice * qualityPriceMult);
+    let derivedWeightClass = itemData.weightClass ?? "none";
+
+    // Base auto-qualities: armor quality itself does not add Magic/Silver; keep for future.
+    itemData.autoQualitiesStructured = [];
+
+    // Apply damaged (X): reduces all AR/BR by X (min 0)
+    const damagedQ = (itemData.qualitiesStructured || []).find(q => q?.key === "damaged");
+    const damagedValue = safeNumber(damagedQ?.value, 0);
+
+    const stepWeightClass = (base, delta) => {
+      const order = ["none", "light", "medium", "heavy", "superheavy", "crippling"];
+      let i = order.indexOf(String(base || "none").toLowerCase());
+      if (i === -1) i = 0;
+      i = Math.max(0, Math.min(order.length - 1, i + delta));
+      return order[i];
+    };
+
+    const materialKey = String(itemData.material || "").trim();
+
+    if (isShield) {
+      const shieldProfile = UESRPG.SHIELD_PROFILES?.[materialKey] ?? null;
+      const typeKey = String(itemData.shieldType || "normal").toLowerCase();
+      const typeRule = UESRPG.SHIELD_TYPE_RULES?.[typeKey] ?? UESRPG.SHIELD_TYPE_RULES.normal;
+
+      if (shieldProfile) {
+        derivedEnc = safeNumber(shieldProfile.enc, derivedEnc) + safeNumber(typeRule.encDelta, 0);
+        derivedWeightClass = stepWeightClass(shieldProfile.weightClass, weightDelta + safeNumber(typeRule.weightClassDelta, 0));
+        derivedPrice = Math.round(safeNumber(shieldProfile.price, basePrice) * qualityPriceMult * safeNumber(typeRule.priceMult, 1.0));
+        itemData.enchant_levelEffective = safeNumber(shieldProfile.enchantLevel, itemData.enchant_level);
+
+        const brBase = safeNumber(shieldProfile.br, itemData.blockRating);
+        const br = Math.round(brBase * safeNumber(typeRule.brMult, 1.0));
+        itemData.blockRatingEffective = Math.max(0, br - damagedValue);
+
+        // Magic BR:
+        // - Some shields have a generic magic BR equal to half the base BR (parentheses in table).
+        // - Some have an explicitly listed value (e.g. Moonstone 6, Dragonscale 11).
+        // - Some additionally list a special value vs an element (e.g. "4 vs frost").
+        const magicBR = (shieldProfile.magicBR != null)
+          ? safeNumber(shieldProfile.magicBR, 0)
+          : safeNumber(shieldProfile.magicBRHalf, 0);
+        itemData.magic_brEffective = Math.max(0, magicBR - damagedValue);
+        itemData.magic_brSpecial = shieldProfile.magicBRSpecial ?? null;
+      }
+    } else {
+      const armorClass = String(itemData.armorClass || "partial").toLowerCase();
+      const profile = UESRPG.ARMOR_PROFILES?.[armorClass]?.[materialKey] ?? null;
+
+      if (profile) {
+        derivedEnc = safeNumber(profile.enc, derivedEnc);
+        derivedWeightClass = stepWeightClass(profile.weightClass, weightDelta);
+        // Base price is table-driven (per location) but we store a single number; use body price as a conservative default.
+        derivedPrice = Math.round(safeNumber(profile.priceBody, basePrice) * qualityPriceMult);
+        itemData.enchant_levelEffective = safeNumber(profile.enchantLevel, itemData.enchant_level);
+
+        const ar = safeNumber(profile.ar, itemData.armor);
+        const magicAR = safeNumber(profile.magicAR, 0);
+        itemData.armorEffective = Math.max(0, ar - damagedValue);
+        itemData.magic_arEffective = Math.max(0, magicAR - damagedValue);
+        itemData.special_ar_typeEffective = profile.magicARType || "";
+      }
+    }
+
+    itemData.encEffective = derivedEnc;
+    itemData.priceEffective = derivedPrice;
+    itemData.weightClassEffective = derivedWeightClass;
   }
 
   _prepareNormalItem(actorData, itemData) {
@@ -240,8 +328,8 @@ export class SimpleItem extends Item {
     itemData.weapon2H ? itemData.damage3 = itemData.damage2 : itemData.damage3 = itemData.damage
 
     // --- Derived (non-persisted) effective stats ---
-    const baseDamage = itemData.damage;
-    const baseDamage2 = itemData.damage2;
+    const baseDamage = normalizeDiceExpression(itemData.damage);
+    const baseDamage2 = normalizeDiceExpression(itemData.damage2);
     const baseEnc = safeNumber(itemData.enc, 0);
     const basePrice = safeNumber(itemData.price, 0);
 
@@ -299,7 +387,7 @@ export class SimpleItem extends Item {
   }
 
   _prepareAmmunitionItem(actorData, itemData) {
-    const baseDamage = itemData.damage;
+    const baseDamage = normalizeDiceExpression(itemData.damage);
     const basePricePer10 = safeNumber(itemData.pricePer10, 0);
     const matKey = String(itemData.ammoMaterial || "iron").toLowerCase();
     const mRule = UESRPG.AMMO_MATERIAL_RULES?.[matKey] ?? null;
