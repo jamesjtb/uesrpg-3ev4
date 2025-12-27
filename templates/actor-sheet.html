@@ -473,9 +473,9 @@
                                                 <div class="item-name">{{item.name}}</div>
                                             </div>
                                         </td>
-                                        <td>{{item.system.armor}}</td>
-                                        <td>{{item.system.magic_ar}}</td>
-                                        <td>{{item.system.blockRating}}</td>
+                                        <td>{{#if item.system.armorEffective}}{{item.system.armorEffective}}{{else}}{{item.system.armor}}{{/if}}</td>
+                                        <td>{{#if item.system.magic_arEffective}}{{item.system.magic_arEffective}}{{#if item.system.special_ar_typeEffective}} {{item.system.special_ar_typeEffective}}{{/if}}{{else}}{{item.system.magic_ar}}{{/if}}</td>
+                                        <td>{{#if item.system.blockRatingEffective}}{{item.system.blockRatingEffective}}{{else}}{{item.system.blockRating}}{{/if}}</td>
                                         <td class="right-align-cell"><a class="item-control item-delete" title="Delete Item"><i class="fas fa-trash"></i></a></td>
                                     </tr>
                                 {{/each}}
