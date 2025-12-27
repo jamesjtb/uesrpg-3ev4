@@ -3,6 +3,12 @@
  * @extends {ActorSheet}
  */
 import { getDamageTypeFromWeapon } from "../combat/combat-utils.js";
+import { requireUserCanRollActor } from "../helpers/permissions.js";
+import { doTestRoll, formatDegree } from "../helpers/degree-roll-helper.js";
+import { computeSkillTN, SKILL_DIFFICULTIES } from "../skills/skill-tn.js";
+import { buildSkillRollRequest, normalizeSkillRollOptions } from "../skills/roll-request.js";
+import { SkillOpposedWorkflow } from "../skills/opposed-workflow.js";
+import { OpposedWorkflow } from "../combat/opposed-workflow.js";
 
 export class npcSheet extends foundry.appv1.sheets.ActorSheet {
   /** @override */
@@ -221,7 +227,7 @@ async activateListeners(html) {
 
   // Rollable Buttons
   html.find(".characteristic-roll").click(this._onClickCharacteristic.bind(this));
-  html.find(".professions-roll").click(this._onProfessionsRoll.bind(this));
+  if (typeof this._onProfessionsRoll === "function") html.find(".professions-roll").click(this._onProfessionsRoll.bind(this));
   html.find(".damage-roll").click(this._onDamageRoll.bind(this));
   html.find(".magic-roll").click(this._onSpellRoll.bind(this));
   html.find(".resistance-roll").click(this._onResistanceRoll.bind(this));
@@ -732,77 +738,188 @@ async _onSetBaseCharacteristics(event) {
   d.render(true);
   }
 
-  _onProfessionsRoll(event) {
+async _onProfessionsRoll(event) {
   event.preventDefault();
+
+  if (!requireUserCanRollActor(game.user, this.actor)) return;
+
   const element = event.currentTarget;
-  const actorSys = this.actor?.system || {};
-  let tags = [];
-  if (actorSys?.wounded) {
-    tags.push(`<span class="tag wound-tag">Wounded ${Number(actorSys?.woundPenalty ?? 0)}</span>`);
+  const key = String(element?.id ?? "").trim();
+  if (!key) return;
+
+  const actorSystem = this.actor?.system ?? {};
+
+  // Profession display name
+  const getProfessionLabel = (k) => {
+    if (k === "profession1" || k === "profession2" || k === "profession3") {
+      const spec = String(actorSystem?.skills?.[k]?.specialization ?? "").trim();
+      return spec || k.replace("profession", "Profession ");
+    }
+    const fromAttr = String(element.getAttribute?.("name") ?? "").trim();
+    if (fromAttr) return fromAttr;
+    return k.charAt(0).toUpperCase() + k.slice(1);
+  };
+
+  const label = getProfessionLabel(key);
+
+  // --- Targeted -> opposed workflow ---
+  const targets = [...(game.user.targets ?? [])];
+  if (targets.length > 0) {
+    const attackerToken =
+      canvas?.tokens?.controlled?.find(t => t.actor?.id === this.actor.id) ??
+      this.actor.getActiveTokens?.()[0] ??
+      null;
+
+    if (!attackerToken) {
+      ui.notifications.warn("No attacker token found on the canvas. Select your token and try again.");
+      return;
+    }
+
+    // Combat profession routes into combat opposed workflow (same as combat style click).
+    if (key === "combat") {
+      for (const defenderToken of targets) {
+        await OpposedWorkflow.createPending({
+          attackerTokenUuid: attackerToken.document?.uuid ?? attackerToken.uuid,
+          defenderTokenUuid: defenderToken.document?.uuid ?? defenderToken.uuid,
+          attackerLabel: "Combat (Profession)",
+          attackerItemUuid: "prof:combat"
+        });
+      }
+      return;
+    }
+
+    // All other professions use skill opposed workflow.
+    for (const defenderToken of targets) {
+      const msg = await SkillOpposedWorkflow.createPending({
+        attackerTokenUuid: attackerToken.document?.uuid ?? attackerToken.uuid,
+        defenderTokenUuid: defenderToken.document?.uuid ?? defenderToken.uuid,
+        attackerSkillUuid: `prof:${key}`,
+        attackerSkillLabel: label
+      });
+
+      // Mirror PC behavior: attacker rolls immediately from the created card.
+      await SkillOpposedWorkflow.handleAction(msg, "attacker-roll", { event });
+    }
+    return;
   }
-  if (Number(actorSys?.fatigue?.penalty ?? 0) !== 0) {
-    tags.push(`<span class="tag fatigue-tag">Fatigued ${Number(actorSys?.fatigue?.penalty ?? 0)}</span>`);
-  }
-  if (Number(actorSys?.carry_rating?.penalty ?? 0) !== 0) {
-    tags.push(`<span class="tag enc-tag">Encumbered ${Number(actorSys?.carry_rating?.penalty ?? 0)}</span>`);
-  }
 
-  let d = new Dialog({
-    title: "Apply Roll Modifier",
-    content: `<form>
-                <div class="dialogForm">
-                <label><b>${element.getAttribute("name")} Modifier: </b></label>
-                <input placeholder="ex. -20, +10" id="playerInput" value="0" style="text-align:center; width:50%; border-style: groove; float:right;" type="text">
-                </div>
-              </form>`,
-    buttons: {
-      one: {
-        label: "Roll!",
-        callback: async (html) => {
-          const playerInput = parseInt(html.find('[id="playerInput"]').val()) || 0;
+  // --- Untargeted -> same UI + pipeline as PC skill tests ---
+  const baseValue = Number(actorSystem?.professions?.[key] ?? 0);
+  const profSkillItem = {
+    uuid: `prof:${key}`,
+    id: `prof:${key}`,
+    name: label,
+    img: this.actor.img,
+    system: { value: baseValue },
+    _professionKey: key
+  };
 
-          let roll = new Roll("1d100");
-          await roll.evaluate();
+  const hasSpec = Boolean(String(actorSystem?.skills?.[key]?.specialization ?? "").trim());
 
-          const lucky = actorSys.lucky_numbers || {};
-          const unlucky = actorSys.unlucky_numbers || {};
-          const isLucky = [lucky.ln1, lucky.ln2, lucky.ln3, lucky.ln4, lucky.ln5, lucky.ln6, lucky.ln7, lucky.ln8, lucky.ln9, lucky.ln10].includes(roll.result);
-          const isUnlucky = [unlucky.ul1, unlucky.ul2, unlucky.ul3, unlucky.ul4, unlucky.ul5, unlucky.ul6].includes(roll.result);
+  // Pull last used defaults if present (falls back to PC defaults shape).
+  const defaults = { difficultyKey: "average", manualMod: 0, useSpec: false };
 
-          const base = Number(this.actor.system?.professionsWound?.[element.getAttribute("id")] ?? this.actor.system?.professions?.[element.getAttribute("id")] ?? 0);
-          const fatigue = Number(actorSys?.fatigue?.penalty ?? 0);
-          const carry = Number(actorSys?.carry_rating?.penalty ?? 0);
-          const target = base + playerInput + fatigue + carry;
+  const difficultyOptions = SKILL_DIFFICULTIES.map(d => {
+    const sign = d.mod >= 0 ? "+" : "";
+    const sel = d.key === defaults.difficultyKey ? "selected" : "";
+    return `<option value="${d.key}" ${sel}>${d.label} (${sign}${d.mod})</option>`;
+  }).join("\n");
 
-          let contentString = "";
-          if (isLucky) {
-            contentString = `<h2>${element.getAttribute("name")}</h2><p></p><b>Target Number: [[${target}]]</b><p></p><b>Result: [[${roll.result}]]</b><p></p><span style='color:green; font-size:120%;'><b>LUCKY NUMBER!</b></span>`;
-          } else if (isUnlucky) {
-            contentString = `<h2>${element.getAttribute("name")}</h2><p></p><b>Target Number: [[${target}]]</b><p></p><b>Result: [[${roll.result}]]</b><p></p><span style='color:rgb(168, 5, 5); font-size:120%;'><b>UNLUCKY NUMBER!</b></span>`;
-          } else {
-            contentString = `<h2>${element.getAttribute("name")}</h2><p></p><b>Target Number: [[${target}]]</b><p></p><b>Result: [[${roll.result}]]</b><p></p>${roll.result <= target ? "<span style='color:green; font-size:120%;'><b>SUCCESS!</b></span>" : "<span style='color:rgb(168,5,5); font-size:120%;'><b>FAILURE!</b></span>"}`;
-          }
+  const content = `
+    <form class="uesrpg-skill-roll">
+      <div class="form-group">
+        <label><b>Difficulty</b></label>
+        <select name="difficultyKey" style="width:100%;">${difficultyOptions}</select>
+      </div>
 
-          await roll.toMessage({
-            async: false,
-            user: game.user.id,
-            speaker: ChatMessage.getSpeaker(),
-            roll: roll,
-            content: contentString,
-            flavor: `<div class="tag-container">${tags.join("")}</div>`,
-            rollMode: game.settings.get("core", "rollMode"),
-          });
-        },
-      },
-      two: {
-        label: "Cancel",
-        callback: (html) => console.log("Cancelled"),
-      },
+      <div class="form-group" style="margin-top:8px;">
+        <label><b>Manual Modifier</b></label>
+        <input name="manualMod" type="text" value="0" placeholder="e.g. -20, +10" style="width:100%; text-align:center;" />
+      </div>
+
+      ${hasSpec ? `
+      <div class="form-group" style="margin-top:8px; display:flex; gap:8px; align-items:center;">
+        <input type="checkbox" name="useSpec" />
+        <label style="margin:0;">Use Specialization (+10)</label>
+      </div>
+      ` : ``}
+    </form>
+  `;
+
+  const decl = await Dialog.prompt({
+    title: `${label} — Roll Options`,
+    content,
+    label: "Roll",
+    callback: (html) => {
+      const root = html instanceof HTMLElement ? html : html?.[0];
+      const difficultyKey = root?.querySelector('select[name="difficultyKey"]')?.value ?? "average";
+      const useSpec = Boolean(root?.querySelector('input[name="useSpec"]')?.checked);
+      const rawManual = root?.querySelector('input[name="manualMod"]')?.value ?? "0";
+      const manualMod = Number.parseInt(String(rawManual), 10) || 0;
+      return normalizeSkillRollOptions({ difficultyKey, useSpec, manualMod }, defaults);
     },
-    default: "one",
-    close: (html) => console.log(),
+    rejectClose: false
+  }).catch(() => null);
+
+  if (!decl) return;
+
+  const normalized = normalizeSkillRollOptions(decl, defaults);
+
+  // Build request for debug symmetry (no side effects).
+  buildSkillRollRequest({
+    actor: this.actor,
+    skillItem: profSkillItem,
+    targetToken: null,
+    options: { difficultyKey: normalized.difficultyKey, manualMod: normalized.manualMod, useSpec: Boolean(normalized.useSpec) },
+    context: { source: "npc-sheet", quick: false }
   });
-  d.render(true);
+
+  const tn = computeSkillTN({
+    actor: this.actor,
+    skillItem: profSkillItem,
+    difficultyKey: normalized.difficultyKey,
+    manualMod: normalized.manualMod,
+    useSpecialization: hasSpec && normalized.useSpec
+  });
+
+  const res = await doTestRoll(this.actor, {
+    rollFormula: "1d100",
+    target: tn.finalTN,
+    allowLucky: true,
+    allowUnlucky: true
+  });
+
+  const degreeLine = formatDegree(res);
+
+  const breakdownRows = (tn.breakdown ?? []).map((b) => {
+    const sign = b.value >= 0 ? "+" : "";
+    const labelTxt = String(b.label ?? "");
+    return `<div style="display:flex; justify-content:space-between;"><span>${labelTxt}</span><span>${sign}${b.value}</span></div>`;
+  }).join("");
+
+  const declaredParts = [];
+  if (tn?.difficulty?.label) declaredParts.push(`${tn.difficulty.label} (${tn.difficulty.mod >= 0 ? "+" : ""}${tn.difficulty.mod})`);
+  if (hasSpec && normalized.useSpec) declaredParts.push("Spec +10");
+  if (normalized.manualMod) declaredParts.push(`Mod ${normalized.manualMod >= 0 ? "+" : ""}${normalized.manualMod}`);
+
+  const flavor = `
+    <div>
+      <h2 style="margin:0 0 6px 0;">${label}</h2>
+      <div><b>Target Number:</b> ${tn.finalTN}</div>
+      ${declaredParts.length ? `<div style="margin-top:2px; font-size:0.85em; opacity:0.85;"><b>Options:</b> ${declaredParts.join("; ")}</div>` : ""}
+      <div style="margin-top:4px;">${degreeLine}</div>
+      <details style="margin-top:6px;">
+        <summary style="cursor:pointer; font-size:12px; opacity:0.9;">TN breakdown</summary>
+        <div style="margin-top:6px; font-size:12px; opacity:0.9;">${breakdownRows}</div>
+      </details>
+    </div>
+  `;
+
+  await res.roll.toMessage({
+    speaker: ChatMessage.getSpeaker({ actor: this.actor }),
+    flavor,
+    rollMode: game.settings.get("core", "rollMode")
+  });
 }
 
 async _onDefendRoll(event) {
