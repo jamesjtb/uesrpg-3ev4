@@ -9,6 +9,9 @@
  */
 export const systemRootPath = "systems/uesrpg-3ev4";
 
+
+// Central roll formula used by all tests (PC and NPC).
+export const SYSTEM_ROLL_FORMULA = "1d100";
 /** Central constants object (extend as needed). */
 export const UESRPG = {
   // Weapon quality levels (Chapter 7 scaffold)
