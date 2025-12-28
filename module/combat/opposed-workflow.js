@@ -19,6 +19,7 @@ import { UESRPG } from "../constants.js";
 import { DefenseDialog } from "./defense-dialog.js";
 import { computeTN, listCombatStyles, variantMod as computeVariantMod } from "./tn.js";
 import { getDamageTypeFromWeapon, getHitLocationFromRoll } from "./combat-utils.js";
+import { getBlockValue, normalizeHitLocation } from "./mitigation.js";
 
 function _asNumber(v) {
   if (v == null) return 0;
@@ -65,6 +66,10 @@ function normalizeDiceExpression(expr) {
 
 async function safeEvaluateRoll(formula, { allowUnvalidated = false } = {}) {
   const f = normalizeDiceExpression(formula);
+  if (game?.settings?.get("uesrpg-3ev4", "opposedDebugFormula") && String(formula ?? "").trim() !== f) {
+    // eslint-disable-next-line no-console
+    console.log("UESRPG Opposed | Formula normalized", { original: String(formula ?? ""), normalized: f });
+  }
   const ok = (typeof Roll?.validate === "function") ? Roll.validate(f) : true;
   if (!ok && !allowUnvalidated) {
     console.warn(`UESRPG Opposed | Invalid roll formula "${String(formula)}" -> normalized "${f}". Falling back to 0.`);
@@ -93,6 +98,53 @@ function _resolveDoc(uuid) {
   } catch (_e) {
     return null;
   }
+}
+
+/**
+ * Get current Action Points (AP) for an actor. Returns 0 if missing/invalid.
+ * System schema uses `actor.system.action_points.value` in this repository.
+ */
+function _getActionPoints(actor) {
+  const v = Number(actor?.system?.action_points?.value ?? 0);
+  return Number.isFinite(v) ? v : 0;
+}
+
+/**
+ * Spend AP atomically. Returns true if spent, false if insufficient or update failed.
+ * Does not mutate document directly.
+ */
+async function _spendActionPoints(actor, amount, { reason = "" } = {}) {
+  const spend = Number(amount ?? 0);
+  if (!actor || !Number.isFinite(spend) || spend <= 0) return true;
+
+  const current = _getActionPoints(actor);
+  if (current < spend) return false;
+
+  try {
+    await actor.update({ "system.action_points.value": current - spend });
+    return true;
+  } catch (err) {
+    console.error("UESRPG | Failed to spend Action Points", { actor: actor?.uuid, spend, reason, err });
+    ui.notifications?.error?.("Failed to spend Action Points. See console for details.");
+    return false;
+  }
+}
+
+/**
+ * Prefer an equipped weapon UUID for a given actor. Used for Counter-Attack default selection.
+ * Falls back to the first owned weapon if none are equipped.
+ */
+function _getPreferredWeaponUuid(actor, { meleeOnly = false } = {}) {
+  const items = Array.from(actor?.items ?? []);
+  const weapons = items.filter((it) => it?.type === "weapon");
+  const filtered = meleeOnly
+    ? weapons.filter((w) => (w.system?.weaponType ?? w.system?.type ?? "").toString().toLowerCase() !== "ranged")
+    : weapons;
+
+  const equipped = filtered.find((w) => w.system?.equipped === true);
+  if (equipped?.uuid) return equipped.uuid;
+
+  return filtered[0]?.uuid ?? "";
 }
 
 function _resolveActor(docOrUuid) {
@@ -134,6 +186,17 @@ function _variantLabel(variant) {
   }
 }
 
+
+function _circumstanceLabel(mod) {
+  const v = Number(mod ?? 0) || 0;
+  switch (v) {
+    case -10: return "Minor Disadvantage (-10)";
+    case -20: return "Disadvantage (-20)";
+    case -30: return "Major Disadvantage (-30)";
+    default: return "—";
+  }
+}
+
 function _btn(label, action, extraDataset = {}) {
   const ds = Object.entries(extraDataset)
     .map(([k, v]) => `data-${k}="${String(v).replace(/\"/g, "&quot;")}"`)
@@ -153,6 +216,18 @@ function _logDebug(event, payload) {
   } catch (_e) {}
 }
 
+function _opposedFlags(parentMessageId, stage) {
+  // Thread all workflow messages to the originating opposed card for easier debugging and filtering.
+  return {
+    "uesrpg-3ev4": {
+      opposed: {
+        parentMessageId,
+        stage
+      }
+    }
+  };
+}
+
 function _renderBreakdown(tnObj) {
   const rows = (tnObj?.breakdown ?? []).map(b => {
     const v = Number(b.value ?? 0);
@@ -170,6 +245,8 @@ function _renderBreakdown(tnObj) {
 function _renderCard(data, messageId) {
   const a = data.attacker;
   const d = data.defender;
+
+  const showResolutionDetails = !!(game?.settings?.get?.("uesrpg-3ev4", "opposedShowResolutionDetails"));
 
   const baseA = Number(a.baseTarget ?? 0);
   const modA = Number(a.totalMod ?? 0);
@@ -203,7 +280,37 @@ function _renderCard(data, messageId) {
 
   const outcomeLine = data.outcome
     ? `<div style="margin-top:10px;"><b>Outcome:</b> ${data.outcome.text ?? ""}</div>`
-    : `<div style="margin-top:10px;"><i>Pending</i></div>`;
+    : `<div style="margin-top:10px;"><i>Pending</i></div>`
+
+
+  const resolutionDetails = (() => {
+    if (!showResolutionDetails) return "";
+    if (!data.outcome) return "";
+    const aVariant = a.variantLabel ?? a.variant ?? "—";
+    const dDefense = d.defenseLabel ?? d.defenseType ?? "—";
+    const advA = Number(data.advantage?.attacker ?? 0);
+    const advD = Number(data.advantage?.defender ?? 0);
+    const aManual = Number(a.manualMod ?? 0);
+    const aHL = (a.precisionLocation ?? a.hitLocation ?? "").toString();
+    const dHL = (d.precisionLocation ?? d.hitLocation ?? "").toString();
+
+    const lines = [];
+    lines.push(`<div><b>Attack variation:</b> ${aVariant}</div>`);
+    lines.push(`<div><b>Manual modifier:</b> ${aManual >= 0 ? "+" : ""}${aManual}</div>`);
+    if (aHL) lines.push(`<div><b>Attacker hit location:</b> ${aHL}</div>`);
+    if (dHL) lines.push(`<div><b>Defender hit location:</b> ${dHL}</div>`);
+    lines.push(`<div><b>Advantage:</b> Attacker ${advA} / Defender ${advD}</div>`);
+    lines.push(`<div><b>Defense:</b> ${dDefense}</div>`);
+
+    return `
+      <details style="margin-top:8px;">
+        <summary style="cursor:pointer;">Resolution details</summary>
+        <div style="margin-top:6px; font-size:12px; opacity:0.9;">
+          ${lines.join("")}
+        </div>
+      </details>`;
+  })();
+
 
   const resolvedActions = (() => {
     if (!data.outcome || data.status !== "resolved") return "";
@@ -242,6 +349,24 @@ function _renderCard(data, messageId) {
       `;
     }
 
+    // Defender wins by defending (Parry / Evade / other non-block, non-counter defense).
+    // RAW Step 3: "Defender wins: The defense is successful, the defender chooses how to utilize their advantage and resolves it."
+    // NOTE: If the defender chose "No Defense", the defender is treated as having automatically failed and cannot gain advantage.
+    const defenderCanUseAdvantage = (data.outcome.winner === "defender")
+      && (d.noDefense !== true)
+      && !["block", "counter", "none"].includes(String(d.defenseType ?? "none"))
+      && (advD > 0)
+      && (data.defenderAdvantage?.resolved !== true);
+
+    if (defenderCanUseAdvantage) {
+      return `
+        <div style="margin-top:10px; display:flex; gap:8px; flex-wrap:wrap; align-items:center;">
+          ${_btn("Resolve Advantage", "defender-advantage")}
+          <span style="opacity:0.85; font-size:12px;">Advantage: ${advD}</span>
+        </div>
+      `;
+    }
+
     return "";
   })();
 
@@ -256,6 +381,7 @@ function _renderCard(data, messageId) {
         <div style="margin-top:4px; font-size:13px; line-height:1.25;">
           <div><b>Test:</b> ${a.label}</div>
           <div><b>Attack:</b> ${aVariantText}</div>
+          ${Number(a.circumstanceMod ?? 0) ? `` : ``}
           <div><b>TN:</b> ${aTargetLabel}</div>
 
           ${a.result ? `<div><b>Roll:</b> ${a.result.rollTotal} — ${_fmtDegree(a.result)}</div>` : ""}
@@ -271,6 +397,7 @@ function _renderCard(data, messageId) {
         <div style="margin-top:4px; font-size:13px; line-height:1.25;">
           <div><b>Test:</b> ${dTestLabel}</div>
           <div><b>Defense:</b> ${dDefenseLabel}</div>
+          ${Number(d.circumstanceMod ?? 0) ? `` : ``}
           <div><b>TN:</b> ${dTargetLabel}</div>
 
           ${(d.noDefense || d.result) ? `<div><b>Roll:</b> ${d.noDefense ? 100 : d.result.rollTotal} — ${d.noDefense ? "1 DoF" : _fmtDegree(d.result)}</div>` : ""}
@@ -280,6 +407,7 @@ function _renderCard(data, messageId) {
       </div>
     </div>
     ${outcomeLine}
+    ${resolutionDetails}
     ${resolvedActions}
   </div>`;
 }
@@ -297,7 +425,7 @@ async function _updateCard(message, data) {
   });
 }
 
-async function _attackerDeclareDialog(attackerLabel, { styles = [], selectedStyleUuid = null, defaultVariant = "normal", defaultManual = 0 } = {}) {
+async function _attackerDeclareDialog(attackerActor, attackerLabel, { styles = [], selectedStyleUuid = null, defaultVariant = "normal", defaultManual = 0, defaultCirc = 0 } = {}) {
   const showStyleSelect = Array.isArray(styles) && styles.length >= 2;
 
   const styleSelect = showStyleSelect
@@ -376,7 +504,18 @@ async function _attackerDeclareDialog(attackerLabel, { styles = [], selectedStyl
       </label>
     </div>
 
-	    <div class="form-group" style="margin-top:12px;">
+	
+    <div class="form-group" style="margin-top:12px;">
+      <label><b>Combat Circumstance Modifiers</b></label>
+      <select name="circMod" style="width:100%;">
+        <option value="0" ${Number(defaultCirc) === 0 ? "selected" : ""}>—</option>
+        <option value="-10" ${Number(defaultCirc) === -10 ? "selected" : ""}>Minor Disadvantage (-10)</option>
+        <option value="-20" ${Number(defaultCirc) === -20 ? "selected" : ""}>Disadvantage (-20)</option>
+        <option value="-30" ${Number(defaultCirc) === -30 ? "selected" : ""}>Major Disadvantage (-30)</option>
+      </select>
+    </div>
+
+    <div class="form-group" style="margin-top:12px;">
       <label><b>Manual Modifier</b></label>
       <input name="manualMod" type="number" value="${Number(defaultManual) || 0}" style="width:100%;" />
     </div>
@@ -407,8 +546,21 @@ async function _attackerDeclareDialog(attackerLabel, { styles = [], selectedStyl
             const variant = root.querySelector('input[name="attackVariant"]:checked')?.value ?? "normal";
             const raw = root.querySelector('input[name="manualMod"]')?.value ?? "0";
             const manualMod = Number.parseInt(String(raw), 10) || 0;
+            const rawCirc = root.querySelector('select[name="circMod"]')?.value ?? "0";
+            const circumstanceMod = Number.parseInt(String(rawCirc), 10) || 0;
             const precisionLocation = root.querySelector('select[name="precisionLocation"]')?.value ?? safeDefaultLoc;
-            return settle({ styleUuid, variant, manualMod, precisionLocation });
+
+            // Pre-AE: enforce AP spend for All Out Attack (+1 AP). If AP is missing, treat as 0.
+            const apCost = (variant === "allOut") ? 1 : 0;
+            if (apCost > 0) {
+              const ap = _getActionPoints(attackerActor);
+              if (ap < apCost) {
+                ui.notifications?.warn?.("Not enough Action Points to perform All Out Attack.");
+                return;
+              }
+            }
+
+            return settle({ styleUuid, variant, manualMod, circumstanceMod, precisionLocation, apCost });
           }
         },
         cancel: {
@@ -570,34 +722,7 @@ function _listEquippedShields(actor) {
   });
 }
 
-/**
- * Determine the effective Block Rating (BR) for a shield against a given incoming damage type.
- *
- * This prefers the derived (non-persisted) fields computed in Item#prepareData, but falls back
- * to the legacy persisted fields when needed.
- */
-function _getShieldBlockRating(shield, damageType = "physical") {
-  if (!shield) return 0;
-
-  const sys = shield.system ?? {};
-  const dt = String(damageType || "physical").toLowerCase();
-
-  const baseBR = Number(sys.blockRatingEffective ?? sys.blockRating ?? 0);
-  if (!Number.isFinite(baseBR)) return 0;
-
-  // Physical: use base BR.
-  if (dt === "physical") return Math.max(0, baseBR);
-
-  // Magic/Elemental: prefer derived magic BR, including special vs an element.
-  const special = sys.magic_brSpecial;
-  if (special && String(special.type || "").toLowerCase() === dt) {
-    const v = Number(special.value ?? 0);
-    return Math.max(0, Number.isFinite(v) ? v : 0);
-  }
-
-  const magicBR = Number(sys.magic_brEffective ?? sys.magic_br ?? 0);
-  return Math.max(0, Number.isFinite(magicBR) ? magicBR : 0);
-}
+// Block Rating resolver is centralized in module/combat/mitigation.js
 
 async function _promptWeaponAndAdvantages({ attackerActor, advantageCount = 0, defaultWeaponUuid = null, defaultHitLocation = "Body" }) {
   const weapons = _listEquippedWeapons(attackerActor);
@@ -796,6 +921,62 @@ async function _promptWeaponAndAdvantages({ attackerActor, advantageCount = 0, d
   });
 }
 
+/**
+ * Prompt the defender to utilize their Advantage after a successful defense.
+ *
+ * RAW (Chapter 5, Attacking & Defending, Step 3):
+ * "Defender wins: The defense is successful, the defender chooses how to utilize their advantage and resolves it."
+ *
+ * Pre–Active Effects scope: we provide a pipeline to select/record an advantage utilization choice,
+ * and post a chat audit message. Most mechanical outcomes will be implemented later via Active Effects.
+ */
+async function _promptDefenderAdvantage({ defenderActor, advantageCount = 0 } = {}) {
+  if (!defenderActor) return null;
+  const adv = Number(advantageCount ?? 0);
+  if (!Number.isFinite(adv) || adv <= 0) {
+    ui.notifications.warn("No Advantage is available to resolve.");
+    return null;
+  }
+
+  // NOTE: Keep the list compact and deterministic. These are placeholders until AE-backed mechanics are introduced.
+  const content = `
+    <form class="uesrpg-def-adv">
+      <div style="margin-bottom:0.5rem;">
+        <b>Advantage</b>: ${adv} available
+      </div>
+      <div class="form-group" style="margin:0 0 0.5rem 0;">
+        <label style="font-weight:700;">Utilize Advantage</label>
+        <select name="choice" style="width:100%;">
+          <option value="defer" selected>Defer (record only; no mechanical effect pre-AE)</option>
+          <option value="special" disabled>Special Advantage (requires Active Effects)</option>
+        </select>
+        <p class="notes" style="margin:0.35rem 0 0 0; opacity:0.85;">
+          Most Advantage options require Active Effects and will be enabled in a later milestone.
+        </p>
+      </div>
+    </form>
+  `;
+
+  try {
+    const choice = await Dialog.prompt({
+      title: `Resolve Defender Advantage — ${defenderActor.name}`,
+      content,
+      label: "Resolve",
+      callback: (html) => {
+        const form = html?.[0]?.querySelector?.("form.uesrpg-def-adv");
+        if (!form) return { choice: "defer" };
+        const sel = form.querySelector("select[name='choice']");
+        return { choice: String(sel?.value ?? "defer") };
+      },
+      rejectClose: true,
+    });
+    return choice ?? null;
+  } catch (_e) {
+    // Closed without resolving.
+    return null;
+  }
+}
+
 async function _rollWeaponDamage({ weapon }) {
   const addFlatBonus = (expr, bonus) => {
     const b = Number(bonus || 0);
@@ -808,10 +989,52 @@ async function _rollWeaponDamage({ weapon }) {
   let damageString =
     (weapon.system.damage3Effective ?? weapon.system.damage3 ?? weapon.system.damage2Effective ?? weapon.system.damage2 ?? weapon.system.damageEffective ?? weapon.system.damage) || "0";
 
-  // Ranged: add ammunition material/quality contribution and optionally consume 1 shot.
+  /** @type {{ammoUuid:string, qtyAfter:number, ammoName:string}|null} */
+  let pendingAmmo = null;
+
+  // Ranged: add ammunition material/quality contribution.
+  // IMPORTANT: ammunition consumption must occur only after the damage roll has been successfully posted to chat.
+  // (No spend unless resolved: prevents ammo loss if the workflow errors prior to producing a real roll.)
   if (String(weapon.system?.attackMode ?? "melee") === "ranged" && weapon.actor) {
+    const shouldConsume = weapon.system?.consumeAmmo !== false;
     const ammoId = String(weapon.system?.ammoId ?? "").trim();
-    if (ammoId) {
+
+    // If the weapon is configured to consume ammo, enforce that ammo exists and has quantity.
+    // This gates the damage workflow pre-AE and prevents "free" ranged damage when out of ammo.
+    if (shouldConsume) {
+      if (!ammoId) {
+        ui.notifications.warn(`${weapon.name}: no ammunition selected.`);
+        return null;
+      }
+      const ammo = weapon.actor.items.get(ammoId);
+      if (!ammo || ammo.type !== "ammunition") {
+        ui.notifications.warn(`${weapon.name}: selected ammunition could not be resolved.`);
+        return null;
+      }
+      const qty = Number(ammo.system?.quantity ?? 0);
+      if (!(qty > 0)) {
+        ui.notifications.warn(`${ammo.name}: no ammunition remaining.`);
+        return null;
+      }
+
+      const ammoExpr = normalizeDiceExpression(ammo.system?.damageEffective ?? ammo.system?.damage ?? "0");
+      let ammoBonus = 0;
+      try {
+        const r = await safeEvaluateRoll(ammoExpr);
+        ammoBonus = Number(r.total) || 0;
+      } catch (err) {
+        console.warn("UESRPG | Failed to evaluate ammunition damage expression", { ammoId, ammoExpr, err });
+      }
+      damageString = addFlatBonus(damageString, ammoBonus);
+
+      // Record the consumption for later; actual update is performed by the caller.
+      pendingAmmo = {
+        ammoUuid: ammo.uuid,
+        ammoName: ammo.name,
+        qtyAfter: Math.max(0, qty - 1),
+      };
+    } else if (ammoId) {
+      // Ammo is configured but consumption is disabled; treat ammo as optional damage modifier.
       const ammo = weapon.actor.items.get(ammoId);
       if (ammo?.type === "ammunition") {
         const ammoExpr = normalizeDiceExpression(ammo.system?.damageEffective ?? ammo.system?.damage ?? "0");
@@ -823,16 +1046,6 @@ async function _rollWeaponDamage({ weapon }) {
           console.warn("UESRPG | Failed to evaluate ammunition damage expression", { ammoId, ammoExpr, err });
         }
         damageString = addFlatBonus(damageString, ammoBonus);
-
-        // Consume ammo after a successful roll creation; ensure we do not go negative.
-        if (weapon.system?.consumeAmmo !== false) {
-          const qty = Number(ammo.system?.quantity ?? 0);
-          if (qty > 0) {
-            await ammo.update({ "system.quantity": qty - 1 });
-          } else {
-            ui.notifications.warn(`${ammo.name}: no ammunition remaining.`);
-          }
-        }
       }
     }
   }
@@ -860,7 +1073,28 @@ async function _rollWeaponDamage({ weapon }) {
     else total = Math.max(total, alt);
   }
 
-  return { damageString, rollA: a, rollB: b, finalDamage: total };
+  return { damageString, rollA: a, rollB: b, finalDamage: total, pendingAmmo };
+}
+
+async function _consumePendingAmmo(pendingAmmo) {
+  if (!pendingAmmo) return true;
+  const { ammoUuid, qtyAfter, ammoName } = pendingAmmo;
+  try {
+    const doc = await fromUuid(ammoUuid);
+    if (!doc) {
+      ui.notifications.warn(`${ammoName || "Ammunition"}: could not be resolved for consumption.`);
+      return false;
+    }
+    const qty = Number(doc.system?.quantity ?? 0);
+    const next = Math.min(qty, Math.max(0, Number(qtyAfter ?? 0)));
+    if (next === qty) return true;
+    await doc.update({ "system.quantity": next });
+    return true;
+  } catch (err) {
+    console.error("UESRPG | Failed to consume ammo", { pendingAmmo, err });
+    ui.notifications.error(`${ammoName || "Ammunition"}: failed to consume. See console for details.`);
+    return false;
+  }
 }
 
 /**
@@ -879,6 +1113,8 @@ async function _postWeaponDamageChatCard({
   hitLocation,
   applyButtonHtml = "",
   extraNoteHtml = "",
+  parentMessageId = null,
+  stage = "damage",
 } = {}) {
   if (!attacker || !weapon || !dmg) return;
 
@@ -939,14 +1175,20 @@ async function _postWeaponDamageChatCard({
 
   // Return the created message so callers can enforce strict ordering when multiple
   // chat cards are posted in sequence (e.g., Resolve Block -> weapon card -> block result).
-  return await ChatMessage.create({
+  const created = await ChatMessage.create({
     user: game.user.id,
     speaker: ChatMessage.getSpeaker({ actor: attacker, token: aToken?.document ?? null }),
     content: cardHtml,
     style: CONST.CHAT_MESSAGE_STYLES.OTHER,
     rolls: [dmg.rollA, dmg.rollB].filter(Boolean),
     rollMode: game.settings.get("core", "rollMode"),
+    flags: parentMessageId ? _opposedFlags(parentMessageId, stage) : undefined,
   });
+
+  // If this damage roll was ranged and requires ammo consumption, do it strictly AFTER the roll is posted.
+  await _consumePendingAmmo(dmg.pendingAmmo);
+
+  return created;
 }
 
 export const OpposedWorkflow = {
@@ -1061,13 +1303,18 @@ export const OpposedWorkflow = {
       const styles = listCombatStyles(attacker);
       const selectedStyleUuid = styles.find(s => s.uuid === data.attacker.itemUuid)?.uuid ?? styles[0]?.uuid ?? data.attacker.itemUuid ?? null;
 
-      const decl = await _attackerDeclareDialog(data.attacker.label ?? "Attack", {
+      const decl = await _attackerDeclareDialog(attacker, data.attacker.label ?? "Attack", {
         styles,
         selectedStyleUuid,
         defaultVariant: data.attacker.variant ?? "normal",
-        defaultManual: data.attacker.manualMod ?? 0
+        defaultManual: data.attacker.manualMod ?? 0,
+        defaultCirc: data.attacker.circumstanceMod ?? 0
       });
       if (!decl) return;
+
+      // IMPORTANT: Do not spend AP until after we have produced a real roll message.
+      // This prevents AP loss if the workflow fails before resolving the roll.
+      const pendingApCost = Number(decl.apCost ?? 0) || 0;
 
       // If the attacker selected a different combat style, switch base TN + label now.
       if (decl.styleUuid && decl.styleUuid !== data.attacker.itemUuid) {
@@ -1079,12 +1326,14 @@ export const OpposedWorkflow = {
       }
 
       const manualMod = Number(decl.manualMod) || 0;
+      const circumstanceMod = Number(decl.circumstanceMod) || 0;
       const tn = computeTN({
         actor: attacker,
         role: "attacker",
         styleUuid: data.attacker.itemUuid,
         variant: decl.variant,
-        manualMod
+        manualMod,
+        circumstanceMod
       });
 
       const finalTN = tn.finalTN;
@@ -1096,6 +1345,8 @@ export const OpposedWorkflow = {
       data.attacker.variantLabel = _variantLabel(decl.variant);
       data.attacker.variantMod = vMod;
       data.attacker.manualMod = manualMod;
+      data.attacker.circumstanceMod = circumstanceMod;
+      data.attacker.circumstanceLabel = _circumstanceLabel(circumstanceMod);
       data.attacker.totalMod = totalMod;
       data.attacker.baseTarget = tn.baseTN;
       data.attacker.target = finalTN;
@@ -1113,8 +1364,18 @@ export const OpposedWorkflow = {
       await res.roll.toMessage({
         speaker: ChatMessage.getSpeaker({ actor: attacker, token: aToken?.document ?? null }),
         flavor: `${data.attacker.label} — Attacker Roll`,
-        rollMode: game.settings.get("core", "rollMode")
+        rollMode: game.settings.get("core", "rollMode"),
+        flags: _opposedFlags(message.id, "attacker-roll")
       });
+
+      // Spend AP only after the attack roll has been successfully executed and posted.
+      // This avoids losing AP on cancelled/failed workflows.
+      if (pendingApCost > 0) {
+        const ok = await _spendActionPoints(attacker, pendingApCost, { reason: `attackVariant:${decl.variant}` });
+        if (!ok) {
+          ui.notifications.warn("Insufficient Action Points to perform this attack.");
+        }
+      }
 
       data.attacker.result = {
         rollTotal: res.rollTotal,
@@ -1185,6 +1446,7 @@ export const OpposedWorkflow = {
       }
 
       const manualMod = _asNumber(choice.manualMod ?? 0);
+      const circumstanceMod = _asNumber(choice.circumstanceMod ?? 0);
       const tn = computeTN({
         actor: defender,
         role: "defender",
@@ -1216,7 +1478,8 @@ export const OpposedWorkflow = {
         await res.roll.toMessage({
           speaker: ChatMessage.getSpeaker({ actor: defender, token: dToken?.document ?? null }),
           flavor: `${data.defender.label} — Defender Roll`,
-          rollMode: game.settings.get("core", "rollMode")
+          rollMode: game.settings.get("core", "rollMode"),
+          flags: _opposedFlags(message.id, "defender-roll")
         });
 
         data.defender.result = {
@@ -1248,7 +1511,7 @@ export const OpposedWorkflow = {
       const selection = await _promptWeaponAndAdvantages({
         attackerActor: attacker,
         advantageCount: advCount,
-        defaultWeaponUuid: data.context?.lastWeaponUuid ?? null,
+        defaultWeaponUuid: data.context?.lastWeaponUuid ?? _getPreferredWeaponUuid(attacker, { meleeOnly: false }) ?? null,
         defaultHitLocation: baseHitLocation,
       });
       if (!selection) return;
@@ -1270,6 +1533,7 @@ export const OpposedWorkflow = {
         : getHitLocationFromRoll(data.attacker?.result?.rollTotal ?? 0);
 
       const dmg = await _rollWeaponDamage({ weapon });
+      if (!dmg) return;
       const damageType = getDamageTypeFromWeapon(weapon);
 
       // Render a weapon damage chat card, gated by the opposed result.
@@ -1367,13 +1631,14 @@ export const OpposedWorkflow = {
         </div>
       `;
 
-      await ChatMessage.create({
+      const dmgMsg = await ChatMessage.create({
         user: game.user.id,
         speaker: ChatMessage.getSpeaker({ actor: attacker, token: aToken?.document ?? null }),
         content: cardHtml,
         style: CONST.CHAT_MESSAGE_STYLES.OTHER,
         rolls: [dmg.rollA, dmg.rollB].filter(Boolean),
         rollMode: game.settings.get("core", "rollMode"),
+        flags: _opposedFlags(message.id, "damage-card"),
       });
 
       return;
@@ -1395,7 +1660,7 @@ export const OpposedWorkflow = {
       const selection = await _promptWeaponAndAdvantages({
         attackerActor: defender,
         advantageCount: advCount,
-        defaultWeaponUuid: data.context?.lastDefenderWeaponUuid ?? null,
+        defaultWeaponUuid: data.context?.lastDefenderWeaponUuid ?? _getPreferredWeaponUuid(defender, { meleeOnly: true }) ?? null,
         defaultHitLocation: baseHitLocation,
       });
       if (!selection) return;
@@ -1417,6 +1682,7 @@ export const OpposedWorkflow = {
         : getHitLocationFromRoll(data.defender?.result?.rollTotal ?? 0);
 
       const dmg = await _rollWeaponDamage({ weapon });
+      if (!dmg) return;
       const damageType = getDamageTypeFromWeapon(weapon);
 
       // Counter-attack: defender is the striker, original attacker is the target.
@@ -1444,6 +1710,74 @@ export const OpposedWorkflow = {
         hitLocation,
         applyButtonHtml: applyBtn,
         extraNoteHtml: `<b>Strike:</b> Counter-Attack against ${aToken?.name ?? attacker.name}`,
+        parentMessageId: message.id,
+        stage: "counter-damage-card",
+      });
+
+      return;
+    }
+
+    // --- Resolve Advantage (defender won via successful defense) ---
+    if (action === "defender-advantage") {
+      if (!data.outcome || data.status !== "resolved" || data.outcome?.winner !== "defender") {
+        ui.notifications.warn("Defender Advantage can only be resolved after the opposed test is resolved and the defender wins.");
+        return;
+      }
+      // If the defender chose No Defense, they are treated as having failed and cannot utilize Advantage.
+      if (data.defender?.noDefense === true || String(data.defender?.defenseType ?? "none") === "none") {
+        ui.notifications.warn("No Defense was chosen; defender cannot resolve Advantage.");
+        return;
+      }
+      // Counter-Attack and Block have their own dedicated resolution actions.
+      const dt = String(data.defender?.defenseType ?? "none");
+      if (dt === "counter" || dt === "block") {
+        ui.notifications.warn("This defense type has a dedicated resolution action.");
+        return;
+      }
+
+      if (!_canControlActor(defender) && !game.user.isGM) {
+        ui.notifications.warn("You do not have permission to resolve Advantage for this defender.");
+        return;
+      }
+
+      const advCount = Number(data.advantage?.defender ?? 0);
+      if (!Number.isFinite(advCount) || advCount <= 0) {
+        ui.notifications.warn("No Advantage is available to resolve for the defender.");
+        return;
+      }
+
+      // Prevent double-resolution.
+      data.defenderAdvantage = data.defenderAdvantage ?? {};
+      if (data.defenderAdvantage.resolved === true) {
+        ui.notifications.warn("Defender Advantage has already been resolved.");
+        return;
+      }
+
+      const choice = await _promptDefenderAdvantage({ defenderActor: defender, advantageCount: advCount });
+      if (!choice) return;
+
+      data.defenderAdvantage = {
+        resolved: true,
+        choice: String(choice.choice ?? "defer"),
+        resolvedAt: Date.now(),
+        resolvedBy: game.user.id,
+      };
+      await _updateCard(message, data);
+
+      const choiceLabel = (data.defenderAdvantage.choice === "defer")
+        ? "Defer (record only)"
+        : data.defenderAdvantage.choice;
+
+      await ChatMessage.create({
+        user: game.user.id,
+        speaker: ChatMessage.getSpeaker({ actor: defender, token: dToken?.document ?? null }),
+        content: `<div class="ues-opposed-card" style="padding:6px;">
+          <b>Defender Advantage Resolved:</b> ${choiceLabel}.<br/>
+          <span style="opacity:0.85;">Advantage available: ${advCount}. (Mechanical effects will be implemented with Active Effects.)</span>
+        </div>`,
+        style: CONST.CHAT_MESSAGE_STYLES.OTHER,
+        rollMode: game.settings.get("core", "rollMode"),
+        flags: _opposedFlags(message.id, "defender-advantage"),
       });
 
       return;
@@ -1471,7 +1805,7 @@ export const OpposedWorkflow = {
       const selection = await _promptWeaponAndAdvantages({
         attackerActor: attacker,
         advantageCount: 0,
-        defaultWeaponUuid: data.context?.lastWeaponUuid ?? null,
+        defaultWeaponUuid: data.context?.lastWeaponUuid ?? _getPreferredWeaponUuid(attacker, { meleeOnly: false }) ?? null,
       });
       if (!selection) return;
 
@@ -1482,6 +1816,7 @@ export const OpposedWorkflow = {
       }
 
       const dmg = await _rollWeaponDamage({ weapon });
+      if (!dmg) return;
       const damageType = getDamageTypeFromWeapon(weapon);
       // Always post the weapon damage card so the chat log retains hit-location context,
       // even when the defender wins by blocking.
@@ -1493,8 +1828,10 @@ export const OpposedWorkflow = {
         dmg,
         hitLocation,
         extraNoteHtml: `<b>Defense:</b> Block (${shield?.name ?? "Shield"})`,
+        parentMessageId: message.id,
+        stage: "block-damage-card",
       });
-      const br = _getShieldBlockRating(shield, damageType);
+      const br = getBlockValue(shield, damageType);
       const blocked = dmg.finalDamage <= br;
 
       if (blocked) {
@@ -1506,6 +1843,7 @@ export const OpposedWorkflow = {
           </div>`,
           style: CONST.CHAT_MESSAGE_STYLES.OTHER,
           rollMode: game.settings.get("core", "rollMode"),
+          flags: _opposedFlags(message.id, "block-result"),
         });
         return;
       }
@@ -1536,6 +1874,7 @@ export const OpposedWorkflow = {
         </div>`,
         style: CONST.CHAT_MESSAGE_STYLES.OTHER,
         rollMode: game.settings.get("core", "rollMode"),
+        flags: _opposedFlags(message.id, "block-penetrated"),
       });
       return;
     }
