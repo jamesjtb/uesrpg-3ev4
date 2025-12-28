@@ -1419,7 +1419,11 @@ async _onCombatRoll(event) {
   // IMPORTANT WORKFLOW:
   // If the user has a target selected, we start an opposed test immediately WITHOUT prompting for modifiers.
   // All attack options + manual modifier are declared later from the chat card "Roll Attack" button.
-  const defenderToken = [...(game.user.targets ?? [])][0] ?? null;
+  const targets = [...(game.user.targets ?? [])];
+  if (targets.length > 1) {
+    ui.notifications.warn("Multiple targets selected. Using the first targeted token for this opposed roll.");
+  }
+  const defenderToken = targets[0] ?? null;
   if (defenderToken) {
     const attackerToken =
       canvas?.tokens?.controlled?.find(t => t.actor?.id === this.actor.id) ??
