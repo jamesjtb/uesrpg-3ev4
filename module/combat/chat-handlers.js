@@ -11,7 +11,8 @@
  *  - Registers only once (guards against double-calls from init.js)
  */
 
-import { applyDamage, applyHealing, DAMAGE_TYPES } from "./damage-automation.js";
+import { applyHealing, DAMAGE_TYPES } from "./damage-automation.js";
+import { applyDamageResolved } from "./damage-resolver.js";
 import { OpposedWorkflow } from "./opposed-workflow.js";
 import { SkillOpposedWorkflow } from "../skills/opposed-workflow.js";
 import { canUserRollActor } from "../helpers/permissions.js";
@@ -41,7 +42,7 @@ async function _onApplyDamage(ev, message) {
 
   const btn = ev.currentTarget;
   const targetUuid = btn.dataset.targetUuid || null;
-  const dmg = Number(btn.dataset.damage || 0);
+  const rawDamage = Number(btn.dataset.damage || 0);
   const damageType = btn.dataset.damageType || DAMAGE_TYPES.PHYSICAL;
   const dosBonus = Number(btn.dataset.dosBonus || 0);
   const penetration = Number(btn.dataset.penetration || 0);
@@ -50,6 +51,7 @@ async function _onApplyDamage(ev, message) {
   const penetrateArmorForTriggers = String(btn.dataset.penetrateArmor ?? "0") === "1";
 	const forcefulImpact = String(btn.dataset.forcefulImpact ?? "0") === "1";
 	const pressAdvantage = String(btn.dataset.pressAdvantage ?? "0") === "1";
+  const ignoreReduction = String(btn.dataset.ignoreReduction ?? "0") === "1";
 
   // Optional enrichment for RAW weapon trait bonuses.
   // If present, these are resolved safely and passed through to applyDamage().
@@ -82,14 +84,17 @@ async function _onApplyDamage(ev, message) {
     weapon = null;
   }
 
-  await applyDamage(targetActor, dmg, damageType, {
+  await applyDamageResolved(targetActor, {
+    rawDamage,
+    damageType,
     dosBonus,
     penetration,
     hitLocation,
     source,
+    ignoreReduction,
     penetrateArmorForTriggers,
-	  forcefulImpact,
-	  pressAdvantage,
+    forcefulImpact,
+    pressAdvantage,
     weapon,
     attackerActor,
   });
