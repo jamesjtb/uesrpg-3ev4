@@ -517,6 +517,7 @@ export async function applyDamage(actor, damage, damageType = DAMAGE_TYPES.PHYSI
 async function _applyForcefulImpact(targetActor, hitLocation) {
   if (!targetActor?.items) return;
 
+  // Normalize hitLocation key variants coming from sheets/chat cards.
   const locationMap = {
     Head: "Head",
     Body: "Body",
@@ -531,6 +532,14 @@ async function _applyForcefulImpact(targetActor, hitLocation) {
   };
   const propertyName = locationMap[hitLocation] ?? hitLocation;
 
+  // Coverage normalization rules (mirrors getDamageReduction):
+  // - For FULL armor pieces, category is authoritative.
+  // - For PARTIAL armor pieces, if hitLocations are "all true" (legacy default), fall back to category.
+  // - Otherwise, only explicit true values count as covered.
+  //
+  // Shields:
+  // - If a shield defines explicit hitLocations, respect them.
+  // - Otherwise, treat shields as protecting the arm locations (LeftArm/RightArm) for Forceful Impact only.
   const ARMOR_CATEGORY_TO_LOCATIONS = {
     head: ["Head"],
     body: ["Body"],
@@ -543,40 +552,66 @@ async function _applyForcefulImpact(targetActor, hitLocation) {
 
   const getCoveredLocations = (item) => {
     const sys = item?.system ?? {};
-    const armorClass = String(sys.armorClass || "partial").toLowerCase();
     const category = String(sys.category || "").toLowerCase();
+    const armorClass = String(sys.armorClass || "partial").toLowerCase();
     const hitLocs = sys.hitLocations ?? {};
+    const isShield = Boolean(sys.isShieldEffective ?? sys.isShield) || category === "shield" || category.startsWith("shield");
 
+    // If explicit coverage exists, use it (works for both armor and shields).
+    const anyExplicit = ARMOR_LOCATION_KEYS.some(k => hitLocs?.[k] === true);
+    if (anyExplicit) return new Set(ARMOR_LOCATION_KEYS.filter(k => hitLocs?.[k] === true));
+
+    // Shields without explicit coverage: treat as arm-protection for Forceful Impact.
+    if (isShield) return new Set(["LeftArm", "RightArm"]);
+
+    // Armor pieces: category-based fallback when legacy "all true" would otherwise misbehave.
     const allTrue = ARMOR_LOCATION_KEYS.every(k => hitLocs?.[k] === true);
     const catLocs = ARMOR_CATEGORY_TO_LOCATIONS[category] ?? null;
     if (catLocs && (armorClass === "full" || (armorClass === "partial" && allTrue))) {
       return new Set(catLocs);
     }
-    return new Set(ARMOR_LOCATION_KEYS.filter(k => hitLocs?.[k] === true));
+
+    return new Set();
   };
 
   const equippedArmor = targetActor.items?.filter((i) => i.type === "armor" && i.system?.equipped === true) ?? [];
   const candidates = [];
 
   for (const item of equippedArmor) {
-    if (item.system?.isShield) continue;
+    const sys = item.system ?? {};
+    const category = String(sys.category || "").toLowerCase();
+    const isShield = Boolean(sys.isShieldEffective ?? sys.isShield) || category === "shield" || category.startsWith("shield");
+
     const covered = getCoveredLocations(item);
     if (!covered.has(propertyName)) continue;
 
-    const ar = (item.system?.armorEffective != null)
-      ? Number(item.system.armorEffective)
-      : Number(item.system?.armor ?? 0);
-    candidates.push({ item, ar: Number.isFinite(ar) ? ar : 0 });
+    // Forceful Impact selects one piece/shield. Prefer the piece that is currently most protective:
+    // - Armor uses AR (effective if available)
+    // - Shields use Block Rating (effective if available)
+    const score = (() => {
+      if (isShield) {
+        const br = (sys.blockEffective != null) ? Number(sys.blockEffective) : Number(sys.block ?? 0);
+        return Number.isFinite(br) ? br : 0;
+      }
+      const ar = (sys.armorEffective != null) ? Number(sys.armorEffective) : Number(sys.armor ?? 0);
+      return Number.isFinite(ar) ? ar : 0;
+    })();
+
+    candidates.push({ item, score });
   }
 
   if (!candidates.length) return;
-  candidates.sort((a, b) => (b.ar - a.ar));
-  const armorItem = candidates[0].item;
 
-  const current = Array.isArray(armorItem.system?.qualitiesStructured)
-    ? armorItem.system.qualitiesStructured
+  // Choose the single most protective item on that location (deterministic).
+  candidates.sort((a, b) => (b.score - a.score));
+  const targetItem = candidates[0].item;
+
+  // Stack Damaged (X) by +1 per use.
+  const current = Array.isArray(targetItem.system?.qualitiesStructured)
+    ? targetItem.system.qualitiesStructured
     : [];
   const next = current.map(q => ({ ...q }));
+
   const idx = next.findIndex(q => String(q?.key ?? "").toLowerCase() === "damaged");
   if (idx >= 0) {
     const v = Number(next[idx].value ?? 0);
@@ -585,7 +620,7 @@ async function _applyForcefulImpact(targetActor, hitLocation) {
     next.push({ key: "damaged", value: 1 });
   }
 
-  await armorItem.update({ "system.qualitiesStructured": next });
+  await targetItem.update({ "system.qualitiesStructured": next });
 }
 
 /**
