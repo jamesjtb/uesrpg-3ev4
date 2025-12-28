@@ -125,27 +125,16 @@ export class CombatHelper {
    * @returns {Object} damage applied, wounds caused
    */
   static async applyDamage(target, rawDamage, hitLocation = 'body', damageType = 'physical') {
-    const actorSys = target?. system || {};
-    const currentHP = Number(actorSys?. hp?. value ??  0);
-    const woundThreshold = Number(actorSys?.wound_threshold?.value ?? 0);
-    
-    // Get AR for hit location and damage type
-    const ar = this.getArmorRating(target, hitLocation, damageType);
-    const finalDamage = Math.max(0, rawDamage - ar);
-    
-    const newHP = Math.max(0, currentHP - finalDamage);
-    const causedWound = finalDamage > woundThreshold;
-    
-    await target.update({ 'system.hp. value': newHP });
-    
-    return {
+    // Legacy helper kept for backwards compatibility.
+    // Delegate to the canonical resolver path.
+    const { applyDamageResolved } = await import("../combat/damage-resolver.js");
+
+    return await applyDamageResolved(target, {
       rawDamage,
-      ar,
-      finalDamage,
-      newHP,
-      causedWound,
-      message: `${target.name} takes ${finalDamage} damage to ${hitLocation} (${rawDamage} - ${ar} AR). HP: ${currentHP} → ${newHP}${causedWound ? ' [WOUND! ]' : ''}`
-    };
+      damageType,
+      hitLocation,
+      source: "CombatHelper",
+    });
   }
   
   /**
