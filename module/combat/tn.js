@@ -151,6 +151,7 @@ export function computeTN({
   defenseType = null,
   styleUuid = null,
   manualMod = 0,
+  circumstanceMod = 0,
   context = {}
 } = {}) {
   const breakdown = [];
@@ -209,6 +210,10 @@ export function computeTN({
   // --- Manual
   const mMod = asNumber(manualMod);
   if (mMod) breakdown.push({ key: "manual", label: "Manual", value: mMod, source: "manual" });
+
+  // --- Combat circumstances (pre-AE): discrete disadvantage dropdown applied to this side's TN.
+  const cMod = asNumber(circumstanceMod);
+  if (cMod) breakdown.push({ key: "circumstance", label: "Circumstance", value: cMod, source: "circumstance" });
 
   // --- Placeholders for Step 2+ expansions
   if (context?.includePlaceholders) {
