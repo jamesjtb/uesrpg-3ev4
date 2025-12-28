@@ -7,7 +7,8 @@
  */
 
 import { doTestRoll, resolveOpposed } from "../helpers/degree-roll-helper.js";
-import { applyDamage, calculateDamage, DAMAGE_TYPES } from "./damage-automation.js";
+import { calculateDamage, DAMAGE_TYPES } from "./damage-automation.js";
+import { applyDamageResolved } from "./damage-resolver.js";
 import { getHitLocationFromRoll } from "./combat-utils.js";
 
 export const OpposedRoll = {
@@ -98,11 +99,13 @@ export const OpposedRoll = {
           ` : ''}
           <br><strong>Final Damage:</strong> <span style="color:#d32f2f; font-weight:bold;">${damageCalc.finalDamage}</span>
           ${!autoApplyDamage ? `
-            <br><button class="apply-damage-btn" 
-              data-actor-id="${defender.id}" 
-              data-damage="${rawDamage}" 
-              data-type="${damageType}" 
-              data-location="${hitLoc}"
+            <br><button type="button" class="apply-damage-btn"
+              data-target-uuid="${defender.uuid}"
+              data-attacker-actor-uuid="${attacker.uuid}"
+              data-weapon-uuid="${weapon?.uuid ?? ''}"
+              data-damage="${rawDamage}"
+              data-damage-type="${damageType}"
+              data-hit-location="${hitLoc}"
               data-dos-bonus="${dosBonus}"
               data-penetration="${penetration || 0}"
               data-source="${weapon ? weapon.name : attacker.name}">
@@ -113,11 +116,15 @@ export const OpposedRoll = {
       
       // Auto-apply damage if enabled
       if (autoApplyDamage) {
-        await applyDamage(defender, rawDamage, damageType, {
+        await applyDamageResolved(defender, {
+          rawDamage,
+          damageType,
           dosBonus,
           penetration,
+          hitLocation: hitLoc,
           source: weapon ? weapon.name : attacker.name,
-          hitLocation: hitLoc
+          attackerActor: attacker,
+          weapon,
         });
       }
     }
