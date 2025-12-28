@@ -3,12 +3,14 @@
  *
  * Defender selection dialog for opposed combat.
  *
- * Requirements satisfied:
- *  - Shows Evade / Block / Parry / Counter-Attack options.
- *  - Uses a compact 2x2 layout.
- *  - If defender has multiple combat styles, allows choosing which style to use (defaults sensibly).
- *  - Option TN values update live when the combat style selection changes.
- *  - RAW: Block is a Combat Style test using Strength (STR), not a separate Block skill.
+ * Design goals:
+ *  - Deterministic, no inline JS.
+ *  - Provides Evade / Parry / Block / Counter-Attack selection.
+ *  - Optional Combat Style selection (Parry/Block/Counter) when available.
+ *  - Provides Manual Modifier and Combat Circumstance Modifiers inputs.
+ *  - Live TN previews for each defense option using module/combat/tn.js computeTN().
+ *
+ * NOTE: This system does not use ApplicationV2.
  */
 
 import { computeTN, listCombatStyles, hasEquippedShield } from "./tn.js";
@@ -20,157 +22,184 @@ function asNumber(v) {
   return m ? Number(m[0]) : 0;
 }
 
-// NOTE: TN math is centralized in module/combat/tn.js (computeTN).
-// This dialog only previews *base TNs* for each defense choice, and returns the user's selection.
-
 export class DefenseDialog extends Dialog {
-  constructor(defender, { attackerContext } = {}, resolveFn = null) {
+  /**
+   * @param {Actor} defender
+   * @param {object} options
+   * @param {Function} resolveFn
+   */
+  constructor(defender, options = {}, resolveFn) {
     const styles = listCombatStyles(defender);
-    const defaultStyleUuid = styles[0]?.uuid ?? "";
+    const defaultStyleUuid = options.defaultStyleUuid ?? styles?.[0]?.uuid ?? null;
+    const defaultDefenseType = options.defaultDefenseType ?? "evade";
+    const defaultManualMod = Number(options.defaultManualMod ?? 0) || 0;
+    const defaultCircMod = Number(options.defaultCircumstanceMod ?? 0) || 0;
 
-    const content = DefenseDialog._renderContent(defender, {
+    const shieldOk = hasEquippedShield(defender);
+
+    const content = DefenseDialog._renderContent({
       styles,
       defaultStyleUuid,
-      attackerContext
+      defaultDefenseType,
+      defaultManualMod,
+      defaultCircMod,
+      shieldOk
     });
 
     super({
-      title: `${defender?.name ?? "Defender"} - Choose Defense`,
+      title: "Defender Response",
       content,
       buttons: {
-        ok: {
-          label: "Continue",
-          callback: (html) => {
-            const res = this._readSelection(html);
-            // If invalid selection (e.g., missing style), keep dialog open.
-            if (!res) return false;
-            this._resolved = true;
-            if (typeof this._resolveFn === "function") this._resolveFn(res);
-            return true;
-          }
+        confirm: {
+          icon: '<i class="fas fa-check"></i>',
+          label: "Confirm",
+          callback: (html) => resolveFn(this._readSelection(html))
         },
         cancel: {
+          icon: '<i class="fas fa-times"></i>',
           label: "Cancel",
-          callback: () => {
-            this._resolved = true;
-            if (typeof this._resolveFn === "function") this._resolveFn(null);
-            return true;
-          }
+          callback: () => resolveFn(null)
         }
       },
-      default: "ok"
-    }, {
-      classes: ["uesrpg", "uesrpg-defense-dialog"],
-      width: 520
-    });
+      default: "confirm",
+      close: () => resolveFn(null)
+    }, options);
 
     this._defender = defender;
     this._styles = styles;
-    this._defaultStyleUuid = defaultStyleUuid;
-    this._resolveFn = resolveFn;
-    this._resolved = false;
+    this._html = null;
   }
 
-  static _renderContent(defender, { styles, defaultStyleUuid }) {
-    const styleSelect = (styles.length >= 2)
-      ? `
-        <div class="form-group">
-          <label><b>Combat Style</b></label>
-          <select name="styleUuid" style="width:100%;">
-            ${styles.map(s => `<option value="${s.uuid}" ${s.uuid === defaultStyleUuid ? "selected" : ""}>${s.name}</option>`).join("\n")}
-          </select>
-        </div>`
-      : (styles.length === 1)
-        ? `<input type="hidden" name="styleUuid" value="${defaultStyleUuid}" />`
-        : `<div class="form-group"><i>No Combat Style item found; Parry/Block/Counter-Attack will be unavailable.</i></div>`;
+  static _renderContent({
+    styles,
+    defaultStyleUuid,
+    defaultDefenseType,
+    defaultManualMod,
+    defaultCircMod,
+    shieldOk
+  }) {
+    const styleOptions = styles
+      .map(s => `<option value="${s.uuid}" ${s.uuid === defaultStyleUuid ? "selected" : ""}>${Handlebars.escapeExpression(s.name)}</option>`)
+      .join("");
 
-    // 2x2 layout; we update TN text live in activateListeners.
+    const showStyle = styles.length > 0;
+
+    const blockDisabled = shieldOk ? "" : "disabled";
+
     return `
-      <style>
-  /* Force dialog footer buttons to be a single row, 2 columns */
-  .dialog .dialog-buttons { display:grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-  .dialog .dialog-buttons button { width: 100%; }
-</style>
-      <form class="uesrpg-defense-dialog-form">
-        ${styleSelect}
+<form class="uesrpg defense-dialog">
+  <div class="form-group">
+    <label><b>Manual Modifier</b></label>
+    <input type="number" name="manualMod" value="${asNumber(defaultManualMod)}" step="1" />
+  </div>
 
-        <div class="uesrpg-defense-grid" style="display:grid; grid-template-columns: 1fr 1fr; gap: 12px;"><label class="def-opt" style="border:1px solid #888; padding:10px; border-radius:6px;">
-            <input type="radio" name="defenseType" value="parry" checked />
-            <b>Parry</b> — TN <span class="tn" data-tn-for="parry">0</span><br/>
-            <span class="hint">Parry (melee only)</span>
-          </label>
+  <div class="form-group">
+    <label><b>Combat Circumstance Modifiers</b></label>
+    <select name="circMod" style="width: 100%;">
+      <option value="0" ${Number(defaultCircMod) === 0 ? "selected" : ""}>—</option>
+      <option value="-10" ${Number(defaultCircMod) === -10 ? "selected" : ""}>Minor Disadvantage (-10)</option>
+      <option value="-20" ${Number(defaultCircMod) === -20 ? "selected" : ""}>Disadvantage (-20)</option>
+      <option value="-30" ${Number(defaultCircMod) === -30 ? "selected" : ""}>Major Disadvantage (-30)</option>
+    </select>
+  </div>
 
-<label class="def-opt" style="border:1px solid #888; padding:10px; border-radius:6px;">
-            <input type="radio" name="defenseType" value="block" />
-            <b>Block</b> — TN <span class="tn" data-tn-for="block">0</span><br/>
-            <span class="hint">Block with shield (Combat Style using STR)</span>
-          </label>
+  ${showStyle ? `
+  <div class="form-group">
+    <label><b>Combat Style</b></label>
+    <select name="styleUuid" style="width: 100%;">
+      ${styleOptions}
+    </select>
+    <p class="notes">Used for Parry, Block, and Counter-Attack.</p>
+  </div>` : ``}
 
-<label class="def-opt" style="border:1px solid #888; padding:10px; border-radius:6px;">
-            <input type="radio" name="defenseType" value="evade" />
-            <b>Evade</b> — TN <span class="tn" data-tn-for="evade">0</span><br/>
-            <span class="hint">Dodge the attack (AGI)</span>
-          </label>
+  <hr/>
 
-<label class="def-opt" style="border:1px solid #888; padding:10px; border-radius:6px;">
-            <input type="radio" name="defenseType" value="counter" />
-            <b>Counter-Attack</b> — TN <span class="tn" data-tn-for="counter">0</span><br/>
-            <span class="hint">Strike while defending (melee only)</span>
-          </label>
-</div>
+  <div class="defense-grid" style="display:grid; grid-template-columns: repeat(2, 1fr); gap: 8px;">
+    <label class="def-opt" style="border:1px solid #9993; border-radius:8px; padding:8px;">
+      <div style="display:flex; justify-content:space-between; align-items:center;">
+        <span><input type="radio" name="defenseType" value="evade" ${defaultDefenseType === "evade" ? "checked" : ""}/> <b>Evade</b></span>
+        <span class="tn-pill" style="font-variant-numeric: tabular-nums;">TN: <span data-tn-for="evade">—</span></span>
+      </div>
+    </label>
 
-        <div class="form-group" style="margin-top:12px;">
-          <label><b>Manual Modifier</b></label>
-          <input name="manualMod" type="number" value="0" style="width:100%;" />
-</div>
-      </form>
-    `;
+    <label class="def-opt" style="border:1px solid #9993; border-radius:8px; padding:8px;">
+      <div style="display:flex; justify-content:space-between; align-items:center;">
+        <span><input type="radio" name="defenseType" value="parry" ${defaultDefenseType === "parry" ? "checked" : ""}/> <b>Parry</b></span>
+        <span class="tn-pill" style="font-variant-numeric: tabular-nums;">TN: <span data-tn-for="parry">—</span></span>
+      </div>
+    </label>
+
+    <label class="def-opt" style="border:1px solid #9993; border-radius:8px; padding:8px; opacity:${shieldOk ? "1" : "0.45"};">
+      <div style="display:flex; justify-content:space-between; align-items:center;">
+        <span><input type="radio" name="defenseType" value="block" ${defaultDefenseType === "block" ? "checked" : ""} ${blockDisabled}/> <b>Block</b></span>
+        <span class="tn-pill" style="font-variant-numeric: tabular-nums;">TN: <span data-tn-for="block">—</span></span>
+      </div>
+      ${shieldOk ? "" : `<p class="notes">Requires an equipped shield.</p>`}
+    </label>
+
+    <label class="def-opt" style="border:1px solid #9993; border-radius:8px; padding:8px;">
+      <div style="display:flex; justify-content:space-between; align-items:center;">
+        <span><input type="radio" name="defenseType" value="counter" ${defaultDefenseType === "counter" ? "checked" : ""}/> <b>Counter-Attack</b></span>
+        <span class="tn-pill" style="font-variant-numeric: tabular-nums;">TN: <span data-tn-for="counter">—</span></span>
+      </div>
+    </label>
+  </div>
+</form>`;
   }
 
   activateListeners(html) {
     super.activateListeners(html);
     this._html = html;
+
     const styleSelect = html.find('select[name="styleUuid"]');
-    if (styleSelect.length) {
-      styleSelect.on("change", () => this._refreshTN(html));
-    }
+    if (styleSelect.length) styleSelect.on("change", () => this._refreshTN(html));
+
+    const manualInput = html.find('input[name="manualMod"]');
+    if (manualInput.length) manualInput.on("change", () => this._refreshTN(html));
+
+    const circSelect = html.find('select[name="circMod"]');
+    if (circSelect.length) circSelect.on("change", () => this._refreshTN(html));
+
+    const radios = html.find('input[name="defenseType"]');
+    if (radios.length) radios.on("change", () => this._refreshTN(html));
+
     this._refreshTN(html);
   }
 
-  _getSelectedStyle(html) {
-    const styleUuid = html.find('[name="styleUuid"]').val() ?? this._defaultStyleUuid;
-    return this._styles.find(s => s.uuid === styleUuid) ?? null;
+  _getSelectedStyleUuid(html) {
+    const styleSelect = html.find('select[name="styleUuid"]');
+    if (!styleSelect.length) return null;
+    const val = styleSelect.val();
+    return val ? String(val) : null;
   }
 
   _refreshTN(html) {
-    const style = this._getSelectedStyle(html);
-    const styleUuid = style?.uuid ?? null;
-
-    // Eligibility: Block requires an equipped shield.
     const shieldOk = hasEquippedShield(this._defender);
+
     const blockRadio = html.find('input[name="defenseType"][value="block"]');
-    const blockLabel = blockRadio.closest("label.def-opt");
     if (blockRadio.length) {
       blockRadio.prop("disabled", !shieldOk);
-      // Visually fade when illegal.
-      blockLabel.css({ opacity: shieldOk ? 1 : 0.45, filter: shieldOk ? "" : "grayscale(0.2)" });
-      // If currently selected but illegal, switch to Evade.
       if (!shieldOk && blockRadio.prop("checked")) {
         html.find('input[name="defenseType"][value="evade"]').prop("checked", true);
       }
     }
 
-    const evadeTN = computeTN({ actor: this._defender, role: "defender", defenseType: "evade", manualMod: 0 }).finalTN;
-    const parryTN = computeTN({ actor: this._defender, role: "defender", defenseType: "parry", styleUuid, manualMod: 0 }).finalTN;
-    const counterTN = computeTN({ actor: this._defender, role: "defender", defenseType: "counter", styleUuid, manualMod: 0 }).finalTN;
+    const rawMod = html.find('input[name="manualMod"]').val() ?? "0";
+    const manualMod = Number.parseInt(String(rawMod), 10) || 0;
+
+    const rawCirc = html.find('select[name="circMod"]').val() ?? "0";
+    const circumstanceMod = Number.parseInt(String(rawCirc), 10) || 0;
+
+    const styleUuid = this._getSelectedStyleUuid(html);
+
+    const evadeTN = computeTN({ actor: this._defender, role: "defender", defenseType: "evade", manualMod, circumstanceMod }).finalTN;
+    const parryTN = computeTN({ actor: this._defender, role: "defender", defenseType: "parry", styleUuid, manualMod, circumstanceMod }).finalTN;
+    const counterTN = computeTN({ actor: this._defender, role: "defender", defenseType: "counter", styleUuid, manualMod, circumstanceMod }).finalTN;
     const blockTN = shieldOk
-      ? computeTN({ actor: this._defender, role: "defender", defenseType: "block", styleUuid, manualMod: 0 }).finalTN
+      ? computeTN({ actor: this._defender, role: "defender", defenseType: "block", styleUuid, manualMod, circumstanceMod }).finalTN
       : 0;
 
-    const setTN = (k, v) => {
-      html.find(`[data-tn-for="${k}"]`).text(String(asNumber(v)));
-    };
-
+    const setTN = (k, v) => html.find(`[data-tn-for="${k}"]`).text(String(asNumber(v)));
     setTN("evade", evadeTN);
     setTN("parry", parryTN);
     setTN("counter", counterTN);
@@ -181,40 +210,29 @@ export class DefenseDialog extends Dialog {
     const rawMod = html.find('input[name="manualMod"]').val() ?? "0";
     const manualMod = Number.parseInt(String(rawMod), 10) || 0;
 
-    const defenseType = html.find('input[name="defenseType"]:checked').val() ?? "evade";
-    const style = this._getSelectedStyle(html);
-    const styleUuid = style?.uuid ?? null;
+    const rawCirc = html.find('select[name="circMod"]').val() ?? "0";
+    const circumstanceMod = Number.parseInt(String(rawCirc), 10) || 0;
 
-    // Evade does not require a combat style.
-    if (defenseType === "evade") return { defenseType: "evade", label: "Evade", manualMod };
+    const defenseType = String(html.find('input[name="defenseType"]:checked').val() ?? "evade");
+    const shieldOk = hasEquippedShield(this._defender);
+    const styleUuid = this._getSelectedStyleUuid(html);
 
-    // Other defenses require a combat style.
-    if (!styleUuid) {
-      ui.notifications.warn("No combat style available for this defense.");
-      return null;
-    }
-
-    // Eligibility guard: Block requires a shield.
-    if (defenseType === "block" && !hasEquippedShield(this._defender)) {
+    if (defenseType === "block" && !shieldOk) {
       ui.notifications.warn("Block requires an equipped shield.");
       return null;
     }
 
-    if (defenseType === "block") return { defenseType: "block", label: "Block", manualMod, styleUuid };
-    if (defenseType === "parry") return { defenseType: "parry", label: "Parry", manualMod, styleUuid };
-    if (defenseType === "counter") return { defenseType: "counter", label: "Counter-Attack", manualMod, styleUuid };
-    return { defenseType: "evade", label: "Evade", manualMod };
+    if (defenseType === "evade") return { defenseType: "evade", label: "Evade", manualMod, circumstanceMod, styleUuid: null };
+    if (defenseType === "block") return { defenseType: "block", label: "Block", manualMod, circumstanceMod, styleUuid };
+    if (defenseType === "parry") return { defenseType: "parry", label: "Parry", manualMod, circumstanceMod, styleUuid };
+    if (defenseType === "counter") return { defenseType: "counter", label: "Counter-Attack", manualMod, circumstanceMod, styleUuid };
+
+    return { defenseType: "evade", label: "Evade", manualMod, circumstanceMod, styleUuid: null };
   }
 
   static async show(defender, options = {}) {
     return await new Promise((resolve) => {
       const dlg = new DefenseDialog(defender, options, resolve);
-      const _close = dlg.close.bind(dlg);
-      dlg.close = async (...args) => {
-        await _close(...args);
-        // If user closes via X/ESC, resolve null.
-        if (!dlg._resolved) resolve(null);
-      };
       dlg.render(true);
     });
   }
