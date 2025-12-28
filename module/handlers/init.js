@@ -9,6 +9,7 @@ import { SystemCombat } from "../entities/combat.js";
 import { initializeChatHandlers, registerCombatChatHooks } from "../combat/chat-handlers.js";
 import { registerSkillTNDebug } from "../dev/skill-tn-debug.js";
 import { registerActorSelectDebug } from "../dev/actor-select-debug.js";
+import { registerDebugSettingsMenu } from "../dev/debug-settings.js";
 
 async function registerSettings() {
   // Register system settings
@@ -127,7 +128,25 @@ async function registerSettings() {
     name: "Opposed Debug Logging",
     hint: "When enabled, the opposed-roll workflow logs detailed diagnostic information to the browser console.",
     scope: "world",
-    config: true,
+    config: false,
+    default: false,
+    type: Boolean,
+  });
+
+  game.settings.register("uesrpg-3ev4", "opposedDebugFormula", {
+    name: "Opposed Debug: Formula Normalization",
+    hint: "When enabled (testing), logs when a roll formula is normalized or rejected before evaluation.",
+    scope: "world",
+    config: false,
+    default: false,
+    type: Boolean,
+  });
+
+  game.settings.register("uesrpg-3ev4", "opposedShowResolutionDetails", {
+    name: "Opposed: Show Resolution Details",
+    hint: "When enabled, opposed-roll chat cards include an additional expandable section with detailed resolution data. Recommended for testing; disable for normal play.",
+    scope: "world",
+    config: false,
     default: false,
     type: Boolean,
   });
@@ -137,7 +156,7 @@ async function registerSettings() {
     name: "Skill Roll Debug Logging",
     hint: "When enabled, skill rolls and skill-opposed workflows log structured diagnostic information to the browser console.",
     scope: "world",
-    config: true,
+    config: false,
     default: false,
     type: Boolean,
   });
@@ -171,11 +190,14 @@ async function registerSettings() {
     name: "Debug: Skill TN Macro",
     hint: "When enabled (GM only), exposes game.uesrpg.debugSkillTN(...) for diagnosing skill TN computation.",
     scope: "client",
-    config: true,
+    config: false,
     type: Boolean,
     default: false,
     onChange: delayedReload
   });
+
+  // Register a dedicated Debugging menu to avoid clutter in System Settings.
+  registerDebugSettingsMenu();
 
 }
 
