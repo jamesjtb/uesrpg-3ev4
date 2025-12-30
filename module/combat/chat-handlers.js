@@ -25,6 +25,25 @@ let _chatHooksRegistered = false;
  * @param {string|null} uuid
  * @returns {Actor|null}
  */
+async function _maybeConsumeAmmoFromMessage(message) {
+  const opposed = message?.flags?.["uesrpg-3ev4"]?.opposed;
+  const pendingAmmo = opposed?.pendingAmmo ?? null;
+  if (!pendingAmmo) return;
+  if (opposed?.ammoConsumed) return;
+
+  // Ensure exactly one client performs consumption.
+  const activeGM = game.users.activeGM;
+  const shouldRun = activeGM ? (game.user.id === activeGM.id) : message.isAuthor;
+  if (!shouldRun) return;
+
+  const ok = await OpposedWorkflow.consumePendingAmmo(pendingAmmo);
+  await message.update({
+    "flags.uesrpg-3ev4.opposed.ammoConsumed": true,
+    "flags.uesrpg-3ev4.opposed.ammoConsumedOk": !!ok,
+    "flags.uesrpg-3ev4.opposed.ammoConsumedAt": Date.now(),
+  });
+}
+
 function _resolveActor(message, uuid) {
   if (uuid) {
     const doc = fromUuidSync(uuid);
@@ -147,6 +166,10 @@ async function _onOpposedAction(ev, message) {
 export function initializeChatHandlers() {
   if (_chatHooksRegistered) return;
   _chatHooksRegistered = true;
+
+  Hooks.on("createChatMessage", (message) => {
+    _maybeConsumeAmmoFromMessage(message).catch((err) => console.error("UESRPG | Ammo consumption hook failed", err));
+  });
 
   Hooks.on("renderChatMessageHTML", (message, html) => {
     // html is an HTMLElement in v13, but some modules provide a jQuery wrapper.
