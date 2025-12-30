@@ -19,6 +19,7 @@ import { OpposedRoll } from "../combat/opposed-rolls.js";
 import { OpposedWorkflow } from "../combat/opposed-workflow.js";
 import { SkillOpposedWorkflow } from "../skills/opposed-workflow.js";
 import { computeSkillTN, SKILL_DIFFICULTIES } from "../skills/skill-tn.js";
+import { isItemEffectActive } from "../ae/transfer.js";
 import { doTestRoll, formatDegree } from "../helpers/degree-roll-helper.js";
 import { requireUserCanRollActor } from "../helpers/permissions.js";
 import { buildSkillRollRequest, normalizeSkillRollOptions, skillRollDebug } from "../skills/roll-request.js";
@@ -92,19 +93,10 @@ async getData(options = {}) {
     this._prepareCharacterItems(data);
   }
 
-  // Enrich biography using the most stable API available
-  const enrichFn =
-    globalThis.TextEditor?.enrichHTML ??
-    foundry?.applications?.ux?.TextEditor?.implementation?.enrichHTML;
-
-  if (typeof enrichFn === "function") {
-    data.actor.system.enrichedBio = await enrichFn(data.actor?.system?.bio ?? "", {
-      async: true,
-    });
-  } else {
-    // Fallback: don’t crash rendering if API differs
-    data.actor.system.enrichedBio = data.actor?.system?.bio ?? "";
-  }
+  // Enrich biography using Foundry v13 namespaced TextEditor API (AppV1-safe)
+  const enrichFn = foundry.applications.ux.TextEditor.implementation.enrichHTML;
+  const bio = (data.actor && data.actor.system && typeof data.actor.system.bio === "string") ? data.actor.system.bio : "";
+  data.actor.system.enrichedBio = await enrichFn(bio, { async: true });
     // Normalize rank values for rendering (prevents UI defaulting to 'untrained' due to legacy typos)
     try {
       const items = data?.items || [];
@@ -116,7 +108,18 @@ async getData(options = {}) {
     } catch (e) { /* no-op */ }
 
 
-  return data;
+  
+    // Active Effects list for templates (plain objects)
+    data.effects = (this.actor && this.actor.effects) ? this.actor.effects.contents.map(e => e.toObject()) : [];
+
+    // Active Effects (for Effects tab templates)
+    if (this.actor && this.actor.effects) {
+      data.effects = this.actor.effects.contents.map(e => e.toObject());
+    } else {
+      data.effects = [];
+    }
+
+return data;
 }
 
 
@@ -286,6 +289,10 @@ async getData(options = {}) {
   /** @override */
 activateListeners(html) {
   super.activateListeners(html);
+
+    // Active Effects (Effects tab)
+    if (this._onEffectControl) html.find('.effect-control').click(this._onEffectControl.bind(this));
+
 
   // Rollable Buttons & Menus
   html.find(".characteristic-roll").click(this._onClickCharacteristic.bind(this));
@@ -1491,14 +1498,61 @@ async _onCombatRoll(event) {
           const wound = this.actor.system?.wounded ? Number(this.actor.system?.woundPenalty ?? 0) : 0;
 
           const breakdown = [];
-          breakdown.push({ label: "Base Skill", value: base });
+          breakdown.push({ label: "Base TN", value: base });
           breakdown.push({ label: `Difficulty: ${diff.label}`, value: difficultyMod });
           if (fatigue) breakdown.push({ label: "Fatigue", value: fatigue });
           if (enc) breakdown.push({ label: "Encumbrance", value: enc });
           if (wound) breakdown.push({ label: "Wounded", value: wound });
           if (playerInput) breakdown.push({ label: "Manual Modifier", value: playerInput });
 
-          const tn = base + difficultyMod + fatigue + enc + wound + playerInput;
+                    // Active Effects combat modifiers (attack TN) for unopposed Combat Style rolls.
+          // This mirrors the opposed combat TN pipeline.
+          const aeBreakdown = [];
+          let aeTotal = 0;
+
+          // Actor effects
+          for (const ef of (this.actor?.effects ?? [])) {
+            if (ef?.disabled) continue;
+            const changes = Array.isArray(ef?.changes) ? ef.changes : [];
+            let v = 0;
+            for (const ch of changes) {
+              if (!ch) continue;
+              if (ch.key !== "system.modifiers.combat.attackTN") continue;
+              if (ch.mode !== (CONST?.ACTIVE_EFFECT_MODES?.ADD ?? 2)) continue;
+              v += Number(ch.value) || 0;
+            }
+            if (v) {
+              aeBreakdown.push({ label: ef?.name ?? "Effect", value: v });
+              aeTotal += v;
+            }
+          }
+
+          // Item transfer effects (Apply Effect to Actor)
+          for (const it of (this.actor?.items ?? [])) {
+            for (const ef of (it?.effects ?? [])) {
+              if (!ef?.transfer) continue;
+              if (!isItemEffectActive(this.actor, it, ef)) continue;
+              if (ef?.disabled) continue;
+
+              const changes = Array.isArray(ef?.changes) ? ef.changes : [];
+              let v = 0;
+              for (const ch of changes) {
+                if (!ch) continue;
+                if (ch.key !== "system.modifiers.combat.attackTN") continue;
+                if (ch.mode !== (CONST?.ACTIVE_EFFECT_MODES?.ADD ?? 2)) continue;
+                v += Number(ch.value) || 0;
+              }
+              if (v) {
+                const label = ef?.name ? `${it.name}: ${ef.name}` : (it.name ?? "Item");
+                aeBreakdown.push({ label, value: v });
+                aeTotal += v;
+              }
+            }
+          }
+
+          for (const e of aeBreakdown) breakdown.push(e);
+
+          const tn = base + difficultyMod + fatigue + enc + wound + playerInput + aeTotal;
 
           const res = await doTestRoll(this.actor, {
             rollFormula: SYSTEM_ROLL_FORMULA,
@@ -3175,4 +3229,53 @@ await item.update({ "system.quantity": newQty });
     d.position.width = 500;
     d.render(true);
   }
+/* -------------------------------------------- */
+/* Active Effects                                */
+/* -------------------------------------------- */
+
+/**
+ * Handle Active Effect controls from the Effects tab.
+ */
+async _onEffectControl(event) {
+  event.preventDefault();
+  const el = event.currentTarget;
+  if (!el || !el.dataset) return;
+
+  const action = el.dataset.action;
+  const effectId = el.dataset.effectId;
+  if (!action) return;
+  if (!this.actor || !this.actor.effects) return;
+
+  if (action === "create") {
+    const effectData = {
+      name: "New Effect",
+      img: "icons/svg/aura.svg",
+      changes: [],
+      disabled: false,
+      transfer: false,
+      duration: {}
+    };
+    const created = await this.actor.createEmbeddedDocuments("ActiveEffect", [effectData]);
+    const eff = (created && created.length) ? created[0] : null;
+    if (eff && eff.sheet) eff.sheet.render(true);
+    return;
+  }
+
+  const effect = this.actor.effects.get(effectId);
+  if (!effect) return;
+
+  switch (action) {
+    case "edit":
+      if (effect.sheet) effect.sheet.render(true);
+      break;
+    case "delete":
+      await effect.delete();
+      break;
+    case "toggle":
+      await effect.update({ disabled: !effect.disabled });
+      break;
+    default:
+      break;
+  }
+}
 }
