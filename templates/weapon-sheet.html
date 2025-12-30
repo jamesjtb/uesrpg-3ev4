@@ -118,7 +118,8 @@
         <nav class="sheet-tabs tabs" data-group="primary">
             <a class="item" data-tab="description">Description</a>
             <a class="item" data-tab="attributes">Attributes</a>
-        </nav>
+                            <a class="item" data-tab="effects">Effects</a>
+</nav>
     </div>
     
         {{!-- Sheet Body --}}
@@ -329,5 +330,26 @@
                     </div>
                 </div>
             </div>
-        </section>
+        
+
+                <div class="tab effects" data-group="primary" data-tab="effects">
+                    <header class="effects-header flexrow">
+                        <h3>Effects</h3>
+                        <a class="effect-control" data-action="create" title="Create Effect"><i class="fas fa-plus"></i></a>
+                    </header>
+                    <ol class="effects-list">
+                        {{#each effects as |effect|}}
+                        <li class="effect flexrow" data-effect-id="{{effect._id}}">
+                            <img class="effect-icon" src="{{effect.img}}" />
+                            <h4 class="effect-name">{{effect.name}}</h4>
+                            <div class="effect-controls flexrow">
+                                <a class="effect-control" data-action="toggle" data-effect-id="{{effect._id}}" title="Toggle"><i class="fas {{#if effect.disabled}}fa-toggle-off{{else}}fa-toggle-on{{/if}}"></i></a>
+                                <a class="effect-control" data-action="edit" data-effect-id="{{effect._id}}" title="Edit"><i class="fas fa-edit"></i></a>
+                                <a class="effect-control" data-action="delete" data-effect-id="{{effect._id}}" title="Delete"><i class="fas fa-trash"></i></a>
+                            </div>
+                        </li>
+                        {{/each}}
+                    </ol>
+                </div>
+</section>
 </form>
