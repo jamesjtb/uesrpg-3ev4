@@ -8,6 +8,9 @@
  *  - Does not mutate documents.
  */
 
+import { collectCombatTNModifierEntries } from "../combat/tn.js";
+import { evaluateAEModifierKeys } from "../ae/modifier-evaluator.js";
+
 export const SKILL_DIFFICULTIES = Object.freeze([
   { key: "effortless", label: "Effortless", mod: 40 },
   { key: "simple", label: "Simple", mod: 30 },
@@ -144,6 +147,16 @@ if (actor && (skillName || profKey)) {
   }
 }
 
+  // Active Effects: skill-specific and global modifiers.
+  // Supported keys:
+  // - system.modifiers.skills._all
+  // - system.modifiers.skills.<normalizedSkillName>
+  // We evaluate these deterministically at roll-time to support both ADD and OVERRIDE modes.
+  const _aeSkillNorm = _normalizeKey(skillItem?.name);
+  const _aeSkillKeys = ["system.modifiers.skills._all"];
+  if (_aeSkillNorm) _aeSkillKeys.push(`system.modifiers.skills.${_aeSkillNorm}`);
+  const _aeSkillResolved = actor ? evaluateAEModifierKeys(actor, _aeSkillKeys) : {};
+
   return computeSkillTNFromData({
     actorSystem: actor?.system ?? {},
     actorType: actor?.type,
@@ -154,6 +167,17 @@ if (actor && (skillName || profKey)) {
       system: skillItem?.system ?? {}
     },
     itemBonuses,
+    aeSkillResolved: _aeSkillResolved,
+    combatTNBonuses: (() => {
+      // Unopposed Combat Style checks should consume the same AE-driven combat TN bonuses
+      // used by the opposed combat workflow (e.g. weapon effects adding Attack TN).
+      // This is only relevant for combat styles.
+      const isCombat = _isCombatStyle({ type: skillItem?.type, name: skillItem?.name });
+      if (!isCombat) return null;
+      // Lazy import boundary: keep this file usable in pure-data mode.
+      // The import is static (top-level) but the function call is gated.
+      return collectCombatTNModifierEntries(actor, "attacker");
+    })(),
     difficultyKey,
     manualMod,
     useSpecialization
@@ -169,14 +193,59 @@ export function computeSkillTNFromData({
   actorHasPlayerOwner = true,
   skill = { name: null, type: null, system: {} },
   itemBonuses = null,
+  aeSkillResolved = null,
+  combatTNBonuses = null,
   difficultyKey = "average",
   manualMod = 0,
   useSpecialization = false
 } = {}) {
   const breakdown = [];
 
+  // In UESRPG, the stored skill value represents the rank-derived bonus (and any legacy item-derived parts).
+  // In chat cards, present this as "Rank" for clarity.
   const baseSkill = _asNumber(skill?.system?.value);
-  breakdown.push({ label: "Base Skill", value: baseSkill, source: "base" });
+  breakdown.push({ label: "Rank", value: baseSkill, source: "rank" });
+
+  // Active Effects: skill-specific and global modifiers.
+  // Supported keys (dynamic):
+  // - system.modifiers.skills.<normalizedSkillName>
+  // - system.modifiers.skills._all
+  //
+  // We evaluate these deterministically at roll-time to support both ADD and OVERRIDE modes.
+  const normName = _normalizeKey(skill?.name);
+  const keys = ["system.modifiers.skills._all"];
+  if (normName) keys.push(`system.modifiers.skills.${normName}`);
+
+  const resolved = aeSkillResolved ?? {};
+
+  const allSkillBonus = _asNumber(resolved["system.modifiers.skills._all"]?.total ?? 0);
+  if (allSkillBonus) {
+    breakdown.push({ label: "Bonus", value: allSkillBonus, source: "aeSkillAll" });
+  }
+
+  const specificBonus = normName ? _asNumber(resolved[`system.modifiers.skills.${normName}`]?.total ?? 0) : 0;
+  if (specificBonus) {
+    breakdown.push({ label: "Bonus", value: specificBonus, source: "aeSkillSpecific" });
+  }
+
+  // Combat Style unopposed checks: include combat TN modifiers (attacker side).
+  // These are applied via Actor-level modifiers or transferred item effects.
+  // We prefer provenance-carrying entries when provided by the caller.
+  if (_isCombatStyle({ type: skill?.type, name: skill?.name })) {
+    const entries = Array.isArray(combatTNBonuses) ? combatTNBonuses : null;
+    if (entries && entries.length) {
+      for (const e of entries) {
+        const v = _asNumber(e?.value);
+        if (!v) continue;
+        const label = String(e?.label ?? "Effects");
+        breakdown.push({ label, value: v, source: "combatTN" });
+      }
+    } else {
+      const combatMods = actorSystem?.modifiers?.combat ?? {};
+      const v = _asNumber(combatMods?.attackTN);
+      if (v) breakdown.push({ label: "Effects", value: v, source: "combatTN" });
+    }
+  }
   // Skill-linked item automation.
   // NOTE: This function is pure-data; it cannot inspect Actor items. Any item-based bonuses must be
   // collected by the caller and provided via `itemBonuses`.
