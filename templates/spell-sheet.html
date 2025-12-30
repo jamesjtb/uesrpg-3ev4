@@ -5,7 +5,7 @@
                 <h1 class="charname flex-container">
                     <img class="profile-img" src="{{item.img}}" data-edit="img" title="{{item.name}}"/>
                     <input name="name" type="text" value="{{item.name}}" placeholder="Name"/>
-                </h1>
+</h1>
                 <div class="item-resource-container">
                     <div class="item-resource-row">
                         <div class="item-resource">
@@ -60,6 +60,15 @@
                                 <div class="small-text-label">Form</div>
                             </div>
                         </div>
+
+                        <div class="item-resource uesrpg-spell-active-toggle">
+                            <div class="stat-value-label" style="display:flex; justify-content:center; align-items:center;">
+                                <input type="checkbox" name="flags.uesrpg-3ev4.activeSpell" {{checked (lookup (lookup item.flags "uesrpg-3ev4") "activeSpell")}} />
+                            </div>
+                            <div class="flex-container">
+                                <div class="small-text-label">Active Spell</div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -69,7 +78,8 @@
         <nav class="sheet-tabs tabs" data-group="primary">
             <a class="item" data-tab="description">Description</a>
             <a class="item" data-tab="attributes">Attributes</a>
-        </nav>
+                            <a class="item" data-tab="effects">Effects</a>
+</nav>
         </div>
 
         {{!-- Sheet Body --}}
@@ -91,5 +101,26 @@
                     </div>
                 </div>
             </div>
-        </section>
+        
+
+                <div class="tab effects" data-group="primary" data-tab="effects">
+                    <header class="effects-header flexrow">
+                        <h3>Effects</h3>
+                        <a class="effect-control" data-action="create" title="Create Effect"><i class="fas fa-plus"></i></a>
+                    </header>
+                    <ol class="effects-list">
+                        {{#each effects as |effect|}}
+                        <li class="effect flexrow" data-effect-id="{{effect._id}}">
+                            <img class="effect-icon" src="{{effect.img}}" />
+                            <h4 class="effect-name">{{effect.name}}</h4>
+                            <div class="effect-controls flexrow">
+                                <a class="effect-control" data-action="toggle" data-effect-id="{{effect._id}}" title="Toggle"><i class="fas {{#if effect.disabled}}fa-toggle-off{{else}}fa-toggle-on{{/if}}"></i></a>
+                                <a class="effect-control" data-action="edit" data-effect-id="{{effect._id}}" title="Edit"><i class="fas fa-edit"></i></a>
+                                <a class="effect-control" data-action="delete" data-effect-id="{{effect._id}}" title="Delete"><i class="fas fa-trash"></i></a>
+                            </div>
+                        </li>
+                        {{/each}}
+                    </ol>
+                </div>
+</section>
 </form>
