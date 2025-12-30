@@ -3,6 +3,9 @@
  * @extends {Actor}
  */
 
+
+import { isTransferEffectActive } from "../ae/transfer.js";
+
 export class SimpleActor extends Actor {
   async _preCreate(data, options, user) {
 
@@ -81,6 +84,18 @@ _ensureSystemData(actorData) {
   
   // Ensure resources exist
   actorData.system.hp = actorData.system.hp || { value: 0, max: 0, base: 0, bonus: 0 };
+  // Active Effects support: additive modifier targets (do not overwrite derived fields directly)
+  actorData.system.modifiers = actorData.system.modifiers || {};
+  actorData.system.modifiers.characteristics = actorData.system.modifiers.characteristics || {};
+  // Skill modifiers (Active Effects) - dynamic keys by normalized skill name
+  // Example: system.modifiers.skills.athletics = 10
+  // Optional global skill modifier: system.modifiers.skills._all = 5
+  actorData.system.modifiers.skills = actorData.system.modifiers.skills || {};
+  actorData.system.modifiers.hp = actorData.system.modifiers.hp || { base: 0, bonus: 0, max: 0, value: 0 };
+  actorData.system.modifiers.magicka = actorData.system.modifiers.magicka || { base: 0, bonus: 0, max: 0, value: 0 };
+  actorData.system.modifiers.stamina = actorData.system.modifiers.stamina || { base: 0, bonus: 0, max: 0, value: 0 };
+  actorData.system.modifiers.luck_points = actorData.system.modifiers.luck_points || { base: 0, bonus: 0, max: 0, value: 0 };
+
   actorData.system.stamina = actorData.system. stamina || { value: 0, max: 0, bonus: 0 };
   actorData.system.magicka = actorData.system.magicka || { value: 0, max: 0, bonus: 0 };
   actorData.system.luck_points = actorData.system.luck_points || { value: 0, max: 0, bonus:  0 };
@@ -859,6 +874,316 @@ _aggregateItemStats(actorData) {
     return bonus
   }
 
+
+
+/**
+ * Collect numeric Active Effect modifiers for a set of target keys.
+ *
+ * Deterministic resolution rules:
+ *  - We consider Actor embedded effects and active transfer Item effects.
+ *  - ADD values are summed.
+ *  - If any OVERRIDE exists for a key, it wins and ADDs for that key are ignored.
+ *  - Other modes are ignored.
+ *
+ * This is used for derived-stat pipelines where the system recomputes values each prepare cycle.
+ *
+ * @param {Array<string>} targetKeys
+ * @returns {Record<string, { add: number, override: number|null }>} map by key
+ */
+_collectAEModifiersForKeys(targetKeys = []) {
+  const keys = Array.isArray(targetKeys) ? targetKeys.filter(Boolean) : [];
+  const out = {};
+  for (const k of keys) out[k] = { add: 0, override: null };
+  if (!keys.length) return out;
+
+  const asNum = (v) => {
+    const n = Number(v);
+    return Number.isFinite(n) ? n : 0;
+  };
+
+  const ADD = CONST?.ACTIVE_EFFECT_MODES?.ADD ?? 2;
+  const OVERRIDE = CONST?.ACTIVE_EFFECT_MODES?.OVERRIDE ?? 5;
+
+  /** @type {{effect: any, priority: number, sortId: string}[]} */
+  const sources = [];
+
+  // Actor embedded effects
+  for (const ef of (this?.effects ?? [])) {
+    sources.push({
+      effect: ef,
+      priority: Number(ef?.priority ?? 0),
+      sortId: String(ef?.id ?? ef?._id ?? '')
+    });
+  }
+
+  // Transfer item effects (type/equipped gating handled by isTransferEffectActive)
+  for (const item of (this?.items ?? [])) {
+    for (const ef of (item?.effects ?? [])) {
+      if (!isTransferEffectActive(this, item, ef)) continue;
+      sources.push({
+        effect: ef,
+        priority: Number(ef?.priority ?? 0),
+        sortId: String(ef?.id ?? ef?._id ?? '')
+      });
+    }
+  }
+
+  // Deterministic ordering: ascending priority, then ascending id.
+  sources.sort((a, b) => (a.priority - b.priority) || a.sortId.localeCompare(b.sortId));
+
+  for (const { effect } of sources) {
+    if (!effect || effect.disabled) continue;
+    const changes = Array.isArray(effect.changes) ? effect.changes : [];
+    for (const ch of changes) {
+      if (!ch) continue;
+      const key = ch.key;
+      if (!out[key]) continue;
+      const mode = ch.mode;
+      const value = asNum(ch.value);
+      if (!value && mode !== OVERRIDE) continue;
+
+      if (mode === OVERRIDE) {
+        out[key].override = value;
+        out[key].add = 0;
+      } else if (mode === ADD) {
+        // Ignore ADDs if an OVERRIDE exists (final-wins semantics for the pipeline).
+        if (out[key].override == null) out[key].add += value;
+      }
+    }
+  }
+
+  return out;
+}
+
+
+
+/**
+ * Collect deterministic AE modifiers where multiple keys should be treated as a single semantic lane.
+ * This is used for aliasing (e.g., fatigue vs exhaustion) while preserving deterministic OVERRIDE behavior.
+ *
+ * Deterministic resolution rules:
+ *  - We consider Actor embedded effects and active transfer Item effects.
+ *  - ADD values across the key-set are summed.
+ *  - If any OVERRIDE exists across the key-set, the last encountered OVERRIDE (highest priority, stable ordering)
+ *    wins and ADDs are ignored.
+ *
+ * @param {string[]} keySet
+ * @returns {{ add: number, override: number|null }}
+ */
+_collectAEModifiersForKeySetMerged(keySet = []) {
+  const keys = Array.isArray(keySet) ? keySet.filter(Boolean) : [];
+  if (!keys.length) return { add: 0, override: null };
+
+  const keyLookup = new Set(keys);
+
+  const asNum = (v) => {
+    const n = Number(v);
+    return Number.isFinite(n) ? n : 0;
+  };
+
+  const ADD = CONST?.ACTIVE_EFFECT_MODES?.ADD ?? 2;
+  const OVERRIDE = CONST?.ACTIVE_EFFECT_MODES?.OVERRIDE ?? 5;
+
+  /** @type {{effect: any, priority: number, sortId: string}[]} */
+  const sources = [];
+
+  for (const ef of (this?.effects ?? [])) {
+    sources.push({
+      effect: ef,
+      priority: Number(ef?.priority ?? 0),
+      sortId: String(ef?.id ?? ef?._id ?? '')
+    });
+  }
+
+  for (const item of (this?.items ?? [])) {
+    for (const ef of (item?.effects ?? [])) {
+      if (!isTransferEffectActive(this, item, ef)) continue;
+      sources.push({
+        effect: ef,
+        priority: Number(ef?.priority ?? 0),
+        sortId: String(ef?.id ?? ef?._id ?? '')
+      });
+    }
+  }
+
+  sources.sort((a, b) => (a.priority - b.priority) || a.sortId.localeCompare(b.sortId));
+
+  const out = { add: 0, override: null };
+
+  for (const { effect } of sources) {
+    if (!effect || effect.disabled) continue;
+    const changes = Array.isArray(effect.changes) ? effect.changes : [];
+    for (const ch of changes) {
+      if (!ch) continue;
+      const key = ch.key;
+      if (!keyLookup.has(key)) continue;
+      const mode = ch.mode;
+      const value = asNum(ch.value);
+      if (!value && mode !== OVERRIDE) continue;
+
+      if (mode === OVERRIDE) {
+        out.override = value;
+        out.add = 0;
+      } else if (mode === ADD) {
+        if (out.override == null) out.add += value;
+      }
+    }
+  }
+
+  return out;
+}
+
+/**
+ * Read deterministic AE modifiers for a resource modifier namespace.
+ * Supported keys:
+ *  - system.modifiers.<resource>.base
+ *  - system.modifiers.<resource>.bonus
+ *  - system.modifiers.<resource>.max
+ *  - system.modifiers.<resource>.value
+ *
+ * @param {string} resourceKey
+ * @returns {{ base: {add:number, override:number|null}, bonus:{add:number, override:number|null}, max:{add:number, override:number|null}, value:{add:number, override:number|null} }}
+ */
+_getResourceAEModifiers(resourceKey) {
+  const rk = String(resourceKey ?? '').trim();
+  const keys = [
+    `system.modifiers.${rk}.base`,
+    `system.modifiers.${rk}.bonus`,
+    `system.modifiers.${rk}.max`,
+    `system.modifiers.${rk}.value`
+  ];
+  const map = this._collectAEModifiersForKeys(keys);
+  return {
+    base: map[keys[0]] ?? { add: 0, override: null },
+    bonus: map[keys[1]] ?? { add: 0, override: null },
+    max: map[keys[2]] ?? { add: 0, override: null },
+    value: map[keys[3]] ?? { add: 0, override: null }
+  };
+}
+
+
+/**
+ * Read deterministic AE modifiers for Carry/Encumbrance.
+ *
+ * Supported keys:
+ *  - system.modifiers.carry.base (ADD / OVERRIDE)   : adds to the base carry formula (4*STR + 2*END).
+ *  - system.modifiers.carry.bonus (ADD / OVERRIDE)  : adds to system.carry_rating.bonus.
+ *  - system.modifiers.carry.override (ADD / OVERRIDE): adds to final max; OVERRIDE hard-sets system.carry_rating.max.
+ *  - system.modifiers.encumbrance.penalty (ADD / OVERRIDE): applied after burden bracket computation.
+ *
+ * Notes:
+ *  - We do not rename or repurpose existing schema fields (carry_rating.max/current/bonus/penalty).
+ *  - OVERRIDE wins over ADD per key.
+ *
+ * @returns {{ base:{add:number, override:number|null}, bonus:{add:number, override:number|null}, override:{add:number, override:number|null}, encPenalty:{add:number, override:number|null} }}
+ */
+_getCarryAEModifiers() {
+  const keys = {
+    carryBase: "system.modifiers.carry.base",
+    carryBonus: "system.modifiers.carry.bonus",
+    carryOverride: "system.modifiers.carry.override",
+
+    // Encumbrance lanes (RAW): test penalty, speed penalty, stamina penalty.
+    // Keep legacy key "system.modifiers.encumbrance.penalty" as an alias for testPenalty.
+    encPenaltyLegacy: "system.modifiers.encumbrance.penalty",
+    encTestPenalty: "system.modifiers.encumbrance.testPenalty",
+    encSpeedPenalty: "system.modifiers.encumbrance.speedPenalty",
+    encStaminaPenalty: "system.modifiers.encumbrance.staminaPenalty"
+  };
+
+  const map = this._collectAEModifiersForKeys(Object.values(keys));
+
+  // Prefer the explicit RAW-aligned key if present; otherwise fall back to the legacy alias.
+  const testPenalty = map[keys.encTestPenalty] ?? map[keys.encPenaltyLegacy] ?? { add: 0, override: null };
+
+  return {
+    base: map[keys.carryBase] ?? { add: 0, override: null },
+    bonus: map[keys.carryBonus] ?? { add: 0, override: null },
+    override: map[keys.carryOverride] ?? { add: 0, override: null },
+
+    // Keep old property name working, but also expose the clearer name.
+    encPenalty: testPenalty,
+    encTestPenalty: testPenalty,
+    encSpeedPenalty: map[keys.encSpeedPenalty] ?? { add: 0, override: null },
+    encStaminaPenalty: map[keys.encStaminaPenalty] ?? { add: 0, override: null }
+  };
+}
+
+
+
+/**
+ * Read deterministic AE modifiers for Fatigue / Exhaustion.
+ *
+ * Supported keys:
+ *  - system.modifiers.fatigue.bonus (ADD / OVERRIDE)
+ *  - system.modifiers.fatigue.penalty (ADD / OVERRIDE)
+ *
+ * Aliases supported (treated as the same semantic lanes):
+ *  - system.modifiers.exhaustion.bonus
+ *  - system.modifiers.exhaustion.penalty
+ *
+ * Notes:
+ *  - We do not mutate document data here; we only affect derived values.
+ *  - OVERRIDE across a lane wins over ADD across that lane.
+ *
+ * @returns {{ bonus:{add:number, override:number|null}, penalty:{add:number, override:number|null} }}
+ */
+_getFatigueAEModifiers() {
+  const bonusLane = this._collectAEModifiersForKeySetMerged([
+    "system.modifiers.fatigue.bonus",
+    "system.modifiers.exhaustion.bonus"
+  ]);
+  const penaltyLane = this._collectAEModifiersForKeySetMerged([
+    "system.modifiers.fatigue.penalty",
+    "system.modifiers.exhaustion.penalty"
+  ]);
+  return { bonus: bonusLane, penalty: penaltyLane };
+}
+
+
+
+
+/**
+ * Apply deterministic Active Effect modifiers to Wound Threshold after all other system adjustments.
+ *
+ * Supported keys:
+ *  - system.modifiers.wound_threshold.bonus (ADD / OVERRIDE) -> adjusts system.wound_threshold.bonus
+ *  - system.modifiers.wound_threshold.value (ADD / OVERRIDE) -> adjusts final system.wound_threshold.value
+ *
+ * Notes:
+ *  - Wound Threshold is a derived stat. We never rely on Foundry applying changes directly to derived fields.
+ *  - OVERRIDE wins over ADD for each key.
+ *
+ * @param {any} actorSystemData
+ */
+_applyWoundThresholdAEs(actorSystemData) {
+  if (!actorSystemData) return;
+
+  const keys = [
+    "system.modifiers.wound_threshold.bonus",
+    "system.modifiers.wound_threshold.value"
+  ];
+
+  const map = this._collectAEModifiersForKeys(keys);
+
+  // Bonus lane
+  {
+    const m = map[keys[0]] ?? { add: 0, override: null };
+    if (m.override != null) actorSystemData.wound_threshold.bonus = Number(m.override);
+    else if (m.add) actorSystemData.wound_threshold.bonus = Number(actorSystemData.wound_threshold.bonus ?? 0) + Number(m.add);
+  }
+
+  // Value lane (final)
+  {
+    const m = map[keys[1]] ?? { add: 0, override: null };
+    if (m.override != null) actorSystemData.wound_threshold.value = Number(m.override);
+    else if (m.add) actorSystemData.wound_threshold.value = Number(actorSystemData.wound_threshold.value ?? 0) + Number(m.add);
+  }
+
+  // Safety: wound threshold cannot be negative
+  actorSystemData.wound_threshold.value = Math.max(0, Number(actorSystemData.wound_threshold.value ?? 0));
+}
+
   _speedCalc(actorData) {
     const itemsRaw = actorData?.items;
     const items = Array.isArray(itemsRaw) ? itemsRaw : (itemsRaw ? Array.from(itemsRaw) : []);
@@ -1111,6 +1436,23 @@ _aggregateItemStats(actorData) {
     actorSystemData.characteristics.lck.total = actorSystemData.characteristics.lck.base + agg.charBonus.lck;
 
 
+    // Active Effects: apply characteristic additive modifiers
+    {
+      const cMods = actorSystemData.modifiers?.characteristics ?? {};
+      actorSystemData.characteristics.str.total += Number(cMods.str ?? 0);
+      actorSystemData.characteristics.end.total += Number(cMods.end ?? 0);
+      actorSystemData.characteristics.agi.total += Number(cMods.agi ?? 0);
+      actorSystemData.characteristics.int.total += Number(cMods.int ?? 0);
+      actorSystemData.characteristics.wp.total += Number(cMods.wp ?? 0);
+      actorSystemData.characteristics.prc.total += Number(cMods.prc ?? 0);
+      actorSystemData.characteristics.prs.total += Number(cMods.prs ?? 0);
+      actorSystemData.characteristics.lck.total += Number(cMods.lck ?? 0);
+    }
+
+
+    
+
+
     //Characteristic Bonuses
     var strBonus = Math.floor(actorSystemData.characteristics.str.total / 10);
     var endBonus = Math.floor(actorSystemData.characteristics.end.total / 10);
@@ -1183,16 +1525,119 @@ _aggregateItemStats(actorData) {
     actorSystemData.initiative.value = actorSystemData.initiative.base;
     actorSystemData.initiative.value = this._iniCalc(actorData);
 
-    actorSystemData.hp.base = Math.ceil(actorSystemData.characteristics.end.total / 2);
-    actorSystemData.hp.max = actorSystemData.hp.base + actorSystemData.hp.bonus;
 
-    actorSystemData.magicka.max = actorSystemData.characteristics.int.total + actorSystemData.magicka.bonus + this._determineIbMp(actorData);
+// Health / Magicka / Stamina / Luck Points
+// Active Effects: deterministic resource max pipeline.
+//
+// Effects authoring contract (recommended):
+//  - Use keys under system.modifiers.<resource>.<base|bonus|max|value>
+//  - ADD: treated as additive
+//  - OVERRIDE: sets the corresponding derived component directly (ADDs ignored for that key)
+//
+// NOTE: This system recomputes derived stats each prepare cycle, so we cannot rely on Foundry
+// directly applying changes to derived fields like system.hp.max.
 
-    actorSystemData.stamina.max = endBonus + actorSystemData.stamina.bonus;
+// HP
+actorSystemData.hp.base = Math.ceil(actorSystemData.characteristics.end.total / 2);
+{
+  const hpAE = this._getResourceAEModifiers('hp');
 
-    actorSystemData.luck_points.max = lckBonus + actorSystemData.luck_points.bonus;
+  const base = (hpAE.base.override != null) ? Number(hpAE.base.override) : (Number(actorSystemData.hp.base ?? 0) + Number(hpAE.base.add ?? 0));
+  const bonus = (hpAE.bonus.override != null) ? Number(hpAE.bonus.override) : (Number(actorSystemData.hp.bonus ?? 0) + Number(hpAE.bonus.add ?? 0));
 
-    actorSystemData.carry_rating.max = Math.floor((4 * strBonus) + (2 * endBonus)) + actorSystemData.carry_rating.bonus;
+  actorSystemData.hp.base = base;
+  actorSystemData.hp.bonus = bonus;
+
+  const computedMax = Number(base) + Number(bonus);
+  actorSystemData.hp.max = (hpAE.max.override != null) ? Number(hpAE.max.override) : (computedMax + Number(hpAE.max.add ?? 0));
+
+  // Optional value targeting; always clamp to [0, max]
+  if (hpAE.value.override != null) actorSystemData.hp.value = Number(hpAE.value.override);
+  else if (hpAE.value.add) actorSystemData.hp.value = Number(actorSystemData.hp.value ?? 0) + Number(hpAE.value.add ?? 0);
+
+  actorSystemData.hp.value = Math.clamp(Number(actorSystemData.hp.value ?? 0), 0, Number(actorSystemData.hp.max ?? 0));
+}
+
+// Magicka
+actorSystemData.magicka.max = actorSystemData.characteristics.int.total + actorSystemData.magicka.bonus + this._determineIbMp(actorData);
+{
+  const mAE = this._getResourceAEModifiers('magicka');
+
+  const bonus = (mAE.bonus.override != null) ? Number(mAE.bonus.override) : (Number(actorSystemData.magicka.bonus ?? 0) + Number(mAE.bonus.add ?? 0));
+  actorSystemData.magicka.bonus = bonus;
+
+  // base/max keys are treated as direct max contributions for magicka (no distinct base field in schema).
+  const computedMax = Number(actorSystemData.magicka.max ?? 0) + Number(mAE.base.add ?? 0);
+  const withAdd = computedMax + Number(mAE.max.add ?? 0);
+  actorSystemData.magicka.max = (mAE.max.override != null) ? Number(mAE.max.override) : withAdd;
+
+  if (mAE.value.override != null) actorSystemData.magicka.value = Number(mAE.value.override);
+  else if (mAE.value.add) actorSystemData.magicka.value = Number(actorSystemData.magicka.value ?? 0) + Number(mAE.value.add ?? 0);
+
+  actorSystemData.magicka.value = Math.clamp(Number(actorSystemData.magicka.value ?? 0), 0, Number(actorSystemData.magicka.max ?? 0));
+}
+
+// Stamina
+actorSystemData.stamina.max = endBonus + actorSystemData.stamina.bonus;
+{
+  const sAE = this._getResourceAEModifiers('stamina');
+
+  const bonus = (sAE.bonus.override != null) ? Number(sAE.bonus.override) : (Number(actorSystemData.stamina.bonus ?? 0) + Number(sAE.bonus.add ?? 0));
+  actorSystemData.stamina.bonus = bonus;
+
+  const computedMax = Number(actorSystemData.stamina.max ?? 0) + Number(sAE.base.add ?? 0);
+  const withAdd = computedMax + Number(sAE.max.add ?? 0);
+  actorSystemData.stamina.max = (sAE.max.override != null) ? Number(sAE.max.override) : withAdd;
+
+  if (sAE.value.override != null) actorSystemData.stamina.value = Number(sAE.value.override);
+  else if (sAE.value.add) actorSystemData.stamina.value = Number(actorSystemData.stamina.value ?? 0) + Number(sAE.value.add ?? 0);
+
+  actorSystemData.stamina.value = Math.clamp(Number(actorSystemData.stamina.value ?? 0), 0, Number(actorSystemData.stamina.max ?? 0));
+}
+
+// Luck Points
+actorSystemData.luck_points.max = lckBonus + actorSystemData.luck_points.bonus;
+{
+  const lAE = this._getResourceAEModifiers('luck_points');
+
+  const bonus = (lAE.bonus.override != null) ? Number(lAE.bonus.override) : (Number(actorSystemData.luck_points.bonus ?? 0) + Number(lAE.bonus.add ?? 0));
+  actorSystemData.luck_points.bonus = bonus;
+
+  const computedMax = Number(actorSystemData.luck_points.max ?? 0) + Number(lAE.base.add ?? 0);
+  const withAdd = computedMax + Number(lAE.max.add ?? 0);
+  actorSystemData.luck_points.max = (lAE.max.override != null) ? Number(lAE.max.override) : withAdd;
+
+  if (lAE.value.override != null) actorSystemData.luck_points.value = Number(lAE.value.override);
+  else if (lAE.value.add) actorSystemData.luck_points.value = Number(actorSystemData.luck_points.value ?? 0) + Number(lAE.value.add ?? 0);
+
+  actorSystemData.luck_points.value = Math.clamp(Number(actorSystemData.luck_points.value ?? 0), 0, Number(actorSystemData.luck_points.max ?? 0));
+}
+
+    // Carry Rating (base formula) + deterministic AE modifiers
+    const carryAEs = this._getCarryAEModifiers();
+    const fatigueAEs = this._getFatigueAEModifiers();
+
+    // Bonus lane modifies carry_rating.bonus
+    {
+      const bonus = (carryAEs.bonus.override != null)
+        ? Number(carryAEs.bonus.override)
+        : (Number(actorSystemData.carry_rating.bonus ?? 0) + Number(carryAEs.bonus.add ?? 0));
+      actorSystemData.carry_rating.bonus = bonus;
+    }
+
+    // Base formula lane (4*STR + 2*END) plus optional base modifier
+    const baseFormula = Math.floor((4 * strBonus) + (2 * endBonus));
+    const baseMod = (carryAEs.base.override != null)
+      ? Number(carryAEs.base.override)
+      : Number(carryAEs.base.add ?? 0);
+
+    const computedMax = baseFormula + baseMod + Number(actorSystemData.carry_rating.bonus ?? 0);
+    const withAdd = computedMax + Number(carryAEs.override.add ?? 0);
+
+    // Override lane: hard set carry_rating.max (OVERRIDE), otherwise apply additive.
+    actorSystemData.carry_rating.max = (carryAEs.override.override != null)
+      ? Number(carryAEs.override.override)
+      : withAdd;
     // Guard: Use Number() to ensure numeric value after toFixed for safe carry rating calculations
     actorSystemData.carry_rating.current = Number((agg.totalEnc - agg.armorEnc - agg.excludedEnc).toFixed(1));
 
@@ -1320,6 +1765,44 @@ _aggregateItemStats(actorData) {
       }
     }
 
+    // Encumbrance penalty AE modifier (applies after burden bracket computation)
+    {
+      const m = (carryAEs?.encTestPenalty) ? carryAEs.encTestPenalty : this._getCarryAEModifiers().encTestPenalty;
+      if (m.override != null) actorSystemData.carry_rating.penalty = Number(m.override);
+      else if (m.add) actorSystemData.carry_rating.penalty = Number(actorSystemData.carry_rating.penalty ?? 0) + Number(m.add);
+    }
+
+    // Encumbrance speed penalty AE modifier (RAW lane: modifies the encumbrance-applied speed penalty only).
+    // Semantics: ADD is applied as a post-bracket delta to current speed.value; OVERRIDE sets that delta.
+    {
+      const m = (carryAEs?.encSpeedPenalty) ? carryAEs.encSpeedPenalty : this._getCarryAEModifiers().encSpeedPenalty;
+      const delta = (m.override != null) ? Number(m.override) : (m.add ? Number(m.add) : 0);
+      if (delta) actorSystemData.speed.value = Math.max(0, Number(actorSystemData.speed.value ?? 0) + delta);
+    }
+
+    // Encumbrance stamina penalty AE modifier (RAW lane: modifies the encumbrance-applied SP max penalty only).
+    // Semantics: ADD is applied as a post-bracket delta to current stamina.max; OVERRIDE sets that delta.
+    {
+      const m = (carryAEs?.encStaminaPenalty) ? carryAEs.encStaminaPenalty : this._getCarryAEModifiers().encStaminaPenalty;
+      const delta = (m.override != null) ? Number(m.override) : (m.add ? Number(m.add) : 0);
+      if (delta) actorSystemData.stamina.max = Number(actorSystemData.stamina.max ?? 0) + delta;
+    }
+
+
+    // RAW: If encumbrance Stamina Penalty would reduce SP max below 0, excess converts into fatigue levels.
+    // Implementation: keep stamina.max at 0 (never negative) and add the excess as derived fatigue.bonus.
+    // This is derived-only; we do not persist document changes.
+    {
+      const spMax = Number(actorSystemData.stamina.max ?? 0);
+      if (spMax < 0) {
+        const excess = Math.abs(Math.trunc(spMax));
+        actorSystemData.stamina.max = 0;
+        // Ensure current SP does not exceed the new max.
+        actorSystemData.stamina.value = Math.min(Number(actorSystemData.stamina.value ?? 0), 0);
+        actorSystemData.fatigue.bonus = Number(actorSystemData.fatigue.bonus ?? 0) + excess;
+      }
+    }
+
     // Armor Weight Class Calculations
     // Use effective armor weight class as authoritative input (per contract).
     // We apply speed penalties here to keep existing derived speed math intact.
@@ -1391,6 +1874,12 @@ _aggregateItemStats(actorData) {
       }
 
     //Fatigue Penalties
+    // Active Effects: Fatigue/Exhaustion modifiers (bonus/penalty).
+    {
+      const m = (fatigueAEs?.bonus) ? fatigueAEs.bonus : this._getFatigueAEModifiers().bonus;
+      if (m.override != null) actorSystemData.fatigue.bonus = Number(m.override);
+      else if (m.add) actorSystemData.fatigue.bonus = Number(actorSystemData.fatigue.bonus ?? 0) + Number(m.add);
+    }
     actorSystemData.fatigue.level = actorSystemData.stamina.value <= 0 ? ((actorSystemData.stamina.value -1) * -1) + actorSystemData.fatigue.bonus : 0 + actorSystemData.fatigue.bonus
 
     switch (actorSystemData.fatigue.level > 0) {
@@ -1403,6 +1892,16 @@ _aggregateItemStats(actorData) {
         actorSystemData.fatigue.penalty = 0
         break
     }
+    // Active Effects: Fatigue/Exhaustion penalty modifiers (applied after fatigue penalty is calculated).
+    {
+      const m = (fatigueAEs?.penalty) ? fatigueAEs.penalty : this._getFatigueAEModifiers().penalty;
+      if (m.override != null) actorSystemData.fatigue.penalty = Number(m.override);
+      else if (m.add) actorSystemData.fatigue.penalty = Number(actorSystemData.fatigue.penalty ?? 0) + Number(m.add);
+    }
+
+
+    // Active Effects: Wound Threshold modifiers (bonus/value) applied after all other rule adjustments.
+    this._applyWoundThresholdAEs(actorSystemData);
 
     // PERF end
     // this._perfEnd('_prepareCharacterData', t0);
@@ -1493,16 +1992,109 @@ _aggregateItemStats(actorData) {
     actorSystemData.initiative.value = actorSystemData.initiative.base;
     actorSystemData.initiative.value = this._iniCalc(actorData);
 
-    actorSystemData.hp.base = Math.ceil(actorSystemData.characteristics.end.total / 2);
-    actorSystemData.hp.max = actorSystemData.hp.base + actorSystemData.hp.bonus;
 
-    actorSystemData.magicka.max = actorSystemData.characteristics.int.total + actorSystemData.magicka.bonus + this._determineIbMp(actorData);
+// Health / Magicka / Stamina / Luck Points
+// Active Effects: deterministic resource max pipeline (NPC).
 
-    actorSystemData.stamina.max = endBonus + actorSystemData.stamina.bonus;
+// HP
+actorSystemData.hp.base = Math.ceil(actorSystemData.characteristics.end.total / 2);
+{
+  const hpAE = this._getResourceAEModifiers('hp');
 
-    actorSystemData.luck_points.max = lckBonus + actorSystemData.luck_points.bonus;
+  const base = (hpAE.base.override != null) ? Number(hpAE.base.override) : (Number(actorSystemData.hp.base ?? 0) + Number(hpAE.base.add ?? 0));
+  const bonus = (hpAE.bonus.override != null) ? Number(hpAE.bonus.override) : (Number(actorSystemData.hp.bonus ?? 0) + Number(hpAE.bonus.add ?? 0));
 
-    actorSystemData.carry_rating.max = Math.floor((4 * strBonus) + (2 * endBonus)) + actorSystemData.carry_rating.bonus;
+  actorSystemData.hp.base = base;
+  actorSystemData.hp.bonus = bonus;
+
+  const computedMax = Number(base) + Number(bonus);
+  actorSystemData.hp.max = (hpAE.max.override != null) ? Number(hpAE.max.override) : (computedMax + Number(hpAE.max.add ?? 0));
+
+  if (hpAE.value.override != null) actorSystemData.hp.value = Number(hpAE.value.override);
+  else if (hpAE.value.add) actorSystemData.hp.value = Number(actorSystemData.hp.value ?? 0) + Number(hpAE.value.add ?? 0);
+
+  actorSystemData.hp.value = Math.clamp(Number(actorSystemData.hp.value ?? 0), 0, Number(actorSystemData.hp.max ?? 0));
+}
+
+// Magicka
+actorSystemData.magicka.max = actorSystemData.characteristics.int.total + actorSystemData.magicka.bonus + this._determineIbMp(actorData);
+{
+  const mAE = this._getResourceAEModifiers('magicka');
+
+  const bonus = (mAE.bonus.override != null) ? Number(mAE.bonus.override) : (Number(actorSystemData.magicka.bonus ?? 0) + Number(mAE.bonus.add ?? 0));
+  actorSystemData.magicka.bonus = bonus;
+
+  const computedMax = Number(actorSystemData.magicka.max ?? 0) + Number(mAE.base.add ?? 0);
+  const withAdd = computedMax + Number(mAE.max.add ?? 0);
+  actorSystemData.magicka.max = (mAE.max.override != null) ? Number(mAE.max.override) : withAdd;
+
+  if (mAE.value.override != null) actorSystemData.magicka.value = Number(mAE.value.override);
+  else if (mAE.value.add) actorSystemData.magicka.value = Number(actorSystemData.magicka.value ?? 0) + Number(mAE.value.add ?? 0);
+
+  actorSystemData.magicka.value = Math.clamp(Number(actorSystemData.magicka.value ?? 0), 0, Number(actorSystemData.magicka.max ?? 0));
+}
+
+// Stamina
+actorSystemData.stamina.max = endBonus + actorSystemData.stamina.bonus;
+{
+  const sAE = this._getResourceAEModifiers('stamina');
+
+  const bonus = (sAE.bonus.override != null) ? Number(sAE.bonus.override) : (Number(actorSystemData.stamina.bonus ?? 0) + Number(sAE.bonus.add ?? 0));
+  actorSystemData.stamina.bonus = bonus;
+
+  const computedMax = Number(actorSystemData.stamina.max ?? 0) + Number(sAE.base.add ?? 0);
+  const withAdd = computedMax + Number(sAE.max.add ?? 0);
+  actorSystemData.stamina.max = (sAE.max.override != null) ? Number(sAE.max.override) : withAdd;
+
+  if (sAE.value.override != null) actorSystemData.stamina.value = Number(sAE.value.override);
+  else if (sAE.value.add) actorSystemData.stamina.value = Number(actorSystemData.stamina.value ?? 0) + Number(sAE.value.add ?? 0);
+
+  actorSystemData.stamina.value = Math.clamp(Number(actorSystemData.stamina.value ?? 0), 0, Number(actorSystemData.stamina.max ?? 0));
+}
+
+// Luck Points
+actorSystemData.luck_points.max = lckBonus + actorSystemData.luck_points.bonus;
+{
+  const lAE = this._getResourceAEModifiers('luck_points');
+
+  const bonus = (lAE.bonus.override != null) ? Number(lAE.bonus.override) : (Number(actorSystemData.luck_points.bonus ?? 0) + Number(lAE.bonus.add ?? 0));
+  actorSystemData.luck_points.bonus = bonus;
+
+  const computedMax = Number(actorSystemData.luck_points.max ?? 0) + Number(lAE.base.add ?? 0);
+  const withAdd = computedMax + Number(lAE.max.add ?? 0);
+  actorSystemData.luck_points.max = (lAE.max.override != null) ? Number(lAE.max.override) : withAdd;
+
+  if (lAE.value.override != null) actorSystemData.luck_points.value = Number(lAE.value.override);
+  else if (lAE.value.add) actorSystemData.luck_points.value = Number(actorSystemData.luck_points.value ?? 0) + Number(lAE.value.add ?? 0);
+
+  actorSystemData.luck_points.value = Math.clamp(Number(actorSystemData.luck_points.value ?? 0), 0, Number(actorSystemData.luck_points.max ?? 0));
+}
+
+    // Carry Rating (base formula) + deterministic AE modifiers
+    const carryAEs = this._getCarryAEModifiers();
+    const fatigueAEs = this._getFatigueAEModifiers();
+
+    // Bonus lane modifies carry_rating.bonus
+    {
+      const bonus = (carryAEs.bonus.override != null)
+        ? Number(carryAEs.bonus.override)
+        : (Number(actorSystemData.carry_rating.bonus ?? 0) + Number(carryAEs.bonus.add ?? 0));
+      actorSystemData.carry_rating.bonus = bonus;
+    }
+
+    // Base formula lane (4*STR + 2*END) plus optional base modifier
+    const baseFormula = Math.floor((4 * strBonus) + (2 * endBonus));
+    const baseMod = (carryAEs.base.override != null)
+      ? Number(carryAEs.base.override)
+      : Number(carryAEs.base.add ?? 0);
+
+    const computedMax = baseFormula + baseMod + Number(actorSystemData.carry_rating.bonus ?? 0);
+    const withAdd = computedMax + Number(carryAEs.override.add ?? 0);
+
+    // Override lane: hard set carry_rating.max (OVERRIDE), otherwise apply additive.
+    actorSystemData.carry_rating.max = (carryAEs.override.override != null)
+      ? Number(carryAEs.override.override)
+      : withAdd;
     // Guard: Use Number() to ensure numeric value after toFixed for safe carry rating calculations
     actorSystemData.carry_rating.current = Number((agg.totalEnc - agg.armorEnc - agg.excludedEnc).toFixed(1))
 
@@ -1607,6 +2199,29 @@ _aggregateItemStats(actorData) {
       }
     }
 
+    // Encumbrance penalty AE modifier (applies after burden bracket computation)
+    {
+      const m = (carryAEs?.encTestPenalty) ? carryAEs.encTestPenalty : this._getCarryAEModifiers().encTestPenalty;
+      if (m.override != null) actorSystemData.carry_rating.penalty = Number(m.override);
+      else if (m.add) actorSystemData.carry_rating.penalty = Number(actorSystemData.carry_rating.penalty ?? 0) + Number(m.add);
+    }
+
+    // Encumbrance speed penalty AE modifier (RAW lane: modifies the encumbrance-applied speed penalty only).
+    // Semantics: ADD is applied as a post-bracket delta to current speed.value; OVERRIDE sets that delta.
+    {
+      const m = (carryAEs?.encSpeedPenalty) ? carryAEs.encSpeedPenalty : this._getCarryAEModifiers().encSpeedPenalty;
+      const delta = (m.override != null) ? Number(m.override) : (m.add ? Number(m.add) : 0);
+      if (delta) actorSystemData.speed.value = Math.max(0, Number(actorSystemData.speed.value ?? 0) + delta);
+    }
+
+    // Encumbrance stamina penalty AE modifier (RAW lane: modifies the encumbrance-applied SP max penalty only).
+    // Semantics: ADD is applied as a post-bracket delta to current stamina.max; OVERRIDE sets that delta.
+    {
+      const m = (carryAEs?.encStaminaPenalty) ? carryAEs.encStaminaPenalty : this._getCarryAEModifiers().encStaminaPenalty;
+      const delta = (m.override != null) ? Number(m.override) : (m.add ? Number(m.add) : 0);
+      if (delta) actorSystemData.stamina.max = Number(actorSystemData.stamina.max ?? 0) + delta;
+    }
+
     // Armor Weight Class mobility penalties (effective, Step 9)
     // - Apply speed penalty now.
     // - Agility test penalty is stored on actorSystemData.mobility for roll logic to consume later.
@@ -1664,6 +2279,12 @@ _aggregateItemStats(actorData) {
       }
 
     //Fatigue Penalties
+    // Active Effects: Fatigue/Exhaustion modifiers (bonus/penalty).
+    {
+      const m = (fatigueAEs?.bonus) ? fatigueAEs.bonus : this._getFatigueAEModifiers().bonus;
+      if (m.override != null) actorSystemData.fatigue.bonus = Number(m.override);
+      else if (m.add) actorSystemData.fatigue.bonus = Number(actorSystemData.fatigue.bonus ?? 0) + Number(m.add);
+    }
     actorSystemData.fatigue.level = actorSystemData.stamina.value <= 0 ? ((actorSystemData.stamina.value -1) * -1) + actorSystemData.fatigue.bonus : 0 + actorSystemData.fatigue.bonus
 
     switch (actorSystemData.fatigue.level > 0) {
@@ -1675,6 +2296,12 @@ _aggregateItemStats(actorData) {
         actorSystemData.fatigue.level = 0
         actorSystemData.fatigue.penalty = 0
         break
+    }
+    // Active Effects: Fatigue/Exhaustion penalty modifiers (applied after fatigue penalty is calculated).
+    {
+      const m = (fatigueAEs?.penalty) ? fatigueAEs.penalty : this._getFatigueAEModifiers().penalty;
+      if (m.override != null) actorSystemData.fatigue.penalty = Number(m.override);
+      else if (m.add) actorSystemData.fatigue.penalty = Number(actorSystemData.fatigue.penalty ?? 0) + Number(m.add);
     }
 
     // Set Lucky/Unlucky Numbers based on Threat Category
@@ -1815,6 +2442,9 @@ _aggregateItemStats(actorData) {
       actorSystemData.lucky_numbers.ln9 = 9;
       actorSystemData.lucky_numbers.ln10 = 10;
     }
+
+    // Active Effects: Wound Threshold modifiers (bonus/value) applied after all other rule adjustments.
+    this._applyWoundThresholdAEs(actorSystemData);
 
     // Calculate Item Profession Modifiers
     // Prefer aggregated modifiers; _calculateItemSkillModifiers accepts an optional agg
