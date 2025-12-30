@@ -13,6 +13,75 @@
  */
 
 import { skillHelper, skillModHelper } from "../helpers/skillCalcHelper.js";
+import { evaluateAEModifierKeys } from "../ae/modifier-evaluator.js";
+
+/**
+ * Read combat TN modifiers from actor.system.modifiers.combat.*.
+ * These are intended to be written by Active Effects.
+ *
+ * Supported keys (all optional, default 0):
+ *  - system.modifiers.combat.attackTN
+ *  - system.modifiers.combat.defenseTN
+ *  - system.modifiers.combat.defenseTN.<evade|block|parry|counter>
+ */
+/**
+ * Collect combat TN modifiers from Active Effects.
+ *
+ * We do NOT rely on implicit "transfer" resolution for roll-time provenance. Instead we:
+ *  - read Actor embedded effects
+ *  - read Item effects that are marked transfer=true
+ *
+ * This allows:
+ *  - deterministic application
+ *  - per-effect provenance in TN breakdown (labels = effect.name)
+ *
+ * Supported change modes:
+ *  - ADD (numeric)
+ * Other modes are ignored for now by design to avoid implicit behavior differences.
+ */
+function getCombatTNModifiers(actor, role, defenseType) {
+  const targetKeys = [];
+  if (role === "attacker") targetKeys.push("system.modifiers.combat.attackTN");
+  else if (role === "defender") {
+    targetKeys.push("system.modifiers.combat.defenseTN.total");
+    if (defenseType) targetKeys.push(`system.modifiers.combat.defenseTN.${defenseType}`);
+  }
+
+  const resolved = evaluateAEModifierKeys(actor, targetKeys);
+  const entries = [];
+
+  for (const k of targetKeys) {
+    const r = resolved[k];
+    if (!r || !r.entries?.length) continue;
+    for (const e of r.entries) {
+      entries.push({
+        key: `ae-${k}-${e.effectId ?? randomID()}`,
+        label: e.label,
+        value: e.value,
+        source: k,
+        mode: e.mode,
+      });
+    }
+  }
+
+  const total = targetKeys.reduce((sum, k) => sum + (resolved[k]?.total ?? 0), 0);
+  return { total, entries, resolvedByKey: resolved };
+}
+
+
+/**
+ * Public helper for other pipelines (e.g. unopposed Combat Style checks) to
+ * consume combat TN modifiers with the same provenance labels used by the
+ * opposed combat TN workflow.
+ *
+ * @param {Actor} actor
+ * @param {"attacker"|"defender"} role
+ * @param {string|null} defenseType
+ * @returns {Array<{key: string, label: string, value: number, source: string}>}
+ */
+export function collectCombatTNModifierEntries(actor, role, defenseType = null) {
+  return getCombatTNModifiers(actor, role, defenseType)?.entries ?? [];
+}
 
 function asNumber(v) {
   if (v == null) return 0;
@@ -214,6 +283,12 @@ export function computeTN({
   // --- Combat circumstances (pre-AE): discrete disadvantage dropdown applied to this side's TN.
   const cMod = asNumber(circumstanceMod);
   if (cMod) breakdown.push({ key: "circumstance", label: "Circumstance", value: cMod, source: "circumstance" });
+
+  // --- Active Effects combat TN modifiers (from system.modifiers.combat.*)
+  // Applied exactly once at this stage, and only to TN (not to base characteristics).
+  const ae = getCombatTNModifiers(actor, role, defenseType);
+  for (const e of (ae.entries ?? [])) breakdown.push(e);
+
 
   // --- Placeholders for Step 2+ expansions
   if (context?.includePlaceholders) {
