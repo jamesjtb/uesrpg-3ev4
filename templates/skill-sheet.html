@@ -5,53 +5,68 @@
                 <h1 class="charname flex-container">
                     <img class="profile-img" src="{{item.img}}" data-edit="img" title="{{item.name}}"/>
                     <input name="name" type="text" value="{{item.name}}" placeholder="Name"/>
-                </h1>
+</h1>
                 <div class="item-resource-container">
                     <div class="item-resource-row">
                         <div class="item-resource">
                             <div class="stat-value-label">
-                                <label>{{item.system.value}}</label>
+                                <input type="number" name="system.level" value="{{item.system.level}}"/>
                             </div>
                             <div class="flex-container">
-                                <div class="small-text-label">Target Number</div>
+                                <div class="small-text-label">Level</div>
                             </div>
                         </div>
                         <div class="item-resource">
                             <div class="stat-value-label">
-                                <select name="system.rank" data-type="String">
-                                    {{selectOptions item.system.skillRanks selected=item.system.rank localize=true}}
+                                <input type="number" name="system.cost" value="{{item.system.cost}}"/>
+                            </div>
+                            <div class="flex-container">
+                                <div class="small-text-label">MP Cost</div>
+                            </div>
+                        </div>
+                        <div class="item-resource">
+                            <div class="stat-value-label">
+                                <select name="system.school" data-dtype="String">
+                                    {{selectOptions item.system.school_cat selected=item.system.school localize=true}}
                                 </select>
                             </div>
                             <div class="flex-container">
-                                <div class="small-text-label">Rank</div>
+                                <div class="small-text-label">School</div>
                             </div>
                         </div>
                         <div class="item-resource">
                             <div class="stat-value-label">
-                                <input type="text" name="system.governingCha" value="{{item.system.governingCha}}">
-                            </div>
-                            <div class="flex-container">
-                                <div class="small-text-label"> Governing Ch.</div>
-                            </div>
-                        </div>
-                        <div class="item-resource">
-                            <div class="stat-value-label">
-                                <select name="system.baseCha" data-type="String">
-                                    {{selectOptions item.system.characteristics selected=item.system.baseCha localize=true}}
+                                <select name="system.spellType" data-dtype="String">
+                                    {{selectOptions item.system.spellTypes selected=item.system.spellType localize=true}}
                                 </select>
                             </div>
                             <div class="flex-container">
-                                <div class="small-text-label">Selected Char.</div>
+                                <div class="small-text-label">Type</div>
                             </div>
                         </div>
-                    </div>
-                    <div class="item-resource-row">
                         <div class="item-resource">
                             <div class="stat-value-label">
-                                <input type="text" name="system.trainedItems" value="{{item.system.trainedItems}}" data-dtype="String">
+                                <input type="text" name="system.damage" value="{{item.system.damage}}"/>
                             </div>
                             <div class="flex-container">
-                                <div class="small-text-label">Specialization</div>
+                                <div class="small-text-label">Damage</div>
+                            </div>
+                        </div>
+                        <div class="item-resource">
+                            <div class="stat-value-label">
+                                <input type="text" name="system.form" value="{{item.system.form}}"/>
+                            </div>
+                            <div class="flex-container">
+                                <div class="small-text-label">Form</div>
+                            </div>
+                        </div>
+
+                        <div class="item-resource uesrpg-spell-active-toggle">
+                            <div class="stat-value-label" style="display:flex; justify-content:center; align-items:center;">
+                                <input type="checkbox" name="flags.uesrpg-3ev4.activeSpell" {{checked (lookup (lookup item.flags "uesrpg-3ev4") "activeSpell")}} />
+                            </div>
+                            <div class="flex-container">
+                                <div class="small-text-label">Active Spell</div>
                             </div>
                         </div>
                     </div>
@@ -62,6 +77,7 @@
         {{!-- Sheet Tab Navigation --}}
         <nav class="sheet-tabs tabs" data-group="primary">
             <a class="item" data-tab="description">Description</a>
+            <a class="item" data-tab="attributes">Attributes</a>
                             <a class="item" data-tab="effects">Effects</a>
 </nav>
         </div>
@@ -72,6 +88,18 @@
             {{!-- Description Tab --}}
             <div class="tab" data-group="primary" data-tab="description">
                 {{editor item.system.enrichedDescription target="system.description" engine="prosemirror" button=true owner=owner editable=editable}}
+            </div>
+
+            {{!-- Attributes Tab --}}
+            <div class="tab" data-group="primary" data-tab="attributes">
+                <div class="attribute-tab-container">
+                    <div class="quality-container">
+                        <div class="flex-container">
+                            <h2>Spell Attributes</h2>
+                            <div>{{editor item.system.attributes target="system.attributes" engine="prosemirror" button=true owner=owner editable=editable}}</div>
+                        </div>
+                    </div>
+                </div>
             </div>
         
 
@@ -96,4 +124,3 @@
                 </div>
 </section>
 </form>
-
