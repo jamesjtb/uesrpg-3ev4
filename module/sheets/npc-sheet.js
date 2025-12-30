@@ -61,6 +61,13 @@ export class npcSheet extends foundry.appv1.sheets.ActorSheet {
     }
 
     data.actor.system.enrichedBio = await foundry.applications.ux.TextEditor.implementation.enrichHTML(data.actor.system.bio, {async: true});
+    // Active Effects (for Effects tab templates)
+    if (this.actor && this.actor.effects) {
+      data.effects = this.actor.effects.contents.map(e => e.toObject());
+    } else {
+      data.effects = [];
+    }
+
 
     return data;
   }
@@ -224,6 +231,9 @@ export class npcSheet extends foundry.appv1.sheets.ActorSheet {
   /** @override */
 async activateListeners(html) {
   super.activateListeners(html);
+
+    // Active Effects (Effects tab)
+    if (this._onEffectControl) html.find('.effect-control').click(this._onEffectControl.bind(this));
 
   // Rollable Buttons
   html.find(".characteristic-roll").click(this._onClickCharacteristic.bind(this));
@@ -777,7 +787,12 @@ async _onProfessionsRoll(event) {
     id: `prof:${key}`,
     name: label,
     img: this.actor.img,
-    system: { value: baseValue },
+    system: {
+      value: baseValue,
+      // These are stored on the NPC Actor (system.skills.<key>.*) and may be modified by Actor Active Effects.
+      bonus: Number(actorSystem?.skills?.[key]?.bonus ?? 0),
+      miscValue: 0
+    },
     _professionKey: key
   };
 
@@ -1880,5 +1895,54 @@ _createStatusTags() {
     ? this.form.querySelector("#fatigue-icon").classList.add("active")
     : this.form.querySelector("#fatigue-icon").classList.remove("active");
   // Optionally guard encumbrance/icon logic similarly
+}
+/* -------------------------------------------- */
+/* Active Effects                                */
+/* -------------------------------------------- */
+
+/**
+ * Handle Active Effect controls from the Effects tab.
+ */
+async _onEffectControl(event) {
+  event.preventDefault();
+  const el = event.currentTarget;
+  if (!el || !el.dataset) return;
+
+  const action = el.dataset.action;
+  const effectId = el.dataset.effectId;
+  if (!action) return;
+  if (!this.actor || !this.actor.effects) return;
+
+  if (action === "create") {
+    const effectData = {
+      name: "New Effect",
+      img: "icons/svg/aura.svg",
+      changes: [],
+      disabled: false,
+      transfer: false,
+      duration: {}
+    };
+    const created = await this.actor.createEmbeddedDocuments("ActiveEffect", [effectData]);
+    const eff = (created && created.length) ? created[0] : null;
+    if (eff && eff.sheet) eff.sheet.render(true);
+    return;
+  }
+
+  const effect = this.actor.effects.get(effectId);
+  if (!effect) return;
+
+  switch (action) {
+    case "edit":
+      if (effect.sheet) effect.sheet.render(true);
+      break;
+    case "delete":
+      await effect.delete();
+      break;
+    case "toggle":
+      await effect.update({ disabled: !effect.disabled });
+      break;
+    default:
+      break;
+  }
 }
 }
