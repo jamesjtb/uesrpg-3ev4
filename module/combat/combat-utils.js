@@ -1,103 +1,219 @@
 /**
- * module/combat/combat-utils.js
- * Shared utility functions for combat and damage
+ * module/combat/chat-handlers.js
+ * Foundry VTT v13-compatible chat card handlers for UESRPG 3ev4.
+ *
+ * Exports expected by init.js:
+ *  - initializeChatHandlers()
+ *  - registerCombatChatHooks()
+ *
+ * Notes:
+ *  - Uses Hooks.on("renderChatMessageHTML") (v13) instead of deprecated renderChatMessage
+ *  - Registers only once (guards against double-calls from init.js)
  */
 
-import { DAMAGE_TYPES } from "./damage-automation.js";
+import { applyHealing, DAMAGE_TYPES } from "./damage-automation.js";
+import { applyDamageResolved } from "./damage-resolver.js";
+import { OpposedWorkflow } from "./opposed-workflow.js";
+import { SkillOpposedWorkflow } from "../skills/opposed-workflow.js";
+import { canUserRollActor } from "../helpers/permissions.js";
+
+let _chatHooksRegistered = false;
 
 /**
- * Determine damage type from weapon qualities
- * @param {Item} weapon - The weapon item
- * @returns {string} - Damage type
+ * Resolve an Actor from a UUID or speaker.
+ * @param {ChatMessage} message
+ * @param {string|null} uuid
+ * @returns {Actor|null}
  */
+async function _maybeConsumeAmmoFromMessage(message) {
+  const opposed = message?.flags?.["uesrpg-3ev4"]?.opposed;
+  const pendingAmmo = opposed?.pendingAmmo ?? null;
+  if (!pendingAmmo) return;
+  if (opposed?.ammoConsumed) return;
 
-export function getDamageTypeFromWeapon(weapon) {
-  if (!weapon?.system) return DAMAGE_TYPES.PHYSICAL;
+  // Ensure exactly one client performs consumption.
+  const activeGM = game.users.activeGM;
+  const shouldRun = activeGM ? (game.user.id === activeGM.id) : message.isAuthor;
+  if (!shouldRun) return;
 
-  // Prefer structured qualities (manual + auto-injected) for automation.
-  const structured = Array.isArray(weapon.system.qualitiesStructuredInjected)
-    ? weapon.system.qualitiesStructuredInjected
-    : Array.isArray(weapon.system.qualitiesStructured)
-      ? weapon.system.qualitiesStructured
-      : null;
-
-  const keys = structured ? structured.map(q => String(q?.key ?? "").toLowerCase()).filter(Boolean) : [];
-
-  // Structured-driven fast path
-  if (keys.includes("fire") || keys.includes("flame")) return DAMAGE_TYPES.FIRE;
-  if (keys.includes("frost") || keys.includes("ice")) return DAMAGE_TYPES.FROST;
-  if (keys.includes("shock") || keys.includes("lightning")) return DAMAGE_TYPES.SHOCK;
-  if (keys.includes("poison")) return DAMAGE_TYPES.POISON;
-  if (keys.includes("magic")) return DAMAGE_TYPES.MAGIC;
-  if (keys.includes("silver")) return DAMAGE_TYPES.SILVER;
-  if (keys.includes("sunlight")) return DAMAGE_TYPES.SUNLIGHT;
-
-  // Fallback to legacy rich-text qualities (reference-only)
-  if (!weapon.system.qualities) return DAMAGE_TYPES.PHYSICAL;
-  const qualities = String(weapon.system.qualities).toLowerCase();
-
-  if (qualities.includes('fire') || qualities.includes('flame')) return DAMAGE_TYPES.FIRE;
-  if (qualities.includes('frost') || qualities.includes('ice')) return DAMAGE_TYPES.FROST;
-  if (qualities.includes('shock') || qualities.includes('lightning')) return DAMAGE_TYPES.SHOCK;
-  if (qualities.includes('poison')) return DAMAGE_TYPES.POISON;
-  if (qualities.includes('magic')) return DAMAGE_TYPES.MAGIC;
-  if (qualities.includes('silver')) return DAMAGE_TYPES.SILVER;
-  if (qualities.includes('sunlight')) return DAMAGE_TYPES.SUNLIGHT;
-
-  return DAMAGE_TYPES.PHYSICAL;
+  const ok = await OpposedWorkflow.consumePendingAmmo(pendingAmmo);
+  await message.update({
+    "flags.uesrpg-3ev4.opposed.ammoConsumed": true,
+    "flags.uesrpg-3ev4.opposed.ammoConsumedOk": !!ok,
+    "flags.uesrpg-3ev4.opposed.ammoConsumedAt": Date.now(),
+  });
 }
 
+function _resolveActor(message, uuid) {
+  if (uuid) {
+    const doc = fromUuidSync(uuid);
+    if (doc?.actor) return doc.actor;
+    if (doc?.documentName === "Actor") return doc;
+  }
+  const sp = message?.speaker;
+  if (sp?.token) return canvas?.tokens?.get(sp.token)?.actor ?? null;
+  if (sp?.actor) return game.actors?.get(sp.actor) ?? null;
+  return null;
+}
 
-/**
- * Roll for hit location using 1d100
- * @returns {Promise<string>} Hit location description
- */
-/**
- * Return hit location using ones digit of d100 roll as per UESRPG rules.
- * @param {number} attackRollResult
- * @returns {string}
- */
-export function getHitLocationFromRoll(attackRollResult) {
-  const digit = Math.abs(Number(attackRollResult) || 0) % 10;
-  switch (digit) {
-    case 0: return "Head";
-    case 1: case 2: case 3: case 4: case 5: return "Body";
-    case 6: return "Right Leg";
-    case 7: return "Left Leg";
-    case 8: return "Right Arm";
-    case 9: return "Left Arm";
+async function _onApplyDamage(ev, message) {
+  ev.preventDefault();
+
+  const btn = ev.currentTarget;
+  const targetUuid = btn.dataset.targetUuid || null;
+  const rawDamage = Number(btn.dataset.damage || 0);
+  const damageType = btn.dataset.damageType || DAMAGE_TYPES.PHYSICAL;
+  const dosBonus = Number(btn.dataset.dosBonus || 0);
+  const penetration = Number(btn.dataset.penetration || 0);
+  const hitLocation = btn.dataset.hitLocation || "Body";
+  const source = btn.dataset.source || (message?.speaker?.alias ?? "Unknown");
+  const penetrateArmorForTriggers = String(btn.dataset.penetrateArmor ?? "0") === "1";
+	const forcefulImpact = String(btn.dataset.forcefulImpact ?? "0") === "1";
+	const pressAdvantage = String(btn.dataset.pressAdvantage ?? "0") === "1";
+  const ignoreReduction = String(btn.dataset.ignoreReduction ?? "0") === "1";
+
+  // Optional enrichment for RAW weapon trait bonuses.
+  // If present, these are resolved safely and passed through to applyDamage().
+  const attackerActorUuid = btn.dataset.attackerActorUuid || null;
+  const weaponUuid = btn.dataset.weaponUuid || null;
+
+  const targetActor = _resolveActor(message, targetUuid);
+  if (!targetActor) {
+    ui.notifications.warn("No valid target actor found for damage application.");
+    return;
   }
 
-  // Defensive fallback (should never be reached)
-  return "Body";
+  let attackerActor = null;
+  let weapon = null;
+
+  try {
+    if (attackerActorUuid) {
+      const a = fromUuidSync(attackerActorUuid);
+      attackerActor = (a?.documentName === "Actor") ? a : (a?.actor ?? null);
+    }
+  } catch (_e) {
+    attackerActor = null;
+  }
+
+  try {
+    if (weaponUuid) {
+      weapon = fromUuidSync(weaponUuid) ?? null;
+    }
+  } catch (_e) {
+    weapon = null;
+  }
+
+  await applyDamageResolved(targetActor, {
+    rawDamage,
+    damageType,
+    dosBonus,
+    penetration,
+    hitLocation,
+    source,
+    ignoreReduction,
+    penetrateArmorForTriggers,
+    forcefulImpact,
+    pressAdvantage,
+    weapon,
+    attackerActor,
+  });
+}
+
+async function _onApplyHealing(ev, message) {
+  ev.preventDefault();
+
+  const btn = ev.currentTarget;
+  const targetUuid = btn.dataset.targetUuid || null;
+  const healing = Number(btn.dataset.healing || 0);
+  const source = btn.dataset.source || (message?.speaker?.alias ?? "Healing");
+
+  const targetActor = _resolveActor(message, targetUuid);
+  if (!targetActor) {
+    ui.notifications.warn("No valid target actor found for healing.");
+    return;
+  }
+
+  await applyHealing(targetActor, healing, { source });
+}
+
+
+
+async function _onSkillOpposedAction(ev, message) {
+  ev.preventDefault();
+  const btn = ev.currentTarget;
+  const action = btn.dataset.uesSkillOpposedAction;
+  await SkillOpposedWorkflow.handleAction(message, action, { event: ev });
+}
+
+function _getSkillOpposedState(message) {
+  const raw = message?.flags?.["uesrpg-3ev4"]?.skillOpposed;
+  if (!raw) return null;
+  if (raw && typeof raw === "object" && Number(raw.version) >= 1 && raw.state) return raw.state;
+  if (raw && typeof raw === "object" && raw.attacker && raw.defender) return raw;
+  return null;
+}
+
+async function _onOpposedAction(ev, message) {
+  ev.preventDefault();
+  const btn = ev.currentTarget;
+  const action = btn.dataset.uesOpposedAction;
+  await OpposedWorkflow.handleAction(message, action);
 }
 
 /**
- * Backwards-compatible helper.
- *
- * Historically the system exposed `rollHitLocation()` globally and some modules/macros
- * still import/call it. RAW hit-location in UESRPG 3e v4 is based on the ones digit
- * of the attack roll result.
- *
- * If an attack roll result is provided, we derive hit location from it.
- * If not provided, we roll 1d100 (only to obtain a ones digit) and derive from that.
- *
- * @param {number} [attackRollResult]
- * @returns {Promise<string>} Hit location
+ * Register chat handlers (v13).
  */
-export async function rollHitLocation(attackRollResult) {
-  if (Number.isFinite(attackRollResult)) return getHitLocationFromRoll(Number(attackRollResult));
+export function initializeChatHandlers() {
+  if (_chatHooksRegistered) return;
+  _chatHooksRegistered = true;
 
-  // RAW: hit location is the 1s digit of the attack roll, but can also be rolled as 1d10 (treat 10 as 0).
-  // We use 1d10 here as a deterministic fallback when an attack roll isn't provided.
-  console.warn("UESRPG | rollHitLocation() called without attack roll result; rolling 1d10 as fallback.");
-  const r = await new Roll("1d10").evaluate();
-  return getHitLocationFromRoll(Number(r.total));
+  Hooks.on("createChatMessage", (message) => {
+    _maybeConsumeAmmoFromMessage(message).catch((err) => console.error("UESRPG | Ammo consumption hook failed", err));
+  });
+
+  Hooks.on("renderChatMessageHTML", (message, html) => {
+    // html is an HTMLElement in v13, but some modules provide a jQuery wrapper.
+    const root = html instanceof HTMLElement ? html : html?.[0];
+    if (!root) return;
+
+    root.querySelectorAll(".apply-damage-btn").forEach((el) => {
+      el.addEventListener("click", (ev) => _onApplyDamage(ev, message));
+    });
+
+    root.querySelectorAll(".apply-healing-btn").forEach((el) => {
+      el.addEventListener("click", (ev) => _onApplyHealing(ev, message));
+    });
+
+    root.querySelectorAll("[data-ues-opposed-action]").forEach((el) => {
+      el.addEventListener("click", (ev) => _onOpposedAction(ev, message));
+    });
+
+    // Skill opposed-roll chat card buttons
+    root.querySelectorAll("[data-ues-skill-opposed-action]").forEach((el) => {
+      const action = el.dataset.uesSkillOpposedAction;
+      const data = _getSkillOpposedState(message);
+      let actor = null;
+      try {
+        const actorUuid = (action === "attacker-roll") ? data?.attacker?.actorUuid : (action === "defender-roll") ? data?.defender?.actorUuid : null;
+        actor = actorUuid ? fromUuidSync(actorUuid) : null;
+      } catch (_e) {
+        actor = null;
+      }
+
+      // Permission-aware button state
+      if (actor && !canUserRollActor(game.user, actor)) {
+        el.setAttribute("disabled", "disabled");
+        el.setAttribute("title", "You do not have permission to roll for this actor.");
+      }
+
+      el.addEventListener("click", (ev) => _onSkillOpposedAction(ev, message));
+    });
+  });
 }
 
-// Global exposure for macros
-window.Uesrpg3e = window.Uesrpg3e || {};
-window.Uesrpg3e.utils = window.Uesrpg3e.utils || {};
-window.Uesrpg3e.utils.getDamageTypeFromWeapon = getDamageTypeFromWeapon;
-window.Uesrpg3e.utils.getHitLocationFromRoll = getHitLocationFromRoll;
-window.Uesrpg3e.utils.rollHitLocation = rollHitLocation;
+/**
+ * Backwards-compatible export expected by some init scripts.
+ */
+export function registerCombatChatHooks() {
+  initializeChatHandlers();
+}
