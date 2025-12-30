@@ -147,6 +147,61 @@ function _getPreferredWeaponUuid(actor, { meleeOnly = false } = {}) {
   return filtered[0]?.uuid ?? "";
 }
 
+async function _preConsumeAttackAmmo(attacker, data) {
+  // Pre-consume 1 ammunition when the attacker commits to the attack roll.
+  // Assumption (per project direction): only one ranged weapon participates in an attack roll.
+  try {
+    const weaponUuid = _getPreferredWeaponUuid(attacker, { meleeOnly: false }) || "";
+    if (!weaponUuid) return null;
+
+    const weapon = await fromUuid(weaponUuid);
+    if (!weapon || weapon.type !== "weapon") return null;
+
+    // Only pre-consume for ranged attackMode weapons configured to consume ammo.
+    if (String(weapon.system?.attackMode ?? "melee") !== "ranged") return null;
+    if (weapon.system?.consumeAmmo === false) return null;
+
+    const ammoId = String(weapon.system?.ammoId ?? "").trim();
+    if (!ammoId) {
+      ui.notifications.warn(`${weapon.name}: no ammunition selected.`);
+      return null;
+    }
+
+    const ammo = attacker.items.get(ammoId);
+    if (!ammo || ammo.type !== "ammunition") {
+      ui.notifications.warn(`${weapon.name}: selected ammunition could not be resolved.`);
+      return null;
+    }
+
+    const qty = Number(ammo.system?.quantity ?? 0);
+    if (!(qty > 0)) {
+      ui.notifications.warn(`${ammo.name}: no ammunition remaining.`);
+      return null;
+    }
+
+    await ammo.update({ "system.quantity": Math.max(0, qty - 1) });
+
+    const pre = {
+      weaponUuid: weapon.uuid,
+      ammoId,
+      ammoUuid: ammo.uuid,
+      ammoName: ammo.name,
+      consumedAt: Date.now()
+    };
+
+    // Persist on workflow data so damage roll can avoid double consumption.
+    data.attacker = data.attacker ?? {};
+    data.attacker.preConsumedAmmo = pre;
+
+    return pre;
+  } catch (err) {
+    console.error("UESRPG | Pre-consume attack ammo failed", err);
+    ui.notifications.error("Failed to consume ammunition for this attack. See console for details.");
+    return null;
+  }
+}
+
+
 function _resolveActor(docOrUuid) {
   const doc = typeof docOrUuid === "string" ? _resolveDoc(docOrUuid) : docOrUuid;
   if (!doc) return null;
@@ -419,11 +474,29 @@ async function _updateCard(message, data) {
   data.context.updatedAt = Date.now();
   data.context.updatedBy = game.user.id;
 
-  await message.update({
+  const payload = {
     content: _renderCard(data, message.id),
     flags: { "uesrpg-3ev4": { opposed: data } }
-  });
+  };
+
+  // In Foundry v13, ChatLog DOM updates can intermittently throw if the message element is not currently rendered
+  // (e.g., filtered/paginated chat log). We must never allow that to abort the combat workflow (ammo consumption,
+  // resolution messages, etc.). Update the document, then attempt a safe UI refresh.
+  try {
+    await message.update(payload);
+  } catch (err) {
+    console.warn("UESRPG | Chat card update failed; applying non-rendering update fallback.", { messageId: message.id, err });
+    try {
+      await message.update(payload, { render: false });
+      // Best-effort UI refresh; do not throw if chat is not available.
+      if (ui?.chat) ui.chat.render?.(true);
+    } catch (err2) {
+      console.error("UESRPG | Chat card update fallback failed.", { messageId: message.id, err: err2 });
+      // Do not rethrow: the workflow must proceed.
+    }
+  }
 }
+
 
 async function _attackerDeclareDialog(attackerActor, attackerLabel, { styles = [], selectedStyleUuid = null, defaultVariant = "normal", defaultManual = 0, defaultCirc = 0 } = {}) {
   const showStyleSelect = Array.isArray(styles) && styles.length >= 2;
@@ -977,7 +1050,7 @@ async function _promptDefenderAdvantage({ defenderActor, advantageCount = 0 } = 
   }
 }
 
-async function _rollWeaponDamage({ weapon }) {
+async function _rollWeaponDamage({ weapon, preConsumedAmmo = null }) {
   const addFlatBonus = (expr, bonus) => {
     const b = Number(bonus || 0);
     if (!Number.isFinite(b) || b === 0) return String(expr ?? "0");
@@ -999,6 +1072,13 @@ async function _rollWeaponDamage({ weapon }) {
     const shouldConsume = weapon.system?.consumeAmmo !== false;
     const ammoId = String(weapon.system?.ammoId ?? "").trim();
 
+
+    const preConsumedMatches = !!(preConsumedAmmo
+      && preConsumedAmmo.weaponUuid
+      && preConsumedAmmo.ammoId
+      && preConsumedAmmo.weaponUuid === weapon.uuid
+      && preConsumedAmmo.ammoId === ammoId);
+
     // If the weapon is configured to consume ammo, enforce that ammo exists and has quantity.
     // This gates the damage workflow pre-AE and prevents "free" ranged damage when out of ammo.
     if (shouldConsume) {
@@ -1012,7 +1092,8 @@ async function _rollWeaponDamage({ weapon }) {
         return null;
       }
       const qty = Number(ammo.system?.quantity ?? 0);
-      if (!(qty > 0)) {
+      // If ammo was already consumed at attack time, quantity may now be 0.
+      if (!preConsumedMatches && !(qty > 0)) {
         ui.notifications.warn(`${ammo.name}: no ammunition remaining.`);
         return null;
       }
@@ -1029,7 +1110,12 @@ async function _rollWeaponDamage({ weapon }) {
 
       // Record the consumption for later; actual update is performed by the caller.
       pendingAmmo = {
+        // Store multiple resolution paths for maximum compatibility with linked and unlinked token Actors.
+        // - ammoUuid is a direct document UUID (best-case).
+        // - actorUuid + ammoId allow consuming by updating embedded Items on the parent Actor (fallback when UUID resolution fails).
         ammoUuid: ammo.uuid,
+        actorUuid: weapon.actor?.uuid ?? null,
+        ammoId,
         ammoName: ammo.name,
         qtyAfter: Math.max(0, qty - 1),
       };
@@ -1073,23 +1159,63 @@ async function _rollWeaponDamage({ weapon }) {
     else total = Math.max(total, alt);
   }
 
-  return { damageString, rollA: a, rollB: b, finalDamage: total, pendingAmmo };
+  return { damageString, rollA: a, rollB: b, finalDamage: total, pendingAmmo: null };
 }
 
 async function _consumePendingAmmo(pendingAmmo) {
   if (!pendingAmmo) return true;
-  const { ammoUuid, qtyAfter, ammoName } = pendingAmmo;
+
+  const { ammoUuid, actorUuid, ammoId, qtyAfter, ammoName } = pendingAmmo;
+
+  // Prefer consuming by updating the embedded Item on the parent Actor.
+  // This is more reliable than updating the embedded Item directly by UUID in cases where
+  // the workflow involves a synthetic (unlinked) token Actor or other UUID resolution edge cases.
+  const _resolveActor = async (uuid) => {
+    if (!uuid) return null;
+    const doc = await fromUuid(uuid);
+    if (!doc) return null;
+
+    // Actor document
+    if (doc.documentName === "Actor") return doc;
+
+    // TokenDocument (synthetic Actor lives here)
+    if (doc.documentName === "Token" && doc.actor) return doc.actor;
+
+    // TokenDocument in some contexts may resolve as a Scene or other parent; fall through
+    return doc.actor ?? null;
+  };
+
   try {
-    const doc = await fromUuid(ammoUuid);
-    if (!doc) {
-      ui.notifications.warn(`${ammoName || "Ammunition"}: could not be resolved for consumption.`);
-      return false;
+    // Attempt 1: consume via Actor + embedded Item id
+    if (actorUuid && ammoId) {
+      const actor = await _resolveActor(actorUuid);
+      const ammo = actor?.items?.get?.(ammoId) ?? null;
+
+      if (ammo && ammo.type === "ammunition") {
+        const qty = Number(ammo.system?.quantity ?? 0);
+        const next = Math.min(qty, Math.max(0, Number(qtyAfter ?? 0)));
+        if (next !== qty) {
+          await actor.updateEmbeddedDocuments("Item", [{ _id: ammoId, "system.quantity": next }]);
+        }
+        return true;
+      }
     }
-    const qty = Number(doc.system?.quantity ?? 0);
-    const next = Math.min(qty, Math.max(0, Number(qtyAfter ?? 0)));
-    if (next === qty) return true;
-    await doc.update({ "system.quantity": next });
-    return true;
+
+    // Attempt 2: consume by resolving the embedded Item UUID directly
+    if (ammoUuid) {
+      const doc = await fromUuid(ammoUuid);
+      if (!doc) {
+        ui.notifications.warn(`${ammoName || "Ammunition"}: could not be resolved for consumption.`);
+        return false;
+      }
+      const qty = Number(doc.system?.quantity ?? 0);
+      const next = Math.min(qty, Math.max(0, Number(qtyAfter ?? 0)));
+      if (next !== qty) await doc.update({ "system.quantity": next });
+      return true;
+    }
+
+    ui.notifications.warn(`${ammoName || "Ammunition"}: could not be resolved for consumption.`);
+    return false;
   } catch (err) {
     console.error("UESRPG | Failed to consume ammo", { pendingAmmo, err });
     ui.notifications.error(`${ammoName || "Ammunition"}: failed to consume. See console for details.`);
@@ -1184,14 +1310,14 @@ async function _postWeaponDamageChatCard({
     rollMode: game.settings.get("core", "rollMode"),
     flags: parentMessageId ? _opposedFlags(parentMessageId, stage) : undefined,
   });
-
-  // If this damage roll was ranged and requires ammo consumption, do it strictly AFTER the roll is posted.
-  await _consumePendingAmmo(dmg.pendingAmmo);
-
   return created;
 }
 
 export const OpposedWorkflow = {
+  async consumePendingAmmo(pendingAmmo) {
+    return _consumePendingAmmo(pendingAmmo);
+  },
+
   /**
    * Create a pending opposed test card.
    * Compatible with legacy callers.
@@ -1359,6 +1485,10 @@ export const OpposedWorkflow = {
         tn
       });
 
+      // Pre-consume ammunition at attack time (per system rules and project direction).
+      // This prevents "free" ranged attacks when out of ammo.
+      await _preConsumeAttackAmmo(attacker, data);
+
       // Perform a real Foundry roll + message so Dice So Nice triggers.
       const res = await doTestRoll(attacker, { rollFormula: "1d100", target: finalTN, allowLucky: false, allowUnlucky: false });
       await res.roll.toMessage({
@@ -1452,12 +1582,14 @@ export const OpposedWorkflow = {
         role: "defender",
         defenseType: choice.defenseType,
         styleUuid: choice.styleUuid ?? choice.styleId ?? null,
-        manualMod
+        manualMod,
+        circumstanceMod
       });
 
       data.defender.target = tn.finalTN;
-      data.defender.targetLabel = manualMod
-        ? `${tn.finalTN} (${manualMod >= 0 ? "+" : ""}${manualMod})`
+      const declaredMod = (Number(manualMod) || 0) + (Number(circumstanceMod) || 0);
+      data.defender.targetLabel = declaredMod
+        ? `${tn.finalTN} (${declaredMod >= 0 ? "+" : ""}${declaredMod})`
         : `${tn.finalTN}`;
       data.defender.tn = tn;
 
@@ -1532,7 +1664,7 @@ export const OpposedWorkflow = {
         ? selection.precisionLocation
         : getHitLocationFromRoll(data.attacker?.result?.rollTotal ?? 0);
 
-      const dmg = await _rollWeaponDamage({ weapon });
+      const dmg = await _rollWeaponDamage({ weapon, preConsumedAmmo: data.attacker?.preConsumedAmmo ?? null });
       if (!dmg) return;
       const damageType = getDamageTypeFromWeapon(weapon);
 
@@ -1631,16 +1763,16 @@ export const OpposedWorkflow = {
         </div>
       `;
 
-      const dmgMsg = await ChatMessage.create({
+      const damageFlags = _opposedFlags(message.id, "damage-card");
+const dmgMsg = await ChatMessage.create({
         user: game.user.id,
         speaker: ChatMessage.getSpeaker({ actor: attacker, token: aToken?.document ?? null }),
         content: cardHtml,
         style: CONST.CHAT_MESSAGE_STYLES.OTHER,
         rolls: [dmg.rollA, dmg.rollB].filter(Boolean),
         rollMode: game.settings.get("core", "rollMode"),
-        flags: _opposedFlags(message.id, "damage-card"),
+        flags: damageFlags,
       });
-
       return;
     }
 
@@ -1681,7 +1813,7 @@ export const OpposedWorkflow = {
         ? selection.precisionLocation
         : getHitLocationFromRoll(data.defender?.result?.rollTotal ?? 0);
 
-      const dmg = await _rollWeaponDamage({ weapon });
+      const dmg = await _rollWeaponDamage({ weapon, preConsumedAmmo: data.attacker?.preConsumedAmmo ?? null });
       if (!dmg) return;
       const damageType = getDamageTypeFromWeapon(weapon);
 
@@ -1815,7 +1947,7 @@ export const OpposedWorkflow = {
         return;
       }
 
-      const dmg = await _rollWeaponDamage({ weapon });
+      const dmg = await _rollWeaponDamage({ weapon, preConsumedAmmo: data.attacker?.preConsumedAmmo ?? null });
       if (!dmg) return;
       const damageType = getDamageTypeFromWeapon(weapon);
       // Always post the weapon damage card so the chat log retains hit-location context,
