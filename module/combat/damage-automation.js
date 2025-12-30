@@ -5,7 +5,7 @@
  * Handles:
  *  - Damage type calculations (physical, fire, frost, shock, poison, magic, etc.)
  *  - Armor and resistance reduction
- *  - Natural Toughness (natToughness) for physical only (NO END-bonus soak)
+ *  - Natural Toughness (natToughness) for all damage types (NO END-bonus soak)
  *  - Automatic HP deduction (supports linked/unlinked tokens)
  *  - Simple wound status: wounded @ <= 50% HP, unconscious @ 0 HP
  *  - Hit location support
@@ -15,6 +15,8 @@
  *  - applyDamage(actor, damage, damageType, options)
  *  - getDamageReduction(actor, damageType, hitLocation)
  */
+
+import { evaluateAEModifierKeys } from "../ae/modifier-evaluator.js";
 
 export const DAMAGE_TYPES = {
   PHYSICAL: "physical",
@@ -97,9 +99,21 @@ export function getDamageReduction(actor, damageType = DAMAGE_TYPES.PHYSICAL, hi
 
   const actorData = actor.system;
 
+  // Track base vs AE modifier contributions so the chat report can attribute reductions to effects.
   let armor = 0;
   let resistance = 0;
-  let toughness = 0;
+  // RAW: Natural Toughness reduces incoming damage of all types and functions like AR but is not armor.
+  let toughness = Number(actorData.resistance?.natToughness ?? 0);
+
+  const base = { armor: 0, resistance: 0, toughness };
+  const ae = {
+    armorRating: {
+      global: { total: 0, entries: [] },
+      location: { key: propertyName, total: 0, entries: [] },
+    },
+    resistance: { key: null, total: 0, entries: [] },
+    natToughness: { total: 0, entries: [] },
+  };
 
   // PHYSICAL: armor by hitLocation + natToughness
   if (damageType === DAMAGE_TYPES.PHYSICAL) {
@@ -120,8 +134,8 @@ export function getDamageReduction(actor, damageType = DAMAGE_TYPES.PHYSICAL, hi
       armor += Number.isFinite(ar) ? ar : 0;
     }
 
-    // RAW per your decision: natToughness only; no END-bonus soak
-    toughness = Number(actorData.resistance?.natToughness ?? 0);
+    base.armor = armor;
+
   } else {
     // NON-PHYSICAL: resistance only
     switch (damageType) {
@@ -150,11 +164,69 @@ export function getDamageReduction(actor, damageType = DAMAGE_TYPES.PHYSICAL, hi
         resistance = 0;
     }
 
-    toughness = 0;
+    base.resistance = resistance;
+
+  }
+
+  base.toughness = toughness;
+
+
+  // --- Active Effects: Armor Rating & Resistance modifiers (ADD/OVERRIDE)
+  // These are applied deterministically as modifier totals (not absolute armor/resistance replacement).
+  // Keys:
+  //  - Armor: system.modifiers.combat.armorRating and optional per-location system.modifiers.combat.armorRating.<LocationKey>
+  //  - Resistance: system.modifiers.resistance.<resKey> (fireR, frostR, shockR, poisonR, magicR, diseaseR, silverR, sunlightR)
+  //  - Nat Toughness: system.modifiers.resistance.natToughness
+  try {
+    const armorKeys = [
+      "system.modifiers.combat.armorRating",
+      `system.modifiers.combat.armorRating.${propertyName}`,
+    ];
+    const armorMods = evaluateAEModifierKeys(actor, armorKeys);
+    const gKey = "system.modifiers.combat.armorRating";
+    const lKey = `system.modifiers.combat.armorRating.${propertyName}`;
+    const g = armorMods[gKey] ?? { total: 0, entries: [] };
+    const l = armorMods[lKey] ?? { total: 0, entries: [] };
+    ae.armorRating.global = { total: Number(g.total ?? 0) || 0, entries: Array.isArray(g.entries) ? g.entries : [] };
+    ae.armorRating.location = { key: propertyName, total: Number(l.total ?? 0) || 0, entries: Array.isArray(l.entries) ? l.entries : [] };
+    const armorModTotal = ae.armorRating.global.total + ae.armorRating.location.total;
+    if (armorModTotal) armor += armorModTotal;
+
+    // Determine applicable resistance key for this damage type
+    const resKeyByType = {
+      [DAMAGE_TYPES.FIRE]: "fireR",
+      [DAMAGE_TYPES.FROST]: "frostR",
+      [DAMAGE_TYPES.SHOCK]: "shockR",
+      [DAMAGE_TYPES.POISON]: "poisonR",
+      [DAMAGE_TYPES.MAGIC]: "magicR",
+      [DAMAGE_TYPES.SILVER]: "silverR",
+      [DAMAGE_TYPES.SUNLIGHT]: "sunlightR",
+    };
+
+    const resKey = (damageType === DAMAGE_TYPES.PHYSICAL) ? null : (resKeyByType[damageType] ?? null);
+    if (resKey) {
+      const rKey = `system.modifiers.resistance.${resKey}`;
+      const resMods = evaluateAEModifierKeys(actor, [rKey]);
+      const r = resMods[rKey] ?? { total: 0, entries: [] };
+      ae.resistance.key = resKey;
+      ae.resistance.total = Number(r.total ?? 0) || 0;
+      ae.resistance.entries = Array.isArray(r.entries) ? r.entries : [];
+      resistance += ae.resistance.total;
+    }
+
+    // Natural Toughness modifier applies to all damage types (RAW).
+    const tKey = "system.modifiers.resistance.natToughness";
+    const toughMods = evaluateAEModifierKeys(actor, [tKey]);
+    const t = toughMods[tKey] ?? { total: 0, entries: [] };
+    ae.natToughness.total = Number(t.total ?? 0) || 0;
+    ae.natToughness.entries = Array.isArray(t.entries) ? t.entries : [];
+    toughness += ae.natToughness.total;
+  } catch (err) {
+    console.warn("UESRPG | AE armor/resistance modifier evaluation failed", err);
   }
 
   const total = armor + resistance + toughness;
-  return { armor, resistance, toughness, total, penetrated: 0 };
+  return { armor, resistance, toughness, total, penetrated: 0, base, ae };
 }
 
 /**
@@ -380,6 +452,14 @@ export async function applyDamage(actor, damage, damageType = DAMAGE_TYPES.PHYSI
 
   const finalDamage = Number(damageCalc.finalDamage || 0);
 
+  // --- Active Effects: Damage & Mitigation modifiers (final resolution stage)
+  // All values are additive and sourced from AEs using explicit keys.
+  // - aeDamageTaken: applied AFTER armor/resistance/toughness (positive increases damage taken; negative reduces)
+  // - aeMitigationFlat: flat mitigation applied AFTER reductions (positive reduces damage)
+  const aeDamageTaken = Number(options?.aeDamageTaken ?? 0) || 0;
+  const aeMitigationFlat = Number(options?.aeMitigationFlat ?? 0) || 0;
+  const finalDamageAdjusted = Math.max(0, finalDamage + aeDamageTaken - aeMitigationFlat);
+
   // Wound Threshold (RAW): WOUNDED is applied when a *single* instance of damage meets/exceeds
   // the target's Wound Threshold value. This is not derived from remaining HP.
   // Schema: actor.system.wound_threshold.value (PC + NPC).
@@ -398,7 +478,7 @@ export async function applyDamage(actor, damage, damageType = DAMAGE_TYPES.PHYSI
   // HP state
   const currentHP = Number(actor.system?.hp?.value ?? 0);
   const maxHP = Number(actor.system?.hp?.max ?? 1);
-  const newHP = Math.max(0, currentHP - finalDamage);
+  const newHP = Math.max(0, currentHP - finalDamageAdjusted);
 
   // Choose update target: unlinked token actor if applicable, else base actor
   const activeToken = actor.token ?? actor.getActiveTokens?.()[0] ?? null;
@@ -408,7 +488,7 @@ export async function applyDamage(actor, damage, damageType = DAMAGE_TYPES.PHYSI
 
   // Determine wound status from RAW threshold.
   // NOTE: We intentionally do not auto-clear the flag on healing.
-  const isWounded = (finalDamage >= Math.max(0, woundThreshold)) && finalDamage > 0 && woundThreshold > 0;
+  const isWounded = (finalDamageAdjusted >= Math.max(0, woundThreshold)) && finalDamageAdjusted > 0 && woundThreshold > 0;
 
   let woundStatus = "uninjured";
   if (newHP === 0) woundStatus = "unconscious";
@@ -469,6 +549,127 @@ export async function applyDamage(actor, damage, damageType = DAMAGE_TYPES.PHYSI
     parts.push(`<div class="uesrpg-da-row"><span class="k">Raw</span><span class="v">${rawLine}</span></div>`);
     parts.push(`<div class="uesrpg-da-row"><span class="k">Reduction</span><span class="v">-${damageCalc.reductions.total} <span class="muted">(AR ${damageCalc.reductions.armor} / R ${damageCalc.reductions.resistance} / T ${damageCalc.reductions.toughness}${damageCalc.reductions.penetrated ? ` / Pen ${damageCalc.reductions.penetrated}` : ""})</span></span></div>`);
   }
+  const aeBreakdown = options?.aeBreakdown ?? null;
+
+  const aeSummary = (() => {
+    const hasBreakdown =
+      aeBreakdown &&
+      (Array.isArray(aeBreakdown.attacker) || Array.isArray(aeBreakdown.defender));
+
+    const rows = [];
+
+    const fmt = (n) => {
+      const v = Number(n ?? 0) || 0;
+      return v >= 0 ? `+${v}` : `${v}`;
+    };
+
+    const sumByTarget = (entries, target) => {
+      if (!Array.isArray(entries)) return 0;
+      return entries
+        .filter(e => e?.target === target)
+        .reduce((a, e) => a + (Number(e?.value ?? 0) || 0), 0);
+    };
+
+    const renderDetails = (entries, target, label) => {
+      if (!Array.isArray(entries)) return;
+      for (const e of entries) {
+        if (!e || e.target !== target) continue;
+        const value = Number(e.value ?? 0) || 0;
+        if (!value) continue;
+        const name = String(e.label ?? "Effect");
+        rows.push(
+          `<div class="uesrpg-da-row"><span class="k"></span><span class="v muted">${label}: ${name} ${fmt(value)}</span></div>`
+        );
+      }
+    };
+
+    // --- Attacker-side (dealt damage + penetration) ---
+    if (hasBreakdown) {
+      const dealt = sumByTarget(aeBreakdown.attacker, "damage.dealt");
+      const pen = sumByTarget(aeBreakdown.attacker, "penetration");
+
+      const bits = [];
+      if (dealt) bits.push(`Dealt ${fmt(dealt)}`);
+      if (pen) bits.push(`Pen ${fmt(pen)} <span class="muted">(via penetration)</span>`);
+
+      if (bits.length) {
+        rows.push(
+          `<div class="uesrpg-da-row"><span class="k">AE (Attacker)</span><span class="v">${bits.join(" • ")}</span></div>`
+        );
+        renderDetails(aeBreakdown.attacker, "damage.dealt", "Dealt");
+        renderDetails(aeBreakdown.attacker, "penetration", "Pen");
+      }
+    }
+
+    // --- Defender-side (damage taken + flat mitigation) ---
+    {
+      const bits = [];
+      if (aeDamageTaken) bits.push(`Taken ${fmt(aeDamageTaken)}`);
+      if (aeMitigationFlat) bits.push(`Mit -${Number(aeMitigationFlat || 0)}`);
+
+      if (bits.length) {
+        rows.push(
+          `<div class="uesrpg-da-row"><span class="k">AE (Defender)</span><span class="v">${bits.join(" • ")}</span></div>`
+        );
+
+        if (hasBreakdown) {
+          renderDetails(aeBreakdown.defender, "damage.taken", "Taken");
+          renderDetails(aeBreakdown.defender, "mitigation.flat", "Mit");
+        }
+      }
+    }
+
+    return rows.join("");
+  })();
+
+  // --- Reduction provenance (Armor / Resistance / Toughness) ---
+  // If the reduction calculation surfaced AE breakdown info, attribute it here.
+  const reductionAEBreakdown = (() => {
+    const r = damageCalc?.reductions;
+    const ae = r?.ae;
+    const base = r?.base;
+    if (!ae || !base) return "";
+
+    const lines = [];
+    const fmt = (n) => {
+      const v = Number(n ?? 0) || 0;
+      return v >= 0 ? `+${v}` : `${v}`;
+    };
+
+    const pushEntries = (title, entries) => {
+      if (!Array.isArray(entries) || !entries.length) return;
+      for (const e of entries) {
+        const value = Number(e?.value ?? 0) || 0;
+        if (!value) continue;
+        const label = String(e?.label ?? "Effect");
+        lines.push(`<div class="uesrpg-da-row"><span class="k"></span><span class="v muted">${title}: ${label} ${fmt(value)}</span></div>`);
+      }
+    };
+
+    // Armor Rating
+    if ((ae.armorRating?.global?.total ?? 0) || (ae.armorRating?.location?.total ?? 0)) {
+      const bits = [];
+      if (ae.armorRating?.global?.total) bits.push(`Global ${fmt(ae.armorRating.global.total)}`);
+      if (ae.armorRating?.location?.total) bits.push(`${ae.armorRating.location.key} ${fmt(ae.armorRating.location.total)}`);
+      lines.push(`<div class="uesrpg-da-row"><span class="k"></span><span class="v muted">AR AE: ${bits.join(" • ")}</span></div>`);
+      pushEntries("AR", ae.armorRating?.global?.entries);
+      pushEntries("AR", ae.armorRating?.location?.entries);
+    }
+
+    // Resistance
+    if (ae.resistance?.key && ae.resistance?.total) {
+      lines.push(`<div class="uesrpg-da-row"><span class="k"></span><span class="v muted">R AE (${ae.resistance.key}): ${fmt(ae.resistance.total)}</span></div>`);
+      pushEntries("R", ae.resistance.entries);
+    }
+
+    // Natural Toughness
+    if (ae.natToughness?.total) {
+      lines.push(`<div class="uesrpg-da-row"><span class="k"></span><span class="v muted">T AE (natToughness): ${fmt(ae.natToughness.total)}</span></div>`);
+      pushEntries("T", ae.natToughness.entries);
+    }
+
+    return lines.join("");
+  })();
 
   const messageContent = `
     <div class="uesrpg-damage-applied-card">
@@ -477,11 +678,15 @@ export async function applyDamage(actor, damage, damageType = DAMAGE_TYPES.PHYSI
         <div class="sub">${source}${hitLocation ? ` • ${hitLocation}` : ""}${damageType ? ` • ${damageType}` : ""}</div>
       </div>
       <div class="body">
-        ${parts.join("\n")}
-        <div class="uesrpg-da-row"><span class="k">Final</span><span class="v final">${finalDamage}</span></div>
-        <div class="uesrpg-da-row"><span class="k">HP</span><span class="v">${newHP} / ${maxHP}${hpDelta ? ` <span class="muted">(-${hpDelta})</span>` : ""}</span></div>
+        
+        <div class=\"uesrpg-da-row\"><span class=\"k\">Total Damage</span><span class=\"v final\">${finalDamageAdjusted}</span></div>
+        <div class=\"uesrpg-da-row\"><span class=\"k\">HP</span><span class="v">${newHP} / ${maxHP}${hpDelta ? ` <span class="muted">(-${hpDelta})</span>` : ""}</span></div>
         ${woundStatus === "wounded" ? `<div class="status wounded">WOUNDED <span class="muted">(WT ${woundThreshold})</span></div>` : ""}
         ${woundStatus === "unconscious" ? `<div class="status unconscious">UNCONSCIOUS</div>` : ""}
+<details style="margin-top:6px;">
+          <summary style="cursor:pointer; user-select:none;">Damage breakdown</summary>
+          <div style="margin-top:4px;">${parts.join("\n")}${reductionAEBreakdown}${aeSummary}</div>
+        </details>
       </div>
     </div>
   `;
@@ -495,11 +700,14 @@ export async function applyDamage(actor, damage, damageType = DAMAGE_TYPES.PHYSI
     blind: true,
   });
 
-  const prevented = Math.max(0, Number(damageCalc.totalDamage ?? rawDamage) - finalDamage);
+  const prevented = Math.max(0, Number(damageCalc.totalDamage ?? rawDamage) - finalDamageAdjusted);
 
   return {
     actor: updateTarget,
-    damage: finalDamage,
+    damage: finalDamageAdjusted,
+    baseFinalDamage: finalDamage,
+    aeDamageTaken,
+    aeMitigationFlat,
     reductions: damageCalc.reductions,
     oldHP: currentHP,
     newHP,
@@ -512,8 +720,46 @@ export async function applyDamage(actor, damage, damageType = DAMAGE_TYPES.PHYSI
  * Apply Forceful Impact: increment Damaged (X) on one armor item that covers the hit location.
  * Selection policy: choose the single equipped, non-shield armor item with the highest effective AR at the location.
  *
- * This does NOT attempt to handle edge cases...<snip>
+ * This does NOT attempt to handle edge cases beyond deterministic item selection.
  */
+export async function applyForcefulImpact(targetActor, hitLocation) {
+  return _applyForcefulImpact(targetActor, hitLocation);
+}
+
+/**
+ * Exported helper for resolver pipelines.
+ * Ensures the target actor has the Unconscious status effect applied.
+ *
+ * This helper exists because damage-resolver imports it.
+ * Keep it small and deterministic: if a compatible unconscious status is already present,
+ * do nothing. Otherwise create a minimal ActiveEffect with the standard unconscious status id.
+ *
+ * @param {Actor} targetActor
+ */
+export async function ensureUnconsciousEffect(targetActor) {
+  try {
+    if (!targetActor) return;
+
+    const hasUnconscious = targetActor.effects?.some(
+      (e) => e?.statuses?.has?.("unconscious") || e?.name === "Unconscious"
+    );
+
+    if (hasUnconscious) return;
+
+    const unconsciousEffect = {
+      name: "Unconscious",
+      icon: "icons/svg/unconscious.svg",
+      duration: {},
+      statuses: ["unconscious"],
+      flags: { core: { statusId: "unconscious" } },
+    };
+
+    await targetActor.createEmbeddedDocuments("ActiveEffect", [unconsciousEffect]);
+  } catch (err) {
+    console.error("UESRPG | Failed to apply unconscious effect:", err);
+  }
+}
+
 async function _applyForcefulImpact(targetActor, hitLocation) {
   if (!targetActor?.items) return;
 
