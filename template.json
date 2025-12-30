@@ -300,6 +300,18 @@
         "medium": "Medium",
         "heavy": "Heavy",
         "super_heavy": "Super Heavy"
+      },
+      "modifiers": {
+        "combat": {
+          "attackTN": 0,
+          "defenseTN": {
+            "total": 0,
+            "evade": 0,
+            "block": 0,
+            "parry": 0,
+            "counter": 0
+          }
+        }
       }
     },
     "NPC": {
@@ -601,7 +613,19 @@
         "super_heavy": "Super Heavy"
       },
       "storeName": "",
-      "priceMod": 0
+      "priceMod": 0,
+      "modifiers": {
+        "combat": {
+          "attackTN": 0,
+          "defenseTN": {
+            "total": 0,
+            "evade": 0,
+            "block": 0,
+            "parry": 0,
+            "counter": 0
+          }
+        }
+      }
     }
   },
   "Item": {
