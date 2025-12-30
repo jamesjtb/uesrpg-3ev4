@@ -228,6 +228,160 @@ foundry.documents.collections.Actors.registerSheet("uesrpg-3ev4", merchantSheet,
 }
 
 export default async function initHandler() {
+
+  // DEFAULT_ITEM_AE_TRANSFER_POLICY_V3
+  // Default newly created Item Active Effects to transfer=true ("Apply Effect to Actor"), unless explicitly set.
+  // We register these hooks once per session.
+  if (!game.uesrpg) game.uesrpg = {};
+  if (!game.uesrpg._defaultItemAETransferHook) {
+    game.uesrpg._defaultItemAETransferHook = true;
+
+    Hooks.on("preCreateActiveEffect", (effect, data, options, userId) => {
+      try {
+        if (game.userId !== userId) return;
+
+        const parent = effect?.parent ?? options?.parent ?? null;
+        if (!parent || parent.documentName !== "Item") return;
+
+        // Respect explicit setting
+        if (data?.transfer !== undefined) return;
+
+        // Ensure we can mutate the pending create data
+        if (foundry?.utils?.mergeObject) {
+          foundry.utils.mergeObject(data, { transfer: true }, { inplace: true });
+        } else {
+          data.transfer = true;
+        }
+      } catch (err) {
+        console.error("UESRPG | Default Item AE transfer preCreate failed", err);
+      }
+    });
+
+    // Fallback: if some creation path bypasses preCreate mutation, enforce immediately after create.
+    Hooks.on("createActiveEffect", async (effect, options, userId) => {
+      try {
+        if (game.userId !== userId) return;
+        const parent = effect?.parent;
+        if (!parent || parent.documentName !== "Item") return;
+
+        if (effect.transfer) return;
+        // Only force if it looks like a default-created effect (no explicit choice).
+        await effect.update({ transfer: true });
+      } catch (err) {
+        console.error("UESRPG | Default Item AE transfer create fallback failed", err);
+      }
+    });
+  }
+
+
+  // SPELL_EFFECT_APPLICATION_V1
+  // Spells do not use Item transfer semantics. Instead, when a spell is marked active, we
+  // clone its Item Active Effects onto the owning Actor as embedded ActiveEffects.
+  // This is deterministic, reversible, and aligns with future targeting work (self/target/area).
+  //
+  // - Activation flag: flags.uesrpg.activeSpell (on the Item)
+  // - Applied actor effects are tagged: flags.uesrpg.appliedFromSpell = <item.uuid>
+  // - On deactivation or deletion: tagged effects are removed.
+  if (!game.uesrpg._spellEffectApplicationHook) {
+    game.uesrpg._spellEffectApplicationHook = true;
+
+    const FLAG_SCOPE = game.system?.id ?? "uesrpg-3ev4";
+
+
+    const reconcileSpellEffects = async (item) => {
+      try {
+        if (!item || item.type !== "spell") return;
+        const actor = item.parent;
+        if (!actor || actor.documentName !== "Actor") return;
+        const active = (item.getFlag?.(FLAG_SCOPE, "activeSpell") ?? foundry.utils.getProperty(item, `flags.${FLAG_SCOPE}.activeSpell`) ?? false) === true;
+        const spellUuid = item.uuid;
+
+        // Remove previously applied effects for this spell (idempotent).
+        const existing = (actor.effects ?? []).filter(e => {
+          const f = e?.flags ?? {};
+          return f?.[FLAG_SCOPE]?.appliedFromSpell === spellUuid || f?.uesrpg?.appliedFromSpell === spellUuid;
+        });
+        if (existing.length) {
+          await actor.deleteEmbeddedDocuments("ActiveEffect", existing.map(e => e.id));
+        }
+
+        if (!active) return;
+
+        const itemEffects = Array.from(item.effects ?? []);
+        if (!itemEffects.length) return;
+
+        const toCreate = [];
+        for (const ef of itemEffects) {
+          // Copy only meaningful effects; disabled effects remain disabled on the actor, but still mirrored.
+          const changes = foundry.utils.duplicate(ef.changes ?? []);
+          if (!Array.isArray(changes) || !changes.length) continue;
+
+          toCreate.push({
+            name: ef.name ?? item.name ?? "Spell Effect",
+            icon: ef.icon ?? item.img,
+            disabled: ef.disabled === true,
+            origin: spellUuid,
+            duration: {},
+            changes,
+            flags: {
+              [FLAG_SCOPE]: {
+                system: "uesrpg-3ev4",
+                appliedFromSpell: spellUuid,
+                sourceItemId: item.id,
+                sourceEffectId: ef.id ?? null
+              }
+            }
+          });
+        }
+
+        if (toCreate.length) {
+          await actor.createEmbeddedDocuments("ActiveEffect", toCreate);
+        }
+      } catch (err) {
+        console.error("UESRPG | Spell effect reconcile failed", err);
+      }
+    };
+
+    Hooks.on("updateItem", async (item, changed, options, userId) => {
+      try {
+        // Only the user performing the update should reconcile to avoid races.
+        if (game.userId !== userId) return;
+        if (!item || item.type !== "spell") return;
+
+        // Reconcile only when something relevant changes. If uncertain, reconcile.
+        const touched =
+          foundry.utils.getProperty(changed, `flags.${FLAG_SCOPE}.activeSpell`) !== undefined || foundry.utils.getProperty(changed, "flags.uesrpg.activeSpell") !== undefined ||
+          foundry.utils.getProperty(changed, "effects") !== undefined ||
+          foundry.utils.getProperty(changed, "name") !== undefined;
+
+        if (touched) await reconcileSpellEffects(item);
+      } catch (err) {
+        console.error("UESRPG | Spell updateItem hook failed", err);
+      }
+    });
+
+    Hooks.on("deleteItem", async (item, options, userId) => {
+      try {
+        if (game.userId !== userId) return;
+        if (!item || item.type !== "spell") return;
+        const actor = item.parent;
+        if (!actor || actor.documentName !== "Actor") return;
+
+        const spellUuid = item.uuid;
+        const existing = (actor.effects ?? []).filter(e => {
+          const f = e?.flags ?? {};
+          return f?.[FLAG_SCOPE]?.appliedFromSpell === spellUuid || f?.uesrpg?.appliedFromSpell === spellUuid;
+        });
+        if (existing.length) {
+          await actor.deleteEmbeddedDocuments("ActiveEffect", existing.map(e => e.id));
+        }
+      } catch (err) {
+        console.error("UESRPG | Spell deleteItem cleanup failed", err);
+      }
+    });
+  }
+
+
   /**
    * Set an initiative formula for the system
    * @type {String}
