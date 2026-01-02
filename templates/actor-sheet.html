@@ -20,7 +20,6 @@
                     <a class="item" data-tab="combat">Combat</a>
                     <a class="item" data-tab="magic">Magic</a>
                     <a class="item" data-tab="equipment">Items</a>
-                    <a class="item" data-tab="effects">Effects</a>
                 </nav>
                 <div>
                     <h1 class="charname"><input type="text" name="name" value="{{actor.name}}" placeholder="Name"></h1>
@@ -627,6 +626,31 @@
                             </table>
                         </div>
                     </div>
+
+                    {{!-- Effects section lives inside Magic tab, below the spell list (AE-first UI). --}}
+                    <div class="magic-effects-section">
+                        <header class="effects-header flexrow">
+                            <h3>Effects</h3>
+                            <a class="effect-control" data-action="create" title="Create Effect">
+                                <i class="fas fa-plus"></i>
+                            </a>
+                        </header>
+                        <ol class="effects-list">
+                            {{#each effects as |effect|}}
+                                <li class="effect flexrow" data-effect-id="{{effect._id}}">
+                                    <img class="effect-icon" src="{{effect.img}}" />
+                                    <h4 class="effect-name">{{effect.name}}</h4>
+                                    <div class="effect-controls flexrow">
+                                        <a class="effect-control" data-action="toggle" data-effect-id="{{effect._id}}" title="Toggle Effect">
+                                            <i class="fas {{#if effect.disabled}}fa-toggle-off{{else}}fa-toggle-on{{/if}}"></i>
+                                        </a>
+                                        <a class="effect-control" data-action="edit" data-effect-id="{{effect._id}}" title="Edit Effect"><i class="fas fa-edit"></i></a>
+                                        <a class="effect-control" data-action="delete" data-effect-id="{{effect._id}}" title="Delete Effect"><i class="fas fa-trash"></i></a>
+                                    </div>
+                                </li>
+                            {{/each}}
+                        </ol>
+                    </div>
                 </div>
             </div>
 
@@ -802,30 +826,7 @@
                 </div>
             </div>
 
-<div class="tab effects" data-group="primary" data-tab="effects">
-    <header class="effects-header flexrow">
-        <h3>Effects</h3>
-        <a class="effect-control" data-action="create" title="Create Effect"><i class="fas fa-plus"></i></a>
-    </header>
-    <ol class="effects-list">
-        {{#each effects as |effect|}}
-        <li class="effect flexrow" data-effect-id="{{effect._id}}">
-            <img class="effect-icon" src="{{effect.img}}" />
-            <h4 class="effect-name">{{effect.name}}</h4>
-            <div class="effect-controls flexrow">
-                <a class="effect-control" data-action="toggle" data-effect-id="{{effect._id}}" title="Toggle Effect">
-                    <i class="fas {{#if effect.disabled}}fa-toggle-off{{else}}fa-toggle-on{{/if}}"></i>
-                </a>
-                <a class="effect-control" data-action="edit" data-effect-id="{{effect._id}}" title="Edit Effect"><i class="fas fa-edit"></i></a>
-                <a class="effect-control" data-action="delete" data-effect-id="{{effect._id}}" title="Delete Effect"><i class="fas fa-trash"></i></a>
-            </div>
-        </li>
-        {{/each}}
-    </ol>
-</div>
-
         </section>
 
     </div>
 </form>
-
