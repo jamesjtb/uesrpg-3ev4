@@ -109,15 +109,9 @@ async getData(options = {}) {
 
 
   
-    // Active Effects list for templates (plain objects)
-    data.effects = (this.actor && this.actor.effects) ? this.actor.effects.contents.map(e => e.toObject()) : [];
-
-    // Active Effects (for Effects tab templates)
-    if (this.actor && this.actor.effects) {
-      data.effects = this.actor.effects.contents.map(e => e.toObject());
-    } else {
-      data.effects = [];
-    }
+    // Active Effects list for templates (plain objects).
+    // We render these inside the Magic tab (AE-first UI) instead of a dedicated Effects tab.
+    data.effects = (this.actor?.effects?.contents ?? []).map(e => e.toObject());
 
 return data;
 }
@@ -459,71 +453,11 @@ if (indexToRemove !== -1) {
 
   async _onSetBaseCharacteristics(event) {
     event.preventDefault();
-    const strBonusArray = [];
-    const endBonusArray = [];
-    const agiBonusArray = [];
-    const intBonusArray = [];
-    // Willpower is set as wpC (instead of just 'wp' because the item value only contains 2 initial letters vs. 3 for all others... an inconsistency that is easier to resolve this way)
-    const wpCBonusArray = [];
-    const prcBonusArray = [];
-    const prsBonusArray = [];
-    const lckBonusArray = [];
-	
-	const bonusMap = {
-  str: strBonusArray,
-  end: endBonusArray,
-  agi: agiBonusArray,
-  int: intBonusArray,
-  wpC: wpCBonusArray,
-  prc: prcBonusArray,
-  prs: prsBonusArray,
-  lck: lckBonusArray,
-};
-
-
-    const bonusItems = this.actor.items.filter((item) =>
-      item?.system && Object.prototype.hasOwnProperty.call(item.system, "characteristicBonus")
-    );
-
-    for (let item of bonusItems) {
-      for (let key in item.system.characteristicBonus) {
-        let itemBonus = item.system.characteristicBonus[key];
-        if (itemBonus !== 0) {
-          let itemButton = `<button style="width: auto;" onclick="getItem(this.id, this.dataset.actor)" id="${item.id
-            }" data-actor="${item.actor.id}">${item.name} ${itemBonus >= 0 ? `+${itemBonus}` : itemBonus
-            }</button>`;
-          const prefix = [...key].splice(0, 3).join(""); // e.g. "str", "end", "wpC"
-
-const targetArray = bonusMap[prefix];
-if (targetArray) {
-  targetArray.push(itemButton);
-}
-
-
-        }
-      }
-    }
-    let d = new Dialog({
+    
+let d = new Dialog({
       title: "Set Base Characteristics",
       content: `<form>
-                    <script>
-                      function getItem(itemID, actorID) {
-                          let actor = game.actors.find(actor => actor.id === actorID)
-                          let tokenActor = game.scenes.find(scene => scene.active === true)?.tokens?.find(token => token.actorId === actorID)
-                          if (!tokenActor?.actorLink) {
-                            let actorBonusItems = actor.items.filter(item => item?.system && Object.prototype.hasOwnProperty.call(item.system, 'characteristicBonus'))
-                            let item = actorBonusItems.find(i => i.id === itemID)
-                            item.sheet.render(true)
-                          }
-                          else {
-                            let tokenBonusItems = tokenActor._actor.items.filter(item => item?.system && Object.prototype.hasOwnProperty.call(item.system, 'characteristicBonus'))
-                            let item = tokenBonusItems.find(i => i.id === itemID)
-                            item.sheet.render(true)
-                          }
-                        }
-                    </script>
-
-                    <h2>Set the Character's Base Characteristics.</h2>
+<h2>Set the Character's Base Characteristics.</h2>
 
                     <div style="border: inset; margin-bottom: 10px; padding: 5px;">
                     <i>Use this menu to adjust characteristic values on the character
@@ -577,63 +511,13 @@ if (targetArray) {
                       </table>
                     </div>
 
-                    <div class="modifierBox">
-                      <h2>STR Modifiers</h2>
-                      <span style="font-size: small">${strBonusArray.join(
-          ""
-        )}</span>
-                    </div>
 
-                    <div class="modifierBox">
-                      <h2>END Modifiers</h2>
-                      <span style="font-size: small">${endBonusArray.join(
-          ""
-        )}</span>
-                    </div>
 
-                    <div class="modifierBox">
-                      <h2>AGI Modifiers</h2>
-                      <span style="font-size: small">${agiBonusArray.join(
-          ""
-        )}</span>
-                    </div>
 
-                    <div class="modifierBox">
-                      <h2>INT Modifiers</h2>
-                      <span style="font-size: small">${intBonusArray.join(
-          ""
-        )}</span>
-                    </div>
 
-                    <div class="modifierBox">
-                      <h2>WP Modifiers</h2>
-                      <span style="font-size: small">${wpCBonusArray.join(
-          ""
-        )}</span>
-                    </div>
 
-                    <div class="modifierBox">
-                      <h2>PRC Modifiers</h2>
-                      <span style="font-size: small">${prcBonusArray.join(
-          ""
-        )}</span>
-                    </div>
 
-                    <div class="modifierBox">
-                      <h2>PRS Modifiers</h2>
-                      <span style="font-size: small">${prsBonusArray.join(
-          ""
-        )}</span>
-                    </div>
-
-                    <div class="modifierBox">
-                      <h2>LCK Modifiers</h2>
-                      <span style="font-size: small">${lckBonusArray.join(
-          ""
-        )}</span>
-                    </div>
-
-                  </form>`,
+</form>`,
       buttons: {
         one: {
           label: "Submit",
