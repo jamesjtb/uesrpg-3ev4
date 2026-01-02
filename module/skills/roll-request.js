@@ -42,7 +42,9 @@ export function normalizeSkillRollOptions(raw = {}, fallback = {}) {
   return {
     difficultyKey: diff.key,
     manualMod: clampNumber(raw.manualMod ?? fallback.manualMod ?? 0, { min: -200, max: 200 }),
-    useSpec: Boolean(raw.useSpec ?? fallback.useSpec ?? false)
+    useSpec: Boolean(raw.useSpec ?? fallback.useSpec ?? false),
+    applyBlinded: Boolean(raw.applyBlinded ?? fallback.applyBlinded ?? false),
+    applyDeafened: Boolean(raw.applyDeafened ?? fallback.applyDeafened ?? false)
   };
 }
 
