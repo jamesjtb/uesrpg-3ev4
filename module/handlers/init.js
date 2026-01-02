@@ -10,6 +10,10 @@ import { initializeChatHandlers, registerCombatChatHooks } from "../combat/chat-
 import { registerSkillTNDebug } from "../dev/skill-tn-debug.js";
 import { registerActorSelectDebug } from "../dev/actor-select-debug.js";
 import { registerDebugSettingsMenu } from "../dev/debug-settings.js";
+import { registerConditions } from "../conditions/index.js";
+import { registerWounds } from "../wounds/index.js";
+import { applyDamage, DAMAGE_TYPES } from "../combat/damage-automation.js";
+import { applyDamageResolved } from "../combat/damage-resolver.js";
 
 async function registerSettings() {
   // Register system settings
@@ -233,6 +237,22 @@ export default async function initHandler() {
   // Default newly created Item Active Effects to transfer=true ("Apply Effect to Actor"), unless explicitly set.
   // We register these hooks once per session.
   if (!game.uesrpg) game.uesrpg = {};
+
+// COMBAT_API_EXPORTS_V1
+// Provide stable access points for macros and downstream system automation without relying on dynamic imports.
+// This avoids incorrect relative import roots (e.g. "/scripts/systems/...") in Foundry macro contexts.
+if (!game.uesrpg.combat) game.uesrpg.combat = {};
+game.uesrpg.combat.applyDamage = applyDamage;
+game.uesrpg.combat.applyDamageResolved = applyDamageResolved;
+game.uesrpg.combat.DAMAGE_TYPES = DAMAGE_TYPES;
+
+// Canonical Healing wrapper (Package 5)
+// Ensures all healing callers use the unified pipeline (bleeding reduction, forestall, etc.).
+game.uesrpg.combat.applyHealing = async (actor, amount, options = {}) => {
+  const src = options?.source ?? "Healing";
+  return applyDamage(actor, amount, DAMAGE_TYPES.HEALING, { ...options, source: src });
+};
+
   if (!game.uesrpg._defaultItemAETransferHook) {
     game.uesrpg._defaultItemAETransferHook = true;
 
@@ -318,7 +338,8 @@ export default async function initHandler() {
 
           toCreate.push({
             name: ef.name ?? item.name ?? "Spell Effect",
-            icon: ef.icon ?? item.img,
+            // Foundry v13: ActiveEffect uses `img` (not legacy `icon`).
+            img: ef.img ?? ef.icon ?? item.img,
             disabled: ef.disabled === true,
             origin: spellUuid,
             duration: {},
@@ -409,15 +430,96 @@ export default async function initHandler() {
   initializeChatHandlers();
   registerCombatChatHooks();
 
+  // Chapter 5: conditions + wounds automation (AE-backed, deterministic)
+  registerConditions();
+  registerWounds();
+
 // Applying Font to system
 function applyFont(fontFamily) {
   document.documentElement.style.setProperty("--main-font-family", fontFamily);
 }
 
 //Hook for changing font on startup
-Hooks.once("ready", () => {
+
+/**
+ * Normalize invalid core SVG icon paths on Active Effects created by older builds.
+ * This prevents 404 spam from missing icons (e.g., icons/svg/arrow-up.svg).
+ *
+ * Safe:
+ * - GM-only
+ * - idempotent
+ * - updates only when the icon path is known-invalid
+ */
+async function normalizeInvalidEffectIcons() {
+  if (!game.user?.isGM) return;
+
+  // Foundry core SVGs live under icons/svg/*.svg
+  // Some older builds referenced non-existent arrows (arrow-up.svg / arrow-down.svg).
+  const iconMap = new Map([
+    ["icons/svg/arrow-up.svg", "icons/svg/up.svg"],
+    ["icons/svg/arrow-down.svg", "icons/svg/down.svg"]
+  ]);
+
+  /**
+   * Normalize icons on a collection of ActiveEffect-like documents.
+   * @param {any} parentDoc Actor | Item | TokenDocument.actor etc
+   * @param {Iterable<any>} effects
+   */
+  const normalizeEffects = async (parentDoc, effects) => {
+    if (!parentDoc || !effects) return;
+    const updates = [];
+    for (const ef of effects) {
+      const img = ef?.img;
+      if (!img || typeof img !== "string") continue;
+      const next = iconMap.get(img);
+      if (!next || next === img) continue;
+      updates.push({ _id: ef.id, img: next });
+    }
+    if (updates.length === 0) return;
+
+    try {
+      await parentDoc.updateEmbeddedDocuments("ActiveEffect", updates);
+    } catch (err) {
+      // Do not hard-fail boot if a synthetic actor or protected document cannot be updated.
+      console.warn("UESRPG | Failed to normalize effect icons on document.", { parent: parentDoc?.uuid ?? parentDoc?.id, err });
+    }
+  };
+
+  // 1) World Actors (and their embedded item effects)
+  for (const actor of (game.actors?.contents ?? [])) {
+    await normalizeEffects(actor, actor.effects ?? []);
+    for (const it of (actor.items ?? [])) {
+      await normalizeEffects(it, it.effects ?? []);
+    }
+  }
+
+  // 2) World Items
+  for (const it of (game.items?.contents ?? [])) {
+    await normalizeEffects(it, it.effects ?? []);
+  }
+
+  // 3) Unlinked token actors on active scenes (best effort)
+  for (const scene of (game.scenes?.contents ?? [])) {
+    for (const td of (scene.tokens ?? [])) {
+      try {
+        const actor = td?.actor;
+        if (!actor) continue;
+        // Normalize effects on the token actor (may be synthetic).
+        await normalizeEffects(actor, actor.effects ?? []);
+      } catch (_err) {
+        // swallow
+      }
+    }
+  }
+}
+
+
+Hooks.once("ready", async () => {
   const fontFamily = game.settings.get("uesrpg-3ev4", "changeUiFont");
   applyFont(fontFamily);
+
+  await normalizeInvalidEffectIcons();
+
 
   // Developer-only: expose a skill TN debug helper for the GM.
   if (game.user?.isGM && game.settings.get("uesrpg-3ev4", "debugSkillTN")) {
