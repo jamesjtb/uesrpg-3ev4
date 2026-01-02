@@ -395,7 +395,7 @@ async activateListeners(html) {
       buttons: {
         one: {
           label: "Cancel",
-          callback: (html) => console.log("Cancelled"),
+          callback: () => {},
         },
         two: {
           label: "Duplicate",
@@ -408,7 +408,7 @@ async activateListeners(html) {
         },
       },
       default: "two",
-      close: (html) => console.log(),
+      close: () => {},
     });
 
     d.render(true);
@@ -620,11 +620,11 @@ async _onSetBaseCharacteristics(event) {
       },
       two: {
         label: "Cancel",
-        callback: async (html) => console.log("Cancelled"),
+        callback: () => {},
       },
     },
     default: "one",
-    close: async (html) => console.log(),
+    close: () => {},
   });
   d.render(true);
 }
@@ -707,11 +707,11 @@ async _onSetBaseCharacteristics(event) {
       },
       two: {
         label: "Cancel",
-        callback: (html) => console.log("Cancelled"),
+        callback: () => {},
       },
     },
     default: "one",
-    close: (html) => console.log(),
+    close: () => {},
   });
   d.render(true);
   }
@@ -1254,11 +1254,11 @@ _onSpellRoll(event) {
       },
       two: {
         label: "Cancel",
-        callback: (html) => console.log("Cancelled"),
+        callback: () => {},
       },
     },
     default: "one",
-    close: (html) => console.log(),
+    close: () => {},
   });
 
   m.position.width = 450;
@@ -1312,10 +1312,10 @@ _onSpellRoll(event) {
           });
         },
       },
-      two: { label: "Cancel", callback: (html) => console.log("Cancelled") },
+      two: { label: "Cancel", callback: () => {} },
     },
     default: "one",
-    close: (html) => console.log(),
+    close: () => {},
   });
   d.render(true);
 }
@@ -1459,11 +1459,11 @@ _onSpellRoll(event) {
           },
           five: {
             label: "Cancel",
-            callback: (html) => console.log("Cancelled"),
+            callback: () => {},
           },
         },
         default: "one",
-        close: (html) => console.log(),
+        close: () => {},
       });
 
       d.render(true);
@@ -1494,7 +1494,7 @@ _onSpellRoll(event) {
                 <input placeholder="ex. -20, +10" id="playerInput" value="0" style="text-align:center; width:50%; border-style: groove; float:right;" type="text">
               </div></form>`,
     buttons: {
-      one: { label: "Cancel", callback: (html) => console.log("Cancelled") },
+      one: { label: "Cancel", callback: () => {} },
       two: {
         label: "Submit",
         callback: async (html) => {
@@ -1505,7 +1505,7 @@ _onSpellRoll(event) {
       },
     },
     default: "two",
-    close: (html) => console.log(),
+    close: () => {},
   });
   d.render(true);
 }
@@ -1530,7 +1530,7 @@ _onSpellRoll(event) {
                 </div>
               </form>`,
     buttons: {
-      one: { label: "Cancel", callback: (html) => console.log("Cancelled") },
+      one: { label: "Cancel", callback: () => {} },
       two: {
         label: "Submit",
         callback: async (html) => {
@@ -1540,7 +1540,7 @@ _onSpellRoll(event) {
       },
     },
     default: "two",
-    close: (html) => console.log(),
+    close: () => {},
   });
   d.render(true);
 }
@@ -1929,7 +1929,7 @@ _onResetResource(event) {
       buttons: {
         one: {
           label: "Cancel",
-          callback: (html) => console.log("Cancelled"),
+          callback: () => {},
         },
         two: {
           label: "Submit",
@@ -1948,7 +1948,7 @@ _onResetResource(event) {
         },
       },
       default: "two",
-      close: (html) => console.log(),
+      close: () => {},
     });
 
     d.position.width = 500;
