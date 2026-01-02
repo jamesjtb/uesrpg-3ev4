@@ -1,206 +1,281 @@
+import { isItemEffectActive } from "./transfer.js";
+
 /**
- * module/ae/modifier-evaluator.js
+ * UESRPG Active Effect Modifier Evaluator
  *
- * Deterministic Active Effect modifier evaluation for roll-time pipelines.
+ * Purpose:
+ * - Deterministically aggregate a subset of Active Effect changes into numeric modifiers.
+ * - Avoid reliance on Foundry's implicit AE application semantics for gameplay-critical math.
  *
- * Goals:
- *  - Deterministic application order and behavior.
- *  - Support both ADD and OVERRIDE modes explicitly (only for recognized modifier keys).
- *  - Preserve transfer semantics hardening v1 via isTransferEffectActive().
- *  - Provide provenance breakdown per source (effect or item:effect).
+ * Supported behaviors:
+ * - Only `ADD` and `OVERRIDE` modes are intentionally supported for numeric aggregation.
+ * - All other AE change modes are ignored by default (opt-in debug logging via options).
  *
- * NOTE: This system is not on ApplicationV2.
+ * Notes:
+ * - This evaluator is "context-capable" but context checks are opt-in and no-op by default.
+ * - Dedupe-by-origin is conservative: if an actor already has an effect with the same origin
+ *   as a transfer effect, the transfer effect is ignored to prevent double-application.
  */
 
-import { isTransferEffectActive } from "./transfer.js";
-
 /**
- * Coerce a value into a finite number.
- * @param {*} v
- * @returns {number}
+ * @typedef {object} AEEvaluateOptions
+ * @property {object} [context] Optional evaluation context (e.g., opponentUuid, attackMode, itemUuid).
+ * @property {boolean} [enforceConditions=false] If true, will enforce `effect.flags.uesrpg.conditions`.
+ * @property {boolean} [dedupeByOrigin=true] If true, will ignore transfer effects duplicating actor effects by origin.
+ * @property {boolean} [debug=false] If true, will emit console.debug logs for ignored/unsupported changes.
  */
-function asNumber(v) {
-  if (v == null) return 0;
-  if (typeof v === "number" && Number.isFinite(v)) return v;
-  const n = Number(v);
-  if (Number.isFinite(n)) return n;
-  const m = String(v).match(/-?\d+(?:\.\d+)?/);
-  return m ? Number(m[0]) : 0;
-}
-
 
 /**
- * Detect typed bonus damage syntax (e.g. "3[fire]") used for damage.dealt.
- * These values are handled separately by the damage resolver and must not be
- * treated as numeric dealt modifiers.
- * @param {*} v
- * @returns {boolean}
- */
-function isTypedDamageDealtValue(v) {
-  if (v == null) return false;
-  const str = String(v).trim();
-  return /^-?\d+(?:\.\d+)?\s*\[\s*[^\]]+\s*\]\s*$/i.test(str);
-}
-
-/**
- * Determine a stable priority for an ActiveEffect for deterministic OVERRIDE selection.
- * @param {ActiveEffect} effect
- * @returns {number}
- */
-function getEffectPriority(effect) {
-  const p = effect?.priority;
-  if (typeof p === "number" && Number.isFinite(p)) return p;
-  // Some AEs may store priority under flags; we intentionally do not infer those.
-  return 0;
-}
-
-/**
- * Build roll-time modifier sources:
- *  - Actor embedded effects
- *  - Item effects that are transfer=true AND pass transfer semantics hardening v1
+ * Evaluate a set of modifier keys against the actor's currently-applicable Active Effects.
  *
- * @param {Actor} actor
- * @returns {Array<{effect: ActiveEffect, sourceName: string}>}
- */
-function collectEffectSources(actor) {
-  /** @type {Array<{effect: any, sourceName: string}>} */
-  const sources = [];
-  for (const ef of (actor?.effects ?? [])) {
-    sources.push({ effect: ef, sourceName: ef?.name ?? "Effect" });
-  }
-  for (const item of (actor?.items ?? [])) {
-    for (const ef of (item?.effects ?? [])) {
-      if (!isTransferEffectActive(actor, item, ef)) continue;
-      const src = item?.name ? `${item.name}` : (ef?.name ?? "Effect");
-      sources.push({ effect: ef, sourceName: ef?.name ? `${src}: ${ef.name}` : src });
-    }
-  }
-  return sources;
-}
-
-/**
- * Evaluate one or more modifier keys for a given actor.
- *
- * OVERRIDE behavior (explicit, deterministic):
- *  - If one or more OVERRIDE-mode changes exist for a key, choose the candidate with the
- *    highest ActiveEffect.priority; on tie, choose lexicographically greatest effect id.
- *  - When OVERRIDE is present, ADD contributions for that key are ignored.
- *
- * ADD behavior:
- *  - Sum all ADD-mode changes for that key (grouped by sourceName for provenance).
- *
- * @param {Actor} actor
+ * @param {import("foundry").documents.BaseActor} actor
  * @param {string[]} keys
- * @returns {Record<string, {total:number, mode:"ADD"|"OVERRIDE"|"NONE", entries:Array<{label:string,value:number,mode:"ADD"|"OVERRIDE",priority?:number,effectId?:string}>}>}
+ * @param {AEEvaluateOptions} [options]
+ * @returns {Record<string, number>} Map of key->numeric modifier total
  */
-export function evaluateAEModifierKeys(actor, keys) {
-  const ADD = CONST?.ACTIVE_EFFECT_MODES?.ADD ?? 2;
-  const OVERRIDE = CONST?.ACTIVE_EFFECT_MODES?.OVERRIDE ?? 5;
+export function evaluateAEModifierKeys(actor, keys, options = {}) {
+  return _evaluateCore(actor, keys, options).totalsByKey;
+}
 
-  /**
-   * Normalize an ActiveEffect change mode to a numeric CONST.ACTIVE_EFFECT_MODES value.
-   * Foundry stores modes as numbers, but some data/model layers or legacy content can surface strings.
-   * @param {unknown} mode
-   * @returns {number}
-   */
-  function normalizeMode(mode) {
-    if (typeof mode === "number" && Number.isFinite(mode)) return mode;
-    if (typeof mode === "string") {
-      const trimmed = mode.trim();
-      const n = Number(trimmed);
-      if (Number.isFinite(n)) return n;
-      const upper = trimmed.toUpperCase();
-      if (upper === "ADD") return ADD;
-      if (upper === "OVERRIDE") return OVERRIDE;
-      if (upper === "MULTIPLY") return CONST?.ACTIVE_EFFECT_MODES?.MULTIPLY ?? 1;
-      if (upper === "DOWNGRADE") return CONST?.ACTIVE_EFFECT_MODES?.DOWNGRADE ?? 3;
-      if (upper === "UPGRADE") return CONST?.ACTIVE_EFFECT_MODES?.UPGRADE ?? 4;
-      if (upper === "CUSTOM") return CONST?.ACTIVE_EFFECT_MODES?.CUSTOM ?? 0;
-    }
-    return Number.NaN;
+/**
+ * Evaluate a set of modifier keys and return a deterministic breakdown by Active Effect.
+ *
+ * This is used by opposed-roll TN breakdown cards so users can see which effects contributed.
+ *
+ * @param {import("foundry").documents.BaseActor} actor
+ * @param {string[]} keys
+ * @param {AEEvaluateOptions} [options]
+ * @returns {{ totalsByKey: Record<string, number>, entries: Array<{label:string, value:number, source:"ae", effectId?:string, effectUuid?:string}>, resolvedByKey: Record<string, number> }}
+ */
+export function evaluateAEModifierKeysDetailed(actor, keys, options = {}) {
+  return _evaluateCore(actor, keys, options);
+}
+
+function _evaluateCore(actor, keys, options = {}) {
+  const {
+    context = null,
+    enforceConditions = false,
+    dedupeByOrigin = true,
+    debug = false
+  } = options ?? {};
+
+  const keySet = new Set(Array.isArray(keys) ? keys : []);
+  /** @type {Record<string, number>} */
+  const totalsByKey = {};
+  for (const k of keySet) totalsByKey[k] = 0;
+
+  /** @type {Map<string, { label: string, order: number, value: number, effectId?: string, effectUuid?: string }>} */
+  const entriesByEffect = new Map();
+
+  if (!actor || keySet.size === 0) {
+    return { totalsByKey, entries: [], resolvedByKey: totalsByKey };
   }
 
-  const keySet = new Set(keys);
+  const effects = _collectApplicableEffects(actor, { dedupeByOrigin, debug });
 
-  /** @type {Record<string, any>} */
-  const out = {};
-  for (const k of keys) out[k] = { total: 0, mode: "NONE", entries: [] };
+  // Track per-key per-effect contributions so OVERRIDE can replace prior values deterministically.
+  /** @type {Map<string, Map<string, number>>} */
+  const byKeyByEffect = new Map();
+  for (const k of keySet) byKeyByEffect.set(k, new Map());
 
-  const sources = collectEffectSources(actor);
+  for (let idx = 0; idx < effects.length; idx++) {
+    const effect = effects[idx];
 
-  /** @type {Record<string, Map<string, number>>} */
-  const addByKey = {};
-  /** @type {Record<string, Array<{label:string,value:number,priority:number,effectId:string}>>} */
-  const overrideByKey = {};
+    if (enforceConditions && !_effectMatchesContext(effect, context)) {
+      if (debug) console.debug(`[UESRPG|AE] Skipping effect due to conditions`, { effect, context });
+      continue;
+    }
 
-  for (const { effect, sourceName } of sources) {
-    if (!effect || effect.disabled) continue;
     const changes = Array.isArray(effect.changes) ? effect.changes : [];
-    for (const ch of changes) {
-      if (!ch) continue;
-      if (!keySet.has(ch.key)) continue;
-      // Typed bonus damage values (e.g. "3[fire]") are handled by the damage resolver.
-      if (ch.key === "system.modifiers.combat.damage.dealt" && isTypedDamageDealtValue(ch.value)) continue;
+    for (const change of changes) {
+      const key = change?.key;
+      if (!keySet.has(key)) continue;
 
-      if (normalizeMode(ch.mode) === OVERRIDE) {
-        const cand = {
-          label: sourceName,
-          value: asNumber(ch.value),
-          priority: getEffectPriority(effect),
-          effectId: String(effect.id ?? ""),
-        };
-        (overrideByKey[ch.key] ??= []).push(cand);
+      const mode = change?.mode;
+      const rawValue = change?.value;
+
+      const numeric = _toNumber(rawValue);
+      if (numeric === null) {
+        if (debug) console.debug(`[UESRPG|AE] Ignoring non-numeric AE change`, { change, effect });
         continue;
       }
 
-      if (normalizeMode(ch.mode) === ADD) {
-        (addByKey[ch.key] ??= new Map());
-        const m = addByKey[ch.key];
-        const prev = m.get(sourceName) ?? 0;
-        m.set(sourceName, prev + asNumber(ch.value));
+      const effKey = String(effect?.uuid ?? effect?.id ?? effect?._id ?? `${idx}`);
+      const effName = String(effect?.name ?? "Active Effect");
+
+      // Ensure entry exists to preserve stable ordering.
+      if (!entriesByEffect.has(effKey)) {
+        entriesByEffect.set(effKey, {
+          label: effName,
+          order: idx,
+          value: 0,
+          effectId: effect?.id,
+          effectUuid: effect?.uuid
+        });
       }
+
+      const mapForKey = byKeyByEffect.get(key);
+      if (!mapForKey) continue;
+
+      if (_isAddMode(mode)) {
+        const prev = mapForKey.get(effKey) ?? 0;
+        mapForKey.set(effKey, prev + numeric);
+        continue;
+      }
+
+      if (_isOverrideMode(mode)) {
+        // OVERRIDE replaces all prior contributions for that key.
+        mapForKey.clear();
+        mapForKey.set(effKey, numeric);
+        continue;
+      }
+
+      if (debug) console.debug(`[UESRPG|AE] Ignoring unsupported AE change mode`, { mode, change, effect });
     }
   }
 
-  for (const k of keys) {
-    const overrides = overrideByKey[k] ?? [];
-    if (overrides.length) {
-      // Deterministic selection: highest priority; tie-break by effectId
-      overrides.sort((a, b) => {
-        if (a.priority !== b.priority) return b.priority - a.priority;
-        // lexicographic descending for stability across sessions
-        return String(b.effectId).localeCompare(String(a.effectId));
-      });
-      const chosen = overrides[0];
-      out[k] = {
-        total: chosen.value,
-        mode: "OVERRIDE",
-        entries: [{
-          label: chosen.label,
-          value: chosen.value,
-          mode: "OVERRIDE",
-          priority: chosen.priority,
-          effectId: chosen.effectId,
-        }],
-      };
-      continue;
-    }
+  // Finalize totals by key and entries by effect (aggregate across all keys)
+  for (const key of keySet) {
+    const mapForKey = byKeyByEffect.get(key);
+    if (!mapForKey) continue;
 
-    const adds = addByKey[k];
-    if (adds && adds.size) {
-      const entries = [];
-      let total = 0;
-      for (const [label, value] of adds.entries()) {
-        if (!value) continue;
-        total += value;
-        entries.push({ label, value, mode: "ADD" });
-      }
-      out[k] = { total, mode: "ADD", entries };
-      continue;
-    }
+    let keyTotal = 0;
+    for (const v of mapForKey.values()) keyTotal += (Number(v) || 0);
+    totalsByKey[key] = keyTotal;
 
-    out[k] = { total: 0, mode: "NONE", entries: [] };
+    for (const [effKey, v] of mapForKey.entries()) {
+      const entry = entriesByEffect.get(effKey);
+      if (!entry) continue;
+      entry.value += (Number(v) || 0);
+    }
   }
 
-  return out;
+  // Convert to ordered breakdown, omitting zero-value entries.
+  const entries = Array.from(entriesByEffect.values())
+    .filter(e => (Number(e.value) || 0) !== 0)
+    .sort((a, b) => a.order - b.order)
+    .map(e => ({
+      label: e.label,
+      value: e.value,
+      source: "ae",
+      effectId: e.effectId,
+      effectUuid: e.effectUuid
+    }));
+
+  return { totalsByKey, entries, resolvedByKey: totalsByKey };
+}
+
+/**
+ * Collect currently-applicable effects from actor + transferable embedded item effects.
+ * Uses the system's transfer gating helper when available.
+ *
+ * @param {import("foundry").documents.BaseActor} actor
+ * @param {{dedupeByOrigin:boolean, debug:boolean}} options
+ * @returns {any[]} Array of ActiveEffect-like objects
+ */
+function _collectApplicableEffects(actor, { dedupeByOrigin, debug }) {
+  const actorEffects = Array.from(actor.effects ?? []);
+
+  // Index origins already present directly on the actor.
+  const actorOrigins = new Set(
+    actorEffects.map(e => e?.origin).filter(o => typeof o === "string" && o.length > 0)
+  );
+
+  /** @type {any[]} */
+  const transferable = [];
+
+  // Collect transfer effects from embedded items (actor-owned).
+  for (const item of actor.items ?? []) {
+    const itemEffects = Array.from(item?.effects ?? []);
+    for (const effect of itemEffects) {
+      // Respect existing gating helper if present, otherwise fallback to transfer flag.
+      let isActive = false;
+      try {
+        // Use the system's deterministic transfer gating (same as actor-sheet TN breakdown).
+        isActive = isItemEffectActive(actor, item, effect);
+      } catch (err) {
+        if (debug) console.debug(`[UESRPG|AE] Transfer gating threw; skipping effect`, { err, effect, item });
+        isActive = false;
+      }
+
+      if (!isActive) continue;
+
+      if (dedupeByOrigin) {
+        const origin = effect?.origin;
+        if (origin && actorOrigins.has(origin)) {
+          if (debug) console.debug(`[UESRPG|AE] Dedupe transfer effect by origin`, { origin, effect, item });
+          continue;
+        }
+      }
+
+      transferable.push(effect);
+    }
+  }
+
+  return actorEffects.concat(transferable);
+}
+
+/**
+ * Optional condition matching for context-specific effects.
+ * Convention:
+ * - effect.flags.uesrpg.conditions is an object with optional keys like:
+ *   - opponentUuid, attackMode, itemUuid
+ *
+ * This is intentionally strict: if conditions exist, all present ones must match.
+ *
+ * @param {any} effect
+ * @param {object|null} context
+ * @returns {boolean}
+ */
+function _effectMatchesContext(effect, context) {
+  const conditions = effect?.flags?.uesrpg?.conditions;
+  if (!conditions || typeof conditions !== "object") return true;
+
+  if (!context || typeof context !== "object") return false;
+
+  for (const [k, expected] of Object.entries(conditions)) {
+    if (expected === undefined) continue;
+
+    // Canonical combat lane: `context.attackMode`. Older chat cards/effects may use `attackType`.
+    if (k === "attackMode" || k === "attackType") {
+      const actual = (context.attackMode ?? context.attackType ?? "");
+      if (String(actual).toLowerCase() !== String(expected).toLowerCase()) return false;
+      continue;
+    }
+
+    if (context[k] !== expected) return false;
+  }
+
+  return true;
+}
+
+function _toNumber(value) {
+  if (value === null || value === undefined) return null;
+  if (typeof value === "number" && Number.isFinite(value)) return value;
+
+  if (typeof value === "string") {
+    const trimmed = value.trim();
+    if (trimmed.length === 0) return null;
+    const n = Number(trimmed);
+    if (Number.isFinite(n)) return n;
+    return null;
+  }
+
+  // Do not attempt to coerce booleans/objects.
+  return null;
+}
+
+function _isAddMode(mode) {
+  // Foundry uses CONST.ACTIVE_EFFECT_MODES; support numeric + string.
+  if (mode === 2 || mode === "ADD") return true;
+  const CONST_MODES = globalThis?.CONST?.ACTIVE_EFFECT_MODES;
+  if (CONST_MODES && mode === CONST_MODES.ADD) return true;
+  return false;
+}
+
+function _isOverrideMode(mode) {
+  if (mode === 5 || mode === "OVERRIDE") return true;
+  const CONST_MODES = globalThis?.CONST?.ACTIVE_EFFECT_MODES;
+  if (CONST_MODES && mode === CONST_MODES.OVERRIDE) return true;
+  return false;
 }
