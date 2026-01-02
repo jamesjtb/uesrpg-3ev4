@@ -22,8 +22,9 @@ export async function doTestRoll(actor, { rollFormula = SYSTEM_ROLL_FORMULA, tar
   const roll = await new Roll(rollFormula).evaluate();
   const total = Number(roll.total);
 
-  // Determine actor type / NPC status (best-effort)
-  const actorIsNPC = !!(actor && (actor.type === "npc" || actor.system?.details?.npc === true || actor.hasPlayerOwner === false));
+  // Determine actor type / NPC status (deterministic)
+  // Per project rules: NPCs use fixed critical bands; PCs use lucky/unlucky numbers.
+  const actorIsNPC = (actor?.type === "npc");
 
   // Determine criticals via lucky/unlucky or NPC thresholds
   let isCriticalSuccess = false;
