@@ -110,7 +110,8 @@ export function computeSkillTN({
   skillItem,
   difficultyKey = "average",
   manualMod = 0,
-  useSpecialization = false
+  useSpecialization = false,
+  situationalMods = []
 } = {}) {
   // Derive item-based skill bonuses from equipped items that use the legacy `system.skillArray` format.
   // This allows the chat card breakdown to attribute bonuses to specific items.
@@ -180,7 +181,8 @@ if (actor && (skillName || profKey)) {
     })(),
     difficultyKey,
     manualMod,
-    useSpecialization
+    useSpecialization,
+    situationalMods
   });
 }
 
@@ -197,7 +199,8 @@ export function computeSkillTNFromData({
   combatTNBonuses = null,
   difficultyKey = "average",
   manualMod = 0,
-  useSpecialization = false
+  useSpecialization = false,
+  situationalMods = []
 } = {}) {
   const breakdown = [];
 
@@ -302,6 +305,16 @@ export function computeSkillTNFromData({
   // Specialization (RAW Chapter 3): +10 when applicable.
   const specBonus = useSpecialization ? 10 : 0;
   if (specBonus) breakdown.push({ label: "Specialization", value: specBonus, source: "specialization" });
+
+  // Situational modifiers (e.g., sensory impairment toggles in opposed workflows).
+  if (Array.isArray(situationalMods)) {
+    for (const m of situationalMods) {
+      const v = _asNumber(m?.value);
+      if (!v) continue;
+      const label = String(m?.label ?? m?.name ?? "Situational").trim() || "Situational";
+      breakdown.push({ label, value: v, source: String(m?.source ?? "situational") });
+    }
+  }
 
   const manual = _asNumber(manualMod);
   if (manual) breakdown.push({ label: "Manual Modifier", value: manual, source: "manual" });
