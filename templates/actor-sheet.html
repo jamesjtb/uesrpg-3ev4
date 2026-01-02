@@ -403,7 +403,7 @@
                                 <tr>
                                     <th class="item-name-cell equip-items" id="weapon">Equip Weapons</th>
                                     <th>Damage</th>
-                                    <th>Reach</th>
+                                    <th>Reach/Range</th>
                                     <th>2H</th>
                                     <th class="right-align-cell"><i class="fas fa-trash"></i></th>
                                 </tr>
@@ -419,7 +419,13 @@
                                             </div>
                                         </td>
                                         <td class="damage-entry">{{item.system.damage3}}</td>
-                                        <td>{{item.system.reach}}</td>
+                                        <td>
+                                            {{#if (eq item.system.attackMode "ranged")}}
+                                                {{item.system.range}}
+                                            {{else}}
+                                                {{item.system.reach}}
+                                            {{/if}}
+                                        </td>
                                         <td><input class="toggle2H checkbox" type="checkbox" {{checked item.system.weapon2H}} title="Toggle 2H Damage"></td>
                                         <td class="right-align-cell"><a class="item-control item-delete" title="Delete Item"><i class="fas fa-trash"></i></a></td>
                                     </tr>
