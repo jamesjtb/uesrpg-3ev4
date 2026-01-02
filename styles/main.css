@@ -1666,7 +1666,19 @@
 .worldbuilding .editor,
 .worldbuilding .prosemirror {
   height: auto !important;
-  min-height: 0 !important;
+  /*
+   * Foundry v13 ProseMirror editors rely on the editable surface having a usable box size.
+   * With our flex + internal scroll layout, setting min-height: 0 here can collapse the
+   * editor to ~0px, making it effectively unclickable/untypable (except via source mode).
+   */
+  min-height: 100px !important;
+}
+
+/* Ensure the actual editable surface is also typeable */
+.worldbuilding .editor .editor-content,
+.worldbuilding .prosemirror .editor-content,
+.worldbuilding .prosemirror .ProseMirror {
+  min-height: 100px !important;
 }
 
 /* 4) Optional: tighten the biography container if it is known to be the offender */
