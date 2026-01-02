@@ -43,133 +43,104 @@ export class SimpleActor extends Actor {
     }
   }
 
-// In actor.js, replace the entire prepareData() method: 
-prepareData() {
-  super.prepareData();
+  prepareData() {
+    super.prepareData();
 
-  const actorData = this;
-  
-  // CRITICAL: Initialize required system data structures FIRST
-  this._ensureSystemData(actorData);
+    // Ensure required data structures exist so downstream derived-data logic is resilient,
+    // even when actors are partially migrated or have inconsistent embedded item data.
+    this._ensureSystemData();
 
-  // Then call type-specific preparation
-  try {
-    if (actorData.type === "Player Character" && typeof this._prepareCharacterData === "function") {
-      this._prepareCharacterData(actorData);
-    } else if (actorData.type === "NPC" && typeof this._prepareNPCData === "function") {
-      this._prepareNPCData(actorData);
+    try {
+      if (this.type === "Player Character" && typeof this._prepareCharacterData === "function") {
+        this._prepareCharacterData(this);
+      } else if (this.type === "NPC" && typeof this._prepareNPCData === "function") {
+        this._prepareNPCData(this);
+      }
+    } catch (err) {
+      console.error(`uesrpg-3ev4 | Error during prepareData for ${this.name || this.id}:`, err);
+      // Re-ensure minimum safe defaults after a failure to prevent cascading errors in rendering.
+      this._ensureSystemData();
     }
-  } catch (err) {
-    console.error(`uesrpg-3ev4 | Error during prepareData for ${this.name || this.id}:`, err);
-    // Ensure fallback data exists even after error
-    this._ensureSystemData(actorData);
-  }
-}
-
-// ADD THIS NEW METHOD to actor.js (place before _aggregateItemStats):
-_ensureSystemData(actorData) {
-  // Ensure system object exists
-  actorData.system = actorData.system || {};
-  
-  // Ensure characteristics exist with safe defaults
-  actorData.system.characteristics = actorData.system.characteristics || {};
-  const chars = ['str', 'end', 'agi', 'int', 'wp', 'prc', 'prs', 'lck'];
-  for (const char of chars) {
-    actorData.system.characteristics[char] = actorData.system. characteristics[char] || {
-      base: 0,
-      total: 0,
-      bonus: 0
-    };
-  }
-  
-  // Ensure resources exist
-  actorData.system.hp = actorData.system.hp || { value: 0, max: 0, base: 0, bonus: 0 };
-  // Active Effects support: additive modifier targets (do not overwrite derived fields directly)
-  actorData.system.modifiers = actorData.system.modifiers || {};
-  actorData.system.modifiers.characteristics = actorData.system.modifiers.characteristics || {};
-  // Skill modifiers (Active Effects) - dynamic keys by normalized skill name
-  // Example: system.modifiers.skills.athletics = 10
-  // Optional global skill modifier: system.modifiers.skills._all = 5
-  actorData.system.modifiers.skills = actorData.system.modifiers.skills || {};
-  actorData.system.modifiers.hp = actorData.system.modifiers.hp || { base: 0, bonus: 0, max: 0, value: 0 };
-  actorData.system.modifiers.magicka = actorData.system.modifiers.magicka || { base: 0, bonus: 0, max: 0, value: 0 };
-  actorData.system.modifiers.stamina = actorData.system.modifiers.stamina || { base: 0, bonus: 0, max: 0, value: 0 };
-  actorData.system.modifiers.luck_points = actorData.system.modifiers.luck_points || { base: 0, bonus: 0, max: 0, value: 0 };
-
-  actorData.system.stamina = actorData.system. stamina || { value: 0, max: 0, bonus: 0 };
-  actorData.system.magicka = actorData.system.magicka || { value: 0, max: 0, bonus: 0 };
-  actorData.system.luck_points = actorData.system.luck_points || { value: 0, max: 0, bonus:  0 };
-  
-  // Ensure derived stats exist
-  actorData. system.initiative = actorData.system.initiative || { base: 0, value: 0, bonus: 0 };
-  actorData.system.wound_threshold = actorData.system.wound_threshold || { base: 0, value: 0, bonus:  0 };
-  actorData.system.speed = actorData.system.speed || { base: 0, value: 0, bonus: 0, swimSpeed: 0, flySpeed: 0 };
-  actorData.system.carry_rating = actorData.system.carry_rating || { current: 0, max: 0, penalty: 0, bonus: 0, label: "Minimal" };
-
-  // Armor mobility penalties (derived) - used by automation; defaults are neutral
-  actorData.system.mobility = actorData.system.mobility || {
-    armorWeightClass: "none",
-    agilityTestPenalty: 0,
-    agilityPenaltyExemptSkills: ["combatstyle", "combat_style", "combat style"],
-    speedPenalty: 0,
-    sources: []
-  };
-  
-  // Ensure combat data exists
-  actorData. system.fatigue = actorData.system. fatigue || { level: 0, penalty: 0, bonus: 0 };
-  actorData. system.woundPenalty = actorData.system.woundPenalty || 0;
-  actorData.system.wounded = actorData.system.wounded || false;
-  
-  // Ensure lucky/unlucky numbers exist (for NPCs)
-  actorData.system.lucky_numbers = actorData.system.lucky_numbers || {
-    ln1: 0, ln2: 0, ln3: 0, ln4: 0, ln5: 0, ln6: 0, ln7: 0, ln8: 0, ln9: 0, ln10: 0
-  };
-  actorData. system.unlucky_numbers = actorData.system.unlucky_numbers || {
-    ul1: 0, ul2: 0, ul3: 0, ul4: 0, ul5: 0, ul6: 0
-  };
-  
-  // Ensure resistance exists
-  actorData.system. resistance = actorData.system. resistance || {
-    diseaseR: 0, fireR: 0, frostR: 0, shockR: 0, poisonR: 0, magicR: 0, natToughness: 0, silverR: 0, sunlightR: 0
-  };
-  
-  // Ensure professions/skills exist
-  actorData. system.professions = actorData.system.professions || {};
-  actorData.system. professionsWound = actorData.system.professionsWound || {};
-  actorData.system. skills = actorData.system.skills || {};
-  
-  // Ensure items collection exists
-  if (!actorData.items || !(actorData.items instanceof foundry.utils.Collection)) {
-    // Use the actual embedded collection if available, otherwise create empty array
-    if (! actorData.items) {
-      actorData.items = [];
-    }
-  }
-}
-
-  // Minimal fallback to provide safe defaults so downstream code doesn't throw.
-  _legacyPrepareFallback(actorData) {
-    actorData.system = actorData.system || {};
-    actorData.system.containerStats = actorData.system.containerStats || {};
-    actorData.system.carry_rating = actorData.system.carry_rating || { current: 0, max: 0, penalty: 0, bonus: 0 };
-    actorData.system.fatigue = actorData.system.fatigue || { level: 0, penalty: 0, bonus: 0 };
-    actorData.system.woundPenalty = actorData.system.woundPenalty || 0;
-    actorData.system.wounded = actorData.system.wounded || false;
-    // Ensure items collection exists (embedded collection); this prevents code that iterates items from failing
-    if (!actorData.items) actorData.items = new foundry.data.EmbeddedCollection(foundry.documents.Item, [], { parent: actorData });
   }
 
   /**
-   * Small perf helpers (temporary — remove or disable in production if desired)
+   * Ensure required system data objects exist with safe defaults.
+   *
+   * IMPORTANT:
+   *  - This only initializes missing objects/fields; it should not perform computations.
+   *  - It must not replace embedded collections (e.g. this.items, this.effects).
+   *  - This is derived-data scaffolding only; schema changes must occur in migrations.
    */
-  _perfStart(label) {
-    if (window && window.performance) return performance.now();
-    return Date.now();
+  _ensureSystemData() {
+    const system = (this.system ??= {});
+
+    // Characteristics
+    system.characteristics ??= {};
+    const chars = ["str", "end", "agi", "int", "wp", "prc", "prs", "lck"];
+    for (const c of chars) {
+      system.characteristics[c] ??= { base: 0, total: 0, bonus: 0 };
+    }
+
+    // Core resources
+    system.hp ??= { value: 0, max: 0, base: 0, bonus: 0 };
+    system.stamina ??= { value: 0, max: 0, bonus: 0 };
+    system.magicka ??= { value: 0, max: 0, bonus: 0 };
+    system.luck_points ??= { value: 0, max: 0, bonus: 0 };
+
+    // Modifier lanes (Active Effects)
+    system.modifiers ??= {};
+    system.modifiers.characteristics ??= {};
+    system.modifiers.skills ??= {};
+    system.modifiers.hp ??= { base: 0, bonus: 0, max: 0, value: 0 };
+    system.modifiers.magicka ??= { base: 0, bonus: 0, max: 0, value: 0 };
+    system.modifiers.stamina ??= { base: 0, bonus: 0, max: 0, value: 0 };
+    system.modifiers.luck_points ??= { base: 0, bonus: 0, max: 0, value: 0 };
+
+    // Derived stats containers
+    system.initiative ??= { base: 0, value: 0, bonus: 0 };
+    system.wound_threshold ??= { base: 0, value: 0, bonus: 0 };
+    system.speed ??= { base: 0, value: 0, bonus: 0, swimSpeed: 0, flySpeed: 0 };
+    system.carry_rating ??= { current: 0, max: 0, penalty: 0, bonus: 0, label: "Minimal" };
+
+    // Armor mobility penalties (derived) - neutral defaults
+    system.mobility ??= {
+      armorWeightClass: "none",
+      agilityTestPenalty: 0,
+      agilityPenaltyExemptSkills: ["combatstyle", "combat_style", "combat style"],
+      speedPenalty: 0,
+      sources: []
+    };
+
+    // Combat state containers
+    system.fatigue ??= { level: 0, penalty: 0, bonus: 0 };
+    system.woundPenalty ??= 0;
+    system.wounded ??= false;
+
+    // Luck numbers (PCs may use lucky/unlucky numbers; NPCs use fixed critical bands)
+    system.lucky_numbers ??= {
+      ln1: 0, ln2: 0, ln3: 0, ln4: 0, ln5: 0, ln6: 0, ln7: 0, ln8: 0, ln9: 0, ln10: 0
+    };
+    system.unlucky_numbers ??= { ul1: 0, ul2: 0, ul3: 0, ul4: 0, ul5: 0, ul6: 0 };
+
+    // Resistances
+    system.resistance ??= {
+      diseaseR: 0,
+      fireR: 0,
+      frostR: 0,
+      shockR: 0,
+      poisonR: 0,
+      magicR: 0,
+      natToughness: 0,
+      silverR: 0,
+      sunlightR: 0
+    };
+
+    // Professions / Skills containers
+    system.professions ??= {};
+    system.professionsWound ??= {};
+    system.skills ??= {};
   }
-  _perfEnd(label, start) {
-    const dur = ((window && window.performance && performance.now ? performance.now() : Date.now()) - start).toFixed(1);
-    console.warn(`PERF: ${label} took ${dur}ms`, this.name || this._id || this);
-  }
+
 
   /**
    * Aggregate item stats in a single pass to avoid repeated item.filter() work.
@@ -1143,6 +1114,40 @@ _getFatigueAEModifiers() {
 
 
 
+
+
+  /**
+   * Chapter 5: magical healing / first aid can temporarily remove passive wound penalties
+   * while the actor remains wounded.
+   *
+   * Implemented as AE-backed suppression markers.
+   */
+
+  _hasWoundPenaltySuppression(actorData) {
+    const scope = game.system?.id ?? "uesrpg-3ev4";
+    const effectsRaw = actorData?.effects;
+    const effects = Array.isArray(effectsRaw) ? effectsRaw : (effectsRaw ? Array.from(effectsRaw) : []);
+
+    return effects.some(e => {
+      const flags = e?.flags?.[scope] ?? e?.flags?.["uesrpg-3ev4"] ?? null;
+      const wounds = flags?.wounds ?? null;
+      if (!wounds || typeof wounds !== "object") return false;
+
+      // Explicit suppression marker
+      if (wounds.suppressWoundPenalty === true) return true;
+
+      const kind = String(wounds.kind ?? "");
+      if (kind === "forestall") {
+        const r = Number(wounds.remainingRounds ?? 0);
+        return Number.isFinite(r) && r > 0;
+      }
+      if (kind === "firstAid") return true;
+
+
+
+      return false;
+    });
+  }
 /**
  * Apply deterministic Active Effect modifiers to Wound Threshold after all other system adjustments.
  *
@@ -1822,6 +1827,14 @@ actorSystemData.luck_points.max = lckBonus + actorSystemData.luck_points.bonus;
       actorSystemData.speed.swimSpeed = Math.max(0, Number(actorSystemData.speed.swimSpeed || 0) + spdPenalty);
     }
 
+
+// Chapter 5 (Package 4): Movement restriction semantics derived from conditions.
+// - Slowed: halve Speed (round up)
+// - Entangled: halve Speed (round up)
+// - Prone: movement costs double -> effective ground Speed is halved (round down)
+// - Immobilized/Restrained/Paralyzed/Unconscious: cannot move (Speed 0)
+this._applyMovementRestrictionSemantics(actorData, actorSystemData);
+
     // Set Skill professions to regular professions (This is a fucking mess, but it's the way it's done for now...)
     for (let prof in actorSystemData.professions) {
       if (prof === 'profession1'||prof === 'profession2'||prof === 'profession3'||prof === 'commerce') {
@@ -1841,7 +1854,8 @@ actorSystemData.luck_points.max = lckBonus + actorSystemData.luck_points.bonus;
     }
 
     // Wound Penalties
-    if (actorSystemData.wounded === true) {
+    const woundSuppressed = this._hasWoundPenaltySuppression(actorData);
+    if (actorSystemData.wounded === true && !woundSuppressed) {
       let woundPen = 0
       let woundIni = -2;
       this._painIntolerant(actorData) ? woundPen = -30 : woundPen = -20
@@ -1866,6 +1880,19 @@ actorSystemData.luck_points.max = lckBonus + actorSystemData.luck_points.bonus;
 
         }
       }
+    else if (actorSystemData.wounded === true && woundSuppressed) {
+      // Passive wound penalties are suppressed by first aid / magical healing forestall,
+      // without clearing the wounded state.
+      actorSystemData.woundPenalty = 0;
+      actorSystemData.initiative.value = actorSystemData.initiative.base;
+
+      if (actorSystemData.professionsWound && actorSystemData.professions) {
+        for (var skill in actorSystemData.professionsWound) {
+          actorSystemData.professionsWound[skill] = actorSystemData.professions[skill];
+        }
+      }
+    }
+
 
       else if (actorSystemData.wounded === false) {
           for (var skill in actorSystemData.professionsWound) {
@@ -2237,6 +2264,14 @@ actorSystemData.luck_points.max = lckBonus + actorSystemData.luck_points.bonus;
       actorSystemData.speed.value = Math.max(0, Number(actorSystemData.speed.value || 0) + spdPenalty);
       actorSystemData.speed.swimSpeed = Math.max(0, Number(actorSystemData.speed.swimSpeed || 0) + spdPenalty);
     }
+
+
+// Chapter 5 (Package 4): Movement restriction semantics derived from conditions.
+// - Slowed: halve Speed (round up)
+// - Entangled: halve Speed (round up)
+// - Prone: movement costs double -> effective ground Speed is halved (round down)
+// - Immobilized/Restrained/Paralyzed/Unconscious: cannot move (Speed 0)
+this._applyMovementRestrictionSemantics(actorData, actorSystemData);
 
     // Set Skill professions to regular professions (This is a fucking mess, but it's the way it's done for now...)
     for (let prof in actorSystemData.professions) {
@@ -2971,6 +3006,91 @@ actorSystemData.luck_points.max = lckBonus + actorSystemData.luck_points.bonus;
     }
     return pain
   }
+
+
+/**
+ * Collect all uesrpg-3ev4 condition keys applied via ActiveEffects.
+ * This is a derived-data helper only; it does not mutate document data.
+ */
+_getUesConditionKeySet(actorData) {
+  const out = new Set();
+  const effects = actorData?.effects?.contents ?? actorData?.effects ?? [];
+  for (const e of effects) {
+    const flagged = e?.getFlag?.("uesrpg-3ev4", "condition") ?? e?.flags?.["uesrpg-3ev4"]?.condition ?? null;
+    const key = flagged?.key ? String(flagged.key).trim().toLowerCase() : "";
+    if (key) out.add(key);
+
+    // Fallback: some conditions may exist as named effects without our flags.
+    const nm = String(e?.name ?? "").trim().toLowerCase();
+    if (nm) {
+      const first = nm.split("(")[0].trim().split(/\s+/)[0];
+      if (first) out.add(first);
+    }
+  }
+  return out;
+}
+
+/**
+ * Chapter 5 (Package 4): enforce movement restriction semantics via derived Speed.
+ * This does not block token movement in the canvas; it deterministically adjusts derived speed values.
+ */
+_applyMovementRestrictionSemantics(actorData, actorSystemData) {
+  try {
+    if (!actorSystemData?.speed) return;
+
+    const keys = this._getUesConditionKeySet(actorData);
+
+    const clamp = (n) => {
+      const v = Number(n);
+      return Number.isFinite(v) ? Math.max(0, v) : 0;
+    };
+
+    let ground = clamp(actorSystemData.speed.value);
+    let swim = clamp(actorSystemData.speed.swimSpeed);
+    let fly = clamp(actorSystemData.speed.flySpeed);
+
+    const immobile = keys.has("immobilized") || keys.has("restrained") || keys.has("paralyzed") || keys.has("unconscious");
+    if (immobile) {
+      ground = 0;
+      swim = 0;
+      fly = 0;
+    } else {
+      // Slowed / Entangled: halve (round up)
+      if (keys.has("slowed")) {
+        ground = Math.ceil(ground / 2);
+        swim = Math.ceil(swim / 2);
+        fly = Math.ceil(fly / 2);
+      }
+      if (keys.has("entangled")) {
+        ground = Math.ceil(ground / 2);
+        swim = Math.ceil(swim / 2);
+        fly = Math.ceil(fly / 2);
+      }
+
+      // Prone: movement costs double, so effective ground speed is halved (round down).
+      if (keys.has("prone")) {
+        ground = Math.floor(ground / 2);
+      }
+
+      // Hidden: movement costs double, so effective movement speeds are halved (round down).
+      if (keys.has("hidden")) {
+        ground = Math.floor(ground / 2);
+        swim = Math.floor(swim / 2);
+        fly = Math.floor(fly / 2);
+      }
+    }
+
+    actorSystemData.speed.value = ground;
+    actorSystemData.speed.swimSpeed = swim;
+
+    // Some actors may not define flySpeed in their schema; guard defensively.
+    if (Object.prototype.hasOwnProperty.call(actorSystemData.speed, "flySpeed")) {
+      actorSystemData.speed.flySpeed = fly;
+    }
+  } catch (err) {
+    console.warn("uesrpg-3ev4 | Movement restriction semantics failed", err);
+  }
+}
 
   _addHalfSpeed(actorData) {
     let halfSpeedItems = (actorData.items || []).filter(item => item?.system?.addHalfSpeed === true);
