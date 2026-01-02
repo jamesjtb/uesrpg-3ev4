@@ -871,12 +871,15 @@ async _onProfessionsRoll(event) {
     allowUnlucky: true
   });
 
-  const degreeLine = formatDegree(res);
+  const degreeLine = res.isSuccess
+    ? `<b style="color:green;">SUCCESS — ${formatDegree(res)}</b>`
+    : `<b style="color:rgb(168, 5, 5);">FAILURE — ${formatDegree(res)}</b>`;
 
   const breakdownRows = (tn.breakdown ?? []).map((b) => {
-    const sign = b.value >= 0 ? "+" : "";
+    const v = Number(b.value ?? 0);
+    const sign = v >= 0 ? "+" : "";
     const labelTxt = String(b.label ?? "");
-    return `<div style="display:flex; justify-content:space-between;"><span>${labelTxt}</span><span>${sign}${b.value}</span></div>`;
+    return `<div style="display:flex; justify-content:space-between; gap:10px;"><span>${labelTxt}</span><span>${sign}${v}</span></div>`;
   }).join("");
 
   const declaredParts = [];
@@ -884,58 +887,136 @@ async _onProfessionsRoll(event) {
   if (hasSpec && normalized.useSpec) declaredParts.push("Spec +10");
   if (normalized.manualMod) declaredParts.push(`Mod ${normalized.manualMod >= 0 ? "+" : ""}${normalized.manualMod}`);
 
+  // Tag bar (kept consistent with PC sheet tags)
+  const tags = [];
+  if (this.actor?.system?.wounded) tags.push(`<span class="tag wound-tag">Wounded ${this.actor.system.woundPenalty}</span>`);
+  if (Number(this.actor?.system?.fatigue?.penalty ?? 0) !== 0) tags.push(`<span class="tag fatigue-tag">Fatigued ${this.actor.system.fatigue.penalty}</span>`);
+  if (Number(this.actor?.system?.carry_rating?.penalty ?? 0) !== 0) tags.push(`<span class="tag enc-tag">Encumbered ${this.actor.system.carry_rating.penalty}</span>`);
+
+  const armorMods = (tn.breakdown ?? []).filter(b => String(b.label || "").startsWith("Armor:") && Number(b.value) !== 0);
+  for (const m of armorMods) {
+    const v = Number(m.value) || 0;
+    tags.push(`<span class="tag armor-tag">${m.label} ${v}</span>`);
+  }
+
+  if (tn?.difficulty?.mod) tags.push(`<span class="tag">${tn.difficulty.label} ${tn.difficulty.mod >= 0 ? "+" : ""}${tn.difficulty.mod}</span>`);
+  if (hasSpec && normalized.useSpec) tags.push(`<span class="tag">Specialization +10</span>`);
+  if (normalized.manualMod) tags.push(`<span class="tag">Mod ${normalized.manualMod >= 0 ? "+" : ""}${normalized.manualMod}</span>`);
+
   const flavor = `
     <div>
-      <h2 style="margin:0 0 6px 0;">${label}</h2>
+      <h2 style="margin:0 0 6px 0;"><img src="${profSkillItem.img}" style="height:24px; vertical-align:middle; margin-right:6px;"/>${label}</h2>
       <div><b>Target Number:</b> ${tn.finalTN}</div>
-      ${declaredParts.length ? `<div style="margin-top:2px; font-size:0.85em; opacity:0.85;"><b>Options:</b> ${declaredParts.join("; ")}</div>` : ""}
-      <div style="margin-top:4px;">${degreeLine}</div>
-      <details style="margin-top:6px;">
-        <summary style="cursor:pointer; font-size:12px; opacity:0.9;">TN breakdown</summary>
-        <div style="margin-top:6px; font-size:12px; opacity:0.9;">${breakdownRows}</div>
-      </details>
-    </div>
-  `;
+      ${declaredParts.length ? `<div style="margin-top:2px; font-size:12px; opacity:0.85;"><b>Options:</b> ${declaredParts.join("; ")}</div>` : ""}
+      <div style="margin-top:4px;">${degreeLine}${res.isCriticalSuccess ? ' <span style="color:green;">(CRITICAL)</span>' : ''}${res.isCriticalFailure ? ' <span style="color:red;">(CRITICAL FAIL)</span>' : ''}</div>
+      <details style="margin-top:6px;"><summary style="cursor:pointer; user-select:none;">TN breakdown</summary><div style="margin-top:4px; font-size:12px; opacity:0.9;">${breakdownRows}</div></details>
+      <div class="tag-container" style="margin-top:6px;">${tags.join("")}</div>
+    </div>`;
 
   await res.roll.toMessage({
+    user: game.user.id,
     speaker: ChatMessage.getSpeaker({ actor: this.actor }),
     flavor,
     rollMode: game.settings.get("core", "rollMode")
   });
+
 }
 
 async _onDefendRoll(event) {
   event.preventDefault();
-  
-  const defenseType = event.currentTarget.dataset.defense || 'evade';
-  const actorSys = this.actor?.system || {};
-  
-  // Get defense skill value
-  let defenseTN = 50;
-  if (defenseType === 'evade') {
-    const evadeSkill = this.actor.items.find(i => i.type === 'skill' && i.name.toLowerCase() === 'evade');
-    defenseTN = Number(evadeSkill?.system?.value ??  Number(actorSys?.characteristics?.agi?.total ?? 50));
-  } else if (defenseType === 'block') {
-    const blockSkill = this.actor.items.find(i => i.type === 'combatStyle' && i.name.toLowerCase().includes('block'));
-    defenseTN = Number(blockSkill?.system?.value ?? Number(actorSys?.characteristics?.str?.total ?? 50));
+
+  if (!requireUserCanRollActor(game.user, this.actor)) return;
+
+  const defenseType = String(event.currentTarget?.dataset?.defense ?? "evade").trim().toLowerCase();
+
+  // Resolve the defense skill/item.
+  let skillItem = null;
+  let label = "Defense";
+
+  if (defenseType === "evade") {
+    label = "Evade";
+    skillItem = this.actor.items.find(i => i.type === "skill" && String(i.name || "").trim().toLowerCase() === "evade") ?? null;
+  } else if (defenseType === "block") {
+    label = "Block";
+    // Prefer an explicit Block skill if present; otherwise, fall back to a block-focused combat style.
+    skillItem = this.actor.items.find(i => i.type === "skill" && String(i.name || "").trim().toLowerCase() === "block")
+      ?? this.actor.items.find(i => i.type === "combatStyle" && String(i.name || "").toLowerCase().includes("block"))
+      ?? null;
+  } else {
+    label = defenseType.charAt(0).toUpperCase() + defenseType.slice(1);
+    skillItem = this.actor.items.find(i => i.type === "skill" && String(i.name || "").trim().toLowerCase() === defenseType) ?? null;
   }
-  
-  // Roll defense
-  const roll = new Roll("1d100");
-  await roll.evaluate();
-  
-  const success = roll.total <= defenseTN;
-  const dos = success ? Math.floor((defenseTN - roll.total) / 10) : 0;
-  
-  // Chat message
-  ChatMessage.create({
-    speaker: ChatMessage.getSpeaker({actor: this.actor}),
-    content: `
-      <h3>${defenseType.toUpperCase()} Defense</h3>
-      <p><b>Target:</b> ${defenseTN}</p>
-      <p><b>Roll:</b> [[${roll.total}]]</p>
-      <p><b>${success ? 'SUCCESS' : 'FAILURE'}</b> (${dos} DoS)</p>
-    `
+
+  if (!skillItem) {
+    ui.notifications.warn(`No ${label} skill/style found on ${this.actor.name}.`);
+    return;
+  }
+
+  // Default roll options (quick roll parity with PC sheet without additional dialogs).
+  const difficultyKey = "average";
+  const manualMod = 0;
+  const hasSpec = Boolean(String(skillItem?.system?.specialization ?? "").trim());
+  const useSpec = false;
+
+  const request = buildSkillRollRequest({
+    actor: this.actor,
+    skillItem,
+    targetToken: null,
+    options: { difficultyKey, manualMod, useSpec: false },
+    context: { source: "npc-sheet", quick: true, defenseType }
+  });
+
+  const tn = computeSkillTN({
+    actor: this.actor,
+    skillItem,
+    difficultyKey,
+    manualMod,
+    useSpecialization: hasSpec && useSpec
+  });
+
+  const tags = [];
+  if (this.actor.system.wounded) tags.push(`<span class="tag wound-tag">Wounded ${this.actor.system.woundPenalty}</span>`);
+  if (this.actor.system.fatigue?.penalty != 0) tags.push(`<span class="tag fatigue-tag">Fatigued ${this.actor.system.fatigue.penalty}</span>`);
+  if (this.actor.system.carry_rating?.penalty != 0) tags.push(`<span class="tag enc-tag">Encumbered ${this.actor.system.carry_rating.penalty}</span>`);
+
+  const armorMods = (tn.breakdown ?? []).filter(b => String(b.label || "").startsWith("Armor:") && Number(b.value) !== 0);
+  for (const m of armorMods) {
+    const v = Number(m.value) || 0;
+    tags.push(`<span class="tag armor-tag">${m.label} ${v}</span>`);
+  }
+
+  const res = await doTestRoll(this.actor, {
+    rollFormula: "1d100",
+    target: tn.finalTN,
+    allowLucky: true,
+    allowUnlucky: true
+  });
+
+  const degreeLine = res.isSuccess
+    ? `<b style="color:green;">SUCCESS — ${formatDegree(res)}</b>`
+    : `<b style="color:rgb(168, 5, 5);">FAILURE — ${formatDegree(res)}</b>`;
+
+  const breakdownRows = (tn.breakdown ?? []).map(b => {
+    const v = Number(b.value ?? 0);
+    const sign = v >= 0 ? "+" : "";
+    return `<div style="display:flex; justify-content:space-between; gap:10px;"><span>${b.label}</span><span>${sign}${v}</span></div>`;
+  }).join("");
+
+  const flavor = `
+    <div>
+      <h2 style="margin:0 0 6px 0;"><img src="${skillItem.img}" style="height:24px; vertical-align:middle; margin-right:6px;"/>${label}</h2>
+      <div><b>Target Number:</b> ${tn.finalTN}</div>
+      <div style="margin-top:4px;">${degreeLine}${res.isCriticalSuccess ? ' <span style="color:green;">(CRITICAL)</span>' : ''}${res.isCriticalFailure ? ' <span style="color:red;">(CRITICAL FAIL)</span>' : ''}</div>
+      <details style="margin-top:6px;"><summary style="cursor:pointer; user-select:none;">TN breakdown</summary><div style="margin-top:4px; font-size:12px; opacity:0.9;">${breakdownRows}</div></details>
+      <div class="tag-container" style="margin-top:6px;">${tags.join("")}</div>
+    </div>`;
+
+  await res.roll.toMessage({
+    user: game.user.id,
+    speaker: ChatMessage.getSpeaker({ actor: this.actor }),
+    flavor,
+    flags: { uesrpg: { rollRequest: request }, "uesrpg-3ev4": { rollRequest: request } },
+    rollMode: game.settings.get("core", "rollMode")
   });
 }
   
