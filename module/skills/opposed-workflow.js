@@ -13,6 +13,7 @@
 import { doTestRoll, resolveOpposed, formatDegree } from "../helpers/degree-roll-helper.js";
 import { computeSkillTN, SKILL_DIFFICULTIES } from "./skill-tn.js";
 import { requireUserCanRollActor } from "../helpers/permissions.js";
+import { hasCondition } from "../conditions/condition-engine.js";
 import { buildSkillRollRequest, normalizeSkillRollOptions, skillRollDebug, validateSkillRollRequest } from "./roll-request.js";
 
 const _SKILL_ROLL_SETTINGS_NS = "uesrpg-3ev4";
@@ -201,13 +202,16 @@ function _hasSpecializations(skillItem) {
 
 async function _skillRollDialog({
   title,
+  actor = null,
   showSkillSelect = false,
   skills = [],
   selectedSkillUuid = null,
   allowSpecialization = false,
   defaultUseSpec = false,
   defaultDifficultyKey = "average",
-  defaultManualMod = 0
+  defaultManualMod = 0,
+  defaultApplyBlinded = true,
+  defaultApplyDeafened = true
 } = {}) {
   const skillSelect = showSkillSelect
     ? `
@@ -238,6 +242,19 @@ async function _skillRollDialog({
           <span><b>Use Specialization</b> (+10)${specDisabled ? " <span style=\"opacity:0.75;\">(none on this skill)</span>" : ""}</span>
         </label>
       </div>`;
+  const hasBlinded = actor ? hasCondition(actor, "blinded") : false;
+  const hasDeafened = actor ? hasCondition(actor, "deafened") : false;
+
+  const sensoryRow = (hasBlinded || hasDeafened) ? `
+      <div class="form-group" style="margin-top:8px;">
+        <label><b>Sensory Impairment</b></label>
+        <div style="display:flex; flex-direction:column; gap:4px; margin-top:4px;">
+          ${hasBlinded ? '<label style="display:flex; gap:8px; align-items:center;"><input type="checkbox" name="applyBlinded" ' + (defaultApplyBlinded ? 'checked' : '') + '/> <span>Apply Blinded (-30, sight-based)</span></label>' : ''}
+          ${hasDeafened ? '<label style="display:flex; gap:8px; align-items:center;"><input type="checkbox" name="applyDeafened" ' + (defaultApplyDeafened ? 'checked' : '') + '/> <span>Apply Deafened (-30, hearing-based)</span></label>' : ''}
+        </div>
+        <p style="opacity:0.8; font-size:12px; margin-top:6px;">RAW: apply only if the test benefits from the relevant sense.</p>
+      </div>` : "";
+
 
   const content = `
     <form class="uesrpg-skill-declare">
@@ -249,6 +266,9 @@ async function _skillRollDialog({
       </div>
 
       ${specRow}
+
+      ${sensoryRow}
+
 
       <div class="form-group" style="margin-top:8px;">
         <label><b>Manual Modifier</b></label>
@@ -301,9 +321,12 @@ async function _skillRollDialog({
               ?? "";
             const difficultyKey = root?.querySelector('select[name="difficultyKey"]')?.value ?? "average";
             const useSpec = Boolean(root?.querySelector('input[name="useSpec"]')?.checked);
+            const applyBlinded = Boolean(root?.querySelector('input[name="applyBlinded"]')?.checked);
+            const applyDeafened = Boolean(root?.querySelector('input[name="applyDeafened"]')?.checked);
+
             const rawManual = root?.querySelector('input[name="manualMod"]')?.value ?? "0";
             const manualMod = Number.parseInt(String(rawManual), 10) || 0;
-            return { skillUuid, difficultyKey, useSpec, manualMod };
+            return { skillUuid, difficultyKey, useSpec, manualMod, applyBlinded, applyDeafened };
           }
         },
         cancel: { label: "Cancel", callback: () => null }
@@ -502,17 +525,23 @@ export const SkillOpposedWorkflow = {
       let decl = null;
       const quick = Boolean(event?.shiftKey) && game.settings.get("uesrpg-3ev4", "skillRollQuickShift");
       if (quick) {
-        decl = { skillUuid: selectedSkillUuid, ...defaults };
+        decl = { skillUuid: selectedSkillUuid,
+          applyBlinded: (defaults.applyBlinded ?? true),
+          applyDeafened: (defaults.applyDeafened ?? true),
+          ...defaults };
       } else {
         decl = await _skillRollDialog({
           title: `Opposed — Choose Skill`,
+          actor: attacker,
           showSkillSelect: true,
           skills,
           selectedSkillUuid,
           allowSpecialization: true,
           defaultUseSpec: defaults.useSpec,
           defaultDifficultyKey: defaults.difficultyKey,
-          defaultManualMod: defaults.manualMod
+          defaultManualMod: defaults.manualMod,
+          defaultApplyBlinded: (defaults.applyBlinded ?? true),
+          defaultApplyDeafened: (defaults.applyDeafened ?? true)
         });
       }
       if (!decl) return;
@@ -537,7 +566,7 @@ export const SkillOpposedWorkflow = {
         actor: attacker,
         skillItem,
         targetToken: dToken,
-        options: { difficultyKey: decl.difficultyKey, manualMod: decl.manualMod, useSpec: Boolean(decl.useSpec) },
+        options: { difficultyKey: decl.difficultyKey, manualMod: decl.manualMod, useSpec: Boolean(decl.useSpec), applyBlinded: Boolean(decl.applyBlinded), applyDeafened: Boolean(decl.applyDeafened) },
         context: { source: "chat", quick, messageId: message.id, groupId: data.context?.groupId ?? null }
       });
       const v = validateSkillRollRequest(request);
@@ -564,7 +593,8 @@ export const SkillOpposedWorkflow = {
         skillItem,
         difficultyKey: decl.difficultyKey,
         manualMod: decl.manualMod,
-        useSpecialization: allowSpec && decl.useSpec
+        useSpecialization: allowSpec && decl.useSpec,
+        situationalMods: (function(){ const out=[]; if (decl?.applyBlinded) out.push({ label: "Blinded (sight)", value: -30 }); if (decl?.applyDeafened) out.push({ label: "Deafened (hearing)", value: -30 }); return out; })()
       });
       data.attacker.tn = tn;
       skillRollDebug("opposed attacker TN", { finalTN: tn.finalTN, breakdown: tn.breakdown });
@@ -624,13 +654,16 @@ export const SkillOpposedWorkflow = {
       } else {
         decl = await _skillRollDialog({
           title: `Oppose — Choose Skill`,
+          actor: defender,
           showSkillSelect: true,
           skills,
           selectedSkillUuid,
           allowSpecialization: true,
           defaultUseSpec: defaults.useSpec,
           defaultDifficultyKey: defaults.difficultyKey,
-          defaultManualMod: defaults.manualMod
+          defaultManualMod: defaults.manualMod,
+          defaultApplyBlinded: (defaults.applyBlinded ?? true),
+          defaultApplyDeafened: (defaults.applyDeafened ?? true)
         });
       }
       if (!decl) return;
@@ -646,7 +679,7 @@ export const SkillOpposedWorkflow = {
         actor: defender,
         skillItem: defSkill,
         targetToken: aToken,
-        options: { difficultyKey: decl.difficultyKey, manualMod: decl.manualMod, useSpec: Boolean(decl.useSpec) },
+        options: { difficultyKey: decl.difficultyKey, manualMod: decl.manualMod, useSpec: Boolean(decl.useSpec), applyBlinded: Boolean(decl.applyBlinded), applyDeafened: Boolean(decl.applyDeafened) },
         context: { source: "chat", quick, messageId: message.id, groupId: data.context?.groupId ?? null }
       });
       const v = validateSkillRollRequest(request);
@@ -673,7 +706,8 @@ export const SkillOpposedWorkflow = {
         skillItem: defSkill,
         difficultyKey: decl.difficultyKey,
         manualMod: decl.manualMod,
-        useSpecialization: allowSpec && decl.useSpec
+        useSpecialization: allowSpec && decl.useSpec,
+        situationalMods: (function(){ const out=[]; if (decl?.applyBlinded) out.push({ label: "Blinded (sight)", value: -30 }); if (decl?.applyDeafened) out.push({ label: "Deafened (hearing)", value: -30 }); return out; })()
       });
       data.defender.tn = tn;
       skillRollDebug("opposed defender TN", { finalTN: tn.finalTN, breakdown: tn.breakdown });
