@@ -23,6 +23,7 @@ import { isItemEffectActive } from "../ae/transfer.js";
 import { doTestRoll, formatDegree } from "../helpers/degree-roll-helper.js";
 import { requireUserCanRollActor } from "../helpers/permissions.js";
 import { buildSkillRollRequest, normalizeSkillRollOptions, skillRollDebug } from "../skills/roll-request.js";
+import { postItemToChat } from "./shared-handlers.js";
 
 export class SimpleActorSheet extends foundry.appv1.sheets.ActorSheet {
   /** @override */
@@ -1920,20 +1921,7 @@ await item.update({ "system.quantity": newQty });
   }
 
   async _onTalentRoll(event) {
-    event.preventDefault();
-    let button = $(event.currentTarget);
-    const li = button.parents(".item");
-    const item = this.actor.getEmbeddedDocument("Item", li.data("itemId"));
-
-    let contentString = `<h2><img src="${item.img}"</img>${item.name}</h2>
-    <i><b>${item.type}</b></i><p>
-      <i>${item.system.description}</i>`;
-
-    await ChatMessage.create({
-      user: game.user.id,
-      speaker: ChatMessage.getSpeaker(),
-      content: contentString
-    });
+    await postItemToChat(event, this.actor, { includeImage: true });
   }
 
   async _onWealthCalc(event) {
