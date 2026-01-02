@@ -131,13 +131,6 @@
             {{!-- Description Tab --}}
             <div class="tab" data-group="primary" data-tab="description">
                 <div class="item-description-container">
-                    <div class="item-selection-container">
-                        <h2 class="headerWithButton">
-                            <button type="button" class="modifier-create">+</button>
-                            <div>Modifiers</div>
-                        </h2>
-                        <div class="selection-container" id="item-modifiers"></div>
-                    </div>
                     <div class="basic-padding">
                         {{editor item.system.enrichedDescription target="system.description" button=true owner=owner editable=editable}}
                     </div>
@@ -285,89 +278,9 @@
                     </div>
                     {{/unless}}
 
-                    <div class="attribute-container">
-                        <div class="item-characteristic-container">
-                            <h2>Characteristics</h2>
-                            <div class="modifier-container">
-                                <div class="grid-container">
-                                    <div>Strength</div>
-                                    <div><input type="number" name="system.characteristicBonus.strChaBonus" value="{{item.system.characteristicBonus.strChaBonus}}"></div>
-                                </div>
-                                <div class="grid-container">
-                                    <div>Endurance</div>
-                                    <div><input type="number" name="system.characteristicBonus.endChaBonus" value="{{item.system.characteristicBonus.endChaBonus}}"></div>
-                                </div>
-                                <div class="grid-container">
-                                    <div>Agility</div>
-                                    <div><input type="number" name="system.characteristicBonus.agiChaBonus" value="{{item.system.characteristicBonus.agiChaBonus}}"></div>
-                                </div>
-                                <div class="grid-container">
-                                    <div>Intelligence</div>
-                                    <div><input type="number" name="system.characteristicBonus.intChaBonus" value="{{item.system.characteristicBonus.intChaBonus}}"></div>
-                                </div>
-                                <div class="grid-container">
-                                    <div>Willpower</div>
-                                    <div><input type="number" name="system.characteristicBonus.wpChaBonus" value="{{item.system.characteristicBonus.wpChaBonus}}"></div>
-                                </div>
-                                <div class="grid-container">
-                                    <div>Perception</div>
-                                    <div><input type="number" name="system.characteristicBonus.prcChaBonus" value="{{item.system.characteristicBonus.prcChaBonus}}"></div>
-                                </div>
-                                <div class="grid-container">
-                                    <div>Personality</div>
-                                    <div><input type="number" name="system.characteristicBonus.prsChaBonus" value="{{item.system.characteristicBonus.prsChaBonus}}"></div>
-                                </div>
-                                <div class="grid-container">
-                                    <div>Luck</div>
-                                    <div><input type="number" name="system.characteristicBonus.lckChaBonus" value="{{item.system.characteristicBonus.lckChaBonus}}"></div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="item-resistance-container">
-                            <h2>Resistances</h2>
-                            <div class="modifier-container">
-                                <div class="grid-container">
-                                    <div>Disease</div>
-                                    <div><input type="number" name="system.diseaseR" value="{{item.system.diseaseR}}"></div>
-                                </div>
-                                <div class="grid-container">
-                                    <div>Fire</div>
-                                    <div><input type="number" name="system.fireR" value="{{item.system.fireR}}"></div>
-                                </div>
-                                <div class="grid-container">
-                                    <div>Frost</div>
-                                    <div><input type="number" name="system.frostR" value="{{item.system.frostR}}"></div>
-                                </div>
-                                <div class="grid-container">
-                                    <div>Shock</div>
-                                    <div><input type="number" name="system.shockR" value="{{item.system.shockR}}"></div>
-                                </div>
-                                <div class="grid-container">
-                                    <div>Poison</div>
-                                    <div><input type="number" name="system.poisonR" value="{{item.system.poisonR}}"></div>
-                                </div>
-                                <div class="grid-container">
-                                    <div>Magic</div>
-                                    <div><input type="number" name="system.magicR" value="{{item.system.magicR}}"></div>
-                                </div>
-                                <div class="grid-container">
-                                    <div>Toughness</div>
-                                    <div><input type="number" name="system.natToughnessR" value="{{item.system.natToughnessR}}"></div>
-                                </div>
-                                <div class="grid-container">
-                                    <div>Silver</div>
-                                    <div><input type="number" name="system.silverR" value="{{item.system.silverR}}"></div>
-                                </div>
-                                <div class="grid-container">
-                                    <div>Sunlight</div>
-                                    <div><input type="number" name="system.sunlightR" value="{{item.system.sunlightR}}"></div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
                     <div class="quality-container">
                         <div class="flex-container">
-                            <h2>Structured Qualities</h2>
+                            <h2>Qualities</h2>
                         </div>
                         <div class="structured-qualities-grid is-armor">
                             {{#each coreQualitiesCatalog}}
