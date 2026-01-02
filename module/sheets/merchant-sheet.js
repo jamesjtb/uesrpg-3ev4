@@ -3,6 +3,7 @@
  * @extends {ActorSheet}
  */
 import { getDamageTypeFromWeapon } from "../combat/combat-utils.js";
+import { postItemToChat } from "./shared-handlers.js";
 
 export class merchantSheet extends foundry.appv1.sheets.ActorSheet {
   /** @override */
@@ -1905,20 +1906,7 @@ async _onClickCharacteristic(event) {
   }
 
   async _onTalentRoll(event) {
-    event.preventDefault();
-    let button = $(event.currentTarget);
-    const li = button.parents(".item");
-    const item = this.actor.getEmbeddedDocument("Item", li.data("itemId"));
-
-    let contentString = `<h2>${item.name}</h2><p>
-    <i><b>${item.type}</b></i><p>
-      <i>${item.system.description}</i>`;
-
-    await ChatMessage.create({
-      user: game.user.id,
-      speaker: ChatMessage.getSpeaker(),
-      content: contentString,
-    });
+    await postItemToChat(event, this.actor, { includeImage: false });
   }
 
   async _onWealthCalc(event) {
