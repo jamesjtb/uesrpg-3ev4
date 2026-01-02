@@ -113,6 +113,13 @@ export class SimpleItemSheet extends foundry.appv1.sheets.ItemSheet {
     // Template compatibility: newer sheets reference `coreQualitiesCatalog`.
     data.coreQualitiesCatalog = data.qualitiesCatalog;
 
+    // Armor cleanup: ensure weapon-only "Silver" never appears in armor qualities UI, regardless of
+    // which catalog export a world is using.
+    if (itemType === "armor" && Array.isArray(data.coreQualitiesCatalog)) {
+      data.coreQualitiesCatalog = data.coreQualitiesCatalog.filter(q => q && q.key !== "silver");
+      data.qualitiesCatalog = data.coreQualitiesCatalog;
+    }
+
     // Trait catalog (type-specific) with selected flags.
     const traitsSrc = (data.item && data.item.system) ? data.item.system.qualitiesTraits : null;
     const traits = Array.isArray(traitsSrc) ? traitsSrc : [];
@@ -208,6 +215,29 @@ export class SimpleItemSheet extends foundry.appv1.sheets.ItemSheet {
     }
 
     const structured = Array.from(structuredMap.values());
+    // ------------------------------------------------------------
+    // Runed quality (RAW): On successful creation, armor/weapon gains Magic.
+    // Armor additionally gains +1 Magic AR. We implement this as a safe,
+    // idempotent sheet-level enforcement when Runed is checked:
+    //  - Ensure Magic quality is present.
+    //  - Ensure armor system.magic_ar is at least 1.
+    // This avoids stacking and avoids destructive removal when unchecked.
+    // ------------------------------------------------------------
+    const hasRuned = structured.some(q => q && q.key === "runed");
+    if (hasRuned) {
+      // Ensure Magic quality exists
+      const hasMagic = structured.some(q => q && q.key === "magic");
+      if (!hasMagic) structured.push({ key: "magic" });
+
+      // Armor: ensure Magic AR >= 1
+      if (this.item?.type === "armor") {
+        const currentMagicAR = Number(formData["system.magic_ar"] ?? this.item.system?.magic_ar ?? 0);
+        if (!Number.isNaN(currentMagicAR) && currentMagicAR < 1) {
+          formData["system.magic_ar"] = 1;
+        }
+      }
+    }
+
 
     // Reconcile Reach between header field and structured list.
     const reachValue = (reachFromStructured != null) ? reachFromStructured : (() => {
