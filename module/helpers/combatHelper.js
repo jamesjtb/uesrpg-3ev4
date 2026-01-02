@@ -7,10 +7,10 @@ export class CombatHelper {
    * @param {Object} defender - defending actor  
    * @param {Object} attackRoll - the d100 roll result from attacker
    * @param {Object} defendRoll - the d100 roll result from defender (or null if no defense)
-   * @param {String} attackType - 'melee', 'ranged', or 'spell'
+   * @param {String} attackMode - 'melee', 'ranged', or 'spell'
    * @returns {Object} result with winner, advantage, hit location
    */
-  static resolveOpposedRoll(attacker, defender, attackRoll, defendRoll, attackType = 'melee') {
+  static resolveOpposedRoll(attacker, defender, attackRoll, defendRoll, attackMode = 'melee') {
     // Guard against missing rolls
     if (!attackRoll) return { success: false, message: 'No attack roll provided' };
     
