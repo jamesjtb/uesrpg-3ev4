@@ -141,6 +141,15 @@ export class SimpleActor extends Actor {
     system.skills ??= {};
   }
 
+  /**
+   * Get the total value of a characteristic by name.
+   * @param {object} actorData - Actor data object
+   * @param {string} name - Characteristic key (str, end, agi, int, wp, prc, prs, lck)
+   * @returns {number} The total value, or 0 if not found
+   */
+  _getCharacteristicTotal(actorData, name) {
+    return Number(actorData?.system?.characteristics?.[name]?.total ?? 0);
+  }
 
   /**
    * Aggregate item stats in a single pass to avoid repeated item.filter() work.
@@ -525,18 +534,17 @@ _iniCalc(actorData) {
     const items = Array.isArray(itemsRaw) ? itemsRaw : (itemsRaw ? Array.from(itemsRaw) : []);
   const attribute = items.filter(item => item && (item.type === "trait" || item.type === "talent"));
   let init = Number(actorData?.system?.initiative?.base ?? 0);
-  const getTotal = (name) => Number(actorData?.system?.characteristics?.[name]?.total ?? 0);
   for (const item of attribute) {
     if (item?.system?.replace?.ini && item.system.replace.ini.characteristic !== "none") {
       const ch = item.system.replace.ini.characteristic;
-      if (ch === "str") init = Math.floor(getTotal("str") / 10) * 3;
-      else if (ch === "end") init = Math.floor(getTotal("end") / 10) * 3;
-      else if (ch === "agi") init = Math.floor(getTotal("agi") / 10) * 3;
-      else if (ch === "int") init = Math.floor(getTotal("int") / 10) * 3;
-      else if (ch === "wp") init = Math.floor(getTotal("wp") / 10) * 3;
-      else if (ch === "prc") init = Math.floor(getTotal("prc") / 10) * 3;
-      else if (ch === "prs") init = Math.floor(getTotal("prs") / 10) * 3;
-      else if (ch === "lck") init = Math.floor(getTotal("lck") / 10) * 3;
+      if (ch === "str") init = Math.floor(this._getCharacteristicTotal(actorData, "str") / 10) * 3;
+      else if (ch === "end") init = Math.floor(this._getCharacteristicTotal(actorData, "end") / 10) * 3;
+      else if (ch === "agi") init = Math.floor(this._getCharacteristicTotal(actorData, "agi") / 10) * 3;
+      else if (ch === "int") init = Math.floor(this._getCharacteristicTotal(actorData, "int") / 10) * 3;
+      else if (ch === "wp") init = Math.floor(this._getCharacteristicTotal(actorData, "wp") / 10) * 3;
+      else if (ch === "prc") init = Math.floor(this._getCharacteristicTotal(actorData, "prc") / 10) * 3;
+      else if (ch === "prs") init = Math.floor(this._getCharacteristicTotal(actorData, "prs") / 10) * 3;
+      else if (ch === "lck") init = Math.floor(this._getCharacteristicTotal(actorData, "lck") / 10) * 3;
     }
   }
   return init;
@@ -547,18 +555,17 @@ _woundThresholdCalc(actorData) {
     const items = Array.isArray(itemsRaw) ? itemsRaw : (itemsRaw ? Array.from(itemsRaw) : []);
   const attribute = items.filter(item => item && (item.type === "trait" || item.type === "talent"));
   let wound = Number(actorData?.system?.wound_threshold?.base ?? 0);
-  const getTotal = (name) => Number(actorData?.system?.characteristics?.[name]?.total ?? 0);
   for (const item of attribute) {
     if (item?.system?.replace?.wt && item.system.replace.wt.characteristic !== "none") {
       const ch = item.system.replace.wt.characteristic;
-      if (ch === "str") wound = Math.floor(getTotal("str") / 10) * 3;
-      else if (ch === "end") wound = Math.floor(getTotal("end") / 10) * 3;
-      else if (ch === "agi") wound = Math.floor(getTotal("agi") / 10) * 3;
-      else if (ch === "int") wound = Math.floor(getTotal("int") / 10) * 3;
-      else if (ch === "wp") wound = Math.floor(getTotal("wp") / 10) * 3;
-      else if (ch === "prc") wound = Math.floor(getTotal("prc") / 10) * 3;
-      else if (ch === "prs") wound = Math.floor(getTotal("prs") / 10) * 3;
-      else if (ch === "lck") wound = Math.floor(getTotal("lck") / 10) * 3;
+      if (ch === "str") wound = Math.floor(this._getCharacteristicTotal(actorData, "str") / 10) * 3;
+      else if (ch === "end") wound = Math.floor(this._getCharacteristicTotal(actorData, "end") / 10) * 3;
+      else if (ch === "agi") wound = Math.floor(this._getCharacteristicTotal(actorData, "agi") / 10) * 3;
+      else if (ch === "int") wound = Math.floor(this._getCharacteristicTotal(actorData, "int") / 10) * 3;
+      else if (ch === "wp") wound = Math.floor(this._getCharacteristicTotal(actorData, "wp") / 10) * 3;
+      else if (ch === "prc") wound = Math.floor(this._getCharacteristicTotal(actorData, "prc") / 10) * 3;
+      else if (ch === "prs") wound = Math.floor(this._getCharacteristicTotal(actorData, "prs") / 10) * 3;
+      else if (ch === "lck") wound = Math.floor(this._getCharacteristicTotal(actorData, "lck") / 10) * 3;
     }
   }
   return wound;
@@ -1203,18 +1210,17 @@ _applyWoundThresholdAEs(actorSystemData) {
     const items = Array.isArray(itemsRaw) ? itemsRaw : (itemsRaw ? Array.from(itemsRaw) : []);
     const attribute = items.filter(item => item && (item.type === "trait" || item.type === "talent"));
     let init = Number(actorData?.system?.initiative?.base ?? 0);
-    const getTotal = (name) => Number(actorData?.system?.characteristics?.[name]?.total ?? 0);
     for (let item of attribute) {
       if (item?.system?.replace?.ini && item.system.replace.ini.characteristic !== "none") {
         const ch = item.system.replace.ini.characteristic;
-        if (ch === "str") init = Math.floor(getTotal("str") / 10) * 3;
-        else if (ch === "end") init = Math.floor(getTotal("end") / 10) * 3;
-        else if (ch === "agi") init = Math.floor(getTotal("agi") / 10) * 3;
-        else if (ch === "int") init = Math.floor(getTotal("int") / 10) * 3;
-        else if (ch === "wp") init = Math.floor(getTotal("wp") / 10) * 3;
-        else if (ch === "prc") init = Math.floor(getTotal("prc") / 10) * 3;
-        else if (ch === "prs") init = Math.floor(getTotal("prs") / 10) * 3;
-        else if (ch === "lck") init = Math.floor(getTotal("lck") / 10) * 3;
+        if (ch === "str") init = Math.floor(this._getCharacteristicTotal(actorData, "str") / 10) * 3;
+        else if (ch === "end") init = Math.floor(this._getCharacteristicTotal(actorData, "end") / 10) * 3;
+        else if (ch === "agi") init = Math.floor(this._getCharacteristicTotal(actorData, "agi") / 10) * 3;
+        else if (ch === "int") init = Math.floor(this._getCharacteristicTotal(actorData, "int") / 10) * 3;
+        else if (ch === "wp") init = Math.floor(this._getCharacteristicTotal(actorData, "wp") / 10) * 3;
+        else if (ch === "prc") init = Math.floor(this._getCharacteristicTotal(actorData, "prc") / 10) * 3;
+        else if (ch === "prs") init = Math.floor(this._getCharacteristicTotal(actorData, "prs") / 10) * 3;
+        else if (ch === "lck") init = Math.floor(this._getCharacteristicTotal(actorData, "lck") / 10) * 3;
       }
     }
     return init;
@@ -1225,18 +1231,17 @@ _applyWoundThresholdAEs(actorSystemData) {
     const items = Array.isArray(itemsRaw) ? itemsRaw : (itemsRaw ? Array.from(itemsRaw) : []);
     const attribute = items.filter(item => item && (item.type === "trait" || item.type === "talent"));
     let wound = Number(actorData?.system?.wound_threshold?.base ?? 0);
-    const getTotal = (name) => Number(actorData?.system?.characteristics?.[name]?.total ?? 0);
     for (let item of attribute) {
       if (item?.system?.replace?.wt && item.system.replace.wt.characteristic !== "none") {
         const ch = item.system.replace.wt.characteristic;
-        if (ch === "str") wound = Math.floor(getTotal("str") / 10) * 3;
-        else if (ch === "end") wound = Math.floor(getTotal("end") / 10) * 3;
-        else if (ch === "agi") wound = Math.floor(getTotal("agi") / 10) * 3;
-        else if (ch === "int") wound = Math.floor(getTotal("int") / 10) * 3;
-        else if (ch === "wp") wound = Math.floor(getTotal("wp") / 10) * 3;
-        else if (ch === "prc") wound = Math.floor(getTotal("prc") / 10) * 3;
-        else if (ch === "prs") wound = Math.floor(getTotal("prs") / 10) * 3;
-        else if (ch === "lck") wound = Math.floor(getTotal("lck") / 10) * 3;
+        if (ch === "str") wound = Math.floor(this._getCharacteristicTotal(actorData, "str") / 10) * 3;
+        else if (ch === "end") wound = Math.floor(this._getCharacteristicTotal(actorData, "end") / 10) * 3;
+        else if (ch === "agi") wound = Math.floor(this._getCharacteristicTotal(actorData, "agi") / 10) * 3;
+        else if (ch === "int") wound = Math.floor(this._getCharacteristicTotal(actorData, "int") / 10) * 3;
+        else if (ch === "wp") wound = Math.floor(this._getCharacteristicTotal(actorData, "wp") / 10) * 3;
+        else if (ch === "prc") wound = Math.floor(this._getCharacteristicTotal(actorData, "prc") / 10) * 3;
+        else if (ch === "prs") wound = Math.floor(this._getCharacteristicTotal(actorData, "prs") / 10) * 3;
+        else if (ch === "lck") wound = Math.floor(this._getCharacteristicTotal(actorData, "lck") / 10) * 3;
       }
     }
     return wound;
@@ -2821,18 +2826,17 @@ this._applyMovementRestrictionSemantics(actorData, actorSystemData);
     const items = Array.isArray(itemsRaw) ? itemsRaw : (itemsRaw ? Array.from(itemsRaw) : []);
     const attribute = items.filter(item => item && (item.type === "trait" || item.type === "talent"));
     let init = Number(actorData?.system?.initiative?.base ?? 0);
-    const getTotal = (name) => Number(actorData?.system?.characteristics?.[name]?.total ?? 0);
     for (let item of attribute) {
       if (item?.system?.replace?.ini && item.system.replace.ini.characteristic !== "none") {
         const ch = item.system.replace.ini.characteristic;
-        if (ch === "str") init = Math.floor(getTotal("str") / 10) * 3;
-        else if (ch === "end") init = Math.floor(getTotal("end") / 10) * 3;
-        else if (ch === "agi") init = Math.floor(getTotal("agi") / 10) * 3;
-        else if (ch === "int") init = Math.floor(getTotal("int") / 10) * 3;
-        else if (ch === "wp") init = Math.floor(getTotal("wp") / 10) * 3;
-        else if (ch === "prc") init = Math.floor(getTotal("prc") / 10) * 3;
-        else if (ch === "prs") init = Math.floor(getTotal("prs") / 10) * 3;
-        else if (ch === "lck") init = Math.floor(getTotal("lck") / 10) * 3;
+        if (ch === "str") init = Math.floor(this._getCharacteristicTotal(actorData, "str") / 10) * 3;
+        else if (ch === "end") init = Math.floor(this._getCharacteristicTotal(actorData, "end") / 10) * 3;
+        else if (ch === "agi") init = Math.floor(this._getCharacteristicTotal(actorData, "agi") / 10) * 3;
+        else if (ch === "int") init = Math.floor(this._getCharacteristicTotal(actorData, "int") / 10) * 3;
+        else if (ch === "wp") init = Math.floor(this._getCharacteristicTotal(actorData, "wp") / 10) * 3;
+        else if (ch === "prc") init = Math.floor(this._getCharacteristicTotal(actorData, "prc") / 10) * 3;
+        else if (ch === "prs") init = Math.floor(this._getCharacteristicTotal(actorData, "prs") / 10) * 3;
+        else if (ch === "lck") init = Math.floor(this._getCharacteristicTotal(actorData, "lck") / 10) * 3;
       }
     }
     return init;
@@ -2843,18 +2847,17 @@ this._applyMovementRestrictionSemantics(actorData, actorSystemData);
     const items = Array.isArray(itemsRaw) ? itemsRaw : (itemsRaw ? Array.from(itemsRaw) : []);
     const attribute = items.filter(item => item && (item.type === "trait" || item.type === "talent"));
     let wound = Number(actorData?.system?.wound_threshold?.base ?? 0);
-    const getTotal = (name) => Number(actorData?.system?.characteristics?.[name]?.total ?? 0);
     for (let item of attribute) {
       if (item?.system?.replace?.wt && item.system.replace.wt.characteristic !== "none") {
         const ch = item.system.replace.wt.characteristic;
-        if (ch === "str") wound = Math.floor(getTotal("str") / 10) * 3;
-        else if (ch === "end") wound = Math.floor(getTotal("end") / 10) * 3;
-        else if (ch === "agi") wound = Math.floor(getTotal("agi") / 10) * 3;
-        else if (ch === "int") wound = Math.floor(getTotal("int") / 10) * 3;
-        else if (ch === "wp") wound = Math.floor(getTotal("wp") / 10) * 3;
-        else if (ch === "prc") wound = Math.floor(getTotal("prc") / 10) * 3;
-        else if (ch === "prs") wound = Math.floor(getTotal("prs") / 10) * 3;
-        else if (ch === "lck") wound = Math.floor(getTotal("lck") / 10) * 3;
+        if (ch === "str") wound = Math.floor(this._getCharacteristicTotal(actorData, "str") / 10) * 3;
+        else if (ch === "end") wound = Math.floor(this._getCharacteristicTotal(actorData, "end") / 10) * 3;
+        else if (ch === "agi") wound = Math.floor(this._getCharacteristicTotal(actorData, "agi") / 10) * 3;
+        else if (ch === "int") wound = Math.floor(this._getCharacteristicTotal(actorData, "int") / 10) * 3;
+        else if (ch === "wp") wound = Math.floor(this._getCharacteristicTotal(actorData, "wp") / 10) * 3;
+        else if (ch === "prc") wound = Math.floor(this._getCharacteristicTotal(actorData, "prc") / 10) * 3;
+        else if (ch === "prs") wound = Math.floor(this._getCharacteristicTotal(actorData, "prs") / 10) * 3;
+        else if (ch === "lck") wound = Math.floor(this._getCharacteristicTotal(actorData, "lck") / 10) * 3;
       }
     }
     return wound;
