@@ -3069,6 +3069,11 @@ await item.update({ "system.quantity": newQty });
           break;
 
         case "weapon":
+          {
+            const mode = String(item.system?.attackMode ?? "melee").toLowerCase();
+            const rr = (mode === "ranged")
+              ? (String(item.system?.range ?? item.system?.rangeBandsDerivedEffective?.display ?? item.system?.rangeBandsDerived?.display ?? "").trim())
+              : (String(item.system?.reach ?? "").trim());
           tableEntry = `<tr>
                             <td data-item-id="${item._id}">
                                 <div style="display: flex; flex-direction: row; align-items: center; gap: 5px;">
@@ -3081,13 +3086,13 @@ await item.update({ "system.quantity": newQty });
             }</td>
                             <td style="text-align: center;">${item.system.damage2
             }</td>
-                            <td style="text-align: center;">${item.system.reach
-            }</td>
+                            <td style="text-align: center;">${rr}</td>
                             <td style="text-align: center;">
                                 <input type="checkbox" class="itemSelect" data-item-id="${item._id
             }" ${item.system.equipped ? "checked" : ""}>
                             </td>
                         </tr>`;
+          }
           break;
 
         case "ammunition":
@@ -3162,7 +3167,7 @@ await item.update({ "system.quantity": newQty });
                                           <th>Name</th>
                                           <th>1H</th>
                                           <th>2H</th>
-                                          <th>Reach</th>
+                                          <th>Reach/Range</th>
                                           <th>Equipped</th>
                                       </tr>
                                   </thead>
