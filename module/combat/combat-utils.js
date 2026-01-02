@@ -1,219 +1,177 @@
 /**
- * module/combat/chat-handlers.js
- * Foundry VTT v13-compatible chat card handlers for UESRPG 3ev4.
+ * module/combat/combat-utils.js
  *
- * Exports expected by init.js:
- *  - initializeChatHandlers()
- *  - registerCombatChatHooks()
+ * UESRPG 3e v4 — Combat utilities (Foundry VTT v13).
  *
- * Notes:
- *  - Uses Hooks.on("renderChatMessageHTML") (v13) instead of deprecated renderChatMessage
- *  - Registers only once (guards against double-calls from init.js)
+ * This file was restored after an automated cleanup removed/mismerged the
+ * original exports used by the opposed workflow and various sheets.
+ *
+ * Design constraints:
+ *  - No schema changes
+ *  - Deterministic, defensive behavior
+ *  - Prefer explicit system fields when present; fall back to qualities/traits
  */
 
-import { applyHealing, DAMAGE_TYPES } from "./damage-automation.js";
-import { applyDamageResolved } from "./damage-resolver.js";
-import { OpposedWorkflow } from "./opposed-workflow.js";
-import { SkillOpposedWorkflow } from "../skills/opposed-workflow.js";
-import { canUserRollActor } from "../helpers/permissions.js";
+import { DAMAGE_TYPES } from "./damage-automation.js";
 
-let _chatHooksRegistered = false;
+const _KNOWN_DAMAGE_TYPES = new Set(Object.values(DAMAGE_TYPES).map((v) => String(v).toLowerCase()));
 
 /**
- * Resolve an Actor from a UUID or speaker.
- * @param {ChatMessage} message
- * @param {string|null} uuid
- * @returns {Actor|null}
+ * Infer damage type from a weapon item.
+ *
+ * Priority order:
+ *  1) Explicit system fields (damageType, damage_type, damage_typeEffective, etc.)
+ *  2) Structured qualities / traits containing a known damage type token
+ *  3) Default to physical
+ *
+ * @param {Item|null} weapon
+ * @returns {string} One of DAMAGE_TYPES.* values (lowercase string).
  */
-async function _maybeConsumeAmmoFromMessage(message) {
-  const opposed = message?.flags?.["uesrpg-3ev4"]?.opposed;
-  const pendingAmmo = opposed?.pendingAmmo ?? null;
-  if (!pendingAmmo) return;
-  if (opposed?.ammoConsumed) return;
+export function getDamageTypeFromWeapon(weapon) {
+  if (!weapon) return DAMAGE_TYPES.PHYSICAL;
 
-  // Ensure exactly one client performs consumption.
-  const activeGM = game.users.activeGM;
-  const shouldRun = activeGM ? (game.user.id === activeGM.id) : message.isAuthor;
-  if (!shouldRun) return;
+  const sys = weapon.system ?? {};
 
-  const ok = await OpposedWorkflow.consumePendingAmmo(pendingAmmo);
-  await message.update({
-    "flags.uesrpg-3ev4.opposed.ammoConsumed": true,
-    "flags.uesrpg-3ev4.opposed.ammoConsumedOk": !!ok,
-    "flags.uesrpg-3ev4.opposed.ammoConsumedAt": Date.now(),
-  });
-}
+  // 1) Explicit fields (some worlds may have legacy/custom data here).
+  const explicitCandidates = [
+    sys.damageType,
+    sys.damage_type,
+    sys.damageTypeEffective,
+    sys.damage_typeEffective,
+    sys.damage_type_effective,
+    sys.damage?.type,
+    sys.damage?.damageType,
+  ].filter(Boolean);
 
-function _resolveActor(message, uuid) {
-  if (uuid) {
-    const doc = fromUuidSync(uuid);
-    if (doc?.actor) return doc.actor;
-    if (doc?.documentName === "Actor") return doc;
-  }
-  const sp = message?.speaker;
-  if (sp?.token) return canvas?.tokens?.get(sp.token)?.actor ?? null;
-  if (sp?.actor) return game.actors?.get(sp.actor) ?? null;
-  return null;
-}
-
-async function _onApplyDamage(ev, message) {
-  ev.preventDefault();
-
-  const btn = ev.currentTarget;
-  const targetUuid = btn.dataset.targetUuid || null;
-  const rawDamage = Number(btn.dataset.damage || 0);
-  const damageType = btn.dataset.damageType || DAMAGE_TYPES.PHYSICAL;
-  const dosBonus = Number(btn.dataset.dosBonus || 0);
-  const penetration = Number(btn.dataset.penetration || 0);
-  const hitLocation = btn.dataset.hitLocation || "Body";
-  const source = btn.dataset.source || (message?.speaker?.alias ?? "Unknown");
-  const penetrateArmorForTriggers = String(btn.dataset.penetrateArmor ?? "0") === "1";
-	const forcefulImpact = String(btn.dataset.forcefulImpact ?? "0") === "1";
-	const pressAdvantage = String(btn.dataset.pressAdvantage ?? "0") === "1";
-  const ignoreReduction = String(btn.dataset.ignoreReduction ?? "0") === "1";
-
-  // Optional enrichment for RAW weapon trait bonuses.
-  // If present, these are resolved safely and passed through to applyDamage().
-  const attackerActorUuid = btn.dataset.attackerActorUuid || null;
-  const weaponUuid = btn.dataset.weaponUuid || null;
-
-  const targetActor = _resolveActor(message, targetUuid);
-  if (!targetActor) {
-    ui.notifications.warn("No valid target actor found for damage application.");
-    return;
+  for (const c of explicitCandidates) {
+    const v = String(c).trim().toLowerCase();
+    if (v && _KNOWN_DAMAGE_TYPES.has(v)) return v;
   }
 
-  let attackerActor = null;
-  let weapon = null;
+  // 2) Derive from qualities/traits.
+  const tokens = [];
 
-  try {
-    if (attackerActorUuid) {
-      const a = fromUuidSync(attackerActorUuid);
-      attackerActor = (a?.documentName === "Actor") ? a : (a?.actor ?? null);
+  const qInjected = Array.isArray(sys.qualitiesStructuredInjected) ? sys.qualitiesStructuredInjected : null;
+  const qBase = Array.isArray(sys.qualitiesStructured) ? sys.qualitiesStructured : null;
+  const structured = qInjected ?? qBase ?? [];
+
+  for (const q of structured) {
+    if (!q) continue;
+    // common shapes: {key}, {name}, string
+    if (typeof q === "string") tokens.push(q);
+    else {
+      if (q.key) tokens.push(q.key);
+      if (q.name) tokens.push(q.name);
+      if (q.label) tokens.push(q.label);
     }
-  } catch (_e) {
-    attackerActor = null;
   }
 
-  try {
-    if (weaponUuid) {
-      weapon = fromUuidSync(weaponUuid) ?? null;
+  const traits = Array.isArray(sys.qualitiesTraits) ? sys.qualitiesTraits : [];
+  for (const t of traits) {
+    if (!t) continue;
+    tokens.push(String(t));
+  }
+
+  const normalized = tokens
+    .map((t) => String(t).trim().toLowerCase())
+    .filter(Boolean);
+
+  // Recognize direct matches first.
+  for (const t of normalized) {
+    if (_KNOWN_DAMAGE_TYPES.has(t)) return t;
+  }
+
+  // Recognize common composite labels (e.g. "fire damage", "magic (x)").
+  for (const t of normalized) {
+    for (const dt of _KNOWN_DAMAGE_TYPES) {
+      if (t.includes(dt)) return dt;
     }
-  } catch (_e) {
-    weapon = null;
   }
 
-  await applyDamageResolved(targetActor, {
-    rawDamage,
-    damageType,
-    dosBonus,
-    penetration,
-    hitLocation,
-    source,
-    ignoreReduction,
-    penetrateArmorForTriggers,
-    forcefulImpact,
-    pressAdvantage,
-    weapon,
-    attackerActor,
-  });
-}
-
-async function _onApplyHealing(ev, message) {
-  ev.preventDefault();
-
-  const btn = ev.currentTarget;
-  const targetUuid = btn.dataset.targetUuid || null;
-  const healing = Number(btn.dataset.healing || 0);
-  const source = btn.dataset.source || (message?.speaker?.alias ?? "Healing");
-
-  const targetActor = _resolveActor(message, targetUuid);
-  if (!targetActor) {
-    ui.notifications.warn("No valid target actor found for healing.");
-    return;
-  }
-
-  await applyHealing(targetActor, healing, { source });
-}
-
-
-
-async function _onSkillOpposedAction(ev, message) {
-  ev.preventDefault();
-  const btn = ev.currentTarget;
-  const action = btn.dataset.uesSkillOpposedAction;
-  await SkillOpposedWorkflow.handleAction(message, action, { event: ev });
-}
-
-function _getSkillOpposedState(message) {
-  const raw = message?.flags?.["uesrpg-3ev4"]?.skillOpposed;
-  if (!raw) return null;
-  if (raw && typeof raw === "object" && Number(raw.version) >= 1 && raw.state) return raw.state;
-  if (raw && typeof raw === "object" && raw.attacker && raw.defender) return raw;
-  return null;
-}
-
-async function _onOpposedAction(ev, message) {
-  ev.preventDefault();
-  const btn = ev.currentTarget;
-  const action = btn.dataset.uesOpposedAction;
-  await OpposedWorkflow.handleAction(message, action);
+  return DAMAGE_TYPES.PHYSICAL;
 }
 
 /**
- * Register chat handlers (v13).
+ * Resolve hit location from a d100 attack roll (or an explicit d10 roll).
+ *
+ * RAW mapping (Chapter 5: Advanced Mechanics):
+ * - Use the ones digit of the attack roll (or a d10; count 10 as 0).
+ *   1-5 Body
+ *   6   Right Leg
+ *   7   Left Leg
+ *   8   Right Arm
+ *   9   Left Arm
+ *   0   Head
+ *
+ * @param {number} rollTotal
+ * @returns {"Body"|"RightLeg"|"LeftLeg"|"RightArm"|"LeftArm"|"Head"}
  */
-export function initializeChatHandlers() {
-  if (_chatHooksRegistered) return;
-  _chatHooksRegistered = true;
+export function getHitLocationFromRoll(rollTotal) {
+  const n = Number(rollTotal);
+  const ones = Number.isFinite(n) ? Math.abs(Math.trunc(n)) % 10 : 0;
 
-  Hooks.on("createChatMessage", (message) => {
-    _maybeConsumeAmmoFromMessage(message).catch((err) => console.error("UESRPG | Ammo consumption hook failed", err));
-  });
-
-  Hooks.on("renderChatMessageHTML", (message, html) => {
-    // html is an HTMLElement in v13, but some modules provide a jQuery wrapper.
-    const root = html instanceof HTMLElement ? html : html?.[0];
-    if (!root) return;
-
-    root.querySelectorAll(".apply-damage-btn").forEach((el) => {
-      el.addEventListener("click", (ev) => _onApplyDamage(ev, message));
-    });
-
-    root.querySelectorAll(".apply-healing-btn").forEach((el) => {
-      el.addEventListener("click", (ev) => _onApplyHealing(ev, message));
-    });
-
-    root.querySelectorAll("[data-ues-opposed-action]").forEach((el) => {
-      el.addEventListener("click", (ev) => _onOpposedAction(ev, message));
-    });
-
-    // Skill opposed-roll chat card buttons
-    root.querySelectorAll("[data-ues-skill-opposed-action]").forEach((el) => {
-      const action = el.dataset.uesSkillOpposedAction;
-      const data = _getSkillOpposedState(message);
-      let actor = null;
-      try {
-        const actorUuid = (action === "attacker-roll") ? data?.attacker?.actorUuid : (action === "defender-roll") ? data?.defender?.actorUuid : null;
-        actor = actorUuid ? fromUuidSync(actorUuid) : null;
-      } catch (_e) {
-        actor = null;
-      }
-
-      // Permission-aware button state
-      if (actor && !canUserRollActor(game.user, actor)) {
-        el.setAttribute("disabled", "disabled");
-        el.setAttribute("title", "You do not have permission to roll for this actor.");
-      }
-
-      el.addEventListener("click", (ev) => _onSkillOpposedAction(ev, message));
-    });
-  });
+  switch (ones) {
+    case 0: return "Head";
+    case 6: return "RightLeg";
+    case 7: return "LeftLeg";
+    case 8: return "RightArm";
+    case 9: return "LeftArm";
+    default: return "Body"; // 1-5
+  }
 }
 
+const _HIT_LOCATION_CANONICAL = new Set(["Head", "Body", "RightArm", "LeftArm", "RightLeg", "LeftLeg"]);
+
 /**
- * Backwards-compatible export expected by some init scripts.
+ * Normalize a hit location string (chat cards / UI inputs / legacy values).
+ *
+ * Accepts:
+ * - Canonical keys: Head, Body, RightArm, LeftArm, RightLeg, LeftLeg
+ * - Human labels: "Right Arm", "Left Leg", etc.
+ * - Legacy tokens: r_arm, l_leg, etc.
+ * - Digit strings: "0"-"9" (mapped via getHitLocationFromRoll semantics)
+ *
+ * @param {Actor|null} _targetActor currently unused (reserved for future coverage checks)
+ * @param {string|number|null} raw
+ * @returns {"Head"|"Body"|"RightArm"|"LeftArm"|"RightLeg"|"LeftLeg"}
  */
-export function registerCombatChatHooks() {
-  initializeChatHandlers();
+export function resolveHitLocationForTarget(_targetActor, raw) {
+  if (raw === null || raw === undefined || raw === "") return "Body";
+
+  // If a numeric digit was provided (e.g. from UI), apply RAW digit mapping.
+  if (typeof raw === "number" && Number.isFinite(raw)) {
+    return getHitLocationFromRoll(raw);
+  }
+
+  const s0 = String(raw).trim();
+  if (!s0) return "Body";
+
+  // Digit string support ("10" counts as 0).
+  if (/^\d+$/.test(s0)) {
+    const v = Number(s0);
+    if (Number.isFinite(v)) return getHitLocationFromRoll(v);
+  }
+
+  // Canonical exact.
+  if (_HIT_LOCATION_CANONICAL.has(s0)) return s0;
+
+  const s = s0.toLowerCase().replace(/[_\s-]+/g, "");
+  const map = {
+    head: "Head",
+    body: "Body",
+    rightarm: "RightArm",
+    leftarm: "LeftArm",
+    rightleg: "RightLeg",
+    leftleg: "LeftLeg",
+    rarm: "RightArm",
+    larm: "LeftArm",
+    rleg: "RightLeg",
+    lleg: "LeftLeg",
+  };
+
+  const mapped = map[s];
+  if (mapped && _HIT_LOCATION_CANONICAL.has(mapped)) return mapped;
+
+  // Final fallback.
+  return "Body";
 }
