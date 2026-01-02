@@ -1,5 +1,13 @@
-import { capitalizeFirstLetter } from "../helpers/stringHelpers.js";
 import { systemRootPath } from "../constants.js";
+
+/**
+ * Capitalize the first letter of a string.
+ * @param {string} string - The input string
+ * @returns {string} The string with first letter capitalized
+ */
+function capitalizeFirstLetter(string) {
+  return string.charAt(0).toUpperCase() + string.slice(1);
+}
 
 const handleDialogResult = (html) => {
   return $(html).find('input[type="radio"]:checked').val();
