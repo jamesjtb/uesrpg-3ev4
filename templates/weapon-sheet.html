@@ -54,12 +54,24 @@
                             </div>
                         </div>
                         <div class="item-resource">
-                            <div class="stat-value-label">
-                                <input type="number" name="system.reach" value="{{item.system.reach}}"/>
-                            </div>
-                            <div class="flex-container">
-                                <div class="small-text-label">Reach</div>
-                            </div>
+                            {{#if (eq item.system.attackMode "ranged")}}
+                                <div class="stat-value-label">
+                                    <input type="text" name="system.range" value="{{item.system.range}}" placeholder="X/Y/Z"/>
+                                    {{#if item.system.rangeBandsDerivedEffective.display}}
+                                        <div class="effective-hint"><span class="label">Eff</span>{{item.system.rangeBandsDerivedEffective.display}}</div>
+                                    {{/if}}
+                                </div>
+                                <div class="flex-container">
+                                    <div class="small-text-label">Range</div>
+                                </div>
+                            {{else}}
+                                <div class="stat-value-label">
+                                    <input type="number" name="system.reach" value="{{item.system.reach}}"/>
+                                </div>
+                                <div class="flex-container">
+                                    <div class="small-text-label">Reach</div>
+                                </div>
+                            {{/if}}
                         </div>
                     </div>
                     <div class="item-resource-row">
