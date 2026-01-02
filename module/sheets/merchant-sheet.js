@@ -370,7 +370,7 @@ export class merchantSheet extends foundry.appv1.sheets.ActorSheet {
       buttons: {
         one: {
           label: "Cancel",
-          callback: (html) => console.log("Cancelled"),
+          callback: () => {},
         },
         two: {
           label: "Duplicate",
@@ -383,7 +383,7 @@ export class merchantSheet extends foundry.appv1.sheets.ActorSheet {
         },
       },
       default: "two",
-      close: (html) => console.log(),
+      close: () => {},
     });
 
     d.render(true);
@@ -819,11 +819,11 @@ async _onDecreasePriceMod(event) {
       },
       two: {
         label: "Cancel",
-        callback: async (html) => console.log("Cancelled"),
+        callback: () => {},
       },
     },
     default: "one",
-    close: async (html) => console.log(),
+    close: () => {},
   });
   d.render(true);
 }
@@ -971,11 +971,11 @@ async _onClickCharacteristic(event) {
       },
       two: {
         label: "Cancel",
-        callback: (html) => console.log("Cancelled"),
+        callback: () => {},
       },
     },
     default: "one",
-    close: (html) => console.log(),
+    close: () => {},
   });
   d.render(true);
 }
@@ -1072,11 +1072,11 @@ async _onClickCharacteristic(event) {
       },
       two: {
         label: "Cancel",
-        callback: (html) => console.log("Cancelled"),
+        callback: () => {},
       },
     },
     default: "one",
-    close: (html) => console.log(),
+    close: () => {},
   });
   d.render(true);
 }
@@ -1159,11 +1159,11 @@ async _onClickCharacteristic(event) {
         },
         two: {
           label: "Cancel",
-          callback: (html) => console.log("Cancelled"),
+          callback: () => {},
         },
       },
       default: "one",
-      close: (html) => console.log(),
+      close: () => {},
     });
     d.render(true);
   }
@@ -1628,11 +1628,11 @@ async _onClickCharacteristic(event) {
         },
         two: {
           label: "Cancel",
-          callback: (html) => console.log("Cancelled"),
+          callback: () => {},
         },
       },
       default: "one",
-      close: (html) => console.log(),
+      close: () => {},
     });
 
     m.position.width = 450;
@@ -1718,11 +1718,11 @@ async _onClickCharacteristic(event) {
         },
         two: {
           label: "Cancel",
-          callback: (html) => console.log("Cancelled"),
+          callback: () => {},
         },
       },
       default: "one",
-      close: (html) => console.log(),
+      close: () => {},
     });
     d.render(true);
   }
@@ -1884,11 +1884,11 @@ async _onClickCharacteristic(event) {
           },
           five: {
             label: "Cancel",
-            callback: (html) => console.log("Cancelled"),
+            callback: () => {},
           },
         },
         default: "one",
-        close: (html) => console.log(),
+        close: () => {},
       });
 
       d.render(true);
@@ -1921,7 +1921,7 @@ async _onClickCharacteristic(event) {
       buttons: {
         one: {
           label: "Cancel",
-          callback: (html) => console.log("Cancelled"),
+          callback: () => {},
         },
         two: {
           label: "Submit",
@@ -1935,7 +1935,7 @@ async _onClickCharacteristic(event) {
         },
       },
       default: "two",
-      close: (html) => console.log(),
+      close: () => {},
     });
     d.render(true);
   }

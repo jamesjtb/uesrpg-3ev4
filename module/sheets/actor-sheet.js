@@ -433,7 +433,7 @@ if (indexToRemove !== -1) {
       buttons: {
         one: {
           label: "Cancel",
-          callback: (html) => console.log("Cancelled"),
+          callback: () => {},
         },
         two: {
           label: "Duplicate",
@@ -446,7 +446,7 @@ if (indexToRemove !== -1) {
         },
       },
       default: "two",
-      close: (html) => console.log(),
+      close: () => {},
     });
 
     d.render(true);
@@ -578,11 +578,11 @@ let d = new Dialog({
         },
         two: {
           label: "Cancel",
-          callback: async (html) => console.log("Cancelled"),
+          callback: () => {},
         },
       },
       default: "one",
-      close: async (html) => console.log(),
+      close: () => {},
     });
     d.render(true);
   }
@@ -693,11 +693,11 @@ if (isLucky(this.actor, roll.result)) {
         },
         two: {
           label: "Cancel",
-          callback: (html) => console.log("Cancelled"),
+          callback: () => {},
         },
       },
       default: "one",
-      close: (html) => console.log(),
+      close: () => {},
     });
     d.render(true);
   }
@@ -1257,11 +1257,11 @@ await castRoll.toMessage({
         },
         two: {
           label: "Cancel",
-          callback: (html) => console.log("Cancelled"),
+          callback: () => {},
         },
       },
       default: "one",
-      close: (html) => console.log(),
+      close: () => {},
     });
 
     m.position.width = 450;
@@ -1555,11 +1555,11 @@ let contentString = "";
         },
         two: {
           label: "Cancel",
-          callback: (html) => console.log("Cancelled"),
+          callback: () => {},
         },
       },
       default: "one",
-      close: (html) => console.log(),
+      close: () => {},
     });
     d.render(true);
   }
@@ -1873,11 +1873,11 @@ await item.update({ "system.quantity": newQty });
           },
           five: {
             label: "Cancel",
-            callback: (html) => console.log("Cancelled"),
+            callback: () => {},
           },
         },
         default: "one",
-        close: (html) => console.log(),
+        close: () => {},
       });
 
       d.render(true);
@@ -1939,7 +1939,7 @@ await item.update({ "system.quantity": newQty });
       buttons: {
         one: {
           label: "Cancel",
-          callback: (html) => console.log("Cancelled"),
+          callback: () => {},
         },
         two: {
           label: "Submit",
@@ -1953,7 +1953,7 @@ await item.update({ "system.quantity": newQty });
         },
       },
       default: "two",
-      close: (html) => console.log(),
+      close: () => {},
     });
     d.render(true);
   }
@@ -1979,7 +1979,7 @@ await item.update({ "system.quantity": newQty });
       buttons: {
         one: {
           label: "Cancel",
-          callback: (html) => console.log("Cancelled"),
+          callback: () => {},
         },
         two: {
           label: "Submit",
@@ -1993,7 +1993,7 @@ await item.update({ "system.quantity": newQty });
         },
       },
       default: "two",
-      close: (html) => console.log(),
+      close: () => {},
     });
     d.render(true);
   }
@@ -2046,7 +2046,7 @@ await item.update({ "system.quantity": newQty });
         buttons: {
           one: {
             label: "Cancel",
-            callback: (html) => console.log("Cancelled"),
+            callback: () => {},
           },
           two: {
             label: "Submit",
@@ -2069,7 +2069,7 @@ await item.update({ "system.quantity": newQty });
           },
         },
         default: "two",
-        close: (html) => console.log(),
+        close: () => {},
       });
     } else {
       d = new Dialog({
@@ -2108,7 +2108,7 @@ await item.update({ "system.quantity": newQty });
         buttons: {
           one: {
             label: "Cancel",
-            callback: (html) => console.log("Cancelled"),
+            callback: () => {},
           },
           two: {
             label: "Submit",
@@ -2131,7 +2131,7 @@ await item.update({ "system.quantity": newQty });
           },
         },
         default: "two",
-        close: (html) => console.log(),
+        close: () => {},
       });
     }
     d.render(true);
@@ -2181,7 +2181,7 @@ await item.update({ "system.quantity": newQty });
       buttons: {
         one: {
           label: "Cancel",
-          callback: (html) => console.log("Cancelled"),
+          callback: () => {},
         },
         two: {
           label: "Submit",
@@ -2249,7 +2249,7 @@ await item.update({ "system.quantity": newQty });
         },
       },
       default: "two",
-      close: (html) => console.log(),
+      close: () => {},
     });
 
     d.position.width = 600;
@@ -2519,7 +2519,7 @@ await item.update({ "system.quantity": newQty });
       buttons: {
         one: {
           label: "Cancel",
-          callback: (html) => console.log("Cancelled"),
+          callback: () => {},
         },
         two: {
           label: "Submit",
@@ -2584,7 +2584,7 @@ await item.update({ "system.quantity": newQty });
         },
       },
       default: "two",
-      close: (html) => console.log(),
+      close: () => {},
     });
 
     d.position.width = 600;
@@ -2683,7 +2683,7 @@ await item.update({ "system.quantity": newQty });
       buttons: {
         one: {
           label: "Cancel",
-          callback: (html) => console.log("Cancelled"),
+          callback: () => {},
         },
         two: {
           label: "Submit",
@@ -2701,7 +2701,7 @@ await item.update({ "system.quantity": newQty });
         },
       },
       default: "two",
-      close: (html) => console.log(),
+      close: () => {},
     });
 
     d.render(true);
@@ -3082,7 +3082,7 @@ await item.update({ "system.quantity": newQty });
       buttons: {
         one: {
           label: "Cancel",
-          callback: (html) => console.log("Cancelled"),
+          callback: () => {},
         },
         two: {
           label: "Submit",
@@ -3100,7 +3100,7 @@ await item.update({ "system.quantity": newQty });
         },
       },
       default: "two",
-      close: (html) => console.log(),
+      close: () => {},
     });
 
     d.position.width = 500;
