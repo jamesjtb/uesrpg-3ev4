@@ -64,6 +64,35 @@ function hasLegacyQuality(qualitiesText, needle) {
   return q.includes(String(needle).toLowerCase());
 }
 
+/**
+ * Extract and sum numeric parameters for a legacy quality from free-text qualities.
+ * Example: "Damaged (1), Damaged (2)" => 3
+ */
+function sumLegacyQualityParam(qualitiesText, qualityName) {
+  const q = String(qualitiesText ?? "");
+  if (!q) return 0;
+  const name = String(qualityName ?? "").trim();
+  if (!name) return 0;
+
+  const re = new RegExp(`${name}\\s*\\(\\s*(\\d+)\\s*\\)`, "gi");
+  let total = 0;
+  let m;
+  while ((m = re.exec(q)) !== null) {
+    const v = Number(m[1]);
+    if (Number.isFinite(v)) total += v;
+  }
+  return total;
+}
+
+function hasLegacyQualityToken(qualitiesText, qualityName) {
+  const q = String(qualitiesText ?? "").toLowerCase();
+  const needle = String(qualityName ?? "").toLowerCase().trim();
+  if (!q || !needle) return false;
+  // Token-boundary match to avoid substring false positives.
+  const re = new RegExp(`(^|[^a-z])${needle}([^a-z]|$)`, "i");
+  return re.test(q);
+}
+
 function hasStructuredQuality(qualitiesStructured, key) {
   if (!Array.isArray(qualitiesStructured)) return false;
   return qualitiesStructured.some(q => (q?.key ?? q) === key);
@@ -151,6 +180,25 @@ export class SimpleItem extends Item {
       byKey.set(key, entry);
     }
 
+    // Legacy qualities parsing (weapons only): make sure common RAW qualities are available
+    // to automation even if the item was not updated via the Structured Qualities UI.
+    if (this.type === "weapon") {
+      const legacyText = String(itemData.qualities ?? "");
+
+      // Primitive / Proven (weapon quality level also auto-grants these, but legacy items may store it only as text)
+      if (!byKey.has("primitive") && hasLegacyQualityToken(legacyText, "primitive")) {
+        byKey.set("primitive", { key: "primitive" });
+      }
+      if (!byKey.has("proven") && hasLegacyQualityToken(legacyText, "proven")) {
+        byKey.set("proven", { key: "proven" });
+      }
+
+      // Damaged (X) stacks; store the summed value if no structured entry exists.
+      if (!byKey.has("damaged")) {
+        const dv = sumLegacyQualityParam(legacyText, "Damaged");
+        if (dv > 0) byKey.set("damaged", { key: "damaged", value: dv });
+      }
+    }
     itemData.qualitiesStructuredInjected = Array.from(byKey.values());
   }
 
