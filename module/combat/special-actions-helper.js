@@ -361,14 +361,17 @@ export async function handleSpecialActionCardAction(message, action) {
       // Roll using Skill TN
       const skillName = choice.testType.toLowerCase();
       
-      // More precise skill matching to avoid false positives
+      // Precise skill matching: exact match first, then check for known skill types
+      const knownSkills = ["athletics", "evade", "deceive", "observe"];
+      const isKnownSkill = knownSkills.includes(skillName);
+      
       const skillItem = actor.items.find(i =>
         i.type === "skill" &&
         i.name.toLowerCase() === skillName
-      ) ?? actor.items.find(i =>
+      ) ?? (isKnownSkill ? actor.items.find(i =>
         i.type === "skill" &&
-        i.name.toLowerCase().startsWith(skillName)
-      );
+        i.name.toLowerCase().includes(skillName)
+      ) : null);
 
       if (!skillItem) {
         ui.notifications.warn(`${actor.name} does not have the ${choice.testType} skill.`);

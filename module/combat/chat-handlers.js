@@ -360,9 +360,30 @@ export function initializeChatHandlers() {
 
     // Special Action opposed test card buttons
     root.querySelectorAll("[data-ues-special-action]").forEach((el) => {
+      const action = el.dataset.uesSpecialAction;
+      
+      // Get actor from message flags for permission check
+      let actor = null;
+      try {
+        const state = message.flags?.["uesrpg-3ev4"]?.specialActionOpposed?.state;
+        const actorUuid = (action === "attacker-roll") 
+          ? state?.attacker?.actorUuid 
+          : (action === "defender-roll") 
+            ? state?.defender?.actorUuid 
+            : null;
+        actor = actorUuid ? fromUuidSync(actorUuid) : null;
+      } catch (_e) {
+        actor = null;
+      }
+
+      // Permission-aware button state
+      if (actor && !canUserRollActor(game.user, actor)) {
+        el.setAttribute("disabled", "disabled");
+        el.setAttribute("title", "You do not have permission to roll for this actor.");
+      }
+      
       el.addEventListener("click", async (ev) => {
         ev.preventDefault();
-        const action = el.dataset.uesSpecialAction;
         try {
           const { handleSpecialActionCardAction } = await import("./special-actions-helper.js");
           await handleSpecialActionCardAction(message, action);
