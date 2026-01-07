@@ -2277,9 +2277,6 @@ async _onDamageRoll(event) {
 
   const shortcutWeapon = weapon;
 
-  // Check for Power Attack stamina effect and apply bonus
-  const powerAttackBonus = await applyPowerAttackBonus(this.actor);
-
   // RAW: Hit Location is usually the 1s digit of the attack roll, but can also be determined by rolling 1d10 (10 counts as 0).
   // This weapon card currently rolls hit location directly (opposed-roll wiring will supply the attack roll later).
   const hit = new Roll("1d10");
@@ -2318,12 +2315,12 @@ async _onDamageRoll(event) {
     else baseDamage = Math.max(baseDamage, altTotal);
   }
 
-  // Apply Power Attack bonus once to final damage
-  const finalDamage = baseDamage + powerAttackBonus;
+  // Final damage (Power Attack will be applied by damage resolver when Apply Damage is clicked)
+  const finalDamage = baseDamage;
 
   const supRollTag = altRoll
-    ? `<div style="margin-top:0.25rem;font-size:x-small;line-height:1.2;">Roll A: ${weaponRoll.total}<br>Roll B: ${altRoll.total}${powerAttackBonus > 0 ? `<br>Power Attack: +${powerAttackBonus}` : ''}</div>`
-    : powerAttackBonus > 0 ? `<div style="margin-top:0.25rem;font-size:x-small;line-height:1.2;">Base: ${weaponRoll.total}<br>Power Attack: +${powerAttackBonus}</div>` : "";
+    ? `<div style="margin-top:0.25rem;font-size:x-small;line-height:1.2;">Roll A: ${weaponRoll.total}<br>Roll B: ${altRoll.total}</div>`
+    : "";
 
   // Render qualities from Structured Qualities + Traits (no journal links).
   const labelIndex = (() => {
