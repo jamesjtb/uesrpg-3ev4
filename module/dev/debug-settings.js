@@ -34,6 +34,7 @@ export class DebugSettingsApp extends FormApplication {
   getData(options) {
     const world = {
       opposedDebug: game.settings.get(NAMESPACE, "opposedDebug"),
+      effectsProxyDebug: game.settings.get(NAMESPACE, "effectsProxyDebug"),
       opposedDebugFormula: game.settings.get(NAMESPACE, "opposedDebugFormula"),
       opposedShowResolutionDetails: game.settings.get(NAMESPACE, "opposedShowResolutionDetails"),
       skillRollDebug: game.settings.get(NAMESPACE, "skillRollDebug"),
@@ -41,6 +42,7 @@ export class DebugSettingsApp extends FormApplication {
 
     const client = {
       debugSkillTN: game.settings.get(NAMESPACE, "debugSkillTN"),
+      sheetDiagnostics: game.settings.get(NAMESPACE, "sheetDiagnostics"),
     };
 
     return {
@@ -63,6 +65,7 @@ export class DebugSettingsApp extends FormApplication {
     // World settings: GM only.
     if (_isGM()) {
       await setIfPresent("world", "opposedDebug");
+      await setIfPresent("world", "effectsProxyDebug");
       await setIfPresent("world", "opposedDebugFormula");
       await setIfPresent("world", "opposedShowResolutionDetails");
       await setIfPresent("world", "skillRollDebug");
@@ -70,6 +73,7 @@ export class DebugSettingsApp extends FormApplication {
 
     // Client settings: anyone can set their own client toggles.
     await setIfPresent("client", "debugSkillTN");
+    await setIfPresent("client", "sheetDiagnostics");
   }
 }
 

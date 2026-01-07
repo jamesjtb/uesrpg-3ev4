@@ -9,6 +9,8 @@
 
 import { computeSkillTN } from "../skills/skill-tn.js";
 
+let _actorSelectDebugRegistered = false;
+
 const SETTING_KEY = "debugActorSelect";
 
 function _isEnabled() {
@@ -62,6 +64,8 @@ function _summarizeActor(actor) {
 let _lastTokenId = null;
 
 export function registerActorSelectDebug() {
+  if (_actorSelectDebugRegistered) return;
+  _actorSelectDebugRegistered = true;
   game.settings.register("uesrpg-3ev4", SETTING_KEY, {
     name: "Debug: Actor Select (TN Context)",
     hint: "When enabled, logs TN-relevant actor context to the console whenever you control a token.",
