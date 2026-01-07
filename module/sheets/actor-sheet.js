@@ -389,54 +389,28 @@ async activateListeners(html) {
         const ok = await requireAP(title, 1);
         if (!ok) return;
 
-        // Special Actions automation
-        try {
-          const { initiateSpecialActionOpposedTest } = await import("../combat/special-actions-helper.js");
-          
-          // Get target token
-          const targets = Array.from(game.user.targets);
-          const targetToken = targets[0];
-          
-          // Arise doesn't need a target
-          if (specialId === "arise") {
-            const actorToken = this.actor.token ?? this.actor.getActiveTokens()[0];
-            if (!actorToken) {
-              ui.notifications?.warn?.("Could not find your token.");
-              return;
-            }
-            
-            await initiateSpecialActionOpposedTest({
-              specialActionId: specialId,
-              actorTokenUuid: actorToken.uuid,
-              targetTokenUuid: null
-            });
-            return;
-          }
-          
-          // Other Special Actions require a target
-          if (!targetToken) {
-            ui.notifications?.warn?.(`${def.name} requires a target. Please select a target token.`);
-            return;
-          }
-          
-          const actorToken = this.actor.token ?? this.actor.getActiveTokens()[0];
-          if (!actorToken) {
-            ui.notifications?.warn?.("Could not find your token.");
-            return;
-          }
-          
-          await initiateSpecialActionOpposedTest({
-            specialActionId: specialId,
-            actorTokenUuid: actorToken.uuid,
-            targetTokenUuid: targetToken.document?.uuid ?? targetToken.uuid
-          });
-          
-        } catch (err) {
-          console.error("UESRPG | Failed to initiate Special Action", err);
-          // Fallback to simple card
-          await postActionCard(title, `<p><b>${def.name}</b> (${def.actionType}) used.</p>`);
+        // CORRECTED: Resolve actor token
+        let actorToken = canvas.tokens?.controlled?.[0] ?? null;
+        if (!actorToken) {
+          // Try finding token by actor ID
+          actorToken = canvas.tokens?.placeables?.find(t => t.actor?.id === this.actor.id) ?? null;
         }
-        
+
+        // CORRECTED: Resolve target
+        const targets = Array.from(game.user.targets ?? []);
+        const targetToken = targets[0] ?? null;
+        const target = targetToken?.actor ?? null;
+
+        // Import and initiate
+        const { initiateSpecialActionFromSheet } = await import("../combat/special-actions-helper.js");
+        await initiateSpecialActionFromSheet({
+          specialActionId: specialId,
+          actor: this.actor,
+          target,
+          actorToken,
+          targetToken
+        });
+
         return;
       }
 
