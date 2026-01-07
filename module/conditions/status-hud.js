@@ -25,6 +25,8 @@ import {
   SYSTEM_TOKEN_HUD_STATUS_ID_SET
 } from "./condition-engine.js";
 
+import { applyFrenzied, removeFrenzied } from "./frenzied.js";
+
 let _systemStatusEffectsRegistered = false;
 let _statusHudInteropRegistered = false;
 
@@ -278,6 +280,14 @@ async function _handleHudToggle(app, actor, statusId) {
       await setConditionValue(actor, statusId, 0);
     } else {
       await setConditionValue(actor, statusId, 1);
+    }
+  } else if (statusId === "frenzied") {
+    // Frenzied: requires custom application for talent-based dynamic changes
+    const active = hasCondition(actor, statusId);
+    if (active) {
+      await removeFrenzied(actor, { applySPLoss: false }); // No SP loss on manual toggle
+    } else {
+      await applyFrenzied(actor, { source: "Token HUD", voluntary: true });
     }
   } else {
     // Static conditions: toggle via the condition engine for canonical AE wiring.
