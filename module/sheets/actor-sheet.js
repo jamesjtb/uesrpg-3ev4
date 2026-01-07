@@ -8,7 +8,7 @@ import { isUnlucky } from "../helpers/skillCalcHelper.js";
 import chooseBirthsignPenalty from "../dialogs/choose-birthsign-penalty.js";
 import { characteristicAbbreviations } from "../maps/characteristics.js";
 import renderErrorDialog from '../dialogs/error-dialog.js';
-import { applyPhysicalExertionBonus, applyPowerAttackBonus } from "../stamina/stamina-integration-hooks.js";
+import { applyPhysicalExertionBonus, applyPhysicalExertionToSkill, applyPowerAttackBonus } from "../stamina/stamina-integration-hooks.js";
 import coreRaces from "./racemenu/data/core-races.js";
 import coreVariants from "./racemenu/data/core-variants.js";
 import { renderRaceCards } from "./racemenu/render-race-cards.js";
@@ -767,9 +767,16 @@ async activateListeners(html) {
       case "dash": {
         if (!(await requireAP("Dash", 1))) return;
         await breakAimChainIfPresent();
+        
+        // Check for Sprint stamina effect
+        const { applySprintBonus } = await import("../stamina/stamina-integration-hooks.js");
+        const sprintEffect = await applySprintBonus(this.actor);
+        const speed = this.actor.system?.speed?.value ?? 0;
+        const movement = sprintEffect ? speed * 2 : speed;
+        
         await postActionCard(
           "Dash",
-          "<p>The character can use this action in order to move up to their Speed. If this is done on their Turn, this movement is added to their base movement for that Turn. This action can be used to allow a character to move several times their Speed during a round.</p>"
+          `<p>The character can use this action in order to move up to their Speed${sprintEffect ? ' (2× Speed from Sprint effect)' : ''}. If this is done on their Turn, this movement is added to their base movement for that Turn. This action can be used to allow a character to move several times their Speed during a round.</p>${sprintEffect ? `<p><b>Sprint Active:</b> Movement up to ${movement} meters</p>` : ''}`
         );
         return;
       }
@@ -1464,11 +1471,14 @@ if (isLucky(this.actor, roll.result)) {
       lastSkillUuidByActor: { [this.actor.uuid]: skillItem.uuid }
     });
 
+    // Check for Physical Exertion stamina effect for STR/END skills
+    const staminaBonus = await applyPhysicalExertionToSkill(this.actor, skillItem);
+
     const request = buildSkillRollRequest({
       actor: this.actor,
       skillItem,
       targetToken: null,
-      options: { difficultyKey: decl.difficultyKey, manualMod: decl.manualMod, useSpec: Boolean(decl.useSpec) },
+      options: { difficultyKey: decl.difficultyKey, manualMod: decl.manualMod + staminaBonus, useSpec: Boolean(decl.useSpec) },
       context: { source: "sheet", quick: quickShift }
     });
     skillRollDebug("untargeted request", request);
@@ -1477,7 +1487,7 @@ if (isLucky(this.actor, roll.result)) {
       actor: this.actor,
       skillItem,
       difficultyKey: decl.difficultyKey,
-      manualMod: decl.manualMod,
+      manualMod: decl.manualMod + staminaBonus,
       useSpecialization: hasSpec && decl.useSpec
     });
 
@@ -1498,6 +1508,7 @@ if (isLucky(this.actor, roll.result)) {
     if (tn?.difficulty?.mod) tags.push(`<span class="tag">${tn.difficulty.label} ${tn.difficulty.mod >= 0 ? "+" : ""}${tn.difficulty.mod}</span>`);
     if (hasSpec && decl.useSpec) tags.push(`<span class="tag">Specialization +10</span>`);
     if (decl.manualMod) tags.push(`<span class="tag">Mod ${decl.manualMod >= 0 ? "+" : ""}${decl.manualMod}</span>`);
+    if (staminaBonus > 0) tags.push(`<span class="tag">Physical Exertion +${staminaBonus}</span>`);
 
     const res = await doTestRoll(this.actor, { rollFormula: SYSTEM_ROLL_FORMULA, target: tn.finalTN, allowLucky: true, allowUnlucky: true });
 
