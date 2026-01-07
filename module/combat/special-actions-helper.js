@@ -68,6 +68,39 @@ export async function showSpecialAdvantageDialog(specialActionId) {
 }
 
 /**
+ * Check if a Combat Style is unarmed.
+ * @param {Item} combatStyleItem - Combat Style item
+ * @returns {boolean}
+ */
+function _isUnarmedCombatStyle(combatStyleItem) {
+  if (!combatStyleItem) return false;
+  const name = String(combatStyleItem.name || "").trim().toLowerCase();
+  // Common unarmed combat style names
+  return name.includes("unarmed") || 
+         name.includes("hand to hand") ||
+         name.includes("hand-to-hand") ||
+         name.includes("brawling") ||
+         name.includes("martial arts");
+}
+
+/**
+ * Check if a Combat Style can use shields.
+ * @param {Item} combatStyleItem - Combat Style item  
+ * @returns {boolean}
+ */
+function _canUseShield(combatStyleItem) {
+  if (!combatStyleItem) return false;
+  const name = String(combatStyleItem.name || "").trim().toLowerCase();
+  // Shield-capable styles (one-handed weapons)
+  // Unarmed styles cannot use shields
+  if (_isUnarmedCombatStyle(combatStyleItem)) return false;
+  // Two-handed weapon styles cannot use shields
+  if (name.includes("two-handed") || name.includes("two handed")) return false;
+  // Most other combat styles can use shields (sword and board, etc.)
+  return true;
+}
+
+/**
  * Show test choice dialog BEFORE creating opposed card (NEW PRE-CHOICE FLOW).
  * Returns: { testType: "combatStyle" | "athletics" | "evade" | etc., skillUuid: "..." }
  * @param {Object} options
@@ -90,39 +123,89 @@ export async function showPreTestChoiceDialog({ specialActionId, actor, isDefend
   let radioOptions = [];
 
   // Add Combat Style option if applicable
-  if (available.some(opt => opt.includes("Combat Style"))) {
-    if (hasActiveCombatStyle) {
-      radioOptions.push({
-        value: "combatStyle",
-        label: "Combat Style",
-        skillUuid: "combat-style",
-        itemUuid: hasActiveCombatStyle.uuid,
-        checked: true
-      });
-    } else if (isNPC) {
-      const combatProf = actor.system?.professions?.combat;
-      if (combatProf) {
+  for (const opt of available) {
+    if (opt === "Combat Style") {
+      // Generic Combat Style - any active combat style works
+      if (hasActiveCombatStyle) {
         radioOptions.push({
-          value: "combatProfession",
-          label: "Combat (Profession)",
-          skillUuid: "prof:combat",
-          itemUuid: null,
-          checked: true
+          value: "combatStyle",
+          label: "Combat Style",
+          skillUuid: "combat-style",
+          itemUuid: hasActiveCombatStyle.uuid,
+          checked: radioOptions.length === 0
         });
+      } else if (isNPC) {
+        const combatProf = actor.system?.professions?.combat;
+        if (combatProf) {
+          radioOptions.push({
+            value: "combatProfession",
+            label: "Combat (Profession)",
+            skillUuid: "prof:combat",
+            itemUuid: null,
+            checked: radioOptions.length === 0
+          });
+        }
+      }
+    } else if (opt === "Combat Style (unarmed)") {
+      // Unarmed Combat Style only
+      if (hasActiveCombatStyle && _isUnarmedCombatStyle(hasActiveCombatStyle)) {
+        radioOptions.push({
+          value: "combatStyle",
+          label: "Combat Style (unarmed)",
+          skillUuid: "combat-style",
+          itemUuid: hasActiveCombatStyle.uuid,
+          checked: radioOptions.length === 0
+        });
+      } else if (isNPC) {
+        // NPCs with Combat profession can use unarmed
+        const combatProf = actor.system?.professions?.combat;
+        if (combatProf) {
+          radioOptions.push({
+            value: "combatProfession",
+            label: "Combat (Profession)",
+            skillUuid: "prof:combat",
+            itemUuid: null,
+            checked: radioOptions.length === 0
+          });
+        }
+      }
+    } else if (opt === "Combat Style (with shield)") {
+      // Shield-capable Combat Style only
+      if (hasActiveCombatStyle && _canUseShield(hasActiveCombatStyle)) {
+        radioOptions.push({
+          value: "combatStyle",
+          label: "Combat Style (with shield)",
+          skillUuid: "combat-style",
+          itemUuid: hasActiveCombatStyle.uuid,
+          checked: radioOptions.length === 0
+        });
+      } else if (isNPC) {
+        // NPCs with Combat profession can use shields
+        const combatProf = actor.system?.professions?.combat;
+        if (combatProf) {
+          radioOptions.push({
+            value: "combatProfession",
+            label: "Combat (Profession)",
+            skillUuid: "prof:combat",
+            itemUuid: null,
+            checked: radioOptions.length === 0
+          });
+        }
       }
     }
   }
 
   // Add skill options based on available choices
   const skillMappings = {
-    "Athletics": { value: "athletics", label: "Athletics" },
+    "Athletics": { value: "athletics", label: "Athletics", profKey: "athletics" },
     "Evade": { value: "evade", label: "Evade" },
     "Deceive": { value: "deceive", label: "Deceive" },
     "Observe": { value: "observe", label: "Observe" }
   };
 
   for (const [key, config] of Object.entries(skillMappings)) {
-    if (available.some(opt => opt.includes(key))) {
+    if (available.includes(key)) {
+      // Try to find as a skill first (works for both PCs and NPCs)
       const skillItem = actor.items.find(i => 
         i.type === "skill" && 
         String(i.name || "").trim().toLowerCase() === config.value
@@ -136,6 +219,18 @@ export async function showPreTestChoiceDialog({ specialActionId, actor, isDefend
           itemUuid: null,
           checked: radioOptions.length === 0
         });
+      } else if (isNPC && config.profKey) {
+        // For NPCs, also check if there's a profession (e.g., prof:athletics)
+        const profValue = actor.system?.professions?.[config.profKey];
+        if (profValue != null) {
+          radioOptions.push({
+            value: config.value,
+            label: `${config.label} (Profession)`,
+            skillUuid: `prof:${config.profKey}`,
+            itemUuid: null,
+            checked: radioOptions.length === 0
+          });
+        }
       }
     }
   }
