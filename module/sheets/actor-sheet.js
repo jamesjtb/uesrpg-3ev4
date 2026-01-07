@@ -229,7 +229,37 @@ async activateListeners(html) {
   html.find(".resistance-roll").click(this._onResistanceRoll.bind(this));
   html.find(".damage-roll").click(this._onDamageRoll.bind(this));
   html.find(".ammo-roll").click(this._onAmmoRoll.bind(this));
-  html.find(".item-img").click(this._onTalentRoll.bind(this));
+  
+  // Item image click handler with debounce protection for talents/traits/powers
+  html.find(".item-img").on("click", async (event) => {
+    event.preventDefault();
+    event.stopPropagation();
+    
+    const li = $(event.currentTarget).closest(".item, tr, li");
+    const itemId = li.data("itemId");
+    const item = this.actor.items.get(itemId);
+    
+    if (!item) return;
+    
+    // For talent, trait, and power: send to chat ONCE (use shared handler)
+    if (["talent", "trait", "power"].includes(item.type)) {
+      // Debounce protection
+      const sendKey = `_sending_${itemId}`;
+      if (this[sendKey]) return;
+      this[sendKey] = true;
+      
+      try {
+        await postItemToChat(event, this.actor, { includeImage: this.actor.type === "Player Character" });
+      } finally {
+        setTimeout(() => delete this[sendKey], 500);
+      }
+      return;
+    }
+    
+    // For other items, show the sheet
+    if (item.sheet) item.sheet.render(true);
+  });
+  
   html.find("#luckyMenu").click(this._onLuckyMenu.bind(this));
   html.find("#raceMenu").click(this._onRaceMenu.bind(this));
   html.find("#birthSignMenu").click(this._onBirthSignMenu.bind(this));
@@ -866,6 +896,87 @@ async activateListeners(html) {
           },
           default: "use"
         }).render(true);
+      }
+
+      case "attack-of-opportunity": {
+        if (!requireUserCanRollActor(game.user, this.actor)) return;
+        
+        const weaponId = this.actor.sheetCombatQuick?.meleeWeaponId ?? null;
+        if (!weaponId) {
+          ui.notifications.warn("No melee weapon equipped for Attack of Opportunity.");
+          return;
+        }
+
+        const weapon = this.actor.items.get(weaponId);
+        if (!weapon) {
+          ui.notifications.warn("Equipped weapon could not be found.");
+          return;
+        }
+
+        const attackerToken = resolveTokenForActor(this.actor);
+        if (!attackerToken) {
+          ui.notifications.warn("Please place and select a token for this actor.");
+          return;
+        }
+
+        const defenderToken = resolveFirstTargetedToken();
+        if (!defenderToken) {
+          ui.notifications.warn("Please target an enemy token for Attack of Opportunity.");
+          return;
+        }
+
+        const hasAP = await requireAP("Attack of Opportunity", 1);
+        if (!hasAP) return;
+
+        const attackMode = "melee";
+        
+        // For PC: use combat style
+        if (this.actor.type === "Player Character") {
+          const style = this.actor.itemTypes?.combatStyle?.[0] ?? this.actor.items.find(i => i.type === "combatStyle");
+          if (!style) {
+            ui.notifications.warn("No Combat Style found on this actor.");
+            return;
+          }
+          const base = Number(style.system?.value ?? 0) || 0;
+          const fatiguePenalty = Number(this.actor.system?.fatigue?.penalty ?? 0) || 0;
+          const carryPenalty = Number(this.actor.system?.carry_rating?.penalty ?? 0) || 0;
+          const woundPenalty = Number(this.actor.system?.woundPenalty ?? 0) || 0;
+          const attackTN = base + fatiguePenalty + carryPenalty + woundPenalty;
+
+          await OpposedWorkflow.createPending({
+            attackerTokenUuid: attackerToken.document?.uuid ?? attackerToken.uuid,
+            defenderTokenUuid: defenderToken.document?.uuid ?? defenderToken.uuid,
+            attackerActorUuid: this.actor.uuid,
+            defenderActorUuid: defenderToken.actor?.uuid ?? null,
+            attackerItemUuid: style.uuid,
+            attackerLabel: "Attack of Opportunity",
+            attackerTarget: attackTN,
+            mode: "attack",
+            attackMode,
+            weaponUuid: weapon.uuid
+          });
+        } else {
+          // For NPC: use combat profession
+          const base = Number(this.actor.system?.professions?.combat ?? 0) || 0;
+          const fatiguePenalty = Number(this.actor.system?.fatigue?.penalty ?? 0) || 0;
+          const carryPenalty = Number(this.actor.system?.carry_rating?.penalty ?? 0) || 0;
+          const woundPenalty = Number(this.actor.system?.woundPenalty ?? 0) || 0;
+          const attackTN = base + fatiguePenalty + carryPenalty + woundPenalty;
+
+          await OpposedWorkflow.createPending({
+            attackerTokenUuid: attackerToken.document?.uuid ?? attackerToken.uuid,
+            defenderTokenUuid: defenderToken.document?.uuid ?? defenderToken.uuid,
+            attackerActorUuid: this.actor.uuid,
+            defenderActorUuid: defenderToken.actor?.uuid ?? null,
+            attackerItemUuid: "prof:combat",
+            attackerLabel: "Attack of Opportunity",
+            attackerTarget: attackTN,
+            mode: "attack",
+            attackMode,
+            weaponUuid: weapon.uuid
+          });
+        }
+        return;
       }
 
       default:

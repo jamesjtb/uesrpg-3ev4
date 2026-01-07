@@ -2212,3 +2212,36 @@
 .uesrpg-adv-dialog select {
   width: 100%;
 }
+
+/* Attack Counter Warning Styles */
+.attack-limit-warning {
+  color: #ff4444;
+  font-weight: bold;
+  animation: attack-warning-pulse 1.5s ease-in-out infinite;
+}
+
+@keyframes attack-warning-pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.6;
+  }
+}
+
+/* Reaction Section Styles */
+.reaction-section {
+  margin-top: 1rem;
+}
+
+.reaction-section h4 {
+  margin: 0.5rem 0;
+  font-weight: 600;
+}
+
+.actions-help-small {
+  font-size: 0.85em;
+  opacity: 0.75;
+  font-style: italic;
+  margin-top: 0.25rem;
+}

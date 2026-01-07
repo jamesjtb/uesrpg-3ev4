@@ -118,6 +118,14 @@
                                 </div>
                             </div>
                             <div class="combat-stat">
+                                <div class="stat-value-label {{#if (gte actor.system.combat_tracking.attacks_this_round 2)}}attack-limit-warning{{/if}}">
+                                    {{actor.system.combat_tracking.attacks_this_round}}/2
+                                </div>
+                                <div class="flex-container">
+                                    <div class="small-text-label">Attacks</div>
+                                </div>
+                            </div>
+                            <div class="combat-stat">
                                 <div class="stat-value-label">{{actor.system.speed.swimSpeed}}</div>
                                 <div class="flex-container">
                                     <div class="small-text-label">Swim</div>
@@ -316,10 +324,37 @@
             <div class="uesrpg-actions-card">
                 <div class="quickbar-title">Reactions</div>
                 <div class="actions-help">
-                    Reactions require a valid combat context (e.g., an opposed defense prompt). No reaction can be executed from the sheet without that context.
+                    <strong>Defensive Reactions:</strong> Available when being attacked (consume 1 AP).<br>
+                    <strong>Attack of Opportunity:</strong> Available when enemy leaves engagement range (consumes 1 AP + triggers attack).
                 </div>
-                <div class="quickbar-buttons">
-                    <button type="button" class="uesrpg-open-defense" disabled="disabled" title="No active defense prompt detected.">Open Defense Dialog</button>
+                
+                <div class="reaction-section">
+                    <h4>Defensive Reactions</h4>
+                    <div class="quickbar-buttons">
+                        <button type="button" class="uesrpg-reaction-defensive" data-defense-type="block" disabled="disabled">
+                            <i class="fas fa-shield-alt"></i> Block
+                        </button>
+                        <button type="button" class="uesrpg-reaction-defensive" data-defense-type="parry" disabled="disabled">
+                            <i class="fas fa-sword"></i> Parry
+                        </button>
+                        <button type="button" class="uesrpg-reaction-defensive" data-defense-type="evade" disabled="disabled">
+                            <i class="fas fa-running"></i> Evade
+                        </button>
+                        <button type="button" class="uesrpg-reaction-defensive" data-defense-type="counter" disabled="disabled">
+                            <i class="fas fa-fist-raised"></i> Counter-Attack
+                        </button>
+                    </div>
+                    <p class="actions-help-small">These buttons activate when you are attacked and the defense dialog appears.</p>
+                </div>
+
+                <div class="reaction-section">
+                    <h4>Attack of Opportunity</h4>
+                    <div class="quickbar-buttons">
+                        <button type="button" class="uesrpg-quick-action" data-action="attack-of-opportunity" data-label="Attack of Opportunity">
+                            <i class="fas fa-crosshairs"></i> Attack of Opportunity
+                        </button>
+                    </div>
+                    <p class="actions-help-small">Use when an enemy leaves your engagement range (requires equipped weapon and targeted token).</p>
                 </div>
             </div>
         </div>

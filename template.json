@@ -52,12 +52,21 @@
             "value": 0
           }
         }
+      },
+      "combatTracking": {
+        "combat_tracking": {
+          "attacks_this_round": 0,
+          "attacks_this_turn": 0,
+          "last_reset_round": 0,
+          "last_reset_turn": 0
+        }
       }
     },
     "Player Character": {
       "templates": [
         "equippedWeapons",
-        "favorites"
+        "favorites",
+        "combatTracking"
       ],
       "race": "",
       "birthsign": "",
@@ -317,7 +326,8 @@
     "NPC": {
       "templates": [
         "equippedWeapons",
-        "favorites"
+        "favorites",
+        "combatTracking"
       ],
       "race": "",
       "birthsign": "",
