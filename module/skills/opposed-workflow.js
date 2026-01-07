@@ -390,8 +390,7 @@ function _listSkills(actor, { allowCombatStyle = false } = {}) {
         uuid: activeCombatStyle.uuid, 
         name: activeCombatStyle.name, 
         hasSpec: false, 
-        isCombatStyle: true,
-        actualItemUuid: activeCombatStyle.uuid
+        isCombatStyle: true
       });
     }
   }
