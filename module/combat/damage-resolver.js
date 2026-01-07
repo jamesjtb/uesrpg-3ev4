@@ -389,6 +389,37 @@ export async function applyDamageResolved(targetActor, payload = {}) {
     defender: mods.defender.entries,
   };
 
+  // --- Consume Power Attack effect if it contributed to damage ---
+  if (attackerActor && mods.attacker.damageDealt > 0) {
+    const powerAttackEffect = attackerActor.effects.find(e => 
+      !e.disabled && e.flags?.uesrpg?.key === "stamina-power-attack"
+    );
+    
+    if (powerAttackEffect) {
+      try {
+        const bonusValue = Number(powerAttackEffect.flags?.uesrpg?.damageBonus ?? 0);
+        
+        // Delete the effect (consume it)
+        await powerAttackEffect.delete();
+        
+        // Post consumption notification to chat
+        await ChatMessage.create({
+          user: game.user.id,
+          speaker: ChatMessage.getSpeaker({ actor: attackerActor }),
+          content: `
+            <div class="uesrpg-chat-card" style="border-left: 3px solid #ff9800; padding: 8px;">
+              <p><i class="fas fa-bolt"></i> <strong>Power Attack</strong> consumed!</p>
+              <p><em>Added +${bonusValue} damage to the attack.</em></p>
+            </div>
+          `,
+          type: CONST.CHAT_MESSAGE_TYPES.OTHER
+        });
+      } catch (err) {
+        console.warn("UESRPG | Failed to consume Power Attack effect:", err);
+      }
+    }
+  }
+
   // --- Typed bonus damage (single application workflow)
   // We must support additional damage types in ONE damage application click.
   // Policy:
