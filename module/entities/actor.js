@@ -162,8 +162,7 @@ export class SimpleActor extends Actor {
     let sigParts = [];
     for (let it of items) {
             const sys = it?.system ?? {};
-      const cat = String(sys?.item_cat ?? sys?.category ?? "").trim().toLowerCase();
-    const isShield = (it?.type === 'armor') && (cat === "shield" || cat.startsWith("shield"));
+      const isShield = (it?.type === 'armor') && Boolean(sys?.isShieldEffective ?? sys?.isShield);
       sigParts.push(`${it?._id||''}:${Number(sys?.quantity||0)}:${Number(sys?.enc||0)}:${sys?.equipped?1:0}:${sys?.excludeENC?1:0}:${sys?.containerStats?.contained?1:0}:${isShield?1:0}`);
     }
     const signature = sigParts.join('|');
@@ -195,8 +194,7 @@ export class SimpleActor extends Actor {
       const isEquipped = Object.prototype.hasOwnProperty.call(sys, 'equipped') ? sys.equipped : true;
 
       // RAW Chapter 7: Check if this is armor (for special ENC handling)
-      const cat = String(sys?.item_cat ?? sys?.category ?? "").trim().toLowerCase();
-      const isShield = (item?.type === 'armor') && (cat === "shield" || cat.startsWith("shield"));
+      const isShield = (item?.type === 'armor') && Boolean(sys?.isShieldEffective ?? sys?.isShield);
       const isEquippedArmor = (item?.type === 'armor' && isEquipped && !isShield);
 
       // Is this item contained in a container?
@@ -323,8 +321,7 @@ export class SimpleActor extends Actor {
       const isEquipped = Object.prototype.hasOwnProperty.call(sys, "equipped") ? !!sys.equipped : true;
       if (!isEquipped) continue;
 
-      const cat = norm(sys?.item_cat ?? sys?.category);
-      const isShield = (cat === "shield" || cat.startsWith("shield"));
+      const isShield = Boolean(sys?.isShieldEffective ?? sys?.isShield);
       if (isShield) continue;
 
       // Weight class can exist in a few places depending on item version and sheet usage.
@@ -1909,8 +1906,7 @@ this._applyMovementRestrictionSemantics(actorData, actorSystemData);
       if (item?.type !== "armor") return false;
       const sys = item.system ?? {};
       if (sys.equipped !== true) return false;
-      const cat = String(sys.item_cat ?? sys.category ?? "").trim().toLowerCase();
-      const isShield = (cat === "shield" || cat.startsWith("shield"));
+      const isShield = Boolean(sys?.isShieldEffective ?? sys?.isShield);
       return !isShield;
     });
 
