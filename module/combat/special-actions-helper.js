@@ -15,6 +15,21 @@ import { ActionEconomy } from "./action-economy.js";
 const SYSTEM_ID = "uesrpg-3ev4";
 
 /**
+ * Simple HTML escape to prevent XSS.
+ * @param {string} str
+ * @returns {string}
+ */
+function _escapeHtml(str) {
+  if (typeof str !== "string") return "";
+  return str
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#039;");
+}
+
+/**
  * Show Special Advantage mode selection dialog.
  * @param {string} specialActionId 
  * @returns {Promise<{mode: "free"|"autowin"}|null>}
@@ -124,13 +139,15 @@ export async function showPreTestChoiceDialog({ specialActionId, actor, isDefend
   const isNPC = actor?.type === "NPC";
   const choices = [];
 
+  // Cache combat styles to avoid repeated filtering
+  const allCombatStyles = !isNPC ? (actor.items?.filter(i => i.type === "combatStyle") ?? []) : [];
+
   // Process each available option type
   for (const optType of available) {
     if (optType === "Combat Style") {
       // Generic Combat Style - offer ALL Combat Style items
       if (!isNPC) {
-        const combatStyles = actor.items?.filter(i => i.type === "combatStyle") ?? [];
-        for (const style of combatStyles) {
+        for (const style of allCombatStyles) {
           choices.push({
             value: "combatStyle",
             label: `${style.name} (Combat Style)`,
@@ -153,9 +170,7 @@ export async function showPreTestChoiceDialog({ specialActionId, actor, isDefend
     else if (optType === "Combat Style (unarmed)") {
       // Unarmed Combat Style only
       if (!isNPC) {
-        const unarmedStyles = actor.items?.filter(i => 
-          i.type === "combatStyle" && _isUnarmedCombatStyle(i)
-        ) ?? [];
+        const unarmedStyles = allCombatStyles.filter(style => _isUnarmedCombatStyle(style));
         for (const style of unarmedStyles) {
           choices.push({
             value: "combatStyle",
@@ -179,9 +194,7 @@ export async function showPreTestChoiceDialog({ specialActionId, actor, isDefend
     else if (optType === "Combat Style (with shield)") {
       // Shield-capable Combat Style
       if (!isNPC) {
-        const shieldStyles = actor.items?.filter(i => 
-          i.type === "combatStyle" && _canUseShield(i)
-        ) ?? [];
+        const shieldStyles = allCombatStyles.filter(style => _canUseShield(style));
         for (const style of shieldStyles) {
           choices.push({
             value: "combatStyle",
@@ -274,13 +287,13 @@ export async function showPreTestChoiceDialog({ specialActionId, actor, isDefend
 
   const content = `
     <form class="uesrpg-special-action-test-choice">
-      <p><b>Special Action: ${def.name}</b></p>
+      <p><b>Special Action: ${_escapeHtml(def.name)}</b></p>
       <p>Choose your ${isDefender ? 'defense' : 'test'}:</p>
       <div style="margin: 12px 0;">
         ${choices.map(opt => `
           <label style="display: flex; align-items: center; gap: 8px; margin-bottom: 8px;">
-            <input type="radio" name="testChoice" value="${opt.value}" data-skill-uuid="${opt.skillUuid}" ${opt.checked ? 'checked' : ''} />
-            <span><b>${opt.label}</b></span>
+            <input type="radio" name="testChoice" value="${_escapeHtml(opt.value)}" data-skill-uuid="${_escapeHtml(opt.skillUuid)}" ${opt.checked ? 'checked' : ''} />
+            <span><b>${_escapeHtml(opt.label)}</b></span>
           </label>
         `).join('')}
       </div>
