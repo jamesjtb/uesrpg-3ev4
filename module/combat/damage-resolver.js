@@ -367,6 +367,10 @@ export async function applyDamageResolved(targetActor, payload = {}) {
 
   const ctx = buildDamageContext(payload);
 
+  // Unique identifier for this damage application (used for wound/shock idempotency).
+  const applicationId = String(ctx.options?.applicationId ?? "").trim() || foundry.utils.randomID();
+  ctx.options.applicationId = applicationId;
+
   // --- Active Effects: damage & mitigation modifiers (resolver boundary) ---
   const attackerActor = ctx.options?.attackerActor ?? null;
   const mods = getAETwitterMods(attackerActor, targetActor);
@@ -450,7 +454,7 @@ export async function applyDamageResolved(targetActor, payload = {}) {
   /** @type {Array<any>} */
   const results = [];
   let totalApplied = 0;
-  let anyWoundTrigger = false;
+  let woundTriggered = false;
 
   for (const c of components) {
     const isPrimary = c.kind === "primary";
@@ -481,7 +485,6 @@ export async function applyDamageResolved(targetActor, payload = {}) {
       : Math.max(0, baseFinal);
 
     totalApplied += adjusted;
-    if (woundThreshold > 0 && adjusted >= woundThreshold && adjusted > 0) anyWoundTrigger = true;
 
     results.push({
       kind: c.kind,
@@ -498,11 +501,39 @@ export async function applyDamageResolved(targetActor, payload = {}) {
     });
   }
 
+
+  // Chapter 5 Wounds: if damage from a single attack (all components) is in excess of WT, a wound is triggered.
+  woundTriggered = (woundThreshold > 0 && totalApplied > woundThreshold && totalApplied > 0);
+
+  // Provide per-damage-type totals for wound shock follow-ups (e.g. fire vs shock effects).
+  const damageAppliedByType = results.reduce((acc, r) => {
+    const k = String(r?.damageType ?? "").toLowerCase() || "physical";
+    const v = Number(r?.finalApplied ?? 0) || 0;
+    if (v > 0) acc[k] = (acc[k] ?? 0) + v;
+    return acc;
+  }, {});
+
+
   const newHP = Math.max(0, Number(currentHP) - Math.max(0, totalApplied));
 
   const updateData = { "system.hp.value": newHP };
-  if (anyWoundTrigger && !updateTarget.system?.wounded) updateData["system.wounded"] = true;
   await updateTarget.update(updateData);
+
+  // Emit canonical damage-applied hook for downstream automation (e.g. Chapter 5 wounds/shock).
+  try {
+    Hooks.callAll("uesrpgDamageApplied", updateTarget, {
+      applicationId,
+      woundTriggered,
+      woundThreshold,
+      amountApplied: Math.max(0, totalApplied),
+      damageAppliedByType,
+      hitLocation,
+      source: ctx.options?.source ?? "Attack",
+      origin: ctx.options?.origin ?? null
+    });
+  } catch (err) {
+    console.warn("UESRPG | uesrpgDamageApplied hook failed", err);
+  }
 
   // Forceful Impact: only meaningful for primary physical hits.
   if (ctx.options?.forcefulImpact && String(ctx.damageType ?? "").toLowerCase() === DAMAGE_TYPES.PHYSICAL) {
@@ -680,7 +711,7 @@ export async function applyDamageResolved(targetActor, payload = {}) {
       <div class="body">
         <div class="uesrpg-da-row"><span class="k">Total Damage</span><span class="v final">${Math.max(0, Number(totalApplied || 0))}</span></div>
         <div class="uesrpg-da-row"><span class="k">HP</span><span class="v">${newHP} / ${maxHP}${hpDelta ? ` <span class="muted">(-${hpDelta})</span>` : ""}</span></div>
-        ${anyWoundTrigger ? `<div class="status wounded">WOUNDED <span class="muted">(WT ${woundThreshold})</span></div>` : ""}
+        ${woundTriggered ? `<div class="status wounded">WOUNDED <span class="muted">(WT ${woundThreshold})</span></div>` : ""}
         ${newHP === 0 ? `<div class="status unconscious">UNCONSCIOUS</div>` : ""}
         <details style="margin-top:6px;">
           <summary style="cursor:pointer; user-select:none;">Damage breakdown</summary>
@@ -706,6 +737,6 @@ export async function applyDamageResolved(targetActor, payload = {}) {
     components: results,
     oldHP: Number(currentHP || 0),
     newHP,
-    woundStatus: (newHP === 0) ? "unconscious" : (anyWoundTrigger ? "wounded" : "uninjured"),
+    woundStatus: (newHP === 0) ? "unconscious" : (woundTriggered ? "wounded" : "uninjured"),
   };
 }

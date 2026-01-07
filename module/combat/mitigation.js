@@ -1,15 +1,13 @@
 /**
  * module/combat/mitigation.js
  *
- * Canonical mitigation resolvers (pre-Active Effects).
+ * Canonical mitigation resolvers.
  *
  * Design constraints:
  *  - Foundry v13 only
  *  - No schema changes
  *  - Deterministic and defensive around partial data
  */
-
-import { getDamageReduction, DAMAGE_TYPES } from "./damage-automation.js";
 
 const LOCATION_MAP = {
   Head: { key: "Head", label: "Head" },
@@ -27,19 +25,6 @@ const LOCATION_MAP = {
 export function normalizeHitLocation(hitLocation) {
   const raw = String(hitLocation ?? "Body").trim();
   return LOCATION_MAP[raw] ?? LOCATION_MAP.Body;
-}
-
-/**
- * Get effective Armor Rating at a hit location.
- * Penetration is applied to armor only (consistent with damage automation).
- */
-export function getArmorValue(actor, hitLocation, { penetration = 0 } = {}) {
-  if (!actor) return 0;
-  const loc = normalizeHitLocation(hitLocation).label;
-  const red = getDamageReduction(actor, DAMAGE_TYPES.PHYSICAL, loc);
-  const base = Number(red?.armor ?? 0) || 0;
-  const pen = Number(penetration ?? 0) || 0;
-  return Math.max(0, base - pen);
 }
 
 /**

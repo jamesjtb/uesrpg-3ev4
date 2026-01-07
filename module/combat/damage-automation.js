@@ -17,8 +17,12 @@
  */
 
 import { evaluateAEModifierKeys } from "../ae/modifier-evaluator.js";
+import { UESRPG } from "../constants.js";
+import { requestCreateActiveEffect } from "../helpers/active-effect-proxy.js";
+import { requestUpdateDocument } from "../helpers/authority-proxy.js";
 
 export const DAMAGE_TYPES = {
+  HEALING: "healing",
   PHYSICAL: "physical",
   FIRE: "fire",
   FROST: "frost",
@@ -28,6 +32,36 @@ export const DAMAGE_TYPES = {
   SILVER: "silver",
   SUNLIGHT: "sunlight",
 };
+
+/**
+ * Best-effort condition check without importing the condition engine.
+ *
+ * We avoid circular dependencies (condition-engine -> damage-automation).
+ */
+function _actorHasConditionKey(actor, key) {
+  const k = String(key || "").trim().toLowerCase();
+  if (!actor || !k) return false;
+
+  for (const ef of (actor.effects ?? [])) {
+    try {
+      if (ef?.disabled) continue;
+      if (ef?.statuses?.has?.(k)) return true;
+      const coreId = String(ef?.flags?.core?.statusId ?? "").toLowerCase();
+      if (coreId === k) return true;
+
+      const sysKey = String(ef?.flags?.["uesrpg-3ev4"]?.condition?.key ?? "").toLowerCase();
+      if (sysKey === k) return true;
+
+      // Loose fallback: some legacy effects only have a name.
+      const n = String(ef?.name ?? "").toLowerCase();
+      if (n === k) return true;
+    } catch (_e) {
+      continue;
+    }
+  }
+
+  return false;
+}
 
 /**
  * Get total damage reduction for an actor based on damage type.
@@ -60,6 +94,10 @@ export function getDamageReduction(actor, damageType = DAMAGE_TYPES.PHYSICAL, hi
 
   const propertyName = locationMap[hitLocation] ?? hitLocation;
 
+  // RAW: While Prone, treat any FULL armor as PARTIAL for coverage purposes.
+  // This is implemented as a coverage-class downgrade only (does not mutate item data).
+  const isProneForArmor = _actorHasConditionKey(actor, "prone");
+
   // --- Armor coverage normalization ---
   // Legacy data (and the base template) can create armor items where all hitLocations are set to true.
   // This causes unrelated pieces (e.g. body armor) to incorrectly contribute AR to other locations.
@@ -82,9 +120,11 @@ export function getDamageReduction(actor, damageType = DAMAGE_TYPES.PHYSICAL, hi
 
   const getCoveredLocations = (item) => {
     const sys = item?.system ?? {};
-    const armorClass = String(sys.armorClass || "partial").toLowerCase();
+    let armorClass = String(sys.armorClass || "partial").toLowerCase();
     const category = String(sys.category || "").toLowerCase();
     const hitLocs = sys.hitLocations ?? {};
+
+    if (isProneForArmor && armorClass === "full") armorClass = "partial";
 
     const allTrue = ARMOR_LOCATION_KEYS.every(k => hitLocs?.[k] === true);
 
@@ -127,9 +167,28 @@ export function getDamageReduction(actor, damageType = DAMAGE_TYPES.PHYSICAL, hi
       if (!covered.has(propertyName)) continue;
 
       // Automation should always prefer derived effective values.
-      const ar = (item.system?.armorEffective != null)
+      let ar = (item.system?.armorEffective != null)
         ? Number(item.system.armorEffective)
         : Number(item.system?.armor ?? 0);
+
+      // RAW: While Prone, treat FULL armor as PARTIAL.
+      // Implement as a derived-value override at damage time (no item mutation).
+      // This ensures AR follows the partial profile even if armorEffective was derived as full.
+      if (isProneForArmor) {
+        const sys = item.system ?? {};
+        const armorClass = String(sys.armorClass || "partial").toLowerCase();
+        if (armorClass === "full") {
+          const materialKey = String(sys.material || "").trim();
+          const partialProfile = UESRPG?.ARMOR_PROFILES?.partial?.[materialKey] ?? null;
+
+          if (partialProfile && partialProfile.ar != null) {
+            const qs = Array.isArray(sys.qualitiesStructured) ? sys.qualitiesStructured : [];
+            const damagedQ = qs.find(q => String(q?.key ?? "").toLowerCase() === "damaged");
+            const damagedValue = Number(damagedQ?.value ?? 0) || 0;
+            ar = Math.max(0, Number(partialProfile.ar) - damagedValue);
+          }
+        }
+      }
 
       armor += Number.isFinite(ar) ? ar : 0;
     }
@@ -422,6 +481,12 @@ export async function applyDamage(actor, damage, damageType = DAMAGE_TYPES.PHYSI
     return null;
   }
 
+  // Compatibility: allow calling applyDamage with DAMAGE_TYPES.HEALING.
+  // Route to applyHealing to avoid negative HP application.
+  if (String(damageType ?? "").toLowerCase() === DAMAGE_TYPES.HEALING) {
+    return applyHealing(actor, damage, options);
+  }
+
   const rawDamage = Number(damage || 0);
 
   // Compute damage breakdown
@@ -499,7 +564,25 @@ export async function applyDamage(actor, damage, damageType = DAMAGE_TYPES.PHYSI
   const updateData = { "system.hp.value": newHP };
   if (isWounded && !updateTarget.system?.wounded) updateData["system.wounded"] = true;
 
-  await updateTarget.update(updateData);
+  await requestUpdateDocument(updateTarget, updateData);
+
+  // Emit damage-applied hook for downstream automation (wounds, conditions, etc.)
+  try {
+    Hooks.callAll("uesrpgDamageApplied", updateTarget, {
+      applicationId: options?.applicationId ?? crypto?.randomUUID?.() ?? foundry?.utils?.randomID?.() ?? null,
+      origin: options?.origin ?? null,
+      source,
+      amountApplied: finalDamageAdjusted,
+      hitLocation,
+      damageType,
+      damageAppliedByType: null,
+      woundThreshold,
+      woundTriggered: isWounded === true
+    });
+  } catch (err) {
+    console.error("UESRPG | uesrpgDamageApplied hook dispatch failed", err);
+  }
+
 
   // Optional: Forceful Impact may damage the armor protecting the hit location.
   // This is intentionally best-effort and should never block damage resolution.
@@ -529,7 +612,7 @@ export async function applyDamage(actor, damage, damageType = DAMAGE_TYPES.PHYSI
           flags: { core: { statusId: "unconscious" } },
         };
 
-        await targetActor.createEmbeddedDocuments("ActiveEffect", [unconsciousEffect]);
+        await requestCreateActiveEffect(targetActor, unconsciousEffect);
       }
     } catch (err) {
       console.error("UESRPG | Failed to apply unconscious effect:", err);
@@ -754,7 +837,7 @@ export async function ensureUnconsciousEffect(targetActor) {
       flags: { core: { statusId: "unconscious" } },
     };
 
-    await targetActor.createEmbeddedDocuments("ActiveEffect", [unconsciousEffect]);
+    await requestCreateActiveEffect(targetActor, unconsciousEffect);
   } catch (err) {
     console.error("UESRPG | Failed to apply unconscious effect:", err);
   }
@@ -866,7 +949,7 @@ async function _applyForcefulImpact(targetActor, hitLocation) {
     next.push({ key: "damaged", value: 1 });
   }
 
-  await targetItem.update({ "system.qualitiesStructured": next });
+  await requestUpdateDocument(targetItem, { "system.qualitiesStructured": next });
 }
 
 /**
@@ -888,44 +971,76 @@ export async function applyHealing(actor, healing, options = {}) {
   const currentHP = Number(actor.system?.hp?.value ?? 0);
   const maxHP = Number(actor.system?.hp?.max ?? 1);
 
-  const healAmount = Number(healing || 0);
-  const newHP = Math.min(maxHP, currentHP + healAmount);
-  const actualHealing = newHP - currentHP;
+  // RAW (Bleeding interaction): "subtract the total HP regained (including HP that would go beyond max HP)".
+  // We therefore track both:
+  //  - totalHealed: the attempted healing amount (including DoS bonus and overheal)
+  //  - effectiveHealed: actual HP restored (capped by maxHP)
+  const baseHeal = Number(healing || 0);
+  const dosBonus = Number(options?.dosBonus ?? 0);
+  const totalHealed = Math.max(0, baseHeal + dosBonus);
+  if (totalHealed <= 0) return null;
 
-  if (actualHealing <= 0) {
-    ui.notifications.info(`${actor.name} is already at full health`);
-    return null;
-  }
+  const newHP = Math.min(maxHP, currentHP + totalHealed);
+  const effectiveHealed = newHP - currentHP;
+  const overflow = Math.max(0, totalHealed - effectiveHealed);
 
   const activeToken = actor.token ?? actor.getActiveTokens?.()[0] ?? null;
   const isUnlinkedToken = !!(activeToken && actor.prototypeToken && actor.prototypeToken.actorLink === false);
   const updateTarget = isUnlinkedToken ? activeToken.actor : actor;
 
-  await updateTarget.update({ "system.hp.value": newHP });
+  // Only update HP when there is an actual HP delta.
+  if (effectiveHealed !== 0) {
+    await requestUpdateDocument(updateTarget, { "system.hp.value": newHP });
+  }
 
   const messageContent = `
     <div class="uesrpg-healing-applied">
       <h3>${updateTarget.name} receives healing!</h3>
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.5rem;margin:0.5rem 0;">
         <div><strong>Source:</strong></div><div>${source}</div>
-        <div><strong>Healing:</strong></div><div style="color:#388e3c;font-weight:bold;">+${actualHealing}</div>
+        <div><strong>Healing:</strong></div><div style="color:#388e3c;font-weight:bold;">+${effectiveHealed}</div>
         <div><strong>HP:</strong></div><div>${newHP} / ${maxHP}</div>
       </div>
     </div>
   `;
 
-  await ChatMessage.create({
-    user: game.user.id,
-    speaker: ChatMessage.getSpeaker({ actor: updateTarget }),
-    content: messageContent,
-    style: CONST.CHAT_MESSAGE_STYLES.OTHER,
-  });
+  // Avoid chat spam when no HP is actually restored (but still dispatch the hook for Bleeding reduction).
+  if (effectiveHealed > 0) {
+    await ChatMessage.create({
+      user: game.user.id,
+      speaker: ChatMessage.getSpeaker({ actor: updateTarget }),
+      content: messageContent,
+      style: CONST.CHAT_MESSAGE_STYLES.OTHER,
+    });
+  }
+  // Emit healing-applied hook for downstream automation (wounds treatment, etc.)
+  try {
+    Hooks.callAll("uesrpgHealingApplied", updateTarget, {
+      applicationId: options?.applicationId ?? crypto?.randomUUID?.() ?? foundry?.utils?.randomID?.() ?? null,
+      origin: options?.origin ?? null,
+      source: options?.source ?? "Healing",
+      // Backwards-compatible: keep amountApplied as the effective HP restored.
+      amountApplied: effectiveHealed,
+      // Canonical: total healing including overheal (used by Bleeding).
+      totalHealed,
+      effectiveHealed,
+      overflow,
+      oldHP: currentHP,
+      newHP,
+      maxHP,
+    });
+  } catch (err) {
+    console.error("UESRPG | uesrpgHealingApplied hook dispatch failed", err);
+  }
+
 
   return {
     actor: updateTarget,
-    healing: actualHealing,
+    healing: effectiveHealed,
     oldHP: currentHP,
     newHP,
+    totalHealed,
+    overflow,
   };
 }
 

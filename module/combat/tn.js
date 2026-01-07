@@ -13,7 +13,7 @@
  */
 
 import { skillHelper, skillModHelper } from "../helpers/skillCalcHelper.js";
-import { evaluateAEModifierKeys } from "../ae/modifier-evaluator.js";
+import { collectCombatTNModifiersFromAE } from "../ae/combat-tn-modifiers.js";
 
 /**
  * Read combat TN modifiers from actor.system.modifiers.combat.*.
@@ -39,33 +39,8 @@ import { evaluateAEModifierKeys } from "../ae/modifier-evaluator.js";
  *  - ADD (numeric)
  * Other modes are ignored for now by design to avoid implicit behavior differences.
  */
-function getCombatTNModifiers(actor, role, defenseType) {
-  const targetKeys = [];
-  if (role === "attacker") targetKeys.push("system.modifiers.combat.attackTN");
-  else if (role === "defender") {
-    targetKeys.push("system.modifiers.combat.defenseTN.total");
-    if (defenseType) targetKeys.push(`system.modifiers.combat.defenseTN.${defenseType}`);
-  }
-
-  const resolved = evaluateAEModifierKeys(actor, targetKeys);
-  const entries = [];
-
-  for (const k of targetKeys) {
-    const r = resolved[k];
-    if (!r || !r.entries?.length) continue;
-    for (const e of r.entries) {
-      entries.push({
-        key: `ae-${k}-${e.effectId ?? randomID()}`,
-        label: e.label,
-        value: e.value,
-        source: k,
-        mode: e.mode,
-      });
-    }
-  }
-
-  const total = targetKeys.reduce((sum, k) => sum + (resolved[k]?.total ?? 0), 0);
-  return { total, entries, resolvedByKey: resolved };
+function getCombatTNModifiers(actor, role, defenseType, context) {
+  return collectCombatTNModifiersFromAE(actor, role, defenseType, context);
 }
 
 
@@ -80,7 +55,8 @@ function getCombatTNModifiers(actor, role, defenseType) {
  * @returns {Array<{key: string, label: string, value: number, source: string}>}
  */
 export function collectCombatTNModifierEntries(actor, role, defenseType = null) {
-  return getCombatTNModifiers(actor, role, defenseType)?.entries ?? [];
+  // This helper has no context, so only non-contextual effects will be included.
+  return getCombatTNModifiers(actor, role, defenseType, {})?.entries ?? [];
 }
 
 function asNumber(v) {
@@ -92,6 +68,67 @@ function asNumber(v) {
 
 function getCharTotal(actor, key) {
   return asNumber(actor?.system?.characteristics?.[key]?.total ?? actor?.system?.characteristics?.[key]?.value ?? 0);
+}
+
+// --- Size-to-Hit (Chapter 5) ----------------------------------------------
+
+const SIZE_INDEX = {
+  puny: 0,
+  tiny: 1,
+  small: 2,
+  standard: 3,
+  large: 4,
+  huge: 5,
+  enormous: 6
+};
+
+function _normalizeSize(size) {
+  const s = String(size ?? "standard").trim().toLowerCase();
+  if (s === "punity") return "puny"; // legacy typo in some rule text
+  return SIZE_INDEX[s] != null ? s : "standard";
+}
+
+function _sizeIndex(size) {
+  return SIZE_INDEX[_normalizeSize(size)] ?? SIZE_INDEX.standard;
+}
+
+function _sizeToHitModForTargetSize(size) {
+  // Chapter 5: Size-to-Hit Effects
+  // Puny -30, Tiny -20, Small -10, Standard 0, Large +10, Huge +20, Enormous +30
+  switch (_normalizeSize(size)) {
+    case "puny": return -30;
+    case "tiny": return -20;
+    case "small": return -10;
+    case "large": return 10;
+    case "huge": return 20;
+    case "enormous": return 30;
+    case "standard":
+    default: return 0;
+  }
+}
+
+function computeSizeToHitModifier({ attackerSize, targetSize, attackMode } = {}) {
+  const aIdx = _sizeIndex(attackerSize);
+  const tIdx = _sizeIndex(targetSize);
+  const mode = String(attackMode ?? "melee").toLowerCase();
+
+  // Ranged: apply the size-to-hit table directly.
+  if (mode === "ranged") return _sizeToHitModForTargetSize(targetSize);
+
+  // Melee: apply only the conditional clauses in Chapter 5.
+  // - Small targets are harder to hit by larger creatures.
+  // - Huge/Enormous targets are easier to hit by smaller creatures.
+  const tNorm = _normalizeSize(targetSize);
+
+  if (aIdx > tIdx && (tNorm === "puny" || tNorm === "tiny" || tNorm === "small")) {
+    return _sizeToHitModForTargetSize(tNorm);
+  }
+
+  if (aIdx < tIdx && (tNorm === "huge" || tNorm === "enormous")) {
+    return _sizeToHitModForTargetSize(tNorm);
+  }
+
+  return 0;
 }
 
 export function listCombatStyles(actor) {
@@ -134,7 +171,7 @@ if (typeof styleUuidOrId === "string" && styleUuidOrId.startsWith("prof:")) {
     id: styleUuidOrId,
     type: "combatStyle",
     name: key.charAt(0).toUpperCase() + key.slice(1),
-    system: { value: base + fatiguePenalty + (sys?.wounded ? woundPenalty : 0), bonus: 0, miscValue: 0 },
+    system: { value: base + fatiguePenalty + woundPenalty, bonus: 0, miscValue: 0 },
     _professionKey: key
   };
 }
@@ -183,9 +220,9 @@ function computeBlockTN(defender, styleItem) {
   const itemChaBonus = asNumber(skillHelper(defender, "str") ?? 0);
   const itemSkillBonus = asNumber(skillModHelper(defender, styleItem?.name ?? "") ?? 0);
 
-  let tn = strTotal + styleBonus + miscValue + itemChaBonus + itemSkillBonus + fatiguePenalty;
-  if (defender?.system?.wounded) tn += woundPenalty;
-  return tn;
+  // Chapter 5: wound penalties are derived from Wound Active Effects and exposed via system.woundPenalty.
+  // Do not use legacy system.wounded flags.
+  return strTotal + styleBonus + miscValue + itemChaBonus + itemSkillBonus + fatiguePenalty + woundPenalty;
 }
 
 function computeEvadeTN(defender) {
@@ -194,7 +231,7 @@ if (defender?.type === "NPC") {
   const base = Number(sys?.professions?.evade ?? 0);
   const woundPenalty = Number(sys?.woundPenalty ?? 0);
   const fatiguePenalty = Number(sys?.fatigue?.penalty ?? 0);
-  return base + fatiguePenalty + (sys?.wounded ? woundPenalty : 0);
+  return base + fatiguePenalty + woundPenalty;
 }
 
   const evadeItem = (defender?.items ?? []).find(i => i.type === "skill" && String(i.name ?? "").toLowerCase() === "evade");
@@ -221,6 +258,7 @@ export function computeTN({
   styleUuid = null,
   manualMod = 0,
   circumstanceMod = 0,
+  situationalMods = [],
   context = {}
 } = {}) {
   const breakdown = [];
@@ -284,9 +322,42 @@ export function computeTN({
   const cMod = asNumber(circumstanceMod);
   if (cMod) breakdown.push({ key: "circumstance", label: "Circumstance", value: cMod, source: "circumstance" });
 
+  // --- Situational modifiers (e.g. sensory impairment toggles, range bands, etc.)
+  // These are passed in explicitly by callers and must always be reflected in TN and breakdown.
+  if (Array.isArray(situationalMods) && situationalMods.length) {
+    let i = 0;
+    for (const m of situationalMods) {
+      const v = asNumber(m?.value);
+      if (!v) continue;
+
+      const k = String(m?.key ?? `m${i}`).trim() || `m${i}`;
+      const label = String(m?.label ?? m?.name ?? "Situational").trim() || "Situational";
+
+      breakdown.push({
+        key: `situational:${k}`,
+        label,
+        value: v,
+        source: String(m?.source ?? "situational")
+      });
+
+      i += 1;
+    }
+  }
+
+  // --- Size-to-Hit (Chapter 5): attacker TN only
+  // Caller must provide sizes in context to keep computeTN synchronous.
+  if (role === "attacker") {
+    const sizeMod = computeSizeToHitModifier({
+      attackerSize: context?.selfSize ?? actor?.system?.size,
+      targetSize: context?.opponentSize,
+      attackMode: context?.attackMode
+    });
+    if (sizeMod) breakdown.push({ key: "size", label: "Size", value: sizeMod, source: "size" });
+  }
+
   // --- Active Effects combat TN modifiers (from system.modifiers.combat.*)
   // Applied exactly once at this stage, and only to TN (not to base characteristics).
-  const ae = getCombatTNModifiers(actor, role, defenseType);
+  const ae = getCombatTNModifiers(actor, role, defenseType, context);
   for (const e of (ae.entries ?? [])) breakdown.push(e);
 
 

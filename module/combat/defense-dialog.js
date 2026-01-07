@@ -15,6 +15,7 @@
 
 import { computeTN, listCombatStyles, hasEquippedShield } from "./tn.js";
 import { hasCondition } from "../conditions/condition-engine.js";
+import { computeDefenseAvailability, normalizeDefenseType } from "./defense-options.js";
 
 function asNumber(v) {
   if (v == null) return 0;
@@ -32,7 +33,7 @@ export class DefenseDialog extends Dialog {
   constructor(defender, options = {}, resolveFn) {
     const styles = listCombatStyles(defender);
     const defaultStyleUuid = options.defaultStyleUuid ?? styles?.[0]?.uuid ?? null;
-    const defaultDefenseType = options.defaultDefenseType ?? "evade";
+    const requestedDefaultDefenseType = options.defaultDefenseType ?? "evade";
     const defaultManualMod = Number(options.defaultManualMod ?? 0) || 0;
     const defaultCircMod = Number(options.defaultCircumstanceMod ?? 0) || 0;
 
@@ -43,11 +44,18 @@ export class DefenseDialog extends Dialog {
     const defaultApplyBlinded = (options.defaultApplyBlinded ?? true);
     const defaultApplyDeafened = (options.defaultApplyDeafened ?? true);
 
-    const attackerHasFlail = !!(options.attackerWeaponTraits?.flail);
-    const attackerHasEntangling = !!(options.attackerWeaponTraits?.entangling);
-    const attackerIsTwoHanded = !!(options.attackerWeaponTraits?.isTwoHanded);
+    const attackerWeaponTraits = options.attackerWeaponTraits ?? null;
     const defenderHasSmallWeapon = !!(options.defenderHasSmallWeapon);
-    const smallVsTwoHandedGate = defenderHasSmallWeapon && attackerIsTwoHanded;
+    const attackMode = String(options?.context?.attackMode ?? options?.attackMode ?? "melee");
+
+    const availability = computeDefenseAvailability({
+      attackMode,
+      attackerWeaponTraits,
+      defenderHasSmallWeapon,
+      defenderHasShield: shieldOk
+    });
+
+    const defaultDefenseType = normalizeDefenseType(requestedDefaultDefenseType, availability, "evade");
 
     const content = DefenseDialog._renderContent({
       styles,
@@ -56,9 +64,7 @@ export class DefenseDialog extends Dialog {
       defaultManualMod,
       defaultCircMod,
       shieldOk,
-      attackerHasFlail,
-      attackerHasEntangling,
-      smallVsTwoHandedGate,
+      availability,
       hasBlinded,
       hasDeafened,
       defaultApplyBlinded,
@@ -87,10 +93,9 @@ export class DefenseDialog extends Dialog {
     this._defender = defender;
     this._styles = styles;
     this._context = options.context ?? null;
-    this._attackerWeaponTraits = options.attackerWeaponTraits ?? null;
-    this._attackerHasFlail = attackerHasFlail;
-    this._attackerHasEntangling = attackerHasEntangling;
-    this._smallVsTwoHandedGate = smallVsTwoHandedGate;
+    this._attackMode = attackMode;
+    this._attackerWeaponTraits = attackerWeaponTraits;
+    this._defenderHasSmallWeapon = defenderHasSmallWeapon;
     this._html = null;
   }
 
@@ -101,9 +106,7 @@ export class DefenseDialog extends Dialog {
     defaultManualMod,
     defaultCircMod,
     shieldOk,
-    attackerHasFlail,
-    attackerHasEntangling,
-    smallVsTwoHandedGate,
+    availability,
     hasBlinded,
     hasDeafened,
     defaultApplyBlinded,
@@ -115,16 +118,27 @@ export class DefenseDialog extends Dialog {
 
     const showStyle = styles.length > 0;
 
-    const blockDisabled = shieldOk ? "" : "disabled";
-    const parryCounterDisabled = (attackerHasFlail || attackerHasEntangling || smallVsTwoHandedGate) ? "disabled" : "";
+    const allowed = availability?.allowed ?? { evade: true, parry: true, block: Boolean(shieldOk), counter: true };
+    const reasons = availability?.reasons ?? { evade: [], parry: [], block: [], counter: [] };
+    const gates = availability?.gates ?? {
+      isRangedAttack: false,
+      attackerHasFlail: false,
+      attackerHasEntangling: false,
+      smallVsTwoHandedGate: false,
+      shieldOk: Boolean(shieldOk)
+    };
+
+    const blockDisabled = allowed.block ? "" : "disabled";
+    const parryDisabled = allowed.parry ? "" : "disabled";
+    const counterDisabled = allowed.counter ? "" : "disabled";
 
     const notes = [];
-    if (attackerHasFlail) notes.push(`<p class="notes" style="margin:6px 0 0 0;"><b>Flail:</b> Attacks with a flail cannot be parried or counter-attacked.</p>`);
-    if (attackerHasEntangling) {
-      if (shieldOk) notes.push(`<p class="notes" style="margin:6px 0 0 0;"><b>Entangling:</b> Attacks with an entangling weapon cannot be parried or counter-attacked. Blocking is still possible with a shield.</p>`);
-      else notes.push(`<p class="notes" style="margin:6px 0 0 0;"><b>Entangling:</b> Without an equipped shield, you cannot Parry, Block, or Counter-Attack against an entangling weapon.</p>`);
+    if (gates.isRangedAttack) notes.push(`<p class="notes" style="margin:6px 0 0 0;"><b>Ranged:</b> Ranged attacks cannot be parried or counter-attacked.</p>`);
+    if (gates.attackerHasFlail) notes.push(`<p class="notes" style="margin:6px 0 0 0;"><b>Flail:</b> Attacks with a flail cannot be parried or counter-attacked.</p>`);
+    if (gates.attackerHasEntangling) {
+      notes.push(`<p class="notes" style="margin:6px 0 0 0;"><b>Entangling:</b> Attacks with an entangling weapon cannot be parried or blocked.</p>`);
     }
-    if (smallVsTwoHandedGate) notes.push(`<p class="notes" style="margin:6px 0 0 0;"><b>Small:</b> A Small weapon cannot be used to Parry or Counter-Attack against a two-handed weapon.</p>`);
+    if (gates.smallVsTwoHandedGate) notes.push(`<p class="notes" style="margin:6px 0 0 0;"><b>Small:</b> A Small weapon cannot be used to Parry or Counter-Attack against a two-handed weapon.</p>`);
 
     const extraNotes = notes.join("");
 
@@ -183,28 +197,28 @@ export class DefenseDialog extends Dialog {
       </div>
     </label>
 
-    <label class="def-opt" style="border:1px solid #9993; border-radius:8px; padding:8px; opacity:${parryCounterDisabled ? "0.45" : "1"};">
+    <label class="def-opt" style="border:1px solid #9993; border-radius:8px; padding:8px; opacity:${parryDisabled ? "0.45" : "1"};">
       <div style="display:flex; justify-content:space-between; align-items:center;">
-        <span><input type="radio" name="defenseType" value="parry" ${defaultDefenseType === "parry" ? "checked" : ""} ${parryCounterDisabled}/> <b>Parry</b></span>
+        <span><input type="radio" name="defenseType" value="parry" ${defaultDefenseType === "parry" ? "checked" : ""} ${parryDisabled}/> <b>Parry</b></span>
         <span class="tn-pill" style="font-variant-numeric: tabular-nums;">TN: <span data-tn-for="parry">—</span></span>
       </div>
-      ${parryCounterDisabled ? `<p class="notes">Not available for this attack.</p>` : ``}
+      ${parryDisabled ? `<p class="notes">Not available for this attack.</p>` : ``}
     </label>
 
-    <label class="def-opt" style="border:1px solid #9993; border-radius:8px; padding:8px; opacity:${shieldOk ? "1" : "0.45"};">
+    <label class="def-opt" style="border:1px solid #9993; border-radius:8px; padding:8px; opacity:${blockDisabled ? "0.45" : "1"};">
       <div style="display:flex; justify-content:space-between; align-items:center;">
         <span><input type="radio" name="defenseType" value="block" ${defaultDefenseType === "block" ? "checked" : ""} ${blockDisabled}/> <b>Block</b></span>
         <span class="tn-pill" style="font-variant-numeric: tabular-nums;">TN: <span data-tn-for="block">—</span></span>
       </div>
-      ${shieldOk ? "" : `<p class="notes">Requires an equipped shield.</p>`}
+      ${blockDisabled ? `<p class="notes">${Handlebars.escapeExpression(String(reasons?.block?.[0] ?? "Not available for this attack."))}</p>` : ``}
     </label>
 
-    <label class="def-opt" style="border:1px solid #9993; border-radius:8px; padding:8px; opacity:${parryCounterDisabled ? "0.45" : "1"};">
+    <label class="def-opt" style="border:1px solid #9993; border-radius:8px; padding:8px; opacity:${counterDisabled ? "0.45" : "1"};">
       <div style="display:flex; justify-content:space-between; align-items:center;">
-        <span><input type="radio" name="defenseType" value="counter" ${defaultDefenseType === "counter" ? "checked" : ""} ${parryCounterDisabled}/> <b>Counter-Attack</b></span>
+        <span><input type="radio" name="defenseType" value="counter" ${defaultDefenseType === "counter" ? "checked" : ""} ${counterDisabled}/> <b>Counter-Attack</b></span>
         <span class="tn-pill" style="font-variant-numeric: tabular-nums;">TN: <span data-tn-for="counter">—</span></span>
       </div>
-      ${parryCounterDisabled ? `<p class="notes">Not available for this attack.</p>` : ``}
+      ${counterDisabled ? `<p class="notes">Not available for this attack.</p>` : ``}
     </label>
   </div>
 
@@ -217,13 +231,18 @@ export class DefenseDialog extends Dialog {
     this._html = html;
 
     // If the default defense type is not allowed, force a safe fallback.
-    const parryCounterDisabled = (this._attackerHasFlail || this._attackerHasEntangling || this._smallVsTwoHandedGate);
-    if (parryCounterDisabled) {
-      const checked = html.find('input[name="defenseType"]:checked');
-      const v = String(checked.val() ?? "");
-      if (v === "parry" || v === "counter") {
-        html.find('input[name="defenseType"][value="evade"]').prop("checked", true);
-      }
+    const shieldOk = hasEquippedShield(this._defender);
+    const availability = computeDefenseAvailability({
+      attackMode: this._attackMode,
+      attackerWeaponTraits: this._attackerWeaponTraits,
+      defenderHasSmallWeapon: this._defenderHasSmallWeapon,
+      defenderHasShield: shieldOk
+    });
+    const checked = html.find('input[name="defenseType"]:checked');
+    const v = String(checked.val() ?? "evade");
+    const normalized = normalizeDefenseType(v, availability, "evade");
+    if (normalized !== v) {
+      html.find(`input[name="defenseType"][value="${normalized}"]`).prop("checked", true);
     }
 
     const styleSelect = html.find('select[name="styleUuid"]');
@@ -255,31 +274,28 @@ export class DefenseDialog extends Dialog {
 
   _refreshTN(html) {
     const shieldOk = hasEquippedShield(this._defender);
-
-    const parryCounterDisabled = (this._attackerHasFlail || this._attackerHasEntangling || this._smallVsTwoHandedGate);
+    const availability = computeDefenseAvailability({
+      attackMode: this._attackMode,
+      attackerWeaponTraits: this._attackerWeaponTraits,
+      defenderHasSmallWeapon: this._defenderHasSmallWeapon,
+      defenderHasShield: shieldOk
+    });
 
     const blockRadio = html.find('input[name="defenseType"][value="block"]');
-    if (blockRadio.length) {
-      blockRadio.prop("disabled", !shieldOk);
-      if (!shieldOk && blockRadio.prop("checked")) {
-        html.find('input[name="defenseType"][value="evade"]').prop("checked", true);
-      }
-    }
+    if (blockRadio.length) blockRadio.prop("disabled", !availability.allowed.block);
 
     const parryRadio = html.find('input[name="defenseType"][value="parry"]');
-    if (parryRadio.length) {
-      parryRadio.prop("disabled", parryCounterDisabled);
-      if (parryCounterDisabled && parryRadio.prop("checked")) {
-        html.find('input[name="defenseType"][value="evade"]').prop("checked", true);
-      }
-    }
+    if (parryRadio.length) parryRadio.prop("disabled", !availability.allowed.parry);
 
     const counterRadio = html.find('input[name="defenseType"][value="counter"]');
-    if (counterRadio.length) {
-      counterRadio.prop("disabled", parryCounterDisabled);
-      if (parryCounterDisabled && counterRadio.prop("checked")) {
-        html.find('input[name="defenseType"][value="evade"]').prop("checked", true);
-      }
+    if (counterRadio.length) counterRadio.prop("disabled", !availability.allowed.counter);
+
+    // If the currently selected option becomes illegal (equipment/context change), force fallback.
+    const checked = html.find('input[name="defenseType"]:checked');
+    const v = String(checked.val() ?? "evade");
+    const normalized = normalizeDefenseType(v, availability, "evade");
+    if (normalized !== v) {
+      html.find(`input[name="defenseType"][value="${normalized}"]`).prop("checked", true);
     }
 
     const rawMod = html.find('input[name="manualMod"]').val() ?? "0";
@@ -300,7 +316,7 @@ export class DefenseDialog extends Dialog {
     const evadeTN = computeTN({ actor: this._defender, role: "defender", defenseType: "evade", manualMod, circumstanceMod, situationalMods, context: ctx }).finalTN;
     const parryTN = computeTN({ actor: this._defender, role: "defender", defenseType: "parry", styleUuid, manualMod, circumstanceMod, situationalMods, context: ctx }).finalTN;
     const counterTN = computeTN({ actor: this._defender, role: "defender", defenseType: "counter", styleUuid, manualMod, circumstanceMod, situationalMods, context: ctx }).finalTN;
-    const blockTN = shieldOk
+    const blockTN = availability.allowed.block
       ? computeTN({ actor: this._defender, role: "defender", defenseType: "block", styleUuid, manualMod, circumstanceMod, situationalMods, context: ctx }).finalTN
       : 0;
 
@@ -321,20 +337,16 @@ export class DefenseDialog extends Dialog {
     const applyBlinded = Boolean(html.find('input[name="applyBlinded"]').prop("checked"));
     const applyDeafened = Boolean(html.find('input[name="applyDeafened"]').prop("checked"));
 
-    const defenseType = String(html.find('input[name="defenseType"]:checked').val() ?? "evade");
+    const rawDefenseType = String(html.find('input[name="defenseType"]:checked').val() ?? "evade");
     const shieldOk = hasEquippedShield(this._defender);
-    const parryCounterDisabled = (this._attackerHasFlail || this._attackerHasEntangling || this._smallVsTwoHandedGate);
+    const availability = computeDefenseAvailability({
+      attackMode: this._attackMode,
+      attackerWeaponTraits: this._attackerWeaponTraits,
+      defenderHasSmallWeapon: this._defenderHasSmallWeapon,
+      defenderHasShield: shieldOk
+    });
+    const defenseType = normalizeDefenseType(rawDefenseType, availability, "evade");
     const styleUuid = this._getSelectedStyleUuid(html);
-
-    if (defenseType === "block" && !shieldOk) {
-      ui.notifications.warn("Block requires an equipped shield.");
-      return null;
-    }
-
-    if ((defenseType === "parry" || defenseType === "counter") && parryCounterDisabled) {
-      ui.notifications.warn("That defense option is not available for this attack.");
-      return null;
-    }
 
     if (defenseType === "evade") return { defenseType: "evade", label: "Evade", manualMod, circumstanceMod, styleUuid: null, applyBlinded, applyDeafened };
     if (defenseType === "block") return { defenseType: "block", label: "Block", manualMod, circumstanceMod, styleUuid, applyBlinded, applyDeafened };
