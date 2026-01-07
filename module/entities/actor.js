@@ -1478,7 +1478,7 @@ actorSystemData.luck_points.max = lckBonus + actorSystemData.luck_points.bonus;
       : withAdd;
     // Guard: Use Number() to ensure numeric value after toFixed for safe carry rating calculations
     // RAW: "ENC is halved when armor is worn (but not for carried shields)"
-    actorSystemData.carry_rating.current = Number((agg.totalEnc - (agg.armorEnc / 2) - agg.excludedEnc).toFixed(1))
+    actorSystemData.carry_rating.current = Number((agg.totalEnc - (agg.armorEnc / 2) - agg.excludedEnc).toFixed(1));
 
     //Form Shift Calcs
     if (this._wereWolfForm(actorData) === true) {
