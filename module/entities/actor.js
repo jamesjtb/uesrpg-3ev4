@@ -198,17 +198,20 @@ export class SimpleActor extends Actor {
       const isContained = sys?.containerStats?.contained === true;
 
       // RAW: Items contribute their weight; containers halve contents
+      let contributedWeight = 0;
       if (isContained) {
         // Item is inside a container: contributes half its weight
-        stats.totalEnc += (itemWeight / 2);
+        contributedWeight = itemWeight / 2;
       } else {
         // Item is loose in inventory: contributes full weight
-        stats.totalEnc += itemWeight;
+        contributedWeight = itemWeight;
       }
+      
+      stats.totalEnc += contributedWeight;
 
-      // Special exclusions
+      // Special exclusions - track the actual contributed weight
       if (sys.excludeENC === true) {
-        stats.excludedEnc += itemWeight;
+        stats.excludedEnc += contributedWeight;
       }
 
       // RAW Chapter 7: "ENC is halved when armor is worn (but not for carried shields)"
