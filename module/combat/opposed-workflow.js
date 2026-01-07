@@ -507,6 +507,37 @@ async function _preConsumeAttackAmmo(attacker, data) {
 }
 
 
+/**
+ * Mark a ranged weapon as needing reload after it's fired.
+ * This is called after a successful ranged attack.
+ * NON-BLOCKING: Does not prevent attacks, just tracks state.
+ * 
+ * @param {Item} weapon - The ranged weapon that was fired
+ * @returns {Promise<void>}
+ */
+async function _markWeaponNeedsReload(weapon) {
+  if (!weapon || weapon.type !== "weapon") return;
+  if (weapon.system?.attackMode !== "ranged") return;
+  
+  const reloadState = weapon.system?.reloadState ?? {};
+  if (!reloadState.requiresReload) return;
+  
+  // Mark as needing reload (non-blocking)
+  try {
+    await weapon.update({
+      "system.reloadState.isLoaded": false
+    });
+    
+    const reloadCost = Number(reloadState.reloadAPCost ?? 0);
+    if (reloadCost > 0) {
+      ui.notifications.info(`${weapon.name} needs reloading (${reloadCost} AP required).`);
+    }
+  } catch (err) {
+    console.warn("UESRPG | Failed to mark weapon as needing reload:", err);
+  }
+}
+
+
 function _resolveActor(docOrUuid) {
   const doc = typeof docOrUuid === "string" ? _resolveDoc(docOrUuid) : docOrUuid;
   if (!doc) return null;

@@ -904,7 +904,12 @@
       "material": "standard",
       "qualitiesStructured": [],
       "qualitiesTraits": [],
-      "equipmentType": ""
+      "equipmentType": "",
+      "reloadState": {
+        "isLoaded": true,
+        "reloadAPCost": 0,
+        "requiresReload": false
+      }
     },
     "spell": {
       "description": "",
