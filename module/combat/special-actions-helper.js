@@ -15,6 +15,21 @@ import { ActionEconomy } from "./action-economy.js";
 const SYSTEM_ID = "uesrpg-3ev4";
 
 /**
+ * Simple HTML escape to prevent XSS.
+ * @param {string} str
+ * @returns {string}
+ */
+function _escapeHtml(str) {
+  if (typeof str !== "string") return "";
+  return str
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#039;");
+}
+
+/**
  * Show Special Advantage mode selection dialog.
  * @param {string} specialActionId 
  * @returns {Promise<{mode: "free"|"autowin"}|null>}
@@ -116,148 +131,169 @@ export async function showPreTestChoiceDialog({ specialActionId, actor, isDefend
   const options = _getSpecialActionOptions(specialActionId);
   const available = isDefender ? options.defender : options.attacker;
 
-  // Build radio options
-  const hasActiveCombatStyle = actor?.itemTypes?.combatStyle?.find(cs => cs?.system?.active);
+  if (!available || available.length === 0) {
+    console.warn(`UESRPG | No options defined for Special Action: ${specialActionId}`);
+    return null;
+  }
+
   const isNPC = actor?.type === "NPC";
+  const choices = [];
 
-  let radioOptions = [];
+  // Cache combat styles to avoid repeated filtering
+  const allCombatStyles = !isNPC ? (actor.items?.filter(i => i.type === "combatStyle") ?? []) : [];
 
-  // Add Combat Style option if applicable
-  for (const opt of available) {
-    if (opt === "Combat Style") {
-      // Generic Combat Style - any active combat style works
-      if (hasActiveCombatStyle) {
-        radioOptions.push({
-          value: "combatStyle",
-          label: "Combat Style",
-          skillUuid: hasActiveCombatStyle.uuid,
-          itemUuid: hasActiveCombatStyle.uuid,
-          checked: radioOptions.length === 0
-        });
-      } else if (isNPC) {
-        const combatProf = actor.system?.professions?.combat;
-        if (combatProf) {
-          radioOptions.push({
+  // Process each available option type
+  for (const optType of available) {
+    if (optType === "Combat Style") {
+      // Generic Combat Style - offer ALL Combat Style items
+      if (!isNPC) {
+        for (const style of allCombatStyles) {
+          choices.push({
+            value: "combatStyle",
+            label: `${style.name} (Combat Style)`,
+            skillUuid: style.uuid,
+            checked: choices.length === 0
+          });
+        }
+      } else {
+        // NPC: use combat profession
+        if (actor.system?.professions?.combat != null) {
+          choices.push({
             value: "combatProfession",
             label: "Combat (Profession)",
             skillUuid: "prof:combat",
-            itemUuid: null,
-            checked: radioOptions.length === 0
+            checked: choices.length === 0
           });
         }
       }
-    } else if (opt === "Combat Style (unarmed)") {
+    }
+    else if (optType === "Combat Style (unarmed)") {
       // Unarmed Combat Style only
-      if (hasActiveCombatStyle && _isUnarmedCombatStyle(hasActiveCombatStyle)) {
-        radioOptions.push({
-          value: "combatStyle",
-          label: "Combat Style (unarmed)",
-          skillUuid: hasActiveCombatStyle.uuid,
-          itemUuid: hasActiveCombatStyle.uuid,
-          checked: radioOptions.length === 0
-        });
-      } else if (isNPC) {
-        // NPCs with Combat profession can use unarmed
-        const combatProf = actor.system?.professions?.combat;
-        if (combatProf) {
-          radioOptions.push({
-            value: "combatProfession",
-            label: "Combat (Profession)",
-            skillUuid: "prof:combat",
-            itemUuid: null,
-            checked: radioOptions.length === 0
+      if (!isNPC) {
+        const unarmedStyles = allCombatStyles.filter(style => _isUnarmedCombatStyle(style));
+        for (const style of unarmedStyles) {
+          choices.push({
+            value: "combatStyle",
+            label: `${style.name} (Combat Style - Unarmed)`,
+            skillUuid: style.uuid,
+            checked: choices.length === 0
           });
         }
-      }
-    } else if (opt === "Combat Style (with shield)") {
-      // Shield-capable Combat Style only
-      if (hasActiveCombatStyle && _canUseShield(hasActiveCombatStyle)) {
-        radioOptions.push({
-          value: "combatStyle",
-          label: "Combat Style (with shield)",
-          skillUuid: hasActiveCombatStyle.uuid,
-          itemUuid: hasActiveCombatStyle.uuid,
-          checked: radioOptions.length === 0
-        });
-      } else if (isNPC) {
-        // NPCs with Combat profession can use shields
-        const combatProf = actor.system?.professions?.combat;
-        if (combatProf) {
-          radioOptions.push({
+      } else {
+        // NPC: use combat profession (treat as unarmed-capable)
+        if (actor.system?.professions?.combat != null) {
+          choices.push({
             value: "combatProfession",
             label: "Combat (Profession)",
             skillUuid: "prof:combat",
-            itemUuid: null,
-            checked: radioOptions.length === 0
+            checked: choices.length === 0
           });
         }
       }
     }
-  }
-
-  // Add skill options based on available choices
-  const skillMappings = {
-    "Athletics": { value: "athletics", label: "Athletics", profKey: "athletics" },
-    "Evade": { value: "evade", label: "Evade" },
-    "Deceive": { value: "deceive", label: "Deceive" },
-    "Observe": { value: "observe", label: "Observe" }
-  };
-
-  for (const [key, config] of Object.entries(skillMappings)) {
-    if (available.includes(key)) {
-      // Try to find as a skill first (works for both PCs and NPCs)
-      const skillItem = actor.items.find(i => 
-        i.type === "skill" && 
-        String(i.name || "").trim().toLowerCase() === config.value
-      );
-      
-      if (skillItem) {
-        radioOptions.push({
-          value: config.value,
-          label: config.label,
-          skillUuid: skillItem.uuid,
-          itemUuid: null,
-          checked: radioOptions.length === 0
-        });
-      } else if (isNPC && config.profKey) {
-        // For NPCs, also check if there's a profession (e.g., prof:athletics)
-        const profValue = actor.system?.professions?.[config.profKey];
-        if (profValue != null) {
-          radioOptions.push({
-            value: config.value,
-            label: `${config.label} (Profession)`,
-            skillUuid: `prof:${config.profKey}`,
-            itemUuid: null,
-            checked: radioOptions.length === 0
+    else if (optType === "Combat Style (with shield)") {
+      // Shield-capable Combat Style
+      if (!isNPC) {
+        const shieldStyles = allCombatStyles.filter(style => _canUseShield(style));
+        for (const style of shieldStyles) {
+          choices.push({
+            value: "combatStyle",
+            label: `${style.name} (Combat Style - Shield)`,
+            skillUuid: style.uuid,
+            checked: choices.length === 0
+          });
+        }
+      } else {
+        // NPC: use combat profession (treat as shield-capable)
+        if (actor.system?.professions?.combat != null) {
+          choices.push({
+            value: "combatProfession",
+            label: "Combat (Profession)",
+            skillUuid: "prof:combat",
+            checked: choices.length === 0
           });
         }
       }
     }
+    else if (optType === "Athletics") {
+      if (isNPC) {
+        if (actor.system?.professions?.athletics != null) {
+          choices.push({
+            value: "athletics",
+            label: "Athletics (Profession)",
+            skillUuid: "prof:athletics",
+            checked: choices.length === 0
+          });
+        }
+      } else {
+        const skill = actor.items?.find(i => i.type === "skill" && i.name?.toLowerCase() === "athletics");
+        if (skill) {
+          choices.push({
+            value: "athletics",
+            label: "Athletics",
+            skillUuid: skill.uuid,
+            checked: choices.length === 0
+          });
+        }
+      }
+    }
+    else if (optType === "Evade") {
+      const skill = actor.items?.find(i => i.type === "skill" && i.name?.toLowerCase() === "evade");
+      if (skill) {
+        choices.push({
+          value: "evade",
+          label: "Evade",
+          skillUuid: skill.uuid,
+          checked: choices.length === 0
+        });
+      }
+    }
+    else if (optType === "Deceive") {
+      const skill = actor.items?.find(i => i.type === "skill" && i.name?.toLowerCase() === "deceive");
+      if (skill) {
+        choices.push({
+          value: "deceive",
+          label: "Deceive",
+          skillUuid: skill.uuid,
+          checked: choices.length === 0
+        });
+      }
+    }
+    else if (optType === "Observe") {
+      const skill = actor.items?.find(i => i.type === "skill" && i.name?.toLowerCase() === "observe");
+      if (skill) {
+        choices.push({
+          value: "observe",
+          label: "Observe",
+          skillUuid: skill.uuid,
+          checked: choices.length === 0
+        });
+      }
+    }
   }
 
-  if (radioOptions.length === 0) {
-    ui.notifications.warn(`No valid test options available for ${def.name}.`);
+  if (choices.length === 0) {
+    ui.notifications.warn(`${actor.name} has no valid options for ${def.name}. Check that they have the required Combat Styles or Skills.`);
     return null;
   }
 
   // Only show dialog if there are multiple choices
-  if (radioOptions.length === 1) {
+  if (choices.length === 1) {
     return {
-      testType: radioOptions[0].value,
-      skillUuid: radioOptions[0].skillUuid,
-      itemUuid: radioOptions[0].itemUuid
+      testType: choices[0].value,
+      skillUuid: choices[0].skillUuid
     };
   }
 
   const content = `
     <form class="uesrpg-special-action-test-choice">
-      <p><b>Special Action: ${def.name}</b></p>
+      <p><b>Special Action: ${_escapeHtml(def.name)}</b></p>
       <p>Choose your ${isDefender ? 'defense' : 'test'}:</p>
       <div style="margin: 12px 0;">
-        ${radioOptions.map(opt => `
+        ${choices.map(opt => `
           <label style="display: flex; align-items: center; gap: 8px; margin-bottom: 8px;">
-            <input type="radio" name="testType" value="${opt.value}" data-skill-uuid="${opt.skillUuid}" data-item-uuid="${opt.itemUuid || ''}" ${opt.checked ? 'checked' : ''} />
-            <span><b>${opt.label}</b></span>
+            <input type="radio" name="testChoice" value="${_escapeHtml(opt.value)}" data-skill-uuid="${_escapeHtml(opt.skillUuid)}" ${opt.checked ? 'checked' : ''} />
+            <span><b>${_escapeHtml(opt.label)}</b></span>
           </label>
         `).join('')}
       </div>
@@ -273,12 +309,11 @@ export async function showPreTestChoiceDialog({ specialActionId, actor, isDefend
           label: "Confirm",
           callback: (html) => {
             const root = html instanceof HTMLElement ? html : html?.[0];
-            const selected = root?.querySelector('input[name="testType"]:checked');
+            const selected = root?.querySelector('input[name="testChoice"]:checked');
             const testType = selected?.value;
             const skillUuid = selected?.dataset?.skillUuid;
-            const itemUuid = selected?.dataset?.itemUuid || null;
             
-            return { testType, skillUuid, itemUuid };
+            return { testType, skillUuid };
           }
         },
         cancel: { label: "Cancel", callback: () => null }
