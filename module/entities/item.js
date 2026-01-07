@@ -485,12 +485,8 @@ export class SimpleItem extends Item {
 
 _prepareContainerItem(actorData, itemData) {
   const contained = Array.isArray(itemData?.contained_items) ? itemData.contained_items : [];
-  if (contained.length === 0) {
-    itemData.container_enc = itemData.container_enc || { item_count: 0, current: 0, applied_enc: 0 };
-    return;
-  }
-
-  const itemCount = contained.length;
+  
+  // Calculate total weight of contents for capacity tracking
   let currentCapacity = 0;
   for (const containedItem of contained) {
     const cItem = containedItem?.item || containedItem || {};
@@ -499,12 +495,14 @@ _prepareContainerItem(actorData, itemData) {
     currentCapacity += enc * qty;
   }
 
-  // RAW: "halve the total effective value of the ENC contained within them"
-  const appliedENC = Math.floor(currentCapacity / 2);
+  // Store only what we need:
+  // - current: for capacity checking and UI display
+  // - max: user-defined capacity limit
+  // - item_count: calculated on-the-fly for display (not user-editable)
   itemData.container_enc = itemData.container_enc || {};
-  itemData.container_enc.item_count = itemCount;
   itemData.container_enc.current = currentCapacity;
-  itemData.container_enc.applied_enc = appliedENC;
+  itemData.container_enc.max = Number(itemData.container_enc.max ?? 0);
+  itemData.container_enc.item_count = contained.length;
 }
 
 async _duplicateContainedItemsOnActor(actorData, itemData) {

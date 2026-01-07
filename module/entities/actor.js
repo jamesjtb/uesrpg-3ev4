@@ -177,7 +177,7 @@ export class SimpleActor extends Actor {
       hpBonus:0, mpBonus:0, spBonus:0, lpBonus:0, wtBonus:0, speedBonus:0, iniBonus:0,
       resist: { diseaseR:0, fireR:0, frostR:0, shockR:0, poisonR:0, magicR:0, natToughnessR:0, silverR:0, sunlightR:0 },
       swimBonus:0, flyBonus:0, doubleSwimSpeed:false, addHalfSpeed:false, halfSpeed:false,
-      totalEnc:0, containersAppliedEnc:0, containedWeightReduction:0, armorEnc:0, excludedEnc:0,
+      totalEnc:0, armorEnc:0, excludedEnc:0,
       skillModifiers: {},
       traitsAndTalents: [],
       shiftForms: [],
@@ -188,23 +188,43 @@ export class SimpleActor extends Actor {
       const sys = item && item.system ? item.system : {};
       const enc = Number(sys.enc || 0);
       const qty = Number(sys.quantity || 0);
+      const itemWeight = enc * qty;
       const id = item?._id || '';
+      
       // Check equipped status: if 'equipped' property exists, use its value; otherwise default to true
       const isEquipped = Object.prototype.hasOwnProperty.call(sys, 'equipped') ? sys.equipped : true;
 
-      // ENC - defensive guards for nested property access
-      stats.totalEnc += enc * qty;
-      if (item.type === 'container' && sys?.container_enc && !isNaN(Number(sys?.container_enc?.applied_enc))) {
-        stats.containersAppliedEnc += Number(sys.container_enc.applied_enc);
-      }
-      if (sys?.containerStats?.contained) {
-        stats.containedWeightReduction += enc * qty;
-      }
-      if (sys.excludeENC === true) stats.excludedEnc += enc * qty;
-            const cat = String(sys?.item_cat ?? sys?.category ?? "").trim().toLowerCase();
+      // RAW Chapter 7: Check if this is armor (for special ENC handling)
+      const cat = String(sys?.item_cat ?? sys?.category ?? "").trim().toLowerCase();
       const isShield = (item?.type === 'armor') && (cat === "shield" || cat.startsWith("shield"));
-      // RAW Chapter 7: Store full weight of equipped non-shield armor; halving happens in carry_rating calculation
-      if (item?.type === 'armor' && isEquipped && !isShield) stats.armorEnc += (enc * qty);
+      const isEquippedArmor = (item?.type === 'armor' && isEquipped && !isShield);
+
+      // Is this item contained in a container?
+      // Note: Equipped armor cannot be contained (it's being worn)
+      const isContained = (sys?.containerStats?.contained === true) && !isEquippedArmor;
+
+      // RAW: Items contribute their weight; containers halve contents
+      let contributedWeight = 0;
+      if (isContained) {
+        // Item is inside a container: contributes half its weight
+        contributedWeight = itemWeight / 2;
+      } else {
+        // Item is loose in inventory: contributes full weight
+        contributedWeight = itemWeight;
+      }
+      
+      stats.totalEnc += contributedWeight;
+
+      // Special exclusions - track the actual contributed weight
+      if (sys.excludeENC === true) {
+        stats.excludedEnc += contributedWeight;
+      }
+
+      // RAW Chapter 7: "ENC is halved when armor is worn (but not for carried shields)"
+      if (isEquippedArmor) {
+        // Store the full weight; we'll halve it when calculating carry_rating.current
+        stats.armorEnc += itemWeight;
+      }
 
       // Characteristic bonuses (only if equipped)
       if (isEquipped && sys.characteristicBonus) {
@@ -259,8 +279,6 @@ export class SimpleActor extends Actor {
       if (item.type === 'trait' || item.type === 'talent') stats.traitsAndTalents.push(item);
       if (sys.shiftFormStyle) stats.shiftForms.push(sys.shiftFormStyle);
     }
-
-    stats.totalEnc += stats.containersAppliedEnc - stats.containedWeightReduction;
 
     this._aggCache = { signature, agg: stats };
     return stats;
