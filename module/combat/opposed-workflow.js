@@ -4268,6 +4268,7 @@ if (stage === "attacker-roll") {
       }
 
 
+
       const defenderMovementAction = _getTokenMovementAction(dToken);
 
 

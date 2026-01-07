@@ -404,11 +404,12 @@ async activateListeners(html) {
 
         if (!attackerChoice) return; // User cancelled
 
-        // Create skill opposed test with PRE-SELECTED attacker test
         const testLabel = attackerChoice.testType === "combatStyle" || attackerChoice.testType === "combatProfession"
           ? "Combat Style"
           : attackerChoice.testType.charAt(0).toUpperCase() + attackerChoice.testType.slice(1);
         
+        // Create skill opposed test with PRE-SELECTED attacker test
+        // SkillOpposedWorkflow supports both skills AND Combat Style
         const message = await SkillOpposedWorkflow.createPending({
           attackerTokenUuid: actorToken?.document?.uuid ?? actorToken?.uuid,
           defenderTokenUuid: targetToken?.document?.uuid ?? targetToken?.uuid,
@@ -422,6 +423,7 @@ async activateListeners(html) {
           state.specialActionId = specialId;
           state.attackerTestType = attackerChoice.testType;
           state.requireDefenderChoice = true; // Defender needs to choose when they roll
+          state.allowCombatStyle = true; // Allow Combat Style as a test option
 
           await message.update({
             flags: {
