@@ -260,7 +260,7 @@ async function spendStamina(actor, option, spAmount = 1) {
     effectData.changes.push({
       key: "system.modifiers.combat.damage.dealt",
       mode: CONST.ACTIVE_EFFECT_MODES.ADD,
-      value: String(damageBonus),
+      value: `${damageBonus}[physical]`,
       priority: 20
     });
   }
