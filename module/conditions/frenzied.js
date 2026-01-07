@@ -138,7 +138,8 @@ function _mkFrenziedChanges(actor) {
   
   return [
     // +WT
-    { key: "system.modifiers.wound_threshold.bonus", mode: CONST.ACTIVE_EFFECT_MODES.ADD, value: mods.wtBonus, priority: 20 },
+    // Using system.modifiers.wound_threshold.value as per condition-engine.js (bleeding)
+    { key: "system.modifiers.wound_threshold.value", mode: CONST.ACTIVE_EFFECT_MODES.ADD, value: mods.wtBonus, priority: 20 },
     
     // +SB (Strength Bonus contributes to damage)
     { key: "system.characteristics.str.bonus", mode: CONST.ACTIVE_EFFECT_MODES.ADD, value: mods.sbBonus, priority: 20 },
@@ -318,8 +319,9 @@ export function registerFrenzied() {
   if (_registered) return;
   _registered = true;
 
-  // Combat end: remove Frenzied from all participants
+  // Combat end: remove Frenzied from all participants (GM-only)
   Hooks.on("deleteCombat", async (combat, options, userId) => {
+    if (game?.user?.isGM !== true) return;
     if (game.user.id !== userId) return;
 
     for (const c of (combat.combatants ?? [])) {
