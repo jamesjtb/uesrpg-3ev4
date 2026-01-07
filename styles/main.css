@@ -107,6 +107,28 @@
   color: darkred;
 }
 
+/* Clickable Characteristics header (replaces Set button) */
+.worldbuilding .characteristics-config {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2px 10px;
+  border: 1px solid var(--color-border-light-2);
+  border-radius: 4px;
+  background: rgba(0, 0, 0, 0.1);
+  user-select: none;
+}
+
+.worldbuilding .characteristics-config:hover {
+  cursor: pointer;
+  background: rgba(0, 0, 0, 0.2);
+}
+
+.worldbuilding .characteristics-config:focus-visible {
+  outline: 2px solid var(--color-border-highlight);
+  outline-offset: 2px;
+}
+
 .worldbuilding select:hover {
   cursor: pointer;
 }
@@ -957,6 +979,256 @@
   gap: 10px;
 }
 
+.worldbuilding .combat-actions-strip {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  width: 100%;
+  gap: 10px;
+}
+
+.worldbuilding .equipped-summary {
+  flex: 1 1 420px;
+  border: 1px solid;
+  background: rgba(120, 120, 120, 0.46);
+  padding: 6px 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.worldbuilding .equipped-summary-header {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  padding-bottom: 4px;
+  margin-bottom: 2px;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.15);
+}
+
+.worldbuilding .equipped-summary-title {
+  font-family: var(--main-font-family);
+  font-size: 13px;
+  font-weight: bold;
+}
+
+.worldbuilding .equipped-summary .uesrpg-group-toggle {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 18px;
+  height: 18px;
+}
+
+.worldbuilding .equipped-summary .uesrpg-collapse-body {
+  display: block;
+}
+
+
+.worldbuilding .equipped-summary .summary-row {
+  display: flex;
+  flex-direction: row;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 2px 0;
+}
+
+.worldbuilding .equipped-summary .summary-label {
+  font-family: var(--main-font-family);
+  font-size: 12px;
+  font-weight: bold;
+}
+
+.worldbuilding .equipped-summary .summary-value {
+  flex: 1 1 auto;
+  text-align: right;
+  font-family: var(--main-font-family);
+  font-size: 12px;
+}
+
+.worldbuilding .combat-quickbar {
+  flex: 0 0 220px;
+  min-width: 200px;
+  border: 1px solid;
+  background: rgba(180, 180, 180, 0.32);
+  padding: 6px 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.worldbuilding .combat-quickbar .quickbar-title {
+  font-family: var(--main-font-family);
+  font-size: 14px;
+  font-weight: bold;
+  text-align: center;
+}
+
+.worldbuilding .combat-quickbar .quickbar-buttons {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.worldbuilding .combat-quickbar .quickbar-buttons button {
+  width: 100%;
+  height: 26px;
+}
+
+.worldbuilding .combat-quickbar .quickbar-empty {
+  font-family: var(--main-font-family);
+  font-size: 11px;
+  text-align: center;
+  opacity: 0.85;
+  padding: 4px 2px;
+}
+
+
+
+/* Combat Tab - Actions Subtabs (A–E) */
+.worldbuilding .uesrpg-actions-section {
+  border: 1px solid;
+  background: rgba(120, 120, 120, 0.34);
+  padding: 6px 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.worldbuilding .uesrpg-actions-tabs {
+  display: flex;
+  flex-direction: row;
+  gap: 6px;
+}
+
+.worldbuilding .uesrpg-actions-subtab {
+  flex: 1 1 0;
+  text-align: center;
+  border: 1px solid;
+  padding: 4px 6px;
+  cursor: pointer;
+  font-family: var(--main-font-family);
+  font-size: 13px;
+}
+
+.worldbuilding .uesrpg-actions-subtab.active {
+  font-weight: bold;
+  background: rgba(120, 120, 120, 0.55);
+}
+
+.worldbuilding .uesrpg-actions-panels {
+  display: block;
+}
+
+.worldbuilding .uesrpg-actions-panel {
+  display: none;
+}
+
+.worldbuilding .uesrpg-actions-panel.active {
+  display: block;
+}
+
+.worldbuilding .uesrpg-actions-card {
+  border: 1px solid;
+  background: rgba(120, 120, 120, 0.46);
+  padding: 6px 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.worldbuilding .uesrpg-actions-card .actions-help {
+  font-family: var(--main-font-family);
+  font-size: 12px;
+  opacity: 0.9;
+}
+
+/* --- Special Actions (Actor/NPC Sheet) --- */
+.worldbuilding .uesrpg-special-actions-list {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin: 0;
+  padding: 0;
+  /* Prevent sheet infinite-growth: scroll within the card */
+  max-height: 360px;
+  overflow: auto;
+}
+
+/* In smaller sheet sizes, keep the list usable without forcing a resize */
+.worldbuilding .uesrpg-actions-panel[data-actionstab="special"] .uesrpg-special-actions-list {
+  max-height: min(360px, 45vh);
+}
+
+.worldbuilding .uesrpg-special-action-pill {
+  display: grid;
+  grid-template-columns: 1fr auto auto;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 6px;
+  border: 1px solid rgba(0,0,0,0.35);
+  background: rgba(180, 180, 180, 0.22);
+  border-radius: 6px;
+}
+
+.worldbuilding .uesrpg-special-action-pill__name {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-family: var(--main-font-family);
+  font-size: 13px;
+}
+
+.worldbuilding .uesrpg-special-action-pill__meta {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  justify-content: flex-end;
+}
+
+.worldbuilding .uesrpg-chip {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 10px;
+  line-height: 1;
+  padding: 2px 6px;
+  border-radius: 999px;
+  border: 1px solid rgba(0,0,0,0.35);
+  background: rgba(0,0,0,0.05);
+  text-transform: capitalize;
+  white-space: nowrap;
+}
+
+.worldbuilding .uesrpg-sa-known-toggle {
+  cursor: pointer;
+  user-select: none;
+}
+
+.worldbuilding .uesrpg-sa-known-toggle:hover {
+  filter: brightness(1.08);
+}
+
+
+.worldbuilding .uesrpg-chip--known {
+  opacity: 0.95;
+}
+
+.worldbuilding .uesrpg-chip--unknown {
+  opacity: 0.75;
+}
+
+.worldbuilding .uesrpg-special-action-pill__use .uesrpg-quick-action {
+  padding: 2px 8px;
+  line-height: 1.2;
+  min-height: 22px;
+  font-size: 12px;
+}
+
 .worldbuilding .combat-stats-container {
   display: grid;
   grid-template-columns: 60px 60px;
@@ -1765,4 +2037,178 @@
 .effects-list .effect-controls {
   flex: 0 0 auto;
   gap: 0.25rem;
+}
+
+/* --- Advantage Dialog Compact Grid (Opposed Workflow) --- */
+.uesrpg-adv-dialog {
+  font-size: 13px;
+}
+
+.uesrpg-adv-dialog .uesrpg-adv-summary {
+  margin-bottom: 0.5rem;
+  opacity: 0.9;
+}
+
+/* --- Combat Style Sheet (Item) - Compact Layout --- */
+.worldbuilding.sheet.item .uesrpg-combatstyle-panel {
+  display: flex;
+  flex-direction: column;
+}
+
+.worldbuilding.sheet.item .uesrpg-combatstyle-equipment-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px 10px;
+}
+
+.worldbuilding.sheet.item .uesrpg-combatstyle-equip label {
+  font-weight: 600;
+  font-size: 12px;
+  opacity: 0.95;
+}
+
+.worldbuilding.sheet.item .uesrpg-combatstyle-equip input[type="text"] {
+  width: 100%;
+  min-height: 28px;
+}
+
+.worldbuilding.sheet.item .uesrpg-combatstyle-special-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 8px 10px;
+}
+
+.worldbuilding.sheet.item .uesrpg-combatstyle-special {
+  display: grid;
+  grid-template-columns: 18px 1fr auto;
+  align-items: center;
+  gap: 6px;
+  margin: 0;
+  padding: 4px 6px;
+  border: 1px solid rgba(0,0,0,0.25);
+  border-radius: 6px;
+  background: rgba(180, 180, 180, 0.16);
+}
+
+.worldbuilding.sheet.item .uesrpg-combatstyle-special input[type="checkbox"] {
+  margin: 0;
+}
+
+.worldbuilding.sheet.item .uesrpg-combatstyle-special__name {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-weight: 600;
+}
+
+.worldbuilding.sheet.item .uesrpg-combatstyle-special__type {
+  font-size: 11px;
+  opacity: 0.85;
+  text-transform: capitalize;
+  white-space: nowrap;
+}
+
+@media (max-width: 520px) {
+  .worldbuilding.sheet.item .uesrpg-combatstyle-special-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+.uesrpg-adv-dialog .uesrpg-adv-count {
+  font-size: 0.9em;
+  opacity: 0.85;
+}
+
+.uesrpg-adv-dialog .uesrpg-adv-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.5rem;
+  align-items: start;
+}
+
+.uesrpg-adv-dialog .uesrpg-adv-section {
+  grid-column: 1 / -1;
+  margin-top: 0.25rem;
+}
+
+.uesrpg-adv-dialog .uesrpg-adv-section__title {
+  font-weight: 600;
+  opacity: 0.95;
+}
+
+.uesrpg-adv-dialog .uesrpg-adv-choice {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin: 0;
+  padding: 0.35rem 0.4rem;
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 6px;
+}
+
+.uesrpg-adv-dialog .uesrpg-adv-choice input[type="checkbox"] {
+  flex: 0 0 auto;
+}
+
+.uesrpg-adv-dialog .uesrpg-adv-choice__label {
+  flex: 1 1 auto;
+  line-height: 1.2;
+}
+
+.uesrpg-adv-dialog .uesrpg-adv-choice__title {
+  display: block;
+  font-weight: 600;
+  line-height: 1.1;
+}
+
+.uesrpg-adv-dialog .uesrpg-adv-choice__desc {
+  display: block;
+  font-size: 0.85em;
+  opacity: 0.85;
+  margin-top: 0.15rem;
+  line-height: 1.1;
+}
+
+.uesrpg-adv-dialog .uesrpg-adv-weapon {
+  display: grid;
+  grid-template-columns: 72px 1fr;
+  align-items: center;
+  gap: 0.5rem;
+  margin: 0;
+}
+
+.uesrpg-adv-dialog .uesrpg-adv-weapon select {
+  width: 100%;
+}
+
+.uesrpg-adv-dialog .uesrpg-adv-chip {
+  flex: 0 0 auto;
+  font-size: 0.75em;
+  padding: 0.1rem 0.35rem;
+  border-radius: 999px;
+  opacity: 0.9;
+  border: 1px solid rgba(255,255,255,0.12);
+}
+
+.uesrpg-adv-dialog .uesrpg-adv-chip--primary {
+  opacity: 0.95;
+}
+
+.uesrpg-adv-dialog .uesrpg-adv-chip--secondary {
+  opacity: 0.95;
+}
+
+.uesrpg-adv-dialog .uesrpg-adv-block {
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 6px;
+  padding: 0.35rem 0.4rem;
+}
+
+.uesrpg-adv-dialog .uesrpg-adv-inline {
+  margin-top: 0.35rem;
+}
+
+.uesrpg-adv-dialog select {
+  width: 100%;
 }
