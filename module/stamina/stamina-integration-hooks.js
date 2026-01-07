@@ -1,6 +1,17 @@
 /**
  * Stamina integration hooks for automatic effect application and consumption.
  * Integrates with existing roll handlers to apply stamina bonuses and consume effects.
+ * 
+ * Integration Status:
+ * - ✓ Physical Exertion: Integrated with characteristic tests and skill tests
+ * - ✓ Power Attack: Integrated with damage rolls
+ * - ✓ Sprint: Integrated with Dash action
+ * - ⚠ Power Draw: Helper function ready, needs integration with ranged attack workflow in opposed-workflow.js
+ * - ⚠ Power Block: Helper function ready, needs integration with block resolution in combat workflow
+ * - ✓ Heroic Action: Immediate effect, fully implemented
+ * 
+ * Note: Power Draw and Power Block require deeper integration with the combat workflow system.
+ * The helper functions are ready and can be called from the appropriate combat resolution points.
  */
 
 import { getActiveStaminaEffect, consumeStaminaEffect } from "./stamina-dialog.js";
