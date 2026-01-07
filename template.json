@@ -893,7 +893,8 @@
       "qualityLevel": "common",
       "material": "standard",
       "qualitiesStructured": [],
-      "qualitiesTraits": []
+      "qualitiesTraits": [],
+      "equipmentType": ""
     },
     "spell": {
       "description": "",
@@ -993,7 +994,16 @@
       "specialization": "",
       "description": "",
       "baseCha": "",
-      "trainedItems": ""
+      "trainedItems": "",
+      "governingCha": "",
+      "trainedEquipment": [
+        "",
+        "",
+        "",
+        "",
+        ""
+      ],
+      "specialAdvantages": {}
     },
     "skill": {
       "templates": [
