@@ -141,6 +141,41 @@ async function _showTestChoiceDialog({ title, options, actor }) {
 }
 
 /**
+ * Find a skill by name with precise matching.
+ * @param {Actor} actor
+ * @param {string} skillName - Lowercase skill name
+ * @returns {Item|null}
+ */
+function _findSkillByName(actor, skillName) {
+  if (!actor || !skillName) return null;
+  
+  // First try exact match
+  const exactMatch = actor.items.find(i =>
+    i.type === "skill" &&
+    i.name.toLowerCase() === skillName
+  );
+  if (exactMatch) return exactMatch;
+  
+  // For known Special Action skills, allow word-boundary matching
+  const knownSkills = {
+    "athletics": /\bathletics\b/i,
+    "evade": /\bevade\b/i,
+    "deceive": /\bdeceive\b/i,
+    "observe": /\bobserve\b/i
+  };
+  
+  const pattern = knownSkills[skillName];
+  if (pattern) {
+    return actor.items.find(i =>
+      i.type === "skill" &&
+      pattern.test(i.name)
+    );
+  }
+  
+  return null;
+}
+
+/**
  * Get available test options for a Special Action.
  * @param {string} specialActionId
  * @param {"attacker"|"defender"} side
@@ -361,17 +396,8 @@ export async function handleSpecialActionCardAction(message, action) {
       // Roll using Skill TN
       const skillName = choice.testType.toLowerCase();
       
-      // Precise skill matching: exact match first, then check for known skill types
-      const knownSkills = ["athletics", "evade", "deceive", "observe"];
-      const isKnownSkill = knownSkills.includes(skillName);
-      
-      const skillItem = actor.items.find(i =>
-        i.type === "skill" &&
-        i.name.toLowerCase() === skillName
-      ) ?? (isKnownSkill ? actor.items.find(i =>
-        i.type === "skill" &&
-        i.name.toLowerCase().includes(skillName)
-      ) : null);
+      // Find skill item with precise matching
+      const skillItem = _findSkillByName(actor, skillName);
 
       if (!skillItem) {
         ui.notifications.warn(`${actor.name} does not have the ${choice.testType} skill.`);
