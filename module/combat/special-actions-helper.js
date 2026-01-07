@@ -123,7 +123,7 @@ export async function showPreTestChoiceDialog({ specialActionId, actor, isDefend
     if (available.some(opt => opt.includes(key))) {
       const skillItem = actor.items.find(i => 
         i.type === "skill" && 
-        i.name.toLowerCase().includes(config.value)
+        String(i.name || "").trim().toLowerCase() === config.value
       );
       
       if (skillItem) {
