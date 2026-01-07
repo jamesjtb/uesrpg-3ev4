@@ -430,6 +430,29 @@ export class SimpleItem extends Item {
     itemData.autoQualitiesStructured = [...qualityAuto, ...materialAuto]
       .filter(q => q?.key && q.key !== "specialDamageRule")
       .map(q => ({ key: q.key, value: q.value }));
+
+    // Extract reload AP cost from qualitiesStructuredInjected
+    let reloadAPCost = 0;
+    let requiresReload = false;
+
+    if (itemData.attackMode === "ranged") {
+      const injected = itemData.qualitiesStructuredInjected ?? [];
+      const reloadQuality = injected.find(q => String(q?.key ?? "").toLowerCase() === "reload");
+      
+      if (reloadQuality && reloadQuality.value !== undefined) {
+        reloadAPCost = Math.max(0, Number(reloadQuality.value) || 0);
+        requiresReload = reloadAPCost > 0;
+      }
+    }
+
+    // Store in derived state (non-persisted)
+    itemData.reloadState = itemData.reloadState ?? {};
+    itemData.reloadState.reloadAPCost = reloadAPCost;
+    itemData.reloadState.requiresReload = requiresReload;
+    // Don't override isLoaded if it's already set
+    if (itemData.reloadState.isLoaded === undefined) {
+      itemData.reloadState.isLoaded = true;
+    }
   }
 
   _prepareAmmunitionItem(actorData, itemData) {

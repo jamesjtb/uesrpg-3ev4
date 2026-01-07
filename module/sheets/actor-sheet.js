@@ -898,6 +898,88 @@ async activateListeners(html) {
         }).render(true);
       }
 
+      case "reload-weapon": {
+        event.preventDefault();
+        
+        // Get equipped ranged weapon
+        const rangedWeapon = this.actor.items.find(i => 
+          i.type === "weapon" && 
+          i.system?.equipped === true && 
+          i.system?.attackMode === "ranged"
+        );
+        
+        if (!rangedWeapon) {
+          ui.notifications.warn("No equipped ranged weapon to reload.");
+          return;
+        }
+        
+        const reloadState = rangedWeapon.system?.reloadState ?? {};
+        const reloadCost = Number(reloadState.reloadAPCost ?? 0);
+        
+        if (!reloadState.requiresReload || reloadCost === 0) {
+          ui.notifications.info(`${rangedWeapon.name} does not require reloading.`);
+          return;
+        }
+        
+        // Check if already loaded (optional, non-blocking)
+        if (reloadState.isLoaded) {
+          ui.notifications.info(`${rangedWeapon.name} is already loaded.`);
+          return;
+        }
+        
+        // Check for Power Draw stamina effect
+        const { applyPowerDrawBonus } = await import("../stamina/stamina-integration-hooks.js");
+        const powerDrawReduction = await applyPowerDrawBonus(this.actor, rangedWeapon);
+        let effectiveReloadCost = Math.max(0, reloadCost - powerDrawReduction);
+        
+        // Check AP availability
+        const currentAP = Number(this.actor.system?.action_points?.value ?? 0);
+        if (currentAP < effectiveReloadCost) {
+          ui.notifications.warn(`Reload requires ${effectiveReloadCost} AP, but you only have ${currentAP} AP remaining.`);
+          return;
+        }
+        
+        // Consume AP
+        const newAP = currentAP - effectiveReloadCost;
+        await this.actor.update({
+          "system.action_points.value": newAP
+        });
+        
+        // Mark weapon as loaded
+        await rangedWeapon.update({
+          "system.reloadState.isLoaded": true
+        });
+        
+        // Build chat message content
+        const powerDrawNote = powerDrawReduction > 0 
+          ? `<p><em>Power Draw bonus: -${powerDrawReduction} AP</em></p>` 
+          : "";
+        
+        // Send chat message
+        await ChatMessage.create({
+          user: game.user.id,
+          speaker: ChatMessage.getSpeaker({ actor: this.actor }),
+          content: `
+            <div class="uesrpg-chat-card">
+              <header class="card-header">
+                <img src="${rangedWeapon.img}" width="36" height="36"/>
+                <h3>Reload Weapon</h3>
+              </header>
+              <div class="card-content">
+                <p><strong>${this.actor.name}</strong> reloads <strong>${rangedWeapon.name}</strong>.</p>
+                <p><em>AP Cost: ${effectiveReloadCost}${powerDrawReduction > 0 ? ` (${reloadCost} - ${powerDrawReduction})` : ""}</em></p>
+                ${powerDrawNote}
+                <p>Remaining AP: ${newAP}</p>
+              </div>
+            </div>
+          `,
+          type: CONST.CHAT_MESSAGE_TYPES.OTHER
+        });
+        
+        ui.notifications.info(`${rangedWeapon.name} reloaded for ${effectiveReloadCost} AP.`);
+        return;
+      }
+
       case "attack-of-opportunity": {
         if (!requireUserCanRollActor(game.user, this.actor)) return;
         
