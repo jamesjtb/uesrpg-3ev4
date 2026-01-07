@@ -203,7 +203,8 @@ export class SimpleActor extends Actor {
       if (sys.excludeENC === true) stats.excludedEnc += enc * qty;
             const cat = String(sys?.item_cat ?? sys?.category ?? "").trim().toLowerCase();
       const isShield = (item?.type === 'armor') && (cat === "shield" || cat.startsWith("shield"));
-      if (item?.type === 'armor' && isEquipped && !isShield) stats.armorEnc += ((enc / 2) * qty);
+      // RAW Chapter 7: Store full weight of equipped non-shield armor; halving happens in carry_rating calculation
+      if (item?.type === 'armor' && isEquipped && !isShield) stats.armorEnc += (enc * qty);
 
       // Characteristic bonuses (only if equipped)
       if (isEquipped && sys.characteristicBonus) {
@@ -996,7 +997,8 @@ actorSystemData.luck_points.max = lckBonus + actorSystemData.luck_points.bonus;
       ? Number(carryAEs.override.override)
       : withAdd;
     // Guard: Use Number() to ensure numeric value after toFixed for safe carry rating calculations
-    actorSystemData.carry_rating.current = Number((agg.totalEnc - agg.armorEnc - agg.excludedEnc).toFixed(1));
+    // RAW: "ENC is halved when armor is worn (but not for carried shields)"
+    actorSystemData.carry_rating.current = Number((agg.totalEnc - (agg.armorEnc / 2) - agg.excludedEnc).toFixed(1));
 
     //Form Shift Calcs
     if (this._wereWolfForm(actorData) === true) {
@@ -1475,7 +1477,8 @@ actorSystemData.luck_points.max = lckBonus + actorSystemData.luck_points.bonus;
       ? Number(carryAEs.override.override)
       : withAdd;
     // Guard: Use Number() to ensure numeric value after toFixed for safe carry rating calculations
-    actorSystemData.carry_rating.current = Number((agg.totalEnc - agg.armorEnc - agg.excludedEnc).toFixed(1))
+    // RAW: "ENC is halved when armor is worn (but not for carried shields)"
+    actorSystemData.carry_rating.current = Number((agg.totalEnc - (agg.armorEnc / 2) - agg.excludedEnc).toFixed(1))
 
     //Form Shift Calcs
     if (this._wereWolfForm(actorData) === true) {
