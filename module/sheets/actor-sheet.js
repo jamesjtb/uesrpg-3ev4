@@ -8,6 +8,7 @@ import { isUnlucky } from "../helpers/skillCalcHelper.js";
 import chooseBirthsignPenalty from "../dialogs/choose-birthsign-penalty.js";
 import { characteristicAbbreviations } from "../maps/characteristics.js";
 import renderErrorDialog from '../dialogs/error-dialog.js';
+import { applyPhysicalExertionBonus, applyPowerAttackBonus } from "../stamina/stamina-integration-hooks.js";
 import coreRaces from "./racemenu/data/core-races.js";
 import coreVariants from "./racemenu/data/core-variants.js";
 import { renderRaceCards } from "./racemenu/render-race-cards.js";
@@ -48,6 +49,7 @@ import {
 import { bindCommonSheetListeners, bindCommonEditableInventoryListeners } from "./sheet-listeners.js";
 import { shouldHideFromMainInventory } from "./sheet-inventory.js";
 import { prepareCharacterItems } from "./sheet-prepare-items.js";
+import { registerStaminaButtonHandler } from "./actor-sheet-stamina-integration.js";
 
 export class SimpleActorSheet extends foundry.appv1.sheets.ActorSheet {
   /** @override */
@@ -251,6 +253,10 @@ async activateListeners(html) {
   html.find(".incrementResource").click(this._onIncrementResource.bind(this));
   // Resource restore (migrated from label button)
   html.find(".restoreResource").click(this._onResetResource.bind(this));
+  
+  // Register stamina button handler after incrementResource
+  registerStaminaButtonHandler(this, html);
+  
   html.find("#spellFilter").click(this._filterSpells.bind(this));
   html.find("#itemFilter").click(this._filterItems.bind(this));
   html.find(".incrementFatigue").click(this._incrementFatigue.bind(this));
@@ -1198,6 +1204,9 @@ let d = new Dialog({
     event.preventDefault();
     const element = event.currentTarget;
 
+    // Check for Physical Exertion stamina effect
+    const staminaBonus = await applyPhysicalExertionBonus(this.actor, element.id);
+
     // Mobility: Heavy armor imposes -20 to Agility-based tests (except Combat Style).
     // For characteristic rolls, apply only when rolling Agility.
     const mobilityAgiPenalty = (String(element?.id || "").toLowerCase() === "agi")
@@ -1208,12 +1217,14 @@ let d = new Dialog({
       this.actor.system.woundPenalty +
       this.actor.system.fatigue.penalty +
       this.actor.system.carry_rating.penalty +
-      mobilityAgiPenalty;
+      mobilityAgiPenalty +
+      staminaBonus;
     const regularValue =
       this.actor.system.characteristics[element.id].total +
       this.actor.system.fatigue.penalty +
       this.actor.system.carry_rating.penalty +
-      mobilityAgiPenalty;
+      mobilityAgiPenalty +
+      staminaBonus;
     let tags = [];
     const hasWoundPenalty = Number(this.actor.system?.woundPenalty ?? 0) !== 0;
     if (hasWoundPenalty) {
@@ -1240,6 +1251,12 @@ let d = new Dialog({
     if (mobilityAgiPenalty !== 0) {
       tags.push(
         `<span class="tag armor-mobility-tag">Armor Mobility ${mobilityAgiPenalty}</span>`
+      );
+    }
+
+    if (staminaBonus > 0) {
+      tags.push(
+        `<span class="tag">Physical Exertion +${staminaBonus}</span>`
       );
     }
 
@@ -2226,6 +2243,9 @@ async _onDamageRoll(event) {
 
   const shortcutWeapon = weapon;
 
+  // Check for Power Attack stamina effect and apply bonus
+  const powerAttackBonus = await applyPowerAttackBonus(this.actor);
+
   // RAW: Hit Location is usually the 1s digit of the attack roll, but can also be determined by rolling 1d10 (10 counts as 0).
   // This weapon card currently rolls hit location directly (opposed-roll wiring will supply the attack roll later).
   const hit = new Roll("1d10");
@@ -2248,7 +2268,7 @@ async _onDamageRoll(event) {
   const weaponRoll = new Roll(damageString);
   await weaponRoll.evaluate();
   let altRoll = null;
-  let finalDamage = Number(weaponRoll.total);
+  let finalDamage = Number(weaponRoll.total) + powerAttackBonus;
 
   // Superior quality level (legacy boolean) and Proven/Primitive qualities (structured)
   const wantsProven = hasQ("proven");
@@ -2260,13 +2280,13 @@ async _onDamageRoll(event) {
     await altRoll.evaluate();
     const altTotal = Number(altRoll.total);
 
-    if (wantsPrimitive && !wantsProven) finalDamage = Math.min(finalDamage, altTotal);
-    else finalDamage = Math.max(finalDamage, altTotal);
+    if (wantsPrimitive && !wantsProven) finalDamage = Math.min(Number(weaponRoll.total), altTotal) + powerAttackBonus;
+    else finalDamage = Math.max(Number(weaponRoll.total), altTotal) + powerAttackBonus;
   }
 
   const supRollTag = altRoll
-    ? `<div style="margin-top:0.25rem;font-size:x-small;line-height:1.2;">Roll A: ${weaponRoll.total}<br>Roll B: ${altRoll.total}</div>`
-    : "";
+    ? `<div style="margin-top:0.25rem;font-size:x-small;line-height:1.2;">Roll A: ${weaponRoll.total}<br>Roll B: ${altRoll.total}${powerAttackBonus > 0 ? `<br>Power Attack: +${powerAttackBonus}` : ''}</div>`
+    : powerAttackBonus > 0 ? `<div style="margin-top:0.25rem;font-size:x-small;line-height:1.2;">Base: ${weaponRoll.total}<br>Power Attack: +${powerAttackBonus}</div>` : "";
 
   // Render qualities from Structured Qualities + Traits (no journal links).
   const labelIndex = (() => {
