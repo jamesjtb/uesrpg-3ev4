@@ -933,7 +933,8 @@
       "spellTypes": {
         "conventional": "Conventional",
         "unconventional": "Unconventional"
-      }
+      },
+      "isAttackSpell": false
     },
     "trait": {
       "templates": [

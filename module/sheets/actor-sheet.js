@@ -225,10 +225,11 @@ async activateListeners(html) {
   html.find(".characteristic-roll").click(this._onClickCharacteristic.bind(this));
   html.find(".skill-roll").click(this._onSkillRoll.bind(this));
   html.find(".combat-roll").click(this._onCombatRoll.bind(this));
-  html.find(".magic-roll").click(this._onSpellRoll.bind(this));
+  html.find(".magic-roll").click(this._onMagicSkillRoll.bind(this));
   html.find(".resistance-roll").click(this._onResistanceRoll.bind(this));
   html.find(".damage-roll").click(this._onDamageRoll.bind(this));
   html.find(".ammo-roll").click(this._onAmmoRoll.bind(this));
+  html.find(".uesrpg-cast-magic").click(this._onCastMagicAction.bind(this));
   
   // Item image click handler with debounce protection for talents/traits/powers
   html.find(".item-img").on("click", async (event) => {
@@ -1748,6 +1749,332 @@ if (isLucky(this.actor, roll.result)) {
       flags: { uesrpg: { rollRequest: request }, "uesrpg-3ev4": { rollRequest: request } },
       rollMode: game.settings.get("core", "rollMode")
     });
+  }
+
+  /**
+   * Handle magic skill rolls (when clicking dice icon on a magic skill).
+   * Uses the same skill TN computation system as regular skills.
+   * Supports targeted (opposed) vs untargeted (single test) rolls.
+   */
+  async _onMagicSkillRoll(event) {
+    event.preventDefault();
+
+    if (!requireUserCanRollActor(game.user, this.actor)) {
+      return;
+    }
+
+    const button = event.currentTarget;
+    const li = button.closest(".item");
+    const magicSkillItem = this.actor.items.get(li?.dataset.itemId);
+
+    if (!magicSkillItem) {
+      ui.notifications.warn("Magic skill not found.");
+      return;
+    }
+
+    const quickShift = Boolean(event.shiftKey) && game.settings.get("uesrpg-3ev4", "skillRollQuickShift");
+
+    const getLast = () => {
+      try { return game.settings.get("uesrpg-3ev4", "skillRollLastOptions") ?? {}; } catch (_e) { return {}; }
+    };
+    const setLast = async (patch={}) => {
+      const prev = getLast();
+      const next = { ...prev, ...patch };
+      next.lastSkillUuidByActor = { ...(prev.lastSkillUuidByActor||{}), ...(patch.lastSkillUuidByActor||{}) };
+      try { await game.settings.set("uesrpg-3ev4", "skillRollLastOptions", next); } catch (_e) {}
+    };
+
+    // --- Targeted -> opposed workflow ---
+    const targets = [...(game.user.targets ?? [])];
+    if (targets.length > 0) {
+      const attackerToken =
+        canvas?.tokens?.controlled?.find(t => t.actor?.id === this.actor.id) ??
+        this.actor.getActiveTokens?.()[0] ??
+        null;
+
+      if (!attackerToken) {
+        ui.notifications.warn("No attacker token found on the canvas. Select your token and try again.");
+        return;
+      }
+
+      // One opposed card per target
+      const created = [];
+      for (const defenderToken of targets) {
+        const msg = await SkillOpposedWorkflow.createPending({
+          attackerTokenUuid: attackerToken.document?.uuid ?? attackerToken.uuid,
+          defenderTokenUuid: defenderToken.document?.uuid ?? defenderToken.uuid,
+          attackerActorUuid: this.actor.uuid,
+          defenderActorUuid: defenderToken.actor?.uuid ?? null,
+          attackerSkillUuid: magicSkillItem.uuid,
+          attackerSkillLabel: magicSkillItem.name
+        });
+        if (msg) created.push(msg);
+
+        // Shift-click: quick roll for the attacker using defaults
+        if (msg && quickShift) {
+          await SkillOpposedWorkflow.handleAction(msg, "attacker-roll", { event });
+        }
+      }
+
+      return;
+    }
+
+    // --- Untargeted -> single skill test ---
+    const hasSpec = String(magicSkillItem?.system?.trainedItems ?? "").trim().length > 0;
+    const last = getLast();
+
+    const defaults = normalizeSkillRollOptions(last, { difficultyKey: "average", manualMod: 0, useSpec: false });
+
+    let decl = null;
+
+    if (quickShift) {
+      decl = { difficultyKey: defaults.difficultyKey, manualMod: defaults.manualMod, useSpec: defaults.useSpec };
+    } else {
+      const difficultyOptions = SKILL_DIFFICULTIES.map(d => {
+        const sign = d.mod >= 0 ? "+" : "";
+        const sel = d.key === defaults.difficultyKey ? "selected" : "";
+        return `<option value="${d.key}" ${sel}>${d.label} (${sign}${d.mod})</option>`;
+      }).join("\n");
+
+      const content = `
+        <form class="uesrpg-skill-roll">
+          <div class="form-group">
+            <label><b>Difficulty</b></label>
+            <select name="difficultyKey" style="width:100%;">${difficultyOptions}</select>
+          </div>
+          <div class="form-group" style="margin-top:8px;">
+            <label style="display:flex; align-items:center; gap:8px;">
+              <input type="checkbox" name="useSpec" ${hasSpec ? "" : "disabled"} ${defaults.useSpec ? "checked" : ""} />
+              <span><b>Use Specialization</b> (+10)${hasSpec ? "" : ' <span style="opacity:0.75;">(none on this skill)</span>'}</span>
+            </label>
+          </div>
+          <div class="form-group" style="margin-top:8px; display:flex; align-items:center; justify-content:space-between; gap:10px;">
+            <label style="margin:0;"><b>Manual Modifier</b></label>
+            <input name="manualMod" type="number" value="${Number(defaults.manualMod) || 0}" style="width:120px;" />
+          </div>
+        </form>`;
+
+      try {
+        decl = await Dialog.wait({
+          title: `${magicSkillItem.name} — Roll Options`,
+          content,
+          buttons: {
+            ok: {
+              label: "Roll",
+              callback: (html) => {
+                const root = html instanceof HTMLElement ? html : html?.[0];
+                const difficultyKey = root?.querySelector('select[name="difficultyKey"]')?.value ?? "average";
+                const useSpec = Boolean(root?.querySelector('input[name="useSpec"]')?.checked);
+                const rawManual = root?.querySelector('input[name="manualMod"]')?.value ?? "0";
+                const manualMod = Number.parseInt(String(rawManual), 10) || 0;
+                return normalizeSkillRollOptions({ difficultyKey, useSpec, manualMod }, defaults);
+              }
+            },
+            cancel: { label: "Cancel", callback: () => null }
+          },
+          default: "ok"
+        }, { width: 420 });
+      } catch (_e) {
+        decl = null;
+      }
+    }
+
+    if (!decl) return;
+
+    decl = normalizeSkillRollOptions(decl, defaults);
+
+    await setLast({
+      difficultyKey: decl.difficultyKey,
+      manualMod: decl.manualMod,
+      useSpec: Boolean(decl.useSpec),
+      lastSkillUuidByActor: { [this.actor.uuid]: magicSkillItem.uuid }
+    });
+
+    const request = buildSkillRollRequest({
+      actor: this.actor,
+      skillItem: magicSkillItem,
+      targetToken: null,
+      options: { difficultyKey: decl.difficultyKey, manualMod: decl.manualMod, useSpec: Boolean(decl.useSpec) },
+      context: { source: "sheet", quick: quickShift }
+    });
+
+    const tn = computeSkillTN({
+      actor: this.actor,
+      skillItem: magicSkillItem,
+      difficultyKey: decl.difficultyKey,
+      manualMod: decl.manualMod,
+      useSpecialization: hasSpec && decl.useSpec
+    });
+
+    // Tag bar
+    const tags = [];
+    if (Number(this.actor.system?.woundPenalty ?? 0) !== 0) tags.push(`<span class="tag wound-tag">Wounded ${this.actor.system.woundPenalty}</span>`);
+    if (this.actor.system.fatigue.penalty != 0) tags.push(`<span class="tag fatigue-tag">Fatigued ${this.actor.system.fatigue.penalty}</span>`);
+    if (this.actor.system.carry_rating.penalty != 0) tags.push(`<span class="tag enc-tag">Encumbered ${this.actor.system.carry_rating.penalty}</span>`);
+
+    const armorMods = (tn.breakdown ?? []).filter(b => String(b.label || "").startsWith("Armor:") && Number(b.value) !== 0);
+    for (const m of armorMods) {
+      const v = Number(m.value) || 0;
+      tags.push(`<span class="tag armor-tag">${m.label} ${v}</span>`);
+    }
+
+    if (tn?.difficulty?.mod) tags.push(`<span class="tag">${tn.difficulty.label} ${tn.difficulty.mod >= 0 ? "+" : ""}${tn.difficulty.mod}</span>`);
+    if (hasSpec && decl.useSpec) tags.push(`<span class="tag">Specialization +10</span>`);
+    if (decl.manualMod) tags.push(`<span class="tag">Mod ${decl.manualMod >= 0 ? "+" : ""}${decl.manualMod}</span>`);
+
+    const res = await doTestRoll(this.actor, { rollFormula: SYSTEM_ROLL_FORMULA, target: tn.finalTN, allowLucky: true, allowUnlucky: true });
+
+    const degreeLine = res.isSuccess
+      ? `<b style="color:green;">SUCCESS — ${formatDegree(res)}</b>`
+      : `<b style="color:rgb(168, 5, 5);">FAILURE — ${formatDegree(res)}</b>`;
+
+    const breakdownRows = (tn.breakdown ?? []).map(b => {
+      const v = Number(b.value ?? 0);
+      const sign = v >= 0 ? "+" : "";
+      return `<div style="display:flex; justify-content:space-between; gap:10px;"><span>${b.label}</span><span>${sign}${v}</span></div>`;
+    }).join("");
+
+    const declaredParts = [];
+    if (tn?.difficulty?.label) declaredParts.push(`${tn.difficulty.label} (${tn.difficulty.mod >= 0 ? "+" : ""}${tn.difficulty.mod})`);
+    if (hasSpec && decl.useSpec) declaredParts.push("Spec +10");
+    if (decl.manualMod) declaredParts.push(`Mod ${decl.manualMod >= 0 ? "+" : ""}${decl.manualMod}`);
+
+    const flavor = `
+      <div>
+        <h2 style="margin:0 0 6px 0;"><img src="${magicSkillItem.img}" style="height:24px; vertical-align:middle; margin-right:6px;"/>${magicSkillItem.name}</h2>
+        <div><b>Target Number:</b> ${tn.finalTN}</div>
+        ${declaredParts.length ? `<div style="margin-top:2px; font-size:12px; opacity:0.85;"><b>Options:</b> ${declaredParts.join("; ")}</div>` : ""}
+        <div style="margin-top:4px;">${degreeLine}${res.isCriticalSuccess ? ' <span style="color:green;">(CRITICAL)</span>' : ''}${res.isCriticalFailure ? ' <span style="color:red;">(CRITICAL FAIL)</span>' : ''}</div>
+        <details style="margin-top:6px;"><summary style="cursor:pointer; user-select:none;">TN breakdown</summary><div style="margin-top:4px; font-size:12px; opacity:0.9;">${breakdownRows}</div></details>
+        <div class="tag-container" style="margin-top:6px;">${tags.join("")}</div>
+      </div>`;
+
+    await res.roll.toMessage({
+      user: game.user.id,
+      speaker: ChatMessage.getSpeaker({ actor: this.actor }),
+      flavor,
+      flags: { uesrpg: { rollRequest: request }, "uesrpg-3ev4": { rollRequest: request } },
+      rollMode: game.settings.get("core", "rollMode")
+    });
+  }
+
+  /**
+   * Handle Cast Magic button click.
+   * Shows spell picker, then routes to attack spell workflow or existing spell dialog.
+   */
+  async _onCastMagicAction(event) {
+    event.preventDefault();
+    
+    // 1. Get all spells owned by actor
+    const spells = this.actor.items.filter(i => i.type === "spell");
+    if (!spells.length) {
+      ui.notifications.warn("No spells available to cast.");
+      return;
+    }
+    
+    // 2. Show spell selection dialog
+    const spellOptions = spells.map(s => 
+      `<option value="${s.id}">${s.name} (${s.system.school} ${s.system.level}, ${s.system.cost} MP)</option>`
+    ).join("");
+    
+    const content = `
+      <form class="uesrpg-cast-magic-form">
+        <div class="form-group">
+          <label><b>Select Spell to Cast</b></label>
+          <select name="spellId" style="width:100%;">${spellOptions}</select>
+        </div>
+      </form>`;
+    
+    const selectedSpellId = await Dialog.wait({
+      title: "Cast Magic",
+      content,
+      buttons: {
+        cast: {
+          label: "Cast",
+          callback: (html) => {
+            const root = html instanceof HTMLElement ? html : html?.[0];
+            return root?.querySelector('select[name="spellId"]')?.value;
+          }
+        },
+        cancel: { label: "Cancel", callback: () => null }
+      },
+      default: "cast"
+    }, { width: 420 });
+    
+    if (!selectedSpellId) return;
+    
+    const spell = this.actor.items.get(selectedSpellId);
+    if (!spell) return;
+    
+    // 3. Check if spell is attack type and targets exist
+    const targets = [...(game.user.targets ?? [])];
+    const isAttack = Boolean(spell.system?.isAttackSpell);
+    
+    if (isAttack && targets.length > 0) {
+      // Attack spell with target -> opposed workflow
+      await this._castAttackSpell(spell, targets);
+    } else {
+      // Non-attack or no target -> use existing spell dialog
+      // Trigger the existing _onSpellRoll with the spell item
+      const fakeEvent = { currentTarget: { closest: () => ({ dataset: { itemId: spell.id } }) } };
+      await this._onSpellRoll.call(this, fakeEvent);
+    }
+  }
+
+  /**
+   * Cast an attack spell using the opposed workflow.
+   * Calculates casting TN from magic skill, applies spell level penalty, initiates SkillOpposedWorkflow.
+   */
+  async _castAttackSpell(spell, targets) {
+    // Determine magic skill for this spell school
+    const school = String(spell.system?.school ?? "").toLowerCase();
+    let magicSkill = this.actor.items.find(i => 
+      i.type === "magicSkill" && 
+      String(i.name ?? "").toLowerCase().includes(school)
+    );
+    
+    // Fallback to WP bonus if no skill found
+    const wpTotal = Number(this.actor?.system?.characteristics?.wp?.total ?? 0);
+    const wpBonus = Math.floor(wpTotal / 10);
+    const baseTN = magicSkill ? Number(magicSkill.system?.value ?? 0) : wpBonus;
+    
+    // Calculate Spellcasting Level = skill rank numeric value + 1
+    // RAW Chapter 6 p.128 lines 180-184: Spellcasting Level determines max spell level without penalty
+    const rankToNumeric = { untrained: 0, novice: 1, apprentice: 2, journeyman: 3, adept: 4, expert: 5, master: 6 };
+    const skillRank = magicSkill ? (rankToNumeric[String(magicSkill.system?.rank ?? "untrained").toLowerCase()] ?? 0) : 0;
+    const spellcastingLevel = skillRank + 1;
+    
+    // Penalty: -10 per spell level above spellcasting level
+    const spellLevel = Number(spell.system?.level ?? 1);
+    const levelPenalty = Math.max(0, spellLevel - spellcastingLevel) * -10;
+    
+    // Apply standard penalties
+    const fatiguePenalty = Number(this.actor.system?.fatigue?.penalty ?? 0);
+    const carryPenalty = Number(this.actor.system?.carry_rating?.penalty ?? 0);
+    const woundPenalty = Number(this.actor.system?.woundPenalty ?? 0);
+    
+    const attackerTN = baseTN + levelPenalty + fatiguePenalty + carryPenalty + woundPenalty;
+    
+    // Get attacker token
+    const attackerToken = canvas?.tokens?.controlled?.find(t => t.actor?.id === this.actor.id) 
+      ?? this.actor.getActiveTokens?.()[0];
+    
+    if (!attackerToken) {
+      ui.notifications.warn("No attacker token found. Select your token and try again.");
+      return;
+    }
+    
+    // Create opposed workflow for each target
+    for (const defenderToken of targets) {
+      await SkillOpposedWorkflow.createPending({
+        attackerTokenUuid: attackerToken.document?.uuid ?? attackerToken.uuid,
+        defenderTokenUuid: defenderToken.document?.uuid ?? defenderToken.uuid,
+        attackerActorUuid: this.actor.uuid,
+        defenderActorUuid: defenderToken.actor?.uuid ?? null,
+        attackerSkillUuid: magicSkill?.uuid ?? `spell:${spell.id}`,
+        attackerSkillLabel: `${spell.name} (${spell.system.school})`
+      });
+    }
   }
 
   async _onSpellRoll(event) {
