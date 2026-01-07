@@ -14,7 +14,7 @@
  * The helper functions are ready and can be called from the appropriate combat resolution points.
  */
 
-import { getActiveStaminaEffect, consumeStaminaEffect } from "./stamina-dialog.js";
+import { getActiveStaminaEffect, consumeStaminaEffect, STAMINA_EFFECT_KEYS } from "./stamina-dialog.js";
 
 /**
  * Check and apply Physical Exertion bonus to characteristic test
@@ -31,11 +31,11 @@ export async function applyPhysicalExertionBonus(actor, characteristicId) {
   // Physical Exertion only applies to STR/END tests
   if (charId !== 'str' && charId !== 'end') return 0;
   
-  const effect = getActiveStaminaEffect(actor, "stamina-physical-exertion");
+  const effect = getActiveStaminaEffect(actor, STAMINA_EFFECT_KEYS.PHYSICAL_EXERTION);
   if (!effect) return 0;
   
   // Consume the effect and apply bonus
-  await consumeStaminaEffect(actor, "stamina-physical-exertion", {
+  await consumeStaminaEffect(actor, STAMINA_EFFECT_KEYS.PHYSICAL_EXERTION, {
     bonus: "+20 to test"
   });
   
@@ -63,11 +63,11 @@ export async function applyPhysicalExertionToSkill(actor, skillItem) {
   // Physical Exertion only applies to STR/END based skills
   if (charId !== 'str' && charId !== 'end') return 0;
   
-  const effect = getActiveStaminaEffect(actor, "stamina-physical-exertion");
+  const effect = getActiveStaminaEffect(actor, STAMINA_EFFECT_KEYS.PHYSICAL_EXERTION);
   if (!effect) return 0;
   
   // Consume the effect and apply bonus
-  await consumeStaminaEffect(actor, "stamina-physical-exertion", {
+  await consumeStaminaEffect(actor, STAMINA_EFFECT_KEYS.PHYSICAL_EXERTION, {
     bonus: "+20 to test",
     message: `Applied to ${skillItem.name} skill test`
   });
@@ -84,13 +84,13 @@ export async function applyPhysicalExertionToSkill(actor, skillItem) {
 export async function applyPowerAttackBonus(actor) {
   if (!actor) return 0;
   
-  const effect = getActiveStaminaEffect(actor, "stamina-power-attack");
+  const effect = getActiveStaminaEffect(actor, STAMINA_EFFECT_KEYS.POWER_ATTACK);
   if (!effect) return 0;
   
   const bonus = effect.flags?.uesrpg?.damageBonus || 0;
   
   // Consume the effect
-  await consumeStaminaEffect(actor, "stamina-power-attack", {
+  await consumeStaminaEffect(actor, STAMINA_EFFECT_KEYS.POWER_ATTACK, {
     bonus: `+${bonus} damage`
   });
   
@@ -106,11 +106,11 @@ export async function applyPowerAttackBonus(actor) {
 export async function applySprintBonus(actor) {
   if (!actor) return null;
   
-  const effect = getActiveStaminaEffect(actor, "stamina-sprint");
+  const effect = getActiveStaminaEffect(actor, STAMINA_EFFECT_KEYS.SPRINT);
   if (!effect) return null;
   
   // Consume the effect
-  const result = await consumeStaminaEffect(actor, "stamina-sprint", {
+  const result = await consumeStaminaEffect(actor, STAMINA_EFFECT_KEYS.SPRINT, {
     message: "Movement range doubled for this Dash action"
   });
   
@@ -127,11 +127,11 @@ export async function applySprintBonus(actor) {
 export async function applyPowerDrawBonus(actor, weapon) {
   if (!actor) return 0;
   
-  const effect = getActiveStaminaEffect(actor, "stamina-power-draw");
+  const effect = getActiveStaminaEffect(actor, STAMINA_EFFECT_KEYS.POWER_DRAW);
   if (!effect) return 0;
   
   // Consume the effect
-  await consumeStaminaEffect(actor, "stamina-power-draw", {
+  await consumeStaminaEffect(actor, STAMINA_EFFECT_KEYS.POWER_DRAW, {
     message: `Reload time reduced by 1 for ${weapon?.name || "ranged weapon"}`
   });
   
@@ -148,13 +148,13 @@ export async function applyPowerDrawBonus(actor, weapon) {
 export async function applyPowerBlockBonus(actor, originalBR) {
   if (!actor) return originalBR;
   
-  const effect = getActiveStaminaEffect(actor, "stamina-power-block");
+  const effect = getActiveStaminaEffect(actor, STAMINA_EFFECT_KEYS.POWER_BLOCK);
   if (!effect) return originalBR;
   
   const doubledBR = originalBR * 2;
   
   // Consume the effect
-  await consumeStaminaEffect(actor, "stamina-power-block", {
+  await consumeStaminaEffect(actor, STAMINA_EFFECT_KEYS.POWER_BLOCK, {
     message: `Shield BR doubled: ${originalBR} → ${doubledBR} (physical damage only)`
   });
   

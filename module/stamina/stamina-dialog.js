@@ -7,6 +7,18 @@ import { createOrUpdateStatusEffect } from "../effects/status-effect.js";
 import { requestUpdateDocument } from "../helpers/authority-proxy.js";
 
 /**
+ * Stamina effect key constants to avoid typos
+ */
+export const STAMINA_EFFECT_KEYS = {
+  PHYSICAL_EXERTION: "stamina-physical-exertion",
+  SPRINT: "stamina-sprint",
+  POWER_DRAW: "stamina-power-draw",
+  POWER_ATTACK: "stamina-power-attack",
+  POWER_BLOCK: "stamina-power-block",
+  HEROIC_USED: "stamina-heroic-used-this-round"
+};
+
+/**
  * Stamina spending options with their costs and descriptions
  */
 const STAMINA_OPTIONS = [
@@ -15,7 +27,7 @@ const STAMINA_OPTIONS = [
     name: "Physical Exertion",
     cost: 1,
     description: "+20 bonus on next STR/END based skill or characteristic test (not Combat Style)",
-    effectKey: "stamina-physical-exertion",
+    effectKey: STAMINA_EFFECT_KEYS.PHYSICAL_EXERTION,
     consumeOn: "str-end-test"
   },
   {
@@ -23,7 +35,7 @@ const STAMINA_OPTIONS = [
     name: "Sprint",
     cost: 1,
     description: "Next Dash action allows movement up to 2× speed",
-    effectKey: "stamina-sprint",
+    effectKey: STAMINA_EFFECT_KEYS.SPRINT,
     consumeOn: "dash"
   },
   {
@@ -31,7 +43,7 @@ const STAMINA_OPTIONS = [
     name: "Power Draw",
     cost: 1,
     description: "Reduce reload time by 1 for next ranged weapon shot",
-    effectKey: "stamina-power-draw",
+    effectKey: STAMINA_EFFECT_KEYS.POWER_DRAW,
     consumeOn: "ranged-shot"
   },
   {
@@ -39,7 +51,7 @@ const STAMINA_OPTIONS = [
     name: "Power Attack",
     cost: "1-3",
     description: "+2 damage per SP spent (max +6), spend before damage roll",
-    effectKey: "stamina-power-attack",
+    effectKey: STAMINA_EFFECT_KEYS.POWER_ATTACK,
     consumeOn: "damage-roll",
     allowAmount: true
   },
@@ -48,7 +60,7 @@ const STAMINA_OPTIONS = [
     name: "Power Block",
     cost: 1,
     description: "Double shield BR vs physical damage, spend after damage roll",
-    effectKey: "stamina-power-block",
+    effectKey: STAMINA_EFFECT_KEYS.POWER_BLOCK,
     consumeOn: "block"
   },
   {
@@ -165,7 +177,7 @@ async function spendStamina(actor, option, spAmount = 1) {
     
     // Check if already used this round
     const hasHeroicThisRound = actor.effects.find(e => 
-      !e.disabled && e?.flags?.uesrpg?.key === "stamina-heroic-used-this-round"
+      !e.disabled && e?.flags?.uesrpg?.key === STAMINA_EFFECT_KEYS.HEROIC_USED
     );
     
     if (hasHeroicThisRound) {
@@ -192,7 +204,7 @@ async function spendStamina(actor, option, spAmount = 1) {
       duration: {},
       flags: {
         uesrpg: {
-          key: "stamina-heroic-used-this-round",
+          key: STAMINA_EFFECT_KEYS.HEROIC_USED,
           description: "Heroic Action used this round"
         }
       }

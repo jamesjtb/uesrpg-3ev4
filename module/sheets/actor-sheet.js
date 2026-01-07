@@ -774,9 +774,15 @@ async activateListeners(html) {
         const speed = this.actor.system?.speed?.value ?? 0;
         const movement = sprintEffect ? speed * 2 : speed;
         
+        // Build Dash description
+        const baseDescription = "The character can use this action in order to move up to their Speed";
+        const sprintNote = sprintEffect ? " (2× Speed from Sprint effect)" : "";
+        const turnDescription = "If this is done on their Turn, this movement is added to their base movement for that Turn. This action can be used to allow a character to move several times their Speed during a round.";
+        const sprintDetails = sprintEffect ? `<p><b>Sprint Active:</b> Movement up to ${movement} meters</p>` : "";
+        
         await postActionCard(
           "Dash",
-          `<p>The character can use this action in order to move up to their Speed${sprintEffect ? ' (2× Speed from Sprint effect)' : ''}. If this is done on their Turn, this movement is added to their base movement for that Turn. This action can be used to allow a character to move several times their Speed during a round.</p>${sprintEffect ? `<p><b>Sprint Active:</b> Movement up to ${movement} meters</p>` : ''}`
+          `<p>${baseDescription}${sprintNote}. ${turnDescription}</p>${sprintDetails}`
         );
         return;
       }
@@ -2279,7 +2285,7 @@ async _onDamageRoll(event) {
   const weaponRoll = new Roll(damageString);
   await weaponRoll.evaluate();
   let altRoll = null;
-  let finalDamage = Number(weaponRoll.total) + powerAttackBonus;
+  let baseDamage = Number(weaponRoll.total);
 
   // Superior quality level (legacy boolean) and Proven/Primitive qualities (structured)
   const wantsProven = hasQ("proven");
@@ -2291,9 +2297,12 @@ async _onDamageRoll(event) {
     await altRoll.evaluate();
     const altTotal = Number(altRoll.total);
 
-    if (wantsPrimitive && !wantsProven) finalDamage = Math.min(Number(weaponRoll.total), altTotal) + powerAttackBonus;
-    else finalDamage = Math.max(Number(weaponRoll.total), altTotal) + powerAttackBonus;
+    if (wantsPrimitive && !wantsProven) baseDamage = Math.min(baseDamage, altTotal);
+    else baseDamage = Math.max(baseDamage, altTotal);
   }
+
+  // Apply Power Attack bonus once to final damage
+  const finalDamage = baseDamage + powerAttackBonus;
 
   const supRollTag = altRoll
     ? `<div style="margin-top:0.25rem;font-size:x-small;line-height:1.2;">Roll A: ${weaponRoll.total}<br>Roll B: ${altRoll.total}${powerAttackBonus > 0 ? `<br>Power Attack: +${powerAttackBonus}` : ''}</div>`
