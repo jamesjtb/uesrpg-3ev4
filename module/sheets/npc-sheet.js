@@ -1981,7 +1981,7 @@ async _onDefendRoll(event) {
         defenderTokenUuid: defenderToken.document?.uuid ?? defenderToken.uuid,
         attackerActorUuid: this.actor.uuid,
         defenderActorUuid: defenderToken.actor?.uuid ?? null,
-        attackerSkillUuid: magicSkill?.uuid ?? `spell:${spell.id}`,
+        attackerSkillUuid: magicSkill?.uuid ?? null,
         attackerSkillLabel: `${spell.name} (${spell.system.school})`
       });
     }
