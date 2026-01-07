@@ -499,7 +499,8 @@ _prepareContainerItem(actorData, itemData) {
     currentCapacity += enc * qty;
   }
 
-  const appliedENC = Math.ceil(currentCapacity / 2);
+  // RAW: "halve the total effective value of the ENC contained within them"
+  const appliedENC = Math.floor(currentCapacity / 2);
   itemData.container_enc = itemData.container_enc || {};
   itemData.container_enc.item_count = itemCount;
   itemData.container_enc.current = currentCapacity;
