@@ -4426,6 +4426,37 @@ if (stage === "attacker-roll") {
         await _applyPressAdvantageEffect(attacker, defenderActor, { attackerTokenUuid: data.attacker?.tokenUuid ?? null, defenderTokenUuid: data.defender?.tokenUuid ?? null });
       }
 
+      // Execute Special Advantage automation (free + auto-win)
+      if (Array.isArray(selection.specialActionsSelected) && selection.specialActionsSelected.length > 0) {
+        try {
+          const { executeSpecialAction } = await import("./special-actions-helper.js");
+          const defenderActor = _resolveDoc(data?.defender?.actorUuid);
+          
+          for (const saId of selection.specialActionsSelected) {
+            const result = await executeSpecialAction({
+              specialActionId: saId,
+              actor: attacker,
+              target: defenderActor ?? null,
+              isAdvantageMode: true,
+              opposedResult: { winner: "attacker" }
+            });
+
+            if (result.success) {
+              await ChatMessage.create({
+                user: game.user.id,
+                speaker: ChatMessage.getSpeaker({ actor: attacker }),
+                content: `<div class="uesrpg-special-action-advantage"><b>Special Advantage:</b><p>${result.message}</p></div>`,
+                style: CONST.CHAT_MESSAGE_STYLES.OTHER
+              });
+            } else {
+              ui.notifications.warn(`Special Advantage: ${result.message}`);
+            }
+          }
+        } catch (err) {
+          console.error("UESRPG | Failed to execute Special Advantage automation", err);
+        }
+      }
+
       // Hit location RAW: ones digit of attack roll, unless Precision Strike is used.
       const hitLocationRaw = (advCount > 0 && selection.precisionStrike)
         ? selection.precisionLocation
@@ -4724,11 +4755,19 @@ const dmgMsg = await ChatMessage.create({
       data.advantageSpent = data.advantageSpent ?? {};
       data.advantageResolution = data.advantageResolution ?? {};
       data.advantageSpent.defender = true;
-      data.advantageResolution.defender = { overextend: Boolean(choice.overextend), overwhelm: Boolean(choice.overwhelm) };
+      data.advantageResolution.defender = { 
+        overextend: Boolean(choice.overextend), 
+        overwhelm: Boolean(choice.overwhelm),
+        specialActionsSelected: Array.isArray(choice.specialActionsSelected) ? choice.specialActionsSelected.slice() : []
+      };
 
       data.defenderAdvantage = {
         resolved: true,
-        choice: { overextend: Boolean(choice.overextend), overwhelm: Boolean(choice.overwhelm) },
+        choice: { 
+          overextend: Boolean(choice.overextend), 
+          overwhelm: Boolean(choice.overwhelm),
+          specialActionsSelected: Array.isArray(choice.specialActionsSelected) ? choice.specialActionsSelected.slice() : []
+        },
         resolvedAt: Date.now(),
         resolvedBy: game.user.id,
       };
@@ -4745,6 +4784,36 @@ const dmgMsg = await ChatMessage.create({
       }
       if (choice.overwhelm) {
         await _applyOverwhelmEffect(attacker, { defenderUuid: defender.uuid });
+      }
+
+      // Execute Special Advantage automation for defender (free + auto-win)
+      if (Array.isArray(choice.specialActionsSelected) && choice.specialActionsSelected.length > 0) {
+        try {
+          const { executeSpecialAction } = await import("./special-actions-helper.js");
+          
+          for (const saId of choice.specialActionsSelected) {
+            const result = await executeSpecialAction({
+              specialActionId: saId,
+              actor: defender,
+              target: attacker ?? null,
+              isAdvantageMode: true,
+              opposedResult: { winner: "defender" }
+            });
+
+            if (result.success) {
+              await ChatMessage.create({
+                user: game.user.id,
+                speaker: ChatMessage.getSpeaker({ actor: defender }),
+                content: `<div class="uesrpg-special-action-advantage"><b>Special Advantage:</b><p>${result.message}</p></div>`,
+                style: CONST.CHAT_MESSAGE_STYLES.OTHER
+              });
+            } else {
+              ui.notifications.warn(`Special Advantage: ${result.message}`);
+            }
+          }
+        } catch (err) {
+          console.error("UESRPG | Failed to execute Special Advantage automation", err);
+        }
       }
 
       await ChatMessage.create({

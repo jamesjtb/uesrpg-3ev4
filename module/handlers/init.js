@@ -623,4 +623,43 @@ Hooks.once("ready", async () => {
   registerActorSelectDebug();
   }
 });
+
+// Auto-execute Special Action outcomes when skill opposed test resolves
+Hooks.on("createChatMessage", async (message) => {
+  const state = message?.flags?.["uesrpg-3ev4"]?.skillOpposed?.state;
+  if (!state?.outcome || !state?.specialActionId) return;
+
+  try {
+    const { executeSpecialAction } = await import("../combat/special-actions-helper.js");
+    
+    const attacker = fromUuidSync(state.attacker?.actorUuid);
+    const defender = fromUuidSync(state.defender?.actorUuid);
+    
+    // Attacker is always required; defender is required for all opposed actions
+    // (Arise is handled separately and doesn't trigger this hook)
+    if (!attacker) return;
+    
+    // Most Special Actions require a defender, but be defensive
+    const target = defender ?? null;
+
+    const result = await executeSpecialAction({
+      specialActionId: state.specialActionId,
+      actor: attacker,
+      target,
+      isAdvantageMode: false,
+      opposedResult: state.outcome
+    });
+
+    if (result.success) {
+      await ChatMessage.create({
+        user: game.user.id,
+        speaker: ChatMessage.getSpeaker({ actor: attacker }),
+        content: `<div class="uesrpg-special-action-outcome"><b>Special Action Outcome:</b><p>${result.message}</p></div>`,
+        style: CONST.CHAT_MESSAGE_STYLES.OTHER
+      });
+    }
+  } catch (err) {
+    console.error("UESRPG | Failed to execute Special Action outcome automation", err);
+  }
+});
 }
