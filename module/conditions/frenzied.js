@@ -336,3 +336,9 @@ export function registerFrenzied() {
     }
   });
 }
+
+export const FrenziedAPI = {
+  applyFrenzied,
+  removeFrenzied,
+  promptWillpowerTest
+};

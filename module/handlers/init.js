@@ -12,7 +12,7 @@ import { registerDebugSettingsMenu } from "../dev/debug-settings.js";
 import { registerOpposedDiagnostics } from "../dev/opposed-diagnostics.js";
 import { registerConditions } from "../conditions/index.js";
 import { registerWounds } from "../wounds/index.js";
-import { registerFrenzied } from "../conditions/frenzied.js";
+import { registerFrenzied, FrenziedAPI } from "../conditions/frenzied.js";
 import { applyDamage, applyHealing, DAMAGE_TYPES } from "../combat/damage-automation.js";
 import { applyDamageResolved } from "../combat/damage-resolver.js";
 import { registerChatMessageSocket } from "../helpers/chat-message-socket.js";
@@ -534,6 +534,8 @@ game.uesrpg.combat.applyHealing = async (actor, amount, options = {}) => {
   // Frenzied condition automation (Chapter 5)
   try {
     registerFrenzied();
+    if (!game.uesrpg.conditions) game.uesrpg.conditions = {};
+    game.uesrpg.conditions.frenzied = FrenziedAPI;
   } catch (err) {
     console.warn("UESRPG | Failed to register Frenzied automation", err);
   }
