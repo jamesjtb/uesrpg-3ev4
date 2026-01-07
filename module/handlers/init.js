@@ -635,12 +635,17 @@ Hooks.on("createChatMessage", async (message) => {
     const attacker = fromUuidSync(state.attacker?.actorUuid);
     const defender = fromUuidSync(state.defender?.actorUuid);
     
-    if (!attacker || !defender) return;
+    // Attacker is always required; defender is required for all opposed actions
+    // (Arise is handled separately and doesn't trigger this hook)
+    if (!attacker) return;
+    
+    // Most Special Actions require a defender, but be defensive
+    const target = defender ?? null;
 
     const result = await executeSpecialAction({
       specialActionId: state.specialActionId,
       actor: attacker,
-      target: defender,
+      target,
       isAdvantageMode: false,
       opposedResult: state.outcome
     });
