@@ -247,10 +247,8 @@ const STATIC_CONDITIONS = {
 
   frenzied: {
     name: "Frenzied",
-    // Core icon (Foundry) used in the Token HUD palette.
     icon: "icons/svg/terror.svg",
-    // Tracking-only condition for now.
-    // NOTE: Full frenzy automation (actions/AP/forced behavior) is intentionally deferred to a later package.
+    // Automated via frenzied.js; changes are dynamic based on talents
     changes: []
   },
 
