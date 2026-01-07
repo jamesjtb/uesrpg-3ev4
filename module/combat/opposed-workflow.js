@@ -4513,27 +4513,49 @@ if (stage === "attacker-roll") {
       // Execute Special Advantage automation (free + auto-win)
       if (Array.isArray(selection.specialActionsSelected) && selection.specialActionsSelected.length > 0) {
         try {
-          const { executeSpecialAction } = await import("./special-actions-helper.js");
+          const { showSpecialAdvantageDialog, executeSpecialAction, createSpecialActionOpposedTest } = await import("./special-actions-helper.js");
           const defenderActor = _resolveDoc(data?.defender?.actorUuid);
           
           for (const saId of selection.specialActionsSelected) {
-            const result = await executeSpecialAction({
-              specialActionId: saId,
-              actor: attacker,
-              target: defenderActor ?? null,
-              isAdvantageMode: true,
-              opposedResult: { winner: "attacker" }
-            });
+            const choice = await showSpecialAdvantageDialog(saId);
+            if (!choice) continue;
 
-            if (result.success) {
-              await ChatMessage.create({
-                user: game.user.id,
-                speaker: ChatMessage.getSpeaker({ actor: attacker }),
-                content: `<div class="uesrpg-special-action-advantage"><b>Special Advantage:</b><p>${result.message}</p></div>`,
-                style: CONST.CHAT_MESSAGE_STYLES.OTHER
+            if (choice.mode === "autowin") {
+              // Auto-win: skip test, automatic success
+              const result = await executeSpecialAction({
+                specialActionId: saId,
+                actor: attacker,
+                target: defenderActor ?? null,
+                isAutoWin: true,
+                opposedResult: { winner: "attacker" }
               });
-            } else {
-              ui.notifications.warn(`Special Advantage: ${result.message}`);
+
+              if (result.success) {
+                await ChatMessage.create({
+                  user: game.user.id,
+                  speaker: ChatMessage.getSpeaker({ actor: attacker }),
+                  content: `<div class="uesrpg-special-action-advantage"><b>Special Advantage (Auto-Win):</b><p>${result.message}</p></div>`,
+                  style: CONST.CHAT_MESSAGE_STYLES.OTHER
+                });
+              }
+            } else if (choice.mode === "free") {
+              // Free action: initiate opposed test (no AP cost)
+              const attackerTokenUuid = data.attacker?.tokenUuid ?? null;
+              const defenderTokenUuid = data.defender?.tokenUuid ?? null;
+              const attackerToken = attackerTokenUuid ? fromUuidSync(attackerTokenUuid)?.object : null;
+              const defenderToken = defenderTokenUuid ? fromUuidSync(defenderTokenUuid)?.object : null;
+
+              if (attackerToken && defenderToken) {
+                await createSpecialActionOpposedTest({
+                  specialActionId: saId,
+                  attackerToken,
+                  defenderToken,
+                  isFreeAction: true
+                });
+
+                const def = await import("../config/special-actions.js").then(m => m.getSpecialActionById(saId));
+                ui.notifications.info(`Special Advantage: ${def?.name} used as free action.`);
+              }
             }
           }
         } catch (err) {
@@ -4873,26 +4895,49 @@ const dmgMsg = await ChatMessage.create({
       // Execute Special Advantage automation for defender (free + auto-win)
       if (Array.isArray(choice.specialActionsSelected) && choice.specialActionsSelected.length > 0) {
         try {
-          const { executeSpecialAction } = await import("./special-actions-helper.js");
+          const { showSpecialAdvantageDialog, executeSpecialAction, createSpecialActionOpposedTest } = await import("./special-actions-helper.js");
           
           for (const saId of choice.specialActionsSelected) {
-            const result = await executeSpecialAction({
-              specialActionId: saId,
-              actor: defender,
-              target: attacker ?? null,
-              isAdvantageMode: true,
-              opposedResult: { winner: "defender" }
-            });
+            const advChoice = await showSpecialAdvantageDialog(saId);
+            if (!advChoice) continue;
 
-            if (result.success) {
-              await ChatMessage.create({
-                user: game.user.id,
-                speaker: ChatMessage.getSpeaker({ actor: defender }),
-                content: `<div class="uesrpg-special-action-advantage"><b>Special Advantage:</b><p>${result.message}</p></div>`,
-                style: CONST.CHAT_MESSAGE_STYLES.OTHER
+            if (advChoice.mode === "autowin") {
+              // Auto-win: skip test, automatic success
+              const result = await executeSpecialAction({
+                specialActionId: saId,
+                actor: defender,
+                target: attacker ?? null,
+                isAutoWin: true,
+                opposedResult: { winner: "defender" }
               });
-            } else {
-              ui.notifications.warn(`Special Advantage: ${result.message}`);
+
+              if (result.success) {
+                await ChatMessage.create({
+                  user: game.user.id,
+                  speaker: ChatMessage.getSpeaker({ actor: defender }),
+                  content: `<div class="uesrpg-special-action-advantage"><b>Special Advantage (Auto-Win):</b><p>${result.message}</p></div>`,
+                  style: CONST.CHAT_MESSAGE_STYLES.OTHER
+                });
+              }
+            } else if (advChoice.mode === "free") {
+              // Free action: initiate opposed test (no AP cost)
+              const attackerTokenUuid = data.attacker?.tokenUuid ?? null;
+              const defenderTokenUuid = data.defender?.tokenUuid ?? null;
+              const attackerToken = attackerTokenUuid ? fromUuidSync(attackerTokenUuid)?.object : null;
+              const defenderToken = defenderTokenUuid ? fromUuidSync(defenderTokenUuid)?.object : null;
+
+              // Defender initiates, so swap attacker/defender roles
+              if (attackerToken && defenderToken) {
+                await createSpecialActionOpposedTest({
+                  specialActionId: saId,
+                  attackerToken: defenderToken,
+                  defenderToken: attackerToken,
+                  isFreeAction: true
+                });
+
+                const def = await import("../config/special-actions.js").then(m => m.getSpecialActionById(saId));
+                ui.notifications.info(`Special Advantage: ${def?.name} used as free action.`);
+              }
             }
           }
         } catch (err) {

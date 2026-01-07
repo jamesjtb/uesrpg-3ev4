@@ -1,5 +1,11 @@
 /**
  * module/combat/special-actions-helper.js
+ * 
+ * Full automation for Special Actions (Chapter 5) with:
+ * - Interactive opposed test cards with action buttons
+ * - Combat Style OR Skill choice for both attacker and defender
+ * - Special Advantage mode selection (Free Action OR Auto-Win)
+ * - Active Effect automation using system condition engine
  */
 
 import { hasCondition, applyCondition, removeCondition } from "../conditions/condition-engine.js";
@@ -8,138 +14,284 @@ import { ActionEconomy } from "./action-economy.js";
 
 const SYSTEM_ID = "uesrpg-3ev4";
 
-function _resolveActor(docOrUuid) {
-  if (!docOrUuid) return null;
-  const doc = typeof docOrUuid === "string" ? fromUuidSync(docOrUuid) : docOrUuid;
-  if (!doc) return null;
-  if (doc.documentName === "Actor") return doc;
-  if (doc.documentName === "Token") return doc.actor ?? null;
-  if (doc.actor) return doc.actor;
-  return null;
-}
-
-function _resolveToken(docOrUuid) {
-  if (!docOrUuid) return null;
-  const doc = typeof docOrUuid === "string" ? fromUuidSync(docOrUuid) : docOrUuid;
-  if (!doc) return null;
-  if (doc.documentName === "Token") return doc.object ?? null;
-  if (doc.actor && doc.document) return doc;
-  return null;
-}
-
 /**
- * Apply condition safely with metadata for Feint tracking.
+ * Show Special Advantage mode selection dialog.
+ * @param {string} specialActionId 
+ * @returns {Promise<{mode: "free"|"autowin"}|null>}
  */
-async function _applyConditionWithMetadata(actor, conditionKey, { duration = null, source = null, attackerUuid = null } = {}) {
-  if (!actor) return null;
-
-  try {
-    await applyCondition(actor, conditionKey, { origin: null, source: source ?? "specialAction" });
-    
-    if (conditionKey === "feinted" && attackerUuid) {
-      const effect = actor.effects.find(e => 
-        !e.disabled && 
-        (e?.flags?.["uesrpg-3ev4"]?.condition?.key === "feinted")
-      );
-      
-      if (effect && duration) {
-        await effect.update({
-          duration,
-          [`flags.uesrpg-3ev4.condition.attackerUuid`]: attackerUuid
-        });
-      }
-    }
-    
-    return true;
-  } catch (err) {
-    console.error(`UESRPG | Special Actions | Failed to apply condition "${conditionKey}"`, err);
-    return false;
-  }
-}
-
-async function postSpecialActionCard({
-  specialActionId,
-  actor,
-  target,
-  actorToken = null,
-  targetToken = null
-} = {}) {
+export async function showSpecialAdvantageDialog(specialActionId) {
   const def = getSpecialActionById(specialActionId);
   if (!def) return null;
 
-  const actorName = actor?.name ?? "Actor";
-  const targetName = target?.name ?? "Target";
+  return new Promise((resolve) => {
+    const dialog = new Dialog({
+      title: `Special Advantage: ${def.name}`,
+      content: `
+        <div style="padding: 10px;">
+          <p>You are using <strong>${def.name}</strong> as a Special Advantage.</p>
+          <p>Choose how to use it:</p>
+          <form>
+            <div style="margin: 10px 0;">
+              <label>
+                <input type="radio" name="advMode" value="free" checked>
+                <strong>Free Action</strong> - No AP cost, but roll opposed test normally
+              </label>
+            </div>
+            <div style="margin: 10px 0;">
+              <label>
+                <input type="radio" name="advMode" value="autowin">
+                <strong>Auto-Win</strong> - Automatically win the opposed test (still costs AP if not using as advantage)
+              </label>
+            </div>
+          </form>
+        </div>
+      `,
+      buttons: {
+        confirm: {
+          label: "Confirm",
+          callback: (html) => {
+            const root = html instanceof HTMLElement ? html : html?.[0];
+            const selected = root?.querySelector('input[name="advMode"]:checked')?.value ?? "free";
+            resolve({ mode: selected });
+          }
+        },
+        cancel: {
+          label: "Cancel",
+          callback: () => resolve(null)
+        }
+      },
+      default: "confirm",
+      close: () => resolve(null)
+    });
+    dialog.render(true);
+  });
+}
 
-  const skillMapping = {
-    bash: { 
-      attacker: ["Athletics", "Combat Style (unarmed)"], 
-      defender: ["Athletics", "Combat Style (unarmed)", "Evade"] 
+/**
+ * Show test choice dialog (Combat Style vs Skills).
+ * @param {Object} options
+ * @param {string} options.title
+ * @param {string[]} options.options - Available test types (e.g., ["Combat Style", "Athletics", "Evade"])
+ * @param {Actor} options.actor
+ * @returns {Promise<{testType: string}|null>}
+ */
+async function _showTestChoiceDialog({ title, options, actor }) {
+  if (!options || options.length === 0) return null;
+  if (options.length === 1) return { testType: options[0] };
+
+  // Check if actor has active combat style
+  const { getActiveCombatStyleId } = await import("./combat-style-utils.js");
+  const activeCombatStyleId = getActiveCombatStyleId(actor);
+  const hasCombatStyle = Boolean(activeCombatStyleId);
+
+  // Filter options based on availability
+  const availableOptions = options.filter(opt => {
+    if (opt === "Combat Style") return hasCombatStyle;
+    return true; // Skills are always available if listed
+  });
+
+  if (availableOptions.length === 0) {
+    ui.notifications.warn("No available test options for this Special Action.");
+    return null;
+  }
+
+  if (availableOptions.length === 1) {
+    return { testType: availableOptions[0] };
+  }
+
+  return new Promise((resolve) => {
+    const optionsHtml = availableOptions.map((opt, idx) => `
+      <div style="margin: 8px 0;">
+        <label>
+          <input type="radio" name="testChoice" value="${opt}" ${idx === 0 ? 'checked' : ''}>
+          <strong>${opt}</strong>
+        </label>
+      </div>
+    `).join('');
+
+    const dialog = new Dialog({
+      title,
+      content: `
+        <div style="padding: 10px;">
+          <p>Choose which test to use:</p>
+          <form>
+            ${optionsHtml}
+          </form>
+        </div>
+      `,
+      buttons: {
+        confirm: {
+          label: "Confirm",
+          callback: (html) => {
+            const root = html instanceof HTMLElement ? html : html?.[0];
+            const selected = root?.querySelector('input[name="testChoice"]:checked')?.value;
+            resolve(selected ? { testType: selected } : null);
+          }
+        },
+        cancel: {
+          label: "Cancel",
+          callback: () => resolve(null)
+        }
+      },
+      default: "confirm",
+      close: () => resolve(null)
+    });
+    dialog.render(true);
+  });
+}
+
+/**
+ * Get available test options for a Special Action.
+ * @param {string} specialActionId
+ * @param {"attacker"|"defender"} side
+ * @returns {string[]}
+ */
+function _getTestOptions(specialActionId, side) {
+  const mapping = {
+    bash: {
+      attacker: ["Combat Style", "Athletics"],
+      defender: ["Combat Style", "Athletics", "Evade"]
     },
-    blindOpponent: { 
-      attacker: ["Combat Style"], 
-      defender: ["Evade", "Combat Style (with shield)"] 
+    blindOpponent: {
+      attacker: ["Combat Style"],
+      defender: ["Combat Style", "Evade"]
     },
-    disarm: { 
-      attacker: ["Athletics", "Combat Style (unarmed)"], 
-      defender: ["Athletics", "Combat Style (unarmed)"] 
+    disarm: {
+      attacker: ["Combat Style", "Athletics"],
+      defender: ["Combat Style", "Athletics"]
     },
-    feint: { 
-      attacker: ["Combat Style", "Deceive"], 
-      defender: ["Observe", "Combat Style"] 
+    feint: {
+      attacker: ["Combat Style", "Deceive"],
+      defender: ["Combat Style", "Observe"]
     },
-    forceMovement: { 
-      attacker: ["Combat Style"], 
-      defender: ["Combat Style", "Athletics"] 
+    forceMovement: {
+      attacker: ["Combat Style"],
+      defender: ["Combat Style", "Athletics"]
     },
-    resist: { 
-      attacker: ["Athletics", "Combat Style (unarmed)"], 
-      defender: ["Athletics", "Combat Style (unarmed)"] 
+    resist: {
+      attacker: ["Combat Style", "Athletics"],
+      defender: ["Combat Style", "Athletics"]
     },
-    trip: { 
-      attacker: ["Athletics", "Combat Style (unarmed)"], 
-      defender: ["Athletics", "Combat Style (unarmed)", "Evade"] 
+    trip: {
+      attacker: ["Combat Style", "Athletics"],
+      defender: ["Combat Style", "Athletics", "Evade"]
     }
   };
 
-  const skills = skillMapping[specialActionId];
-  const attackerSkills = skills?.attacker ? skills.attacker.join(", ") : "—";
-  const defenderSkills = skills?.defender ? skills.defender.join(", ") : "—";
+  const opts = mapping[specialActionId];
+  if (!opts) return [];
+  return side === "attacker" ? opts.attacker : opts.defender;
+}
 
-  const content = `
-    <div class="uesrpg-special-action-card" style="padding: 8px;">
-      <h2>Special Action: ${def.name}</h2>
-      <div style="margin: 8px 0;">
-        <b>${actorName} vs ${targetName}</b>
+/**
+ * Render interactive Special Action card HTML.
+ * @param {Object} data - Card data
+ * @param {string} messageId - Chat message ID
+ * @returns {string}
+ */
+function _renderSpecialActionCard(data, messageId) {
+  const { specialActionId, attacker, defender, isFreeAction } = data;
+  const def = getSpecialActionById(specialActionId);
+  const name = def?.name ?? "Special Action";
+
+  const attackerOptions = _getTestOptions(specialActionId, "attacker");
+  const defenderOptions = _getTestOptions(specialActionId, "defender");
+
+  const attackerOptionsText = attackerOptions.join(", ");
+  const defenderOptionsText = defenderOptions.join(", ");
+
+  const attackerSection = attacker.result
+    ? `<div><strong>${attacker.name}:</strong> ${attacker.testLabel} - ${attacker.result.isSuccess ? 'Success' : 'Failure'} (${attacker.result.rollTotal}/${attacker.result.target})</div>`
+    : `<div><strong>${attacker.name}:</strong> <button class="ues-special-action-btn" data-ues-special-action="attacker-roll">Roll Test</button> (${attackerOptionsText})</div>`;
+
+  const defenderSection = defender.result
+    ? `<div><strong>${defender.name}:</strong> ${defender.testLabel} - ${defender.result.isSuccess ? 'Success' : 'Failure'} (${defender.result.rollTotal}/${defender.result.target})</div>`
+    : `<div><strong>${defender.name}:</strong> <button class="ues-special-action-btn" data-ues-special-action="defender-roll">Roll Opposed</button> (${defenderOptionsText})</div>`;
+
+  let outcomeSection = '';
+  if (attacker.result && defender.result && data.outcome) {
+    outcomeSection = `
+      <div style="margin-top: 12px; padding: 8px; background: rgba(0,0,0,0.1); border-radius: 4px;">
+        <strong>Outcome:</strong> ${data.outcome.text}
+        ${data.outcome.effectMessage ? `<br><em>${data.outcome.effectMessage}</em>` : ''}
       </div>
-      ${skills ? `
-        <div style="margin: 8px 0; font-size:13px;">
-          <div><b>Attacker Skills:</b> ${attackerSkills}</div>
-          <div><b>Defender Skills:</b> ${defenderSkills}</div>
-        </div>
-        <div style="margin:8px 0; font-style:italic; font-size:12px; opacity:0.85;">
-          Resolve this opposed test manually. The system will auto-apply effects when complete.
-        </div>
-      ` : `
-        <div style="margin: 8px 0; font-style:italic; font-size:12px; opacity:0.85;">
-          No opposed test required. Effect applied automatically.
-        </div>
-      `}
+    `;
+  }
+
+  const freeText = isFreeAction ? '<div style="font-style: italic; font-size: 12px; opacity: 0.8;">(Special Advantage: Free Action)</div>' : '';
+
+  return `
+    <div class="uesrpg-special-action-card" style="padding: 12px; border: 1px solid #999; border-radius: 4px; background: rgba(255,255,255,0.05);">
+      <h3 style="margin: 0 0 8px 0;">Special Action: ${name}</h3>
+      ${freeText}
+      <div style="margin: 8px 0;">
+        ${attackerSection}
+      </div>
+      <div style="margin: 8px 0;">
+        ${defenderSection}
+      </div>
+      ${outcomeSection}
     </div>
   `;
+}
+
+/**
+ * Create an interactive opposed test card for a Special Action.
+ * @param {Object} options
+ * @param {string} options.specialActionId
+ * @param {Token} options.attackerToken
+ * @param {Token} options.defenderToken
+ * @param {boolean} options.isFreeAction
+ * @returns {Promise<ChatMessage>}
+ */
+export async function createSpecialActionOpposedTest({
+  specialActionId,
+  attackerToken,
+  defenderToken,
+  isFreeAction = false
+}) {
+  const def = getSpecialActionById(specialActionId);
+  if (!def) return null;
+
+  const attacker = attackerToken?.actor ?? null;
+  const defender = defenderToken?.actor ?? null;
+
+  if (!attacker || !defender) {
+    ui.notifications.warn("Could not resolve attacker or defender.");
+    return null;
+  }
+
+  const data = {
+    specialActionId,
+    isFreeAction,
+    attacker: {
+      name: attacker.name,
+      actorUuid: attacker.uuid,
+      tokenUuid: attackerToken.document?.uuid ?? attackerToken.uuid,
+      result: null,
+      testLabel: null
+    },
+    defender: {
+      name: defender.name,
+      actorUuid: defender.uuid,
+      tokenUuid: defenderToken.document?.uuid ?? defenderToken.uuid,
+      result: null,
+      testLabel: null
+    },
+    outcome: null
+  };
+
+  const content = _renderSpecialActionCard(data, "pending");
 
   const message = await ChatMessage.create({
     user: game.user.id,
-    speaker: ChatMessage.getSpeaker({ actor, token: actorToken?.document ?? null }),
+    speaker: ChatMessage.getSpeaker({ actor: attacker, token: attackerToken.document ?? null }),
     content,
     style: CONST.CHAT_MESSAGE_STYLES.OTHER,
     flags: {
       [SYSTEM_ID]: {
-        specialAction: {
-          id: specialActionId,
-          actorUuid: actor.uuid,
-          targetUuid: target?.uuid ?? null,
-          actorTokenUuid: actorToken?.document?.uuid ?? actorToken?.uuid ?? null,
-          targetTokenUuid: targetToken?.document?.uuid ?? targetToken?.uuid ?? null
+        specialActionOpposed: {
+          state: data
         }
       }
     }
@@ -148,11 +300,149 @@ async function postSpecialActionCard({
   return message;
 }
 
+/**
+ * Handle Special Action card button clicks.
+ * @param {ChatMessage} message
+ * @param {string} action - "attacker-roll" or "defender-roll"
+ */
+export async function handleSpecialActionCardAction(message, action) {
+  try {
+    const data = message.flags?.[SYSTEM_ID]?.specialActionOpposed?.state;
+    if (!data) return;
+
+    const { specialActionId, attacker, defender, isFreeAction } = data;
+    const def = getSpecialActionById(specialActionId);
+    if (!def) return;
+
+    const isAttacker = action === "attacker-roll";
+    const side = isAttacker ? attacker : defender;
+    const actor = fromUuidSync(side.actorUuid);
+
+    if (!actor) {
+      ui.notifications.warn("Could not resolve actor for this action.");
+      return;
+    }
+
+    // Check if already rolled
+    if (side.result) {
+      ui.notifications.warn(`${side.name} has already rolled.`);
+      return;
+    }
+
+    // Show test choice dialog
+    const options = _getTestOptions(specialActionId, isAttacker ? "attacker" : "defender");
+    const choice = await _showTestChoiceDialog({
+      title: `${def.name} - ${side.name}`,
+      options,
+      actor
+    });
+
+    if (!choice) return;
+
+    // Perform roll
+    let rollResult;
+    let testLabel;
+
+    if (choice.testType === "Combat Style") {
+      // Roll using Combat Style TN
+      const { computeTN } = await import("./tn.js");
+      const tn = computeTN(actor, { difficultyKey: "average" });
+      const { doTestRoll } = await import("../helpers/degree-roll-helper.js");
+      rollResult = await doTestRoll(actor, {
+        rollFormula: "1d100",
+        target: tn.finalTN,
+        allowLucky: true,
+        allowUnlucky: true
+      });
+      testLabel = "Combat Style";
+    } else {
+      // Roll using Skill TN
+      const skillName = choice.testType.toLowerCase();
+      const skillItem = actor.items.find(i =>
+        i.type === "skill" &&
+        i.name.toLowerCase().includes(skillName)
+      );
+
+      if (!skillItem) {
+        ui.notifications.warn(`${actor.name} does not have the ${choice.testType} skill.`);
+        return;
+      }
+
+      const { computeSkillTN } = await import("../skills/skill-tn.js");
+      const tn = computeSkillTN({
+        actor,
+        skillItem,
+        difficultyKey: "average",
+        manualMod: 0
+      });
+
+      const { doTestRoll } = await import("../helpers/degree-roll-helper.js");
+      rollResult = await doTestRoll(actor, {
+        rollFormula: "1d100",
+        target: tn.finalTN,
+        allowLucky: true,
+        allowUnlucky: true
+      });
+      testLabel = choice.testType;
+    }
+
+    // Update side with result
+    side.result = rollResult;
+    side.testLabel = testLabel;
+
+    // Check if both have rolled
+    if (attacker.result && defender.result) {
+      // Resolve outcome
+      const { resolveOpposed } = await import("../helpers/degree-roll-helper.js");
+      const opposedResult = resolveOpposed(attacker.result, defender.result);
+
+      const outcomeText = opposedResult.winner === "attacker"
+        ? `${attacker.name} wins!`
+        : (opposedResult.winner === "defender" ? `${defender.name} wins!` : "Tie!");
+
+      // Execute Special Action effects
+      const executionResult = await executeSpecialAction({
+        specialActionId,
+        actor: fromUuidSync(attacker.actorUuid),
+        target: fromUuidSync(defender.actorUuid),
+        isAutoWin: false,
+        opposedResult
+      });
+
+      data.outcome = {
+        ...opposedResult,
+        text: outcomeText,
+        effectMessage: executionResult.success ? executionResult.message : null
+      };
+    }
+
+    // Update message
+    await message.update({
+      content: _renderSpecialActionCard(data, message.id),
+      [`flags.${SYSTEM_ID}.specialActionOpposed.state`]: data
+    });
+
+  } catch (err) {
+    console.error("UESRPG | Special Action card action failed", err);
+    ui.notifications.error("Special Action failed. Check console for details.");
+  }
+}
+
+/**
+ * Execute Special Action effects.
+ * @param {Object} options
+ * @param {string} options.specialActionId
+ * @param {Actor} options.actor
+ * @param {Actor} options.target
+ * @param {boolean} options.isAutoWin
+ * @param {Object} options.opposedResult
+ * @returns {Promise<{success: boolean, message: string}>}
+ */
 export async function executeSpecialAction({
   specialActionId,
   actor,
   target,
-  isAdvantageMode = false,
+  isAutoWin = false,
   opposedResult = null
 } = {}) {
   const def = getSpecialActionById(specialActionId);
@@ -162,30 +452,40 @@ export async function executeSpecialAction({
 
   const actorName = actor?.name ?? "Actor";
   const targetName = target?.name ?? "Target";
-  const winner = isAdvantageMode ? "attacker" : (opposedResult?.winner ?? null);
+  const winner = isAutoWin ? "attacker" : (opposedResult?.winner ?? null);
 
   switch (specialActionId) {
     case "arise":
-      return await _executeArise({ actor, winner, actorName, isAdvantageMode });
+      return await _executeArise({ actor, winner, actorName, isAutoWin });
     case "bash":
-      return await _executeBash({ actor, target, winner, actorName, targetName, isAdvantageMode });
+      return await _executeBash({ actor, target, winner, actorName, targetName, isAutoWin });
     case "blindOpponent":
-      return await _executeBlindOpponent({ actor, target, winner, actorName, targetName, isAdvantageMode });
+      return await _executeBlindOpponent({ actor, target, winner, actorName, targetName, isAutoWin });
     case "disarm":
-      return await _executeDisarm({ actor, target, winner, actorName, targetName, isAdvantageMode });
+      return await _executeDisarm({ actor, target, winner, actorName, targetName, isAutoWin });
     case "feint":
-      return await _executeFeint({ actor, target, winner, actorName, targetName, isAdvantageMode });
+      return await _executeFeint({ actor, target, winner, actorName, targetName, isAutoWin });
     case "forceMovement":
-      return await _executeForceMovement({ actor, target, winner, actorName, targetName, isAdvantageMode });
+      return await _executeForceMovement({ actor, target, winner, actorName, targetName, isAutoWin });
     case "resist":
-      return await _executeResist({ actor, target, winner, actorName, targetName, isAdvantageMode });
+      return await _executeResist({ actor, target, winner, actorName, targetName, isAutoWin });
     case "trip":
-      return await _executeTrip({ actor, target, winner, actorName, targetName, isAdvantageMode });
+      return await _executeTrip({ actor, target, winner, actorName, targetName, isAutoWin });
     default:
       return { success: false, message: `No automation for ${def.name}.` };
   }
 }
 
+/**
+ * Initiate Special Action from character sheet.
+ * @param {Object} options
+ * @param {string} options.specialActionId
+ * @param {Actor} options.actor
+ * @param {Actor} options.target
+ * @param {Token} options.actorToken
+ * @param {Token} options.targetToken
+ * @returns {Promise<Object>}
+ */
 export async function initiateSpecialActionFromSheet({
   specialActionId,
   actor,
@@ -199,12 +499,13 @@ export async function initiateSpecialActionFromSheet({
     return null;
   }
 
+  // Arise doesn't need a target
   if (specialActionId === "arise") {
     const result = await executeSpecialAction({
       specialActionId,
       actor,
       target: null,
-      isAdvantageMode: false,
+      isAutoWin: false,
       opposedResult: { winner: "attacker" }
     });
 
@@ -219,25 +520,29 @@ export async function initiateSpecialActionFromSheet({
     return result;
   }
 
+  // Other Special Actions require a target
   if (!target) {
     ui.notifications.warn(`${def.name} requires a targeted token.`);
     return null;
   }
 
-  await postSpecialActionCard({
+  // Create interactive opposed test card
+  await createSpecialActionOpposedTest({
     specialActionId,
-    actor,
-    target,
-    actorToken,
-    targetToken
+    attackerToken: actorToken,
+    defenderToken: targetToken,
+    isFreeAction: false
   });
 
-  return { success: true, message: "Special Action card posted." };
+  return { success: true, message: "Special Action test initiated." };
 }
 
-// Executors
-async function _executeArise({ actor, winner, actorName, isAdvantageMode }) {
-  if (winner === "attacker" || isAdvantageMode) {
+// ============================================================================
+// EXECUTORS
+// ============================================================================
+
+async function _executeArise({ actor, winner, actorName, isAutoWin }) {
+  if (winner === "attacker" || isAutoWin) {
     await removeCondition(actor, "prone");
     return {
       success: true,
@@ -247,29 +552,29 @@ async function _executeArise({ actor, winner, actorName, isAdvantageMode }) {
   return { success: false, message: `${actorName} fails to arise.` };
 }
 
-async function _executeBash({ actor, target, winner, actorName, targetName, isAdvantageMode }) {
-  if (winner === "attacker" || isAdvantageMode) {
+async function _executeBash({ actor, target, winner, actorName, targetName, isAutoWin }) {
+  if (winner === "attacker" || isAutoWin) {
     await ActionEconomy.spendAP(target, 1, { reason: "bashed", silent: true });
     await applyCondition(target, "prone", { source: "bash" });
     return {
       success: true,
-      message: `${actorName} bashes ${targetName}! Knocked back 1m, loses 1 AP, and falls Prone (unless Acrobatics test succeeds).`
+      message: `${actorName} bashes ${targetName}! Knocked back 1m, loses 1 AP, and falls Prone.`
     };
   }
   return { success: false, message: `${actorName}'s bash fails.` };
 }
 
-async function _executeBlindOpponent({ actor, target, winner, actorName, targetName, isAdvantageMode }) {
-  if (winner === "attacker" || isAdvantageMode) {
+async function _executeBlindOpponent({ actor, target, winner, actorName, targetName, isAutoWin }) {
+  if (winner === "attacker" || isAutoWin) {
     const combat = game.combat ?? null;
     const duration = combat?.started
       ? { rounds: 1, startRound: combat.round ?? 0, startTurn: combat.turn ?? 0 }
       : { seconds: 6 };
 
     await applyCondition(target, "blinded", { source: "blindOpponent" });
-    
-    const effect = target.effects.find(e => 
-      !e.disabled && 
+
+    const effect = target.effects.find(e =>
+      !e.disabled &&
       (e?.flags?.["uesrpg-3ev4"]?.condition?.key === "blinded")
     );
     if (effect) {
@@ -284,39 +589,47 @@ async function _executeBlindOpponent({ actor, target, winner, actorName, targetN
   return { success: false, message: `${actorName} fails to blind ${targetName}.` };
 }
 
-async function _executeDisarm({ actor, target, winner, actorName, targetName, isAdvantageMode }) {
-  if (winner === "attacker" || isAdvantageMode) {
+async function _executeDisarm({ actor, target, winner, actorName, targetName, isAutoWin }) {
+  if (winner === "attacker" || isAutoWin) {
     return {
       success: true,
-      message: `${actorName} disarms ${targetName}! Weapon can be taken (if free hand) or flung 1d4m in random direction. (Manual: unequip weapon)`
+      message: `${actorName} disarms ${targetName}! Weapon can be taken or flung 1d4m. (Manual: unequip weapon)`
     };
   }
   return { success: false, message: `${actorName} fails to disarm ${targetName}.` };
 }
 
-async function _executeFeint({ actor, target, winner, actorName, targetName, isAdvantageMode }) {
-  if (winner === "attacker" || isAdvantageMode) {
+async function _executeFeint({ actor, target, winner, actorName, targetName, isAutoWin }) {
+  if (winner === "attacker" || isAutoWin) {
     const combat = game.combat ?? null;
     const duration = combat?.started
       ? { rounds: 1, startRound: combat.round ?? 0, startTurn: combat.turn ?? 0 }
       : { seconds: 6 };
 
-    await _applyConditionWithMetadata(target, "feinted", { 
-      duration, 
-      source: "feint",
-      attackerUuid: actor.uuid
-    });
+    await applyCondition(target, "feinted", { source: "feint" });
+
+    const effect = target.effects.find(e =>
+      !e.disabled &&
+      (e?.flags?.["uesrpg-3ev4"]?.condition?.key === "feinted")
+    );
+
+    if (effect) {
+      await effect.update({
+        duration,
+        [`flags.uesrpg-3ev4.condition.attackerUuid`]: actor.uuid
+      });
+    }
 
     return {
       success: true,
-      message: `${actorName} feints! ${targetName} treats next melee attack from ${actorName} as if ${actorName} were Hidden (until end of ${actorName}'s turn).`
+      message: `${actorName} feints! ${targetName} cannot defend against ${actorName}'s next melee attack.`
     };
   }
   return { success: false, message: `${actorName}'s feint fails.` };
 }
 
-async function _executeForceMovement({ actor, target, winner, actorName, targetName, isAdvantageMode }) {
-  if (winner === "attacker" || isAdvantageMode) {
+async function _executeForceMovement({ actor, target, winner, actorName, targetName, isAutoWin }) {
+  if (winner === "attacker" || isAutoWin) {
     return {
       success: true,
       message: `${actorName} forces movement! Both move up to 3m in same direction (Manual: adjust tokens).`
@@ -325,12 +638,12 @@ async function _executeForceMovement({ actor, target, winner, actorName, targetN
   return { success: false, message: `${actorName} fails to force movement.` };
 }
 
-async function _executeResist({ actor, target, winner, actorName, targetName, isAdvantageMode }) {
-  if (winner === "attacker" || isAdvantageMode) {
+async function _executeResist({ actor, target, winner, actorName, targetName, isAutoWin }) {
+  if (winner === "attacker" || isAutoWin) {
     await removeCondition(actor, "restrained");
     await removeCondition(actor, "grappled");
     await removeCondition(actor, "blinded");
-    
+
     return {
       success: true,
       message: `${actorName} escapes!`
@@ -339,8 +652,8 @@ async function _executeResist({ actor, target, winner, actorName, targetName, is
   return { success: false, message: `${actorName} fails to resist.` };
 }
 
-async function _executeTrip({ actor, target, winner, actorName, targetName, isAdvantageMode }) {
-  if (winner === "attacker" || isAdvantageMode) {
+async function _executeTrip({ actor, target, winner, actorName, targetName, isAutoWin }) {
+  if (winner === "attacker" || isAutoWin) {
     await applyCondition(target, "prone", { source: "trip" });
     return {
       success: true,
@@ -348,151 +661,4 @@ async function _executeTrip({ actor, target, winner, actorName, targetName, isAd
     };
   }
   return { success: false, message: `${actorName} fails to trip ${targetName}.` };
-}
-
-/**
- * Initiate a skill opposed test for a Special Action.
- *
- * @param {Object} options
- * @param {string} options.specialActionId - The Special Action ID
- * @param {string} options.actorTokenUuid - The actor's token UUID
- * @param {string} options.targetTokenUuid - The target's token UUID
- * @returns {Promise<void>}
- */
-export async function initiateSpecialActionOpposedTest({ specialActionId, actorTokenUuid, targetTokenUuid }) {
-  const def = getSpecialActionById(specialActionId);
-  if (!def) {
-    ui.notifications?.warn?.(`Unknown Special Action: ${specialActionId}`);
-    return;
-  }
-
-  // Arise doesn't require an opposed test
-  if (specialActionId === "arise") {
-    const actor = fromUuidSync(actorTokenUuid)?.actor;
-    if (!actor) {
-      ui.notifications?.warn?.("No actor found for Arise.");
-      return;
-    }
-
-    const result = await executeSpecialAction({
-      specialActionId: "arise",
-      actor,
-      target: null,
-      isAdvantageMode: false,
-      opposedResult: { winner: "attacker" }
-    });
-
-    if (result.success) {
-      await ChatMessage.create({
-        user: game.user.id,
-        speaker: ChatMessage.getSpeaker({ actor }),
-        content: `<div class="uesrpg-special-action-outcome"><b>Special Action:</b><p>${result.message}</p></div>`,
-        style: CONST.CHAT_MESSAGE_STYLES.OTHER
-      });
-    } else {
-      ui.notifications?.warn?.(result.message);
-    }
-    return;
-  }
-
-  // Get opposed test skill mapping
-  const opposedSkills = getOpposedSkillsForSpecialAction(specialActionId);
-  if (!opposedSkills) {
-    ui.notifications?.warn?.(`No opposed test defined for ${def.name}.`);
-    return;
-  }
-
-  // Resolve actor and target
-  const actorToken = fromUuidSync(actorTokenUuid);
-  const targetToken = fromUuidSync(targetTokenUuid);
-  
-  if (!actorToken || !targetToken) {
-    ui.notifications?.warn?.("Could not resolve actor or target token.");
-    return;
-  }
-
-  const actor = actorToken.actor;
-  const target = targetToken.actor;
-
-  if (!actor || !target) {
-    ui.notifications?.warn?.("Could not resolve actor or target.");
-    return;
-  }
-
-  // Create a pending skill opposed test card
-  // This creates a chat message flagged with specialActionId.
-  // The GM/players manually resolve the opposed test using the skill opposed workflow.
-  // When the outcome is set on the message flags, the createChatMessage hook in init.js
-  // will automatically execute the Special Action outcome.
-  const content = `
-    <div class="uesrpg-special-action-opposed">
-      <h3>Special Action: ${def.name}</h3>
-      <p><strong>${actor.name}</strong> vs <strong>${target.name}</strong></p>
-      <p>Attacker Skills: ${opposedSkills.attacker.join(", ")}</p>
-      <p>Defender Skills: ${opposedSkills.defender.join(", ")}</p>
-      <p><em>Resolve this opposed test manually. The system will auto-apply effects when complete.</em></p>
-    </div>
-  `;
-
-  await ChatMessage.create({
-    user: game.user.id,
-    speaker: ChatMessage.getSpeaker({ actor }),
-    content,
-    style: CONST.CHAT_MESSAGE_STYLES.OTHER,
-    flags: {
-      "uesrpg-3ev4": {
-        skillOpposed: {
-          state: {
-            specialActionId,
-            attacker: { actorUuid: actor.uuid, tokenUuid: actorTokenUuid },
-            defender: { actorUuid: target.uuid, tokenUuid: targetTokenUuid },
-            outcome: null // Will be populated by skill opposed workflow when test is resolved
-          }
-        }
-      }
-    }
-  });
-
-  ui.notifications?.info?.(`${def.name} opposed test initiated. Roll for both parties.`);
-}
-
-/**
- * Get opposed skills for a Special Action.
- *
- * @param {string} specialActionId
- * @returns {{attacker: string[], defender: string[]}|null}
- */
-function getOpposedSkillsForSpecialAction(specialActionId) {
-  const mapping = {
-    bash: {
-      attacker: ["Athletics", "Combat Style"],
-      defender: ["Athletics", "Combat Style", "Evade"]
-    },
-    blindOpponent: {
-      attacker: ["Combat Style"],
-      defender: ["Evade", "Combat Style"]
-    },
-    disarm: {
-      attacker: ["Athletics", "Combat Style"],
-      defender: ["Athletics", "Combat Style"]
-    },
-    feint: {
-      attacker: ["Combat Style", "Deceive"],
-      defender: ["Observe", "Combat Style"]
-    },
-    forceMovement: {
-      attacker: ["Combat Style"],
-      defender: ["Combat Style", "Athletics"]
-    },
-    resist: {
-      attacker: ["Athletics"],
-      defender: ["Athletics"]
-    },
-    trip: {
-      attacker: ["Athletics"],
-      defender: ["Athletics", "Evade"]
-    }
-  };
-
-  return mapping[specialActionId] ?? null;
 }

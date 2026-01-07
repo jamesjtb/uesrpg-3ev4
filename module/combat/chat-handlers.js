@@ -358,6 +358,20 @@ export function initializeChatHandlers() {
       el.addEventListener("click", (ev) => _onShockAction(ev, message));
     });
 
+    // Special Action opposed test card buttons
+    root.querySelectorAll("[data-ues-special-action]").forEach((el) => {
+      el.addEventListener("click", async (ev) => {
+        ev.preventDefault();
+        const action = el.dataset.uesSpecialAction;
+        try {
+          const { handleSpecialActionCardAction } = await import("./special-actions-helper.js");
+          await handleSpecialActionCardAction(message, action);
+        } catch (err) {
+          console.error("UESRPG | Special Action button handler failed", err);
+        }
+      });
+    });
+
     // Collapsible action cards (sheet quick-actions).
     // IMPORTANT: Foundry chat sanitization may strip the `hidden` attribute.
     // We therefore enforce the default collapsed state at render time and
