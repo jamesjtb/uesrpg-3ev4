@@ -646,7 +646,7 @@ Hooks.on("createChatMessage", async (message) => {
       specialActionId: state.specialActionId,
       actor: attacker,
       target,
-      isAdvantageMode: false,
+      isAutoWin: false,
       opposedResult: state.outcome
     });
 

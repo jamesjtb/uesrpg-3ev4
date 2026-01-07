@@ -583,6 +583,72 @@ export async function initiateSpecialActionFromSheet({
   return { success: true, message: "Special Action test initiated." };
 }
 
+/**
+ * Create Acrobatics test card for Bash follow-up.
+ * Target must pass to avoid becoming Prone.
+ * @param {Actor} target - The actor who was bashed
+ */
+async function _createBashAcrobaticsTest(target) {
+  // Find Acrobatics skill
+  const acrobatics = target.items.find(i => 
+    i.type === "skill" && 
+    i.name.toLowerCase().includes("acrobatics")
+  );
+
+  if (!acrobatics) {
+    ui.notifications.warn(`${target.name} has no Acrobatics skill. Apply Prone manually if they fail.`);
+    return;
+  }
+
+  // Find target's token
+  const targetToken = canvas.tokens?.placeables?.find(t => t.actor?.uuid === target.uuid) ?? null;
+
+  // Create a simple skill test card (not opposed, just a single roll)
+  const { computeSkillTN } = await import("../skills/skill-tn.js");
+  const { doTestRoll } = await import("../helpers/degree-roll-helper.js");
+  
+  const tn = computeSkillTN({
+    actor: target,
+    skillItem: acrobatics,
+    difficultyKey: "average",
+    manualMod: 0,
+    useSpecialization: false,
+    situationalMods: []
+  });
+
+  const result = await doTestRoll(target, {
+    rollFormula: "1d100",
+    target: tn.finalTN,
+    allowLucky: true,
+    allowUnlucky: true
+  });
+
+  // Post the roll to chat
+  await result.roll.toMessage({
+    speaker: ChatMessage.getSpeaker({ actor: target, token: targetToken?.document ?? null }),
+    flavor: `Acrobatics — Bash Follow-Up (avoid Prone)`,
+    rollMode: game.settings.get("core", "rollMode")
+  });
+
+  // Apply Prone if they failed
+  if (!result.isSuccess) {
+    await applyCondition(target, "prone", { source: "bash-failed-acrobatics" });
+    await ChatMessage.create({
+      user: game.user.id,
+      speaker: ChatMessage.getSpeaker({ actor: target }),
+      content: `<div class="uesrpg-bash-outcome"><b>Bash Follow-Up:</b><p>${target.name} fails the Acrobatics test and falls Prone!</p></div>`,
+      style: CONST.CHAT_MESSAGE_STYLES.OTHER
+    });
+  } else {
+    await ChatMessage.create({
+      user: game.user.id,
+      speaker: ChatMessage.getSpeaker({ actor: target }),
+      content: `<div class="uesrpg-bash-outcome"><b>Bash Follow-Up:</b><p>${target.name} passes the Acrobatics test and avoids falling Prone.</p></div>`,
+      style: CONST.CHAT_MESSAGE_STYLES.OTHER
+    });
+  }
+}
+
 // ============================================================================
 // EXECUTORS
 // ============================================================================
@@ -600,11 +666,15 @@ async function _executeArise({ actor, winner, actorName, isAutoWin }) {
 
 async function _executeBash({ actor, target, winner, actorName, targetName, isAutoWin }) {
   if (winner === "attacker" || isAutoWin) {
+    // Remove 1 AP
     await ActionEconomy.spendAP(target, 1, { reason: "bashed", silent: true });
-    await applyCondition(target, "prone", { source: "bash" });
+
+    // Create Acrobatics test card for target (RAW: must pass to avoid Prone)
+    await _createBashAcrobaticsTest(target);
+
     return {
       success: true,
-      message: `${actorName} bashes ${targetName}! Loses 1 AP and falls Prone. (Manual: move token back 1m)`
+      message: `${actorName} bashes ${targetName}! Knocked back 1m, loses 1 AP. ${targetName} must pass Acrobatics test to avoid Prone. (Manual: move token back 1m)`
     };
   }
   return { success: false, message: `${actorName}'s bash fails.` };

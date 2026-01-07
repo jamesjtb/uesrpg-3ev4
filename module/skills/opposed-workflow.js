@@ -379,13 +379,48 @@ async function _skillRollDialog({
   }
 }
 
-function _listSkills(actor) {
+function _listSkills(actor, { allowCombatStyle = false } = {}) {
   const out = [];
+  
+  // Add Combat Style option if allowed and available
+  if (allowCombatStyle && actor?.type !== "NPC") {
+    const activeCombatStyle = actor?.itemTypes?.["combat-style"]?.find(cs => cs?.system?.active);
+    if (activeCombatStyle) {
+      out.push({ 
+        uuid: "combat-style", 
+        name: "Combat Style", 
+        hasSpec: false, 
+        isCombatStyle: true 
+      });
+    }
+  }
+  
   const items = actor?.itemTypes?.skill ?? actor?.items?.filter(i => i.type === "skill") ?? [];
   for (const i of items) out.push({ uuid: i.uuid, name: i.name, item: i, hasSpec: _hasSpecializations(i) });
 
   if (actor?.type === "NPC") {
-    for (const p of _listProfessions(actor)) out.push({ uuid: p.uuid, name: p.name, item: p, hasSpec: false, isProfession: true });
+    const professions = _listProfessions(actor);
+    
+    // For NPCs with Combat Style allowed, add Combat profession at the top
+    if (allowCombatStyle) {
+      const combatProf = professions.find(p => p._professionKey === "combat");
+      if (combatProf) {
+        out.unshift({ 
+          uuid: combatProf.uuid, 
+          name: combatProf.name, 
+          hasSpec: false, 
+          isProfession: true,
+          isCombatProfession: true
+        });
+      }
+    }
+    
+    // Add remaining professions
+    for (const p of professions) {
+      if (p._professionKey !== "combat" || !allowCombatStyle) {
+        out.push({ uuid: p.uuid, name: p.name, item: p, hasSpec: false, isProfession: true });
+      }
+    }
   }
   return out;
 }
@@ -718,7 +753,11 @@ if (!authorUser) return;
     if (action === "attacker-roll") {
       if (data.attacker.result) return;
       if (!requireUserCanRollActor(game.user, attacker)) return;
-      const skills = _listSkills(attacker);
+      
+      // Check if Combat Style option should be allowed
+      const allowCombatStyle = Boolean(data?.allowCombatStyle);
+      
+      const skills = _listSkills(attacker, { allowCombatStyle });
       if (!skills.length) {
         ui.notifications.warn("Actor has no skills to roll.");
         return;
@@ -764,46 +803,88 @@ if (!authorUser) return;
       decl = { ...decl, ...normalizeSkillRollOptions(decl, defaults) };
 
 
-      const skillItem = _findSkillByUuid(attacker, decl.skillUuid);
-      if (!skillItem) {
-        ui.notifications.warn("Selected actor skill could not be found.");
-        return;
+      // Handle Combat Style or Combat profession separately
+      let tn;
+      let skillLabel;
+      let skillItem = null;
+      
+      if (decl.skillUuid === "combat-style") {
+        // Combat Style roll
+        const { computeTN } = await import("../combat/tn.js");
+        const situationalMods = [];
+        if (decl?.applyBlinded) situationalMods.push({ label: "Blinded (sight)", value: -30 });
+        if (decl?.applyDeafened) situationalMods.push({ label: "Deafened (hearing)", value: -30 });
+        
+        tn = computeTN(attacker, {
+          difficultyKey: decl.difficultyKey,
+          manualMod: decl.manualMod,
+          situationalMods
+        });
+        skillLabel = "Combat Style";
+      } else {
+        skillItem = _findSkillByUuid(attacker, decl.skillUuid);
+        if (!skillItem) {
+          ui.notifications.warn("Selected actor skill could not be found.");
+          return;
+        }
+        
+        // Check if this is NPC Combat profession
+        if (skillItem._professionKey === "combat") {
+          const { computeTN } = await import("../combat/tn.js");
+          const situationalMods = [];
+          if (decl?.applyBlinded) situationalMods.push({ label: "Blinded (sight)", value: -30 });
+          if (decl?.applyDeafened) situationalMods.push({ label: "Deafened (hearing)", value: -30 });
+          
+          tn = computeTN(attacker, {
+            difficultyKey: decl.difficultyKey,
+            manualMod: decl.manualMod,
+            situationalMods
+          });
+          skillLabel = "Combat";
+        } else {
+          // Regular skill roll
+          const allowSpec = _hasSpecializations(skillItem);
+          tn = computeSkillTN({
+            actor: attacker,
+            skillItem,
+            difficultyKey: decl.difficultyKey,
+            manualMod: decl.manualMod,
+            useSpecialization: allowSpec && decl.useSpec,
+            situationalMods: (function(){ const out=[]; if (decl?.applyBlinded) out.push({ label: "Blinded (sight)", value: -30 }); if (decl?.applyDeafened) out.push({ label: "Deafened (hearing)", value: -30 }); return out; })()
+          });
+          skillLabel = skillItem.name;
+        }
       }
 
-      const request = buildSkillRollRequest({
+      const request = skillItem ? buildSkillRollRequest({
         actor: attacker,
         skillItem,
         targetToken: dToken,
         options: { difficultyKey: decl.difficultyKey, manualMod: decl.manualMod, useSpec: Boolean(decl.useSpec), applyBlinded: Boolean(decl.applyBlinded), applyDeafened: Boolean(decl.applyDeafened) },
         context: { source: "chat", quick, messageId: message.id, groupId: data.context?.groupId ?? null }
-      });
-      const v = validateSkillRollRequest(request);
-      if (!v.ok) {
-        ui.notifications.warn(v.error || "Invalid skill roll request.");
-        return;
+      }) : null;
+      
+      if (request) {
+        const v = validateSkillRollRequest(request);
+        if (!v.ok) {
+          ui.notifications.warn(v.error || "Invalid skill roll request.");
+          return;
+        }
+        skillRollDebug("opposed attacker request", request);
+        data.attacker.request = request;
       }
-      skillRollDebug("opposed attacker request", request);
 
-      data.attacker.skillUuid = skillItem.uuid;
-      data.attacker.skillLabel = skillItem.name;
+      data.attacker.skillUuid = decl.skillUuid;
+      data.attacker.skillLabel = skillLabel;
       data.attacker.declared = { difficultyKey: decl.difficultyKey, manualMod: decl.manualMod, useSpec: Boolean(decl.useSpec) };
-      data.attacker.request = request;
+      
       await _setLastSkillRollOptions(_mergeLastSkillRollOptions({
         difficultyKey: decl.difficultyKey,
         manualMod: decl.manualMod,
         useSpec: Boolean(decl.useSpec),
-        lastSkillUuidByActor: { [attacker.uuid]: skillItem.uuid }
+        lastSkillUuidByActor: { [attacker.uuid]: decl.skillUuid }
       }));
 
-      const allowSpec = _hasSpecializations(skillItem);
-      const tn = computeSkillTN({
-        actor: attacker,
-        skillItem,
-        difficultyKey: decl.difficultyKey,
-        manualMod: decl.manualMod,
-        useSpecialization: allowSpec && decl.useSpec,
-        situationalMods: (function(){ const out=[]; if (decl?.applyBlinded) out.push({ label: "Blinded (sight)", value: -30 }); if (decl?.applyDeafened) out.push({ label: "Deafened (hearing)", value: -30 }); return out; })()
-      });
       data.attacker.tn = tn;
       skillRollDebug("opposed attacker TN", { finalTN: tn.finalTN, breakdown: tn.breakdown });
 
@@ -845,7 +926,11 @@ if (!authorUser) return;
     if (action === "defender-roll") {
       if (data.defender.result) return;
       if (!requireUserCanRollActor(game.user, defender, { message: "You do not have permission to roll for the target actor." })) return;
-      const skills = _listSkills(defender);
+      
+      // Check if Combat Style option should be allowed
+      const allowCombatStyle = Boolean(data?.allowCombatStyle);
+      
+      const skills = _listSkills(defender, { allowCombatStyle });
       if (!skills.length) {
         ui.notifications.warn("Target actor has no skills to roll.");
         return;
@@ -883,46 +968,88 @@ if (!authorUser) return;
       if (!decl) return;
 
 
-      const defSkill = _findSkillByUuid(defender, decl.skillUuid);
-      if (!defSkill) {
-        ui.notifications.warn("Selected target skill could not be found.");
-        return;
+      // Handle Combat Style or Combat profession separately
+      let tn;
+      let skillLabel;
+      let defSkill = null;
+      
+      if (decl.skillUuid === "combat-style") {
+        // Combat Style roll
+        const { computeTN } = await import("../combat/tn.js");
+        const situationalMods = [];
+        if (decl?.applyBlinded) situationalMods.push({ label: "Blinded (sight)", value: -30 });
+        if (decl?.applyDeafened) situationalMods.push({ label: "Deafened (hearing)", value: -30 });
+        
+        tn = computeTN(defender, {
+          difficultyKey: decl.difficultyKey,
+          manualMod: decl.manualMod,
+          situationalMods
+        });
+        skillLabel = "Combat Style";
+      } else {
+        defSkill = _findSkillByUuid(defender, decl.skillUuid);
+        if (!defSkill) {
+          ui.notifications.warn("Selected target skill could not be found.");
+          return;
+        }
+        
+        // Check if this is NPC Combat profession
+        if (defSkill._professionKey === "combat") {
+          const { computeTN } = await import("../combat/tn.js");
+          const situationalMods = [];
+          if (decl?.applyBlinded) situationalMods.push({ label: "Blinded (sight)", value: -30 });
+          if (decl?.applyDeafened) situationalMods.push({ label: "Deafened (hearing)", value: -30 });
+          
+          tn = computeTN(defender, {
+            difficultyKey: decl.difficultyKey,
+            manualMod: decl.manualMod,
+            situationalMods
+          });
+          skillLabel = "Combat";
+        } else {
+          // Regular skill roll
+          const allowSpec = _hasSpecializations(defSkill);
+          tn = computeSkillTN({
+            actor: defender,
+            skillItem: defSkill,
+            difficultyKey: decl.difficultyKey,
+            manualMod: decl.manualMod,
+            useSpecialization: allowSpec && decl.useSpec,
+            situationalMods: (function(){ const out=[]; if (decl?.applyBlinded) out.push({ label: "Blinded (sight)", value: -30 }); if (decl?.applyDeafened) out.push({ label: "Deafened (hearing)", value: -30 }); return out; })()
+          });
+          skillLabel = defSkill.name;
+        }
       }
 
-      const request = buildSkillRollRequest({
+      const request = defSkill ? buildSkillRollRequest({
         actor: defender,
         skillItem: defSkill,
         targetToken: aToken,
         options: { difficultyKey: decl.difficultyKey, manualMod: decl.manualMod, useSpec: Boolean(decl.useSpec), applyBlinded: Boolean(decl.applyBlinded), applyDeafened: Boolean(decl.applyDeafened) },
         context: { source: "chat", quick, messageId: message.id, groupId: data.context?.groupId ?? null }
-      });
-      const v = validateSkillRollRequest(request);
-      if (!v.ok) {
-        ui.notifications.warn(v.error || "Invalid skill roll request.");
-        return;
+      }) : null;
+      
+      if (request) {
+        const v = validateSkillRollRequest(request);
+        if (!v.ok) {
+          ui.notifications.warn(v.error || "Invalid skill roll request.");
+          return;
+        }
+        skillRollDebug("opposed defender request", request);
+        data.defender.request = request;
       }
-      skillRollDebug("opposed defender request", request);
 
-      data.defender.skillUuid = defSkill.uuid;
-      data.defender.skillLabel = defSkill.name;
+      data.defender.skillUuid = decl.skillUuid;
+      data.defender.skillLabel = skillLabel;
       data.defender.declared = { difficultyKey: decl.difficultyKey, manualMod: decl.manualMod, useSpec: Boolean(decl.useSpec) };
-      data.defender.request = request;
+      
       await _setLastSkillRollOptions(_mergeLastSkillRollOptions({
         difficultyKey: decl.difficultyKey,
         manualMod: decl.manualMod,
         useSpec: Boolean(decl.useSpec),
-        lastSkillUuidByActor: { [defender.uuid]: defSkill.uuid }
+        lastSkillUuidByActor: { [defender.uuid]: decl.skillUuid }
       }));
 
-      const allowSpec = _hasSpecializations(defSkill);
-      const tn = computeSkillTN({
-        actor: defender,
-        skillItem: defSkill,
-        difficultyKey: decl.difficultyKey,
-        manualMod: decl.manualMod,
-        useSpecialization: allowSpec && decl.useSpec,
-        situationalMods: (function(){ const out=[]; if (decl?.applyBlinded) out.push({ label: "Blinded (sight)", value: -30 }); if (decl?.applyDeafened) out.push({ label: "Deafened (hearing)", value: -30 }); return out; })()
-      });
       data.defender.tn = tn;
       skillRollDebug("opposed defender TN", { finalTN: tn.finalTN, breakdown: tn.breakdown });
 
