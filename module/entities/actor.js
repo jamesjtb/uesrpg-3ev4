@@ -194,8 +194,14 @@ export class SimpleActor extends Actor {
       // Check equipped status: if 'equipped' property exists, use its value; otherwise default to true
       const isEquipped = Object.prototype.hasOwnProperty.call(sys, 'equipped') ? sys.equipped : true;
 
+      // RAW Chapter 7: Check if this is armor (for special ENC handling)
+      const cat = String(sys?.item_cat ?? sys?.category ?? "").trim().toLowerCase();
+      const isShield = (item?.type === 'armor') && (cat === "shield" || cat.startsWith("shield"));
+      const isEquippedArmor = (item?.type === 'armor' && isEquipped && !isShield);
+
       // Is this item contained in a container?
-      const isContained = sys?.containerStats?.contained === true;
+      // Note: Equipped armor cannot be contained (it's being worn)
+      const isContained = (sys?.containerStats?.contained === true) && !isEquippedArmor;
 
       // RAW: Items contribute their weight; containers halve contents
       let contributedWeight = 0;
@@ -215,10 +221,7 @@ export class SimpleActor extends Actor {
       }
 
       // RAW Chapter 7: "ENC is halved when armor is worn (but not for carried shields)"
-      const cat = String(sys?.item_cat ?? sys?.category ?? "").trim().toLowerCase();
-      const isShield = (item?.type === 'armor') && (cat === "shield" || cat.startsWith("shield"));
-      
-      if (item?.type === 'armor' && isEquipped && !isShield) {
+      if (isEquippedArmor) {
         // Store the full weight; we'll halve it when calculating carry_rating.current
         stats.armorEnc += itemWeight;
       }
