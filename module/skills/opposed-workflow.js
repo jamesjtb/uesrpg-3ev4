@@ -809,9 +809,15 @@ if (!authorUser) return;
       const isSpecialAction = Boolean(data?.specialActionId);
       const hasLockedSkill = Boolean(data.attacker.skillUuid);
       
+      // List skills first to check if locked skill is a combat style
+      const tempSkills = _listSkills(attacker, { allowCombatStyle: true });
+      const lockedIsCombatStyle = hasLockedSkill && (
+        tempSkills.find(s => s.uuid === data.attacker.skillUuid && s.isCombatStyle) ||
+        data.attacker.skillUuid?.startsWith("prof:combat")
+      );
+      
       // Check if Combat Style option should be allowed
-      const allowCombatStyle = Boolean(data?.allowCombatStyle) || 
-                               (isSpecialAction && (data.attacker.skillUuid === "combat-style" || data.attacker.skillUuid === "prof:combat"));
+      const allowCombatStyle = Boolean(data?.allowCombatStyle) || (isSpecialAction && lockedIsCombatStyle);
       
       const skills = _listSkills(attacker, { allowCombatStyle });
       if (!skills.length) {
@@ -1046,8 +1052,12 @@ if (!authorUser) return;
       const isSpecialAction = Boolean(data?.specialActionId);
       
       // Check if Combat Style option should be allowed
-      const allowCombatStyle = Boolean(data?.allowCombatStyle) || 
-                               (isSpecialAction && (data.defender.skillUuid === "combat-style" || data.defender.skillUuid === "prof:combat"));
+      // Note: Now that we use actual Combat Style item UUIDs, we check if the locked skill is a combat style
+      const lockedIsCombatStyle = lockedSkillUuid && (
+        skills.find(s => s.uuid === lockedSkillUuid && s.isCombatStyle) ||
+        lockedSkillUuid.startsWith("prof:combat")
+      );
+      const allowCombatStyle = Boolean(data?.allowCombatStyle) || (isSpecialAction && lockedIsCombatStyle);
       
       const skills = _listSkills(defender, { allowCombatStyle });
       if (!skills.length) {
@@ -1071,10 +1081,12 @@ if (!authorUser) return;
       if (quick) {
         decl = { skillUuid: selectedSkillUuid, difficultyKey: defaults.difficultyKey, manualMod: defaults.manualMod, useSpec: defaults.useSpec };
       } else {
+        // If defender already chose via pre-test dialog, skip skill selection
+        const skipSkillSelect = Boolean(lockedSkillUuid && data.requireDefenderChoice === false);
         decl = await _skillRollDialog({
           title: `Oppose — Choose Skill`,
           actor: defender,
-          showSkillSelect: true,
+          showSkillSelect: !skipSkillSelect, // Hide skill selection if already chosen
           skills,
           selectedSkillUuid,
           allowSpecialization: true,
