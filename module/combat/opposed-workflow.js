@@ -3841,6 +3841,51 @@ if (stage === "attacker-roll") {
       const isCommit = action === "defender-commit";
       const isRollCommitted = action === "defender-roll-committed";
 
+      // CORRECTED: Feint gating - force No Defense if Feinted by this specific attacker
+      const feintedEffect = defender.effects.find(e => 
+        !e.disabled && 
+        (e?.flags?.uesrpg?.key === "feinted" || e?.flags?.["uesrpg-3ev4"]?.condition?.key === "feinted")
+      );
+
+      if (feintedEffect) {
+        const feintedByUuid = feintedEffect?.flags?.uesrpg?.attackerUuid ?? 
+                              feintedEffect?.flags?.["uesrpg-3ev4"]?.condition?.attackerUuid;
+        
+        if (feintedByUuid && feintedByUuid === attacker.uuid) {
+          // RAW: treat next melee attack as if attacker were Hidden
+          // Implementation: force No Defense
+          data.defender.banked = data.defender.banked ?? {};
+          data.defender.banked.committed = true;
+          data.defender.banked.committedAt = Date.now();
+          data.defender.banked.committedBy = "system";
+          data.defender.banked.forced = true;
+          data.defender.banked.reason = "feinted";
+
+          data.defender.noDefense = true;
+          data.defender.defenseType = "none";
+          data.defender.label = "No Defense (Feinted)";
+          data.defender.testLabel = "No Defense";
+          data.defender.defenseLabel = "No Defense";
+          data.defender.target = 0;
+          data.defender.tn = {
+            finalTN: 0,
+            baseTN: 0,
+            totalMod: 0,
+            breakdown: [{ key: "base", label: "No Defense (Feinted)", value: 0, source: "base" }]
+          };
+          data.defender.result = { rollTotal: 100, target: 0, isSuccess: false, degree: 1 };
+
+          await _updateCard(message, data);
+
+          // Remove Feinted after it's been used
+          const { removeCondition } = await import("../conditions/condition-engine.js");
+          await removeCondition(defender, "feinted");
+
+          ui.notifications.info(`${defender.name} is Feinted and cannot defend against ${attacker.name}!`);
+          return;
+        }
+      }
+
       if (!bankMode) {
         ui.notifications.warn("Banked choices are not enabled for this opposed test.");
         return;
@@ -4140,6 +4185,45 @@ if (stage === "attacker-roll") {
     // --- Defender Roll ---
     if (action === "defender-roll") {
       if (data.defender.result || data.defender.noDefense) return;
+
+      // CORRECTED: Feint gating - force No Defense if Feinted by this specific attacker
+      const feintedEffect = defender.effects.find(e => 
+        !e.disabled && 
+        (e?.flags?.uesrpg?.key === "feinted" || e?.flags?.["uesrpg-3ev4"]?.condition?.key === "feinted")
+      );
+
+      if (feintedEffect) {
+        const feintedByUuid = feintedEffect?.flags?.uesrpg?.attackerUuid ?? 
+                              feintedEffect?.flags?.["uesrpg-3ev4"]?.condition?.attackerUuid;
+        
+        if (feintedByUuid && feintedByUuid === attacker.uuid) {
+          // RAW: treat next melee attack as if attacker were Hidden
+          // Implementation: force No Defense
+          data.defender.noDefense = true;
+          data.defender.defenseType = "none";
+          data.defender.label = "No Defense (Feinted)";
+          data.defender.testLabel = "No Defense";
+          data.defender.defenseLabel = "No Defense";
+          data.defender.target = 0;
+          data.defender.tn = {
+            finalTN: 0,
+            baseTN: 0,
+            totalMod: 0,
+            breakdown: [{ key: "base", label: "No Defense (Feinted)", value: 0, source: "base" }]
+          };
+          data.defender.result = { rollTotal: 100, target: 0, isSuccess: false, degree: 1 };
+
+          await _updateCard(message, data);
+
+          // Remove Feinted after it's been used
+          const { removeCondition } = await import("../conditions/condition-engine.js");
+          await removeCondition(defender, "feinted");
+
+          ui.notifications.info(`${defender.name} is Feinted and cannot defend against ${attacker.name}!`);
+          return;
+        }
+      }
+
       if (!_canControlActor(defender)) {
         ui.notifications.warn("You do not have permission to roll for the defender.");
         return;

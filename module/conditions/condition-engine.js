@@ -282,6 +282,18 @@ const STATIC_CONDITIONS = {
     icon: "icons/svg/anchor.svg",
     changes: []
   },
+  grappled: {
+    name: "Grappled",
+    icon: "icons/svg/grab.svg",
+    changes: []
+  },
+
+  // Special Actions conditions
+  feinted: {
+    name: "Feinted",
+    icon: "icons/svg/combat.svg",
+    changes: []
+  },
 
   // Package 4: movement restriction semantics (no TN modifiers; applied in derived Speed)
   slowed: {

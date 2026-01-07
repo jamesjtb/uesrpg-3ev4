@@ -1,150 +1,353 @@
 /**
  * module/combat/special-actions-helper.js
- *
- * Special Actions automation helper (Chapter 5 - Advanced Mechanics).
- *
- * Implements:
- * - Regular Special Action usage (costs 1 AP, requires opposed test)
- * - Special Advantage mode (free + auto-win)
- * - Active Effect automation for status conditions
- * - Support for both PC (combat style-based) and NPC (flag-based) Special Actions
  */
 
+import { hasCondition, applyCondition, removeCondition } from "../conditions/condition-engine.js";
 import { getSpecialActionById } from "../config/special-actions.js";
-import { applyCondition, removeCondition } from "../conditions/condition-engine.js";
+import { ActionEconomy } from "./action-economy.js";
+
+const SYSTEM_ID = "uesrpg-3ev4";
+
+function _resolveActor(docOrUuid) {
+  if (!docOrUuid) return null;
+  const doc = typeof docOrUuid === "string" ? fromUuidSync(docOrUuid) : docOrUuid;
+  if (!doc) return null;
+  if (doc.documentName === "Actor") return doc;
+  if (doc.documentName === "Token") return doc.actor ?? null;
+  if (doc.actor) return doc.actor;
+  return null;
+}
+
+function _resolveToken(docOrUuid) {
+  if (!docOrUuid) return null;
+  const doc = typeof docOrUuid === "string" ? fromUuidSync(docOrUuid) : docOrUuid;
+  if (!doc) return null;
+  if (doc.documentName === "Token") return doc.object ?? null;
+  if (doc.actor && doc.document) return doc;
+  return null;
+}
 
 /**
- * Execute a Special Action outcome.
- *
- * @param {Object} options
- * @param {string} options.specialActionId - The Special Action ID (e.g., "bash", "trip")
- * @param {Actor} options.actor - The actor performing the Special Action
- * @param {Actor|null} options.target - The target actor (null for non-targeted actions)
- * @param {boolean} options.isAdvantageMode - Whether this is Special Advantage mode (free + auto-win)
- * @param {Object|null} options.opposedResult - The opposed test result {winner: "attacker"|"defender"}
- * @returns {Promise<{success: boolean, message: string}>}
+ * Apply condition safely with metadata for Feint tracking.
  */
-export async function executeSpecialAction({ specialActionId, actor, target, isAdvantageMode, opposedResult }) {
-  const def = getSpecialActionById(specialActionId);
-  if (!def) {
-    return { success: false, message: `Unknown Special Action: ${specialActionId}` };
-  }
-
-  // In advantage mode, auto-win. In regular mode, check opposed result
-  const success = isAdvantageMode || opposedResult?.winner === "attacker";
-  
-  if (!success) {
-    return { success: false, message: `${def.name} failed - defender won the opposed test.` };
-  }
+async function _applyConditionWithMetadata(actor, conditionKey, { duration = null, source = null, attackerUuid = null } = {}) {
+  if (!actor) return null;
 
   try {
-    let message = "";
+    await applyCondition(actor, conditionKey, { origin: null, source: source ?? "specialAction" });
+    
+    if (conditionKey === "feinted" && attackerUuid) {
+      const effect = actor.effects.find(e => 
+        !e.disabled && 
+        (e?.flags?.["uesrpg-3ev4"]?.condition?.key === "feinted")
+      );
+      
+      if (effect && duration) {
+        await effect.update({
+          duration,
+          [`flags.uesrpg-3ev4.condition.attackerUuid`]: attackerUuid
+        });
+      }
+    }
+    
+    return true;
+  } catch (err) {
+    console.error(`UESRPG | Special Actions | Failed to apply condition "${conditionKey}"`, err);
+    return false;
+  }
+}
 
-    switch (specialActionId) {
-      case "arise":
-        // Remove Prone condition
-        if (actor) {
-          await removeCondition(actor, "prone");
-          message = `${actor.name} rises from prone position without provoking Attacks of Opportunity.`;
+async function postSpecialActionCard({
+  specialActionId,
+  actor,
+  target,
+  actorToken = null,
+  targetToken = null
+} = {}) {
+  const def = getSpecialActionById(specialActionId);
+  if (!def) return null;
+
+  const actorName = actor?.name ?? "Actor";
+  const targetName = target?.name ?? "Target";
+
+  const skillMapping = {
+    bash: { 
+      attacker: ["Athletics", "Combat Style (unarmed)"], 
+      defender: ["Athletics", "Combat Style (unarmed)", "Evade"] 
+    },
+    blindOpponent: { 
+      attacker: ["Combat Style"], 
+      defender: ["Evade", "Combat Style (with shield)"] 
+    },
+    disarm: { 
+      attacker: ["Athletics", "Combat Style (unarmed)"], 
+      defender: ["Athletics", "Combat Style (unarmed)"] 
+    },
+    feint: { 
+      attacker: ["Combat Style", "Deceive"], 
+      defender: ["Observe", "Combat Style"] 
+    },
+    forceMovement: { 
+      attacker: ["Combat Style"], 
+      defender: ["Combat Style", "Athletics"] 
+    },
+    resist: { 
+      attacker: ["Athletics", "Combat Style (unarmed)"], 
+      defender: ["Athletics", "Combat Style (unarmed)"] 
+    },
+    trip: { 
+      attacker: ["Athletics", "Combat Style (unarmed)"], 
+      defender: ["Athletics", "Combat Style (unarmed)", "Evade"] 
+    }
+  };
+
+  const skills = skillMapping[specialActionId];
+  const attackerSkills = skills?.attacker ? skills.attacker.join(", ") : "—";
+  const defenderSkills = skills?.defender ? skills.defender.join(", ") : "—";
+
+  const content = `
+    <div class="uesrpg-special-action-card" style="padding: 8px;">
+      <h2>Special Action: ${def.name}</h2>
+      <div style="margin: 8px 0;">
+        <b>${actorName} vs ${targetName}</b>
+      </div>
+      ${skills ? `
+        <div style="margin: 8px 0; font-size:13px;">
+          <div><b>Attacker Skills:</b> ${attackerSkills}</div>
+          <div><b>Defender Skills:</b> ${defenderSkills}</div>
+        </div>
+        <div style="margin:8px 0; font-style:italic; font-size:12px; opacity:0.85;">
+          Resolve this opposed test manually. The system will auto-apply effects when complete.
+        </div>
+      ` : `
+        <div style="margin: 8px 0; font-style:italic; font-size:12px; opacity:0.85;">
+          No opposed test required. Effect applied automatically.
+        </div>
+      `}
+    </div>
+  `;
+
+  const message = await ChatMessage.create({
+    user: game.user.id,
+    speaker: ChatMessage.getSpeaker({ actor, token: actorToken?.document ?? null }),
+    content,
+    style: CONST.CHAT_MESSAGE_STYLES.OTHER,
+    flags: {
+      [SYSTEM_ID]: {
+        specialAction: {
+          id: specialActionId,
+          actorUuid: actor.uuid,
+          targetUuid: target?.uuid ?? null,
+          actorTokenUuid: actorToken?.document?.uuid ?? actorToken?.uuid ?? null,
+          targetTokenUuid: targetToken?.document?.uuid ?? targetToken?.uuid ?? null
         }
-        break;
+      }
+    }
+  });
 
-      case "bash":
-        // Apply Prone condition + knockback 1 meter
-        if (target) {
-          await applyCondition(target, "prone", { 
-            origin: actor?.uuid, 
-            source: `Bashed by ${actor?.name}` 
-          });
-          message = `${target.name} is knocked prone and pushed back 1 meter.`;
-        }
-        break;
+  return message;
+}
 
-      case "blindOpponent":
-        // Apply Blinded condition for 1 round
-        if (target) {
-          await applyCondition(target, "blinded", {
-            origin: actor?.uuid,
-            source: `Blinded by ${actor?.name}`
-          });
-          message = `${target.name} is blinded for 1 round (-30 to tests requiring sight).`;
-        }
-        break;
+export async function executeSpecialAction({
+  specialActionId,
+  actor,
+  target,
+  isAdvantageMode = false,
+  opposedResult = null
+} = {}) {
+  const def = getSpecialActionById(specialActionId);
+  if (!def) {
+    return { success: false, message: "Unknown Special Action." };
+  }
 
-      case "trip":
-        // Apply Prone condition
-        if (target) {
-          await applyCondition(target, "prone", {
-            origin: actor?.uuid,
-            source: `Tripped by ${actor?.name}`
-          });
-          message = `${target.name} is knocked prone.`;
-        }
-        break;
+  const actorName = actor?.name ?? "Actor";
+  const targetName = target?.name ?? "Target";
+  const winner = isAdvantageMode ? "attacker" : (opposedResult?.winner ?? null);
 
-      case "feint":
-        // Apply custom effect: next melee defense negated (within 1 round)
-        if (target) {
-          const effectData = {
-            name: "Feinted",
-            icon: "icons/svg/combat.svg",
-            origin: actor?.uuid,
-            duration: { rounds: 1 },
-            flags: {
-              "uesrpg-3ev4": {
-                specialAction: "feint",
-                source: `Feinted by ${actor?.name}`
-              }
-            },
-            changes: []
-          };
+  switch (specialActionId) {
+    case "arise":
+      return await _executeArise({ actor, winner, actorName, isAdvantageMode });
+    case "bash":
+      return await _executeBash({ actor, target, winner, actorName, targetName, isAdvantageMode });
+    case "blindOpponent":
+      return await _executeBlindOpponent({ actor, target, winner, actorName, targetName, isAdvantageMode });
+    case "disarm":
+      return await _executeDisarm({ actor, target, winner, actorName, targetName, isAdvantageMode });
+    case "feint":
+      return await _executeFeint({ actor, target, winner, actorName, targetName, isAdvantageMode });
+    case "forceMovement":
+      return await _executeForceMovement({ actor, target, winner, actorName, targetName, isAdvantageMode });
+    case "resist":
+      return await _executeResist({ actor, target, winner, actorName, targetName, isAdvantageMode });
+    case "trip":
+      return await _executeTrip({ actor, target, winner, actorName, targetName, isAdvantageMode });
+    default:
+      return { success: false, message: `No automation for ${def.name}.` };
+  }
+}
 
-          // Check for existing feint effect to prevent duplicates
-          const existing = target.effects.find(e => 
-            e.flags?.["uesrpg-3ev4"]?.specialAction === "feint" &&
-            e.origin === actor?.uuid
-          );
+export async function initiateSpecialActionFromSheet({
+  specialActionId,
+  actor,
+  target,
+  actorToken = null,
+  targetToken = null
+} = {}) {
+  const def = getSpecialActionById(specialActionId);
+  if (!def) {
+    ui.notifications.warn("Unknown Special Action.");
+    return null;
+  }
 
-          if (!existing) {
-            await target.createEmbeddedDocuments("ActiveEffect", [effectData]);
-          }
+  if (specialActionId === "arise") {
+    const result = await executeSpecialAction({
+      specialActionId,
+      actor,
+      target: null,
+      isAdvantageMode: false,
+      opposedResult: { winner: "attacker" }
+    });
 
-          message = `${target.name}'s next melee defense is negated (within 1 round).`;
-        }
-        break;
+    if (result.success) {
+      await ChatMessage.create({
+        user: game.user.id,
+        speaker: ChatMessage.getSpeaker({ actor, token: actorToken?.document ?? null }),
+        content: `<div class="uesrpg-special-action-outcome"><b>Special Action:</b><p>${result.message}</p></div>`,
+        style: CONST.CHAT_MESSAGE_STYLES.OTHER
+      });
+    }
+    return result;
+  }
 
-      case "resist":
-        // Remove Restrained condition
-        if (actor) {
-          await removeCondition(actor, "restrained");
-          message = `${actor.name} breaks free from restraints.`;
-        }
-        break;
+  if (!target) {
+    ui.notifications.warn(`${def.name} requires a targeted token.`);
+    return null;
+  }
 
-      case "disarm":
-        // Manual outcome - no automation (requires GM adjudication for item removal)
-        if (target) {
-          message = `${target.name} is disarmed. GM should remove the weapon from their inventory.`;
-        }
-        break;
+  await postSpecialActionCard({
+    specialActionId,
+    actor,
+    target,
+    actorToken,
+    targetToken
+  });
 
-      case "forceMovement":
-        // Manual outcome - no automation (requires positioning on map)
-        if (target) {
-          message = `${target.name} is forced to move. GM should reposition the token.`;
-        }
-        break;
+  return { success: true, message: "Special Action card posted." };
+}
 
-      default:
-        return { success: false, message: `No automation defined for ${def.name}.` };
+// Executors
+async function _executeArise({ actor, winner, actorName, isAdvantageMode }) {
+  if (winner === "attacker" || isAdvantageMode) {
+    await removeCondition(actor, "prone");
+    return {
+      success: true,
+      message: `${actorName} arises without provoking an attack of opportunity.`
+    };
+  }
+  return { success: false, message: `${actorName} fails to arise.` };
+}
+
+async function _executeBash({ actor, target, winner, actorName, targetName, isAdvantageMode }) {
+  if (winner === "attacker" || isAdvantageMode) {
+    await ActionEconomy.spendAP(target, 1, { reason: "bashed", silent: true });
+    await applyCondition(target, "prone", { source: "bash" });
+    return {
+      success: true,
+      message: `${actorName} bashes ${targetName}! Knocked back 1m, loses 1 AP, and falls Prone (unless Acrobatics test succeeds).`
+    };
+  }
+  return { success: false, message: `${actorName}'s bash fails.` };
+}
+
+async function _executeBlindOpponent({ actor, target, winner, actorName, targetName, isAdvantageMode }) {
+  if (winner === "attacker" || isAdvantageMode) {
+    const combat = game.combat ?? null;
+    const duration = combat?.started
+      ? { rounds: 1, startRound: combat.round ?? 0, startTurn: combat.turn ?? 0 }
+      : { seconds: 6 };
+
+    await applyCondition(target, "blinded", { source: "blindOpponent" });
+    
+    const effect = target.effects.find(e => 
+      !e.disabled && 
+      (e?.flags?.["uesrpg-3ev4"]?.condition?.key === "blinded")
+    );
+    if (effect) {
+      await effect.update({ duration });
     }
 
-    return { success: true, message };
-
-  } catch (err) {
-    console.error("UESRPG | Failed to execute Special Action automation", err);
-    return { success: false, message: `Failed to execute ${def.name}: ${err.message}` };
+    return {
+      success: true,
+      message: `${actorName} blinds ${targetName} for 1 round.`
+    };
   }
+  return { success: false, message: `${actorName} fails to blind ${targetName}.` };
+}
+
+async function _executeDisarm({ actor, target, winner, actorName, targetName, isAdvantageMode }) {
+  if (winner === "attacker" || isAdvantageMode) {
+    return {
+      success: true,
+      message: `${actorName} disarms ${targetName}! Weapon can be taken (if free hand) or flung 1d4m in random direction. (Manual: unequip weapon)`
+    };
+  }
+  return { success: false, message: `${actorName} fails to disarm ${targetName}.` };
+}
+
+async function _executeFeint({ actor, target, winner, actorName, targetName, isAdvantageMode }) {
+  if (winner === "attacker" || isAdvantageMode) {
+    const combat = game.combat ?? null;
+    const duration = combat?.started
+      ? { rounds: 1, startRound: combat.round ?? 0, startTurn: combat.turn ?? 0 }
+      : { seconds: 6 };
+
+    await _applyConditionWithMetadata(target, "feinted", { 
+      duration, 
+      source: "feint",
+      attackerUuid: actor.uuid
+    });
+
+    return {
+      success: true,
+      message: `${actorName} feints! ${targetName} treats next melee attack from ${actorName} as if ${actorName} were Hidden (until end of ${actorName}'s turn).`
+    };
+  }
+  return { success: false, message: `${actorName}'s feint fails.` };
+}
+
+async function _executeForceMovement({ actor, target, winner, actorName, targetName, isAdvantageMode }) {
+  if (winner === "attacker" || isAdvantageMode) {
+    return {
+      success: true,
+      message: `${actorName} forces movement! Both move up to 3m in same direction (Manual: adjust tokens).`
+    };
+  }
+  return { success: false, message: `${actorName} fails to force movement.` };
+}
+
+async function _executeResist({ actor, target, winner, actorName, targetName, isAdvantageMode }) {
+  if (winner === "attacker" || isAdvantageMode) {
+    await removeCondition(actor, "restrained");
+    await removeCondition(actor, "grappled");
+    await removeCondition(actor, "blinded");
+    
+    return {
+      success: true,
+      message: `${actorName} escapes!`
+    };
+  }
+  return { success: false, message: `${actorName} fails to resist.` };
+}
+
+async function _executeTrip({ actor, target, winner, actorName, targetName, isAdvantageMode }) {
+  if (winner === "attacker" || isAdvantageMode) {
+    await applyCondition(target, "prone", { source: "trip" });
+    return {
+      success: true,
+      message: `${actorName} trips ${targetName}, making them Prone.`
+    };
+  }
+  return { success: false, message: `${actorName} fails to trip ${targetName}.` };
 }
 
 /**
