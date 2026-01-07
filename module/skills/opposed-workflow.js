@@ -1060,10 +1060,11 @@ if (!authorUser) return;
       if (quick) {
         decl = { skillUuid: selectedSkillUuid, difficultyKey: defaults.difficultyKey, manualMod: defaults.manualMod, useSpec: defaults.useSpec };
       } else {
+        // Always show skill selection dropdown (removed pre-choice dialog dependency)
         decl = await _skillRollDialog({
           title: `Oppose — Choose Skill`,
           actor: defender,
-          showSkillSelect: true, // Always show skill selection
+          showSkillSelect: true,
           skills,
           selectedSkillUuid,
           allowSpecialization: true,
