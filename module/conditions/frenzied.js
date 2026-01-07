@@ -239,6 +239,8 @@ export async function removeFrenzied(actor, { applySPLoss = true } = {}) {
     
     if (spLoss > 0) {
       const currentSP = Number(actor.system?.stamina?.value ?? 0);
+      // RAW: SP loss "cannot kill them" - Math.max(0, ...) ensures SP never goes negative,
+      // preventing HP loss from SP depletion.
       const newSP = Math.max(0, currentSP - spLoss);
       
       try {
