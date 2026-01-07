@@ -1225,35 +1225,26 @@ this._applyMovementRestrictionSemantics(actorData, actorSystemData);
     // Wound Penalties
     const woundSuppressed = this._hasWoundPenaltySuppression(actorData);
     if (actorSystemData.wounded === true && !woundSuppressed) {
-      let woundPen = 0
-      let woundIni = -2;
-      this._painIntolerant(actorData) ? woundPen = -30 : woundPen = -20
+      let woundPen = 0;
+      this._painIntolerant(actorData) ? woundPen = -30 : woundPen = -20;
 
       if (this._halfWoundPenalty(actorData) === true) {
-        for (var skill in actorSystemData.professionsWound) {
-          actorSystemData.professionsWound[skill] = actorSystemData.professions[skill] + (woundPen / 2);
-        }
-
-        actorSystemData.woundPenalty = woundPen / 2
-        actorSystemData.initiative.value = actorSystemData.initiative.base + (woundIni / 2);
-
-      }
-
-      else if (this._halfWoundPenalty(actorData) === false) {
-        for (var skill in actorSystemData.professionsWound) {
-          actorSystemData.professionsWound[skill] = actorSystemData.professions[skill] + woundPen;
-        }
-
-        actorSystemData.initiative.value = actorSystemData.initiative.base + woundIni;
+        actorSystemData.woundPenalty = woundPen / 2;
+      } else {
         actorSystemData.woundPenalty = woundPen;
+      }
 
+      // professionsWound mirrors professions; wound penalty is applied by TN calculation code
+      if (actorSystemData.professionsWound && actorSystemData.professions) {
+        for (var skill in actorSystemData.professionsWound) {
+          actorSystemData.professionsWound[skill] = actorSystemData.professions[skill];
         }
       }
+    }
     else if (actorSystemData.wounded === true && woundSuppressed) {
       // Passive wound penalties are suppressed by first aid / magical healing forestall,
       // without clearing the wounded state.
       actorSystemData.woundPenalty = 0;
-      actorSystemData.initiative.value = actorSystemData.initiative.base;
 
       if (actorSystemData.professionsWound && actorSystemData.professions) {
         for (var skill in actorSystemData.professionsWound) {
@@ -1261,7 +1252,6 @@ this._applyMovementRestrictionSemantics(actorData, actorSystemData);
         }
       }
     }
-
 
       else if (actorSystemData.wounded === false) {
           for (var skill in actorSystemData.professionsWound) {
@@ -1662,7 +1652,7 @@ this._applyMovementRestrictionSemantics(actorData, actorSystemData);
         actorSystemData.woundPenalty = woundPen;
       }
 
-      // professionsWound mirrors professions; Active Effects apply the actual penalties
+      // professionsWound mirrors professions; wound penalty is applied by TN calculation code
       if (actorSystemData.professionsWound && actorSystemData.professions) {
         for (var skill in actorSystemData.professionsWound) {
           actorSystemData.professionsWound[skill] = actorSystemData.professions[skill];
