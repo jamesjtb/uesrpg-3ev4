@@ -4270,6 +4270,25 @@ if (stage === "attacker-roll") {
 
       const defenderMovementAction = _getTokenMovementAction(dToken);
 
+      // SPECIAL ACTION: Check if defender needs to choose their test type
+      if (data.requireDefenderChoice && data.specialActionId) {
+        const { showPreTestChoiceDialog } = await import("./special-actions-helper.js");
+        const defenderChoice = await showPreTestChoiceDialog({
+          specialActionId: data.specialActionId,
+          actor: defender,
+          isDefender: true
+        });
+
+        if (!defenderChoice) return; // User cancelled
+
+        // Store defender's chosen test type for later use
+        data.defenderTestType = defenderChoice.testType;
+        data.defenderSkillUuid = defenderChoice.skillUuid;
+        data.defenderItemUuid = defenderChoice.itemUuid;
+        data.requireDefenderChoice = false; // Mark as chosen
+
+        await _updateCard(message, data);
+      }
 
       // Attacker weapon traits can restrict eligible defense options (e.g., Flail cannot be parried/countered).
       // Keep this deterministic and schema-safe.

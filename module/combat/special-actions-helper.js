@@ -96,6 +96,7 @@ export async function showPreTestChoiceDialog({ specialActionId, actor, isDefend
         value: "combatStyle",
         label: "Combat Style",
         skillUuid: "combat-style",
+        itemUuid: hasActiveCombatStyle.uuid,
         checked: true
       });
     } else if (isNPC) {
@@ -105,6 +106,7 @@ export async function showPreTestChoiceDialog({ specialActionId, actor, isDefend
           value: "combatProfession",
           label: "Combat (Profession)",
           skillUuid: "prof:combat",
+          itemUuid: null,
           checked: true
         });
       }
@@ -131,6 +133,7 @@ export async function showPreTestChoiceDialog({ specialActionId, actor, isDefend
           value: config.value,
           label: config.label,
           skillUuid: skillItem.uuid,
+          itemUuid: null,
           checked: radioOptions.length === 0
         });
       }
@@ -146,7 +149,8 @@ export async function showPreTestChoiceDialog({ specialActionId, actor, isDefend
   if (radioOptions.length === 1) {
     return {
       testType: radioOptions[0].value,
-      skillUuid: radioOptions[0].skillUuid
+      skillUuid: radioOptions[0].skillUuid,
+      itemUuid: radioOptions[0].itemUuid
     };
   }
 
@@ -157,7 +161,7 @@ export async function showPreTestChoiceDialog({ specialActionId, actor, isDefend
       <div style="margin: 12px 0;">
         ${radioOptions.map(opt => `
           <label style="display: flex; align-items: center; gap: 8px; margin-bottom: 8px;">
-            <input type="radio" name="testType" value="${opt.value}" data-skill-uuid="${opt.skillUuid}" ${opt.checked ? 'checked' : ''} />
+            <input type="radio" name="testType" value="${opt.value}" data-skill-uuid="${opt.skillUuid}" data-item-uuid="${opt.itemUuid || ''}" ${opt.checked ? 'checked' : ''} />
             <span><b>${opt.label}</b></span>
           </label>
         `).join('')}
@@ -177,8 +181,9 @@ export async function showPreTestChoiceDialog({ specialActionId, actor, isDefend
             const selected = root?.querySelector('input[name="testType"]:checked');
             const testType = selected?.value;
             const skillUuid = selected?.dataset?.skillUuid;
+            const itemUuid = selected?.dataset?.itemUuid || null;
             
-            return { testType, skillUuid };
+            return { testType, skillUuid, itemUuid };
           }
         },
         cancel: { label: "Cancel", callback: () => null }

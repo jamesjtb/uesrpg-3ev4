@@ -404,35 +404,66 @@ async activateListeners(html) {
 
         if (!attackerChoice) return; // User cancelled
 
-        // Create skill opposed test with PRE-SELECTED attacker test
         const testLabel = attackerChoice.testType === "combatStyle" || attackerChoice.testType === "combatProfession"
           ? "Combat Style"
           : attackerChoice.testType.charAt(0).toUpperCase() + attackerChoice.testType.slice(1);
         
-        const message = await SkillOpposedWorkflow.createPending({
-          attackerTokenUuid: actorToken?.document?.uuid ?? actorToken?.uuid,
-          defenderTokenUuid: targetToken?.document?.uuid ?? targetToken?.uuid,
-          attackerSkillUuid: attackerChoice.skillUuid,
-          attackerSkillLabel: `${def.name} (${testLabel})`
-        });
-
-        // Tag with Special Action metadata
-        const state = message?.flags?.["uesrpg-3ev4"]?.skillOpposed?.state;
-        if (state) {
-          state.specialActionId = specialId;
-          state.attackerTestType = attackerChoice.testType;
-          state.requireDefenderChoice = true; // Defender needs to choose when they roll
-
-          await message.update({
-            flags: {
-              "uesrpg-3ev4": {
-                skillOpposed: {
-                  version: state.version ?? 1,
-                  state
+        // Route to appropriate workflow based on test type
+        let message;
+        if (attackerChoice.testType === "combatStyle" || attackerChoice.testType === "combatProfession") {
+          // Combat Style → use OpposedWorkflow (3D dice, combat mechanics)
+          message = await OpposedWorkflow.createPending({
+            attackerTokenUuid: actorToken?.document?.uuid ?? actorToken?.uuid,
+            defenderTokenUuid: targetToken?.document?.uuid ?? targetToken?.uuid,
+            attackerActorUuid: this.actor.uuid,
+            defenderActorUuid: targetToken?.actor?.uuid ?? null,
+            attackerItemUuid: attackerChoice.itemUuid,
+            attackerLabel: `${def.name} (${testLabel})`,
+            mode: "special-action"
+          });
+          
+          // Tag with Special Action metadata for OpposedWorkflow
+          const state = message?.flags?.["uesrpg-3ev4"]?.opposed;
+          if (state) {
+            state.specialActionId = specialId;
+            state.attackerTestType = attackerChoice.testType;
+            state.requireDefenderChoice = true;
+            
+            await message.update({
+              flags: {
+                "uesrpg-3ev4": {
+                  opposed: state
                 }
               }
-            }
+            });
+          }
+        } else {
+          // Skill → use SkillOpposedWorkflow
+          message = await SkillOpposedWorkflow.createPending({
+            attackerTokenUuid: actorToken?.document?.uuid ?? actorToken?.uuid,
+            defenderTokenUuid: targetToken?.document?.uuid ?? targetToken?.uuid,
+            attackerSkillUuid: attackerChoice.skillUuid,
+            attackerSkillLabel: `${def.name} (${testLabel})`
           });
+
+          // Tag with Special Action metadata for SkillOpposedWorkflow
+          const state = message?.flags?.["uesrpg-3ev4"]?.skillOpposed?.state;
+          if (state) {
+            state.specialActionId = specialId;
+            state.attackerTestType = attackerChoice.testType;
+            state.requireDefenderChoice = true;
+
+            await message.update({
+              flags: {
+                "uesrpg-3ev4": {
+                  skillOpposed: {
+                    version: state.version ?? 1,
+                    state
+                  }
+                }
+              }
+            });
+          }
         }
 
         return;
