@@ -130,7 +130,7 @@ export async function showPreTestChoiceDialog({ specialActionId, actor, isDefend
         radioOptions.push({
           value: "combatStyle",
           label: "Combat Style",
-          skillUuid: "combat-style",
+          skillUuid: hasActiveCombatStyle.uuid,
           itemUuid: hasActiveCombatStyle.uuid,
           checked: radioOptions.length === 0
         });
@@ -152,7 +152,7 @@ export async function showPreTestChoiceDialog({ specialActionId, actor, isDefend
         radioOptions.push({
           value: "combatStyle",
           label: "Combat Style (unarmed)",
-          skillUuid: "combat-style",
+          skillUuid: hasActiveCombatStyle.uuid,
           itemUuid: hasActiveCombatStyle.uuid,
           checked: radioOptions.length === 0
         });
@@ -175,7 +175,7 @@ export async function showPreTestChoiceDialog({ specialActionId, actor, isDefend
         radioOptions.push({
           value: "combatStyle",
           label: "Combat Style (with shield)",
-          skillUuid: "combat-style",
+          skillUuid: hasActiveCombatStyle.uuid,
           itemUuid: hasActiveCombatStyle.uuid,
           checked: radioOptions.length === 0
         });
