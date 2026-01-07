@@ -293,6 +293,16 @@ game.settings.register("uesrpg-3ev4", "debugAim", {
 
 }
 
+/**
+ * Register Handlebars helpers used by the system.
+ */
+function registerHandlebarsHelpers() {
+  // Greater than or equal helper for attack counter styling
+  Handlebars.registerHelper('gte', function(a, b) {
+    return a >= b;
+  });
+}
+
 async function registerSheets () {
     // Register sheet application classes
 foundry.documents.collections.Actors.unregisterSheet("core", foundry.appv1.sheets.ActorSheet);
@@ -512,6 +522,9 @@ game.uesrpg.combat.applyHealing = async (actor, amount, options = {}) => {
   // Define custom Entity classes
   CONFIG.Actor.documentClass = SimpleActor;
   CONFIG.Item.documentClass = SimpleItem;
+  
+  // Register Handlebars helpers
+  registerHandlebarsHelpers();
 
   // Preload sheet partials after the Handlebars application namespace is fully initialized.
   // Running this too early causes Foundry to fall back to deprecated global loaders.

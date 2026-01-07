@@ -49,6 +49,9 @@ export class SimpleActor extends Actor {
     // Ensure required data structures exist so downstream derived-data logic is resilient,
     // even when actors are partially migrated or have inconsistent embedded item data.
     this._ensureSystemData();
+    
+    // Apply legacy characteristic bonuses from talents/traits/powers
+    this._applyLegacyCharacteristicBonuses();
 
     try {
       if (this.type === "Player Character" && typeof this._prepareCharacterData === "function") {
@@ -139,6 +142,52 @@ export class SimpleActor extends Actor {
     system.professions ??= {};
     system.professionsWound ??= {};
     system.skills ??= {};
+    
+    // Combat tracking
+    system.combat_tracking ??= {
+      attacks_this_round: 0,
+      attacks_this_turn: 0,
+      last_reset_round: 0,
+      last_reset_turn: 0
+    };
+  }
+
+  /**
+   * Apply legacy characteristic bonuses from talents/traits/powers.
+   * This ensures items with characteristicBonus fields apply their effects.
+   */
+  _applyLegacyCharacteristicBonuses() {
+    const relevantItems = this.items.filter(i => 
+      i.type === "talent" || i.type === "trait" || i.type === "power"
+    );
+    
+    const bonuses = {
+      str: 0, end: 0, agi: 0, int: 0,
+      wp: 0, prc: 0, prs: 0, lck: 0
+    };
+    
+    for (const item of relevantItems) {
+      const charBonuses = item.system?.characteristicBonus ?? {};
+      
+      bonuses.str += Number(charBonuses.strChaBonus ?? 0) || 0;
+      bonuses.end += Number(charBonuses.endChaBonus ?? 0) || 0;
+      bonuses.agi += Number(charBonuses.agiChaBonus ?? 0) || 0;
+      bonuses.int += Number(charBonuses.intChaBonus ?? 0) || 0;
+      bonuses.wp += Number(charBonuses.wpChaBonus ?? 0) || 0;
+      bonuses.prc += Number(charBonuses.prcChaBonus ?? 0) || 0;
+      bonuses.prs += Number(charBonuses.prsChaBonus ?? 0) || 0;
+      bonuses.lck += Number(charBonuses.lckChaBonus ?? 0) || 0;
+    }
+    
+    // Apply to characteristic totals (additive to base)
+    const chars = this.system.characteristics;
+    if (chars) {
+      for (const [key, bonus] of Object.entries(bonuses)) {
+        if (chars[key]) {
+          chars[key].bonus = (chars[key].bonus ?? 0) + bonus;
+        }
+      }
+    }
   }
 
   /**

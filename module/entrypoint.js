@@ -12,6 +12,7 @@ import {
   applyPowerBlockBonus,
   hasStaminaEffect
 } from "./stamina/stamina-integration-hooks.js";
+import { AttackTracker } from "./combat/attack-tracker.js";
 
 Hooks.once('ready', async function () {
   console.log(`UESRPG | Ready`);
