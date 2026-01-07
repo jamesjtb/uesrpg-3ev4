@@ -281,17 +281,15 @@ async function _handleHudToggle(app, actor, statusId) {
     } else {
       await setConditionValue(actor, statusId, 1);
     }
-  } 
-  // Frenzied: requires custom application for talent-based dynamic changes
-  else if (statusId === "frenzied") {
+  } else if (statusId === "frenzied") {
+    // Frenzied: requires custom application for talent-based dynamic changes
     const active = hasCondition(actor, statusId);
     if (active) {
       await removeFrenzied(actor, { applySPLoss: false }); // No SP loss on manual toggle
     } else {
       await applyFrenzied(actor, { source: "Token HUD", voluntary: true });
     }
-  }
-  else {
+  } else {
     // Static conditions: toggle via the condition engine for canonical AE wiring.
     await toggleCondition(actor, statusId, { origin: null, source: "Token HUD" });
   }
