@@ -117,7 +117,7 @@ export async function showPreTestChoiceDialog({ specialActionId, actor, isDefend
   const available = isDefender ? options.defender : options.attacker;
 
   // Build radio options
-  const hasActiveCombatStyle = actor?.itemTypes?.["combat-style"]?.find(cs => cs?.system?.active);
+  const hasActiveCombatStyle = actor?.itemTypes?.combatStyle?.find(cs => cs?.system?.active);
   const isNPC = actor?.type === "NPC";
 
   let radioOptions = [];
