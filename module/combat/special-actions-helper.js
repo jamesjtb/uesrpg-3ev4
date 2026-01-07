@@ -435,19 +435,31 @@ export async function handleSpecialActionCardAction(message, action) {
         : (opposedResult.winner === "defender" ? `${defender.name} wins!` : "Tie!");
 
       // Execute Special Action effects
-      const executionResult = await executeSpecialAction({
-        specialActionId,
-        actor: fromUuidSync(attacker.actorUuid),
-        target: fromUuidSync(defender.actorUuid),
-        isAutoWin: false,
-        opposedResult
-      });
+      const attackerActor = fromUuidSync(attacker.actorUuid);
+      const defenderActor = fromUuidSync(defender.actorUuid);
+      
+      if (!attackerActor || !defenderActor) {
+        console.error("UESRPG | Special Action: Could not resolve actors for effect execution");
+        data.outcome = {
+          ...opposedResult,
+          text: outcomeText,
+          effectMessage: "Error: Could not resolve actors"
+        };
+      } else {
+        const executionResult = await executeSpecialAction({
+          specialActionId,
+          actor: attackerActor,
+          target: defenderActor,
+          isAutoWin: false,
+          opposedResult
+        });
 
-      data.outcome = {
-        ...opposedResult,
-        text: outcomeText,
-        effectMessage: executionResult.success ? executionResult.message : null
-      };
+        data.outcome = {
+          ...opposedResult,
+          text: outcomeText,
+          effectMessage: executionResult.success ? executionResult.message : null
+        };
+      }
     }
 
     // Update message
@@ -592,7 +604,7 @@ async function _executeBash({ actor, target, winner, actorName, targetName, isAu
     await applyCondition(target, "prone", { source: "bash" });
     return {
       success: true,
-      message: `${actorName} bashes ${targetName}! Knocked back 1m, loses 1 AP, and falls Prone.`
+      message: `${actorName} bashes ${targetName}! Loses 1 AP and falls Prone. (Manual: move token back 1m)`
     };
   }
   return { success: false, message: `${actorName}'s bash fails.` };
