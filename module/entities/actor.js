@@ -1253,11 +1253,11 @@ this._applyMovementRestrictionSemantics(actorData, actorSystemData);
       }
     }
 
-      else if (actorSystemData.wounded === false) {
-          for (var skill in actorSystemData.professionsWound) {
-           actorSystemData.professionsWound[skill] = actorSystemData.professions[skill];
-        }
+    else {
+      for (var skill in actorSystemData.professionsWound) {
+        actorSystemData.professionsWound[skill] = actorSystemData.professions[skill];
       }
+    }
 
     //Fatigue Penalties
     // Active Effects: Fatigue/Exhaustion modifiers (bonus/penalty).
@@ -1670,7 +1670,7 @@ this._applyMovementRestrictionSemantics(actorData, actorSystemData);
         }
       }
     }
-    else if (actorSystemData.wounded === false) {
+    else {
       for (var skill in actorSystemData.professionsWound) {
         actorSystemData.professionsWound[skill] = actorSystemData.professions[skill];
       }
