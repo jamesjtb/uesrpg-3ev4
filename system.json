@@ -224,5 +224,6 @@
   "compatibility": {
     "minimum": "12",
     "verified": "13"
-  }
+  },
+  "socket": true
 }
