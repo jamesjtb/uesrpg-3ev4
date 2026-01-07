@@ -307,6 +307,9 @@ export async function createSpecialActionOpposedTest({
  */
 export async function handleSpecialActionCardAction(message, action) {
   try {
+    // Import helpers once at the start
+    const { doTestRoll, resolveOpposed } = await import("../helpers/degree-roll-helper.js");
+    
     const data = message.flags?.[SYSTEM_ID]?.specialActionOpposed?.state;
     if (!data) return;
 
@@ -342,9 +345,6 @@ export async function handleSpecialActionCardAction(message, action) {
     // Perform roll
     let rollResult;
     let testLabel;
-
-    // Import helpers once for both branches
-    const { doTestRoll } = await import("../helpers/degree-roll-helper.js");
 
     if (choice.testType === "Combat Style") {
       // Roll using Combat Style TN
@@ -399,7 +399,6 @@ export async function handleSpecialActionCardAction(message, action) {
     // Check if both have rolled
     if (attacker.result && defender.result) {
       // Resolve outcome
-      const { resolveOpposed } = await import("../helpers/degree-roll-helper.js");
       const opposedResult = resolveOpposed(attacker.result, defender.result);
 
       const outcomeText = opposedResult.winner === "attacker"
