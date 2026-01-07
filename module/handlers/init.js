@@ -626,7 +626,6 @@ Hooks.once("ready", async () => {
 
 // Auto-execute Special Action outcomes when skill opposed test resolves
 Hooks.on("createChatMessage", async (message) => {
-  // Auto-execute Special Action outcomes when skill opposed test resolves
   const state = message?.flags?.["uesrpg-3ev4"]?.skillOpposed?.state;
   if (!state?.outcome || !state?.specialActionId) return;
 

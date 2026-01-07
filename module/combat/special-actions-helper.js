@@ -217,8 +217,10 @@ export async function initiateSpecialActionOpposedTest({ specialActionId, actorT
   }
 
   // Create a pending skill opposed test card
-  // Note: This is a simplified implementation that posts a chat message
-  // In a full implementation, this would integrate with the skill opposed workflow
+  // This creates a chat message flagged with specialActionId.
+  // The GM/players manually resolve the opposed test using the skill opposed workflow.
+  // When the outcome is set on the message flags, the createChatMessage hook in init.js
+  // will automatically execute the Special Action outcome.
   const content = `
     <div class="uesrpg-special-action-opposed">
       <h3>Special Action: ${def.name}</h3>
@@ -241,7 +243,7 @@ export async function initiateSpecialActionOpposedTest({ specialActionId, actorT
             specialActionId,
             attacker: { actorUuid: actor.uuid, tokenUuid: actorTokenUuid },
             defender: { actorUuid: target.uuid, tokenUuid: targetTokenUuid },
-            outcome: null // Will be set when resolved
+            outcome: null // Will be populated by skill opposed workflow when test is resolved
           }
         }
       }
