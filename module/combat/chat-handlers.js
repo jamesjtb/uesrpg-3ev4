@@ -358,6 +358,41 @@ export function initializeChatHandlers() {
       el.addEventListener("click", (ev) => _onShockAction(ev, message));
     });
 
+    // Special Action opposed test card buttons
+    root.querySelectorAll("[data-ues-special-action]").forEach((el) => {
+      const action = el.dataset.uesSpecialAction;
+      
+      // Get actor from message flags for permission check
+      let actor = null;
+      try {
+        const state = message.flags?.["uesrpg-3ev4"]?.specialActionOpposed?.state;
+        const actorUuid = (action === "attacker-roll") 
+          ? state?.attacker?.actorUuid 
+          : (action === "defender-roll") 
+            ? state?.defender?.actorUuid 
+            : null;
+        actor = actorUuid ? fromUuidSync(actorUuid) : null;
+      } catch (_e) {
+        actor = null;
+      }
+
+      // Permission-aware button state
+      if (actor && !canUserRollActor(game.user, actor)) {
+        el.setAttribute("disabled", "disabled");
+        el.setAttribute("title", "You do not have permission to roll for this actor.");
+      }
+      
+      el.addEventListener("click", async (ev) => {
+        ev.preventDefault();
+        try {
+          const { handleSpecialActionCardAction } = await import("./special-actions-helper.js");
+          await handleSpecialActionCardAction(message, action);
+        } catch (err) {
+          console.error("UESRPG | Special Action button handler failed", err);
+        }
+      });
+    });
+
     // Collapsible action cards (sheet quick-actions).
     // IMPORTANT: Foundry chat sanitization may strip the `hidden` attribute.
     // We therefore enforce the default collapsed state at render time and
