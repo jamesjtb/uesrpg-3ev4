@@ -3305,6 +3305,7 @@ if (stage === "attacker-roll") {
         waitingSince: null,
         weaponUuid: seededWeaponUuid || null,
         attackMode: seededAttackMode || "melee",
+        skipAttackerAPDeduction: Boolean(cfg.skipAttackerAPDeduction),
         bankChoicesEnabled: (() => {
           try {
             return Boolean(game.settings.get("uesrpg-3ev4", "opposedBankChoices"));
@@ -3730,9 +3731,11 @@ if (stage === "attacker-roll") {
 
       // Spend AP only after the attack roll has been successfully executed and posted.
       // This avoids losing AP on cancelled/failed workflows.
+      // Skip AP deduction if it was already consumed (e.g., Attack of Opportunity).
+      const skipAP = Boolean(data.context?.skipAttackerAPDeduction);
       pendingApCost = Number(data.attacker?.pendingApCost ?? pendingApCost) || 0;
       const apVariant = String(data.attacker?.pendingApVariant ?? data.attacker.variant ?? "normal");
-      if (pendingApCost > 0) {
+      if (pendingApCost > 0 && !skipAP) {
         const ok = await ActionEconomy.spendAP(attacker, pendingApCost, { reason: `attackVariant:${apVariant}`, silent: true });
         if (!ok) {
           ui.notifications.warn("Insufficient Action Points to perform this attack.");

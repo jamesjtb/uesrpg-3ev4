@@ -883,7 +883,8 @@ async activateListeners(html) {
             attackerTarget: attackTN,
             mode: "attack",
             attackMode,
-            weaponUuid: weapon.uuid
+            weaponUuid: weapon.uuid,
+            skipAttackerAPDeduction: true
           });
         } else {
           // For NPC: use combat profession
@@ -903,7 +904,8 @@ async activateListeners(html) {
             attackerTarget: attackTN,
             mode: "attack",
             attackMode,
-            weaponUuid: weapon.uuid
+            weaponUuid: weapon.uuid,
+            skipAttackerAPDeduction: true
           });
         }
         return;
