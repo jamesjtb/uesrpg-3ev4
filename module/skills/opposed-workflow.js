@@ -754,8 +754,13 @@ if (!authorUser) return;
       if (data.attacker.result) return;
       if (!requireUserCanRollActor(game.user, attacker)) return;
       
+      // For Special Actions, check if skill is already locked in
+      const isSpecialAction = Boolean(data?.specialActionId);
+      const hasLockedSkill = Boolean(data.attacker.skillUuid);
+      
       // Check if Combat Style option should be allowed
-      const allowCombatStyle = Boolean(data?.allowCombatStyle);
+      const allowCombatStyle = Boolean(data?.allowCombatStyle) || 
+                               (isSpecialAction && (data.attacker.skillUuid === "combat-style" || data.attacker.skillUuid === "prof:combat"));
       
       const skills = _listSkills(attacker, { allowCombatStyle });
       if (!skills.length) {
@@ -933,8 +938,35 @@ if (!authorUser) return;
       if (data.defender.result) return;
       if (!requireUserCanRollActor(game.user, defender, { message: "You do not have permission to roll for the target actor." })) return;
       
+      // CORRECTED: Check if this is a Special Action requiring defender choice
+      if (data.requireDefenderChoice && data.specialActionId) {
+        const { showPreTestChoiceDialog } = await import("../combat/special-actions-helper.js");
+        const defenderChoice = await showPreTestChoiceDialog({
+          specialActionId: data.specialActionId,
+          actor: defender,
+          isDefender: true
+        });
+
+        if (!defenderChoice) return; // User cancelled
+
+        // Update state with defender's chosen skill
+        data.defender.skillUuid = defenderChoice.skillUuid;
+        const testLabel = defenderChoice.testType === "combatStyle" || defenderChoice.testType === "combatProfession"
+          ? "Combat Style"
+          : defenderChoice.testType.charAt(0).toUpperCase() + defenderChoice.testType.slice(1);
+        data.defender.skillLabel = testLabel;
+        data.defender.testType = defenderChoice.testType;
+        data.requireDefenderChoice = false; // Mark as chosen
+
+        await _updateCard(message, data);
+      }
+      
+      // For Special Actions, check if defender skill is already locked in
+      const isSpecialAction = Boolean(data?.specialActionId);
+      
       // Check if Combat Style option should be allowed
-      const allowCombatStyle = Boolean(data?.allowCombatStyle);
+      const allowCombatStyle = Boolean(data?.allowCombatStyle) || 
+                               (isSpecialAction && (data.defender.skillUuid === "combat-style" || data.defender.skillUuid === "prof:combat"));
       
       const skills = _listSkills(defender, { allowCombatStyle });
       if (!skills.length) {
@@ -945,10 +977,11 @@ if (!authorUser) return;
       const last = _getLastSkillRollOptions();
       const perActorLastSkill = last?.lastSkillUuidByActor?.[defender.uuid] ?? null;
 
-      // Default selection: same-named skill if present, else last-used on this actor, else first.
+      // Default selection: use locked-in skill if available, else same-named skill if present, else last-used on this actor, else first.
+      const lockedSkillUuid = data.defender.skillUuid;
       const wantedName = String(data.attacker.skillLabel ?? "").trim().toLowerCase();
       const sameName = skills.find(s => String(s.name).trim().toLowerCase() === wantedName) ?? null;
-      const selectedSkillUuid = sameName?.uuid ?? perActorLastSkill ?? skills[0].uuid;
+      const selectedSkillUuid = lockedSkillUuid ?? sameName?.uuid ?? perActorLastSkill ?? skills[0].uuid;
 
       const defaults = normalizeSkillRollOptions(last, { difficultyKey: "average", manualMod: 0, useSpec: false });
 

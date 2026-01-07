@@ -68,6 +68,171 @@ export async function showSpecialAdvantageDialog(specialActionId) {
 }
 
 /**
+ * Show test choice dialog BEFORE creating opposed card (NEW PRE-CHOICE FLOW).
+ * Returns: { testType: "combatStyle" | "athletics" | "evade" | etc., skillUuid: "..." }
+ * @param {Object} options
+ * @param {string} options.specialActionId - Special action ID
+ * @param {Actor} options.actor - Actor making the choice
+ * @param {boolean} options.isDefender - Whether this is for the defender
+ * @returns {Promise<{testType: string, skillUuid: string}|null>}
+ */
+export async function showPreTestChoiceDialog({ specialActionId, actor, isDefender = false }) {
+  const def = getSpecialActionById(specialActionId);
+  if (!def) return null;
+
+  const options = _getSpecialActionOptions(specialActionId);
+  const available = isDefender ? options.defender : options.attacker;
+
+  // Build radio options
+  const hasActiveCombatStyle = actor?.itemTypes?.["combat-style"]?.find(cs => cs?.system?.active);
+  const isNPC = actor?.type === "NPC";
+
+  let radioOptions = [];
+
+  // Add Combat Style option if applicable
+  if (available.some(opt => opt.includes("Combat Style"))) {
+    if (hasActiveCombatStyle) {
+      radioOptions.push({
+        value: "combatStyle",
+        label: "Combat Style",
+        skillUuid: "combat-style",
+        checked: true
+      });
+    } else if (isNPC) {
+      const combatProf = actor.system?.professions?.combat;
+      if (combatProf) {
+        radioOptions.push({
+          value: "combatProfession",
+          label: "Combat (Profession)",
+          skillUuid: "prof:combat",
+          checked: true
+        });
+      }
+    }
+  }
+
+  // Add skill options based on available choices
+  const skillMappings = {
+    "Athletics": { value: "athletics", label: "Athletics" },
+    "Evade": { value: "evade", label: "Evade" },
+    "Deceive": { value: "deceive", label: "Deceive" },
+    "Observe": { value: "observe", label: "Observe" }
+  };
+
+  for (const [key, config] of Object.entries(skillMappings)) {
+    if (available.some(opt => opt.includes(key))) {
+      const skillItem = actor.items.find(i => 
+        i.type === "skill" && 
+        String(i.name || "").trim().toLowerCase() === config.value
+      );
+      
+      if (skillItem) {
+        radioOptions.push({
+          value: config.value,
+          label: config.label,
+          skillUuid: skillItem.uuid,
+          checked: radioOptions.length === 0
+        });
+      }
+    }
+  }
+
+  if (radioOptions.length === 0) {
+    ui.notifications.warn(`No valid test options available for ${def.name}.`);
+    return null;
+  }
+
+  // Only show dialog if there are multiple choices
+  if (radioOptions.length === 1) {
+    return {
+      testType: radioOptions[0].value,
+      skillUuid: radioOptions[0].skillUuid
+    };
+  }
+
+  const content = `
+    <form class="uesrpg-special-action-test-choice">
+      <p><b>Special Action: ${def.name}</b></p>
+      <p>Choose your ${isDefender ? 'defense' : 'test'}:</p>
+      <div style="margin: 12px 0;">
+        ${radioOptions.map(opt => `
+          <label style="display: flex; align-items: center; gap: 8px; margin-bottom: 8px;">
+            <input type="radio" name="testType" value="${opt.value}" data-skill-uuid="${opt.skillUuid}" ${opt.checked ? 'checked' : ''} />
+            <span><b>${opt.label}</b></span>
+          </label>
+        `).join('')}
+      </div>
+    </form>
+  `;
+
+  try {
+    const result = await Dialog.wait({
+      title: `Special Action: ${def.name}`,
+      content,
+      buttons: {
+        ok: {
+          label: "Confirm",
+          callback: (html) => {
+            const root = html instanceof HTMLElement ? html : html?.[0];
+            const selected = root?.querySelector('input[name="testType"]:checked');
+            const testType = selected?.value;
+            const skillUuid = selected?.dataset?.skillUuid;
+            
+            return { testType, skillUuid };
+          }
+        },
+        cancel: { label: "Cancel", callback: () => null }
+      },
+      default: "ok"
+    }, { width: 400 });
+
+    return result ?? null;
+  } catch (_e) {
+    return null;
+  }
+}
+
+/**
+ * Get available test options for a Special Action.
+ * @param {string} specialActionId
+ * @returns {{attacker: string[], defender: string[]}}
+ */
+function _getSpecialActionOptions(specialActionId) {
+  const options = {
+    bash: {
+      attacker: ["Combat Style (unarmed)", "Athletics"],
+      defender: ["Combat Style (unarmed)", "Athletics", "Evade"]
+    },
+    blindOpponent: {
+      attacker: ["Combat Style"],
+      defender: ["Combat Style (with shield)", "Evade"]
+    },
+    disarm: {
+      attacker: ["Combat Style (unarmed)", "Athletics"],
+      defender: ["Combat Style (unarmed)", "Athletics"]
+    },
+    feint: {
+      attacker: ["Combat Style", "Deceive"],
+      defender: ["Combat Style", "Observe"]
+    },
+    forceMovement: {
+      attacker: ["Combat Style"],
+      defender: ["Combat Style", "Athletics"]
+    },
+    resist: {
+      attacker: ["Combat Style (unarmed)", "Athletics"],
+      defender: ["Combat Style (unarmed)", "Athletics"]
+    },
+    trip: {
+      attacker: ["Combat Style (unarmed)", "Athletics"],
+      defender: ["Combat Style (unarmed)", "Athletics", "Evade"]
+    }
+  };
+
+  return options[specialActionId] ?? { attacker: [], defender: [] };
+}
+
+/**
  * Show test choice dialog (Combat Style vs Skills).
  * @param {Object} options
  * @param {string} options.title
