@@ -198,6 +198,18 @@
                                             <label>Consume Ammo</label>
                                             <input type="checkbox" name="system.consumeAmmo" {{checked item.system.consumeAmmo}}>
                                         </div>
+
+                                        <div class="form-group">
+                                            <label>Reload Cost (AP)</label>
+                                            <input type="number" name="system.reloadState.reloadAPCost" value="{{item.system.reloadState.reloadAPCost}}" min="0" step="1" readonly style="background: #f0f0f0;"/>
+                                            <p class="notes">Extracted from Reload (X) quality. Edit via Qualities tab.</p>
+                                        </div>
+                                        
+                                        <div class="form-group">
+                                            <label>Loaded</label>
+                                            <input type="checkbox" name="system.reloadState.isLoaded" {{checked item.system.reloadState.isLoaded}}/>
+                                            <p class="notes">Uncheck to mark weapon as needing reload.</p>
+                                        </div>
                                     {{/if}}
                                 </div>
 
