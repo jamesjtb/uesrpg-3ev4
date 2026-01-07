@@ -1051,12 +1051,17 @@ if (!authorUser) return;
       // For Special Actions, check if defender skill is already locked in
       const isSpecialAction = Boolean(data?.specialActionId);
       
-      // Check if Combat Style option should be allowed
-      // Note: Now that we use actual Combat Style item UUIDs, we check if the locked skill is a combat style
+      // Default selection: use locked-in skill if available, else same-named skill if present, else last-used on this actor, else first.
+      const lockedSkillUuid = data.defender.skillUuid;
+      
+      // List skills first to check if locked skill is a combat style
+      const tempSkills = _listSkills(defender, { allowCombatStyle: true });
       const lockedIsCombatStyle = lockedSkillUuid && (
-        skills.find(s => s.uuid === lockedSkillUuid && s.isCombatStyle) ||
-        lockedSkillUuid.startsWith("prof:combat")
+        tempSkills.find(s => s.uuid === lockedSkillUuid && s.isCombatStyle) ||
+        lockedSkillUuid?.startsWith("prof:combat")
       );
+      
+      // Check if Combat Style option should be allowed
       const allowCombatStyle = Boolean(data?.allowCombatStyle) || (isSpecialAction && lockedIsCombatStyle);
       
       const skills = _listSkills(defender, { allowCombatStyle });
@@ -1068,8 +1073,6 @@ if (!authorUser) return;
       const last = _getLastSkillRollOptions();
       const perActorLastSkill = last?.lastSkillUuidByActor?.[defender.uuid] ?? null;
 
-      // Default selection: use locked-in skill if available, else same-named skill if present, else last-used on this actor, else first.
-      const lockedSkillUuid = data.defender.skillUuid;
       const wantedName = String(data.attacker.skillLabel ?? "").trim().toLowerCase();
       const sameName = skills.find(s => String(s.name).trim().toLowerCase() === wantedName) ?? null;
       const selectedSkillUuid = lockedSkillUuid ?? sameName?.uuid ?? perActorLastSkill ?? skills[0].uuid;
