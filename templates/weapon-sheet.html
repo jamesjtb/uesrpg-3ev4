@@ -171,6 +171,12 @@
                                     </div>
 
                                     <div class="form-group">
+                                        <label>Equipment Tag</label>
+                                        <input type="text" name="system.equipmentType" value="{{item.system.equipmentType}}" placeholder="e.g., Long Blade, Axe, Bow"/>
+                                        <p class="notes" style="margin:4px 0 0; font-size:0.85em; opacity:0.85;">Manual label used by Combat Styles when no weapon categories exist.</p>
+                                    </div>
+
+                                    <div class="form-group">
                                         <label>Attack Mode</label>
                                         <select name="system.attackMode">
                                             {{selectOptions attackModeOptions selected=item.system.attackMode}}

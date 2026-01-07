@@ -102,7 +102,7 @@
                                     <th class="item-name-cell item-create addToContainer">+ Item</th>
                                     <th>Qty</th>
                                     <th>ENC</th>
-                                    <th><i class="fas fa-trash"></i></th>
+                                    <th style="white-space: nowrap;"><i class="fas fa-box-open" title="Remove from Container"></i>&nbsp;<i class="fas fa-trash" title="Delete Item"></i></th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -120,7 +120,8 @@
                                             <td>{{#if item.item.system}}{{item.item.system.quantity}}{{else}}0{{/if}}</td>
                                             <td>{{#if item.item.system}}{{item.item.system.enc}}{{else}}0{{/if}}</td>
                                             <td>
-                                                <a class="item-control item-delete remove-contained-item" title="Delete Item"><i class="fas fa-trash"></i></a>
+                                                <a class="item-control remove-contained-item" title="Remove from Container"><i class="fas fa-box-open"></i></a>
+                                                <a class="item-control delete-contained-item" title="Delete Item"><i class="fas fa-trash"></i></a>
                                             </td>
                                         </tr>
                                     {{/each}}

@@ -10,6 +10,12 @@
     </div>
 
     <div class="form-group">
+      <label>Effects/Proxy Debug</label>
+      <input type="checkbox" name="world.effectsProxyDebug" {{checked world.effectsProxyDebug}}>
+      <p class="notes">Enable concise logging for authority-proxy mutations (ChatMessage updates and target-side effect application).</p>
+    </div>
+
+    <div class="form-group">
       <label>Opposed Debug Formula</label>
       <input type="text" name="world.opposedDebugFormula" value="{{world.opposedDebugFormula}}">
       <p class="notes">Optional formula override used by debugging helpers.</p>
@@ -36,6 +42,12 @@
       <label>Debug Skill TN (Client)</label>
       <input type="checkbox" name="client.debugSkillTN" {{checked client.debugSkillTN}}>
       <p class="notes">Shows TN composition helpers for your client only.</p>
+    </div>
+
+    <div class="form-group">
+      <label>Sheet Diagnostics Panel (Client)</label>
+      <input type="checkbox" name="client.sheetDiagnostics" {{checked client.sheetDiagnostics}}>
+      <p class="notes">Shows additional diagnostics info on actor sheets (client only). Useful for testing.</p>
     </div>
   </fieldset>
 
