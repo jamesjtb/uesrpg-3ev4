@@ -892,16 +892,22 @@ if (!authorUser) return;
 
       skillRollDebug("opposed attacker result", { rollTotal: res.rollTotal, target: res.target, isSuccess: res.isSuccess, degree: res.degree, critS: res.isCriticalSuccess, critF: res.isCriticalFailure });
 
+      const rollFlags = request ? {
+        uesrpg: { rollRequest: request },
+        "uesrpg-3ev4": {
+          rollRequest: request,
+          ..._skillOpposedMetaFlag(message.id, "attacker-roll")
+        }
+      } : {
+        "uesrpg-3ev4": {
+          ..._skillOpposedMetaFlag(message.id, "attacker-roll")
+        }
+      };
+
       await res.roll.toMessage({
         speaker: ChatMessage.getSpeaker({ actor: attacker, token: aToken?.document ?? null }),
         flavor: `${data.attacker.skillLabel} — Opposed Skill (Actor)`,
-        flags: {
-          uesrpg: { rollRequest: request },
-          "uesrpg-3ev4": {
-            rollRequest: request,
-            ..._skillOpposedMetaFlag(message.id, "attacker-roll")
-          }
-        },
+        flags: rollFlags,
         rollMode: game.settings.get("core", "rollMode")
       });
 
@@ -1057,25 +1063,40 @@ if (!authorUser) return;
 
       skillRollDebug("opposed defender result", { rollTotal: res.rollTotal, target: res.target, isSuccess: res.isSuccess, degree: res.degree, critS: res.isCriticalSuccess, critF: res.isCriticalFailure });
 
+      const rollFlags = request ? {
+        uesrpg: { rollRequest: request },
+        "uesrpg-3ev4": {
+          rollRequest: request,
+          ..._skillOpposedMetaFlag(message.id, "defender-roll", {
+            commit: {
+              defender: {
+                skillUuid: data.defender.skillUuid,
+                skillLabel: data.defender.skillLabel,
+                declared: data.defender.declared,
+                tn
+              }
+            }
+          })
+        }
+      } : {
+        "uesrpg-3ev4": {
+          ..._skillOpposedMetaFlag(message.id, "defender-roll", {
+            commit: {
+              defender: {
+                skillUuid: data.defender.skillUuid,
+                skillLabel: data.defender.skillLabel,
+                declared: data.defender.declared,
+                tn
+              }
+            }
+          })
+        }
+      };
+
       await res.roll.toMessage({
         speaker: ChatMessage.getSpeaker({ actor: defender, token: dToken?.document ?? null }),
         flavor: `${data.defender.skillLabel} — Opposed Skill (Target)`,
-        flags: {
-          uesrpg: { rollRequest: request },
-          "uesrpg-3ev4": {
-            rollRequest: request,
-            ..._skillOpposedMetaFlag(message.id, "defender-roll", {
-              commit: {
-                defender: {
-                  skillUuid: data.defender.skillUuid,
-                  skillLabel: data.defender.skillLabel,
-                  declared: data.defender.declared,
-                  tn
-                }
-              }
-            })
-          }
-        },
+        flags: rollFlags,
         rollMode: game.settings.get("core", "rollMode")
       });
 
