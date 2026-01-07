@@ -10,6 +10,30 @@ import { buildSkillRollRequest, normalizeSkillRollOptions } from "../skills/roll
 import { SkillOpposedWorkflow } from "../skills/opposed-workflow.js";
 import { OpposedWorkflow } from "../combat/opposed-workflow.js";
 import { postItemToChat } from "./shared-handlers.js";
+import {
+  buildCombatQuickContext,
+  buildCollapsedActionCardHtml,
+  getAimStateFromEffect,
+  getEnabledEffectByKey,
+  resolveFirstTargetedToken,
+  resolveTokenForActor,
+  spendActionPoints
+} from "./combat-actions-utils.js";
+import { buildSpecialActionsForActor, getActiveCombatStyleId, getExplicitActiveCombatStyleItem, isSpecialActionUsableNow } from "../combat/combat-style-utils.js";
+import { AimAudit } from "../combat/aim-audit.js";
+import { createOrUpdateStatusEffect } from "../effects/status-effect.js";
+import { getSpecialActionById } from "../config/special-actions.js";
+import {
+  getCollapsedGroups,
+  setGroupCollapsed,
+  getLoadoutsForActor,
+  saveLoadoutForActor,
+  deleteLoadout,
+  applyLoadoutToActor
+} from "./sheet-ui-state.js";
+import { bindCommonSheetListeners, bindCommonEditableInventoryListeners } from "./sheet-listeners.js";
+import { shouldHideFromMainInventory } from "./sheet-inventory.js";
+import { prepareCharacterItems } from "./sheet-prepare-items.js";
 
 export class npcSheet extends foundry.appv1.sheets.ActorSheet {
   /** @override */
@@ -50,18 +74,89 @@ export class npcSheet extends foundry.appv1.sheets.ActorSheet {
   /* -------------------------------------------- */
 
   /** @override */
-  async getData() {
-    const data = super.getData();
+  async getData(options = {}) {
+    const data = await super.getData(options);
     data.dtypes = ["String", "Number", "Boolean"];
     data.isGM = game.user.isGM;
-    data.editable = data.options.editable;
+
+    data.editable =
+      this.isEditable ??
+      this.options?.editable ??
+      data.options?.editable ??
+      false;
 
     // Prepare Items
     if (this.actor.type === "NPC") {
       this._prepareCharacterItems(data);
     }
 
-    data.actor.system.enrichedBio = await foundry.applications.ux.TextEditor.implementation.enrichHTML(data.actor.system.bio, {async: true});
+    // Combat tab quick actions + equipped summary (template-friendly)
+    try {
+      data.actor.sheetCombatQuick = buildCombatQuickContext(data.actor);
+    } catch (e) {
+      data.actor.sheetCombatQuick = {
+        combatStyleName: null,
+        meleeWeaponId: null,
+        meleeWeaponName: null,
+        rangedWeaponId: null,
+        rangedWeaponName: null,
+        equippedAmmo: [],
+        equippedArmor: [],
+        equippedShields: [],
+      };
+    }
+
+    
+    // Combat tab: Active Combat Style selection + Special Actions registry
+    try {
+      const combatStyles = this.actor?.items?.filter?.(i => i.type === "combatStyle") ?? [];
+      const activeCombatStyleId = getActiveCombatStyleId(this.actor);
+      const activeStyleItem = getExplicitActiveCombatStyleItem(this.actor);
+
+      const specialActions = buildSpecialActionsForActor(this.actor).map(sa => ({
+        ...sa,
+        usableNow: isSpecialActionUsableNow(this.actor, sa.actionType),
+        usableAsAdvantage: Boolean(sa.known)
+      }));
+
+      data.actor.sheetCombatActions = {
+        activeCombatStyleId: activeCombatStyleId ?? "",
+        combatStyles: combatStyles.map(cs => ({ id: cs.id, name: cs.name, isActive: Boolean(activeCombatStyleId && cs.id === activeCombatStyleId) })),
+        activeCombatStyleName: activeStyleItem?.name ?? null,
+        specialActions,
+        canCastMagic: Boolean(this.actor?.items?.some?.(i => i.type === "spell"))
+      };
+    } catch (_e) {
+      data.actor.sheetCombatActions = { activeCombatStyleId: "", combatStyles: [], activeCombatStyleName: null, specialActions: [], canCastMagic: false };
+    }
+// Disable attack quick actions while Defensive Stance is active (RAW: Attack limit 0 until next Turn).
+    try {
+      const hasDefensiveStance = this.actor?.effects?.some((e) => !e.disabled && e?.flags?.uesrpg?.key === "defensiveStance");
+      if (hasDefensiveStance && data?.actor?.sheetCombatQuick) {
+        data.actor.sheetCombatQuick.quickAttacksDisabled = true;
+        data.actor.sheetCombatQuick.quickAttacksDisabledReason = "Defensive Stance: attacks disabled until your next Turn.";
+      }
+    } catch (_e) {
+      /* no-op */
+    }
+
+    // Sheet UI toggles (no actor schema changes)
+    const enableLoadouts = Boolean(game?.settings?.get?.("uesrpg-3ev4", "enableLoadouts"));
+    const showDiagnostics = Boolean(game?.settings?.get?.("uesrpg-3ev4", "sheetDiagnostics"));
+    const loadouts = enableLoadouts ? await getLoadoutsForActor(this.actor.id) : [];
+    data.sheetUi = {
+      enableLoadouts,
+      showDiagnostics,
+      loadouts,
+    };
+
+    // Enrich biography using Foundry v13 namespaced TextEditor API (AppV1-safe)
+    const enrichFn = foundry.applications.ux.TextEditor.implementation.enrichHTML;
+    const bio =
+      (data.actor && data.actor.system && typeof data.actor.system.bio === "string")
+        ? data.actor.system.bio
+        : "";
+    data.actor.system.enrichedBio = await enrichFn(bio, { async: true });
     // Active Effects (for Effects tab templates)
     if (this.actor && this.actor.effects) {
       data.effects = this.actor.effects.contents.map(e => e.toObject());
@@ -74,156 +169,11 @@ export class npcSheet extends foundry.appv1.sheets.ActorSheet {
   }
 
   _prepareCharacterItems(sheetData) {
-    const actorData = sheetData.actor;
-
-    //Initialize containers
-    const gear = {
-      equipped: [],
-      unequipped: [],
-    };
-    const weapon = {
-      equipped: [],
-      unequipped: [],
-    };
-    const armor = {
-      equipped: [],
-      unequipped: [],
-    };
-    const power = [];
-    const trait = [];
-    const talent = [];
-    const combatStyle = [];
-    const spell = [];
-    const ammunition = {
-      equipped: [],
-      unequipped: [],
-    };
-    const language = [];
-    const faction = [];
-    const container = [];
-
-    //Iterate through items, allocating to containers
-    //let totaWeight = 0;
-    for (let i of sheetData.items) {
-      let item = i.system;
-      i.img = i.img || DEFAULT_TOKEN;
-      //Append to item
-      if (i.type === "item") {
-        i.system.equipped ? gear.equipped.push(i) : gear.unequipped.push(i);
-      }
-      //Append to weapons
-      else if (i.type === "weapon") {
-        i.system.equipped ? weapon.equipped.push(i) : weapon.unequipped.push(i);
-      }
-      //Append to armor
-      else if (i.type === "armor") {
-        i.system.equipped ? armor.equipped.push(i) : armor.unequipped.push(i);
-      }
-      //Append to power
-      else if (i.type === "power") {
-        power.push(i);
-      }
-      //Append to trait
-      else if (i.type === "trait") {
-        trait.push(i);
-      }
-      //Append to talent
-      else if (i.type === "talent") {
-        talent.push(i);
-      }
-      //Append to combatStyle
-      else if (i.type === "combatStyle") {
-        combatStyle.push(i);
-      }
-      //Append to spell
-      else if (i.type === "spell") {
-        spell.push(i);
-      }
-      //Append to ammunition
-      else if (i.type === "ammunition") {
-        i.system.equipped
-          ? ammunition.equipped.push(i)
-          : ammunition.unequipped.push(i);
-      } else if (i.type === "language") {
-        language.push(i);
-      }
-      //Append to faction
-      else if (i.type === "faction") {
-        faction.push(i);
-      }
-      //Append to container
-      else if (i.type === "container") {
-        container.push(i);
-      }
-    }
-
-    // Alphabetically sort all item lists
-    if (game.settings.get("uesrpg-3ev4", "sortAlpha")) {
-      const itemCats = [
-        gear.equipped,
-        gear.unequipped,
-        weapon.equipped,
-        weapon.unequipped,
-        armor.equipped,
-        armor.unequipped,
-        power,
-        trait,
-        talent,
-        combatStyle,
-        spell,
-        ammunition.equipped,
-        ammunition.unequipped,
-        language,
-        faction,
-        container,
-      ];
-
-      for (let category of itemCats) {
-        if (category.length > 1 && category != spell) {
-          category.sort((a, b) => {
-            let nameA = a.name.toLowerCase();
-            let nameB = b.name.toLowerCase();
-            if (nameA > nameB) {
-              return 1;
-            } else {
-              return -1;
-            }
-          });
-        } else if (category == spell) {
-          if (category.length > 1) {
-            category.sort((a, b) => {
-              let nameA = a.system.school;
-              let nameB = b.system.school;
-              if (nameA > nameB) {
-                return 1;
-              } else {
-                return -1;
-              }
-            });
-          }
-        }
-      }
-    }
-
-    //Assign and return
-    actorData.gear = gear;
-    actorData.weapon = weapon;
-    actorData.armor = armor;
-    actorData.power = power;
-    actorData.trait = trait;
-    actorData.talent = talent;
-    actorData.combatStyle = combatStyle;
-    actorData.spell = spell;
-    actorData.ammunition = ammunition;
-    actorData.language = language;
-    actorData.faction = faction;
-    actorData.container = container;
+    return prepareCharacterItems(sheetData, { includeSkills: false, includeMagicSkills: false });
   }
 
   get template() {
     const path = "systems/uesrpg-3ev4/templates";
-    if (!game.user.isGM && this.actor.limited)
-      return "systems/uesrpg-3ev4/templates/limited-npc-sheet.html";
     return `${path}/${this.actor.type.toLowerCase()}-sheet.html`;
   }
 
@@ -232,9 +182,6 @@ export class npcSheet extends foundry.appv1.sheets.ActorSheet {
   /** @override */
 async activateListeners(html) {
   super.activateListeners(html);
-
-    // Active Effects (Effects tab)
-    if (this._onEffectControl) html.find('.effect-control').click(this._onEffectControl.bind(this));
 
   // Rollable Buttons
   html.find(".characteristic-roll").click(this._onClickCharacteristic.bind(this));
@@ -263,12 +210,19 @@ async activateListeners(html) {
   html.find(".itemEquip").click(this._onItemEquip.bind(this));
 
   html.find(".itemTabInfo .wealthCalc").click(this._onWealthCalc.bind(this));
-  html.find(".setBaseCharacteristics").click(this._onSetBaseCharacteristics.bind(this));
+  html.find(".setBaseCharacteristics, .characteristics-config").click(this._onSetBaseCharacteristics.bind(this));
+  html.find(".characteristics-config").keydown((ev) => {
+    if (ev.key === "Enter" || ev.key === " ") {
+      ev.preventDefault();
+      this._onSetBaseCharacteristics(ev);
+    }
+  });
   html.find(".carryBonus").click(this._onCarryBonus.bind(this));
   html.find(".wealthCalc").click(this._onWealthCalc.bind(this));
 
   html.find(".incrementResource").click(this._onIncrementResource.bind(this));
-  html.find(".resourceLabel button").click(this._onResetResource.bind(this));
+  // Resource restore (migrated from label button)
+  html.find(".restoreResource").click(this._onResetResource.bind(this));
   html.find("#spellFilter").click(this._filterSpells.bind(this));
   html.find("#itemFilter").click(this._filterItems.bind(this));
   html.find(".incrementFatigue").click(this._incrementFatigue.bind(this));
@@ -282,111 +236,651 @@ async activateListeners(html) {
   this._setResourceBars();
   this._createStatusTags();
 
-  // Item Create Buttons
-  html.find(".item-create").click(this._onItemCreate.bind(this));
+  // Common listener binding (PC + NPC)
+  bindCommonSheetListeners(this, html);
+  bindCommonEditableInventoryListeners(this, html);
+}
 
-  // NOTE:
-  // Damage/healing chat-card button handling is registered centrally in module/combat/chat-handlers.js.
-  // Do not bind per-sheet document-level handlers here (it causes duplicate execution and
-  // "Target actor not found" warnings for synthetic (unlinked) token actors.
+  /**
+   * Handle Combat tab quick-action buttons.
+   * Delegates to existing combat helpers where applicable.
+   *
+   * Supported actions:
+   * - attack (requires weaponId + targeted token)
+   * - disengage (chat card)
+   * - delay (chat card)
+   * - defensive-stance (chat card + AE)
+   * - aim (chat card + AE)
+   * - dash (chat card)
+   * - hide (chat card)
+   * - use-item (dialog + chat card)
+   *
+   * @param {Event} event
+   * @private
+   */
+  async _onCombatQuickAction(event) {
+    event.preventDefault();
 
-  // Everything below here is only needed if the sheet is editable
-  if (!this.options.editable) return;
+    const btn = event.currentTarget;
+    const action = btn?.dataset?.action;
+    if (!action) return;
 
-  // Update Inventory Item
-  html.find(".item-name").contextmenu(async (ev) => {
-    const li = ev.currentTarget.closest(".item");
-    const item = this.actor.items.get(li?.dataset?.itemId);
-    if (!item) return;
-    this._duplicateItem(item);
-  });
-
-  html.find(".item-name").click(async (ev) => {
-    const li = ev.currentTarget.closest(".item");
-    const item = this.actor.items.get(li?.dataset?.itemId);
-    if (!item) return;
-    item.sheet.render(true);
-    await item.update({ "system.value": item.system.value });
-  });
-
-  // Open Container of item
-  html.find(".fa-backpack").click(async (ev) => {
-    const containerId = ev.currentTarget?.dataset?.containerId;
-    if (!containerId) return;
-    const item = this.actor.items.get(containerId);
-    if (!item) return;
-    item.sheet.render(true);
-    await item.update({ "system.value": item.system.value });
-  });
-
-  // Delete Inventory Item
-  html.find(".item-delete").click(async (ev) => {
-    const li = ev.currentTarget.closest(".item");
-    const itemId = li?.dataset?.itemId;
-    if (!itemId) return;
-
-    const itemToDelete = this.actor.items.find((i) => i._id == itemId);
-    if (!itemToDelete) return;
-
-    // If deleted item is the container: unlink all contained items, then clear list
-    if (itemToDelete.type === "container") {
-      const containedItems = Array.isArray(itemToDelete?.system?.contained_items)
-        ? itemToDelete.system.contained_items
-        : [];
-
-      for (const item of containedItems) {
-        const sourceItem = this.actor.items.find((i) => i._id == item._id);
-        if (!sourceItem) continue;
-
-        await sourceItem.update({
-          "system.containerStats.container_id": "",
-          "system.containerStats.container_name": "",
-          "system.containerStats.contained": false,
-        });
-      }
-
-      await itemToDelete.update({ "system.contained_items": [] });
+    // Preserve the currently selected Actions subtab across any actor updates
+    // triggered by this quick action (AP spend, effect application, etc.).
+    try {
+      const active = this.element?.find?.(".uesrpg-actions-subtab.active")?.[0];
+      const tab = active?.dataset?.actionstab;
+      if (tab) this._uesrpgActionsSubtab = tab;
+    } catch (_e) {
+      // no-op
     }
 
-    // If deleted item is in a container: unlink from container and clear its containerStats
-    if (
-      itemToDelete?.system?.isPhysicalObject &&
-      itemToDelete.type !== "container" &&
-      itemToDelete?.system?.containerStats?.contained
-    ) {
-      const containerObject = this.actor.items.find(
-        (i) => i._id == itemToDelete?.system?.containerStats?.container_id
-      );
+    // Local helpers (kept within the sheet class to avoid new global utilities).
+    const postActionCard = async (title, bodyHtml) => {
+      const speaker = ChatMessage.getSpeaker({ actor: this.actor });
+      const content = buildCollapsedActionCardHtml(title, bodyHtml);
+      return ChatMessage.create({ user: game.user.id, speaker, content });
+    };
 
-      if (containerObject && Array.isArray(containerObject?.system?.contained_items)) {
-        const indexToRemove = containerObject.system.contained_items.findIndex(
-          (i) => i._id == itemToDelete._id
+    const requireAP = async (title, apCost = 1) => {
+      return spendActionPoints(this.actor, apCost, { reason: title });
+    };
+
+    const upsertSimpleEffect = async ({ key, name, icon, changes, flags = {}, statusId = null, duration = null }) => {
+      const mergedFlags = {
+        ...(flags ?? {}),
+        uesrpg: { ...(flags?.uesrpg ?? {}), key }
+      };
+
+      return createOrUpdateStatusEffect(this.actor, {
+        statusId,
+        name,
+        img: icon,
+        duration: duration ?? {},
+        changes: Array.isArray(changes) ? changes : [],
+        flags: mergedFlags
+      });
+    };
+
+
+
+    const buildTemporaryDuration = ({ rounds = null, seconds = null } = {}) => {
+      const combat = game.combat ?? null;
+      if (combat && combat.started) {
+        const r = Number(rounds);
+        const out = {
+          startRound: Number(combat.round ?? 0) || 0,
+          startTurn: Number(combat.turn ?? 0) || 0,
+        };
+        if (Number.isFinite(r) && r > 0) out.rounds = r;
+        return out;
+      }
+
+      const s = Number(seconds);
+      const startTime = Number(game?.time?.worldTime ?? 0) || 0;
+      if (Number.isFinite(s) && s > 0) return { startTime, seconds: s };
+      return {};
+    };
+
+    const _deleteEffect = async (effect) => {
+      if (!effect) return;
+      try {
+        await this.actor.deleteEmbeddedDocuments("ActiveEffect", [effect.id]);
+      } catch (err) {
+        console.warn("UESRPG | NPC sheet quick action failed to delete effect", { actor: this.actor?.uuid, effectId: effect?.id, err });
+      }
+    };
+
+    const breakAimChainIfPresent = async () => {
+      const ef = getEnabledEffectByKey(this.actor, "aim");
+      if (!ef) return;
+      await _deleteEffect(ef);
+    };
+
+    switch (action) {
+      case "specialAction": {
+        const specialId = btn?.dataset?.specialId;
+        const at = String(btn?.dataset?.actionType ?? "").toLowerCase();
+        const def = getSpecialActionById(specialId);
+        const title = def ? `Special Action: ${def.name}` : "Special Action";
+
+        if (!def) {
+          ui.notifications?.warn?.("Unknown Special Action.");
+          return;
+        }
+
+        if (at === "primary" && !isSpecialActionUsableNow(this.actor, "primary")) {
+          ui.notifications?.warn?.("This Primary Special Action is only available on your Turn.");
+          return;
+        }
+
+        const ok = await requireAP(title, 1);
+        if (!ok) return;
+
+        await postActionCard(title, `<p><b>${def.name}</b> (${def.actionType}) used.</p>`);
+        return;
+      }
+
+      case "attack": {
+        // Defensive Stance: Attack limit reduced to 0 until next Turn.
+        if (this.actor?.effects?.some((e) => !e.disabled && e?.flags?.uesrpg?.key === "defensiveStance")) {
+          ui.notifications?.warn?.("Defensive Stance is active: you cannot attack until your next Turn.");
+          return;
+        }
+        if (!requireUserCanRollActor(game.user, this.actor)) return;
+        const weaponId = btn?.dataset?.weaponId;
+        if (!weaponId) {
+          ui.notifications.warn("No weapon configured for this action.");
+          return;
+        }
+
+        const weapon = this.actor.items.get(weaponId);
+        if (!weapon) {
+          ui.notifications.warn("Selected weapon could not be found on this actor.");
+          return;
+        }
+
+        const attackerToken = resolveTokenForActor(this.actor);
+        if (!attackerToken) {
+          ui.notifications.warn("Please place and select a token for this actor.");
+          return;
+        }
+
+        const defenderToken = resolveFirstTargetedToken();
+        if (!defenderToken) {
+          ui.notifications.warn("Please target an enemy token.");
+          return;
+        }
+
+        const base = Number(this.actor.system?.professions?.combat ?? 0) || 0;
+        const fatiguePenalty = Number(this.actor.system?.fatigue?.penalty ?? 0) || 0;
+        const carryPenalty = Number(this.actor.system?.carry_rating?.penalty ?? 0) || 0;
+        const woundPenalty = Number(this.actor.system?.woundPenalty ?? 0) || 0;
+        const tn = base + fatiguePenalty + carryPenalty + woundPenalty;
+
+        const label = String(btn?.dataset?.label ?? "Attack");
+        const attackMode = label.toLowerCase().includes("ranged") ? "ranged" : "melee";
+
+        await OpposedWorkflow.createPending({
+          attackerTokenUuid: attackerToken.document?.uuid ?? attackerToken.uuid,
+          defenderTokenUuid: defenderToken.document?.uuid ?? defenderToken.uuid,
+          attackerActorUuid: this.actor.uuid,
+          defenderActorUuid: defenderToken.actor?.uuid ?? null,
+          attackerItemUuid: "prof:combat",
+          attackerLabel: `${label} — Combat (Profession)`,
+          attackerTarget: tn,
+          mode: "attack",
+          attackMode,
+          weaponUuid: weapon.uuid
+        });
+        return;
+      }
+
+      case "disengage": {
+        if (!(await requireAP("Disengage", 1))) return;
+        await breakAimChainIfPresent();
+        await postActionCard(
+          "Disengage",
+          "<p>The character can use this action to retreat from combat with an enemy. If they move out of an enemy’s engagement range during this Turn then the attack of opportunity reaction or other delayed actions/reactions may not be taken against them.</p>"
+        );
+        return;
+      }
+
+      case "delay": {
+        if (!(await requireAP("Delay Turn", 1))) return;
+        await breakAimChainIfPresent();
+        await postActionCard(
+          "Delay Turn",
+          "<p>The character declares a set of circumstances in which they will act. The character then skips their Turn and may insert their delayed Turn into the order as a reaction if the conditions are met.</p>"
+        );
+        return;
+      }
+
+      case "defensive-stance": {
+        if (!(await requireAP("Defensive Stance", 1))) return;
+        await breakAimChainIfPresent();
+        // RAW: +10 defensive tests until next Turn; Attack limit reduced to 0 until next Turn.
+        await postActionCard(
+          "Defensive Stance",
+          "<p><strong>Effect:</strong> +10 on defensive tests until your next Turn. Your Attack limit is reduced to 0 until your next Turn.</p>"
         );
 
-        if (indexToRemove !== -1) {
-          containerObject.system.contained_items.splice(indexToRemove, 1);
-          await containerObject.update({
-            "system.contained_items": containerObject.system.contained_items,
-          });
-        }
+        const ADD = globalThis?.CONST?.ACTIVE_EFFECT_MODES?.ADD ?? 2;
+        const combat = game.combat ?? null;
+        const combatant = combat?.combatants?.find?.((c) => c?.actor?.id === this.actor.id) ?? null;
+        const expiresFlags = (() => {
+          if (!(combat && combat.started && combatant)) return {};
+          const combatId = String(combat.id ?? "");
+          const combatantId = String(combatant.id ?? "");
+          const turns = Array.isArray(combat.turns) ? combat.turns : [];
+          const idx = turns.findIndex((t) => String(t?.id ?? "") === combatantId);
+          const currentTurn = Number(combat.turn ?? 0);
+          const currentRound = Number(combat.round ?? 0);
+
+          // Expire at the start of this actor's next turn (same round if not yet acted; otherwise next round).
+          const expiresTurn = idx >= 0 ? idx : currentTurn;
+          const expiresRound =
+            (idx >= 0 && Number.isFinite(currentTurn) && Number.isFinite(currentRound) && idx <= currentTurn)
+              ? (currentRound + 1)
+              : currentRound;
+
+          return {
+            expiresOnTurnStart: true,
+            expiresCombatId: combatId,
+            expiresRound,
+            expiresTurn,
+            expiresCombatantId: combatantId
+          };
+        })();
+        await upsertSimpleEffect({
+          key: "defensiveStance",
+          name: "Defensive Stance",
+          icon: "systems/uesrpg-3ev4/images/Icons/heroicDefense.webp",
+          statusId: "uesrpg-action-defensive-stance",
+          duration: {}, // Turn-ticker managed; avoid duration races with external modules
+          changes: [
+            { key: "system.modifiers.combat.defenseTN.total", mode: ADD, value: 10, priority: 20 },
+          ],
+          flags: {
+            uesrpg: {
+              source: "action",
+              ...expiresFlags
+            }
+          }
+        });
+        return;
       }
 
-      await itemToDelete.update({
-        "system.containerStats.container_id": "",
-        "system.containerStats.container_name": "",
-        "system.containerStats.contained": false,
+      case "aim": {
+        const ADD = globalThis?.CONST?.ACTIVE_EFFECT_MODES?.ADD ?? 2;
+
+        // RAW: The character must continuously Aim at the same weapon/spell.
+        // Always prompt to select what is being aimed.
+        const candidates = [];
+        try {
+          const weapons = (this.actor.items ?? []).filter((i) => i?.type === "weapon" && Boolean(i?.system?.equipped));
+
+          const isThrownWeapon = (w) => {
+            try {
+              const kind = String(w?.system?.rangeBandsDerivedEffective?.kind ?? w?.system?.rangeBandsDerived?.kind ?? "").toLowerCase();
+              if (kind === "thrown") return true;
+
+              const norm = (v) => String(v ?? "").toLowerCase().replace(/[\s_-]+/g, "");
+              const target = "thrown";
+
+              const structured = Array.isArray(w?.system?.qualitiesStructuredInjected)
+                ? w.system.qualitiesStructuredInjected
+                : Array.isArray(w?.system?.qualitiesStructured)
+                  ? w.system.qualitiesStructured
+                  : null;
+              if (structured) {
+                for (const q of structured) {
+                  const k = norm(q?.key ?? q);
+                  if (k && k == target) return true;
+                }
+              }
+
+              const traits = Array.isArray(w?.system?.qualitiesTraitsInjected)
+                ? w.system.qualitiesTraitsInjected
+                : Array.isArray(w?.system?.qualitiesTraits)
+                  ? w.system.qualitiesTraits
+                  : null;
+              if (traits) {
+                for (const t of traits) {
+                  const k = norm(t);
+                  if (k && k == target) return true;
+                }
+              }
+
+              const legacy = Array.isArray(w?.system?.qualities) ? w.system.qualities : null;
+              if (legacy) {
+                for (const q of legacy) {
+                  const k = norm(q?.key ?? q);
+                  if (k && k == target) return true;
+                }
+              }
+
+              const legacyTraits = Array.isArray(w?.system?.qualitiesTraitsLegacy) ? w.system.qualitiesTraitsLegacy : null;
+              if (legacyTraits) {
+                for (const t of legacyTraits) {
+                  const k = norm(t);
+                  if (k && k == target) return true;
+                }
+              }
+            } catch (_e) {
+              // no-op
+            }
+            return false;
+          };
+
+          const rangedOrThrownWeapons = weapons.filter((w) => {
+            const mode = String(w?.system?.attackMode ?? "").toLowerCase();
+            if (mode === "ranged") return true;
+            return isThrownWeapon(w);
+          });
+
+          for (const w of rangedOrThrownWeapons) {
+            const labelPrefix = isThrownWeapon(w) && String(w?.system?.attackMode ?? "").toLowerCase() !== "ranged" ? "Weapon (Thrown)" : "Weapon";
+            candidates.push({ uuid: w.uuid, label: `${labelPrefix}: ${w.name}`, kind: "weapon" });
+          }
+        } catch (_e) {
+          // no-op
+        }
+
+        try {
+          const spells = (this.actor.items ?? []).filter((i) => i?.type === "spell");
+          const boltSpells = spells.filter((s) => String(s.system?.form ?? "").toLowerCase().includes("bolt"));
+          for (const s of boltSpells) candidates.push({ uuid: s.uuid, label: `Bolt Spell: ${s.name}`, kind: "spell" });
+        } catch (_e) {
+          // no-op
+        }
+
+        if (!candidates.length) {
+          ui.notifications?.warn?.("No ranged weapons or Bolt spells are available to Aim.");
+          return;
+        }
+
+        const existing = getEnabledEffectByKey(this.actor, "aim");
+        const prevState = getAimStateFromEffect(existing);
+        const prevItemUuid = String(prevState.itemUuid ?? "");
+        const prevStacks = Number(prevState.stacks ?? 0) || 0;
+
+        const options = candidates.map((c) => {
+          const selected = prevItemUuid && c.uuid === prevItemUuid ? " selected" : "";
+          return `<option value="${c.uuid}"${selected}>${c.label}</option>`;
+        }).join("");
+
+        const content = `
+          <form class="uesrpg-aim-form">
+            <div class="form-group">
+              <label>Aim At</label>
+              <select name="aimItemUuid">${options}</select>
+            </div>
+          </form>
+        `;
+
+        const selectedUuid = await new Promise((resolve) => {
+          new Dialog({
+            title: "Aim",
+            content,
+            buttons: {
+              ok: {
+                label: "Aim",
+                callback: (html) => {
+                  const uuid = html.find("select[name='aimItemUuid']").val();
+                  resolve(String(uuid ?? "").trim() || null);
+                }
+              },
+              cancel: { label: "Cancel", callback: () => resolve(null) }
+            },
+            default: "ok",
+            close: () => resolve(null)
+          }).render(true);
+        });
+
+        if (!selectedUuid) return;
+
+        // Spend AP only after the selection dialog completes.
+        if (!(await requireAP("Aim", 1))) return;
+
+        // Determine next stack value (cap at 3 stacks / +30).
+        const isContinuingSame = prevItemUuid && selectedUuid === prevItemUuid;
+        const nextStacks = Math.min(3, (isContinuingSame ? prevStacks : 0) + 1);
+        const nextBonus = nextStacks * 10;
+
+        AimAudit.applyStack(this.actor, { stacks: nextStacks, itemUuid: selectedUuid });
+
+        await postActionCard(
+          "Aim",
+          `<p><strong>Effect:</strong> +${nextBonus} to the next ranged attack with the aimed weapon/spell (stacks up to +30 if you continue aiming consecutively). If you take any other action or reaction (other than continuing to Aim or firing the aimed weapon/spell), the Aim chain is broken and the bonus is lost.</p>`
+        );
+
+        const duration = buildTemporaryDuration({ rounds: 9999, seconds: 604800 });
+        await upsertSimpleEffect({
+          key: "aim",
+          name: "Aim",
+          icon: "systems/uesrpg-3ev4/images/Icons/hardTarget.webp",
+          statusId: "uesrpg-action-aim",
+          duration,
+          changes: [
+            { key: "system.modifiers.combat.attackTN", mode: ADD, value: nextBonus, priority: 20 },
+          ],
+          flags: {
+            uesrpg: {
+              source: "action",
+              aim: { stacks: nextStacks, itemUuid: selectedUuid },
+              conditions: { attackMode: "ranged", itemUuid: selectedUuid }
+            }
+          }
+        });
+        return;
+      }
+
+      case "dash": {
+        if (!(await requireAP("Dash", 1))) return;
+        await breakAimChainIfPresent();
+        await postActionCard(
+          "Dash",
+          "<p>The character can use this action in order to move up to their Speed. If this is done on their Turn, this movement is added to their base movement for that Turn. This action can be used to allow a character to move several times their Speed during a round.</p>"
+        );
+        return;
+      }
+
+      case "hide": {
+        if (!(await requireAP("Hide", 1))) return;
+        await breakAimChainIfPresent();
+        await postActionCard(
+          "Hide",
+          "<p>The character can use this action to attempt to hide from foes. If anyone might detect them while they do this, they must make a Stealth skill test opposed by the Observe of anyone who might spot them. On success, they gain the Hidden condition.</p>"
+        );
+        return;
+      }
+
+      case "use-item": {
+        // Minimal deterministic wiring: pick a consumable item (if any) and post a chat note.
+        const candidates = this.actor.items.filter(i => {
+          const consumable = Boolean(i?.system?.consumable);
+          // Prefer physical items; avoid weapons/armor/ammo by default.
+          const type = String(i?.type ?? "");
+          const isPhysical = type === "item" || type === "container";
+          return consumable && isPhysical;
+        });
+
+        if (!candidates.length) {
+          await postActionCard(
+            "Use Item",
+            "<p>No consumable Items were found on this actor.</p>"
+          );
+          return;
+        }
+
+        const options = candidates.map(i => `<option value="${i.id}">${i.name}</option>`).join("");
+        const content = `
+          <form class="uesrpg-use-item-form">
+            <div class="form-group">
+              <label>Item</label>
+              <select name="itemId">${options}</select>
+            </div>
+          </form>
+        `;
+
+        const actor = this.actor;
+        return new Dialog({
+          title: "Use Item",
+          content,
+          buttons: {
+            use: {
+              label: "Use",
+              callback: async (html) => {
+                const itemId = html.find("select[name='itemId']").val();
+                const item = actor.items.get(itemId);
+                if (!item) {
+                  ui.notifications.warn("Selected item could not be found.");
+                  return;
+                }
+                if (!(await spendActionPoints(actor, 1, { reason: "Use Item" }))) return;
+                // Aim chain breaks when taking any action other than Aim/firing the aimed weapon/spell.
+                await breakAimChainIfPresent();
+                await postActionCard("Use Item", `<p>${item.name}</p>`);
+              }
+            },
+            cancel: { label: "Cancel" }
+          },
+          default: "use"
+        }).render(true);
+      }
+
+      default:
+        return;
+    }
+  }
+
+
+  /**
+   * Apply per-user collapsed group state after render.
+   * This does not mutate actor data.
+   */
+  async _applyCollapsedGroups(html) {
+    try {
+      const groups = await getCollapsedGroups();
+      const toggles = html.find(".uesrpg-group-toggle");
+      toggles.each((_i, el) => {
+        const key = el?.dataset?.group;
+        if (!key) return;
+        const collapsed = Boolean(groups?.[key]);
+        this._setGroupCollapsedInDom(el, collapsed);
       });
+    } catch (e) {
+      // No-op
+    }
+  }
+
+  _setGroupCollapsedInDom(toggleEl, collapsed) {
+    if (!toggleEl) return;
+
+    const icon = toggleEl.querySelector("i");
+    if (icon) {
+      icon.classList.remove("fa-chevron-down", "fa-chevron-right");
+      icon.classList.add(collapsed ? "fa-chevron-right" : "fa-chevron-down");
     }
 
-    await this.actor.deleteEmbeddedDocuments("Item", [itemId]);
-  });
-}
+
+    // Generic collapsible blocks: hide/show an explicit collapse body
+    const collapsible = toggleEl.closest(".uesrpg-collapsible");
+    if (collapsible) {
+      const body = collapsible.querySelector(".uesrpg-collapse-body");
+      if (body) body.style.display = collapsed ? "none" : "";
+      return;
+    }
+
+    const table = toggleEl.closest("table");
+    if (table) {
+      const tbody = table.querySelector("tbody");
+      if (tbody) tbody.style.display = collapsed ? "none" : "";
+      return;
+    }
+
+    const section = toggleEl.closest(".languageContainer, .factionContainer, .trait-container, .talent-container, .power-container");
+    if (section) {
+      const list = section.querySelector("ol, ul");
+      if (list) list.style.display = collapsed ? "none" : "";
+    }
+  }
+
+  async _onToggleGroupCollapse(event) {
+    event.preventDefault();
+    event.stopPropagation();
+
+    const el = event.currentTarget;
+    const groupKey = el?.dataset?.group;
+    if (!groupKey) return;
+
+    const groups = await getCollapsedGroups();
+    const next = !Boolean(groups?.[groupKey]);
+    await setGroupCollapsed(groupKey, next);
+    this._setGroupCollapsedInDom(el, next);
+  }
+
+  _onItemSearch(event) {
+    const input = event.currentTarget;
+    const query = String(input?.value ?? "").trim().toLowerCase();
+    const root = this.element?.[0];
+    if (!root) return;
+
+    const tab = root.querySelector(".tab.equipment");
+    if (!tab) return;
+
+    const items = tab.querySelectorAll("tr.item, li.item");
+    for (const row of items) {
+      const nameEl = row.querySelector(".item-name");
+      const name = String(nameEl?.textContent ?? "").trim().toLowerCase();
+      const match = !query || name.includes(query);
+      row.style.display = match ? "" : "none";
+    }
+  }
+
+  async _onLoadoutSave(event) {
+    event.preventDefault();
+    if (!this.actor?.isOwner) return;
+    if (!game.settings.get("uesrpg-3ev4", "enableLoadouts")) return;
+
+    const equippedIds = this.actor.items
+      .filter(i => typeof i?.system?.equipped === "boolean" && i.system.equipped)
+      .map(i => i.id);
+
+    const name = await Dialog.prompt({
+      title: "Save Loadout",
+      content: `<p>Enter a name for this loadout:</p><input type="text" name="uesrpgLoadoutName" style="width:100%" />`,
+      label: "Save",
+      callback: (html) => String(html.find("input[name='uesrpgLoadoutName']").val() ?? "").trim()
+    });
+
+    if (!name) return;
+    await saveLoadoutForActor(this.actor.id, name, equippedIds);
+    this.render(false);
+  }
+
+  async _onLoadoutApply(event) {
+    event.preventDefault();
+    if (!this.actor?.isOwner) return;
+    if (!game.settings.get("uesrpg-3ev4", "enableLoadouts")) return;
+
+    const select = this.element?.find?.("#uesrpg-loadout-select")?.[0];
+    const loadoutId = select?.value;
+    if (!loadoutId) return;
+
+    const loadouts = await getLoadoutsForActor(this.actor.id);
+    const loadout = loadouts.find(l => l.id === loadoutId);
+    if (!loadout) return;
+    await applyLoadoutToActor(this.actor, loadout.equippedIds);
+    this.render(false);
+  }
+
+  async _onLoadoutDelete(event) {
+    event.preventDefault();
+    if (!this.actor?.isOwner) return;
+    if (!game.settings.get("uesrpg-3ev4", "enableLoadouts")) return;
+
+    const select = this.element?.find?.("#uesrpg-loadout-select")?.[0];
+    const loadoutId = select?.value;
+    if (!loadoutId) return;
+
+    const confirmed = await Dialog.confirm({
+      title: "Delete Loadout",
+      content: "<p>Delete the selected loadout?</p>"
+    });
+    if (!confirmed) return;
+
+    await deleteLoadout(this.actor.id, loadoutId);
+    this.render(false);
+  }
+
   /**
    * Handle clickable rolls.
    * @param {Event} event   The originating click event
    * @private
    */
-  _duplicateItem(item) {
+  async _duplicateItem(item) {
     let d = new Dialog({
       title: "Duplicate Item",
       content: `<div style="padding: 10px; display: flex; flex-direction: row; align-items: center; justify-content: center;">
@@ -455,6 +949,27 @@ async _onSetBaseCharacteristics(event) {
       }
     }
   }
+
+  const renderModBox = (label, arr) => {
+    if (!Array.isArray(arr) || arr.length === 0) return "";
+    return `
+      <div class="modifierBox">
+        <h2>${label} Modifiers</h2>
+        <span style="font-size: small">${arr.join("")}</span>
+      </div>
+    `;
+  };
+
+  const modifiersHtml = [
+    renderModBox("STR", strBonusArray),
+    renderModBox("END", endBonusArray),
+    renderModBox("AGI", agiBonusArray),
+    renderModBox("INT", intBonusArray),
+    renderModBox("WP", wpCBonusArray),
+    renderModBox("PRC", prcBonusArray),
+    renderModBox("PRS", prsBonusArray),
+    renderModBox("LCK", lckBonusArray)
+  ].join("");
 
   let d = new Dialog({
     title: "Set Base Characteristics",
@@ -540,47 +1055,39 @@ async _onSetBaseCharacteristics(event) {
                     </table>
                   </div>
 
-                  <div class="modifierBox">
-                    <h2>STR Modifiers</h2>
-                    <span style="font-size: small">${strBonusArray.join("")}</span>
-                  </div>
+                  ${modifiersHtml}
 
-                  <div class="modifierBox">
-                    <h2>END Modifiers</h2>
-                    <span style="font-size: small">${endBonusArray.join("")}</span>
-                  </div>
+                    <div style="margin-bottom: 10px;">
+                      <h3 style="margin: 0 0 6px 0;">Favored Characteristics</h3>
+                      <div style="border: inset; margin-bottom: 10px; padding: 5px;">
+                        <i>Move favored toggles here to keep the sheet compact. These match the toggles previously shown next to each characteristic.</i>
+                      </div>
 
-                  <div class="modifierBox">
-                    <h2>AGI Modifiers</h2>
-                    <span style="font-size: small">${agiBonusArray.join("")}</span>
-                  </div>
+                      <table style="table-layout: fixed; text-align: center;">
+                        <tr>
+                          <th>STR</th>
+                          <th>END</th>
+                          <th>AGI</th>
+                          <th>INT</th>
+                          <th>WP</th>
+                          <th>PRC</th>
+                          <th>PRS</th>
+                          <th>LCK</th>
+                        </tr>
+                        <tr>
+                          <td><input type="checkbox" id="strFav" ${this.actor.system.characteristics.str.favored ? 'checked' : ''}></td>
+                          <td><input type="checkbox" id="endFav" ${this.actor.system.characteristics.end.favored ? 'checked' : ''}></td>
+                          <td><input type="checkbox" id="agiFav" ${this.actor.system.characteristics.agi.favored ? 'checked' : ''}></td>
+                          <td><input type="checkbox" id="intFav" ${this.actor.system.characteristics.int.favored ? 'checked' : ''}></td>
+                          <td><input type="checkbox" id="wpFav" ${this.actor.system.characteristics.wp.favored ? 'checked' : ''}></td>
+                          <td><input type="checkbox" id="prcFav" ${this.actor.system.characteristics.prc.favored ? 'checked' : ''}></td>
+                          <td><input type="checkbox" id="prsFav" ${this.actor.system.characteristics.prs.favored ? 'checked' : ''}></td>
+                          <td><input type="checkbox" id="lckFav" ${this.actor.system.characteristics.lck.favored ? 'checked' : ''}></td>
+                        </tr>
+                      </table>
+                    </div>
 
-                  <div class="modifierBox">
-                    <h2>INT Modifiers</h2>
-                    <span style="font-size: small">${intBonusArray.join("")}</span>
-                  </div>
-
-                  <div class="modifierBox">
-                    <h2>WP Modifiers</h2>
-                    <span style="font-size: small">${wpCBonusArray.join("")}</span>
-                  </div>
-
-                  <div class="modifierBox">
-                    <h2>PRC Modifiers</h2>
-                    <span style="font-size: small">${prcBonusArray.join("")}</span>
-                  </div>
-
-                  <div class="modifierBox">
-                    <h2>PRS Modifiers</h2>
-                    <span style="font-size: small">${prsBonusArray.join("")}</span>
-                  </div>
-
-                  <div class="modifierBox">
-                    <h2>LCK Modifiers</h2>
-                    <span style="font-size: small">${lckBonusArray.join("")}</span>
-                  </div>
-
-                </form>`,
+</form>`,
     buttons: {
       one: {
         label: "Submit",
@@ -642,8 +1149,9 @@ async _onSetBaseCharacteristics(event) {
   const regularValue = charTotal + fatiguePenalty + carryPenalty;
   const lucky = actorSys.lucky_numbers || {};
   const unlucky = actorSys.unlucky_numbers || {};
+  const hasWoundPenalty = woundPenalty !== 0;
   let tags = [];
-  if (actorSys?.wounded) {
+  if (hasWoundPenalty) {
     tags.push(`<span class="tag wound-tag">Wounded ${woundPenalty}</span>`);
   }
   if (fatiguePenalty !== 0) {
@@ -674,7 +1182,7 @@ async _onSetBaseCharacteristics(event) {
           const isLucky = [lucky.ln1, lucky.ln2, lucky.ln3, lucky.ln4, lucky.ln5, lucky.ln6, lucky.ln7, lucky.ln8, lucky.ln9, lucky.ln10].includes(roll.total);
           const isUnlucky = [unlucky.ul1, unlucky.ul2, unlucky.ul3, unlucky.ul4, unlucky.ul5, unlucky.ul6].includes(roll.total);
 
-          if (actorSys?.wounded == true) {
+          if (hasWoundPenalty) {
             const target = woundedValue + playerInput;
             if (isLucky) {
               contentString = `<h2>${element.getAttribute("name")}</h2><p></p><b>Target Number: [[${target}]]</b><p></p><b>Result: [[${roll.result}]]</b><p></p><span style='color:green; font-size:120%;'><b>LUCKY NUMBER!</b></span>`;
@@ -890,7 +1398,7 @@ async _onProfessionsRoll(event) {
 
   // Tag bar (kept consistent with PC sheet tags)
   const tags = [];
-  if (this.actor?.system?.wounded) tags.push(`<span class="tag wound-tag">Wounded ${this.actor.system.woundPenalty}</span>`);
+  if (Number(this.actor?.system?.woundPenalty ?? 0) !== 0) tags.push(`<span class="tag wound-tag">Wounded ${this.actor.system.woundPenalty}</span>`);
   if (Number(this.actor?.system?.fatigue?.penalty ?? 0) !== 0) tags.push(`<span class="tag fatigue-tag">Fatigued ${this.actor.system.fatigue.penalty}</span>`);
   if (Number(this.actor?.system?.carry_rating?.penalty ?? 0) !== 0) tags.push(`<span class="tag enc-tag">Encumbered ${this.actor.system.carry_rating.penalty}</span>`);
 
@@ -976,7 +1484,7 @@ async _onDefendRoll(event) {
   });
 
   const tags = [];
-  if (this.actor.system.wounded) tags.push(`<span class="tag wound-tag">Wounded ${this.actor.system.woundPenalty}</span>`);
+  if (Number(this.actor.system?.woundPenalty ?? 0) !== 0) tags.push(`<span class="tag wound-tag">Wounded ${this.actor.system.woundPenalty}</span>`);
   if (this.actor.system.fatigue?.penalty != 0) tags.push(`<span class="tag fatigue-tag">Fatigued ${this.actor.system.fatigue.penalty}</span>`);
   if (this.actor.system.carry_rating?.penalty != 0) tags.push(`<span class="tag enc-tag">Encumbered ${this.actor.system.carry_rating.penalty}</span>`);
 
@@ -1101,7 +1609,7 @@ async _onDefendRoll(event) {
   });
 }
 
-_onSpellRoll(event) {
+async _onSpellRoll(event) {
   let spellToCast;
 
   if (
@@ -1265,7 +1773,7 @@ _onSpellRoll(event) {
   m.render(true);
 }
 
- _onResistanceRoll(event) {
+ async _onResistanceRoll(event) {
   event.preventDefault();
   const element = event.currentTarget;
   const actorSys = this.actor?.system || {};
@@ -1387,16 +1895,15 @@ _onSpellRoll(event) {
   }
 
   async _onItemEquip(event) {
-    let toggle = $(event.currentTarget);
+    event.preventDefault();
+    const toggle = $(event.currentTarget);
     const li = toggle.closest(".item");
-    const item = this.actor.getEmbeddedDocument("Item", li.data("itemId"));
-
-    if (item.system.equipped === false) {
-      item.system.equipped = true;
-    } else if (item.system.equipped === true) {
-      item.system.equipped = false;
-    }
-    await item.update({ "system.equipped": item.system.equipped });
+    const itemId = li?.data("itemId");
+    if (!itemId) return;
+    const item = this.actor.getEmbeddedDocument("Item", itemId);
+    if (!item) return;
+    const current = Boolean(item?.system?.equipped);
+    await item.update({ "system.equipped": !current });
   }
 
   async _onItemCreate(event) {
@@ -1610,24 +2117,19 @@ _onResetResource(event) {
       }
     }
   }
-
   _createItemFilterOptions() {
-    // Defensive guard: safe hasOwnProperty for equipped
+    const filterEl = this.form?.querySelector?.("#itemFilter");
+    if (!filterEl) return;
+
     for (let item of this.actor.items.filter(
       (i) => i?.system && Object.prototype.hasOwnProperty.call(i.system, "equipped") && i.system.equipped === false
     )) {
-      if (
-        [...this.form.querySelectorAll("#itemFilter option")].some(
-          (i) => i.innerHTML === item.type
-        )
-      ) {
-        continue;
-      } else {
-        let option = document.createElement("option");
-        option.innerHTML = item.type === "ammunition" ? "ammo" : item.type;
-        option.value = item.type;
-        this.form.querySelector("#itemFilter").append(option);
-      }
+      if ([...filterEl.querySelectorAll("option")].some((i) => i.innerHTML === item.type)) continue;
+
+      const option = document.createElement("option");
+      option.innerHTML = item.type === "ammunition" ? "ammo" : item.type;
+      option.value = item.type;
+      filterEl.append(option);
     }
   }
 
@@ -1676,24 +2178,27 @@ _onResetResource(event) {
       }
     }
   }
-
   _setDefaultItemFilter() {
-    let filterBy = sessionStorage.getItem("savedItemFilter");
+    const filterEl = this.form?.querySelector?.("#itemFilter");
+    if (!filterEl) return;
 
-    if (filterBy !== null || filterBy !== undefined) {
-      this.form.querySelector("#itemFilter").value = filterBy;
+    let filterBy = sessionStorage.getItem("savedItemFilter");
+    if (filterBy !== null && filterBy !== undefined) {
+      filterEl.value = filterBy;
       for (let item of [
         ...this.form.querySelectorAll(".equipmentList tbody .item"),
       ]) {
         switch (filterBy) {
           case "All":
             item.classList.add("active");
+            sessionStorage.setItem("savedItemFilter", filterBy);
             break;
 
           case `${filterBy}`:
             filterBy == item.dataset.itemType
               ? item.classList.add("active")
               : item.classList.remove("active");
+            sessionStorage.setItem("savedItemFilter", filterBy);
             break;
         }
       }
@@ -1738,7 +2243,7 @@ _onResetResource(event) {
     }
   }
 
-  _onEquipItems(event) {
+  async _onEquipItems(event) {
     event.preventDefault();
     let element = event.currentTarget;
     let itemList = this.actor.items.filter(
@@ -1957,7 +2462,7 @@ _onResetResource(event) {
 
 _createStatusTags() {
   const actorSys = this.actor?.system || {};
-  actorSys?.wounded
+  Number(actorSys?.woundPenalty ?? 0) !== 0
     ? this.form.querySelector("#wound-icon").classList.add("active")
     : this.form.querySelector("#wound-icon").classList.remove("active");
   Number(actorSys?.fatigue?.level ?? 0) > 0

@@ -267,11 +267,9 @@ export class SimpleItem extends Item {
       chaTotal = Number((characteristics?.total || 0) + itemData.bonus + (itemData.miscValue || 0) + itemChaBonus);
     }
 
-    if (actorData.system?.wounded) {
-      itemData.value = Number(woundPenalty + fatiguePenalty + chaTotal + itemSkillBonus)
-    } else {
-      itemData.value = Number(fatiguePenalty + chaTotal + itemSkillBonus)
-    }
+    // Chapter 5: wound penalties are derived from Wound Active Effects and exposed via system.woundPenalty.
+    // Do not use legacy system.wounded flags.
+    itemData.value = Number(woundPenalty + fatiguePenalty + chaTotal + itemSkillBonus)
 
   }
 

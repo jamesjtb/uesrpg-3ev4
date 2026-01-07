@@ -2,7 +2,6 @@ import { UESRPG } from "../constants.js";
 import { SimpleActor } from "../entities/actor.js";
 import { npcSheet } from "../sheets/npc-sheet.js";
 import { SimpleActorSheet } from "../sheets/actor-sheet.js";
-import { merchantSheet } from "../sheets/merchant-sheet.js";
 import { SimpleItem } from "../entities/item.js";
 import { SimpleItemSheet } from "../sheets/item-sheet.js";
 import { SystemCombat } from "../entities/combat.js";
@@ -10,10 +9,36 @@ import { initializeChatHandlers, registerCombatChatHooks } from "../combat/chat-
 import { registerSkillTNDebug } from "../dev/skill-tn-debug.js";
 import { registerActorSelectDebug } from "../dev/actor-select-debug.js";
 import { registerDebugSettingsMenu } from "../dev/debug-settings.js";
+import { registerOpposedDiagnostics } from "../dev/opposed-diagnostics.js";
 import { registerConditions } from "../conditions/index.js";
 import { registerWounds } from "../wounds/index.js";
-import { applyDamage, DAMAGE_TYPES } from "../combat/damage-automation.js";
+import { applyDamage, applyHealing, DAMAGE_TYPES } from "../combat/damage-automation.js";
 import { applyDamageResolved } from "../combat/damage-resolver.js";
+import { registerChatMessageSocket } from "../helpers/chat-message-socket.js";
+import { registerActiveEffectProxy } from "../helpers/active-effect-proxy.js";
+
+/**
+ * Preload Handlebars partials used by system sheets.
+ *
+ * Foundry requires partial templates to be loaded before they can be referenced via {{> }}.
+ */
+async function preloadHandlebarsTemplates() {
+  const templatePaths = [
+    "systems/uesrpg-3ev4/templates/partials/sheets/fixed-header.hbs",
+  ];
+
+  try {
+    // Foundry v13: use the namespaced template loader.
+    // Avoid touching the deprecated global loadTemplates to keep the console clean.
+    const loader = foundry?.applications?.handlebars?.loadTemplates;
+    if (typeof loader !== "function") {
+      throw new Error("foundry.applications.handlebars.loadTemplates is not available");
+    }
+    await loader(templatePaths);
+  } catch (err) {
+    console.error("UESRPG | Failed to preload Handlebars templates", err);
+  }
+}
 
 async function registerSettings() {
   // Register system settings
@@ -137,6 +162,16 @@ async function registerSettings() {
     type: Boolean,
   });
 
+  // Authority proxy diagnostics (GM/owner proxy mutations)
+  game.settings.register("uesrpg-3ev4", "effectsProxyDebug", {
+    name: "Effects/Proxy Debug Logging",
+    hint: "When enabled, the authority proxy (ChatMessage updates + target-side ActiveEffect application) logs concise diagnostics to the browser console.",
+    scope: "world",
+    config: false,
+    default: false,
+    type: Boolean,
+  });
+
   game.settings.register("uesrpg-3ev4", "opposedDebugFormula", {
     name: "Opposed Debug: Formula Normalization",
     hint: "When enabled (testing), logs when a roll formula is normalized or rejected before evaluation.",
@@ -154,6 +189,17 @@ async function registerSettings() {
     default: false,
     type: Boolean,
   });
+
+  // Opposed workflow: bank choices before rolling to reduce meta-game information.
+  game.settings.register("uesrpg-3ev4", "opposedBankChoices", {
+    name: "Opposed: Bank Choices Before Rolling",
+    hint: "When enabled, attacker and defender choices are banked (committed) and the rolls are triggered only after both sides have committed. This reduces meta-game information on opposed chat cards.",
+    scope: "world",
+    config: true,
+    default: true,
+    type: Boolean,
+  });
+
 
   // Skill roll diagnostics
   game.settings.register("uesrpg-3ev4", "skillRollDebug", {
@@ -200,6 +246,47 @@ async function registerSettings() {
     onChange: delayedReload
   });
 
+
+game.settings.register("uesrpg-3ev4", "debugAim", {
+  name: "Aim: Debug Audit Logging",
+  hint: "When enabled, logs Aim apply/stack, break, and consume events to the browser console.",
+  scope: "client",
+  config: true,
+  type: Boolean,
+  default: false
+});
+
+
+  // Combat sheet UI: optional Action Economy gating for quick actions
+  game.settings.register("uesrpg-3ev4", "enableActionEconomyUI", {
+    name: "Combat Sheet: Action Economy UI",
+    hint: "When enabled, Combat tab quick action buttons are disabled when the actor has 0 Action Points.",
+    scope: "world",
+    config: true,
+    default: false,
+    type: Boolean,
+  });
+
+  // Items tab: per-user loadouts (equipment snapshots)
+  game.settings.register("uesrpg-3ev4", "enableLoadouts", {
+    name: "Sheets: Enable Equipment Loadouts",
+    hint: "When enabled, the Items tab shows a per-user Loadout bar (save/apply equipped-state snapshots).",
+    scope: "world",
+    config: true,
+    default: false,
+    type: Boolean,
+  });
+
+  // Client-only diagnostics panel on actor sheets (used for testing)
+  game.settings.register("uesrpg-3ev4", "sheetDiagnostics", {
+    name: "Debug: Sheet Diagnostics Panel",
+    hint: "When enabled, actor sheets show a small diagnostics panel (client only).",
+    scope: "client",
+    config: false,
+    default: false,
+    type: Boolean,
+  });
+
   // Register a dedicated Debugging menu to avoid clutter in System Settings.
   registerDebugSettingsMenu();
 
@@ -224,11 +311,6 @@ foundry.documents.collections.Actors.registerSheet("uesrpg-3ev4", npcSheet, {
   makeDefault: true,
   label: "Default UESRPG NPC Sheet",
 });
-foundry.documents.collections.Actors.registerSheet("uesrpg-3ev4", merchantSheet, {
-  types: ["NPC"],
-  makeDefault: false,
-  label: "Default UESRPG Merchant Sheet",
-});
 }
 
 export default async function initHandler() {
@@ -237,6 +319,14 @@ export default async function initHandler() {
   // Default newly created Item Active Effects to transfer=true ("Apply Effect to Actor"), unless explicitly set.
   // We register these hooks once per session.
   if (!game.uesrpg) game.uesrpg = {};
+
+  // Opposed workflow diagnostics helpers (per-client trace ring buffer + console dump utilities)
+  // Safe: no schema changes; GM-only dump functions.
+  try {
+    registerOpposedDiagnostics();
+  } catch (err) {
+    console.warn("UESRPG | Failed to register opposed diagnostics", err);
+  }
 
 // COMBAT_API_EXPORTS_V1
 // Provide stable access points for macros and downstream system automation without relying on dynamic imports.
@@ -250,7 +340,7 @@ game.uesrpg.combat.DAMAGE_TYPES = DAMAGE_TYPES;
 // Ensures all healing callers use the unified pipeline (bleeding reduction, forestall, etc.).
 game.uesrpg.combat.applyHealing = async (actor, amount, options = {}) => {
   const src = options?.source ?? "Healing";
-  return applyDamage(actor, amount, DAMAGE_TYPES.HEALING, { ...options, source: src });
+  return applyHealing(actor, amount, { ...options, source: src });
 };
 
   if (!game.uesrpg._defaultItemAETransferHook) {
@@ -422,6 +512,10 @@ game.uesrpg.combat.applyHealing = async (actor, amount, options = {}) => {
   CONFIG.Actor.documentClass = SimpleActor;
   CONFIG.Item.documentClass = SimpleItem;
 
+  // Preload sheet partials after the Handlebars application namespace is fully initialized.
+  // Running this too early causes Foundry to fall back to deprecated global loaders.
+  Hooks.once("setup", preloadHandlebarsTemplates);
+
   await registerSettings();
 
   await registerSheets();
@@ -429,6 +523,8 @@ game.uesrpg.combat.applyHealing = async (actor, amount, options = {}) => {
   // Initialize combat automation chat handlers
   initializeChatHandlers();
   registerCombatChatHooks();
+  registerChatMessageSocket();
+  registerActiveEffectProxy();
 
   // Chapter 5: conditions + wounds automation (AE-backed, deterministic)
   registerConditions();

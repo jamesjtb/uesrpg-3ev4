@@ -17,6 +17,9 @@
  */
 
 import { doTestRoll } from "../helpers/degree-roll-helper.js";
+import { requestCreateEmbeddedDocuments, requestDeleteEmbeddedDocuments, requestUpdateDocument } from "../helpers/authority-proxy.js";
+
+let _woundHooksRegistered = false;
 
 const FLAG_SCOPE = "uesrpg-3ev4";
 const FLAG_PATH = `flags.${FLAG_SCOPE}`;
@@ -137,11 +140,11 @@ async function _applyShockUnconditional(actor, { region, hitLocationNorm, applic
   if (region === "body") {
     const cur = Number(actor.system?.action_points?.value ?? 0) || 0;
     if (cur > 0) {
-      await actor.update({ "system.action_points.value": Math.max(0, cur - 1) });
+      await requestUpdateDocument(actor, { "system.action_points.value": Math.max(0, cur - 1) });
     } else {
       const debtRaw = Number(actor.getFlag(FLAG_SCOPE, "wounds.apDebtNextRefresh") ?? 0);
       const debt = Number.isFinite(debtRaw) ? debtRaw : 0;
-      await actor.setFlag(FLAG_SCOPE, "wounds.apDebtNextRefresh", debt + 1);
+      await requestUpdateDocument(actor, { [`${FLAG_PATH}.wounds.apDebtNextRefresh`]: debt + 1 });
     }
     return;
   }
@@ -149,7 +152,7 @@ async function _applyShockUnconditional(actor, { region, hitLocationNorm, applic
   // For limb/head we create tracking AEs. These are non-HUD, non-migrating markers.
   if (region === "limb") {
     const name = `Crippled Limb (${hitLocationNorm || "Limb"})`;
-    await actor.createEmbeddedDocuments("ActiveEffect", [
+    await requestCreateEmbeddedDocuments(actor, "ActiveEffect", [
       {
         name,
         icon: "icons/svg/bones.svg",
@@ -171,7 +174,7 @@ async function _applyShockUnconditional(actor, { region, hitLocationNorm, applic
 
   if (region === "head") {
     const name = "Stunned (Shock)";
-    await actor.createEmbeddedDocuments("ActiveEffect", [
+    await requestCreateEmbeddedDocuments(actor, "ActiveEffect", [
       {
         name,
         icon: "icons/svg/daze.svg",
@@ -195,7 +198,7 @@ async function _applyShockFailConsequence(actor, { region, hitLocationNorm, appl
 
   if (region === "body") {
     const name = "Crippled Body (Shock)";
-    await actor.createEmbeddedDocuments("ActiveEffect", [
+    await requestCreateEmbeddedDocuments(actor, "ActiveEffect", [
       {
         name,
         icon: "icons/svg/bones.svg",
@@ -217,7 +220,7 @@ async function _applyShockFailConsequence(actor, { region, hitLocationNorm, appl
 
   if (region === "limb") {
     const name = `Lost Limb (${hitLocationNorm || "Limb"})`;
-    await actor.createEmbeddedDocuments("ActiveEffect", [
+    await requestCreateEmbeddedDocuments(actor, "ActiveEffect", [
       {
         name,
         icon: "icons/svg/bones.svg",
@@ -249,13 +252,13 @@ async function _applyShockFailConsequence(actor, { region, hitLocationNorm, appl
     });
 
     if (choice === "ear") {
-      await actor.createEmbeddedDocuments("ActiveEffect", [
+      await requestCreateEmbeddedDocuments(actor, "ActiveEffect", [
         { name: "Lost Ear (Shock)", icon: "icons/svg/skull.svg", changes: [], flags: { [FLAG_SCOPE]: { wounds: { kind: "shockLostEar", applicationId: String(applicationId ?? "") } } } }
       ]);
       return { note: "Lost Ear" };
     }
 
-    await actor.createEmbeddedDocuments("ActiveEffect", [
+    await requestCreateEmbeddedDocuments(actor, "ActiveEffect", [
       { name: "Lost Eye (Shock)", icon: "icons/svg/eye.svg", changes: [], flags: { [FLAG_SCOPE]: { wounds: { kind: "shockLostEye", applicationId: String(applicationId ?? "") } } } }
     ]);
     return { note: "Lost Eye" };
@@ -272,14 +275,14 @@ async function _applyShockMagicSideEffect(actor, { chosenType, damageAppliedByTy
     const loss = Number(damageAppliedByType?.shock ?? damageAppliedByType?.Shock ?? 0) || 0;
     if (loss > 0) {
       const cur = Number(actor.system?.magicka?.value ?? 0) || 0;
-      await actor.update({ "system.magicka.value": Math.max(0, cur - loss) });
+      await requestUpdateDocument(actor, { "system.magicka.value": Math.max(0, cur - loss) });
     }
     return { note: loss > 0 ? `Lost Magicka (${loss})` : "Lost Magicka" };
   }
 
   if (type === "magic" || type === "frost" || type === "poison") {
     const cur = Number(actor.system?.stamina?.value ?? 0) || 0;
-    await actor.update({ "system.stamina.value": Math.max(0, cur - 1) });
+    await requestUpdateDocument(actor, { "system.stamina.value": Math.max(0, cur - 1) });
     return { note: "Lost Stamina (1)" };
   }
 
@@ -405,7 +408,7 @@ async function _dedupeSingletonEffect(actor, kind, { pick = "first" } = {}) {
   if (extras.length) {
     _wlog(`Duplicate ${kind} effects detected during ${kind} invariant enforcement; keeping ${keep.id}, removing ${extras.map(e => e.id).join(", ")}`);
     try {
-      await actor.deleteEmbeddedDocuments("ActiveEffect", extras.map(e => e.id));
+      await requestDeleteEmbeddedDocuments(actor, "ActiveEffect", extras.map(e => e.id));
     } catch (err) {
       console.warn("UESRPG | Failed to delete duplicate wound marker effects", err);
     }
@@ -430,7 +433,7 @@ async function _enforceWoundInvariants(actor, { context = "unknown" } = {}) {
       if (norm != cur) {
         _dlog(`${kind} remainingRounds normalized`, { actor: actor.uuid, effect: ef.id, from: cur, to: norm, context });
         try {
-          await ef.update({ [`${FLAG_PATH}.wounds.remainingRounds`]: norm, name: kind === "bloodLoss" ? `Blood Loss (${norm})` : `Wound Forestall (${norm})` });
+          await requestUpdateDocument(ef, { [`${FLAG_PATH}.wounds.remainingRounds`]: norm, name: kind === "bloodLoss" ? `Blood Loss (${norm})` : `Wound Forestall (${norm})` });
         } catch (err) {
           console.warn("UESRPG | Failed to normalize wound marker counter", err);
         }
@@ -454,7 +457,7 @@ async function _enforceWoundInvariants(actor, { context = "unknown" } = {}) {
     if (p >= d) {
       _dlog("Deleting fully healed treated wound", { actor: actor.uuid, effect: ef.id, damage: d, progress: p, context });
       try {
-        await ef.delete();
+        await requestDeleteEmbeddedDocuments(actor, "ActiveEffect", [ef.id]);
       } catch (err) {
         console.warn("UESRPG | Failed to delete fully healed wound effect", err);
       }
@@ -464,22 +467,43 @@ async function _enforceWoundInvariants(actor, { context = "unknown" } = {}) {
     if (p != progress || d != damage) {
       _dlog("Normalizing treated wound progress", { actor: actor.uuid, effect: ef.id, damageFrom: damage, damageTo: d, progressFrom: progress, progressTo: p, context });
       try {
-        await ef.update({ [`${FLAG_PATH}.wounds.damage`]: d, [`${FLAG_PATH}.wounds.progress`]: p });
+        await requestUpdateDocument(ef, { [`${FLAG_PATH}.wounds.damage`]: d, [`${FLAG_PATH}.wounds.progress`]: p });
       } catch (err) {
         console.warn("UESRPG | Failed to normalize treated wound progress", err);
       }
     }
   }
 
-  // Keep actor.system.wounded consistent with presence of any wound effects.
+    // Canonical invariant:
+  // - `system.wounded` represents whether passive wound effects are currently active (Chapter 5: Passive Effects).
+  // - Wound markers are represented by ActiveEffects with flags. We do NOT force `system.wounded=true` just because a wound marker exists,
+  //   because passive effects begin after Shock Test resolution.
   const hasWoundEffects = _hasAnyWoundEffects(actor);
   const sysWounded = actor.system?.wounded === true;
-  if (hasWoundEffects && !sysWounded) {
-    _dlog("Repairing actor.system.wounded=true due to lingering wound effects", { actor: actor.uuid, context });
+
+  // If any wound has already resolved Shock, ensure passive wound state is active (even if suppressed by First Aid / Forestall).
+  const hasResolvedWound = _findEffectsByKind(actor, "wound").some((ef) => {
+    const wf = _woundsFlag(ef) ?? {};
+    return wf.shockResolved === true;
+  });
+
+  if (hasResolvedWound && !sysWounded) {
+    _dlog("Activating actor.system.wounded due to resolved Shock on an existing wound", { actor: actor.uuid, context });
     try {
-      await actor.update({ "system.wounded": true });
+      await requestUpdateDocument(actor, { "system.wounded": true });
     } catch (err) {
-      console.warn("UESRPG | Failed to repair system.wounded invariant", err);
+      console.warn("UESRPG | Failed to activate system.wounded for resolved wound", err);
+    }
+  }
+
+
+  // If the document says we are wounded but no wound markers remain, clear it deterministically.
+  if (!hasWoundEffects && sysWounded) {
+    _dlog("Clearing actor.system.wounded because no wound effects remain", { actor: actor.uuid, context });
+    try {
+      await requestUpdateDocument(actor, { "system.wounded": false });
+    } catch (err) {
+      console.warn("UESRPG | Failed to clear system.wounded invariant", err);
     }
   }
 }
@@ -492,6 +516,42 @@ function _toNumber(n, fallback = 0) {
   const v = Number(n);
   return Number.isFinite(v) ? v : fallback;
 }
+
+async function _resolveActorLike(actorLike) {
+  // Accept: Actor, TokenDocument/Token, UUID string, Actor ID, Actor name.
+  // If omitted, use the first controlled token's actor, else the user's assigned character.
+  try {
+    if (!actorLike) {
+      return canvas?.tokens?.controlled?.[0]?.actor ?? game.user?.character ?? null;
+    }
+
+    // Actor instance
+    if (actorLike?.documentName === "Actor") return actorLike;
+
+    // Token or TokenDocument
+    if (actorLike?.actor?.documentName === "Actor") return actorLike.actor;
+
+    // UUID / id / name
+    if (typeof actorLike === "string") {
+      const s = actorLike.trim();
+      if (!s) return null;
+
+      // Try UUID first (e.g. Actor.xxxxx)
+      if (s.includes(".")) {
+        const doc = await fromUuid(s).catch(() => null);
+        if (doc?.documentName === "Actor") return doc;
+      }
+
+      // Try ID then name
+      return game.actors?.get?.(s) ?? game.actors?.getName?.(s) ?? null;
+    }
+
+    return null;
+  } catch (_err) {
+    return null;
+  }
+}
+
 
 function _findEffectsByKind(actor, kind) {
   return _effects(actor).filter(e => (e?.getFlag?.(FLAG_SCOPE, "wounds")?.kind === kind));
@@ -544,17 +604,19 @@ async function _cleanupWoundStateIfNoWounds(actor) {
   const toDelete = [...bloodLoss, ...forestall];
 
   if (toDelete.length) {
-    try {
-      await actor.deleteEmbeddedDocuments("ActiveEffect", toDelete.map(e => e.id));
-    } catch (err) {
-      console.warn("UESRPG | Failed to clean up wound state effects", err);
+    for (const ef of toDelete) {
+      try {
+        await requestDeleteEmbeddedDocuments(actor, "ActiveEffect", [ef.id]);
+      } catch (_err) {
+        // Non-blocking.
+      }
     }
   }
 
   let clearedWounded = false;
   try {
     if (actor.system?.wounded) {
-      await actor.update({ "system.wounded": false });
+      await requestUpdateDocument(actor, { "system.wounded": false });
       clearedWounded = true;
     }
   } catch (err) {
@@ -582,7 +644,7 @@ async function _ensureUnconsciousEffect(actor) {
   try {
     const has = _effects(actor).some(e => e?.statuses?.has?.("unconscious") || e?.getFlag?.("core", "statusId") === "unconscious" || e?.name === "Unconscious");
     if (has) return;
-    await actor.createEmbeddedDocuments("ActiveEffect", [{
+    await requestCreateEmbeddedDocuments(actor, "ActiveEffect", [{
       name: "Unconscious",
       img: "icons/svg/unconscious.svg",
       duration: {},
@@ -623,15 +685,18 @@ export async function createWoundFromDamage(actor, { damage = 0, hitLocation = "
         treated: false,
         progress: 0,
         createdAt: ts,
-        source
+        source,
+        shockResolved: false,
+        shockResolvedAt: null,
+        shockPassed: null
       }
     }
   });
 
-  const created = await actor.createEmbeddedDocuments("ActiveEffect", [woundEffect]);
+  const created = await requestCreateEmbeddedDocuments(actor, "ActiveEffect", [woundEffect]);
   const woundDoc = Array.isArray(created) ? (created[0] ?? null) : null;
 
-  await upsertBloodLoss(actor, { resetTo: 5 });
+  // Passive Effects + Blood Loss begin after Shock Test resolution (see resolveShockTestFromChat).
   return woundDoc;
 }
 
@@ -651,25 +716,30 @@ export async function upsertBloodLoss(actor, { resetTo = 5 } = {}) {
         }
       }
     });
-    await actor.createEmbeddedDocuments("ActiveEffect", [effect]);
+    await requestCreateEmbeddedDocuments(actor, "ActiveEffect", [effect]);
     return;
   }
 
-  await existing.update({
+  await requestUpdateDocument(existing, {
     name: `Blood Loss (${next})`,
     [`${FLAG_PATH}.wounds.remainingRounds`]: next
   });
 }
 
-export async function firstAid(actor) {
+export async function firstAid(actorLike) {
+  const actor = await _resolveActorLike(actorLike);
   if (!actor) return { removedBloodLoss: 0, createdFirstAid: false };
 
   let removedBloodLoss = 0;
 
   // Remove blood loss countdown
   for (const ef of _findEffectsByKind(actor, "bloodLoss")) {
-    await ef.delete();
-    removedBloodLoss++;
+    try {
+      await requestDeleteEmbeddedDocuments(actor, "ActiveEffect", [ef.id]);
+      removedBloodLoss++;
+    } catch (_err) {
+      // Non-blocking.
+    }
   }
 
   // Create a persistent suppression marker (passive wound penalties removed by first aid)
@@ -689,12 +759,13 @@ export async function firstAid(actor) {
     }
   });
 
-  await actor.createEmbeddedDocuments("ActiveEffect", [effect]);
+  await requestCreateEmbeddedDocuments(actor, "ActiveEffect", [effect]);
 
   return { removedBloodLoss, createdFirstAid: true };
 }
 
-export async function treatWound(actor, effectId) {
+export async function treatWound(actorLike, effectId) {
+  const actor = await _resolveActorLike(actorLike);
   if (!actor || !effectId) return;
   const ef = actor.effects?.get?.(effectId) ?? null;
   const data = ef?.getFlag?.(FLAG_SCOPE, "wounds");
@@ -702,14 +773,15 @@ export async function treatWound(actor, effectId) {
 
   if (data.treated === true) return;
 
-  await ef.update({
+  await requestUpdateDocument(ef, {
     [`${FLAG_PATH}.wounds.treated`]: true,
     [`${FLAG_PATH}.wounds.treatedAt`]: Date.now(),
     [`${FLAG_PATH}.wounds.progress`]: 0
   });
 }
 
-export async function treatAllWounds(actor) {
+export async function treatAllWounds(actorLike) {
+  const actor = await _resolveActorLike(actorLike);
   if (!actor) return;
   for (const ef of _findEffectsByKind(actor, "wound")) {
     const data = ef.getFlag(FLAG_SCOPE, "wounds") ?? {};
@@ -719,7 +791,8 @@ export async function treatAllWounds(actor) {
 }
 
 
-export async function stabilize(actor) {
+export async function stabilize(actorLike) {
+  const actor = await _resolveActorLike(actorLike);
   if (!actor) return { stabilizedWounds: 0, firstAid: { removedBloodLoss: 0, createdFirstAid: false } };
 
   // Package 5: treatment staging (no roll/action enforcement).
@@ -731,7 +804,7 @@ export async function stabilize(actor) {
 
   for (const ef of _findEffectsByKind(actor, "wound")) {
     try {
-      await ef.update({
+      await requestUpdateDocument(ef, {
         [`${FLAG_PATH}.wounds.stabilized`]: true,
         [`${FLAG_PATH}.wounds.stabilizedAt`]: now
       });
@@ -745,36 +818,45 @@ export async function stabilize(actor) {
   return { stabilizedWounds, firstAid: firstAidResult };
 }
 
-export async function clearWound(actor, effectId) {
-  if (!actor || !effectId) return;
-
-  const ef = actor.effects?.get?.(effectId) ?? null;
+export async function clearWound(actorLike, effectId) {
+  const actor = await _resolveActorLike(actorLike);
+  if (!actor) return;
+  const ef = actor.effects?.get?.(String(effectId)) ?? null;
   if (!ef) return;
 
-  const kind = String(ef.getFlag?.(FLAG_SCOPE, "wounds")?.kind ?? "");
+  const w = ef.getFlag?.(FLAG_SCOPE, "wounds") ?? {};
+  const kind = String(w.kind ?? "");
   if (!["wound", "bloodLoss", "forestall", "firstAid"].includes(kind)) return;
 
-  await ef.delete();
+  const appId = kind === "wound" ? String(w.applicationId ?? "").trim() : "";
 
-  // Defensive invariant: blood loss / forestall should not linger if the last wound was cleared.
+  await requestDeleteEmbeddedDocuments(actor, "ActiveEffect", [ef.id]);
+
+  // When a wound is cleared, also clear associated Shock markers (except lost limbs/eyes/ears).
+  if (kind === "wound" && appId) {
+    await _removeShockMarkersForApplication(actor, appId, { removeLost: false });
+  }
+
+  // Defensive invariant: when wounds are fully healed/cleared, remove lingering blood loss / forestall.
   if (!_hasAnyWoundEffects(actor)) {
     await _cleanupWoundStateIfNoWounds(actor);
   }
 }
 
-export async function clearAllWounds(actor) {
+export async function clearAllWounds(actorLike) {
+  const actor = await _resolveActorLike(actorLike);
   if (!actor) return;
 
   const kinds = new Set(["wound", "bloodLoss", "forestall", "firstAid"]);
   const toDelete = _effects(actor).filter(e => kinds.has(String(e?.getFlag?.(FLAG_SCOPE, "wounds")?.kind ?? "")));
 
   if (!toDelete.length) return;
-  await actor.deleteEmbeddedDocuments("ActiveEffect", toDelete.map(e => e.id));
+  await requestDeleteEmbeddedDocuments(actor, "ActiveEffect", toDelete.map(e => e.id));
 
   // If we removed all wound-related markers, ensure the canonical actor flag is cleared.
   if (actor.system?.wounded) {
     try {
-      await actor.update({ "system.wounded": false });
+      await requestUpdateDocument(actor, { "system.wounded": false });
     } catch (err) {
       console.warn("UESRPG | Failed to clear system.wounded during clearAllWounds", err);
     }
@@ -798,13 +880,13 @@ async function _applyHealingForestall(actor, effectiveHealed) {
         }
       }
     });
-    await actor.createEmbeddedDocuments("ActiveEffect", [ef]);
+    await requestCreateEmbeddedDocuments(actor, "ActiveEffect", [ef]);
     return;
   }
 
   const cur = Math.max(0, _toNumber(existing.getFlag(FLAG_SCOPE, "wounds")?.remainingRounds ?? 0, 0));
   const next = cur + add;
-  await existing.update({
+  await requestUpdateDocument(existing, {
     name: `Wound Forestall (${next})`,
     [`${FLAG_PATH}.wounds.remainingRounds`]: next
   });
@@ -826,16 +908,22 @@ async function _advanceTreatedWoundHealing(actor, effectiveHealed) {
     const next = progress + heal;
 
     if (next >= damage) {
-      await ef.delete();
+      const appId = String(w.applicationId ?? "").trim();
+      await requestDeleteEmbeddedDocuments(actor, "ActiveEffect", [ef.id]);
+
+      // Chapter 5: once the wound is cured, remove wound-related Shock markers (except lost limbs/eyes/ears).
+      if (appId) {
+        await _removeShockMarkersForApplication(actor, appId, { removeLost: false });
+      }
       continue;
     }
 
-    await ef.update({ [`${FLAG_PATH}.wounds.progress`]: next });
+    await requestUpdateDocument(ef, { [`${FLAG_PATH}.wounds.progress`]: next });
   }
 
   // If no wounds remain, clear system.wounded (safe + deterministic).
   if (actor.system?.wounded && !_hasAnyWoundEffects(actor)) {
-    await actor.update({ "system.wounded": false });
+    await requestUpdateDocument(actor, { "system.wounded": false });
   }
 
   // Defensive invariant: when wounds are fully healed, remove any lingering blood loss / forestall.
@@ -876,7 +964,7 @@ async function _tickShockMarkers(actor) {
     const cur = Math.max(0, _toNumber(data.remainingTurns ?? 0, 0));
     if (cur <= 1) {
       try {
-        await ef.delete();
+        await requestDeleteEmbeddedDocuments(actor, "ActiveEffect", [ef.id]);
       } catch (err) {
         console.warn("UESRPG | Failed to delete expired shockStunned marker", err);
       }
@@ -884,10 +972,56 @@ async function _tickShockMarkers(actor) {
     }
     const next = cur - 1;
     try {
-      await ef.update({ [`${FLAG_PATH}.wounds.remainingTurns`]: next, name: "Stunned (Shock)" });
+      await requestUpdateDocument(ef, { [`${FLAG_PATH}.wounds.remainingTurns`]: next, name: "Stunned (Shock)" });
     } catch (err) {
       console.warn("UESRPG | Failed to tick shockStunned marker", err);
     }
+  }
+}
+
+
+async function _activateWoundPassiveState(actor, { resetBloodLoss = true } = {}) {
+  if (!actor) return;
+
+  // Passive effects begin after Shock Test resolution (Chapter 5: Passive Effects).
+  if (actor.system?.wounded !== true) {
+    try {
+      await requestUpdateDocument(actor, { "system.wounded": true });
+    } catch (err) {
+      console.warn("UESRPG | Failed to set system.wounded for passive wound state", err);
+    }
+  }
+
+  // Blood Loss countdown begins at the same moment.
+  if (resetBloodLoss) {
+    try {
+      await upsertBloodLoss(actor, { resetTo: 5 });
+    } catch (err) {
+      console.warn("UESRPG | Failed to start/reset Blood Loss after shock resolution", err);
+    }
+  }
+}
+
+async function _removeShockMarkersForApplication(actor, applicationId, { removeLost = false } = {}) {
+  if (!actor) return;
+  const appId = String(applicationId ?? "").trim();
+  if (!appId) return;
+
+  const toDelete = _effects(actor).filter((ef) => {
+    const wf = _woundsFlag(ef) ?? {};
+    if (String(wf.applicationId ?? "") !== appId) return false;
+    const kind = String(wf.kind ?? "");
+    if (kind === "shockCripple" || kind === "shockCrippleBody" || kind === "shockStunned") return true;
+    if (removeLost && (kind === "shockLostLimb" || kind === "shockLostEar" || kind === "shockLostEye")) return true;
+    return false;
+  });
+
+  if (!toDelete.length) return;
+
+  try {
+    await requestDeleteEmbeddedDocuments(actor, "ActiveEffect", toDelete.map(e => e.id));
+  } catch (err) {
+    console.warn("UESRPG | Failed to remove shock markers for wound", { appId, err });
   }
 }
 
@@ -981,9 +1115,12 @@ export async function resolveShockTestFromChat(...args) {
     magicNote = mr?.note ?? null;
   }
 
+  // Activate passive wound effects (Chapter 5: Passive Effects) now that Shock is resolved.
+  await _activateWoundPassiveState(actor, { resetBloodLoss: true });
+
   // Mark resolved on the wound effect to prevent double application.
   try {
-    await woundEf.update({
+    await requestUpdateDocument(woundEf, {
       [`${FLAG_PATH}.wounds.shockResolved`]: true,
       [`${FLAG_PATH}.wounds.shockResolvedAt`]: Date.now(),
       [`${FLAG_PATH}.wounds.shockPassed`]: passed
@@ -1020,15 +1157,23 @@ async function _tickForestall(actor) {
 
   const cur = Math.max(0, _toNumber(ef.getFlag(FLAG_SCOPE, "wounds")?.remainingRounds ?? 0, 0));
   if (cur <= 1) {
-    await ef.delete();
+    try {
+      await requestDeleteEmbeddedDocuments(actor, "ActiveEffect", [ef.id]);
+    } catch (_err) {
+      // Non-blocking: effect may already be gone.
+    }
     return;
   }
 
   const next = cur - 1;
-  await ef.update({
-    name: `Wound Forestall (${next})`,
-    [`${FLAG_PATH}.wounds.remainingRounds`]: next
-  });
+  try {
+    await requestUpdateDocument(ef, {
+      name: `Wound Forestall (${next})`,
+      [`${FLAG_PATH}.wounds.remainingRounds`]: next
+    });
+  } catch (err) {
+    console.warn("UESRPG | Wounds | Failed to tick Forestall", err);
+  }
 }
 
 async function _tickBloodLoss(actor) {
@@ -1046,24 +1191,42 @@ async function _tickBloodLoss(actor) {
 
   const cur = Math.max(0, _toNumber(ef.getFlag(FLAG_SCOPE, "wounds")?.remainingRounds ?? 0, 0));
   if (cur <= 1) {
-    await ef.delete();
-
-    // Drop to 0 HP via blood loss (idempotent).
+    // Blood Loss expires: drop to 0 HP and apply Unconscious (Chapter 5).
     const hp = _toNumber(actor.system?.hp?.value ?? 0, 0);
+
     if (hp > 0) {
-      await actor.update({ "system.hp.value": 0 });
-      await _ensureUnconsciousEffect(actor);
+      try {
+        await requestUpdateDocument(actor, { "system.hp.value": 0 });
+      } catch (err) {
+        console.warn("UESRPG | Wounds | Failed to set HP to 0 from Blood Loss", err);
+      }
+    }
+
+    // Always ensure Unconscious is present when Blood Loss resolves at 0 rounds.
+    await _ensureUnconsciousEffect(actor);
+
+    try {
       await ChatMessage.create({
         user: game.user.id,
         speaker: ChatMessage.getSpeaker({ actor }),
         content: `<div class="uesrpg-chat-card"><div class="header"><b>${actor.name}</b></div><div>Blood loss: HP dropped to 0.</div></div>`
       });
+    } catch (_e) {
+      // Non-blocking.
     }
+
+    // Best-effort delete (may already be removed by another cleanup path/module).
+    try {
+      await requestDeleteEmbeddedDocuments(actor, "ActiveEffect", [ef.id]);
+    } catch (_err) {
+      // Non-blocking.
+    }
+
     return;
   }
 
   const next = cur - 1;
-  await ef.update({
+  await requestUpdateDocument(ef, {
     name: `Blood Loss (${next})`,
     [`${FLAG_PATH}.wounds.remainingRounds`]: next
   });
@@ -1080,6 +1243,8 @@ export function canNaturalHeal(actor) {
 }
 
 export function registerWoundHooks() {
+  if (_woundHooksRegistered) return;
+  _woundHooksRegistered = true;
   Hooks.on("uesrpgDamageApplied", async (actor, data) => {
     try {
       if (!actor) return;
@@ -1098,13 +1263,24 @@ export function registerWoundHooks() {
       // Guard: post at most one shock card per wound application.
       if (w.shockPosted === true) return;
 
+      // Ensure every wound has a stable applicationId for linking Shock markers + cleanup.
+      let appId = String(w.applicationId ?? data?.applicationId ?? "").trim();
+      if (!appId) appId = String(woundDoc.id ?? "");
+      if (appId && !String(w.applicationId ?? "").trim()) {
+        try {
+          await requestUpdateDocument(woundDoc, { [`${FLAG_PATH}.wounds.applicationId`]: appId });
+        } catch (_e) {
+          // Non-blocking; proceed with local appId.
+        }
+      }
+
       const hitLocationNorm = _normalizeHitLocationKey(w.hitLocation ?? data?.hitLocation ?? "Body");
       const region = _hitRegionFromLocation(hitLocationNorm);
       const damageAppliedByType = data?.damageAppliedByType ?? null;
 
       // Persist details for later resolution (button click). This also provides idempotency.
       try {
-        await woundDoc.update({
+        await requestUpdateDocument(woundDoc, {
           [`${FLAG_PATH}.wounds.shockPosted`]: true,
           [`${FLAG_PATH}.wounds.shockPostedAt`]: Date.now(),
           [`${FLAG_PATH}.wounds.damageAppliedByType`]: damageAppliedByType
@@ -1117,7 +1293,7 @@ export function registerWoundHooks() {
       await _applyShockUnconditional(actor, {
         region,
         hitLocationNorm,
-        applicationId: data?.applicationId ?? null
+        applicationId: appId || null
       });
 
       // Post the shock test card to allow the target to roll END and apply conditional consequences.
@@ -1126,7 +1302,7 @@ export function registerWoundHooks() {
         woundEffect: woundDoc,
         hitLocationNorm,
         damageAppliedByType,
-        applicationId: data?.applicationId ?? null
+        applicationId: appId || null
       });
     } catch (err) {
       console.warn("UESRPG | Wound creation failed", err);

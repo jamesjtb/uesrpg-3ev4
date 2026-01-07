@@ -24,7 +24,8 @@ export async function doTestRoll(actor, { rollFormula = SYSTEM_ROLL_FORMULA, tar
 
   // Determine actor type / NPC status (deterministic)
   // Per project rules: NPCs use fixed critical bands; PCs use lucky/unlucky numbers.
-  const actorIsNPC = (actor?.type === "npc");
+  const actorType = String(actor?.type ?? "");
+  const actorIsNPC = (actorType.toLowerCase() === "npc");
 
   // Determine criticals via lucky/unlucky or NPC thresholds
   let isCriticalSuccess = false;
@@ -49,7 +50,13 @@ export async function doTestRoll(actor, { rollFormula = SYSTEM_ROLL_FORMULA, tar
 
   // Success / failure vs target
   const tn = Number(target || 0);
-  const isSuccess = (total <= tn);
+  // RAW hard rule for PC critical numbers: a critical success always succeeds regardless of TN.
+  // (Critical failure always fails regardless of TN.)
+  let isSuccess = (total <= tn);
+  if (!actorIsNPC) {
+    if (isCriticalSuccess) isSuccess = true;
+    if (isCriticalFailure) isSuccess = false;
+  }
 
   // Compute DoS / DoF (RAW) — TN>100: add tens digit of TN to DoS
   let degree = 0;
@@ -75,6 +82,81 @@ export async function doTestRoll(actor, { rollFormula = SYSTEM_ROLL_FORMULA, tar
     isCriticalSuccess,
     isCriticalFailure,
     degree,                // DoS when success, DoF when failure
+    textual: isSuccess ? `${degree} DoS` : `${degree} DoF`,
+    meta: {
+      actorId: actor?.id,
+      actorName: actor?.name,
+      actorIsNPC
+    }
+  };
+}
+
+/**
+ * Compute a deterministic DoS/DoF result from an already-known d100 total.
+ *
+ * This exists to support cross-user opposed workflows where the roll message is
+ * created successfully (Dice So Nice compatibility) but the originating opposed
+ * card cannot be updated by the rolling user due to document permissions.
+ *
+ * @param {Actor} actor
+ * @param {object} opts
+ * @param {number} opts.rollTotal
+ * @param {number} opts.target
+ * @param {boolean} [opts.allowLucky=true]
+ * @param {boolean} [opts.allowUnlucky=true]
+ * @returns {object} A result object with the same shape as doTestRoll (minus the Roll).
+ */
+export function computeResultFromRollTotal(actor, { rollTotal = 0, target = 0, allowLucky = true, allowUnlucky = true } = {}) {
+  const total = Number(rollTotal);
+  const tn = Number(target || 0);
+
+  const actorType = String(actor?.type ?? "");
+  const actorIsNPC = (actorType.toLowerCase() === "npc");
+
+  let isCriticalSuccess = false;
+  let isCriticalFailure = false;
+
+  if (!actorIsNPC && actor?.system) {
+    if (allowLucky) {
+      const luckyNums = Object.values(actor.system.lucky_numbers || {}).map(n => Number(n));
+      if (luckyNums.includes(total)) isCriticalSuccess = true;
+    }
+    if (allowUnlucky) {
+      const unluckyNums = Object.values(actor.system.unlucky_numbers || {}).map(n => Number(n));
+      if (unluckyNums.includes(total)) isCriticalFailure = true;
+    }
+  }
+
+  if (actorIsNPC && !isCriticalSuccess && !isCriticalFailure) {
+    if (total <= 3) isCriticalSuccess = true;
+    if (total >= 98) isCriticalFailure = true;
+  }
+
+  let isSuccess = (total <= tn);
+  if (!actorIsNPC) {
+    if (isCriticalSuccess) isSuccess = true;
+    if (isCriticalFailure) isSuccess = false;
+  }
+
+  let degree = 0;
+  if (isSuccess) {
+    const baseDos = Math.max(1, Math.floor(total / 10));
+    let tnTensBonus = 0;
+    if (tn > 100) tnTensBonus = Math.floor((tn % 100) / 10);
+    degree = baseDos + tnTensBonus;
+  } else {
+    const diff = Math.max(0, total - tn);
+    degree = 1 + Math.floor(diff / 10);
+  }
+
+  return {
+    roll: null,
+    rollTotal: total,
+    target: tn,
+    isSuccess,
+    isCriticalSuccess,
+    isCriticalFailure,
+    degree,
     textual: isSuccess ? `${degree} DoS` : `${degree} DoF`,
     meta: {
       actorId: actor?.id,
@@ -143,5 +225,6 @@ export function resolveOpposed(aResult, dResult) {
 window.Uesrpg3e = window.Uesrpg3e || {};
 window.Uesrpg3e.roll = window.Uesrpg3e.roll || {};
 window.Uesrpg3e.roll.doTestRoll = window.Uesrpg3e.roll.doTestRoll || doTestRoll;
+window.Uesrpg3e.roll.computeResultFromRollTotal = window.Uesrpg3e.roll.computeResultFromRollTotal || computeResultFromRollTotal;
 window.Uesrpg3e.roll.resolveOpposed = window.Uesrpg3e.roll.resolveOpposed || resolveOpposed;
 window.Uesrpg3e.roll.formatDegree = window.Uesrpg3e.roll.formatDegree || formatDegree;

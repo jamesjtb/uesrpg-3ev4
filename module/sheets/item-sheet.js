@@ -1,4 +1,5 @@
 import { UESRPG } from "../constants.js";
+import { SPECIAL_ACTIONS } from "../config/special-actions.js";
 
 /**
  * Extend the basic foundry.appv1.sheets.ItemSheet with some very simple modifications
@@ -12,7 +13,10 @@ export class SimpleItemSheet extends foundry.appv1.sheets.ItemSheet {
       classes: ["worldbuilding", "sheet", "item"],
       width: 480,
       height: 520,
-      tabs: [{ navSelector: ".sheet-tabs", contentSelector: ".sheet-body", initial: "description" }]
+      tabs: [{ navSelector: ".sheet-tabs", contentSelector: ".sheet-body", initial: "description" }],
+      // Explicitly keep core ItemSheet behavior deterministic.
+      // Some worlds/users run with non-default sheet settings; Combat Style editing relies on submit-on-close.
+      submitOnClose: true
     });
   }
 
@@ -81,6 +85,30 @@ export class SimpleItemSheet extends foundry.appv1.sheets.ItemSheet {
       data.ammoOptions = [];
     }
 
+
+    // --------------------------------------------
+    // Combat Style: Special Actions registry + safe defaults
+    // --------------------------------------------
+    if (data.item && data.item.type === "combatStyle") {
+      // Ensure schema lanes exist even for older items.
+      if (!Array.isArray(data.item.system.trainedEquipment)) data.item.system.trainedEquipment = ["","","","",""];
+      if (data.item.system.trainedEquipment.length < 5) {
+        data.item.system.trainedEquipment = (data.item.system.trainedEquipment.concat(["","","","",""]).slice(0, 5));
+      }
+      if (!data.item.system.specialAdvantages || typeof data.item.system.specialAdvantages !== "object") data.item.system.specialAdvantages = {};
+      data.specialActionsRegistry = SPECIAL_ACTIONS;
+      // Embedded Combat Style only: show whether this style is the Actor's active selection.
+      try {
+        if (data.item.actor) {
+          const activeId = data.item.actor.getFlag?.("uesrpg-3ev4", "activeCombatStyleId");
+          data.isActiveCombatStyle = Boolean(activeId && String(activeId) === String(data.item.id));
+        } else {
+          data.isActiveCombatStyle = false;
+        }
+      } catch (_e) {
+        data.isActiveCombatStyle = false;
+      }
+    }
     // --------------------------------------------
     // Ammunition: derived Price / Shot (from Price / 10)
     // --------------------------------------------
@@ -263,6 +291,34 @@ export class SimpleItemSheet extends foundry.appv1.sheets.ItemSheet {
     // Do NOT use setProperty here because it will create nested objects and may clobber other system fields.
     formData["system.qualitiesStructured"] = structured;
 
+    // ------------------------------------------------------------
+    // Combat Style: normalize Special Action known toggles
+    // ------------------------------------------------------------
+    if (this.item?.type === "combatStyle") {
+      // Checkboxes only submit checked fields; ensure missing keys are written as false
+      // so automation can rely on a deterministic map.
+      for (const sa of SPECIAL_ACTIONS) {
+        const k = `system.specialAdvantages.${sa.id}`;
+        const has = Object.prototype.hasOwnProperty.call(formData, k);
+        formData[k] = has ? Boolean(formData[k]) : false;
+      }
+
+      // Trained Equipment entries (5 slots)
+      // IMPORTANT:
+      // - Some older worlds/items may have trainedEquipment stored as a non-array type.
+      // - Dot-path updates like system.trainedEquipment.0 will NOT reliably coerce the backing
+      //   data into an Array in those cases.
+      // - Persist the whole lane as an Array to guarantee deterministic storage.
+      const te = [];
+      for (let i = 0; i < 5; i++) {
+        const key = `system.trainedEquipment.${i}`;
+        te.push(String(formData[key] ?? this.item.system?.trainedEquipment?.[i] ?? "").trim());
+        // Remove per-index keys so only the canonical array write remains.
+        delete formData[key];
+      }
+      formData["system.trainedEquipment"] = te;
+    }
+
     return super._updateObject(event, formData);
   }
 
@@ -280,7 +336,7 @@ export class SimpleItemSheet extends foundry.appv1.sheets.ItemSheet {
   /* -------------------------------------------- */
 
   /** @override */
-  activateListeners(html) {
+  async activateListeners(html) {
     super.activateListeners(html);
 
     // Ammunition: live update derived Price / Shot display when Price / 10 changes.
@@ -325,18 +381,83 @@ export class SimpleItemSheet extends foundry.appv1.sheets.ItemSheet {
 
     // Remove Contained Item from Container
     html.find(".remove-contained-item").click(this._onRemoveContainedItem.bind(this));
+    html.find(".delete-contained-item").click(this._onDeleteContainedItem.bind(this));
 
     // Update contained Items elements list (keeps the contents list updated if items are updated themselves)
     if (this.item && this.item.type === "container" && this.item.isOwned) {
-      this._updateContainedItemsList();
+      void this._updateContainedItemsList();
     }
 
     if (this.item && this.item.system && Object.prototype.hasOwnProperty.call(this.item.system, "containerStats") && this.item.type !== "container") {
-      this._pushContainedItemData();
+      // Keep parent container's embedded snapshot aligned with this item.
+      await this._pushContainedItemData();
     }
 
     // Active Effects (Effects tab)
     html.find(".effect-control").click(this._onEffectControl.bind(this));
+
+    // Combat Style: set active style on owner actor (Option 2)
+    if (this.item?.type === "combatStyle" && this.item.isOwned && this.actor) {
+      // Combat Style: auto-save UX
+      // NOTE: Using full-form submits on every keystroke causes disruptive rerenders and can appear
+      // like inputs are being "cleared". Instead, update only the changed lane(s) on change/blur.
+      // This keeps the UX stable and still provides deterministic persistence.
+
+      const equipInputs = html.find('input[name^="system.trainedEquipment."]');
+      const saInputs = html.find('input[type="checkbox"][name^="system.specialAdvantages."]');
+
+      const debouncedEquipUpdate = foundry.utils.debounce(async () => {
+        try {
+          // Persist as a canonical 5-slot array (see _updateObject for rationale).
+          const te = [];
+          for (let i = 0; i < 5; i++) {
+            const el = equipInputs.get(i);
+            te.push(String(el?.value ?? "").trim());
+          }
+          await this.item.update({ "system.trainedEquipment": te });
+        } catch (err) {
+          console.warn("UESRPG | Combat Style trainedEquipment auto-update failed", err);
+        }
+      }, 150);
+
+      // Persist on change (not per keystroke) to prevent input jitter or perceived "clearing".
+      // Users can type freely; the value is persisted when the field loses focus.
+      equipInputs.on("change", debouncedEquipUpdate);
+
+      // Prevent accidental form submit on Enter inside these fields.
+      equipInputs.on("keydown", (ev) => {
+        if (ev.key === "Enter") {
+          ev.preventDefault();
+          ev.currentTarget?.blur?.();
+        }
+      });
+
+      saInputs.on("change", async (ev) => {
+        try {
+          const el = ev.currentTarget;
+          const name = el?.name;
+          if (!name) return;
+          await this.item.update({ [name]: Boolean(el.checked) });
+        } catch (err) {
+          console.warn("UESRPG | Combat Style specialAdvantages auto-update failed", err);
+        }
+      });
+
+      html.find(".uesrpg-set-active-style").off("click.uesrpg").on("click.uesrpg", async (ev) => {
+        ev.preventDefault();
+        try {
+          await this.actor.setFlag("uesrpg-3ev4", "activeCombatStyleId", this.item.id);
+          ui.notifications?.info?.(`Active combat style set to: ${this.item.name}`);
+          // Re-render owning sheet to update Special Actions list + advantage injection lane.
+          this.actor.sheet?.render?.(false);
+          this.render(false);
+        } catch (err) {
+          console.error("UESRPG | Failed to set active combat style", { actor: this.actor?.uuid, item: this.item?.uuid, err });
+          ui.notifications?.error?.("Failed to set active combat style.");
+        }
+      });
+
+    }
   }
 
   /* -------------------------------------------- */
@@ -380,13 +501,14 @@ export class SimpleItemSheet extends foundry.appv1.sheets.ItemSheet {
         one: { label: "Cancel" },
         two: {
           label: "Create",
-          callback: html => {
+          callback: async html => {
             const sel = html[0].querySelector("#modifierSelect");
             const val = html[0].querySelector("#modifier-value");
             if (!sel || !val) return;
-            const skillObject = { name: sel.value, value: val.value };
-            this.item.system.skillArray.push(skillObject);
-            this.item.update({ "system.skillArray": this.item.system.skillArray });
+
+            const current = Array.isArray(this.item?.system?.skillArray) ? foundry.utils.deepClone(this.item.system.skillArray) : [];
+            const next = current.concat([{ name: sel.value, value: Number(val.value || 0) }]);
+            await this.item.update({ "system.skillArray": next });
           }
         }
       },
@@ -420,20 +542,19 @@ export class SimpleItemSheet extends foundry.appv1.sheets.ItemSheet {
     }
   }
 
-  _onDeleteModifier(event) {
+  async _onDeleteModifier(event) {
     event.preventDefault();
     const element = event.currentTarget;
     const modEntry = element.closest(".grid-container");
     if (!modEntry || !this.item || !this.item.system || !Array.isArray(this.item.system.skillArray)) return;
 
-    for (const entry of this.item.system.skillArray) {
-      if (entry.name === modEntry.getAttribute("id")) {
-        const index = this.item.system.skillArray.indexOf(entry);
-        if (index >= 0) this.item.system.skillArray.splice(index, 1);
-        this.item.update({ "system.skillArray": this.item.system.skillArray });
-        break;
-      }
-    }
+    const id = modEntry.getAttribute("id");
+    if (!id) return;
+
+    const current = foundry.utils.deepClone(this.item.system.skillArray);
+    const next = current.filter(e => e?.name !== id);
+    if (next.length === current.length) return;
+    await this.item.update({ "system.skillArray": next });
   }
 
   /* -------------------------------------------- */
@@ -462,26 +583,124 @@ export class SimpleItemSheet extends foundry.appv1.sheets.ItemSheet {
     return this.document.update({ "system.charge.value": currentCharge - this.item.system.charge.reduction });
   }
 
+
   /* -------------------------------------------- */
   /* Containers                                    */
   /* -------------------------------------------- */
 
+  /**
+   * Return the set of item types that are allowed to be placed into containers.
+   * We intentionally exclude non-physical "character build" items (skills, talents, traits, powers, etc).
+   *
+   * @returns {Set<string>}
+   */
+  static _containerAllowedTypes() {
+    return new Set(["item", "weapon", "armor", "ammunition"]);
+  }
+
+  /**
+   * Basic permission gate for modifying containment from an ItemSheet context.
+   * Containers are only meaningful when embedded on an Actor.
+   */
+  _canModifyContainment() {
+    return !!(this.options?.editable && this.item?.isOwned && this.actor && this.actor.isOwner);
+  }
+
+
+  /**
+   * Build a normalized, de-duplicated, actor-authoritative contained_items list for this container.
+   * - Removes missing/deleted item ids
+   * - De-duplicates ids
+   * - Adds any actor items which claim they are contained in this container but are missing from the list
+   * - Stores a plain-object snapshot (toObject) for stable rendering and diffs
+   *
+   * @returns {Promise<boolean>} whether an update was applied
+   */
+  async _repairContainerContainedItems() {
+    if (!this.item || this.item.type !== "container") return false;
+    if (!this.actor) return false;
+
+
+    const containerId = this.item.id;
+    const current = Array.isArray(this.item.system?.contained_items) ? this.item.system.contained_items : [];
+
+    const byId = new Map();
+
+    // Seed from current list (but validate against actor items + containerStats)
+    for (const entry of current) {
+      const id = entry?._id;
+      if (!id) continue;
+      if (byId.has(id)) continue;
+
+      const source = this.actor.items.get(id);
+      if (!source) continue;
+
+      const cs = source.system?.containerStats;
+      const isInThis = !!cs?.contained && (cs?.container_id === containerId);
+      if (!isInThis) continue;
+
+      byId.set(id, { _id: id, item: source.toObject() });
+    }
+
+    // Add any actor items that claim they are in this container but are missing from list
+    for (const source of this.actor.items) {
+      if (!source) continue;
+      if (source.type === "container") continue;
+      const cs = source.system?.containerStats;
+      const isInThis = !!cs?.contained && (cs?.container_id === containerId);
+      if (!isInThis) continue;
+      if (byId.has(source.id)) continue;
+      byId.set(source.id, { _id: source.id, item: source.toObject() });
+    }
+
+    const next = Array.from(byId.values());
+
+    // Detect meaningful change
+    const curIds = current.map(e => e?._id).filter(Boolean);
+    const nextIds = next.map(e => e?._id).filter(Boolean);
+    const changedIds = (curIds.length !== nextIds.length) || curIds.some((id, idx) => id !== nextIds[idx]);
+
+    // Also update if any snapshot modifiedTime differs (or missing snapshots)
+    let changedSnapshot = false;
+    if (!changedIds) {
+      for (const entry of next) {
+        const cur = current.find(e => e?._id === entry._id);
+        const curMT = cur?.item?._stats?.modifiedTime;
+        const nextMT = entry?.item?._stats?.modifiedTime;
+        if (curMT !== nextMT) { changedSnapshot = true; break; }
+      }
+    }
+
+    if (!changedIds && !changedSnapshot) return false;
+
+    await this.item.update({ "system.contained_items": next });
+    return true;
+  }
+
   _createContainerListDialog(bagListItems, tooLarge) {
     const tableEntries = [];
     for (const bagItem of bagListItems) {
+      const cs = bagItem?.system?.containerStats ?? { contained: false, container_id: "" };
+      const isContained = !!cs.contained;
+      const isInThisContainer = isContained && (cs.container_id === this.item._id);
+
+      const img = bagItem?.img || CONST.DEFAULT_TOKEN;
+      const qty = bagItem?.system?.quantity ?? 0;
+      const enc = bagItem?.system?.enc ?? 0;
+
       const entry = `<tr data-item-id="${bagItem._id}">
         <td data-item-id="${bagItem._id}">
           <div style="display: flex; flex-direction: row; align-items: center; gap: 5px;">
-            <img class="item-img" src="${bagItem.img}" height="24" width="24">
-            ${bagItem.system.containerStats.contained ? '<i class="fa-solid fa-backpack"></i>' : ""}
+            <img class="item-img" src="${img}" height="24" width="24">
+            ${isContained ? '<i class="fa-solid fa-backpack"></i>' : ""}
             ${bagItem.name}
           </div>
         </td>
         <td style="text-align: center;">${bagItem.type}</td>
-        <td style="text-align: center;">${bagItem.system.quantity}</td>
-        <td style="text-align: center;">${bagItem.system.enc}</td>
+        <td style="text-align: center;">${qty}</td>
+        <td style="text-align: center;">${enc}</td>
         <td style="text-align: center;">
-          <input type="checkbox" class="itemSelect container-select" data-item-id="${bagItem._id}" ${bagItem.system.containerStats.contained && bagItem.system.containerStats.container_id === this.item._id ? "checked" : ""}>
+          <input type="checkbox" class="itemSelect container-select" data-item-id="${bagItem._id}" ${isInThisContainer ? "checked" : ""}>
         </td>
       </tr>`;
       tableEntries.push(entry);
@@ -512,41 +731,77 @@ export class SimpleItemSheet extends foundry.appv1.sheets.ItemSheet {
       buttons: {
         one: {
           label: "Apply",
-          callback: () => {
-            const selectedItems = [...document.querySelectorAll(".itemSelect")];
-            const containedItemsList = [];
+          callback: async (html) => {
+            if (!this._canModifyContainment()) {
+              ui.notifications.warn("You do not have permission to modify container contents.");
+              return;
+            }
 
-            for (const i of selectedItems) {
-              let thisItem = null;
-              if (this.item.isOwned && this.actor) {
-                thisItem = this.actor.items.get(i.dataset.itemId) || null;
-              }
+            const root = html?.[0] ?? document;
+            const selectedInputs = [...root.querySelectorAll(".itemSelect")];
+
+            const allowedTypes = this.constructor._containerAllowedTypes();
+            const containerId = this.item.id;
+
+            // Apply changes per checkbox:
+            // - checked: set this container as owner; unlink from any previous container list
+            // - unchecked: only un-contain if currently in this container
+            for (const input of selectedInputs) {
+              const itemId = input?.dataset?.itemId;
+              if (!itemId) continue;
+
+              const thisItem = this.actor.items.get(itemId);
               if (!thisItem) continue;
 
-              if (i.checked) {
-                // If the item has an existing container, remove from that container list first
-                if ((thisItem.system && thisItem.system.containerStats ? thisItem.system.containerStats.container_id : null)) {
-                  const oldContainer = this.actor.items.get(thisItem.system.containerStats.container_id);
-                  if (oldContainer && Array.isArray(oldContainer.system.contained_items)) {
-                    const idx = oldContainer.system.contained_items.findIndex(ci => ci._id === thisItem._id);
-                    if (idx !== -1) {
-                      const next = oldContainer.system.contained_items.slice();
-                      next.splice(idx, 1);
-                      oldContainer.update({ "system.contained_items": next });
+              // Defensive: never allow containers to be contained (prevents cycles)
+              if (thisItem.type === "container") continue;
+
+              // Defensive: only allow physical inventory items
+              if (!allowedTypes.has(thisItem.type)) continue;
+              const thisCS = thisItem.system?.containerStats ?? {};
+              const currentContainerId = thisCS.container_id || "";
+              const isInThis = !!thisCS.contained && (currentContainerId === containerId);
+
+              if (input.checked) {
+                // Already in this container; nothing to do beyond ensuring fields are consistent
+                if (!isInThis) {
+                  // If the item belongs to another container, remove it from that container's list first
+                  if (currentContainerId) {
+                    const oldContainer = this.actor.items.get(currentContainerId);
+                    if (oldContainer && Array.isArray(oldContainer.system?.contained_items)) {
+                      const nextOld = oldContainer.system.contained_items.filter(ci => ci?._id !== thisItem.id);
+                      await oldContainer.update({ "system.contained_items": nextOld });
                     }
                   }
                 }
 
-                thisItem.update({
-                  "system.containerStats.contained": true,
-                  "system.containerStats.container_id": this.item._id,
-                  "system.containerStats.container_name": this.item.name
-                });
+                const updateData = {};
 
-                containedItemsList.push({ _id: thisItem._id, item: thisItem });
+
+                const csObj = thisItem.system?.containerStats;
+                const csValid = !!(csObj && typeof csObj === "object");
+
+                if (csValid) {
+                  updateData["system.containerStats.contained"] = true;
+                  updateData["system.containerStats.container_id"] = containerId;
+                  updateData["system.containerStats.container_name"] = this.item.name;
+                } else {
+                  // Backfill full object if legacy items lack containerStats
+                  updateData["system.containerStats"] = {
+                    contained: true,
+                    container_id: containerId,
+                    container_name: this.item.name
+                  };
+                }
+
+                // Storing an equipped item is not meaningful; force unequipped if boolean field exists
+                if (typeof thisItem.system?.equipped === "boolean") updateData["system.equipped"] = false;
+
+                await thisItem.update(updateData);
               } else {
-                if ((thisItem.system && thisItem.system.containerStats ? thisItem.system.containerStats.container_id : null) === this.item._id) {
-                  thisItem.update({
+                // Unchecked: only remove if currently in this container
+                if (isInThis) {
+                  await thisItem.update({
                     "system.containerStats.contained": false,
                     "system.containerStats.container_id": "",
                     "system.containerStats.container_name": ""
@@ -555,7 +810,8 @@ export class SimpleItemSheet extends foundry.appv1.sheets.ItemSheet {
               }
             }
 
-            this.item.update({ "system.contained_items": containedItemsList });
+            // Rebuild container list authoritatively from actor item.containerStats
+            await this._repairContainerContainedItems();
           }
         },
         two: { label: "Cancel" }
@@ -567,106 +823,167 @@ export class SimpleItemSheet extends foundry.appv1.sheets.ItemSheet {
   }
 
   _addToContainer() {
+    if (!this._canModifyContainment()) {
+      return ui.notifications.warn("Containers must be owned by an Actor and you must have permission to modify them.");
+    }
+
     const bagListItems = [];
     let tooLarge = false;
 
-    if (!this.item.isOwned) {
-      return ui.notifications.info("Containers must be owned by Actors in order to add items. This will be updated in the future.");
-    }
-    if (!this.actor) return;
-
+    const allowedTypes = this.constructor._containerAllowedTypes();
     const itemList = this.actor.items;
 
-    for (const i of itemList) {
-      if (i._id === this.item._id) continue;
-
-      const itemEnc = (i.system && i.system.enc != null) ? Number(i.system.enc) : 0;
-      const containerMaxEnc = (this.item.system && this.item.system.container_enc && this.item.system.container_enc.max != null)
+    const containerMaxEnc =
+      (this.item.system?.container_enc?.max != null)
         ? Number(this.item.system.container_enc.max)
         : 0;
 
-      if (itemEnc > containerMaxEnc) tooLarge = true;
+    for (const i of itemList) {
+      if (!i) continue;
+      if (i.id === this.item.id) continue;
 
-      const isContainer = !!(i.system && Object.prototype.hasOwnProperty.call(i.system, "containerStats") && i.type === "container");
-      if (itemEnc <= containerMaxEnc && !isContainer) {
+      // Never allow containers inside containers (prevents cycles)
+      if (i.type === "container") continue;
+
+      // Only physical inventory items
+      if (!allowedTypes.has(i.type)) continue;
+      const itemEnc = Number(i.system?.enc ?? 0);
+      const cs = i.system?.containerStats ?? {};
+      const isInThis = !!cs?.contained && (cs?.container_id === this.item.id);
+
+      // Always show items already in this container (even if over capacity) so the user can remove them.
+      if (isInThis) {
         bagListItems.push(i);
+        continue;
       }
+
+      if (itemEnc > containerMaxEnc) {
+        tooLarge = true;
+        continue;
+      }
+
+      bagListItems.push(i);
     }
 
     this._createContainerListDialog(bagListItems, tooLarge);
   }
 
-  _onRemoveContainedItem(event) {
+  /**
+   * Remove an item from this container (does not delete it).
+   */
+  async _onRemoveContainedItem(event) {
     event.preventDefault();
-    const element = event.currentTarget;
-    const row = element.closest(".item");
-    if (!row) return;
-    const removedItemId = row.dataset.itemId;
-    if (!this.item || !this.item.system || !Array.isArray(this.item.system.contained_items)) return;
+    if (!this._canModifyContainment()) {
+      ui.notifications.warn("You do not have permission to modify container contents.");
+      return;
+    }
 
-    const indexToRemove = this.item.system.contained_items.findIndex(item => item._id === removedItemId);
-    if (indexToRemove === -1) return;
+    const row = event.currentTarget?.closest?.(".item");
+    const removedItemId = row?.dataset?.itemId;
+    if (!removedItemId) return;
+    if (!this.actor) return;
 
-    // Update the container item contents list
-    const next = this.item.system.contained_items.slice();
-    next.splice(indexToRemove, 1);
-    this.item.update({ "system.contained_items": next });
-
-    // Update the contained item's status
-    const itemToUpdate = this.actor ? this.actor.items.get(removedItemId) : null;
+    const itemToUpdate = this.actor.items.get(removedItemId);
     if (itemToUpdate) {
-      itemToUpdate.update({
+      await itemToUpdate.update({
         "system.containerStats.contained": false,
         "system.containerStats.container_id": "",
         "system.containerStats.container_name": ""
       });
     }
-    this._updateContainedItemsList();
+
+    await this._repairContainerContainedItems();
   }
 
-  _updateContainedItemsList() {
-    if (!this.item || !this.item.system || !Array.isArray(this.item.system.contained_items)) return;
-    if (!this.actor) return;
-
-    const updatedContainedList = [];
-    let wasChanged = false;
-
-    for (const item of this.item.system.contained_items) {
-      const sourceItem = this.actor.items.get(item._id);
-      if (!sourceItem) continue;
-
-      // diffObject expects plain objects; we compare stored snapshot vs current to detect change
-      const diff = foundry.utils.diffObject(item.item, sourceItem);
-      if (diff && diff._stats && diff._stats.modifiedTime) wasChanged = true;
-
-      updatedContainedList.push({ _id: sourceItem._id, item: sourceItem });
+  /**
+   * Delete a contained item from the Actor (destructive).
+   */
+  async _onDeleteContainedItem(event) {
+    event.preventDefault();
+    if (!this._canModifyContainment()) {
+      ui.notifications.warn("You do not have permission to modify container contents.");
+      return;
     }
 
-    // Bail if there are no updates to avoid infinite loop
-    if (!wasChanged) return;
+    const row = event.currentTarget?.closest?.(".item");
+    const deletedItemId = row?.dataset?.itemId;
+    if (!deletedItemId) return;
+    if (!this.actor) return;
 
-    this.item.update({ "system.contained_items": updatedContainedList });
+    const itemDoc = this.actor.items.get(deletedItemId);
+    const itemName = itemDoc?.name || "this item";
+
+    const d = new Dialog({
+      title: "Delete Item",
+      content: `<p>Delete <strong>${itemName}</strong>? This cannot be undone.</p>`,
+      buttons: {
+        cancel: { label: "Cancel" },
+        delete: {
+          label: "Delete",
+          callback: async () => {
+            await this.actor.deleteEmbeddedDocuments("Item", [deletedItemId]);
+            await this._repairContainerContainedItems();
+          }
+        }
+      },
+      default: "cancel"
+    });
+
+    d.render(true);
   }
 
-  _pushContainedItemData() {
+  /**
+   * Keep this container's contained_items snapshot in sync with owned items.
+   * This is intentionally conservative to avoid render-loop churn.
+   */
+  async _updateContainedItemsList() {
+    if (!this.item || this.item.type !== "container") return;
     if (!this.actor) return;
-    if (!this.item || !this.item.system || !this.item.system.containerStats) return;
 
-    // Refreshes content from a stored item to the container item on stored item refresh
+    // Repair first (removes ghost ids / dedupes / adds missing)
+    const repaired = await this._repairContainerContainedItems();
+    if (repaired) return;
+
+    const current = Array.isArray(this.item.system?.contained_items) ? this.item.system.contained_items : [];
+    let changed = false;
+    const next = [];
+
+    for (const entry of current) {
+      const id = entry?._id;
+      if (!id) { changed = true; continue; }
+      const source = this.actor.items.get(id);
+      if (!source) { changed = true; continue; }
+
+      const sourceObj = source.toObject();
+      const curMT = entry?.item?._stats?.modifiedTime;
+      const nextMT = sourceObj?._stats?.modifiedTime;
+      if (curMT !== nextMT) changed = true;
+
+      next.push({ _id: id, item: sourceObj });
+    }
+
+    if (!changed) return;
+    await this.item.update({ "system.contained_items": next });
+  }
+
+  async _pushContainedItemData() {
+    if (!this.actor) return;
+    if (!this.item?.system?.containerStats) return;
+    if (this.item.type === "container") return;
+
     const containerId = this.item.system.containerStats.container_id;
     if (!containerId) return;
 
     const containerItem = this.actor.items.get(containerId);
     if (!containerItem) return;
 
-    if (!Array.isArray(containerItem.system.contained_items)) return;
+    const current = Array.isArray(containerItem.system?.contained_items) ? containerItem.system.contained_items : [];
+    const itemId = this.item.id;
 
-    const idx = containerItem.system.contained_items.findIndex(ci => ci._id === this.item._id);
-    if (idx === -1) return;
+    const nextEntry = { _id: itemId, item: this.item.toObject() };
 
-    const next = containerItem.system.contained_items.slice();
-    next.splice(idx, 1, { _id: this.item._id, item: this.item });
-    containerItem.update({ "system.contained_items": next });
+    const next = current.filter(ci => ci?._id !== itemId).concat([nextEntry]);
+    await containerItem.update({ "system.contained_items": next });
   }
 
   /* -------------------------------------------- */

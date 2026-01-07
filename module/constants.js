@@ -375,6 +375,7 @@ export const UESRPG = {
       { key: "small", label: "Small" },
       { key: "snare", label: "Snare" },
       { key: "thrown", label: "Thrown" },
+      { key: "twoHanded", label: "Two-Handed" },
       { key: "unwieldy", label: "Unwieldy" }
     ],
     armor: [

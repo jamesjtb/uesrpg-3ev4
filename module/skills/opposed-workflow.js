@@ -10,11 +10,12 @@
  *  - Uses DoS/DoF results for both targeted and untargeted skill rolls.
  */
 
-import { doTestRoll, resolveOpposed, formatDegree } from "../helpers/degree-roll-helper.js";
+import { doTestRoll, resolveOpposed, formatDegree, computeResultFromRollTotal } from "../helpers/degree-roll-helper.js";
 import { computeSkillTN, SKILL_DIFFICULTIES } from "./skill-tn.js";
 import { requireUserCanRollActor } from "../helpers/permissions.js";
 import { hasCondition } from "../conditions/condition-engine.js";
 import { buildSkillRollRequest, normalizeSkillRollOptions, skillRollDebug, validateSkillRollRequest } from "./roll-request.js";
+import { safeUpdateChatMessage } from "../helpers/chat-message-socket.js";
 
 const _SKILL_ROLL_SETTINGS_NS = "uesrpg-3ev4";
 const _FLAG_NS = "uesrpg-3ev4";
@@ -62,6 +63,14 @@ function _mergeLastSkillRollOptions(patch={}) {
   return next;
 }
 
+function _skillOpposedMetaFlag(parentMessageId, stage, extra = null) {
+  const base = { parentMessageId, stage };
+  const skillOpposedMeta = (extra && typeof extra === "object")
+    ? foundry.utils.mergeObject(base, extra, { inplace: false })
+    : base;
+  return { skillOpposedMeta };
+}
+
 
 function _resolveDoc(uuid) {
   if (!uuid) return null;
@@ -91,6 +100,21 @@ function _canControlActor(actor) {
   return game.user.isGM || actor?.isOwner;
 }
 
+
+function _userHasActorOwnership(user, actor) {
+  try {
+    if (!user || !actor) return false;
+    if (user.isGM) return true;
+    if (typeof actor.testUserPermission === 'function') {
+      return actor.testUserPermission(user, CONST.DOCUMENT_OWNERSHIP_LEVELS.OWNER);
+    }
+    const level = Number(actor?.ownership?.[user.id] ?? 0);
+    return level >= CONST.DOCUMENT_OWNERSHIP_LEVELS.OWNER;
+  } catch (_e) {
+    return false;
+  }
+}
+
 function _fmtDegree(res) {
   return formatDegree(res);
 }
@@ -112,7 +136,7 @@ function _renderDeclared(declared, tnObj) {
 
 function _btn(label, action, extraDataset = {}) {
   const ds = Object.entries(extraDataset)
-    .map(([k, v]) => `data-${k}="${String(v).replace(/\"/g, "&quot;")}"`)
+    .map(([k, v]) => `data-${k}="${String(v).replace(/"/g, "&quot;")}"`)
     .join(" ");
   return `<button type="button" data-ues-skill-opposed-action="${action}" ${ds}>${label}</button>`;
 }
@@ -147,7 +171,19 @@ function _renderCard(data, messageId) {
 
   const outcomeLine = data.outcome
     ? `<div style="margin-top:10px;"><b>Outcome:</b> ${data.outcome.text ?? ""}</div>`
-    : `<div style="margin-top:10px;"><i>Pending</i></div>`;
+    : (() => {
+        const phase = String(data?.context?.phase ?? "pending");
+        const waitingSince = Number(data?.context?.waitingSince ?? 0);
+        const ageMs = waitingSince ? (Date.now() - waitingSince) : 0;
+        const isWaiting = (phase === "waitingdefender" || phase === "waitingDefender");
+        const isStale = isWaiting && ageMs > 60_000;
+        const note = isStale
+          ? `<div style="margin-top:6px; font-size:12px; opacity:0.85;">
+               Still waiting on the defender result. If this persists, ensure the defender roll message was posted, and have the attacker refresh the page to re-render the card.
+             </div>`
+          : "";
+        return `<div style="margin-top:10px;"><i>Pending</i></div>${note}`;
+      })();
 
   return `
   <div class="ues-skill-opposed-card" data-message-id="${messageId}" style="padding:6px 6px;">
@@ -188,11 +224,15 @@ async function _updateCard(message, data) {
   data.context.schemaVersion = data.context.schemaVersion ?? _CARD_VERSION;
   data.context.updatedAt = Date.now();
   data.context.updatedBy = game.user.id;
+  // Ensure strict ordering for rapid successive updates where Date.now() can collide.
+  data.context.updatedSeq = (Number(data.context.updatedSeq) || 0) + 1;
 
-  await message.update({
+  const payload = {
     content: _renderCard(data, message.id),
     flags: { [_FLAG_NS]: { [_FLAG_KEY]: { version: _CARD_VERSION, state: data } } }
-  });
+  };
+
+  await safeUpdateChatMessage(message, payload);
 }
 
 function _hasSpecializations(skillItem) {
@@ -239,7 +279,7 @@ async function _skillRollDialog({
       <div class="form-group" style="margin-top:8px;">
         <label style="display:flex; align-items:center; gap:8px;">
           <input type="checkbox" name="useSpec" ${specChecked} ${specDisabled ? "disabled" : ""} />
-          <span><b>Use Specialization</b> (+10)${specDisabled ? " <span style=\"opacity:0.75;\">(none on this skill)</span>" : ""}</span>
+          <span><b>Use Specialization</b> (+10)${specDisabled ? ' <span style="opacity:0.75;">(none on this skill)</span>' : ""}</span>
         </label>
       </div>`;
   const hasBlinded = actor ? hasCondition(actor, "blinded") : false;
@@ -414,6 +454,173 @@ function _resolveOutcome(data) {
 }
 
 export const SkillOpposedWorkflow = {
+  /**
+   * Bank an externally-created roll message (attacker-roll / defender-roll) into
+   * the parent opposed skill card.
+   *
+   * This is intended to be executed by the active GM (when present) or by the
+   * parent message author (when no GM is active) from a createChatMessage hook.
+   *
+   * @param {ChatMessage} rollMessage
+   */
+  async applyExternalRollMessage(rollMessage) {
+    const meta = rollMessage?.flags?.["uesrpg-3ev4"]?.skillOpposedMeta ?? null;
+    const parentId = meta?.parentMessageId ?? null;
+    const stage = meta?.stage ?? null;
+
+    const rollId = rollMessage?.id ?? rollMessage?._id ?? null;
+    if (!parentId || !stage) return;
+
+    const parent = game.messages.get(parentId) ?? null;
+    if (!parent) return;
+
+    const raw = parent?.flags?.[_FLAG_NS]?.[_FLAG_KEY];
+    const normalized = _normalizeCardFlag(raw);
+    const current = normalized.state;
+    if (!current || typeof current !== "object") return;
+
+
+
+    // Anti-spoof + consistency checks: only bank roll messages that match the expected side.
+    const expectedSide = (stage === "attacker-roll")
+      ? current.attacker
+      : (stage === "defender-roll" ? current.defender : null);
+
+    if (!expectedSide?.actorUuid) return;
+
+    const expectedActor = _resolveActor(expectedSide.actorUuid);
+    if (!expectedActor) return;
+
+    const speakerActorId = rollMessage?.speaker?.actor ?? null;
+    if (speakerActorId && speakerActorId !== expectedActor.id) return;
+
+    const authorId =
+  rollMessage?.author?.id ??
+  rollMessage?.user?.id ??
+  (typeof rollMessage?.user === "string" ? rollMessage.user : null) ??
+  rollMessage?._source?.user ??
+  rollMessage?.data?.user ??
+  null;
+const authorUser = authorId ? (game.users.get(authorId) ?? null) : null;
+if (!authorUser) return;
+
+    if (!authorUser.isGM && !_userHasActorOwnership(authorUser, expectedActor)) return;
+
+    const data = foundry.utils.deepClone(current);
+
+    let dirty = false;
+
+    const applyResult = async (side) => {
+      if (!side?.actorUuid) return null;
+
+      let actor = null;
+      try {
+        const doc = fromUuidSync(side.actorUuid);
+        actor = (doc?.documentName === "Actor") ? doc : (doc?.actor ?? null);
+      } catch (_e) {
+        actor = null;
+      }
+      if (!actor) return null;
+
+      const roll = rollMessage?.rolls?.[0] ?? null;
+      const rollTotal = Number(roll?.total ?? NaN);
+      if (!Number.isFinite(rollTotal)) return null;
+
+      const target = Number(side?.tn?.finalTN ?? 0);
+      const res = computeResultFromRollTotal(actor, {
+        rollTotal,
+        target,
+        allowLucky: true,
+        allowUnlucky: true
+      });
+
+      return {
+        rollTotal: res.rollTotal,
+        target: res.target,
+        isSuccess: res.isSuccess,
+        degree: res.degree,
+        textual: res.textual,
+        isCriticalSuccess: res.isCriticalSuccess,
+        isCriticalFailure: res.isCriticalFailure
+      };
+    };
+
+    // Apply commit payload (TN, labels, etc.) before evaluating DoS/DoF.
+    // This is required when the roller cannot update the parent card directly.
+    if (stage === "defender-roll") {
+      const c = meta?.commit?.defender ?? null;
+      if (c && typeof c === "object") {
+        data.defender = data.defender ?? {};
+        if (c.skillUuid != null) data.defender.skillUuid = String(c.skillUuid);
+        if (c.skillLabel != null) data.defender.skillLabel = String(c.skillLabel);
+        if (c.declared && typeof c.declared === "object") data.defender.declared = foundry.utils.deepClone(c.declared);
+        if (c.tn && typeof c.tn === "object") data.defender.tn = foundry.utils.deepClone(c.tn);
+      }
+    }
+
+    if (stage === "attacker-roll") {
+      if (data.attacker?.result) {
+        if (!data.attacker.rollMessageId && rollId) {
+          data.attacker.rollMessageId = rollId;
+          data.attacker.rolledAt = Date.now();
+          dirty = true;
+        } else {
+          return;
+        }
+      } else {
+        const r = await applyResult(data.attacker);
+        if (!r) return;
+        data.attacker.result = r;
+        if (rollId) {
+          data.attacker.rollMessageId = rollId;
+          data.attacker.rolledAt = Date.now();
+        }
+        dirty = true;
+      }
+    } else if (stage === "defender-roll") {
+      if (data.defender?.result) {
+        if (!data.defender.rollMessageId && rollId) {
+          data.defender.rollMessageId = rollId;
+          data.defender.rolledAt = Date.now();
+          dirty = true;
+        } else {
+          return;
+        }
+      } else {
+        const r = await applyResult(data.defender);
+        if (!r) return;
+        data.defender.result = r;
+        if (rollId) {
+          data.defender.rollMessageId = rollId;
+          data.defender.rolledAt = Date.now();
+        }
+        dirty = true;
+      }
+    } else {
+      return;
+    }
+
+    // Phase tracking (non-breaking; used for diagnostics).
+    data.context = data.context ?? {};
+    if (stage === "attacker-roll") {
+      data.context.phase = "waitingDefender";
+      if (!data.context.waitingSince) data.context.waitingSince = Date.now();
+    }
+    if (stage === "defender-roll") {
+      if (!data.context.phase || data.context.phase === "pending") data.context.phase = "resolving";
+    }
+
+    if (data.attacker?.result && data.defender?.result && !data.outcome) {
+      data.outcome = _resolveOutcome(data);
+      data.status = "resolved";
+      data.context = data.context ?? {};
+      data.context.phase = "resolved";
+      if (!data.context.resolvedAt) data.context.resolvedAt = Date.now();
+    }
+
+    await _updateCard(parent, data);
+  },
+
   async createPending(cfg = {}) {
     const aDoc = _resolveDoc(cfg.attackerTokenUuid) ?? _resolveDoc(cfg.attackerActorUuid) ?? _resolveDoc(cfg.attackerUuid);
     const dDoc = _resolveDoc(cfg.defenderTokenUuid) ?? _resolveDoc(cfg.defenderActorUuid) ?? _resolveDoc(cfg.defenderUuid);
@@ -434,7 +641,9 @@ export const SkillOpposedWorkflow = {
         createdAt: Date.now(),
         createdBy: game.user.id,
         updatedAt: Date.now(),
-        updatedBy: game.user.id
+        updatedBy: game.user.id,
+        phase: "pending",
+        waitingSince: null
       },
       status: "pending",
       mode: "skill",
@@ -506,7 +715,6 @@ export const SkillOpposedWorkflow = {
       ui.notifications.warn("Opposed Skill Test: could not resolve actors.");
       return;
     }
-
     if (action === "attacker-roll") {
       if (data.attacker.result) return;
       if (!requireUserCanRollActor(game.user, attacker)) return;
@@ -606,7 +814,13 @@ export const SkillOpposedWorkflow = {
       await res.roll.toMessage({
         speaker: ChatMessage.getSpeaker({ actor: attacker, token: aToken?.document ?? null }),
         flavor: `${data.attacker.skillLabel} — Opposed Skill (Actor)`,
-        flags: { uesrpg: { rollRequest: request }, "uesrpg-3ev4": { rollRequest: request } },
+        flags: {
+          uesrpg: { rollRequest: request },
+          "uesrpg-3ev4": {
+            rollRequest: request,
+            ..._skillOpposedMetaFlag(message.id, "attacker-roll")
+          }
+        },
         rollMode: game.settings.get("core", "rollMode")
       });
 
@@ -719,7 +933,22 @@ export const SkillOpposedWorkflow = {
       await res.roll.toMessage({
         speaker: ChatMessage.getSpeaker({ actor: defender, token: dToken?.document ?? null }),
         flavor: `${data.defender.skillLabel} — Opposed Skill (Target)`,
-        flags: { uesrpg: { rollRequest: request }, "uesrpg-3ev4": { rollRequest: request } },
+        flags: {
+          uesrpg: { rollRequest: request },
+          "uesrpg-3ev4": {
+            rollRequest: request,
+            ..._skillOpposedMetaFlag(message.id, "defender-roll", {
+              commit: {
+                defender: {
+                  skillUuid: data.defender.skillUuid,
+                  skillLabel: data.defender.skillLabel,
+                  declared: data.defender.declared,
+                  tn
+                }
+              }
+            })
+          }
+        },
         rollMode: game.settings.get("core", "rollMode")
       });
 
