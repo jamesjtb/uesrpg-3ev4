@@ -623,4 +623,39 @@ Hooks.once("ready", async () => {
   registerActorSelectDebug();
   }
 });
+
+// Auto-execute Special Action outcomes when skill opposed test resolves
+Hooks.on("createChatMessage", async (message) => {
+  // Auto-execute Special Action outcomes when skill opposed test resolves
+  const state = message?.flags?.["uesrpg-3ev4"]?.skillOpposed?.state;
+  if (!state?.outcome || !state?.specialActionId) return;
+
+  try {
+    const { executeSpecialAction } = await import("../combat/special-actions-helper.js");
+    
+    const attacker = fromUuidSync(state.attacker?.actorUuid);
+    const defender = fromUuidSync(state.defender?.actorUuid);
+    
+    if (!attacker || !defender) return;
+
+    const result = await executeSpecialAction({
+      specialActionId: state.specialActionId,
+      actor: attacker,
+      target: defender,
+      isAdvantageMode: false,
+      opposedResult: state.outcome
+    });
+
+    if (result.success) {
+      await ChatMessage.create({
+        user: game.user.id,
+        speaker: ChatMessage.getSpeaker({ actor: attacker }),
+        content: `<div class="uesrpg-special-action-outcome"><b>Special Action Outcome:</b><p>${result.message}</p></div>`,
+        style: CONST.CHAT_MESSAGE_STYLES.OTHER
+      });
+    }
+  } catch (err) {
+    console.error("UESRPG | Failed to execute Special Action outcome automation", err);
+  }
+});
 }
