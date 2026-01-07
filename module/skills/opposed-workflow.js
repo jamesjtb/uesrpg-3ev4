@@ -1024,29 +1024,6 @@ if (!authorUser) return;
       if (data.defender.result) return;
       if (!requireUserCanRollActor(game.user, defender, { message: "You do not have permission to roll for the target actor." })) return;
       
-      // CORRECTED: Check if this is a Special Action requiring defender choice
-      if (data.requireDefenderChoice && data.specialActionId) {
-        const { showPreTestChoiceDialog } = await import("../combat/special-actions-helper.js");
-        const defenderChoice = await showPreTestChoiceDialog({
-          specialActionId: data.specialActionId,
-          actor: defender,
-          isDefender: true
-        });
-
-        if (!defenderChoice) return; // User cancelled
-
-        // Update state with defender's chosen skill
-        data.defender.skillUuid = defenderChoice.skillUuid;
-        const testLabel = defenderChoice.testType === "combatStyle" || defenderChoice.testType === "combatProfession"
-          ? "Combat Style"
-          : defenderChoice.testType.charAt(0).toUpperCase() + defenderChoice.testType.slice(1);
-        data.defender.skillLabel = testLabel;
-        data.defender.testType = defenderChoice.testType;
-        data.requireDefenderChoice = false; // Mark as chosen
-
-        await _updateCard(message, data);
-      }
-      
       // For Special Actions, check if defender skill is already locked in
       const isSpecialAction = Boolean(data?.specialActionId);
       
@@ -1083,12 +1060,11 @@ if (!authorUser) return;
       if (quick) {
         decl = { skillUuid: selectedSkillUuid, difficultyKey: defaults.difficultyKey, manualMod: defaults.manualMod, useSpec: defaults.useSpec };
       } else {
-        // If defender already chose via pre-test dialog, skip skill selection
-        const skipSkillSelect = Boolean(lockedSkillUuid && data.requireDefenderChoice === false);
+        // Always show skill selection dropdown (removed pre-choice dialog dependency)
         decl = await _skillRollDialog({
           title: `Oppose — Choose Skill`,
           actor: defender,
-          showSkillSelect: !skipSkillSelect, // Hide skill selection if already chosen
+          showSkillSelect: true,
           skills,
           selectedSkillUuid,
           allowSpecialization: true,
