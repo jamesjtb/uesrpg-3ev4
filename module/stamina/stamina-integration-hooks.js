@@ -55,13 +55,18 @@ export async function applyPhysicalExertionToSkill(actor, skillItem) {
   // Don't apply to Combat Style
   if (skillItem.type === 'combatStyle') return 0;
   
-  const characteristic = skillItem.system?.characteristic;
-  if (!characteristic) return 0;
+  // Check governing characteristic (baseCha or governingCha)
+  const governingRaw = String(skillItem.system?.governingCha || skillItem.system?.baseCha || "");
+  const governing = governingRaw.trim().toLowerCase();
   
-  const charId = String(characteristic).toLowerCase();
+  if (!governing) return 0;
   
   // Physical Exertion only applies to STR/END based skills
-  if (charId !== 'str' && charId !== 'end') return 0;
+  // Match whole tokens to handle both single values ("str") and lists ("str, agi")
+  const isStrBased = /\bstr\b|\bstrength\b/.test(governing);
+  const isEndBased = /\bend\b|\bendurance\b/.test(governing);
+  
+  if (!isStrBased && !isEndBased) return 0;
   
   const effect = getActiveStaminaEffect(actor, STAMINA_EFFECT_KEYS.PHYSICAL_EXERTION);
   if (!effect) return 0;
