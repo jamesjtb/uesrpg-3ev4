@@ -589,10 +589,10 @@ export async function initiateSpecialActionFromSheet({
  * @param {Actor} target - The actor who was bashed
  */
 async function _createBashAcrobaticsTest(target) {
-  // Find Acrobatics skill
+  // Find Acrobatics skill (exact match, case-insensitive)
   const acrobatics = target.items.find(i => 
     i.type === "skill" && 
-    i.name.toLowerCase().includes("acrobatics")
+    String(i.name || "").trim().toLowerCase() === "acrobatics"
   );
 
   if (!acrobatics) {
