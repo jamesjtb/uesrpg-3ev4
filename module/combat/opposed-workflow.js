@@ -4513,7 +4513,7 @@ if (stage === "attacker-roll") {
       // Execute Special Advantage automation (free + auto-win)
       if (Array.isArray(selection.specialActionsSelected) && selection.specialActionsSelected.length > 0) {
         try {
-          const { showSpecialAdvantageDialog, executeSpecialAction, createSpecialActionOpposedTest } = await import("./special-actions-helper.js");
+          const { showSpecialAdvantageDialog, executeSpecialAction } = await import("./special-actions-helper.js");
           const defenderActor = _resolveDoc(data?.defender?.actorUuid);
           
           for (const saId of selection.specialActionsSelected) {
@@ -4521,7 +4521,14 @@ if (stage === "attacker-roll") {
             if (!choice) continue;
 
             if (choice.mode === "autowin") {
-              // Auto-win: skip test, automatic success
+              // Auto-Win: consume 1 AP, skip test, auto-succeed
+              const { ActionEconomy } = await import("./action-economy.js");
+              const def = getSpecialActionById(saId);
+              await ActionEconomy.spendAP(attacker, 1, { 
+                reason: `Special Advantage: ${def?.name} (Auto-Win)`, 
+                silent: false 
+              });
+
               const result = await executeSpecialAction({
                 specialActionId: saId,
                 actor: attacker,
@@ -4539,21 +4546,41 @@ if (stage === "attacker-roll") {
                 });
               }
             } else if (choice.mode === "free") {
-              // Free action: initiate opposed test (no AP cost)
+              // Free Action: 0 AP, initiate opposed test normally
               const attackerTokenUuid = data.attacker?.tokenUuid ?? null;
               const defenderTokenUuid = data.defender?.tokenUuid ?? null;
               const attackerToken = attackerTokenUuid ? fromUuidSync(attackerTokenUuid)?.object : null;
               const defenderToken = defenderTokenUuid ? fromUuidSync(defenderTokenUuid)?.object : null;
 
               if (attackerToken && defenderToken) {
-                await createSpecialActionOpposedTest({
-                  specialActionId: saId,
-                  attackerToken,
-                  defenderToken,
-                  isFreeAction: true
+                const { SkillOpposedWorkflow } = await import("../skills/opposed-workflow.js");
+                const def = getSpecialActionById(saId);
+                
+                const message = await SkillOpposedWorkflow.createPending({
+                  attackerTokenUuid: attackerToken?.document?.uuid ?? attackerToken?.uuid,
+                  defenderTokenUuid: defenderToken?.document?.uuid ?? defenderToken?.uuid,
+                  attackerSkillUuid: null,
+                  attackerSkillLabel: `${def?.name} (Special Advantage)`
                 });
 
-                const def = getSpecialActionById(saId);
+                const state = message?.flags?.["uesrpg-3ev4"]?.skillOpposed?.state;
+                if (state) {
+                  state.specialActionId = saId;
+                  state.allowCombatStyle = true;
+                  state.isFreeAction = true;
+
+                  await message.update({
+                    flags: {
+                      "uesrpg-3ev4": {
+                        skillOpposed: {
+                          version: state.version ?? 1,
+                          state
+                        }
+                      }
+                    }
+                  });
+                }
+
                 ui.notifications.info(`Special Advantage: ${def?.name} used as free action.`);
               }
             }
@@ -4895,14 +4922,21 @@ const dmgMsg = await ChatMessage.create({
       // Execute Special Advantage automation for defender (free + auto-win)
       if (Array.isArray(choice.specialActionsSelected) && choice.specialActionsSelected.length > 0) {
         try {
-          const { showSpecialAdvantageDialog, executeSpecialAction, createSpecialActionOpposedTest } = await import("./special-actions-helper.js");
+          const { showSpecialAdvantageDialog, executeSpecialAction } = await import("./special-actions-helper.js");
           
           for (const saId of choice.specialActionsSelected) {
             const advChoice = await showSpecialAdvantageDialog(saId);
             if (!advChoice) continue;
 
             if (advChoice.mode === "autowin") {
-              // Auto-win: skip test, automatic success
+              // Auto-Win: consume 1 AP, skip test, auto-succeed
+              const { ActionEconomy } = await import("./action-economy.js");
+              const def = getSpecialActionById(saId);
+              await ActionEconomy.spendAP(defender, 1, { 
+                reason: `Special Advantage: ${def?.name} (Auto-Win)`, 
+                silent: false 
+              });
+
               const result = await executeSpecialAction({
                 specialActionId: saId,
                 actor: defender,
@@ -4920,7 +4954,7 @@ const dmgMsg = await ChatMessage.create({
                 });
               }
             } else if (advChoice.mode === "free") {
-              // Free action: initiate opposed test (no AP cost)
+              // Free Action: 0 AP, initiate opposed test normally
               const attackerTokenUuid = data.attacker?.tokenUuid ?? null;
               const defenderTokenUuid = data.defender?.tokenUuid ?? null;
               const attackerToken = attackerTokenUuid ? fromUuidSync(attackerTokenUuid)?.object : null;
@@ -4928,14 +4962,34 @@ const dmgMsg = await ChatMessage.create({
 
               // Defender initiates, so swap attacker/defender roles
               if (attackerToken && defenderToken) {
-                await createSpecialActionOpposedTest({
-                  specialActionId: saId,
-                  attackerToken: defenderToken,
-                  defenderToken: attackerToken,
-                  isFreeAction: true
+                const { SkillOpposedWorkflow } = await import("../skills/opposed-workflow.js");
+                const def = getSpecialActionById(saId);
+                
+                const message = await SkillOpposedWorkflow.createPending({
+                  attackerTokenUuid: defenderToken?.document?.uuid ?? defenderToken?.uuid,
+                  defenderTokenUuid: attackerToken?.document?.uuid ?? attackerToken?.uuid,
+                  attackerSkillUuid: null,
+                  attackerSkillLabel: `${def?.name} (Special Advantage)`
                 });
 
-                const def = getSpecialActionById(saId);
+                const state = message?.flags?.["uesrpg-3ev4"]?.skillOpposed?.state;
+                if (state) {
+                  state.specialActionId = saId;
+                  state.allowCombatStyle = true;
+                  state.isFreeAction = true;
+
+                  await message.update({
+                    flags: {
+                      "uesrpg-3ev4": {
+                        skillOpposed: {
+                          version: state.version ?? 1,
+                          state
+                        }
+                      }
+                    }
+                  });
+                }
+
                 ui.notifications.info(`Special Advantage: ${def?.name} used as free action.`);
               }
             }

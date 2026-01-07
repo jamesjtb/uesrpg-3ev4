@@ -386,30 +386,71 @@ async activateListeners(html) {
           return;
         }
 
+        // Consume AP
         const ok = await requireAP(title, 1);
         if (!ok) return;
 
-        // CORRECTED: Resolve actor token
+        // Resolve tokens
         let actorToken = canvas.tokens?.controlled?.[0] ?? null;
         if (!actorToken) {
-          // Try finding token by actor ID
           actorToken = canvas.tokens?.placeables?.find(t => t.actor?.id === this.actor.id) ?? null;
         }
 
-        // CORRECTED: Resolve target
         const targets = Array.from(game.user.targets ?? []);
         const targetToken = targets[0] ?? null;
-        const target = targetToken?.actor ?? null;
 
-        // Import and initiate
-        const { initiateSpecialActionFromSheet } = await import("../combat/special-actions-helper.js");
-        await initiateSpecialActionFromSheet({
-          specialActionId: specialId,
-          actor: this.actor,
-          target,
-          actorToken,
-          targetToken
+        if (!targetToken && specialId !== "arise") {
+          ui.notifications.warn(`${def.name} requires a targeted token.`);
+          return;
+        }
+
+        // Arise doesn't need opposed test
+        if (specialId === "arise") {
+          const { executeSpecialAction } = await import("../combat/special-actions-helper.js");
+          const result = await executeSpecialAction({
+            specialActionId: specialId,
+            actor: this.actor,
+            target: null,
+            isAutoWin: false,
+            opposedResult: { winner: "attacker" }
+          });
+
+          if (result.success) {
+            await ChatMessage.create({
+              user: game.user.id,
+              speaker: ChatMessage.getSpeaker({ actor: this.actor }),
+              content: `<div class="uesrpg-special-action-outcome"><b>Special Action:</b><p>${result.message}</p></div>`,
+              style: CONST.CHAT_MESSAGE_STYLES.OTHER
+            });
+          }
+          return;
+        }
+
+        // Create skill opposed test with Combat Style option
+        const message = await SkillOpposedWorkflow.createPending({
+          attackerTokenUuid: actorToken?.document?.uuid ?? actorToken?.uuid,
+          defenderTokenUuid: targetToken?.document?.uuid ?? targetToken?.uuid,
+          attackerSkillUuid: null, // Will choose in dialog
+          attackerSkillLabel: `${def.name} (Special Action)`
         });
+
+        // Tag with Special Action metadata
+        const state = message?.flags?.["uesrpg-3ev4"]?.skillOpposed?.state;
+        if (state) {
+          state.specialActionId = specialId;
+          state.allowCombatStyle = true; // Enable Combat Style option
+
+          await message.update({
+            flags: {
+              "uesrpg-3ev4": {
+                skillOpposed: {
+                  version: state.version ?? 1,
+                  state
+                }
+              }
+            }
+          });
+        }
 
         return;
       }
