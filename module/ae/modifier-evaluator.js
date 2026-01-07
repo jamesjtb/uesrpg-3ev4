@@ -236,6 +236,13 @@ function _effectMatchesContext(effect, context) {
   for (const [k, expected] of Object.entries(conditions)) {
     if (expected === undefined) continue;
 
+    // RAW (Chapter 5): Overextend applies to the opponent's next attack within 1 round
+    // regardless of who that attack targets. Some legacy effects store opponent scoping
+    // in conditions.opponentUuid; ignore that scoping for Overextend so it applies to
+    // the next attack against any target.
+    const uesrpgKey = effect?.flags?.uesrpg?.key;
+    if (uesrpgKey === "overextend" && k === "opponentUuid") continue;
+
     // Canonical combat lane: `context.attackMode`. Older chat cards/effects may use `attackType`.
     if (k === "attackMode" || k === "attackType") {
       const actual = (context.attackMode ?? context.attackType ?? "");
