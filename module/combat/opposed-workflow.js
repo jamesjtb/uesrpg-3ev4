@@ -22,11 +22,13 @@ import { computeTN, listCombatStyles, hasEquippedShield, variantMod as computeVa
 import { computeDefenseAvailability, normalizeDefenseType } from "./defense-options.js";
 import { getDamageTypeFromWeapon, getHitLocationFromRoll, resolveHitLocationForTarget } from "./combat-utils.js";
 import { getBlockValue, normalizeHitLocation } from "./mitigation.js";
+import { DAMAGE_TYPES } from "./damage-automation.js";
 import { ActionEconomy } from "./action-economy.js";
 import { safeUpdateChatMessage } from "../helpers/chat-message-socket.js";
 import { requestCreateActiveEffect } from "../helpers/active-effect-proxy.js";
 import { buildSpecialActionsForActor, isSpecialActionUsableNow } from "./combat-style-utils.js";
 import { SPECIAL_ACTIONS, getSpecialActionById } from "../config/special-actions.js";
+import { getActiveStaminaEffect, consumeStaminaEffect, STAMINA_EFFECT_KEYS } from "../stamina/stamina-dialog.js";
 
 
 function _collectSensorySituationalMods(decl) {
@@ -5098,6 +5100,18 @@ const dmgMsg = await ChatMessage.create({
         stage: "block-damage-card",
       });
       let br = getBlockValue(shield, damageType);
+      
+      // Check for Power Block stamina effect (only for physical damage)
+      const powerBlockEffect = getActiveStaminaEffect(defender, STAMINA_EFFECT_KEYS.POWER_BLOCK);
+      const isPowerBlockActive = powerBlockEffect && String(damageType).toLowerCase() === DAMAGE_TYPES.PHYSICAL;
+      if (isPowerBlockActive) {
+        const originalBR = br;
+        br = br * 2;
+        await consumeStaminaEffect(defender, STAMINA_EFFECT_KEYS.POWER_BLOCK, {
+          message: `Shield BR doubled: ${originalBR} → ${br} (physical damage only)`
+        });
+      }
+      
       const shieldSplitter = _weaponHasQuality(weapon, "shieldSplitter");
       if (shieldSplitter) br = Math.max(0, Math.ceil(_asNumber(br) / 2));
       const blocked = dmg.finalDamage <= br;

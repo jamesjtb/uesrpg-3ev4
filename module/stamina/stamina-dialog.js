@@ -172,17 +172,26 @@ async function spendStamina(actor, option, spAmount = 1) {
 
   // Handle Heroic Action immediately
   if (option.immediate) {
-    const currentAP = actor.system?.ap?.value ?? 0;
-    const maxAP = actor.system?.ap?.max ?? 0;
+    const currentAP = Number(actor.system?.action_points?.value ?? 0);
+    const maxAP = Number(actor.system?.action_points?.max ?? 0);
     
-    // Check if already used this round
-    const hasHeroicThisRound = actor.effects.find(e => 
-      !e.disabled && e?.flags?.uesrpg?.key === STAMINA_EFFECT_KEYS.HEROIC_USED
-    );
+    // Check if in active combat
+    const combat = game.combat;
+    const isInCombat = combat && combat.started;
     
-    if (hasHeroicThisRound) {
-      ui.notifications.warn("Heroic Action can only be used once per round.");
-      return;
+    if (isInCombat) {
+      // Check for heroic action flag this round
+      const currentRound = Number(combat.round ?? 0);
+      const systemId = game.system?.id ?? "uesrpg-3ev4";
+      const lastUsedRound = actor.getFlag(systemId, "heroicActionLastRound");
+      
+      if (lastUsedRound === currentRound) {
+        ui.notifications.warn("Heroic Action can only be used once per round.");
+        return;
+      }
+      
+      // Set flag for this round
+      await actor.setFlag(systemId, "heroicActionLastRound", currentRound);
     }
     
     // Update stamina
@@ -193,21 +202,7 @@ async function spendStamina(actor, option, spAmount = 1) {
     // Update AP
     const newAP = Math.min(currentAP + 1, maxAP);
     await requestUpdateDocument(actor, {
-      "system.ap.value": newAP
-    });
-    
-    // Create round marker effect (will be removed at start of next round)
-    await createOrUpdateStatusEffect(actor, {
-      name: "Heroic Action Used",
-      statusId: null,
-      img: "icons/magic/control/buff-flight-wings-runes-purple.webp",
-      duration: {},
-      flags: {
-        uesrpg: {
-          key: STAMINA_EFFECT_KEYS.HEROIC_USED,
-          description: "Heroic Action used this round"
-        }
-      }
+      "system.action_points.value": newAP
     });
     
     // Post chat message
@@ -217,8 +212,9 @@ async function spendStamina(actor, option, spAmount = 1) {
       content: `<div class="uesrpg-stamina-card">
         <h3>Stamina: ${option.name}</h3>
         <p><b>Cost:</b> ${cost} SP</p>
-        <p><b>Effect:</b> Regained 1 Action Point</p>
+        <p><b>Effect:</b> Regained 1 Action Point (${currentAP} → ${newAP})</p>
         <p><b>Remaining SP:</b> ${currentSP - cost}</p>
+        ${isInCombat ? '<p style="font-style: italic; opacity: 0.8;">Can only be used once per round in combat.</p>' : ''}
       </div>`,
       style: CONST.CHAT_MESSAGE_STYLES.OTHER
     });
@@ -253,12 +249,20 @@ async function spendStamina(actor, option, spAmount = 1) {
         consumeOn: option.consumeOn,
         description: option.description
       }
-    }
+    },
+    changes: [] // Active Effect modifiers
   };
 
-  // Add Power Attack specific data
+  // Add Power Attack specific data and Active Effect modifier
   if (option.allowAmount) {
-    effectData.flags.uesrpg.damageBonus = spAmount * 2;
+    const damageBonus = spAmount * 2;
+    effectData.flags.uesrpg.damageBonus = damageBonus;
+    effectData.changes.push({
+      key: "system.modifiers.combat.damage.dealt",
+      mode: CONST.ACTIVE_EFFECT_MODES.ADD,
+      value: String(damageBonus),
+      priority: 20
+    });
   }
 
   await createOrUpdateStatusEffect(actor, effectData);

@@ -1279,7 +1279,7 @@ this._applyMovementRestrictionSemantics(actorData, actorSystemData);
       if (m.override != null) actorSystemData.fatigue.bonus = Number(m.override);
       else if (m.add) actorSystemData.fatigue.bonus = Number(actorSystemData.fatigue.bonus ?? 0) + Number(m.add);
     }
-    actorSystemData.fatigue.level = actorSystemData.stamina.value <= 0 ? ((actorSystemData.stamina.value -1) * -1) + actorSystemData.fatigue.bonus : 0 + actorSystemData.fatigue.bonus
+    actorSystemData.fatigue.level = actorSystemData.stamina.value < 0 ? ((actorSystemData.stamina.value -1) * -1) + actorSystemData.fatigue.bonus : 0 + actorSystemData.fatigue.bonus
 
     switch (actorSystemData.fatigue.level > 0) {
       case true:
@@ -1693,7 +1693,7 @@ this._applyMovementRestrictionSemantics(actorData, actorSystemData);
       if (m.override != null) actorSystemData.fatigue.bonus = Number(m.override);
       else if (m.add) actorSystemData.fatigue.bonus = Number(actorSystemData.fatigue.bonus ?? 0) + Number(m.add);
     }
-    actorSystemData.fatigue.level = actorSystemData.stamina.value <= 0 ? ((actorSystemData.stamina.value -1) * -1) + actorSystemData.fatigue.bonus : 0 + actorSystemData.fatigue.bonus
+    actorSystemData.fatigue.level = actorSystemData.stamina.value < 0 ? ((actorSystemData.stamina.value -1) * -1) + actorSystemData.fatigue.bonus : 0 + actorSystemData.fatigue.bonus
 
     switch (actorSystemData.fatigue.level > 0) {
       case true:

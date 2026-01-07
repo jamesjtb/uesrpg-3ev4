@@ -55,13 +55,20 @@ export async function applyPhysicalExertionToSkill(actor, skillItem) {
   // Don't apply to Combat Style
   if (skillItem.type === 'combatStyle') return 0;
   
-  const characteristic = skillItem.system?.characteristic;
-  if (!characteristic) return 0;
+  // Check governing characteristic (baseCha or governingCha)
+  // These can be single values ("str") or comma/space separated lists ("str, agi")
+  const governingRaw = String(skillItem.system?.governingCha || skillItem.system?.baseCha || "");
+  const governing = governingRaw.trim().toLowerCase();
   
-  const charId = String(characteristic).toLowerCase();
+  if (!governing) return 0;
   
   // Physical Exertion only applies to STR/END based skills
-  if (charId !== 'str' && charId !== 'end') return 0;
+  // Word boundary regex handles both single values and comma-separated lists correctly
+  // Examples: "str" ✓, "end" ✓, "str, agi" ✓, "strategy" ✗
+  const isStrBased = /\bstr\b|\bstrength\b/.test(governing);
+  const isEndBased = /\bend\b|\bendurance\b/.test(governing);
+  
+  if (!isStrBased && !isEndBased) return 0;
   
   const effect = getActiveStaminaEffect(actor, STAMINA_EFFECT_KEYS.PHYSICAL_EXERTION);
   if (!effect) return 0;
