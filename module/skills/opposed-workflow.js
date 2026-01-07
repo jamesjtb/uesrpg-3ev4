@@ -754,8 +754,13 @@ if (!authorUser) return;
       if (data.attacker.result) return;
       if (!requireUserCanRollActor(game.user, attacker)) return;
       
+      // For Special Actions, check if skill is already locked in
+      const isSpecialAction = Boolean(data?.specialActionId);
+      const hasLockedSkill = Boolean(data.attacker.skillUuid);
+      
       // Check if Combat Style option should be allowed
-      const allowCombatStyle = Boolean(data?.allowCombatStyle);
+      const allowCombatStyle = Boolean(data?.allowCombatStyle) || 
+                               (isSpecialAction && (data.attacker.skillUuid === "combat-style" || data.attacker.skillUuid === "prof:combat"));
       
       const skills = _listSkills(attacker, { allowCombatStyle });
       if (!skills.length) {
@@ -956,8 +961,12 @@ if (!authorUser) return;
         await _updateCard(message, data);
       }
       
+      // For Special Actions, check if defender skill is already locked in
+      const isSpecialAction = Boolean(data?.specialActionId);
+      
       // Check if Combat Style option should be allowed
-      const allowCombatStyle = Boolean(data?.allowCombatStyle);
+      const allowCombatStyle = Boolean(data?.allowCombatStyle) || 
+                               (isSpecialAction && (data.defender.skillUuid === "combat-style" || data.defender.skillUuid === "prof:combat"));
       
       const skills = _listSkills(defender, { allowCombatStyle });
       if (!skills.length) {
@@ -968,10 +977,11 @@ if (!authorUser) return;
       const last = _getLastSkillRollOptions();
       const perActorLastSkill = last?.lastSkillUuidByActor?.[defender.uuid] ?? null;
 
-      // Default selection: same-named skill if present, else last-used on this actor, else first.
+      // Default selection: use locked-in skill if available, else same-named skill if present, else last-used on this actor, else first.
+      const lockedSkillUuid = data.defender.skillUuid;
       const wantedName = String(data.attacker.skillLabel ?? "").trim().toLowerCase();
       const sameName = skills.find(s => String(s.name).trim().toLowerCase() === wantedName) ?? null;
-      const selectedSkillUuid = sameName?.uuid ?? perActorLastSkill ?? skills[0].uuid;
+      const selectedSkillUuid = lockedSkillUuid ?? sameName?.uuid ?? perActorLastSkill ?? skills[0].uuid;
 
       const defaults = normalizeSkillRollOptions(last, { difficultyKey: "average", manualMod: 0, useSpec: false });
 
