@@ -54,6 +54,15 @@ function _isAgilityBasedSkill(skillItem) {
   return /\bagi\b|\bagility\b/.test(governing);
 }
 
+/**
+ * Determine if a skill is based on STR, AGI, or END.
+ * Used for Frenzied condition penalty exemption.
+ */
+function _isPhysicalSkill(skill) {
+  const gov = String(skill?.system?.governingCha ?? skill?.system?.baseCha ?? skill?.governingCharacteristic ?? "").trim().toLowerCase();
+  return /\bstr\b|\bstrength\b|\bagi\b|\bagility\b|\bend\b|\bendurance\b/.test(gov);
+}
+
 function _collectItemSkillBonuses(actor, skill) {
   const out = [];
   if (!actor) return out;
@@ -297,6 +306,12 @@ export function computeSkillTNFromData({
   // This does not require schema changes; callers may supply actorSystem.environment via effects/modules.
   const envPenalty = _asNumber(actorSystem?.environment?.skillPenalties?.[nameKey]);
   if (envPenalty) breakdown.push({ label: "Environment", value: envPenalty, source: "environment" });
+
+  // Frenzied skill penalty (non-physical tests only)
+  const frenziedPenalty = _asNumber(actorSystem?.modifiers?.skills?.frenziedPenalty);
+  if (frenziedPenalty && !_isPhysicalSkill(skill)) {
+    breakdown.push({ label: "Frenzied", value: frenziedPenalty, source: "frenzied" });
+  }
 
   // Difficulty (RAW Chapter 1)
   const diff = getDifficultyByKey(difficultyKey);
