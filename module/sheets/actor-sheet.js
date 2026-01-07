@@ -8,6 +8,7 @@ import { isUnlucky } from "../helpers/skillCalcHelper.js";
 import chooseBirthsignPenalty from "../dialogs/choose-birthsign-penalty.js";
 import { characteristicAbbreviations } from "../maps/characteristics.js";
 import renderErrorDialog from '../dialogs/error-dialog.js';
+import { applyPhysicalExertionBonus, applyPhysicalExertionToSkill, applyPowerAttackBonus } from "../stamina/stamina-integration-hooks.js";
 import coreRaces from "./racemenu/data/core-races.js";
 import coreVariants from "./racemenu/data/core-variants.js";
 import { renderRaceCards } from "./racemenu/render-race-cards.js";
@@ -48,6 +49,7 @@ import {
 import { bindCommonSheetListeners, bindCommonEditableInventoryListeners } from "./sheet-listeners.js";
 import { shouldHideFromMainInventory } from "./sheet-inventory.js";
 import { prepareCharacterItems } from "./sheet-prepare-items.js";
+import { registerStaminaButtonHandler } from "./actor-sheet-stamina-integration.js";
 
 export class SimpleActorSheet extends foundry.appv1.sheets.ActorSheet {
   /** @override */
@@ -251,6 +253,10 @@ async activateListeners(html) {
   html.find(".incrementResource").click(this._onIncrementResource.bind(this));
   // Resource restore (migrated from label button)
   html.find(".restoreResource").click(this._onResetResource.bind(this));
+  
+  // Register stamina button handler after incrementResource
+  registerStaminaButtonHandler(this, html);
+  
   html.find("#spellFilter").click(this._filterSpells.bind(this));
   html.find("#itemFilter").click(this._filterItems.bind(this));
   html.find(".incrementFatigue").click(this._incrementFatigue.bind(this));
@@ -761,9 +767,22 @@ async activateListeners(html) {
       case "dash": {
         if (!(await requireAP("Dash", 1))) return;
         await breakAimChainIfPresent();
+        
+        // Check for Sprint stamina effect
+        const { applySprintBonus } = await import("../stamina/stamina-integration-hooks.js");
+        const sprintEffect = await applySprintBonus(this.actor);
+        const speed = this.actor.system?.speed?.value ?? 0;
+        const movement = sprintEffect ? speed * 2 : speed;
+        
+        // Build Dash description
+        const baseDescription = "The character can use this action in order to move up to their Speed";
+        const sprintNote = sprintEffect ? " (2× Speed from Sprint effect)" : "";
+        const turnDescription = "If this is done on their Turn, this movement is added to their base movement for that Turn. This action can be used to allow a character to move several times their Speed during a round.";
+        const sprintDetails = sprintEffect ? `<p><b>Sprint Active:</b> Movement up to ${movement} meters</p>` : "";
+        
         await postActionCard(
           "Dash",
-          "<p>The character can use this action in order to move up to their Speed. If this is done on their Turn, this movement is added to their base movement for that Turn. This action can be used to allow a character to move several times their Speed during a round.</p>"
+          `<p>${baseDescription}${sprintNote}. ${turnDescription}</p>${sprintDetails}`
         );
         return;
       }
@@ -1198,6 +1217,9 @@ let d = new Dialog({
     event.preventDefault();
     const element = event.currentTarget;
 
+    // Check for Physical Exertion stamina effect
+    const staminaBonus = await applyPhysicalExertionBonus(this.actor, element.id);
+
     // Mobility: Heavy armor imposes -20 to Agility-based tests (except Combat Style).
     // For characteristic rolls, apply only when rolling Agility.
     const mobilityAgiPenalty = (String(element?.id || "").toLowerCase() === "agi")
@@ -1208,12 +1230,14 @@ let d = new Dialog({
       this.actor.system.woundPenalty +
       this.actor.system.fatigue.penalty +
       this.actor.system.carry_rating.penalty +
-      mobilityAgiPenalty;
+      mobilityAgiPenalty +
+      staminaBonus;
     const regularValue =
       this.actor.system.characteristics[element.id].total +
       this.actor.system.fatigue.penalty +
       this.actor.system.carry_rating.penalty +
-      mobilityAgiPenalty;
+      mobilityAgiPenalty +
+      staminaBonus;
     let tags = [];
     const hasWoundPenalty = Number(this.actor.system?.woundPenalty ?? 0) !== 0;
     if (hasWoundPenalty) {
@@ -1240,6 +1264,12 @@ let d = new Dialog({
     if (mobilityAgiPenalty !== 0) {
       tags.push(
         `<span class="tag armor-mobility-tag">Armor Mobility ${mobilityAgiPenalty}</span>`
+      );
+    }
+
+    if (staminaBonus > 0) {
+      tags.push(
+        `<span class="tag">Physical Exertion +${staminaBonus}</span>`
       );
     }
 
@@ -1447,11 +1477,14 @@ if (isLucky(this.actor, roll.result)) {
       lastSkillUuidByActor: { [this.actor.uuid]: skillItem.uuid }
     });
 
+    // Check for Physical Exertion stamina effect for STR/END skills
+    const staminaBonus = await applyPhysicalExertionToSkill(this.actor, skillItem);
+
     const request = buildSkillRollRequest({
       actor: this.actor,
       skillItem,
       targetToken: null,
-      options: { difficultyKey: decl.difficultyKey, manualMod: decl.manualMod, useSpec: Boolean(decl.useSpec) },
+      options: { difficultyKey: decl.difficultyKey, manualMod: decl.manualMod + staminaBonus, useSpec: Boolean(decl.useSpec) },
       context: { source: "sheet", quick: quickShift }
     });
     skillRollDebug("untargeted request", request);
@@ -1460,7 +1493,7 @@ if (isLucky(this.actor, roll.result)) {
       actor: this.actor,
       skillItem,
       difficultyKey: decl.difficultyKey,
-      manualMod: decl.manualMod,
+      manualMod: decl.manualMod + staminaBonus,
       useSpecialization: hasSpec && decl.useSpec
     });
 
@@ -1481,6 +1514,7 @@ if (isLucky(this.actor, roll.result)) {
     if (tn?.difficulty?.mod) tags.push(`<span class="tag">${tn.difficulty.label} ${tn.difficulty.mod >= 0 ? "+" : ""}${tn.difficulty.mod}</span>`);
     if (hasSpec && decl.useSpec) tags.push(`<span class="tag">Specialization +10</span>`);
     if (decl.manualMod) tags.push(`<span class="tag">Mod ${decl.manualMod >= 0 ? "+" : ""}${decl.manualMod}</span>`);
+    if (staminaBonus > 0) tags.push(`<span class="tag">Physical Exertion +${staminaBonus}</span>`);
 
     const res = await doTestRoll(this.actor, { rollFormula: SYSTEM_ROLL_FORMULA, target: tn.finalTN, allowLucky: true, allowUnlucky: true });
 
@@ -2226,6 +2260,9 @@ async _onDamageRoll(event) {
 
   const shortcutWeapon = weapon;
 
+  // Check for Power Attack stamina effect and apply bonus
+  const powerAttackBonus = await applyPowerAttackBonus(this.actor);
+
   // RAW: Hit Location is usually the 1s digit of the attack roll, but can also be determined by rolling 1d10 (10 counts as 0).
   // This weapon card currently rolls hit location directly (opposed-roll wiring will supply the attack roll later).
   const hit = new Roll("1d10");
@@ -2248,7 +2285,7 @@ async _onDamageRoll(event) {
   const weaponRoll = new Roll(damageString);
   await weaponRoll.evaluate();
   let altRoll = null;
-  let finalDamage = Number(weaponRoll.total);
+  let baseDamage = Number(weaponRoll.total);
 
   // Superior quality level (legacy boolean) and Proven/Primitive qualities (structured)
   const wantsProven = hasQ("proven");
@@ -2260,13 +2297,16 @@ async _onDamageRoll(event) {
     await altRoll.evaluate();
     const altTotal = Number(altRoll.total);
 
-    if (wantsPrimitive && !wantsProven) finalDamage = Math.min(finalDamage, altTotal);
-    else finalDamage = Math.max(finalDamage, altTotal);
+    if (wantsPrimitive && !wantsProven) baseDamage = Math.min(baseDamage, altTotal);
+    else baseDamage = Math.max(baseDamage, altTotal);
   }
 
+  // Apply Power Attack bonus once to final damage
+  const finalDamage = baseDamage + powerAttackBonus;
+
   const supRollTag = altRoll
-    ? `<div style="margin-top:0.25rem;font-size:x-small;line-height:1.2;">Roll A: ${weaponRoll.total}<br>Roll B: ${altRoll.total}</div>`
-    : "";
+    ? `<div style="margin-top:0.25rem;font-size:x-small;line-height:1.2;">Roll A: ${weaponRoll.total}<br>Roll B: ${altRoll.total}${powerAttackBonus > 0 ? `<br>Power Attack: +${powerAttackBonus}` : ''}</div>`
+    : powerAttackBonus > 0 ? `<div style="margin-top:0.25rem;font-size:x-small;line-height:1.2;">Base: ${weaponRoll.total}<br>Power Attack: +${powerAttackBonus}</div>` : "";
 
   // Render qualities from Structured Qualities + Traits (no journal links).
   const labelIndex = (() => {
