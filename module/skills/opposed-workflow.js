@@ -384,13 +384,13 @@ function _listSkills(actor, { allowCombatStyle = false } = {}) {
   
   // Add Combat Style option if allowed and available
   if (allowCombatStyle && actor?.type !== "NPC") {
-    const activeCombatStyle = actor?.itemTypes?.["combat-style"]?.find(cs => cs?.system?.active);
+    const activeCombatStyle = actor?.itemTypes?.combatStyle?.find(cs => cs?.system?.active);
     if (activeCombatStyle) {
       out.push({ 
-        uuid: "combat-style", 
-        name: "Combat Style", 
+        uuid: activeCombatStyle.uuid, 
+        name: activeCombatStyle.name, 
         hasSpec: false, 
-        isCombatStyle: true 
+        isCombatStyle: true
       });
     }
   }
@@ -471,7 +471,57 @@ function _findSkillByUuid(actor, uuid) {
     return { uuid, id: uuid, type: "profession", name: labelFor(key), system: { value: val }, _professionKey: key };
   }
 
-  return actor?.items?.find(i => i.uuid === uuid) ?? null;
+  // Try to resolve as an item UUID
+  const item = actor?.items?.find(i => i.uuid === uuid) ?? null;
+  if (item) return item;
+
+  return null;
+}
+
+/**
+ * Helper to resolve Combat Style or Skill item from UUID.
+ * Returns: { type: "combatStyle"|"skill"|"profession", item, name, value }
+ */
+function _resolveCombatStyleOrSkill(actor, skillUuid) {
+  if (!skillUuid) return null;
+  
+  // Try to resolve the item
+  const item = _findSkillByUuid(actor, skillUuid);
+  
+  if (!item) return null;
+  
+  // Combat Style item
+  if (item.type === "combatStyle") {
+    return {
+      type: "combatStyle",
+      item,
+      name: item.name,
+      value: item.system?.value ?? 0
+    };
+  }
+  
+  // Profession (NPC combat profession or other professions)
+  if (item.type === "profession" || item._professionKey) {
+    return {
+      type: "profession",
+      item,
+      name: item.name,
+      value: item.system?.value ?? 0,
+      professionKey: item._professionKey
+    };
+  }
+  
+  // Regular skill item
+  if (item.type === "skill") {
+    return {
+      type: "skill",
+      item,
+      name: item.name,
+      value: item.system?.value ?? 0
+    };
+  }
+  
+  return null;
 }
 
 
@@ -758,9 +808,15 @@ if (!authorUser) return;
       const isSpecialAction = Boolean(data?.specialActionId);
       const hasLockedSkill = Boolean(data.attacker.skillUuid);
       
+      // List skills first to check if locked skill is a combat style
+      const tempSkills = _listSkills(attacker, { allowCombatStyle: true });
+      const lockedIsCombatStyle = hasLockedSkill && (
+        tempSkills.find(s => s.uuid === data.attacker.skillUuid && s.isCombatStyle) ||
+        data.attacker.skillUuid?.startsWith("prof:combat")
+      );
+      
       // Check if Combat Style option should be allowed
-      const allowCombatStyle = Boolean(data?.allowCombatStyle) || 
-                               (isSpecialAction && (data.attacker.skillUuid === "combat-style" || data.attacker.skillUuid === "prof:combat"));
+      const allowCombatStyle = Boolean(data?.allowCombatStyle) || (isSpecialAction && lockedIsCombatStyle);
       
       const skills = _listSkills(attacker, { allowCombatStyle });
       if (!skills.length) {
@@ -813,7 +869,13 @@ if (!authorUser) return;
       let skillLabel;
       let skillItem = null;
       
-      if (decl.skillUuid === "combat-style") {
+      const resolved = _resolveCombatStyleOrSkill(attacker, decl.skillUuid);
+      if (!resolved) {
+        ui.notifications.warn("Selected actor skill or combat style could not be found.");
+        return;
+      }
+      
+      if (resolved.type === "combatStyle") {
         // Combat Style roll
         const { computeTN } = await import("../combat/tn.js");
         const situationalMods = [];
@@ -825,40 +887,64 @@ if (!authorUser) return;
           manualMod: decl.manualMod,
           situationalMods
         });
-        skillLabel = "Combat Style";
-      } else {
-        skillItem = _findSkillByUuid(attacker, decl.skillUuid);
-        if (!skillItem) {
-          ui.notifications.warn("Selected actor skill could not be found.");
-          return;
+        skillLabel = resolved.name;
+        skillItem = null; // Combat Style doesn't use skillItem
+      } else if (resolved.type === "profession" && resolved.professionKey === "combat") {
+        // NPC Combat profession
+        const { computeTN } = await import("../combat/tn.js");
+        const situationalMods = [];
+        if (decl?.applyBlinded) situationalMods.push({ label: "Blinded (sight)", value: -30 });
+        if (decl?.applyDeafened) situationalMods.push({ label: "Deafened (hearing)", value: -30 });
+        
+        tn = computeTN(attacker, {
+          difficultyKey: decl.difficultyKey,
+          manualMod: decl.manualMod,
+          situationalMods
+        });
+        skillLabel = resolved.name;
+        skillItem = null; // Combat profession doesn't use skillItem
+      } else if (resolved.type === "profession") {
+        // Regular profession (Athletics, etc.)
+        const baseValue = resolved.value;
+        const diffMod = SKILL_DIFFICULTIES.find(d => d.key === decl.difficultyKey)?.mod ?? 0;
+        const manualMod = Number(decl.manualMod ?? 0);
+        let totalMod = diffMod + manualMod;
+        
+        const breakdown = [
+          { key: "base", label: "Base", value: baseValue, source: "base" },
+          { key: "difficulty", label: SKILL_DIFFICULTIES.find(d => d.key === decl.difficultyKey)?.label ?? "Average", value: diffMod, source: "difficulty" }
+        ];
+        
+        if (manualMod) {
+          breakdown.push({ key: "manual", label: "Manual Modifier", value: manualMod, source: "manual" });
         }
         
-        // Check if this is NPC Combat profession
-        if (skillItem._professionKey === "combat") {
-          const { computeTN } = await import("../combat/tn.js");
-          const situationalMods = [];
-          if (decl?.applyBlinded) situationalMods.push({ label: "Blinded (sight)", value: -30 });
-          if (decl?.applyDeafened) situationalMods.push({ label: "Deafened (hearing)", value: -30 });
-          
-          tn = computeTN(attacker, {
-            difficultyKey: decl.difficultyKey,
-            manualMod: decl.manualMod,
-            situationalMods
-          });
-          skillLabel = "Combat";
-        } else {
-          // Regular skill roll
-          const allowSpec = _hasSpecializations(skillItem);
-          tn = computeSkillTN({
-            actor: attacker,
-            skillItem,
-            difficultyKey: decl.difficultyKey,
-            manualMod: decl.manualMod,
-            useSpecialization: allowSpec && decl.useSpec,
-            situationalMods: (function(){ const out=[]; if (decl?.applyBlinded) out.push({ label: "Blinded (sight)", value: -30 }); if (decl?.applyDeafened) out.push({ label: "Deafened (hearing)", value: -30 }); return out; })()
-          });
-          skillLabel = skillItem.name;
+        if (decl?.applyBlinded) {
+          totalMod += -30;
+          breakdown.push({ key: "blinded", label: "Blinded (sight)", value: -30, source: "condition" });
         }
+        if (decl?.applyDeafened) {
+          totalMod += -30;
+          breakdown.push({ key: "deafened", label: "Deafened (hearing)", value: -30, source: "condition" });
+        }
+        
+        const finalTN = baseValue + totalMod;
+        tn = { finalTN, baseTN: baseValue, totalMod, breakdown };
+        skillLabel = resolved.name;
+        skillItem = null; // Profession doesn't use skillItem
+      } else {
+        // Regular skill roll
+        skillItem = resolved.item;
+        const allowSpec = _hasSpecializations(skillItem);
+        tn = computeSkillTN({
+          actor: attacker,
+          skillItem,
+          difficultyKey: decl.difficultyKey,
+          manualMod: decl.manualMod,
+          useSpecialization: allowSpec && decl.useSpec,
+          situationalMods: (function(){ const out=[]; if (decl?.applyBlinded) out.push({ label: "Blinded (sight)", value: -30 }); if (decl?.applyDeafened) out.push({ label: "Deafened (hearing)", value: -30 }); return out; })()
+        });
+        skillLabel = skillItem.name;
       }
 
       const request = skillItem ? buildSkillRollRequest({
@@ -964,9 +1050,18 @@ if (!authorUser) return;
       // For Special Actions, check if defender skill is already locked in
       const isSpecialAction = Boolean(data?.specialActionId);
       
+      // Default selection: use locked-in skill if available, else same-named skill if present, else last-used on this actor, else first.
+      const lockedSkillUuid = data.defender.skillUuid;
+      
+      // List skills first to check if locked skill is a combat style
+      const tempSkills = _listSkills(defender, { allowCombatStyle: true });
+      const lockedIsCombatStyle = lockedSkillUuid && (
+        tempSkills.find(s => s.uuid === lockedSkillUuid && s.isCombatStyle) ||
+        lockedSkillUuid?.startsWith("prof:combat")
+      );
+      
       // Check if Combat Style option should be allowed
-      const allowCombatStyle = Boolean(data?.allowCombatStyle) || 
-                               (isSpecialAction && (data.defender.skillUuid === "combat-style" || data.defender.skillUuid === "prof:combat"));
+      const allowCombatStyle = Boolean(data?.allowCombatStyle) || (isSpecialAction && lockedIsCombatStyle);
       
       const skills = _listSkills(defender, { allowCombatStyle });
       if (!skills.length) {
@@ -977,8 +1072,6 @@ if (!authorUser) return;
       const last = _getLastSkillRollOptions();
       const perActorLastSkill = last?.lastSkillUuidByActor?.[defender.uuid] ?? null;
 
-      // Default selection: use locked-in skill if available, else same-named skill if present, else last-used on this actor, else first.
-      const lockedSkillUuid = data.defender.skillUuid;
       const wantedName = String(data.attacker.skillLabel ?? "").trim().toLowerCase();
       const sameName = skills.find(s => String(s.name).trim().toLowerCase() === wantedName) ?? null;
       const selectedSkillUuid = lockedSkillUuid ?? sameName?.uuid ?? perActorLastSkill ?? skills[0].uuid;
@@ -990,10 +1083,12 @@ if (!authorUser) return;
       if (quick) {
         decl = { skillUuid: selectedSkillUuid, difficultyKey: defaults.difficultyKey, manualMod: defaults.manualMod, useSpec: defaults.useSpec };
       } else {
+        // If defender already chose via pre-test dialog, skip skill selection
+        const skipSkillSelect = Boolean(lockedSkillUuid && data.requireDefenderChoice === false);
         decl = await _skillRollDialog({
           title: `Oppose — Choose Skill`,
           actor: defender,
-          showSkillSelect: true,
+          showSkillSelect: !skipSkillSelect, // Hide skill selection if already chosen
           skills,
           selectedSkillUuid,
           allowSpecialization: true,
@@ -1012,7 +1107,13 @@ if (!authorUser) return;
       let skillLabel;
       let defSkill = null;
       
-      if (decl.skillUuid === "combat-style") {
+      const resolved = _resolveCombatStyleOrSkill(defender, decl.skillUuid);
+      if (!resolved) {
+        ui.notifications.warn("Selected defender skill or combat style could not be found.");
+        return;
+      }
+      
+      if (resolved.type === "combatStyle") {
         // Combat Style roll
         const { computeTN } = await import("../combat/tn.js");
         const situationalMods = [];
@@ -1024,40 +1125,64 @@ if (!authorUser) return;
           manualMod: decl.manualMod,
           situationalMods
         });
-        skillLabel = "Combat Style";
-      } else {
-        defSkill = _findSkillByUuid(defender, decl.skillUuid);
-        if (!defSkill) {
-          ui.notifications.warn("Selected target skill could not be found.");
-          return;
+        skillLabel = resolved.name;
+        defSkill = null; // Combat Style doesn't use skillItem
+      } else if (resolved.type === "profession" && resolved.professionKey === "combat") {
+        // NPC Combat profession
+        const { computeTN } = await import("../combat/tn.js");
+        const situationalMods = [];
+        if (decl?.applyBlinded) situationalMods.push({ label: "Blinded (sight)", value: -30 });
+        if (decl?.applyDeafened) situationalMods.push({ label: "Deafened (hearing)", value: -30 });
+        
+        tn = computeTN(defender, {
+          difficultyKey: decl.difficultyKey,
+          manualMod: decl.manualMod,
+          situationalMods
+        });
+        skillLabel = resolved.name;
+        defSkill = null; // Combat profession doesn't use skillItem
+      } else if (resolved.type === "profession") {
+        // Regular profession (Athletics, etc.)
+        const baseValue = resolved.value;
+        const diffMod = SKILL_DIFFICULTIES.find(d => d.key === decl.difficultyKey)?.mod ?? 0;
+        const manualMod = Number(decl.manualMod ?? 0);
+        let totalMod = diffMod + manualMod;
+        
+        const breakdown = [
+          { key: "base", label: "Base", value: baseValue, source: "base" },
+          { key: "difficulty", label: SKILL_DIFFICULTIES.find(d => d.key === decl.difficultyKey)?.label ?? "Average", value: diffMod, source: "difficulty" }
+        ];
+        
+        if (manualMod) {
+          breakdown.push({ key: "manual", label: "Manual Modifier", value: manualMod, source: "manual" });
         }
         
-        // Check if this is NPC Combat profession
-        if (defSkill._professionKey === "combat") {
-          const { computeTN } = await import("../combat/tn.js");
-          const situationalMods = [];
-          if (decl?.applyBlinded) situationalMods.push({ label: "Blinded (sight)", value: -30 });
-          if (decl?.applyDeafened) situationalMods.push({ label: "Deafened (hearing)", value: -30 });
-          
-          tn = computeTN(defender, {
-            difficultyKey: decl.difficultyKey,
-            manualMod: decl.manualMod,
-            situationalMods
-          });
-          skillLabel = "Combat";
-        } else {
-          // Regular skill roll
-          const allowSpec = _hasSpecializations(defSkill);
-          tn = computeSkillTN({
-            actor: defender,
-            skillItem: defSkill,
-            difficultyKey: decl.difficultyKey,
-            manualMod: decl.manualMod,
-            useSpecialization: allowSpec && decl.useSpec,
-            situationalMods: (function(){ const out=[]; if (decl?.applyBlinded) out.push({ label: "Blinded (sight)", value: -30 }); if (decl?.applyDeafened) out.push({ label: "Deafened (hearing)", value: -30 }); return out; })()
-          });
-          skillLabel = defSkill.name;
+        if (decl?.applyBlinded) {
+          totalMod += -30;
+          breakdown.push({ key: "blinded", label: "Blinded (sight)", value: -30, source: "condition" });
         }
+        if (decl?.applyDeafened) {
+          totalMod += -30;
+          breakdown.push({ key: "deafened", label: "Deafened (hearing)", value: -30, source: "condition" });
+        }
+        
+        const finalTN = baseValue + totalMod;
+        tn = { finalTN, baseTN: baseValue, totalMod, breakdown };
+        skillLabel = resolved.name;
+        defSkill = null; // Profession doesn't use skillItem
+      } else {
+        // Regular skill roll
+        defSkill = resolved.item;
+        const allowSpec = _hasSpecializations(defSkill);
+        tn = computeSkillTN({
+          actor: defender,
+          skillItem: defSkill,
+          difficultyKey: decl.difficultyKey,
+          manualMod: decl.manualMod,
+          useSpecialization: allowSpec && decl.useSpec,
+          situationalMods: (function(){ const out=[]; if (decl?.applyBlinded) out.push({ label: "Blinded (sight)", value: -30 }); if (decl?.applyDeafened) out.push({ label: "Deafened (hearing)", value: -30 }); return out; })()
+        });
+        skillLabel = defSkill.name;
       }
 
       const request = defSkill ? buildSkillRollRequest({
