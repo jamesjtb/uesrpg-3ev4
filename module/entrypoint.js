@@ -40,6 +40,9 @@ Hooks.once("init", async function() {
     applyPowerBlock: applyPowerBlockBonus,
     hasEffect: hasStaminaEffect
   };
+  
+  // Expose attack tracker
+  game.uesrpg.AttackTracker = AttackTracker;
 
   // GM-only sheet header button to dump AE keys to console
   Hooks.on("getActorSheetHeaderButtons", (sheet, buttons) => {

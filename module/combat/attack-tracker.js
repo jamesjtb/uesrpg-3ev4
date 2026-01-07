@@ -113,10 +113,12 @@ Hooks.on("updateCombat", async (combat, changed, options, userId) => {
   // Only run on the round change
   if (!changed.round) return;
   
-  // Reset attack counters for all combatants
+  // Reset attack counters for all combatants in parallel
+  const resetPromises = [];
   for (const combatant of combat.combatants) {
     if (combatant.actor) {
-      await AttackTracker.resetAttacks(combatant.actor);
+      resetPromises.push(AttackTracker.resetAttacks(combatant.actor));
     }
   }
+  await Promise.all(resetPromises);
 });
