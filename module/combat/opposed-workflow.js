@@ -4553,7 +4553,7 @@ if (stage === "attacker-roll") {
                   isFreeAction: true
                 });
 
-                const def = await import("../config/special-actions.js").then(m => m.getSpecialActionById(saId));
+                const def = getSpecialActionById(saId);
                 ui.notifications.info(`Special Advantage: ${def?.name} used as free action.`);
               }
             }
@@ -4935,7 +4935,7 @@ const dmgMsg = await ChatMessage.create({
                   isFreeAction: true
                 });
 
-                const def = await import("../config/special-actions.js").then(m => m.getSpecialActionById(saId));
+                const def = getSpecialActionById(saId);
                 ui.notifications.info(`Special Advantage: ${def?.name} used as free action.`);
               }
             }

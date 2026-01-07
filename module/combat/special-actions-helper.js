@@ -343,11 +343,13 @@ export async function handleSpecialActionCardAction(message, action) {
     let rollResult;
     let testLabel;
 
+    // Import helpers once for both branches
+    const { doTestRoll } = await import("../helpers/degree-roll-helper.js");
+
     if (choice.testType === "Combat Style") {
       // Roll using Combat Style TN
       const { computeTN } = await import("./tn.js");
       const tn = computeTN(actor, { difficultyKey: "average" });
-      const { doTestRoll } = await import("../helpers/degree-roll-helper.js");
       rollResult = await doTestRoll(actor, {
         rollFormula: "1d100",
         target: tn.finalTN,
@@ -358,9 +360,14 @@ export async function handleSpecialActionCardAction(message, action) {
     } else {
       // Roll using Skill TN
       const skillName = choice.testType.toLowerCase();
+      
+      // More precise skill matching to avoid false positives
       const skillItem = actor.items.find(i =>
         i.type === "skill" &&
-        i.name.toLowerCase().includes(skillName)
+        i.name.toLowerCase() === skillName
+      ) ?? actor.items.find(i =>
+        i.type === "skill" &&
+        i.name.toLowerCase().startsWith(skillName)
       );
 
       if (!skillItem) {
@@ -376,7 +383,6 @@ export async function handleSpecialActionCardAction(message, action) {
         manualMod: 0
       });
 
-      const { doTestRoll } = await import("../helpers/degree-roll-helper.js");
       rollResult = await doTestRoll(actor, {
         rollFormula: "1d100",
         target: tn.finalTN,
