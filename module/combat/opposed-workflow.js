@@ -4546,7 +4546,16 @@ if (stage === "attacker-roll") {
                 });
               }
             } else if (choice.mode === "free") {
-              // Free Action: 0 AP, initiate opposed test normally
+              // Free Action: 0 AP, show pre-choice dialog, initiate test
+              const { showPreTestChoiceDialog } = await import("./special-actions-helper.js");
+              const attackerChoice = await showPreTestChoiceDialog({
+                specialActionId: saId,
+                actor: attacker,
+                isDefender: false
+              });
+
+              if (!attackerChoice) continue;
+
               const attackerTokenUuid = data.attacker?.tokenUuid ?? null;
               const defenderTokenUuid = data.defender?.tokenUuid ?? null;
               const attackerToken = attackerTokenUuid ? fromUuidSync(attackerTokenUuid)?.object : null;
@@ -4556,17 +4565,22 @@ if (stage === "attacker-roll") {
                 const { SkillOpposedWorkflow } = await import("../skills/opposed-workflow.js");
                 const def = getSpecialActionById(saId);
                 
+                const testLabel = attackerChoice.testType === "combatStyle" || attackerChoice.testType === "combatProfession"
+                  ? "Combat Style"
+                  : attackerChoice.testType.charAt(0).toUpperCase() + attackerChoice.testType.slice(1);
+                
                 const message = await SkillOpposedWorkflow.createPending({
                   attackerTokenUuid: attackerToken?.document?.uuid ?? attackerToken?.uuid,
                   defenderTokenUuid: defenderToken?.document?.uuid ?? defenderToken?.uuid,
-                  attackerSkillUuid: null,
-                  attackerSkillLabel: `${def?.name} (Special Advantage)`
+                  attackerSkillUuid: attackerChoice.skillUuid,
+                  attackerSkillLabel: `${def?.name} (${testLabel})`
                 });
 
                 const state = message?.flags?.["uesrpg-3ev4"]?.skillOpposed?.state;
                 if (state) {
                   state.specialActionId = saId;
-                  state.allowCombatStyle = true;
+                  state.attackerTestType = attackerChoice.testType;
+                  state.requireDefenderChoice = true;
                   state.isFreeAction = true;
 
                   await message.update({
@@ -4954,7 +4968,16 @@ const dmgMsg = await ChatMessage.create({
                 });
               }
             } else if (advChoice.mode === "free") {
-              // Free Action: 0 AP, initiate opposed test normally
+              // Free Action: 0 AP, show pre-choice dialog, initiate test
+              const { showPreTestChoiceDialog } = await import("./special-actions-helper.js");
+              const defenderChoice = await showPreTestChoiceDialog({
+                specialActionId: saId,
+                actor: defender,
+                isDefender: false // Defender is initiating, so they are the "attacker" in this special action
+              });
+
+              if (!defenderChoice) continue;
+
               const attackerTokenUuid = data.attacker?.tokenUuid ?? null;
               const defenderTokenUuid = data.defender?.tokenUuid ?? null;
               const attackerToken = attackerTokenUuid ? fromUuidSync(attackerTokenUuid)?.object : null;
@@ -4965,17 +4988,22 @@ const dmgMsg = await ChatMessage.create({
                 const { SkillOpposedWorkflow } = await import("../skills/opposed-workflow.js");
                 const def = getSpecialActionById(saId);
                 
+                const testLabel = defenderChoice.testType === "combatStyle" || defenderChoice.testType === "combatProfession"
+                  ? "Combat Style"
+                  : defenderChoice.testType.charAt(0).toUpperCase() + defenderChoice.testType.slice(1);
+                
                 const message = await SkillOpposedWorkflow.createPending({
                   attackerTokenUuid: defenderToken?.document?.uuid ?? defenderToken?.uuid,
                   defenderTokenUuid: attackerToken?.document?.uuid ?? attackerToken?.uuid,
-                  attackerSkillUuid: null,
-                  attackerSkillLabel: `${def?.name} (Special Advantage)`
+                  attackerSkillUuid: defenderChoice.skillUuid,
+                  attackerSkillLabel: `${def?.name} (${testLabel})`
                 });
 
                 const state = message?.flags?.["uesrpg-3ev4"]?.skillOpposed?.state;
                 if (state) {
                   state.specialActionId = saId;
-                  state.allowCombatStyle = true;
+                  state.attackerTestType = defenderChoice.testType;
+                  state.requireDefenderChoice = true;
                   state.isFreeAction = true;
 
                   await message.update({

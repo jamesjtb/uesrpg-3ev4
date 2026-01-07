@@ -394,19 +394,34 @@ async activateListeners(html) {
           return;
         }
 
-        // Create skill opposed test with Combat Style option
+        // CORRECTED: Show test choice dialog FIRST
+        const { showPreTestChoiceDialog } = await import("../combat/special-actions-helper.js");
+        const attackerChoice = await showPreTestChoiceDialog({
+          specialActionId: specialId,
+          actor: this.actor,
+          isDefender: false
+        });
+
+        if (!attackerChoice) return; // User cancelled
+
+        // Create skill opposed test with PRE-SELECTED attacker test
+        const testLabel = attackerChoice.testType === "combatStyle" || attackerChoice.testType === "combatProfession"
+          ? "Combat Style"
+          : attackerChoice.testType.charAt(0).toUpperCase() + attackerChoice.testType.slice(1);
+        
         const message = await SkillOpposedWorkflow.createPending({
           attackerTokenUuid: actorToken?.document?.uuid ?? actorToken?.uuid,
           defenderTokenUuid: targetToken?.document?.uuid ?? targetToken?.uuid,
-          attackerSkillUuid: null, // Will choose in dialog
-          attackerSkillLabel: `${def.name} (Special Action)`
+          attackerSkillUuid: attackerChoice.skillUuid,
+          attackerSkillLabel: `${def.name} (${testLabel})`
         });
 
         // Tag with Special Action metadata
         const state = message?.flags?.["uesrpg-3ev4"]?.skillOpposed?.state;
         if (state) {
           state.specialActionId = specialId;
-          state.allowCombatStyle = true; // Enable Combat Style option
+          state.attackerTestType = attackerChoice.testType;
+          state.requireDefenderChoice = true; // Defender needs to choose when they roll
 
           await message.update({
             flags: {

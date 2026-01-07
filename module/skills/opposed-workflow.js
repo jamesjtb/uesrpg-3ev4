@@ -933,6 +933,29 @@ if (!authorUser) return;
       if (data.defender.result) return;
       if (!requireUserCanRollActor(game.user, defender, { message: "You do not have permission to roll for the target actor." })) return;
       
+      // CORRECTED: Check if this is a Special Action requiring defender choice
+      if (data.requireDefenderChoice && data.specialActionId) {
+        const { showPreTestChoiceDialog } = await import("../combat/special-actions-helper.js");
+        const defenderChoice = await showPreTestChoiceDialog({
+          specialActionId: data.specialActionId,
+          actor: defender,
+          isDefender: true
+        });
+
+        if (!defenderChoice) return; // User cancelled
+
+        // Update state with defender's chosen skill
+        data.defender.skillUuid = defenderChoice.skillUuid;
+        const testLabel = defenderChoice.testType === "combatStyle" || defenderChoice.testType === "combatProfession"
+          ? "Combat Style"
+          : defenderChoice.testType.charAt(0).toUpperCase() + defenderChoice.testType.slice(1);
+        data.defender.skillLabel = testLabel;
+        data.defender.testType = defenderChoice.testType;
+        data.requireDefenderChoice = false; // Mark as chosen
+
+        await _updateCard(message, data);
+      }
+      
       // Check if Combat Style option should be allowed
       const allowCombatStyle = Boolean(data?.allowCombatStyle);
       
