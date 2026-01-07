@@ -182,7 +182,8 @@ async function spendStamina(actor, option, spAmount = 1) {
     if (isInCombat) {
       // Check for heroic action flag this round
       const currentRound = Number(combat.round ?? 0);
-      const lastUsedRound = actor.getFlag("uesrpg-3ev4", "heroicActionLastRound");
+      const systemId = game.system?.id ?? "uesrpg-3ev4";
+      const lastUsedRound = actor.getFlag(systemId, "heroicActionLastRound");
       
       if (lastUsedRound === currentRound) {
         ui.notifications.warn("Heroic Action can only be used once per round.");
@@ -190,7 +191,7 @@ async function spendStamina(actor, option, spAmount = 1) {
       }
       
       // Set flag for this round
-      await actor.setFlag("uesrpg-3ev4", "heroicActionLastRound", currentRound);
+      await actor.setFlag(systemId, "heroicActionLastRound", currentRound);
     }
     
     // Update stamina

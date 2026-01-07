@@ -22,6 +22,7 @@ import { computeTN, listCombatStyles, hasEquippedShield, variantMod as computeVa
 import { computeDefenseAvailability, normalizeDefenseType } from "./defense-options.js";
 import { getDamageTypeFromWeapon, getHitLocationFromRoll, resolveHitLocationForTarget } from "./combat-utils.js";
 import { getBlockValue, normalizeHitLocation } from "./mitigation.js";
+import { DAMAGE_TYPES } from "./damage-automation.js";
 import { ActionEconomy } from "./action-economy.js";
 import { safeUpdateChatMessage } from "../helpers/chat-message-socket.js";
 import { requestCreateActiveEffect } from "../helpers/active-effect-proxy.js";
@@ -5101,7 +5102,7 @@ const dmgMsg = await ChatMessage.create({
       
       // Check for Power Block stamina effect (only for physical damage)
       const powerBlockEffect = getActiveStaminaEffect(defender, STAMINA_EFFECT_KEYS.POWER_BLOCK);
-      const isPowerBlockActive = powerBlockEffect && String(damageType).toLowerCase() === "physical";
+      const isPowerBlockActive = powerBlockEffect && String(damageType).toLowerCase() === DAMAGE_TYPES.PHYSICAL;
       if (isPowerBlockActive) {
         const originalBR = br;
         br = br * 2;

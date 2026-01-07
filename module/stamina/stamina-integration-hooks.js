@@ -56,13 +56,15 @@ export async function applyPhysicalExertionToSkill(actor, skillItem) {
   if (skillItem.type === 'combatStyle') return 0;
   
   // Check governing characteristic (baseCha or governingCha)
+  // These can be single values ("str") or comma/space separated lists ("str, agi")
   const governingRaw = String(skillItem.system?.governingCha || skillItem.system?.baseCha || "");
   const governing = governingRaw.trim().toLowerCase();
   
   if (!governing) return 0;
   
   // Physical Exertion only applies to STR/END based skills
-  // Match whole tokens to handle both single values ("str") and lists ("str, agi")
+  // Word boundary regex handles both single values and comma-separated lists correctly
+  // Examples: "str" ✓, "end" ✓, "str, agi" ✓, "strategy" ✗
   const isStrBased = /\bstr\b|\bstrength\b/.test(governing);
   const isEndBased = /\bend\b|\bendurance\b/.test(governing);
   
