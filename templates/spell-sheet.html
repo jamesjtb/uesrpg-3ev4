@@ -1,56 +1,33 @@
-<form class="{{cssClass}}" autocomplete="off">
-  <header class="sheet-header">
-    <img class="profile-img" src="{{item.img}}" data-edit="img" title="{{item.name}}" height="100" width="100"/>
-    <div class="header-fields">
-      <h1 class="charname">
+<form class="{{cssClass}} spell-sheet" autocomplete="off">
+  <header class="sheet-header compact-header">
+    <img class="profile-img" src="{{item.img}}" data-edit="img" title="{{item.name}}" height="60" width="60"/>
+    <div class="header-fields-compact">
+      <h1 class="spell-name">
         <input name="name" type="text" value="{{item.name}}" placeholder="Spell Name"/>
       </h1>
-      <div class="item-resource-container">
-        <div class="item-resource-row">
-          <div class="item-resource">
-            <div class="stat-value-label">
-              <input type="number" name="system.level" value="{{item.system.level}}" min="1" max="7"/>
-            </div>
-            <div class="flex-container">
-              <div class="small-text-label">Level</div>
-            </div>
-          </div>
-          <div class="item-resource">
-            <div class="stat-value-label">
-              <input type="number" name="system.cost" value="{{item.system.cost}}" min="0"/>
-            </div>
-            <div class="flex-container">
-              <div class="small-text-label">MP Cost</div>
-            </div>
-          </div>
-          <div class="item-resource">
-            <div class="stat-value-label">
-              <select name="system.school" data-dtype="String">
-                {{selectOptions item.system.school_cat selected=item.system.school localize=true}}
-              </select>
-            </div>
-            <div class="flex-container">
-              <div class="small-text-label">School</div>
-            </div>
-          </div>
-          <div class="item-resource">
-            <div class="stat-value-label">
-              <select name="system.spellType" data-dtype="String">
-                {{selectOptions item.system.spellTypes selected=item.system.spellType localize=true}}
-              </select>
-            </div>
-            <div class="flex-container">
-              <div class="small-text-label">Type</div>
-            </div>
-          </div>
-          <div class="item-resource uesrpg-spell-active-toggle">
-            <div class="stat-value-label" style="display:flex; justify-content:center; align-items:center;">
-              <input type="checkbox" name="flags.uesrpg-3ev4.activeSpell" {{checked (lookup (lookup item.flags "uesrpg-3ev4") "activeSpell")}} />
-            </div>
-            <div class="flex-container">
-              <div class="small-text-label">Active Spell</div>
-            </div>
-          </div>
+      <div class="spell-stats-row">
+        <div class="stat-compact">
+          <label>Level</label>
+          <input type="number" name="system.level" value="{{item.system.level}}" min="1" max="7"/>
+        </div>
+        <div class="stat-compact">
+          <label>MP</label>
+          <input type="number" name="system.cost" value="{{item.system.cost}}" min="0"/>
+        </div>
+        <div class="stat-compact">
+          <label>School</label>
+          <select name="system.school" data-dtype="String">
+            {{selectOptions item.system.school_cat selected=item.system.school localize=true}}
+          </select>
+        </div>
+        <div class="stat-compact">
+          <label>Type</label>
+          <select name="system.spellType" data-dtype="String">
+            {{selectOptions item.system.spellTypes selected=item.system.spellType localize=true}}
+          </select>
+        </div>
+        <div class="stat-compact checkbox-compact">
+          <label><input type="checkbox" name="flags.uesrpg-3ev4.activeSpell" {{checked (lookup (lookup item.flags "uesrpg-3ev4") "activeSpell")}} /> Active</label>
         </div>
       </div>
     </div>
@@ -71,97 +48,66 @@
 
     {{!-- Attributes Tab --}}
     <div class="tab" data-group="primary" data-tab="attributes">
-      <div class="attribute-tab-container">
-        <h3>Combat Attributes</h3>
-        
-        <div class="form-group">
-          <label><input type="checkbox" name="system.isAttackSpell" {{checked item.system.isAttackSpell}} /> Attack Spell</label>
-          <p class="hint">This spell counts as an attack and initiates opposed test.</p>
-        </div>
-        
-        <div class="form-group">
-          <label>Damage Type:</label>
-          <select name="system.damageType">
-            {{selectOptions item.system.damageTypes selected=item.system.damageType}}
-          </select>
+      <div class="attributes-compact">
+        <section class="attribute-section">
+          <h4>Combat</h4>
+          <div class="attribute-row">
+            <label class="checkbox-label">
+              <input type="checkbox" name="system.isAttackSpell" {{checked item.system.isAttackSpell}} />
+              Attack Spell
+            </label>
+          </div>
+          <div class="attribute-row">
+            <label>Damage Type</label>
+            <select name="system.damageType" style="width: 150px;">
+              {{selectOptions item.system.damageTypes selected=item.system.damageType}}
+            </select>
+            <input type="text" name="system.damageFormula" value="{{item.system.damageFormula}}" placeholder="1d6" style="width: 100px; margin-left: 10px;" />
+          </div>
           <p class="hint">Select "Healing" to restore HP instead of dealing damage.</p>
-        </div>
+        </section>
         
-        <div class="form-group">
-          <label>Damage/Healing Formula:</label>
-          <input type="text" name="system.damageFormula" value="{{item.system.damageFormula}}" placeholder="e.g., 1d6, 2d4+5, 1d10" />
-          <p class="hint">Dice formula for damage/healing. Leave blank for non-damaging spells.</p>
-        </div>
+        <section class="attribute-section">
+          <h4>Casting</h4>
+          <div class="checkboxes-inline">
+            <label><input type="checkbox" name="system.isInstant" {{checked item.system.isInstant}} /> Instant</label>
+            <label><input type="checkbox" name="system.hasUpkeep" {{checked item.system.hasUpkeep}} /> Upkeep</label>
+            <label><input type="checkbox" name="system.hasOverload" {{checked item.system.hasOverload}} /> Overload</label>
+            <label><input type="checkbox" name="system.hasReinforce" {{checked item.system.hasReinforce}} /> Reinforce</label>
+            <label><input type="checkbox" name="system.isDirect" {{checked item.system.isDirect}} /> Direct</label>
+          </div>
+          {{#if item.system.hasOverload}}
+          <div class="attribute-row" style="margin-top: 8px;">
+            <input type="text" name="system.overloadEffect" value="{{item.system.overloadEffect}}" placeholder="Overload effect description" style="width: 100%;" />
+          </div>
+          {{/if}}
+        </section>
         
-        <h3>Casting Attributes</h3>
-        
-        <div class="form-group">
-          <label><input type="checkbox" name="system.isInstant" {{checked item.system.isInstant}} /> Instant</label>
-          <p class="hint">Can be cast as Secondary Action or Reaction.</p>
-        </div>
-        
-        <div class="form-group">
-          <label><input type="checkbox" name="system.hasUpkeep" {{checked item.system.hasUpkeep}} /> Upkeep</label>
-          <p class="hint">Can be refreshed as Free Action by paying original cost.</p>
-        </div>
-        
-        <div class="form-group">
-          <label><input type="checkbox" name="system.hasOverload" {{checked item.system.hasOverload}} /> Overload</label>
-          <input type="text" name="system.overloadEffect" value="{{item.system.overloadEffect}}" placeholder="Overload effect description" />
-        </div>
-        
-        <div class="form-group">
-          <label><input type="checkbox" name="system.hasReinforce" {{checked item.system.hasReinforce}} /> Reinforce</label>
-          <p class="hint">Bonus when not restraining (requires talents).</p>
-        </div>
-        
-        <div class="form-group">
-          <label><input type="checkbox" name="system.isDirect" {{checked item.system.isDirect}} /> Direct</label>
-          <p class="hint">Cannot be defended against normally.</p>
-        </div>
-        
-        <h3>Range & Area</h3>
-        
-        <div class="form-group">
-          <label>Range Type:</label>
-          <select name="system.rangeType">
-            <option value="none" {{#if (eq item.system.rangeType "none")}}selected{{/if}}>None</option>
-            <option value="ranged" {{#if (eq item.system.rangeType "ranged")}}selected{{/if}}>Ranged</option>
-            <option value="melee" {{#if (eq item.system.rangeType "melee")}}selected{{/if}}>Melee</option>
-            <option value="aoe" {{#if (eq item.system.rangeType "aoe")}}selected{{/if}}>AoE</option>
-          </select>
-          <input type="text" name="system.range" value="{{item.system.range}}" placeholder="e.g., 100m, 1m, 7m sphere" />
-        </div>
-        
-        <div class="form-group">
-          <label>Mindlock Value:</label>
-          <input type="number" name="system.mindlockValue" value="{{item.system.mindlockValue}}" min="0" />
-          <p class="hint">Reduces max AP while active.</p>
-        </div>
-        
-        <h3>Duration</h3>
-        
-        <div class="form-group">
-          <label>Duration:</label>
-          <input type="number" name="system.duration.value" value="{{item.system.duration.value}}" min="0" style="width: 80px;" />
-          <select name="system.duration.unit" style="width: 120px;">
-            {{selectOptions item.system.duration.units selected=item.system.duration.unit}}
-          </select>
-        </div>
-        
-        <h3>Legacy Fields</h3>
-        <div class="form-group">
-          <label>Form:</label>
-          <input type="text" name="system.form" value="{{item.system.form}}" placeholder="Legacy form field" />
-        </div>
-        <div class="form-group">
-          <label>Damage (legacy):</label>
-          <input type="text" name="system.damage" value="{{item.system.damage}}" placeholder="Legacy damage field" />
-        </div>
-        <div class="form-group">
-          <label>Free-form Attributes:</label>
-          {{editor item.system.attributes target="system.attributes" engine="prosemirror" button=true owner=owner editable=editable}}
-        </div>
+        <section class="attribute-section">
+          <h4>Range & Duration</h4>
+          <div class="attribute-row">
+            <label>Range</label>
+            <select name="system.rangeType" style="width: 120px;">
+              <option value="none" {{#if (eq item.system.rangeType "none")}}selected{{/if}}>None</option>
+              <option value="ranged" {{#if (eq item.system.rangeType "ranged")}}selected{{/if}}>Ranged</option>
+              <option value="melee" {{#if (eq item.system.rangeType "melee")}}selected{{/if}}>Melee</option>
+              <option value="aoe" {{#if (eq item.system.rangeType "aoe")}}selected{{/if}}>AoE</option>
+            </select>
+            <input type="text" name="system.range" value="{{item.system.range}}" placeholder="e.g. 100m" style="width: 150px; margin-left: 10px;" />
+          </div>
+          <div class="attribute-row">
+            <label>Duration</label>
+            <input type="number" name="system.duration.value" value="{{item.system.duration.value}}" min="0" style="width: 80px;" />
+            <select name="system.duration.unit" style="width: 120px; margin-left: 10px;">
+              {{selectOptions item.system.duration.units selected=item.system.duration.unit}}
+            </select>
+          </div>
+          <div class="attribute-row">
+            <label>Mindlock</label>
+            <input type="number" name="system.mindlockValue" value="{{item.system.mindlockValue}}" min="0" style="width: 60px;" />
+            <span class="hint" style="margin-left: 8px;">Reduces max AP while active</span>
+          </div>
+        </section>
       </div>
     </div>
 
@@ -179,16 +125,18 @@
               <th>Damage/Heal Formula</th>
               <th>Effect Strength</th>
               <th>Duration (rounds)</th>
+              <th>Actions</th>
             </tr>
           </thead>
           <tbody>
             {{#each item.system.scaling.levels as |lvl idx|}}
-            <tr>
+            <tr data-index="{{idx}}">
               <td>{{lvl.level}}</td>
               <td><input type="number" name="system.scaling.levels.{{idx}}.cost" value="{{lvl.cost}}" min="0" /></td>
               <td><input type="text" name="system.scaling.levels.{{idx}}.damageFormula" value="{{lvl.damageFormula}}" placeholder="e.g., 1d6" /></td>
               <td><input type="number" name="system.scaling.levels.{{idx}}.effectStrength" value="{{lvl.effectStrength}}" /></td>
               <td><input type="number" name="system.scaling.levels.{{idx}}.duration" value="{{lvl.duration}}" min="0" /></td>
+              <td><button type="button" class="remove-scaling-level" title="Remove Level"><i class="fas fa-trash"></i></button></td>
             </tr>
             {{/each}}
           </tbody>

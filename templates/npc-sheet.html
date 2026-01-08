@@ -962,7 +962,7 @@
                                         <label>Traits</label>
                                     </h2>
                                     <ol class="single-column-list">
-                                        {{#each actor.trait as |item id|}}
+                                        {{#each actor.itemTypes.trait as |item id|}}
                                             <li class="item" data-item-id="{{item._id}}">
                                                 <div class="itemInfo">
                                                     <img class="item-img" src="{{item.img}}" title="Send to Chat"/>
@@ -982,7 +982,7 @@
                                         <label>Talents</label>
                                     </h2>
                                     <ol class="single-column-list">
-                                        {{#each actor.talent as |item id|}}
+                                        {{#each actor.itemTypes.talent as |item id|}}
                                             <li class="item" data-item-id="{{item._id}}">
                                                 <div class="itemInfo">
                                                     <img class="item-img" src="{{item.img}}" title="Send to Chat"/>
@@ -1001,7 +1001,7 @@
                                         <label>Powers</label>
                                     </h2>
                                     <ol class="single-column-list">
-                                        {{#each actor.power as |item id|}}
+                                        {{#each actor.itemTypes.power as |item id|}}
                                             <li class="item" data-item-id="{{item._id}}">
                                                 <div class="itemInfo">
                                                     <img class="item-img" src="{{item.img}}" title="Send to Chat"/>
