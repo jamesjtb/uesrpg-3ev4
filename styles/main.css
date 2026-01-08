@@ -34,6 +34,7 @@
   border-right: rgb(0, 0, 0) 5px solid;
   border-bottom: rgb(0, 0, 0) 5px solid;
   box-shadow: 5px 5px 30px 5px;
+  overflow: hidden;
 }
 
 .window-title {
@@ -173,7 +174,8 @@
 }
 
 #tinymce body {
-  height: calc(100vh - 16px);
+  height: auto !important;
+  min-height: 0 !important;
   background: white;
 }
 
@@ -1774,74 +1776,122 @@
 .worldbuilding .basic-padding {
   padding: 0 5px;
 }
-/* --- UESRPG PATCH: prevent TinyMCE legacy viewport-height from inflating AppV2 windows --- */
-#tinymce body {
-  height: auto !important;
-  min-height: 0 !important;
-}
-/* --- UESRPG PATCH: AppV2-friendly sizing (avoid sheet windows stretching to viewport cap) --- */
+/* === ITEM SHEET STRUCTURE === */
 
-/* 1) Ensure the sheet window content can shrink and scroll */
-.worldbuilding .window-content {
-  overflow: hidden; /* prevents outer window-content from forcing layout */
-}
-
-/* --- UESRPG PATCH: Fix item sheet structure to prevent description tab invasion --- */
+/* Window content base */
 .worldbuilding.sheet.item .window-content {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  overflow: hidden;
+}
+
+/* Sticky header - fixed size */
+.worldbuilding.sheet.item .stickyHeader {
+  flex: 0 0 auto;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  background: url("../images/parchment5.jpg") repeat;
+  background-size: contain;
+}
+
+/* Sheet body - scrollable container */
+.worldbuilding.sheet.item .sheet-body {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  padding: 6px;
+}
+
+/* All tabs hidden by default */
+.worldbuilding.sheet.item .sheet-body > .tab {
+  display: none;
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
+/* Active tab shown */
+.worldbuilding.sheet.item .sheet-body > .tab.active {
+  display: flex;
+  flex-direction: column;
+}
+
+/* Description tab specific - editor must fill space */
+.worldbuilding.sheet.item .sheet-body > .tab[data-tab="description"] {
+  display: none;
+}
+
+.worldbuilding.sheet.item .sheet-body > .tab[data-tab="description"].active {
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow: hidden;
+}
+
+/* Editor within description tab */
+.worldbuilding.sheet.item .tab[data-tab="description"] .editor {
+  flex: 1 1 auto;
+  min-height: 300px;
   display: flex;
   flex-direction: column;
   overflow: hidden;
 }
 
-.worldbuilding.sheet.item .stickyHeader {
-  flex-shrink: 0;
+.worldbuilding.sheet.item .tab[data-tab="description"] .editor .editor-container {
+  flex: 1 1 auto;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
 }
 
-.worldbuilding.sheet.item .sheet-body {
+.worldbuilding.sheet.item .tab[data-tab="description"] .editor .editor-content {
   flex: 1 1 auto;
   min-height: 0;
   overflow-y: auto;
   overflow-x: hidden;
 }
 
-.worldbuilding.sheet.item .tab {
+/* Attributes tab - no editor, just scrollable content */
+.worldbuilding.sheet.item .sheet-body > .tab[data-tab="attributes"] {
   display: none;
-  height: 100%;
+  overflow-y: auto;
+  overflow-x: hidden;
 }
 
-.worldbuilding.sheet.item .tab.active {
-  display: flex;
-  flex-direction: column;
+.worldbuilding.sheet.item .sheet-body > .tab[data-tab="attributes"].active {
+  display: block;
 }
 
-.worldbuilding.sheet.item .tab[data-tab="description"] {
+/* Effects tab */
+.worldbuilding.sheet.item .sheet-body > .tab[data-tab="effects"] {
   display: none;
+  overflow-y: auto;
+  overflow-x: hidden;
 }
 
-.worldbuilding.sheet.item .tab[data-tab="description"].active {
-  display: flex;
-  flex-direction: column;
-  flex: 1 1 auto;
-  min-height: 0;
+.worldbuilding.sheet.item .sheet-body > .tab[data-tab="effects"].active {
+  display: block;
 }
 
-.worldbuilding.sheet.item .tab[data-tab="description"] .editor {
-  display: flex;
-  flex-direction: column;
-  flex: 1 1 auto;
+/* ProseMirror editor should fill container */
+.worldbuilding.sheet.item .ProseMirror {
   min-height: 200px;
+  height: 100% !important;
+  max-height: none !important;
 }
 
-/* REMOVED: This rule caused the description editor to invade other tabs
-.worldbuilding.sheet.item .window-content > form {
-  flex: 1 1 auto;
-  min-height: 0;
-  overflow-y: auto;
-  overflow-x: hidden;
-  display: flex;
-  flex-direction: column;
+/* Ensure TinyMCE body doesn't force size */
+.worldbuilding.sheet.item #tinymce body {
+  height: auto !important;
+  min-height: 0 !important;
 }
-*/
 
 /* Compact weapon attributes layout */
 .worldbuilding .weapon-attributes-container {
