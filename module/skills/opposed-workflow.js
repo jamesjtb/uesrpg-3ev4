@@ -382,13 +382,13 @@ async function _skillRollDialog({
 function _listSkills(actor, { allowCombatStyle = false } = {}) {
   const out = [];
   
-  // Add Combat Style option if allowed and available
+  // Add ALL Combat Styles if allowed (not just active one)
   if (allowCombatStyle && actor?.type !== "NPC") {
-    const activeCombatStyle = actor?.itemTypes?.combatStyle?.find(cs => cs?.system?.active);
-    if (activeCombatStyle) {
+    const combatStyles = actor?.itemTypes?.combatStyle ?? actor?.items?.filter(i => i.type === "combatStyle") ?? [];
+    for (const cs of combatStyles) {
       out.push({ 
-        uuid: activeCombatStyle.uuid, 
-        name: activeCombatStyle.name, 
+        uuid: cs.uuid, 
+        name: `${cs.name} (Combat Style)`, 
         hasSpec: false, 
         isCombatStyle: true
       });
@@ -804,19 +804,8 @@ if (!authorUser) return;
       if (data.attacker.result) return;
       if (!requireUserCanRollActor(game.user, attacker)) return;
       
-      // For Special Actions, check if skill is already locked in
-      const isSpecialAction = Boolean(data?.specialActionId);
-      const hasLockedSkill = Boolean(data.attacker.skillUuid);
-      
-      // List skills first to check if locked skill is a combat style
-      const tempSkills = _listSkills(attacker, { allowCombatStyle: true });
-      const lockedIsCombatStyle = hasLockedSkill && (
-        tempSkills.find(s => s.uuid === data.attacker.skillUuid && s.isCombatStyle) ||
-        data.attacker.skillUuid?.startsWith("prof:combat")
-      );
-      
-      // Check if Combat Style option should be allowed
-      const allowCombatStyle = Boolean(data?.allowCombatStyle) || (isSpecialAction && lockedIsCombatStyle);
+      // Always respect allowCombatStyle from state (default to true for universal access)
+      const allowCombatStyle = Boolean(data?.allowCombatStyle ?? true);
       
       const skills = _listSkills(attacker, { allowCombatStyle });
       if (!skills.length) {
@@ -1024,21 +1013,8 @@ if (!authorUser) return;
       if (data.defender.result) return;
       if (!requireUserCanRollActor(game.user, defender, { message: "You do not have permission to roll for the target actor." })) return;
       
-      // For Special Actions, check if defender skill is already locked in
-      const isSpecialAction = Boolean(data?.specialActionId);
-      
-      // Default selection: use locked-in skill if available, else same-named skill if present, else last-used on this actor, else first.
-      const lockedSkillUuid = data.defender.skillUuid;
-      
-      // List skills first to check if locked skill is a combat style
-      const tempSkills = _listSkills(defender, { allowCombatStyle: true });
-      const lockedIsCombatStyle = lockedSkillUuid && (
-        tempSkills.find(s => s.uuid === lockedSkillUuid && s.isCombatStyle) ||
-        lockedSkillUuid?.startsWith("prof:combat")
-      );
-      
-      // Check if Combat Style option should be allowed
-      const allowCombatStyle = Boolean(data?.allowCombatStyle) || (isSpecialAction && lockedIsCombatStyle);
+      // Always respect allowCombatStyle from state (default to true for universal access)
+      const allowCombatStyle = Boolean(data?.allowCombatStyle ?? true);
       
       const skills = _listSkills(defender, { allowCombatStyle });
       if (!skills.length) {
@@ -1049,6 +1025,8 @@ if (!authorUser) return;
       const last = _getLastSkillRollOptions();
       const perActorLastSkill = last?.lastSkillUuidByActor?.[defender.uuid] ?? null;
 
+      // Default selection: use locked-in skill if available, else same-named skill if present, else last-used on this actor, else first.
+      const lockedSkillUuid = data.defender.skillUuid;
       const wantedName = String(data.attacker.skillLabel ?? "").trim().toLowerCase();
       const sameName = skills.find(s => String(s.name).trim().toLowerCase() === wantedName) ?? null;
       const selectedSkillUuid = lockedSkillUuid ?? sameName?.uuid ?? perActorLastSkill ?? skills[0].uuid;
