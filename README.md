@@ -1,5 +1,5 @@
 # UESRPG 3e v4
-This system is a fork of the original uesrpg d100 system created by DogBoneZone at https://gitlab.com/DogBoneZone/uesrpg-3e and v13 compatibility upgrade of it  https://github.com/jamesjtb/uesrpg-3ev4
+This system is a fork of the original uesrpg d100 system created by DogBoneZone at https://gitlab.com/DogBoneZone/uesrpg-3e and v13 compatibility upgrade of it https://github.com/jamesjtb/uesrpg-3ev4
 
 This specific fork has advanced combat automation, active effects implementation and other up to date features of the current Foundry VTT iteration. 
 
