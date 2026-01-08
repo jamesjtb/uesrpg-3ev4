@@ -6,7 +6,7 @@ This document describes the Active Effects (AE) framework implemented for the UE
 - A roadmap marker distinguishing implemented vs deferred AE lanes
 - All listed effects are deterministic, stack-safe, and tested, unless explicitly marked otherwise.
 
-**1 Core Design Principles **
+**1 Core Design Principles**
 1.1  Deterministic evaluation
 - The system does not rely on Foundry auto-applying AE changes
 - All AE changes are explicitly read and evaluated by the system
@@ -40,8 +40,8 @@ system.modifiers.combat.defenseTN.counter
 
 Applies to:
 - Opposed combat
-- - Unopposed combat style rolls (parity guaranteed)
-  - - Shown in UI: Full provenance in TN breakdown (collapsible)
+- Unopposed combat style rolls (parity guaranteed)
+- Shown in UI: Full provenance in TN breakdown (collapsible)
 
 2.2 Skills Attribute Keys
 Global
@@ -189,4 +189,5 @@ These are explicitly not implemented yet and safe to ignore until future updates
 - Initiative “current value” overrides
 
 - Any AE mutating stored document data
+
 
