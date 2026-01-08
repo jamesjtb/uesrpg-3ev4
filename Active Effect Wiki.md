@@ -40,8 +40,8 @@ system.modifiers.combat.defenseTN.counter
 
 Applies to:
 - Opposed combat
-- Unopposed combat style rolls (parity guaranteed)
-- Shown in UI: Full provenance in TN breakdown (collapsible)
+- - Unopposed combat style rolls (parity guaranteed)
+  - - Shown in UI: Full provenance in TN breakdown (collapsible)
 
 2.2 Skills Attribute Keys
 Global
@@ -172,12 +172,12 @@ OVERRIDE replaces ADD for the same key. Deterministic resolution via priority
 
 Works for:
 - TN
-- Skills
-- Damage
-- Derived stats
-- Resources
-- Encumbrance
-- Fatigue
+- - Skills
+  - - Damage
+    - - Derived stats
+      - - Resources
+        - - Encumbrance
+          - - Fatigue
 
 **10. Deferred / Not Implemented (by design)**
 
@@ -189,3 +189,4 @@ These are explicitly not implemented yet and safe to ignore until future updates
 - Initiative “current value” overrides
 
 - Any AE mutating stored document data
+
