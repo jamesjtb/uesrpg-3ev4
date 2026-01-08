@@ -3720,8 +3720,8 @@ if (stage === "attacker-roll") {
       if (attackMode === "ranged") {
         try {
           // Weapon UUID priority: preConsumedAmmo (cached) > context (declared) > preferred (equipped)
-          const weaponUuid = data.attacker?.preConsumedAmmo?.weaponUuid 
-            ?? String(data?.context?.weaponUuid ?? "") 
+          const weaponUuid = (data.attacker?.preConsumedAmmo?.weaponUuid 
+            ?? String(data?.context?.weaponUuid ?? "")) 
             || _getPreferredWeaponUuid(attacker, { meleeOnly: false }) 
             || "";
           if (weaponUuid) {
