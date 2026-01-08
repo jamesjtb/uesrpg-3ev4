@@ -1786,19 +1786,100 @@
   overflow: hidden; /* prevents outer window-content from forcing layout */
 }
 
-/* --- UESRPG PATCH: item sheets are not wrapped in .sheet-body, so make the form the scroll container --- */
+/* --- UESRPG PATCH: Fix item sheet structure to prevent description tab invasion --- */
 .worldbuilding.sheet.item .window-content {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.worldbuilding.sheet.item .stickyHeader {
+  flex-shrink: 0;
+}
+
+.worldbuilding.sheet.item .sheet-body {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
+.worldbuilding.sheet.item .tab {
+  display: none;
+  height: 100%;
+}
+
+.worldbuilding.sheet.item .tab.active {
   display: flex;
   flex-direction: column;
 }
 
+.worldbuilding.sheet.item .tab[data-tab="description"] {
+  display: none;
+}
+
+.worldbuilding.sheet.item .tab[data-tab="description"].active {
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 auto;
+  min-height: 0;
+}
+
+.worldbuilding.sheet.item .tab[data-tab="description"] .editor {
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 auto;
+  min-height: 200px;
+}
+
+/* REMOVED: This rule caused the description editor to invade other tabs
 .worldbuilding.sheet.item .window-content > form {
   flex: 1 1 auto;
-  min-height: 0;            /* critical for flex scroll containment */
-  overflow-y: auto;         /* prevent window growth */
+  min-height: 0;
+  overflow-y: auto;
   overflow-x: hidden;
   display: flex;
   flex-direction: column;
+}
+*/
+
+/* Compact weapon attributes layout */
+.worldbuilding .weapon-attributes-container {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  padding: 8px;
+}
+
+.worldbuilding .weapon-attributes-section {
+  border: 1px solid rgba(0, 0, 0, 0.2);
+  background: rgba(180, 180, 180, 0.3);
+  padding: 8px;
+}
+
+.worldbuilding .weapon-attributes-section h3 {
+  margin: 0 0 6px;
+  font-size: 13px;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.2);
+  padding-bottom: 3px;
+}
+
+.worldbuilding .weapon-field-row {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 6px;
+  align-items: center;
+  padding: 3px 0;
+  font-size: 12px;
+}
+
+.worldbuilding .weapon-field-row label {
+  font-weight: 500;
+}
+
+.worldbuilding .weapon-field-row input,
+.worldbuilding .weapon-field-row select {
+  width: 120px;
 }
 
 /* Structured qualities: multi-column grid instead of a single vertical list */
@@ -2009,15 +2090,8 @@
   overflow-y: auto;
 }
 
-/* 6) Item sheet scroll containment (ensure existing rules are present) */
-.worldbuilding.sheet.item .window-content > form {
-  flex: 1 1 auto;
-  min-height: 0;
-  overflow-y: auto;
-  overflow-x: hidden;
-  display: flex;
-  flex-direction: column;
-}
+/* 6) Item sheet scroll containment - REMOVED (was causing description tab invasion)
+   The correct rules are now at lines 1789-1842 */
 
 
 /* --- Patch: Effective hint positioning (prevents overlap with base values) --- */
