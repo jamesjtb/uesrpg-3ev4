@@ -6,7 +6,8 @@
     "module/entrypoint.js"
   ],
   "styles": [
-    "styles/main.css"
+    "styles/main.css",
+    "styles/spell-sheet-compact.css"
   ],
   "packs": [
     {
