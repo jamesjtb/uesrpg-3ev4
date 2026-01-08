@@ -463,12 +463,15 @@ async activateListeners(html) {
           return;
         }
 
-        // Create skill opposed test WITHOUT pre-selecting skill
-        // Let user choose from dropdown in card (includes Combat Styles)
+        // Get active combat style UUID to pre-select it (if available)
+        const activeCombatStyle = getExplicitActiveCombatStyleItem(this.actor);
+        const attackerSkillUuid = activeCombatStyle?.uuid ?? null;
+
+        // Create skill opposed test with combat style pre-selected if available
         const message = await SkillOpposedWorkflow.createPending({
           attackerTokenUuid: actorToken?.document?.uuid ?? actorToken?.uuid,
           defenderTokenUuid: targetToken?.document?.uuid ?? targetToken?.uuid,
-          attackerSkillUuid: null,  // Let user choose from dropdown in card
+          attackerSkillUuid: attackerSkillUuid,  // Pre-select active combat style if available
           attackerSkillLabel: `${def.name} (Special Action)`
         });
 
