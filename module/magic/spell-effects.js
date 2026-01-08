@@ -1,13 +1,146 @@
 /**
  * module/magic/spell-effects.js
  *
- * Spell effect application with RAW stacking rules.
+ * Spell effect application with RAW stacking rules and duration tracking.
  * Chapter 6 p.128 lines 234-241: Effects don't stack with themselves,
  * and opposing effects override each other.
  */
 
 /**
- * Apply a spell effect to a target actor
+ * Apply spell Active Effects to target(s) with duration tracking
+ * @param {Actor} casterActor - The caster of the spell
+ * @param {Actor} targetActor - The target receiving the effect
+ * @param {Item} spell - The spell being cast
+ * @param {object} options - Additional options (actualCost, etc.)
+ * @returns {Promise<void>}
+ */
+export async function applySpellEffectsToTarget(casterActor, targetActor, spell, options = {}) {
+  const spellUuid = spell.uuid;
+  const duration = computeSpellDuration(spell);
+  
+  // Remove existing effects from same spell (no stacking per RAW)
+  const existing = targetActor.effects.filter(e => e.origin === spellUuid);
+  if (existing.length) {
+    await targetActor.deleteEmbeddedDocuments("ActiveEffect", existing.map(e => e.id));
+  }
+  
+  // Remove opposing effects (Frenzy vs Calm, etc.)
+  await removeOpposingSpellEffects(targetActor, spell);
+  
+  // Clone spell's Active Effects to target
+  const spellEffects = Array.from(spell.effects ?? []);
+  const toCreate = [];
+  
+  for (const ef of spellEffects) {
+    if (ef.disabled) continue;
+    
+    const effectData = {
+      name: ef.name || spell.name,
+      img: ef.img || spell.img,
+      origin: spellUuid,
+      disabled: false,
+      duration: {
+        rounds: duration.rounds,
+        seconds: duration.seconds,
+        startRound: game.combat?.round,
+        startTime: game.time.worldTime
+      },
+      changes: foundry.utils.duplicate(ef.changes ?? []),
+      flags: {
+        "uesrpg-3ev4": {
+          spellEffect: true,
+          spellUuid,
+          spellName: spell.name,
+          spellSchool: spell.system.school,
+          spellLevel: spell.system.level,
+          casterUuid: casterActor.uuid,
+          hasUpkeep: Boolean(spell.system?.hasUpkeep),
+          upkeepCost: options.actualCost || spell.system.cost
+        }
+      }
+    };
+    
+    toCreate.push(effectData);
+  }
+  
+  if (toCreate.length) {
+    await targetActor.createEmbeddedDocuments("ActiveEffect", toCreate);
+  }
+}
+
+/**
+ * Compute spell duration from spell data
+ * @param {Item} spell - The spell
+ * @returns {object} - Object with rounds and seconds
+ */
+function computeSpellDuration(spell) {
+  const dur = spell.system.duration || {};
+  const value = Number(dur.value ?? 0);
+  const unit = dur.unit || "rounds";
+  
+  let rounds = 0;
+  let seconds = 0;
+  
+  switch (unit) {
+    case "instant":
+      return { rounds: 0, seconds: 0 };
+    case "rounds":
+      rounds = value;
+      seconds = value * (CONFIG.time.roundTime || 6);
+      break;
+    case "minutes":
+      rounds = value * 10; // 1 minute = 10 rounds
+      seconds = value * 60;
+      break;
+    case "hours":
+      rounds = value * 600;
+      seconds = value * 3600;
+      break;
+    case "days":
+      rounds = value * 14400;
+      seconds = value * 86400;
+      break;
+    case "permanent":
+      return { rounds: Infinity, seconds: Infinity };
+  }
+  
+  return { rounds, seconds };
+}
+
+/**
+ * Remove opposing spell effects (Frenzy vs Calm, etc.)
+ * @param {Actor} targetActor - The target actor
+ * @param {Item} spell - The spell being cast
+ * @returns {Promise<void>}
+ */
+async function removeOpposingSpellEffects(targetActor, spell) {
+  const opposingPairs = {
+    "Frenzy": "Calm",
+    "Calm": "Frenzy",
+    "Fortify": "Weakness",
+    "Weakness": "Fortify",
+    "Light": "Darkness",
+    "Darkness": "Light",
+    "Courage": "Fear",
+    "Fear": "Courage"
+    // Expand as needed
+  };
+  
+  const opposing = opposingPairs[spell.name];
+  if (!opposing) return;
+  
+  const toRemove = targetActor.effects.filter(e => 
+    e.flags["uesrpg-3ev4"]?.spellEffect && e.flags["uesrpg-3ev4"]?.spellName === opposing
+  );
+  
+  if (toRemove.length) {
+    await targetActor.deleteEmbeddedDocuments("ActiveEffect", toRemove.map(e => e.id));
+    ui.notifications.info(`${opposing} was overridden by ${spell.name}.`);
+  }
+}
+
+/**
+ * Apply a spell effect to a target actor (legacy function, kept for compatibility)
  * Respects RAW stacking rules:
  *  - Effects don't stack with themselves
  *  - Opposing effects (e.g., Frenzy vs Calm) override each other
@@ -32,7 +165,7 @@ export async function applySpellEffect(target, spell, options = {}) {
     icon: spell.img,
     origin: spell.uuid,
     disabled: false,
-    duration: computeSpellDuration(spell, options),
+    duration: computeSpellDurationLegacy(spell, options),
     changes,
     flags: {
       "uesrpg-3ev4": {
@@ -63,7 +196,7 @@ export async function applySpellEffect(target, spell, options = {}) {
 }
 
 /**
- * Remove opposing spell effects
+ * Remove opposing spell effects (legacy function)
  * E.g., Frenzy removes Calm, and vice versa
  *
  * @param {Actor} target - The target actor
@@ -101,7 +234,7 @@ async function removeOpposingEffects(target, spell) {
 }
 
 /**
- * Compute spell duration
+ * Compute spell duration (legacy function)
  * For now, returns a simple duration structure
  * TODO: Parse spell.system.attributes for duration keywords
  *
@@ -109,7 +242,7 @@ async function removeOpposingEffects(target, spell) {
  * @param {object} options - Additional options
  * @returns {object} - Duration object for ActiveEffect
  */
-function computeSpellDuration(spell, options = {}) {
+function computeSpellDurationLegacy(spell, options = {}) {
   // Default: no duration (indefinite until dispelled)
   const duration = {
     rounds: undefined,

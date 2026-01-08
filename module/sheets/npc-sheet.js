@@ -187,7 +187,7 @@ async activateListeners(html) {
   html.find(".characteristic-roll").click(this._onClickCharacteristic.bind(this));
   if (typeof this._onProfessionsRoll === "function") html.find(".professions-roll").click(this._onProfessionsRoll.bind(this));
   html.find(".damage-roll").click(this._onDamageRoll.bind(this));
-  html.find(".magic-roll").click(this._onSpellRoll.bind(this));
+  html.find(".magic-roll").click(this._onMagicSkillRoll.bind(this));
   html.find(".resistance-roll").click(this._onResistanceRoll.bind(this));
   html.find(".ammo-roll").click(this._onAmmoRoll.bind(this));
   html.find(".defend-roll").click(this._onDefendRoll.bind(this));
@@ -1858,54 +1858,81 @@ async _onDefendRoll(event) {
 }
 
 /**
-   * Handle Cast Magic button click.
-   * Shows spell picker, then routes to attack spell workflow or existing spell dialog.
+   * Handle clicking spell dice icon on Magic tab.
+   * Routes to new magic casting engine instead of legacy rolling.
    */
-  async _onCastMagicAction(event) {
+  async _onMagicSkillRoll(event) {
     event.preventDefault();
     
-    // 1. Get all spells owned by actor
-    const spells = this.actor.items.filter(i => i.type === "spell");
-    if (!spells.length) {
-      ui.notifications.warn("No spells available to cast.");
+    const button = event.currentTarget;
+    const li = button.closest(".item");
+    const spell = li ? this.actor.items.get(li.dataset.itemId) : null;
+    
+    if (!spell) {
+      ui.notifications.warn("Spell not found.");
       return;
     }
     
-    // 2. Show spell selection dialog
-    const spellOptions = spells.map(s => 
-      `<option value="${s.id}">${s.name} (${s.system.school} ${s.system.level}, ${s.system.cost} MP)</option>`
-    ).join("");
+    // Route to new casting engine
+    await this._onCastMagicAction(event, spell);
+  }
+
+/**
+   * Handle Cast Magic button click.
+   * Shows spell picker, then routes to attack spell workflow or existing spell dialog.
+   * @param {Event} event - The triggering event (optional if preselectedSpell provided)
+   * @param {Item} preselectedSpell - Pre-selected spell to cast (optional)
+   */
+  async _onCastMagicAction(event, preselectedSpell = null) {
+    event?.preventDefault?.();
     
-    const content = `
-      <form class="uesrpg-cast-magic-form">
-        <div class="form-group">
-          <label><b>Select Spell to Cast</b></label>
-          <select name="spellId" style="width:100%;">${spellOptions}</select>
-        </div>
-      </form>`;
+    let spell = preselectedSpell;
     
-    const selectedSpellId = await Dialog.wait({
-      title: "Cast Magic",
-      content,
-      buttons: {
-        cast: {
-          label: "Cast",
-          callback: (html) => {
-            const root = html instanceof HTMLElement ? html : html?.[0];
-            return root?.querySelector('select[name="spellId"]')?.value;
-          }
+    // If no spell provided, show picker
+    if (!spell) {
+      // 1. Get all spells owned by actor
+      const spells = this.actor.items.filter(i => i.type === "spell");
+      if (!spells.length) {
+        ui.notifications.warn("No spells available to cast.");
+        return;
+      }
+      
+      // 2. Show spell selection dialog
+      const spellOptions = spells.map(s => 
+        `<option value="${s.id}">${s.name} (${s.system.school} L${s.system.level}, ${s.system.cost} MP)</option>`
+      ).join("");
+      
+      const content = `
+        <form class="uesrpg-cast-magic-form">
+          <div class="form-group">
+            <label><b>Select Spell to Cast</b></label>
+            <select name="spellId" style="width:100%;">${spellOptions}</select>
+          </div>
+        </form>`;
+      
+      const selectedSpellId = await Dialog.wait({
+        title: "Cast Magic",
+        content,
+        buttons: {
+          cast: {
+            label: "Cast",
+            callback: (html) => {
+              const root = html instanceof HTMLElement ? html : html?.[0];
+              return root?.querySelector('select[name="spellId"]')?.value;
+            }
+          },
+          cancel: { label: "Cancel", callback: () => null }
         },
-        cancel: { label: "Cancel", callback: () => null }
-      },
-      default: "cast"
-    }, { width: 420 });
+        default: "cast"
+      }, { width: 420 });
+      
+      if (!selectedSpellId) return;
+      
+      spell = this.actor.items.get(selectedSpellId);
+      if (!spell) return;
+    }
     
-    if (!selectedSpellId) return;
-    
-    const spell = this.actor.items.get(selectedSpellId);
-    if (!spell) return;
-    
-    // 3. Check if spell is attack type and targets exist
+    // 3. Check if attack spell and targets exist
     const targets = [...(game.user.targets ?? [])];
     const isAttack = Boolean(spell.system?.isAttackSpell);
     
