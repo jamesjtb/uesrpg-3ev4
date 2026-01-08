@@ -3715,10 +3715,14 @@ if (stage === "attacker-roll") {
       if (!ammoOk) return;
 
       // Mark weapon as needing reload after ammunition consumption (ranged attacks only).
+      // Weapon UUID is available from preConsumedAmmo if ammo was consumed, or from context/preferred weapon otherwise.
       const attackMode = getContextAttackMode(data?.context);
       if (attackMode === "ranged") {
         try {
-          const weaponUuid = String(data?.context?.weaponUuid ?? "") || _getPreferredWeaponUuid(attacker, { meleeOnly: false }) || "";
+          const weaponUuid = data.attacker?.preConsumedAmmo?.weaponUuid 
+            ?? String(data?.context?.weaponUuid ?? "") 
+            || _getPreferredWeaponUuid(attacker, { meleeOnly: false }) 
+            || "";
           if (weaponUuid) {
             const weapon = await fromUuid(weaponUuid);
             if (weapon && weapon.type === "weapon") {
