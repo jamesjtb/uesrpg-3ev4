@@ -126,7 +126,15 @@ export class SimpleItem extends Item {
     const itemData = this.system
     const actorData = this.actor ? this.actor : {}
 
-    // Prepare data based on item type - defensive guards for hasOwnProperty
+    // STEP 1: Inject auto-granted qualities into a computed structured list for automation.
+    // This must run BEFORE type-specific prepare methods (like _prepareWeaponItem) so they can use qualitiesStructuredInjected.
+    // This must run for world items as well as embedded items so automation helpers can rely on it.
+    if (['weapon','armor','ammunition'].includes(this.type)) {
+      this._injectAutoQualities(itemData);
+    }
+
+    // STEP 2: Prepare data based on item type - defensive guards for hasOwnProperty
+    // Now qualitiesStructuredInjected is available for use in these methods
     if (this.isEmbedded && this.actor?.system != null) {
       if (this.system && Object.prototype.hasOwnProperty.call(this.system, 'modPrice')) { this._prepareMerchantItem(actorData, itemData) }
       if (this.type === 'armor') { this._prepareArmorItem(actorData, itemData) }
@@ -136,11 +144,6 @@ export class SimpleItem extends Item {
       if (this.system && Object.prototype.hasOwnProperty.call(this.system, 'skillArray') && actorData.type === 'Player Character') { this._prepareModSkillItems(actorData, itemData) }
       if (this.system && Object.prototype.hasOwnProperty.call(this.system, 'baseCha')) { this._prepareCombatStyleData(actorData, itemData) }
       if (this.type == 'container') { this._prepareContainerItem(actorData, itemData) }}
-    // Step 7: Inject auto-granted qualities into a computed structured list for automation.
-    // This must run for world items as well as embedded items so automation helpers can rely on it.
-    if (['weapon','armor','ammunition'].includes(this.type)) {
-      this._injectAutoQualities(itemData);
-    }
 
   }
 
