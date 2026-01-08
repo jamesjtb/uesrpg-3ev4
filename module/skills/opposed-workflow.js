@@ -22,6 +22,7 @@ const _FLAG_NS = "uesrpg-3ev4";
 const _FLAG_KEY = "skillOpposed";
 const _CARD_VERSION = 1;
 const _SKILL_ROLL_LAST_OPTIONS_KEY = "skillRollLastOptions";
+const _DEFAULT_COMBAT_STYLE_DEFENSE_TYPE = "parry";
 
 function _normalizeCardFlag(raw) {
   // v1+ contract: { version, state }
@@ -918,8 +919,10 @@ if (!authorUser) return;
         if (decl?.applyBlinded) situationalMods.push({ label: "Blinded (sight)", value: -30 });
         if (decl?.applyDeafened) situationalMods.push({ label: "Deafened (hearing)", value: -30 });
         
-        tn = computeTN(attacker, {
-          difficultyKey: decl.difficultyKey,
+        tn = computeTN({
+          actor: attacker,
+          role: "attacker",
+          styleUuid: decl.skillUuid,
           manualMod: decl.manualMod,
           situationalMods
         });
@@ -932,8 +935,10 @@ if (!authorUser) return;
         if (decl?.applyBlinded) situationalMods.push({ label: "Blinded (sight)", value: -30 });
         if (decl?.applyDeafened) situationalMods.push({ label: "Deafened (hearing)", value: -30 });
         
-        tn = computeTN(attacker, {
-          difficultyKey: decl.difficultyKey,
+        tn = computeTN({
+          actor: attacker,
+          role: "attacker",
+          styleUuid: decl.skillUuid,
           manualMod: decl.manualMod,
           situationalMods
         });
@@ -1122,8 +1127,11 @@ if (!authorUser) return;
         if (decl?.applyBlinded) situationalMods.push({ label: "Blinded (sight)", value: -30 });
         if (decl?.applyDeafened) situationalMods.push({ label: "Deafened (hearing)", value: -30 });
         
-        tn = computeTN(defender, {
-          difficultyKey: decl.difficultyKey,
+        tn = computeTN({
+          actor: defender,
+          role: "defender",
+          defenseType: _DEFAULT_COMBAT_STYLE_DEFENSE_TYPE,
+          styleUuid: decl.skillUuid,
           manualMod: decl.manualMod,
           situationalMods
         });
@@ -1136,8 +1144,11 @@ if (!authorUser) return;
         if (decl?.applyBlinded) situationalMods.push({ label: "Blinded (sight)", value: -30 });
         if (decl?.applyDeafened) situationalMods.push({ label: "Deafened (hearing)", value: -30 });
         
-        tn = computeTN(defender, {
-          difficultyKey: decl.difficultyKey,
+        tn = computeTN({
+          actor: defender,
+          role: "defender",
+          defenseType: _DEFAULT_COMBAT_STYLE_DEFENSE_TYPE,
+          styleUuid: decl.skillUuid,
           manualMod: decl.manualMod,
           situationalMods
         });

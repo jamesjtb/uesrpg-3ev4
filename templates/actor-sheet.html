@@ -389,21 +389,19 @@
                 </div>
 
                 {{#if actor.sheetCombatActions.specialActions.length}}
-                    <div class="uesrpg-special-actions-list" role="list" aria-label="Special Actions">
+                    <div class="uesrpg-special-actions-list uesrpg-special-actions-compact" role="list" aria-label="Special Actions">
                         {{#each actor.sheetCombatActions.specialActions as |sa|}}
-                            <div class="uesrpg-special-action-pill {{#unless sa.usableNow}}disabled{{/unless}}" role="listitem" data-sa-id="{{sa.id}}">
-                                <div class="uesrpg-special-action-pill__name" title="{{sa.name}}">
-                                    <b>{{sa.name}}</b>
-                                </div>
-                                <div class="uesrpg-special-action-pill__meta">
-                                    <span class="uesrpg-chip uesrpg-chip--{{sa.actionType}}" title="{{sa.actionType}} Action">{{sa.actionType}}</span>
+                            <div class="uesrpg-special-action-compact {{#unless sa.usableNow}}disabled{{/unless}}" role="listitem" data-sa-id="{{sa.id}}">
+                                <div class="uesrpg-special-action-compact__title" title="{{sa.name}}">
+                                    {{sa.name}} - 
+                                    <span class="uesrpg-chip uesrpg-chip--{{sa.actionType}}" title="{{sa.actionType}} Action">{{sa.actionType}}</span>, 
                                     {{#if sa.known}}
                                         <span class="uesrpg-chip uesrpg-chip--known">Known</span>
                                     {{else}}
                                         <span class="uesrpg-chip uesrpg-chip--unknown">Unknown</span>
                                     {{/if}}
                                 </div>
-                                <div class="uesrpg-special-action-pill__use">
+                                <div class="uesrpg-special-action-compact__use">
                                     {{#if (eq sa.actionType "primary")}}
                                         {{#unless sa.usableNow}}
                                             <button type="button" class="uesrpg-quick-action" data-action="specialAction" data-special-id="{{sa.id}}" data-action-type="{{sa.actionType}}" disabled="disabled" title="Primary actions are only available on your turn.">Use</button>
