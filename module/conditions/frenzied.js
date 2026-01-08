@@ -216,7 +216,6 @@ export async function applyFrenzied(actor, { source = "Frenzied", voluntary = fa
     // RAW: Gain +1 SP immediately (can exceed max)
     const mods = _getTalentModifiers(actor);
     const currentSP = Number(actor.system?.stamina?.value ?? 0);
-    const maxSP = Number(actor.system?.stamina?.max ?? 0);
     const newSP = currentSP + mods.spBonus; // Can exceed max per RAW
     
     await requestUpdateDocument(actor, { "system.stamina.value": newSP });
