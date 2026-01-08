@@ -992,8 +992,13 @@ async activateListeners(html) {
           return;
         }
 
-        const hasAP = await requireAP("Attack of Opportunity", 1);
-        if (!hasAP) return;
+        // AP consumption removed here - will be handled in OpposedWorkflow
+        // Check AP availability without consuming
+        const currentAP = Number(this.actor?.system?.action_points?.value ?? 0);
+        if (currentAP < 1) {
+          ui.notifications.warn(`${this.actor.name} does not have enough Action Points (${currentAP}/1).`);
+          return;
+        }
 
         const attackMode = "melee";
         
@@ -1021,7 +1026,7 @@ async activateListeners(html) {
             mode: "attack",
             attackMode,
             weaponUuid: weapon.uuid,
-            skipAttackerAPDeduction: true
+            skipAttackerAPDeduction: false // AP will be consumed during attack commitment
           });
         } else {
           // For NPC: use combat profession
@@ -1042,7 +1047,7 @@ async activateListeners(html) {
             mode: "attack",
             attackMode,
             weaponUuid: weapon.uuid,
-            skipAttackerAPDeduction: true
+            skipAttackerAPDeduction: false // AP will be consumed during attack commitment
           });
         }
         return;
