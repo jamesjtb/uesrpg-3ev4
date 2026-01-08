@@ -30,13 +30,20 @@ export function isTransferEffectActive(actor, item, effect) {
 
   const type = item.type;
 
-  // Passive feature types: always on.
+  // PASSIVE FEATURE TYPES: ALWAYS ACTIVE
+  // Talents, Traits, and Powers are inherent character abilities.
+  // They do NOT require equipment status - they are always "on".
+  // These represent passive character features like racial abilities, learned talents, etc.
   if (type === "talent" || type === "trait" || type === "power") return true;
-  // Equipped-gated types.
+  
+  // EQUIPMENT TYPES: REQUIRE EQUIPPED STATUS
+  // Weapons and armor must be equipped to provide their active effects.
   const equipped = item?.system?.equipped;
 
   if (type === "weapon") return _isWeaponEquippedForActor(actor, item);
   if (type === "armor") return equipped === true;
+  
+  // SPELL EFFECTS: EXPLICIT ACTIVATION ONLY
   // Spells are handled via explicit application onto the Actor (see init.js SPELL_EFFECT_APPLICATION_V1).
   // Item transfer effects on spells remain inactive to prevent implicit or double application.
   if (type === "spell") return false;

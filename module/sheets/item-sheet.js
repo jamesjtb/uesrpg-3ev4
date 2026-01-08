@@ -396,6 +396,12 @@ export class SimpleItemSheet extends foundry.appv1.sheets.ItemSheet {
     // Active Effects (Effects tab)
     html.find(".effect-control").click(this._onEffectControl.bind(this));
 
+    // Spell Scaling: Add/Remove Level buttons
+    if (this.item?.type === "spell") {
+      html.find(".add-scaling-level").click(this._onAddScalingLevel.bind(this));
+      html.find(".remove-scaling-level").click(this._onRemoveScalingLevel.bind(this));
+    }
+
     // Combat Style: set active style on owner actor (Option 2)
     if (this.item?.type === "combatStyle" && this.item.isOwned && this.actor) {
       // Combat Style: auto-save UX
@@ -1035,5 +1041,53 @@ export class SimpleItemSheet extends foundry.appv1.sheets.ItemSheet {
       default:
         break;
     }
+  }
+
+  /* -------------------------------------------- */
+  /* Spell Scaling Level Management               */
+  /* -------------------------------------------- */
+
+  /**
+   * Add a new scaling level to a spell
+   */
+  async _onAddScalingLevel(event) {
+    event.preventDefault();
+    
+    if (this.item?.type !== "spell") return;
+    
+    const currentLevels = this.item.system.scaling?.levels ?? [];
+    const nextLevelNum = currentLevels.length + 1;
+    
+    if (nextLevelNum > 7) {
+      ui.notifications.warn("Maximum 7 spell levels (Novice to Grandmaster).");
+      return;
+    }
+    
+    const newLevels = [...currentLevels, {
+      level: nextLevelNum,
+      cost: 0,
+      damageFormula: "",
+      effectStrength: 0,
+      duration: 0
+    }];
+    
+    await this.item.update({ "system.scaling.levels": newLevels });
+  }
+
+  /**
+   * Remove a scaling level from a spell
+   */
+  async _onRemoveScalingLevel(event) {
+    event.preventDefault();
+    
+    if (this.item?.type !== "spell") return;
+    
+    const index = Number(event.currentTarget.closest("tr")?.dataset?.index ?? -1);
+    if (index < 0) return;
+    
+    const currentLevels = this.item.system.scaling?.levels ?? [];
+    const newLevels = currentLevels.filter((_, i) => i !== index);
+    
+    await this.item.update({ "system.scaling.levels": newLevels });
   }
 }

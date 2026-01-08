@@ -14,6 +14,7 @@ import {
 } from "./stamina/stamina-integration-hooks.js";
 import { AttackTracker } from "./combat/attack-tracker.js";
 import { initializeUpkeepSystem } from "./magic/upkeep-workflow.js";
+import { initializeDamageApplication } from "./magic/damage-application.js";
 
 Hooks.once('ready', async function () {
   console.log(`UESRPG | Ready`);
@@ -22,6 +23,9 @@ Hooks.once('ready', async function () {
   
   // Initialize spell upkeep system
   initializeUpkeepSystem();
+  
+  // Initialize magic damage application
+  initializeDamageApplication();
 });
 
 Hooks.once("init", async function() {

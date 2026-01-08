@@ -238,9 +238,14 @@ export class SimpleActor extends Actor {
       const qty = Number(sys.quantity || 0);
       const itemWeight = enc * qty;
       const id = item?._id || '';
+      const itemType = item?.type;
       
-      // Check equipped status: if 'equipped' property exists, use its value; otherwise default to true
-      const isEquipped = Object.prototype.hasOwnProperty.call(sys, 'equipped') ? sys.equipped : true;
+      // EQUIPMENT STATUS DETERMINATION
+      // Talents, Traits, and Powers are ALWAYS active (passive character features).
+      // They represent inherent abilities and do NOT require equipment status.
+      // Equipment items (weapons/armor/gear) respect the 'equipped' flag when present.
+      const isPassiveFeature = (itemType === 'talent' || itemType === 'trait' || itemType === 'power');
+      const isEquipped = isPassiveFeature ? true : (Object.prototype.hasOwnProperty.call(sys, 'equipped') ? sys.equipped : true);
 
       // RAW Chapter 7: Check if this is armor (for special ENC handling)
       const isShield = (item?.type === 'armor') && Boolean(sys?.isShieldEffective ?? sys?.isShield);
