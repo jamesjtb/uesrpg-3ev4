@@ -3538,6 +3538,22 @@ if (stage === "attacker-roll") {
         data.context.attackMode = await _inferAttackModeFromPreferredWeapon(attacker);
         data.context.attackFromHidden = hasCondition(attacker, "hidden");
 
+        // RAW: Hard gate for unloaded ranged weapons (Issue 1)
+        // Before allowing attack declaration, check if the weapon is loaded
+        if (data.context.attackMode === "ranged") {
+          const weaponUuid = data.context?.weaponUuid || _getPreferredWeaponUuid(attacker, { meleeOnly: false });
+          if (weaponUuid) {
+            const weapon = await fromUuid(weaponUuid);
+            if (weapon?.type === "weapon") {
+              const reloadState = weapon.system?.reloadState;
+              if (reloadState?.requiresReload && !reloadState?.isLoaded) {
+                ui.notifications.warn(`${weapon.name} must be reloaded before attacking.`);
+                return; // Hard stop - prevent attack
+              }
+            }
+          }
+        }
+
         decl = await _attackerDeclareDialog(attacker, data.attacker.label ?? "Attack", {
           styles,
           selectedStyleUuid,
