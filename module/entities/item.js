@@ -126,15 +126,16 @@ export class SimpleItem extends Item {
     const itemData = this.system
     const actorData = this.actor ? this.actor : {}
 
-    // STEP 1: Inject auto-granted qualities into a computed structured list for automation.
-    // This must run BEFORE type-specific prepare methods (like _prepareWeaponItem) so they can use qualitiesStructuredInjected.
-    // This must run for world items as well as embedded items so automation helpers can rely on it.
+    // STEP 1: Pre-inject manual qualities so they're available during prepare methods.
+    // This preliminary injection allows type-specific prepare methods (like _prepareWeaponItem) 
+    // to access qualitiesStructuredInjected for features that depend on manual qualities (like Reload).
     if (['weapon','armor','ammunition'].includes(this.type)) {
       this._injectAutoQualities(itemData);
     }
 
     // STEP 2: Prepare data based on item type - defensive guards for hasOwnProperty
-    // Now qualitiesStructuredInjected is available for use in these methods
+    // These methods can now use qualitiesStructuredInjected (with manual qualities).
+    // They also create autoQualitiesStructured for material/quality-derived qualities.
     if (this.isEmbedded && this.actor?.system != null) {
       if (this.system && Object.prototype.hasOwnProperty.call(this.system, 'modPrice')) { this._prepareMerchantItem(actorData, itemData) }
       if (this.type === 'armor') { this._prepareArmorItem(actorData, itemData) }
@@ -144,6 +145,13 @@ export class SimpleItem extends Item {
       if (this.system && Object.prototype.hasOwnProperty.call(this.system, 'skillArray') && actorData.type === 'Player Character') { this._prepareModSkillItems(actorData, itemData) }
       if (this.system && Object.prototype.hasOwnProperty.call(this.system, 'baseCha')) { this._prepareCombatStyleData(actorData, itemData) }
       if (this.type == 'container') { this._prepareContainerItem(actorData, itemData) }}
+
+    // STEP 3: Final injection of auto-granted qualities into the computed structured list.
+    // This re-runs after prepare methods to include autoQualitiesStructured (material/quality-derived).
+    // This must run for world items as well as embedded items so automation helpers can rely on it.
+    if (['weapon','armor','ammunition'].includes(this.type)) {
+      this._injectAutoQualities(itemData);
+    }
 
   }
 
