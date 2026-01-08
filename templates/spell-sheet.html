@@ -104,6 +104,95 @@
                     <div class="quality-container">
                         <div class="flex-container">
                             <h2>Spell Attributes</h2>
+                            
+                            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 16px;">
+                                <div class="form-group">
+                                    <label style="display: flex; align-items: center; gap: 8px;">
+                                        <input type="checkbox" name="system.isDamagingSpell" {{checked item.system.isDamagingSpell}} />
+                                        <strong>Damaging Spell</strong>
+                                    </label>
+                                    <p class="hint" style="margin-left: 24px; font-size: 0.9em; opacity: 0.8;">This spell deals damage (uses damage field).</p>
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label style="display: flex; align-items: center; gap: 8px;">
+                                        <input type="checkbox" name="system.isHealingSpell" {{checked item.system.isHealingSpell}} />
+                                        <strong>Healing Spell</strong>
+                                    </label>
+                                    <p class="hint" style="margin-left: 24px; font-size: 0.9em; opacity: 0.8;">This spell heals HP or restores resources.</p>
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label style="display: flex; align-items: center; gap: 8px;">
+                                        <input type="checkbox" name="system.isInstant" {{checked item.system.isInstant}} />
+                                        <strong>Instant</strong>
+                                    </label>
+                                    <p class="hint" style="margin-left: 24px; font-size: 0.9em; opacity: 0.8;">Can be cast as Secondary Action or Reaction.</p>
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label style="display: flex; align-items: center; gap: 8px;">
+                                        <input type="checkbox" name="system.hasUpkeep" {{checked item.system.hasUpkeep}} />
+                                        <strong>Upkeep</strong>
+                                    </label>
+                                    <p class="hint" style="margin-left: 24px; font-size: 0.9em; opacity: 0.8;">Can be refreshed as Free Action by paying original cost.</p>
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label style="display: flex; align-items: center; gap: 8px;">
+                                        <input type="checkbox" name="system.hasOverload" {{checked item.system.hasOverload}} />
+                                        <strong>Overload</strong>
+                                    </label>
+                                    <input type="text" name="system.overloadEffect" value="{{item.system.overloadEffect}}" placeholder="Overload effect description" style="margin-left: 24px; width: calc(100% - 24px);" />
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label style="display: flex; align-items: center; gap: 8px;">
+                                        <input type="checkbox" name="system.hasReinforce" {{checked item.system.hasReinforce}} />
+                                        <strong>Reinforce</strong>
+                                    </label>
+                                    <p class="hint" style="margin-left: 24px; font-size: 0.9em; opacity: 0.8;">Bonus when not restraining (requires talents).</p>
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label style="display: flex; align-items: center; gap: 8px;">
+                                        <input type="checkbox" name="system.isDirect" {{checked item.system.isDirect}} />
+                                        <strong>Direct</strong>
+                                    </label>
+                                    <p class="hint" style="margin-left: 24px; font-size: 0.9em; opacity: 0.8;">Has target but cannot be defended against normally.</p>
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label><strong>Mindlock Value</strong></label>
+                                    <input type="number" name="system.mindlockValue" value="{{item.system.mindlockValue}}" min="0" style="width: 100%;" />
+                                    <p class="hint" style="font-size: 0.9em; opacity: 0.8;">Reduces max AP by this amount (min 0) while active.</p>
+                                </div>
+                            </div>
+                            
+                            <div class="form-group" style="margin-bottom: 16px;">
+                                <label><strong>Range Type &amp; Value</strong></label>
+                                <div style="display: grid; grid-template-columns: 150px 1fr; gap: 8px;">
+                                    <select name="system.rangeType" style="width: 100%;">
+                                        <option value="">None</option>
+                                        <option value="melee" {{#if (eq item.system.rangeType "melee")}}selected{{/if}}>Melee</option>
+                                        <option value="ranged" {{#if (eq item.system.rangeType "ranged")}}selected{{/if}}>Ranged</option>
+                                        <option value="aoe" {{#if (eq item.system.rangeType "aoe")}}selected{{/if}}>AoE</option>
+                                    </select>
+                                    <input type="text" name="system.range" value="{{item.system.range}}" placeholder="e.g., 100m, 1m, 7m sphere" style="width: 100%;" />
+                                </div>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label><strong>Damage Type</strong></label>
+                                <input type="text" name="system.damageType" value="{{item.system.damageType}}" placeholder="magic" style="width: 100%;" />
+                            </div>
+                            
+                            <div class="form-group">
+                                <label><strong>Heal Amount</strong></label>
+                                <input type="text" name="system.healAmount" value="{{item.system.healAmount}}" placeholder="e.g., 2d6+5" style="width: 100%;" />
+                            </div>
+                            
+                            <h3 style="margin-top: 16px;">Free-form Attributes</h3>
                             <div>{{editor item.system.attributes target="system.attributes" engine="prosemirror" button=true owner=owner editable=editable}}</div>
                         </div>
                     </div>

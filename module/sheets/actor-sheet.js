@@ -1812,8 +1812,11 @@ if (isLucky(this.actor, roll.result)) {
     const isAttack = Boolean(spell.system?.isAttackSpell);
     
     if (isAttack && targets.length > 0) {
-      // Attack spell with target -> opposed workflow
-      await this._castAttackSpell(spell, targets);
+      // Attack spell with target -> show spell options dialog then opposed workflow
+      const spellOptions = await this._showSpellOptionsDialog(spell);
+      if (spellOptions === null) return; // Cancelled
+      
+      await this._castAttackSpell(spell, targets, spellOptions);
     } else {
       // Non-attack or no target -> use existing spell dialog
       // Trigger the existing _onSpellRoll with the spell item
@@ -1823,38 +1826,64 @@ if (isLucky(this.actor, roll.result)) {
   }
 
   /**
-   * Cast an attack spell using the opposed workflow.
-   * Calculates casting TN from magic skill, applies spell level penalty, initiates SkillOpposedWorkflow.
+   * Show spell options dialog for Restraint/Overload
    */
-  async _castAttackSpell(spell, targets) {
-    // Determine magic skill for this spell school
-    const school = String(spell.system?.school ?? "").toLowerCase();
-    let magicSkill = this.actor.items.find(i => 
-      i.type === "magicSkill" && 
-      String(i.name ?? "").toLowerCase().includes(school)
-    );
+  async _showSpellOptionsDialog(spell) {
+    const wpBonus = Math.floor(Number(this.actor.system?.characteristics?.wp?.total ?? 0) / 10);
+    const hasOverload = Boolean(spell.system?.hasOverload);
+    const baseCost = Number(spell.system?.cost ?? 0);
     
-    // Fallback to WP bonus if no skill found
-    const wpTotal = Number(this.actor?.system?.characteristics?.wp?.total ?? 0);
-    const wpBonus = Math.floor(wpTotal / 10);
-    const baseTN = magicSkill ? Number(magicSkill.system?.value ?? 0) : wpBonus;
+    const content = `
+      <form class="uesrpg-spell-options">
+        <h3>${spell.name}</h3>
+        <div class="form-group">
+          <label>MP Cost: <b>${baseCost}</b></label>
+        </div>
+        <div class="form-group" style="margin-top: 8px;">
+          <label style="display: flex; align-items: center; gap: 8px;">
+            <input type="checkbox" name="restrain" checked />
+            <span><b>Spell Restraint</b> (reduce cost by ${wpBonus} to min 1)</span>
+          </label>
+        </div>
+        ${hasOverload ? `
+        <div class="form-group" style="margin-top: 8px;">
+          <label style="display: flex; align-items: center; gap: 8px;">
+            <input type="checkbox" name="overload" />
+            <span><b>Overload</b> (${spell.system.overloadEffect || 'double cost for enhanced effect'})</span>
+          </label>
+        </div>` : ''}
+      </form>
+    `;
     
-    // Calculate Spellcasting Level = skill rank numeric value + 1
-    // RAW Chapter 6 p.128 lines 180-184: Spellcasting Level determines max spell level without penalty
-    const rankToNumeric = { untrained: 0, novice: 1, apprentice: 2, journeyman: 3, adept: 4, expert: 5, master: 6 };
-    const skillRank = magicSkill ? (rankToNumeric[String(magicSkill.system?.rank ?? "untrained").toLowerCase()] ?? 0) : 0;
-    const spellcastingLevel = skillRank + 1;
-    
-    // Penalty: -10 per spell level above spellcasting level
-    const spellLevel = Number(spell.system?.level ?? 1);
-    const levelPenalty = Math.max(0, spellLevel - spellcastingLevel) * -10;
-    
-    // Apply standard penalties
-    const fatiguePenalty = Number(this.actor.system?.fatigue?.penalty ?? 0);
-    const carryPenalty = Number(this.actor.system?.carry_rating?.penalty ?? 0);
-    const woundPenalty = Number(this.actor.system?.woundPenalty ?? 0);
-    
-    const attackerTN = baseTN + levelPenalty + fatiguePenalty + carryPenalty + woundPenalty;
+    return Dialog.wait({
+      title: "Spell Options",
+      content,
+      buttons: {
+        cast: {
+          label: "Cast",
+          callback: (html) => {
+            const root = html instanceof HTMLElement ? html : html?.[0];
+            const form = root?.querySelector("form");
+            return {
+              isRestrained: form?.restrain?.checked ?? false,
+              isOverloaded: form?.overload?.checked ?? false,
+              restraintValue: wpBonus,
+              baseCost
+            };
+          }
+        },
+        cancel: { label: "Cancel", callback: () => null }
+      },
+      default: "cast"
+    }, { width: 420 });
+  }
+
+  /**
+   * Cast an attack spell using the magic opposed workflow.
+   */
+  async _castAttackSpell(spell, targets, spellOptions = {}) {
+    // Import MagicOpposedWorkflow
+    const { MagicOpposedWorkflow } = await import("../magic/opposed-workflow.js");
     
     // Get attacker token
     const attackerToken = canvas?.tokens?.controlled?.find(t => t.actor?.id === this.actor.id) 
@@ -1867,13 +1896,11 @@ if (isLucky(this.actor, roll.result)) {
     
     // Create opposed workflow for each target
     for (const defenderToken of targets) {
-      await SkillOpposedWorkflow.createPending({
+      await MagicOpposedWorkflow.createPending({
         attackerTokenUuid: attackerToken.document?.uuid ?? attackerToken.uuid,
         defenderTokenUuid: defenderToken.document?.uuid ?? defenderToken.uuid,
-        attackerActorUuid: this.actor.uuid,
-        defenderActorUuid: defenderToken.actor?.uuid ?? null,
-        attackerSkillUuid: magicSkill?.uuid ?? null,
-        attackerSkillLabel: `${spell.name} (${spell.system.school})`
+        spellUuid: spell.uuid,
+        spellOptions
       });
     }
   }
