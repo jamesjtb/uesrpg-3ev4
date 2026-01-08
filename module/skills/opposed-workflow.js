@@ -22,6 +22,7 @@ const _FLAG_NS = "uesrpg-3ev4";
 const _FLAG_KEY = "skillOpposed";
 const _CARD_VERSION = 1;
 const _SKILL_ROLL_LAST_OPTIONS_KEY = "skillRollLastOptions";
+const _DEFAULT_COMBAT_STYLE_DEFENSE_TYPE = "parry";
 
 function _normalizeCardFlag(raw) {
   // v1+ contract: { version, state }
@@ -1129,7 +1130,7 @@ if (!authorUser) return;
         tn = computeTN({
           actor: defender,
           role: "defender",
-          defenseType: "parry", // Default to parry for combat style defense
+          defenseType: _DEFAULT_COMBAT_STYLE_DEFENSE_TYPE,
           styleUuid: decl.skillUuid,
           manualMod: decl.manualMod,
           situationalMods
@@ -1146,7 +1147,7 @@ if (!authorUser) return;
         tn = computeTN({
           actor: defender,
           role: "defender",
-          defenseType: "parry", // Default to parry for combat profession defense
+          defenseType: _DEFAULT_COMBAT_STYLE_DEFENSE_TYPE,
           styleUuid: decl.skillUuid,
           manualMod: decl.manualMod,
           situationalMods

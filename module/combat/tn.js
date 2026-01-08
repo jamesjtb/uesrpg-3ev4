@@ -170,7 +170,13 @@ if (typeof styleUuidOrId === "string" && styleUuidOrId.startsWith("prof:")) {
   const woundPenalty = Number(sys?.woundPenalty ?? 0);
   const fatiguePenalty = Number(sys?.fatigue?.penalty ?? 0);
 
-  const professionItem = {
+  console.log("UESRPG | getCombatStyleItem: Resolved profession combat style", { 
+    actor: actor.name, 
+    key, 
+    value: base + fatiguePenalty + woundPenalty 
+  });
+  
+  return {
     uuid: styleUuidOrId,
     id: styleUuidOrId,
     type: "combatStyle",
@@ -178,14 +184,6 @@ if (typeof styleUuidOrId === "string" && styleUuidOrId.startsWith("prof:")) {
     system: { value: base + fatiguePenalty + woundPenalty, bonus: 0, miscValue: 0 },
     _professionKey: key
   };
-  
-  console.log("UESRPG | getCombatStyleItem: Resolved profession combat style", { 
-    actor: actor.name, 
-    key, 
-    value: professionItem.system.value 
-  });
-  
-  return professionItem;
 }
 
   // Prefer UUID match when present
