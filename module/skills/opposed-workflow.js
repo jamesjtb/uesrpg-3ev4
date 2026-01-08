@@ -42,7 +42,11 @@ function _getMessageState(message) {
 
 function _getLastSkillRollOptions() {
   try {
-    return game.settings.get(_SKILL_ROLL_SETTINGS_NS, _SKILL_ROLL_LAST_OPTIONS_KEY) ?? {};
+    const saved = game.settings.get(_SKILL_ROLL_SETTINGS_NS, _SKILL_ROLL_LAST_OPTIONS_KEY) ?? {};
+    // Always exclude difficulty from saved options - force default to "average"
+    delete saved.difficulty;
+    delete saved.difficultyKey;
+    return saved;
   } catch (_e) {
     return {};
   }
@@ -50,7 +54,11 @@ function _getLastSkillRollOptions() {
 
 async function _setLastSkillRollOptions(next) {
   try {
-    await game.settings.set(_SKILL_ROLL_SETTINGS_NS, _SKILL_ROLL_LAST_OPTIONS_KEY, next ?? {});
+    // Do not persist difficulty choice - always default to "average"
+    const sanitized = { ...next };
+    delete sanitized.difficulty;
+    delete sanitized.difficultyKey;
+    await game.settings.set(_SKILL_ROLL_SETTINGS_NS, _SKILL_ROLL_LAST_OPTIONS_KEY, sanitized);
   } catch (_e) {
     // client setting may not exist if init hasn't run yet; fail silently
   }
@@ -60,6 +68,9 @@ function _mergeLastSkillRollOptions(patch={}) {
   const prev=_getLastSkillRollOptions();
   const next={...prev, ...patch};
   next.lastSkillUuidByActor = {...(prev.lastSkillUuidByActor||{}), ...(patch.lastSkillUuidByActor||{})};
+  // Always force difficulty to "average" (do not persist)
+  delete next.difficulty;
+  delete next.difficultyKey;
   return next;
 }
 

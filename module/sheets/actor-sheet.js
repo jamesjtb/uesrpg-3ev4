@@ -463,12 +463,15 @@ async activateListeners(html) {
           return;
         }
 
-        // Create skill opposed test WITHOUT pre-selecting skill
-        // Let user choose from dropdown in card (includes Combat Styles)
+        // Get active combat style UUID to pre-select it (if available)
+        const activeCombatStyle = getExplicitActiveCombatStyleItem(this.actor);
+        const attackerSkillUuid = activeCombatStyle?.uuid ?? null;
+
+        // Create skill opposed test with combat style pre-selected if available
         const message = await SkillOpposedWorkflow.createPending({
           attackerTokenUuid: actorToken?.document?.uuid ?? actorToken?.uuid,
           defenderTokenUuid: targetToken?.document?.uuid ?? targetToken?.uuid,
-          attackerSkillUuid: null,  // Let user choose from dropdown in card
+          attackerSkillUuid,  // Pre-select active combat style if available
           attackerSkillLabel: `${def.name} (Special Action)`
         });
 
@@ -992,8 +995,13 @@ async activateListeners(html) {
           return;
         }
 
-        const hasAP = await requireAP("Attack of Opportunity", 1);
-        if (!hasAP) return;
+        // AP consumption removed here - will be handled in OpposedWorkflow
+        // Check AP availability without consuming
+        const currentAP = Number(this.actor?.system?.action_points?.value ?? 0);
+        if (currentAP < 1) {
+          ui.notifications.warn(`${this.actor.name} does not have enough Action Points (${currentAP}/1).`);
+          return;
+        }
 
         const attackMode = "melee";
         
@@ -1021,7 +1029,7 @@ async activateListeners(html) {
             mode: "attack",
             attackMode,
             weaponUuid: weapon.uuid,
-            skipAttackerAPDeduction: true
+            skipAttackerAPDeduction: false // AP will be consumed during attack commitment
           });
         } else {
           // For NPC: use combat profession
@@ -1042,7 +1050,7 @@ async activateListeners(html) {
             mode: "attack",
             attackMode,
             weaponUuid: weapon.uuid,
-            skipAttackerAPDeduction: true
+            skipAttackerAPDeduction: false // AP will be consumed during attack commitment
           });
         }
         return;

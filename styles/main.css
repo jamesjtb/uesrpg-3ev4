@@ -1148,9 +1148,9 @@
 
 /* --- Special Actions (Actor/NPC Sheet) --- */
 .worldbuilding .uesrpg-special-actions-list {
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 8px;
   margin: 0;
   padding: 0;
   /* Prevent sheet infinite-growth: scroll within the card */
@@ -1164,14 +1164,18 @@
 }
 
 .worldbuilding .uesrpg-special-action-pill {
-  display: grid;
-  grid-template-columns: 1fr auto auto;
-  align-items: center;
+  display: flex;
+  flex-direction: column;
   gap: 6px;
-  padding: 4px 6px;
+  padding: 6px 8px;
   border: 1px solid rgba(0,0,0,0.35);
   background: rgba(180, 180, 180, 0.22);
   border-radius: 6px;
+}
+
+.worldbuilding .uesrpg-special-action-pill.disabled {
+  opacity: 0.6;
+  pointer-events: none;
 }
 
 .worldbuilding .uesrpg-special-action-pill__name {
@@ -1181,13 +1185,15 @@
   white-space: nowrap;
   font-family: var(--main-font-family);
   font-size: 13px;
+  font-weight: 600;
 }
 
 .worldbuilding .uesrpg-special-action-pill__meta {
   display: inline-flex;
   align-items: center;
   gap: 4px;
-  justify-content: flex-end;
+  justify-content: flex-start;
+  flex-wrap: wrap;
 }
 
 .worldbuilding .uesrpg-chip {
@@ -1204,6 +1210,16 @@
   white-space: nowrap;
 }
 
+.worldbuilding .uesrpg-chip.uesrpg-chip--primary {
+  background: rgba(201, 48, 44, 0.2);
+  border-color: rgba(201, 48, 44, 0.4);
+}
+
+.worldbuilding .uesrpg-chip.uesrpg-chip--secondary {
+  background: rgba(91, 192, 222, 0.2);
+  border-color: rgba(91, 192, 222, 0.4);
+}
+
 .worldbuilding .uesrpg-sa-known-toggle {
   cursor: pointer;
   user-select: none;
@@ -1216,17 +1232,26 @@
 
 .worldbuilding .uesrpg-chip--known {
   opacity: 0.95;
+  background: rgba(92, 184, 92, 0.2);
+  border-color: rgba(92, 184, 92, 0.4);
 }
 
 .worldbuilding .uesrpg-chip--unknown {
   opacity: 0.75;
 }
 
+.worldbuilding .uesrpg-special-action-pill__use {
+  display: flex;
+  width: 100%;
+}
+
 .worldbuilding .uesrpg-special-action-pill__use .uesrpg-quick-action {
-  padding: 2px 8px;
+  padding: 4px 8px;
   line-height: 1.2;
-  min-height: 22px;
+  min-height: 24px;
   font-size: 12px;
+  width: 100%;
+  font-weight: 600;
 }
 
 .worldbuilding .combat-stats-container {
