@@ -391,12 +391,12 @@
                 {{#if actor.sheetCombatActions.specialActions.length}}
                     <div class="uesrpg-special-actions-list" role="list" aria-label="Special Actions">
                         {{#each actor.sheetCombatActions.specialActions as |sa|}}
-                            <div class="uesrpg-special-action-pill" role="listitem" data-sa-id="{{sa.id}}">
+                            <div class="uesrpg-special-action-pill {{#unless sa.usableNow}}disabled{{/unless}}" role="listitem" data-sa-id="{{sa.id}}">
                                 <div class="uesrpg-special-action-pill__name" title="{{sa.name}}">
                                     <b>{{sa.name}}</b>
                                 </div>
                                 <div class="uesrpg-special-action-pill__meta">
-                                    <span class="uesrpg-chip uesrpg-chip--type">{{sa.actionType}}</span>
+                                    <span class="uesrpg-chip uesrpg-chip--{{toLowerCase sa.actionType}}" title="{{sa.actionType}} Action">{{sa.actionType}}</span>
                                     {{#if sa.known}}
                                         <span class="uesrpg-chip uesrpg-chip--known">Known</span>
                                     {{else}}
