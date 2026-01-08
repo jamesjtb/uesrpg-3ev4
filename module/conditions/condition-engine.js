@@ -127,7 +127,7 @@ function _isActiveCombatant(actor) {
   }
 }
 
-function _mkBaseEffectData({ name, img = null, icon = null, condition, changes = [], origin = null, statuses = null, coreStatusId = null }) {
+function _mkBaseEffectData({ name, img = null, icon = null, description = null, condition, changes = [], origin = null, statuses = null, coreStatusId = null }) {
   const effectImg = img ?? icon ?? null;
   const data = {
     name,
@@ -143,6 +143,11 @@ function _mkBaseEffectData({ name, img = null, icon = null, condition, changes =
       }
     }
   };
+
+  // Add description if provided (for tooltips and effect sheets)
+  if (description) {
+    data.description = description;
+  }
 
   if (coreStatusId) {
     data.flags.core = { statusId: coreStatusId };
@@ -169,6 +174,7 @@ const STATIC_CONDITIONS = {
   blinded: {
     name: "Blinded",
     icon: "icons/svg/blind.svg",
+    description: "RAW: The character loses all vision and suffers the following penalties: Cannot see anything; Suffers a -30 to tests benefitting from sight; Automatically fail any tests that rely solely on sight.",
     // RAW: -30 penalty to tests benefitting from sight.
     // Deterministic automation scope: Combat Style tests + Observe.
     changes: [
@@ -179,6 +185,7 @@ const STATIC_CONDITIONS = {
   deafened: {
     name: "Deafened",
     icon: "icons/svg/deaf.svg",
+    description: "RAW: The character loses all hearing and suffers the following penalties: Cannot hear anything; Suffers a -30 to tests benefitting from hearing; Automatically fail any tests that rely solely on hearing.",
     // RAW: -30 penalty to tests benefitting from hearing.
     // Deterministic automation scope: Observe.
     changes: [
@@ -188,28 +195,32 @@ const STATIC_CONDITIONS = {
 
   crippled: {
     name: "Crippled",
-    // Tracking-only condition for now (no hard automation yet).
     icon: "icons/svg/bones.svg",
+    description: "RAW: The character has suffered a crippling injury. Specific effects depend on the location and severity of the injury.",
+    // Tracking-only condition for now (no hard automation yet).
     changes: []
   },
 
   silenced: {
     name: "Silenced",
-    // Tracking-only condition for now (no hard automation yet).
     icon: "icons/svg/sound-off.svg",
+    description: "RAW: Magically silenced characters believe they are making sound, but in reality their words never pass their lips. They suffer the usual -20 penalty for being unable to speak when casting spells. At the start of each round they can roll a Perception test to see if they realize what is happening.",
+    // Tracking-only condition for now (no hard automation yet).
     changes: []
   },
 
   stunned: {
     name: "Stunned",
-    // Tracking-only condition for now (no hard automation yet).
     icon: "icons/svg/stoned.svg",
+    description: "RAW: The character immediately loses all remaining Action Points upon becoming stunned. Stunned characters do not regain Action Points at the start of each round.",
+    // Tracking-only condition for now (no hard automation yet).
     changes: []
   },
 
   entangled: {
     name: "Entangled",
     icon: "icons/svg/net.svg",
+    description: "RAW: The character is entangled and suffers a -20 penalty to all Combat Style tests. Movement is halved.",
     // RAW: -20 penalty to all Combat Style tests.
     // NOTE: Movement halving is enforced in actor derived Speed (Package 4).
     changes: [
@@ -221,6 +232,7 @@ const STATIC_CONDITIONS = {
   dazed: {
     name: "Dazed",
     icon: "icons/svg/daze.svg",
+    description: "RAW: The character gains one less Action Point at the beginning of each round, to a minimum of one.",
     // RAW: Gain 1 fewer Action Point at the beginning of each round (minimum 1).
     // Automation approach: reduce AP max by 1; combat AP refresh clamps to minimum 1 while Dazed.
     changes: [
@@ -230,8 +242,9 @@ const STATIC_CONDITIONS = {
 
   hidden: {
     name: "Hidden",
-    // Core icon (Foundry) used in the Token HUD palette.
     icon: "icons/svg/cowled.svg",
+    description: "RAW: Enemies cannot defend themselves against attacks from hidden characters. Movement costs double.",
+    // Core icon (Foundry) used in the Token HUD palette.
     // RAW: Enemies cannot defend themselves against attacks from hidden characters.
     // Movement costs double (handled via derived Speed in Actor data).
     // Auto-removal after making an attack is handled in the opposed workflow.
@@ -241,6 +254,7 @@ const STATIC_CONDITIONS = {
   invisible: {
     name: "Invisible",
     icon: "icons/svg/invisible.svg",
+    description: "RAW: The character is invisible. Attacks made against invisible targets suffer -30 TN.",
     // RAW: Attacks made against invisible targets suffer -30 TN (handled in opposed workflow).
     changes: []
   },
@@ -248,6 +262,7 @@ const STATIC_CONDITIONS = {
   frenzied: {
     name: "Frenzied",
     icon: "icons/svg/terror.svg",
+    description: "RAW: The character is flung into an uncontrollable rage. Must attempt to attack the nearest person or creature in melee combat each Turn if able, using only All Out Attacks. If not within range, must move toward the nearest potential target. Increase WT by 3 and SB by 1. Suffer a -20 penalty to all skill tests except those based on Strength, Agility, or Endurance. Once the encounter ends, lose 2 SP (this cannot kill them). Can test Willpower at -20 as a Secondary Action to snap out of frenzy.",
     // Automated via frenzied.js; changes are dynamic based on talents
     changes: []
   },
@@ -256,6 +271,7 @@ const STATIC_CONDITIONS = {
   prone: {
     name: "Prone",
     icon: "icons/svg/falling.svg",
+    description: "RAW: The character is prone. Every 1 meter moved while prone costs 2 meters of movement. Suffers a -20 penalty to all combat related tests. Counts any full armor as partial. Standing up requires movement equal to half of base Speed or using the Arise action.",
     // RAW: -20 penalty to all Combat related tests.
     // NOTE: Movement restriction + stand-up cost are enforced via Package 4 semantics.
     changes: [
@@ -268,21 +284,25 @@ const STATIC_CONDITIONS = {
   unconscious: {
     name: "Unconscious",
     icon: "icons/svg/unconscious.svg",
+    description: "RAW: The character is knocked out and loses consciousness. They fall prone if the circumstances allow and may not take actions. If a character gains a level of fatigue while unconscious, they die.",
     changes: []
   },
   paralyzed: {
     name: "Paralyzed",
     icon: "icons/svg/paralysis.svg",
+    description: "RAW: The character is frozen, unable to move any part of their body. They may only cast spells that do not require speech or motion.",
     changes: []
   },
   restrained: {
     name: "Restrained",
     icon: "icons/svg/anchor.svg",
+    description: "RAW: The character is restrained and thus unable to move. They also cannot attack or defend themselves. They may only cast spells that do not require motion.",
     changes: []
   },
   grappled: {
     name: "Grappled",
     icon: "icons/svg/grab.svg",
+    description: "RAW: The character is being grappled. They are restrained and cannot move, attack, or defend themselves. They may attempt to escape using the Resist action.",
     changes: []
   },
 
@@ -290,19 +310,22 @@ const STATIC_CONDITIONS = {
   feinted: {
     name: "Feinted",
     icon: "icons/svg/combat.svg",
+    description: "RAW: The character has been feinted. They cannot defend against the next melee attack from the character who feinted them (treated as if the attacker were Hidden).",
     changes: []
   },
 
   // Package 4: movement restriction semantics (no TN modifiers; applied in derived Speed)
   slowed: {
     name: "Slowed",
-    // Core icon (Foundry) used in the Token HUD palette.
     icon: "icons/svg/wingfoot.svg",
+    description: "RAW: The character's Speed is reduced by half (round up).",
+    // Core icon (Foundry) used in the Token HUD palette.
     changes: []
   },
   immobilized: {
     name: "Immobilized",
     icon: "icons/svg/statue.svg",
+    description: "RAW: The character is immobilized and cannot move.",
     changes: []
   }
 };
@@ -365,6 +388,7 @@ function _mkTokenHudStatusConfigForStatic(key) {
     id: k,
     name: def.name,
     img: def.icon,
+    description: def.description ?? null,
     hud: true,
     disabled: false,
     duration: {},
@@ -632,6 +656,7 @@ export async function applyCondition(actor, key, { origin = null, source = null 
   const createData = _mkBaseEffectData({
     name: def.name,
     icon: def.icon,
+    description: def.description ?? null,
     statuses,
     coreStatusId,
     origin,
