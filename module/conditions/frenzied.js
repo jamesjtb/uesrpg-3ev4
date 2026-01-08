@@ -212,6 +212,10 @@ export async function applyFrenzied(actor, { source = "Frenzied", voluntary = fa
 
   try {
     const created = await requestCreateEmbeddedDocuments(actor, "ActiveEffect", [effectData]);
+    
+    // FIX: Force immediate effect application
+    actor.prepareData();
+    
     return created?.[0] ?? null;
   } catch (err) {
     console.warn("UESRPG | Frenzied | failed to create effect", err);
@@ -262,6 +266,10 @@ export async function removeFrenzied(actor, { applySPLoss = true } = {}) {
   // Remove effect
   try {
     await requestDeleteEmbeddedDocuments(actor, "ActiveEffect", [effect.id]);
+    
+    // FIX: Force immediate recalculation
+    actor.prepareData();
+    
   } catch (err) {
     console.warn("UESRPG | Frenzied | failed to delete effect", err);
   }
