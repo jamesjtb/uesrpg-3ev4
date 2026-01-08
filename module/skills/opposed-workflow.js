@@ -805,7 +805,7 @@ if (!authorUser) return;
       if (!requireUserCanRollActor(game.user, attacker)) return;
       
       // Always respect allowCombatStyle from state (default to true for universal access)
-      const allowCombatStyle = data?.allowCombatStyle !== false;
+      const allowCombatStyle = Boolean(data?.allowCombatStyle ?? true);
       
       const skills = _listSkills(attacker, { allowCombatStyle });
       if (!skills.length) {
@@ -1014,7 +1014,7 @@ if (!authorUser) return;
       if (!requireUserCanRollActor(game.user, defender, { message: "You do not have permission to roll for the target actor." })) return;
       
       // Always respect allowCombatStyle from state (default to true for universal access)
-      const allowCombatStyle = data?.allowCombatStyle !== false;
+      const allowCombatStyle = Boolean(data?.allowCombatStyle ?? true);
       
       const skills = _listSkills(defender, { allowCombatStyle });
       if (!skills.length) {
