@@ -229,6 +229,7 @@ async activateListeners(html) {
   html.find(".resistance-roll").click(this._onResistanceRoll.bind(this));
   html.find(".damage-roll").click(this._onDamageRoll.bind(this));
   html.find(".ammo-roll").click(this._onAmmoRoll.bind(this));
+  html.find(".uesrpg-cast-magic").click(this._onCastMagicAction.bind(this));
   
   // Item image click handler with debounce protection for talents/traits/powers
   html.find(".item-img").on("click", async (event) => {
@@ -1748,6 +1749,125 @@ if (isLucky(this.actor, roll.result)) {
       flags: { uesrpg: { rollRequest: request }, "uesrpg-3ev4": { rollRequest: request } },
       rollMode: game.settings.get("core", "rollMode")
     });
+  }
+
+  /**
+   * Handle Cast Magic button click.
+   * Shows spell picker, then routes to attack spell workflow or existing spell dialog.
+   */
+  async _onCastMagicAction(event) {
+    event.preventDefault();
+    
+    // 1. Get all spells owned by actor
+    const spells = this.actor.items.filter(i => i.type === "spell");
+    if (!spells.length) {
+      ui.notifications.warn("No spells available to cast.");
+      return;
+    }
+    
+    // 2. Show spell selection dialog
+    const spellOptions = spells.map(s => 
+      `<option value="${s.id}">${s.name} (${s.system.school} ${s.system.level}, ${s.system.cost} MP)</option>`
+    ).join("");
+    
+    const content = `
+      <form class="uesrpg-cast-magic-form">
+        <div class="form-group">
+          <label><b>Select Spell to Cast</b></label>
+          <select name="spellId" style="width:100%;">${spellOptions}</select>
+        </div>
+      </form>`;
+    
+    const selectedSpellId = await Dialog.wait({
+      title: "Cast Magic",
+      content,
+      buttons: {
+        cast: {
+          label: "Cast",
+          callback: (html) => {
+            const root = html instanceof HTMLElement ? html : html?.[0];
+            return root?.querySelector('select[name="spellId"]')?.value;
+          }
+        },
+        cancel: { label: "Cancel", callback: () => null }
+      },
+      default: "cast"
+    }, { width: 420 });
+    
+    if (!selectedSpellId) return;
+    
+    const spell = this.actor.items.get(selectedSpellId);
+    if (!spell) return;
+    
+    // 3. Check if spell is attack type and targets exist
+    const targets = [...(game.user.targets ?? [])];
+    const isAttack = Boolean(spell.system?.isAttackSpell);
+    
+    if (isAttack && targets.length > 0) {
+      // Attack spell with target -> opposed workflow
+      await this._castAttackSpell(spell, targets);
+    } else {
+      // Non-attack or no target -> use existing spell dialog
+      // Trigger the existing _onSpellRoll with the spell item
+      const fakeEvent = { currentTarget: { closest: () => ({ dataset: { itemId: spell.id } }) } };
+      await this._onSpellRoll.call(this, fakeEvent);
+    }
+  }
+
+  /**
+   * Cast an attack spell using the opposed workflow.
+   * Calculates casting TN from magic skill, applies spell level penalty, initiates SkillOpposedWorkflow.
+   */
+  async _castAttackSpell(spell, targets) {
+    // Determine magic skill for this spell school
+    const school = String(spell.system?.school ?? "").toLowerCase();
+    let magicSkill = this.actor.items.find(i => 
+      i.type === "magicSkill" && 
+      String(i.name ?? "").toLowerCase().includes(school)
+    );
+    
+    // Fallback to WP bonus if no skill found
+    const wpTotal = Number(this.actor?.system?.characteristics?.wp?.total ?? 0);
+    const wpBonus = Math.floor(wpTotal / 10);
+    const baseTN = magicSkill ? Number(magicSkill.system?.value ?? 0) : wpBonus;
+    
+    // Calculate Spellcasting Level = skill rank numeric value + 1
+    // RAW Chapter 6 p.128 lines 180-184: Spellcasting Level determines max spell level without penalty
+    const rankToNumeric = { untrained: 0, novice: 1, apprentice: 2, journeyman: 3, adept: 4, expert: 5, master: 6 };
+    const skillRank = magicSkill ? (rankToNumeric[String(magicSkill.system?.rank ?? "untrained").toLowerCase()] ?? 0) : 0;
+    const spellcastingLevel = skillRank + 1;
+    
+    // Penalty: -10 per spell level above spellcasting level
+    const spellLevel = Number(spell.system?.level ?? 1);
+    const levelPenalty = Math.max(0, spellLevel - spellcastingLevel) * -10;
+    
+    // Apply standard penalties
+    const fatiguePenalty = Number(this.actor.system?.fatigue?.penalty ?? 0);
+    const carryPenalty = Number(this.actor.system?.carry_rating?.penalty ?? 0);
+    const woundPenalty = Number(this.actor.system?.woundPenalty ?? 0);
+    
+    const attackerTN = baseTN + levelPenalty + fatiguePenalty + carryPenalty + woundPenalty;
+    
+    // Get attacker token
+    const attackerToken = canvas?.tokens?.controlled?.find(t => t.actor?.id === this.actor.id) 
+      ?? this.actor.getActiveTokens?.()[0];
+    
+    if (!attackerToken) {
+      ui.notifications.warn("No attacker token found. Select your token and try again.");
+      return;
+    }
+    
+    // Create opposed workflow for each target
+    for (const defenderToken of targets) {
+      await SkillOpposedWorkflow.createPending({
+        attackerTokenUuid: attackerToken.document?.uuid ?? attackerToken.uuid,
+        defenderTokenUuid: defenderToken.document?.uuid ?? defenderToken.uuid,
+        attackerActorUuid: this.actor.uuid,
+        defenderActorUuid: defenderToken.actor?.uuid ?? null,
+        attackerSkillUuid: magicSkill?.uuid ?? null,
+        attackerSkillLabel: `${spell.name} (${spell.system.school})`
+      });
+    }
   }
 
   async _onSpellRoll(event) {
