@@ -158,7 +158,11 @@ export function listCombatStyles(actor) {
 
 
 export function getCombatStyleItem(actor, styleUuidOrId) {
-  if (!actor || !styleUuidOrId) return null;
+  if (!actor || !styleUuidOrId) {
+    if (!actor) console.warn("UESRPG | getCombatStyleItem: No actor provided");
+    if (!styleUuidOrId) console.warn("UESRPG | getCombatStyleItem: No styleUuidOrId provided");
+    return null;
+  }
 if (typeof styleUuidOrId === "string" && styleUuidOrId.startsWith("prof:")) {
   const key = styleUuidOrId.slice(5);
   const sys = actor?.system ?? {};
@@ -166,7 +170,7 @@ if (typeof styleUuidOrId === "string" && styleUuidOrId.startsWith("prof:")) {
   const woundPenalty = Number(sys?.woundPenalty ?? 0);
   const fatiguePenalty = Number(sys?.fatigue?.penalty ?? 0);
 
-  return {
+  const professionItem = {
     uuid: styleUuidOrId,
     id: styleUuidOrId,
     type: "combatStyle",
@@ -174,13 +178,44 @@ if (typeof styleUuidOrId === "string" && styleUuidOrId.startsWith("prof:")) {
     system: { value: base + fatiguePenalty + woundPenalty, bonus: 0, miscValue: 0 },
     _professionKey: key
   };
+  
+  console.log("UESRPG | getCombatStyleItem: Resolved profession combat style", { 
+    actor: actor.name, 
+    key, 
+    value: professionItem.system.value 
+  });
+  
+  return professionItem;
 }
 
   // Prefer UUID match when present
   const byUuid = (actor.items ?? []).find(i => i.uuid === styleUuidOrId);
-  if (byUuid) return byUuid;
+  if (byUuid) {
+    console.log("UESRPG | getCombatStyleItem: Resolved by UUID", { 
+      actor: actor.name, 
+      uuid: styleUuidOrId,
+      name: byUuid.name,
+      type: byUuid.type,
+      value: byUuid.system?.value ?? 0
+    });
+    return byUuid;
+  }
   const byId = (actor.items ?? []).find(i => i.id === styleUuidOrId);
-  if (byId) return byId;
+  if (byId) {
+    console.log("UESRPG | getCombatStyleItem: Resolved by ID", { 
+      actor: actor.name, 
+      id: styleUuidOrId,
+      name: byId.name,
+      type: byId.type,
+      value: byId.system?.value ?? 0
+    });
+    return byId;
+  }
+  
+  console.error("UESRPG | getCombatStyleItem: Could not resolve combat style", { 
+    actor: actor.name, 
+    styleUuidOrId 
+  });
   return null;
 }
 
@@ -206,7 +241,22 @@ export function hasEquippedShield(actor) {
 
 function computeCombatStyleTN(styleItem) {
   // styleItem.system.value is already computed in prepareData with penalties/bonuses.
-  return asNumber(styleItem?.system?.value ?? 0);
+  const value = asNumber(styleItem?.system?.value ?? 0);
+  
+  if (value === 0 && styleItem) {
+    console.warn("UESRPG | computeCombatStyleTN: Combat Style has 0 value", { 
+      name: styleItem.name,
+      type: styleItem.type,
+      system: styleItem.system 
+    });
+  }
+  
+  console.log("UESRPG | computeCombatStyleTN: Computed TN", { 
+    name: styleItem?.name,
+    value 
+  });
+  
+  return value;
 }
 
 function computeBlockTN(defender, styleItem) {
@@ -263,12 +313,27 @@ export function computeTN({
 } = {}) {
   const breakdown = [];
 
+  console.log("UESRPG | computeTN called", { 
+    actor: actor?.name, 
+    role, 
+    variant, 
+    defenseType, 
+    styleUuid,
+    context 
+  });
+
   // --- Base TN
   let baseTN = 0;
   let baseLabel = "Base";
 
   if (role === "attacker") {
     const styleItem = getCombatStyleItem(actor, styleUuid);
+    if (!styleItem) {
+      console.error("UESRPG | computeTN: No combat style item resolved for attacker", { 
+        actor: actor?.name, 
+        styleUuid 
+      });
+    }
     baseTN = computeCombatStyleTN(styleItem);
     baseLabel = "Base TN";
   } else if (role === "defender") {

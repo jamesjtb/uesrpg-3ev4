@@ -918,8 +918,10 @@ if (!authorUser) return;
         if (decl?.applyBlinded) situationalMods.push({ label: "Blinded (sight)", value: -30 });
         if (decl?.applyDeafened) situationalMods.push({ label: "Deafened (hearing)", value: -30 });
         
-        tn = computeTN(attacker, {
-          difficultyKey: decl.difficultyKey,
+        tn = computeTN({
+          actor: attacker,
+          role: "attacker",
+          styleUuid: decl.skillUuid,
           manualMod: decl.manualMod,
           situationalMods
         });
@@ -932,8 +934,10 @@ if (!authorUser) return;
         if (decl?.applyBlinded) situationalMods.push({ label: "Blinded (sight)", value: -30 });
         if (decl?.applyDeafened) situationalMods.push({ label: "Deafened (hearing)", value: -30 });
         
-        tn = computeTN(attacker, {
-          difficultyKey: decl.difficultyKey,
+        tn = computeTN({
+          actor: attacker,
+          role: "attacker",
+          styleUuid: decl.skillUuid,
           manualMod: decl.manualMod,
           situationalMods
         });
@@ -1122,8 +1126,11 @@ if (!authorUser) return;
         if (decl?.applyBlinded) situationalMods.push({ label: "Blinded (sight)", value: -30 });
         if (decl?.applyDeafened) situationalMods.push({ label: "Deafened (hearing)", value: -30 });
         
-        tn = computeTN(defender, {
-          difficultyKey: decl.difficultyKey,
+        tn = computeTN({
+          actor: defender,
+          role: "defender",
+          defenseType: "parry", // Default to parry for combat style defense
+          styleUuid: decl.skillUuid,
           manualMod: decl.manualMod,
           situationalMods
         });
@@ -1136,8 +1143,11 @@ if (!authorUser) return;
         if (decl?.applyBlinded) situationalMods.push({ label: "Blinded (sight)", value: -30 });
         if (decl?.applyDeafened) situationalMods.push({ label: "Deafened (hearing)", value: -30 });
         
-        tn = computeTN(defender, {
-          difficultyKey: decl.difficultyKey,
+        tn = computeTN({
+          actor: defender,
+          role: "defender",
+          defenseType: "parry", // Default to parry for combat profession defense
+          styleUuid: decl.skillUuid,
           manualMod: decl.manualMod,
           situationalMods
         });
