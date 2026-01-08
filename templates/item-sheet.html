@@ -76,13 +76,6 @@
             {{!-- Description Tab --}}
             <div class="tab" data-group="primary" data-tab="description">
                 <div class="item-description-container">
-                    <div class="item-selection-container">
-                        <h2 class="headerWithButton">
-                            <button type="button" class="modifier-create">+</button>
-                            <div>Modifiers</div>
-                        </h2>
-                        <div class="selection-container" id="item-modifiers"></div>
-                    </div>
                     <div class="basic-padding">
                         {{editor item.system.enrichedDescription target="system.description" engine="prosemirror" button=true owner=owner editable=editable}}
                     </div>

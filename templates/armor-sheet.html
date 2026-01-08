@@ -43,14 +43,6 @@
                                 <div class="small-text-label">Price</div>
                             </div>
                         </div>
-                        <div class="item-resource">
-                            <div class="stat-value-label">
-                                <input type="number" name="system.enchant_level" value="{{item.system.enchant_level}}"/>
-                            </div>
-                            <div class="flex-container">
-                                <div class="small-text-label">Enchant Lv.</div>
-                            </div>
-                        </div>
                         <div class="item-resource set-size-container">
                             <div class="stat-value-label">
                                 <input class="checkbox" type="checkbox" name="system.equipped" {{checked item.system.equipped}}>
@@ -98,18 +90,6 @@
                             </div>
                             <div class="flex-container">
                                 <div class="small-text-label">Block</div>
-                            </div>
-                        </div>
-                        <div class="item-resource">
-                            <div class="stat-value-label">
-                                <div class="flex-container">
-                                    <input type="number" name="system.charge.value" value="{{item.system.charge.value}}"> / <input type="number" name="system.charge.max" value="{{item.system.charge.max}}">
-                                </div>
-                            </div>
-                            <div class="flex-container">
-                                <i class="fas fa-angle-down fa-xs chargeMinus"></i>
-                                <div class="small-text-label">Charge</div>
-                                <i class="fas fa-angle-up fa-xs chargePlus"></i>
                             </div>
                         </div>
                     </div>
@@ -231,6 +211,27 @@
                                 </div>
                             </div>
 </div>
+                    </div>
+
+                    {{! -- ENCHANTING SECTION --}}
+                    <div class="item-selection-container">
+                        <h2>Enchanting</h2>
+                        <div class="selection-container">
+                            <div class="grid-container">
+                                <div>Enchant Level</div>
+                                <div class="right-align-content">
+                                    <input type="number" name="system.enchant_level" value="{{item.system.enchant_level}}"/>
+                                </div>
+                            </div>
+                            <div class="grid-container">
+                                <div>Charge (Current / Max)</div>
+                                <div class="right-align-content">
+                                    <input type="number" name="system.charge.value" value="{{item.system.charge.value}}" style="width:50px">
+                                    /
+                                    <input type="number" name="system.charge.max" value="{{item.system.charge.max}}" style="width:50px">
+                                </div>
+                            </div>
+                        </div>
                     </div>
 
                                         {{! -- HIT LOCATIONS SECTION --}}

@@ -84,7 +84,11 @@
 
         {{!-- Description Tab --}}
         <div class="tab" data-group="primary" data-tab="description">
-            <div style="min-height: 280px; max-height: 420px; overflow: auto;">{{editor item.system.enrichedDescription target="system.description" engine="prosemirror" button=true owner=owner editable=editable}}</div>
+            <div class="item-description-container">
+                <div class="basic-padding">
+                    {{editor item.system.enrichedDescription target="system.description" engine="prosemirror" button=true owner=owner editable=editable}}
+                </div>
+            </div>
         </div>
 
         {{!-- Attributes Tab --}}
