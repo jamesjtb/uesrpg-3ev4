@@ -6,7 +6,8 @@ This document describes the Active Effects (AE) framework implemented for the UE
 - A roadmap marker distinguishing implemented vs deferred AE lanes
 - All listed effects are deterministic, stack-safe, and tested, unless explicitly marked otherwise.
 
-1.1 Core Design Principles - Deterministic evaluation
+**1 Core Design Principles **
+1.1  Deterministic evaluation
 - The system does not rely on Foundry auto-applying AE changes
 - All AE changes are explicitly read and evaluated by the system
 - Results are derived at roll-time or prepare-data time, never stored permanently
@@ -15,7 +16,7 @@ This document describes the Active Effects (AE) framework implemented for the UE
 For every supported modifier key:
 ADD: stack-safe summation
 OVERRIDE: deterministic replacement
-Highest-priority OVERRIDE wins
+!!! Highest-priority OVERRIDE wins !!!
 OVERRIDE suppresses all ADD for the same key
 OVERRIDE is API-correct and normalized across numeric and string modes.
 
@@ -24,7 +25,8 @@ Weapons / Armor: effects apply only if item.system.equipped === true
 Talents / Traits: effects always apply
 Spells: intentionally deferred; not part of this guide
 
-2. Combat & Rolls Attribute Keys
+**2. Combat & Rolls Attribute Keys**
+
 2.1 Combat Target Numbers (TN)
 Attacker
 system.modifiers.combat.attackTN
@@ -50,7 +52,7 @@ system.modifiers.skills.<skillKey>
 
 !!! Applies at roll-time only, never mutates stored skill values. !!!
 
-3. Damage System Attribute Keys
+**3. Damage System Attribute Keys**
 3.1 Attacker-side modifiers
 Bonus damage
 system.modifiers.combat.damage.dealt
@@ -95,7 +97,7 @@ system.modifiers.resistance.natToughness
 Important (RAW):
 Natural Toughness reduces all damage types. It functions like AR but does not count as armor
 
-4. Derived Stats Attribute Keys
+**4. Derived Stats Attribute Keys**
 4.1 Initiative
 system.modifiers.initiative.base
 system.modifiers.initiative.bonus
@@ -108,7 +110,7 @@ initiative.value (by design; initiative is derived)
 system.modifiers.speed.base
 system.modifiers.speed.bonus
 
-5. Resources (Max values only)
+**5. Resources Attribute Keys (Max values only)**
 Supported
 system.modifiers.hp.max
 system.modifiers.magicka.max
@@ -117,12 +119,12 @@ system.modifiers.luck_points.max
 
 Behavior: Max values are derived. Current values are clamped only if exceeding max. No direct mutation of current values via AE
 
-6. Wound Threshold Attribute Keys
+**6. Wound Threshold Attribute Keys**
 system.modifiers.wound_threshold.bonus
 system.modifiers.wound_threshold.value
 Applies after form/trait adjustments.
 
-7. Carry & Encumbrance Attribute Keys
+**7. Carry & Encumbrance Attribute Keys**
 7.1 Carry capacity
 
 system.modifiers.carry.base
@@ -144,14 +146,14 @@ system.modifiers.encumbrance.staminaPenalty
 
 These modify post-bracket penalties, not the bracket selection itself.
 
-[[ Encumbrance → Fatigue conversion (RAW)
+[[ Encumbrance → Fatigue conversion (RAW) : 
 
 If encumbrance penalties would reduce Stamina max below 0:
 - Stamina max is clamped to 0
 - Excess converts into fatigue bonus
 - Conversion is derived-only and reversible ]]
 
-8. Fatigue / Exhaustion Attribute Keys
+**8. Fatigue / Exhaustion Attribute Keys**
 Bonus lane
 system.modifiers.fatigue.bonus
 Alias: system.modifiers.exhaustion.bonus
@@ -160,9 +162,9 @@ Penalty lane
 system.modifiers.fatigue.penalty
 Alias: system.modifiers.exhaustion.penalty
 
-[[ Application order: Encumbrance overflow (derived) => Fatigue bonus AE => Fatigue level calculation => Base fatigue penalty => Fatigue penalty AE ]]
+!!! Application order: Encumbrance overflow (derived) => Fatigue bonus AE => Fatigue level calculation => Base fatigue penalty => Fatigue penalty AE !!!
 
-9. OVERRIDE support (global)
+**9. OVERRIDE support (global)**
 OVERRIDE is supported and tested for all keys listed above.
 
 Rules:
@@ -177,7 +179,7 @@ Works for:
 - Encumbrance
 - Fatigue
 
-10. Deferred / Not Implemented (by design)
+**10. Deferred / Not Implemented (by design)**
 
 These are explicitly not implemented yet and safe to ignore until future updates:
 
@@ -185,4 +187,5 @@ These are explicitly not implemented yet and safe to ignore until future updates
 - Economy modifiers
 - Armor mobility penalties as explicit AE lanes (currently handled internally, not AE-exposed)
 - Initiative “current value” overrides
+
 - Any AE mutating stored document data
