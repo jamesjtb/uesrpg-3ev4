@@ -3714,11 +3714,12 @@ if (stage === "attacker-roll") {
       const ammoOk = await _preConsumeAttackAmmo(attacker, data);
       if (!ammoOk) return;
 
-      // Mark weapon as needing reload after ammunition consumption (ranged attacks only).
-      // Weapon UUID is available from preConsumedAmmo if ammo was consumed, or from context/preferred weapon otherwise.
+      // Mark weapon as needing reload immediately after successful ammunition consumption (ranged attacks only).
+      // This ensures reload state is properly tracked before the attack roll executes.
       const attackMode = getContextAttackMode(data?.context);
       if (attackMode === "ranged") {
         try {
+          // Weapon UUID priority: preConsumedAmmo (cached) > context (declared) > preferred (equipped)
           const weaponUuid = data.attacker?.preConsumedAmmo?.weaponUuid 
             ?? String(data?.context?.weaponUuid ?? "") 
             || _getPreferredWeaponUuid(attacker, { meleeOnly: false }) 
