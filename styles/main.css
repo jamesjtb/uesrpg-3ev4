@@ -2239,6 +2239,20 @@
   font-weight: 600;
 }
 
+.reaction-section.compact {
+  margin: 0.5rem 0;
+  padding: 0.5rem;
+}
+
+.reaction-section.compact h4 {
+  margin: 0 0 0.25rem 0;
+  font-size: 0.95rem;
+}
+
+.reaction-section.compact .actions-help-small {
+  margin: 0;
+}
+
 .actions-help-small {
   font-size: 0.85em;
   opacity: 0.75;

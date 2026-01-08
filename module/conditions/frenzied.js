@@ -144,8 +144,8 @@ function _mkFrenziedChanges(actor) {
     // +SB (Strength Bonus contributes to damage)
     { key: "system.characteristics.str.bonus", mode: CONST.ACTIVE_EFFECT_MODES.ADD, value: mods.sbBonus, priority: 20 },
     
-    // +SP (immediate, can exceed max)
-    { key: "system.stamina.value", mode: CONST.ACTIVE_EFFECT_MODES.ADD, value: mods.spBonus, priority: 20 },
+    // NOTE: SP bonus is applied immediately on application (not via Active Effect)
+    // to ensure it can exceed max and is properly tracked
     
     // Skill penalty (non-physical tests)
     // NOTE: This is a blanket penalty; skill-tn.js must check if skill is STR/AGI/END-based and exempt it
@@ -213,8 +213,17 @@ export async function applyFrenzied(actor, { source = "Frenzied", voluntary = fa
   try {
     const created = await requestCreateEmbeddedDocuments(actor, "ActiveEffect", [effectData]);
     
+    // RAW: Gain +1 SP immediately (can exceed max)
+    const mods = _getTalentModifiers(actor);
+    const currentSP = Number(actor.system?.stamina?.value ?? 0);
+    const newSP = currentSP + mods.spBonus; // Can exceed max per RAW
+    
+    await requestUpdateDocument(actor, { "system.stamina.value": newSP });
+    
     // FIX: Force immediate effect application
     actor.prepareData();
+    
+    ui.notifications.info(`${actor.name} gains ${mods.spBonus} Stamina Point${mods.spBonus > 1 ? 's' : ''} from Frenzy!`);
     
     return created?.[0] ?? null;
   } catch (err) {
@@ -243,18 +252,23 @@ export async function removeFrenzied(actor, { applySPLoss = true } = {}) {
     
     if (spLoss > 0) {
       const currentSP = Number(actor.system?.stamina?.value ?? 0);
-      // RAW: SP loss "cannot kill them" - Math.max(0, ...) ensures SP never goes negative,
-      // preventing HP loss from SP depletion.
-      const newSP = Math.max(0, currentSP - spLoss);
+      // RAW: SP loss "cannot kill them" - minimum 1 SP remains
+      const newSP = Math.max(1, currentSP - spLoss);
       
       try {
         await requestUpdateDocument(actor, { "system.stamina.value": newSP });
         
-        // Chat notification
+        // Chat notification with RAW text
         await ChatMessage.create({
           user: game.user.id,
           speaker: ChatMessage.getSpeaker({ actor }),
-          content: `<div style="padding:6px;"><strong>${actor.name}</strong> exits Frenzied state and loses <strong>${spLoss} SP</strong>.</div>`,
+          content: `<div class="uesrpg-condition-card" style="padding:8px; border:1px solid rgba(0,0,0,0.2); background:rgba(0,0,0,0.05);">
+            <h3 style="margin:0 0 8px 0;">Frenzy Ended: ${actor.name}</h3>
+            <p style="margin:4px 0;"><b>Lost ${spLoss} Stamina Point${spLoss > 1 ? 's' : ''}</b> (now ${newSP} SP).</p>
+            <hr style="margin:8px 0; border:none; border-top:1px solid rgba(0,0,0,0.2);">
+            <p style="margin:4px 0; opacity:0.9;"><b>RAW:</b> Once the encounter has ended, the character snaps out of their frenzied state and loses 2 SP (this cannot kill them).</p>
+            <p style="margin:4px 0; opacity:0.9;">The character can also <b>test Willpower at -20</b> as a Secondary Action during combat to attempt to snap out of frenzy, which ends the condition.</p>
+          </div>`,
           style: CONST.CHAT_MESSAGE_STYLES.OTHER
         });
       } catch (err) {
