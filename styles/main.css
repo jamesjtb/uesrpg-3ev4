@@ -1557,6 +1557,51 @@
   padding-bottom: 2px;
 }
 
+.worldbuilding .item-selection-container h3 {
+  margin: 12px 0 6px 0;
+  font-size: 13px;
+  font-weight: 600;
+  opacity: 0.9;
+}
+
+.worldbuilding .item-selection-container h3:first-of-type {
+  margin-top: 0;
+}
+
+.worldbuilding .quality-material-block {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.worldbuilding .form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin-bottom: 8px;
+}
+
+.worldbuilding .form-group label {
+  font-size: 12px;
+  font-weight: 600;
+  opacity: 0.9;
+}
+
+.worldbuilding .form-group .notes {
+  margin: 2px 0 0 0;
+  font-size: 11px;
+  opacity: 0.75;
+  font-style: italic;
+}
+
+.worldbuilding .form-group input[type="number"],
+.worldbuilding .form-group input[type="text"],
+.worldbuilding .form-group select {
+  padding: 4px 6px;
+  border: 1px solid rgba(0,0,0,0.2);
+  background: rgba(255,255,255,0.4);
+}
+
 .worldbuilding .quality-container {
   border: 1px solid;
   padding: 0 5px 5px 5px;
