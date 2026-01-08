@@ -137,12 +137,14 @@
                                     <div class="small-text-label">Wound</div>
                                 </div>
                             </div>
+                            {{#if (gt actor.system.speed.flySpeed 0)}}
                             <div class="combat-stat">
                                 <div class="stat-value-label">{{actor.system.speed.flySpeed}}</div>
                                 <div class="flex-container">
                                     <div class="small-text-label">Fly</div>
                                 </div>
                             </div>
+                            {{/if}}
                             <div class="combat-stat">
                                 <div class="stat-value-label">{{actor.system.initiative.value}}</div>
                                 <div class="flex-container">
@@ -275,6 +277,36 @@
     </div>
 </div>
 
+<!-- Combat Style section - MOVED ABOVE ACTIONS -->
+<div class="combat-item-container">
+    <table class="combat-style-table">
+        <thead>
+            <tr>
+                <th class="item-name-cell item-create" id="combatStyle">+ Combat Style</th>
+                <th>%</th>
+                <th>Rank</th>
+                <th class="right-align-cell"><i class="fas fa-trash"></i></th>
+            </tr>
+        </thead>
+        <tbody>
+            {{#each actor.itemTypes.combatStyle as |item id|}}
+                <tr class="item" data-item-id="{{item._id}}">
+                    <td class="item-name-cell">
+                        <div class="flex-container">
+                            <i class="fas fa-dice-d20 combat-roll"></i>
+                            <img class="item-img" src="{{item.img}}">
+                            <div class="item-name">{{item.name}}</div>
+                        </div>
+                    </td>
+                    <td>{{item.system.value}}%</td>
+                    <td>{{item.system.rank}}</td>
+                    <td class="right-align-cell"><a class="item-control item-delete" title="Delete Item"><i class="fas fa-trash"></i></a></td>
+                </tr>
+            {{/each}}
+        </tbody>
+    </table>
+</div>
+
 <div class="uesrpg-actions-section" data-actions-root>
     <nav class="uesrpg-actions-tabs">
         <a class="uesrpg-actions-subtab active" data-actionstab="primary">Primary Actions</a>
@@ -324,38 +356,20 @@
         <div class="uesrpg-actions-panel" data-actionstab="reactions">
             <div class="uesrpg-actions-card">
                 <div class="quickbar-title">Reactions</div>
-                <div class="actions-help">
-                    <strong>Defensive Reactions:</strong> Available when being attacked (consume 1 AP).<br>
-                    <strong>Attack of Opportunity:</strong> Available when enemy leaves engagement range (consumes 1 AP + triggers attack).
-                </div>
                 
-                <div class="reaction-section">
+                <div class="reaction-section compact">
                     <h4>Defensive Reactions</h4>
-                    <div class="quickbar-buttons">
-                        <button type="button" class="uesrpg-reaction-defensive" data-defense-type="block" disabled="disabled">
-                            <i class="fas fa-shield-alt"></i> Block
-                        </button>
-                        <button type="button" class="uesrpg-reaction-defensive" data-defense-type="parry" disabled="disabled">
-                            <i class="fas fa-sword"></i> Parry
-                        </button>
-                        <button type="button" class="uesrpg-reaction-defensive" data-defense-type="evade" disabled="disabled">
-                            <i class="fas fa-running"></i> Evade
-                        </button>
-                        <button type="button" class="uesrpg-reaction-defensive" data-defense-type="counter" disabled="disabled">
-                            <i class="fas fa-fist-raised"></i> Counter-Attack
-                        </button>
-                    </div>
-                    <p class="actions-help-small">These buttons activate when you are attacked and the defense dialog appears.</p>
+                    <p class="actions-help-small">Available when attacked (choose in defense dialog, consumes 1 AP). Options: Block, Parry, Evade, Counter-Attack.</p>
                 </div>
 
-                <div class="reaction-section">
+                <div class="reaction-section compact">
                     <h4>Attack of Opportunity</h4>
                     <div class="quickbar-buttons">
                         <button type="button" class="uesrpg-quick-action" data-action="attack-of-opportunity" data-label="Attack of Opportunity">
                             <i class="fas fa-crosshairs"></i> Attack of Opportunity
                         </button>
                     </div>
-                    <p class="actions-help-small">Use when an enemy leaves your engagement range (requires equipped weapon and targeted token).</p>
+                    <p class="actions-help-small">Available when enemy leaves engagement range (consumes 1 AP + triggers attack).</p>
                 </div>
             </div>
         </div>
@@ -419,36 +433,6 @@
                             <div class="diag-row"><span class="diag-label">Quick Weapons</span><span class="diag-value">{{#if actor.sheetCombatQuick.meleeWeaponName}}Melee: {{actor.sheetCombatQuick.meleeWeaponName}}{{else}}Melee: —{{/if}}; {{#if actor.sheetCombatQuick.rangedWeaponName}}Ranged: {{actor.sheetCombatQuick.rangedWeaponName}}{{else}}Ranged: —{{/if}}</span></div>
                         </div>
                     {{/if}}
-
-                    <div class="combat-item-container">
-                        <table class="combat-style-table">
-                            <thead>
-                                <tr>
-                                    <th class="item-name-cell item-create" id="combatStyle">+ Combat Style</th>
-                                    <th>%</th>
-                                    <th>Rank</th>
-                                    <th class="right-align-cell"><i class="fas fa-trash"></i></th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {{#each actor.itemTypes.combatStyle as |item id|}}
-                                    <tr class="item" data-item-id="{{item._id}}">
-                                        <td class="item-name-cell">
-                                            <div class="flex-container">
-                                                <i class="fas fa-dice-d20 combat-roll"></i>
-                                                <img class="item-img" src="{{item.img}}">
-                                                <div class="item-name">{{item.name}}</div>
-                                            </div>
-                                        </td>
-                                        <td>{{item.system.value}}%</td>
-                                        <td>{{item.system.rank}}</td>
-                                        <td class="right-align-cell"><a class="item-control item-delete" title="Delete Item"><i class="fas fa-trash"></i></a></td>
-                                    </tr>
-                                {{/each}}
-                            </tbody>
-                        </table>
-                    </div>
-
 
                 </div>
             </div>
