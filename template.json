@@ -913,7 +913,9 @@
     },
     "spell": {
       "description": "",
-      "damage": 0,
+      "damage": "",
+      "damageType": "magic",
+      "healAmount": "",
       "level": 0,
       "cost": 0,
       "spell_str": "",
@@ -934,7 +936,18 @@
         "conventional": "Conventional",
         "unconventional": "Unconventional"
       },
-      "isAttackSpell": false
+      "isAttackSpell": false,
+      "isDamagingSpell": false,
+      "isHealingSpell": false,
+      "isInstant": false,
+      "hasUpkeep": false,
+      "hasOverload": false,
+      "overloadEffect": "",
+      "hasReinforce": false,
+      "rangeType": "",
+      "range": "",
+      "isDirect": false,
+      "mindlockValue": 0
     },
     "trait": {
       "templates": [
