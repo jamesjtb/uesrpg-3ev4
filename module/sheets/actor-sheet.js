@@ -471,7 +471,7 @@ async activateListeners(html) {
         const message = await SkillOpposedWorkflow.createPending({
           attackerTokenUuid: actorToken?.document?.uuid ?? actorToken?.uuid,
           defenderTokenUuid: targetToken?.document?.uuid ?? targetToken?.uuid,
-          attackerSkillUuid: attackerSkillUuid,  // Pre-select active combat style if available
+          attackerSkillUuid,  // Pre-select active combat style if available
           attackerSkillLabel: `${def.name} (Special Action)`
         });
 

@@ -58,7 +58,7 @@ async function _setLastSkillRollOptions(next) {
     const sanitized = { ...next };
     delete sanitized.difficulty;
     delete sanitized.difficultyKey;
-    await game.settings.set(_SKILL_ROLL_SETTINGS_NS, _SKILL_ROLL_LAST_OPTIONS_KEY, sanitized ?? {});
+    await game.settings.set(_SKILL_ROLL_SETTINGS_NS, _SKILL_ROLL_LAST_OPTIONS_KEY, sanitized);
   } catch (_e) {
     // client setting may not exist if init hasn't run yet; fail silently
   }
