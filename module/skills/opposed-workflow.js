@@ -1003,6 +1003,40 @@ if (!authorUser) return;
 
       if (data.defender.result) {
         data.outcome = _resolveOutcome(data);
+        
+        // Issue 2: Special Action automation on opposed test win
+        if (data.outcome?.winner === "attacker" && data.specialActionId) {
+          try {
+            const { executeSpecialAction } = await import("../combat/special-actions-helper.js");
+            const attackerActor = _resolveActor(data.attacker.actorUuid);
+            const defenderActor = _resolveActor(data.defender.actorUuid);
+            
+            if (attackerActor && defenderActor) {
+              const result = await executeSpecialAction({
+                specialActionId: data.specialActionId,
+                actor: attackerActor,
+                target: defenderActor,
+                isAutoWin: false, // Was opposed test, not auto-win
+                opposedResult: { 
+                  winner: "attacker", 
+                  degrees: data.outcome?.degrees ?? 0 
+                }
+              });
+              
+              if (result.success) {
+                // Post automation result to chat
+                await ChatMessage.create({
+                  user: game.user.id,
+                  speaker: ChatMessage.getSpeaker({ actor: attackerActor }),
+                  content: `<div class="uesrpg-special-action-outcome"><b>Special Action:</b><p>${result.message}</p></div>`,
+                  style: CONST.CHAT_MESSAGE_STYLES.OTHER
+                });
+              }
+            }
+          } catch (err) {
+            console.error("UESRPG | Failed to execute Special Action automation", err);
+          }
+        }
       }
 
       await _updateCard(message, data);
@@ -1224,6 +1258,40 @@ if (!authorUser) return;
 
       if (data.attacker.result) {
         data.outcome = _resolveOutcome(data);
+        
+        // Issue 2: Special Action automation on opposed test win
+        if (data.outcome?.winner === "attacker" && data.specialActionId) {
+          try {
+            const { executeSpecialAction } = await import("../combat/special-actions-helper.js");
+            const attackerActor = _resolveActor(data.attacker.actorUuid);
+            const defenderActor = _resolveActor(data.defender.actorUuid);
+            
+            if (attackerActor && defenderActor) {
+              const result = await executeSpecialAction({
+                specialActionId: data.specialActionId,
+                actor: attackerActor,
+                target: defenderActor,
+                isAutoWin: false, // Was opposed test, not auto-win
+                opposedResult: { 
+                  winner: "attacker", 
+                  degrees: data.outcome?.degrees ?? 0 
+                }
+              });
+              
+              if (result.success) {
+                // Post automation result to chat
+                await ChatMessage.create({
+                  user: game.user.id,
+                  speaker: ChatMessage.getSpeaker({ actor: attackerActor }),
+                  content: `<div class="uesrpg-special-action-outcome"><b>Special Action:</b><p>${result.message}</p></div>`,
+                  style: CONST.CHAT_MESSAGE_STYLES.OTHER
+                });
+              }
+            }
+          } catch (err) {
+            console.error("UESRPG | Failed to execute Special Action automation", err);
+          }
+        }
       }
 
       await _updateCard(message, data);
