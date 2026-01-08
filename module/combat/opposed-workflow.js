@@ -184,23 +184,18 @@ function _measureTokenDistance(tokenA, tokenB) {
     const b = tokenB?.center ?? tokenB?.object?.center ?? null;
     if (!a || !b) return null;
 
-    const ray = new Ray(a, b);
+    // v13: Use namespaced Ray from foundry.canvas.geometry
+    const ray = new foundry.canvas.geometry.Ray(a, b);
 
-    // Preferred: GridLayer.measureDistances (respects grid rules)
-    if (canvas?.grid && typeof canvas.grid.measureDistances === "function") {
-      const dist = canvas.grid.measureDistances([{ ray }], { gridSpaces: true })?.[0];
-      if (Number.isFinite(dist)) return dist;
-    }
-
-    // Fallback: BaseGrid.measurePath (v13)
+    // Preferred: BaseGrid.measurePath (v13+)
     const grid = canvas?.grid?.grid;
     if (grid && typeof grid.measurePath === "function") {
-      const m = grid.measurePath([a, b], { gridSpaces: true });
-      const dist = m?.distance ?? m?.totalDistance ?? null;
+      const result = grid.measurePath([a, b], { gridSpaces: true });
+      const dist = result?.distance ?? result?.totalDistance ?? null;
       if (Number.isFinite(dist)) return dist;
     }
 
-    // Final fallback: Euclidean pixel distance converted to scene units.
+    // Fallback: manual calculation (deprecated measureDistances removed)
     const gridSize = Number(canvas?.scene?.grid?.size ?? 0);
     const gridDistance = Number(canvas?.scene?.grid?.distance ?? 0);
     if (gridSize > 0 && gridDistance > 0) {
@@ -3718,6 +3713,22 @@ if (stage === "attacker-roll") {
       // Hard requirement: ranged (non-thrown) attacks must have ammo even if no damage card is ever produced.
       const ammoOk = await _preConsumeAttackAmmo(attacker, data);
       if (!ammoOk) return;
+
+      // Mark weapon as needing reload after ammunition consumption (ranged attacks only).
+      const attackMode = getContextAttackMode(data?.context);
+      if (attackMode === "ranged") {
+        try {
+          const weaponUuid = String(data?.context?.weaponUuid ?? "") || _getPreferredWeaponUuid(attacker, { meleeOnly: false }) || "";
+          if (weaponUuid) {
+            const weapon = await fromUuid(weaponUuid);
+            if (weapon && weapon.type === "weapon") {
+              await _markWeaponNeedsReload(weapon);
+            }
+          }
+        } catch (err) {
+          console.warn("UESRPG | Failed to mark weapon as needing reload after attack", err);
+        }
+      }
 
       // Perform a real Foundry roll + message so Dice So Nice triggers.
       const res = await doTestRoll(attacker, { rollFormula: "1d100", target: finalTN, allowLucky: true, allowUnlucky: true });
