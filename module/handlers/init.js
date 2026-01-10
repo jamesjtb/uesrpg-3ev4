@@ -4,6 +4,7 @@ import { SimpleActor } from "../entities/actor.js";
 import { npcSheet } from "../sheets/npc-sheet.js";
 import { SimpleActorSheet } from "../sheets/actor-sheet.js";
 import { merchantSheet } from "../sheets/merchant-sheet.js";
+import { GroupSheet } from "../sheets/group-sheet.js";
 import { SimpleItem } from "../entities/item.js";
 import { SimpleItemSheet } from "../sheets/item-sheet.js";
 import { SystemCombat } from "../entities/combat.js";
@@ -125,6 +126,11 @@ async function registerSheets () {
       types: ["NPC"],
       makeDefault: false,
       label: "Default UESRPG Merchant Sheet",
+    });
+    Actors.registerSheet("uesrpg-3ev4", GroupSheet, {
+      types: ["Group"],
+      makeDefault: true,
+      label: "Default UESRPG Group Sheet",
     });
 }
 

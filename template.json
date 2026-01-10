@@ -1,6 +1,6 @@
 {
 "Actor": {
-  "types": ["Player Character", "NPC"],
+  "types": ["Player Character", "NPC", "Group"],
   "templates": {
     "equippedWeapons": {
       "equippedWeapons": {
@@ -593,6 +593,12 @@
     },
     "storeName": "",
     "priceMod": 0
+  },
+  "Group": {
+    "name": "",
+    "description": "",
+    "notes": "",
+    "members": []
   }
 
 },

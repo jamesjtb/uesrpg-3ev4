@@ -15,6 +15,17 @@ export class SimpleActor extends Actor {
       })
     }
 
+    if (this.type === 'Group') {
+      // Updates token default settings for Group types
+      this.prototypeToken.updateSource({
+        'sight.enabled': false,
+        actorLink: true,
+        disposition: 0,
+        'displayName': CONST.TOKEN_DISPLAY_MODES.ALWAYS,
+        'displayBars': CONST.TOKEN_DISPLAY_MODES.NONE
+      })
+    }
+
     // Preps and adds standard skill items to Character types
     await super._preCreate(data, options, user);
     if (this.type === 'Player Character') {
@@ -51,6 +62,7 @@ export class SimpleActor extends Actor {
     // things organized.
     if (actorData.type === 'Player Character') this._prepareCharacterData(actorData);
     if (actorData.type === 'NPC') this._prepareNPCData(actorData);
+    if (actorData.type === 'Group') this._prepareGroupData(actorData);
   }
 
   /**
@@ -723,6 +735,52 @@ export class SimpleActor extends Actor {
     // Calculate Item Profession Modifiers
     this._calculateItemSkillModifiers(actorData)
 
+  }
+
+  /**
+   * Prepare Group type specific data
+   * Groups are simple containers with no calculations needed
+   */
+  _prepareGroupData(actorData) {
+    const actorSystemData = actorData.system;
+
+    // Initialize members array if missing
+    if (!actorSystemData.members) {
+      actorSystemData.members = [];
+    }
+
+    // Sort members by sortOrder
+    actorSystemData.members.sort((a, b) => (a.sortOrder || 0) - (b.sortOrder || 0));
+
+    // No calculations needed - Groups are simple containers
+  }
+
+  /**
+   * Check if adding an actor would create a circular reference
+   * @param {String} actorUuid - UUID of actor to potentially add
+   * @returns {Promise<Boolean>} - True if circular, false if safe
+   */
+  async _wouldCreateCircularReference(actorUuid) {
+    // Can't add self
+    if (actorUuid === this.uuid) return true;
+
+    // Recursively check if actorUuid contains this group
+    const checkActor = async (uuid, visited = new Set()) => {
+      if (visited.has(uuid)) return false;
+      visited.add(uuid);
+
+      const actor = await fromUuid(uuid);
+      if (!actor || actor.type !== 'Group') return false;
+
+      for (const member of actor.system.members || []) {
+        if (member.id === this.uuid) return true;
+        if (await checkActor(member.id, visited)) return true;
+      }
+
+      return false;
+    };
+
+    return checkActor(actorUuid);
   }
 
   async _calculateItemSkillModifiers(actorData) {
