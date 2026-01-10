@@ -4,7 +4,7 @@
   "description": "A system used to play the UESRPG (Unofficial Elder Scrolls Roleplaying Game) 3ev4 d100 system.",
   "main": "module/entrypoint.js",
   "scripts": {
-    "version": "node ./automation/version.js %npm_package_version%",
+    "version": "node ./automation/version.js",
     "postversion": "git pull && git push && git push --tags",
     "packs-compile": "node ./automation/ldb-packager.mjs compile",
     "packs-extract": "node ./automation/ldb-packager.mjs extract",

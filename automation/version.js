@@ -1,8 +1,8 @@
 const {writeFileSync, readFileSync} = require('fs');
 const {exec} = require('child_process');
-const {argv} = require('node:process');
+const {env} = require('node:process');
 
-const versionArg = argv[2];
+const versionArg = env.npm_package_version;
 
 const systemFilePath = './system.json';
 const systemFileEncoding = 'utf-8';
