@@ -74,7 +74,8 @@ function _measureDistanceMeters(aToken, bToken) {
     // Use v13 measurePath API with fallback to deprecated measureDistances
     if (typeof canvas.grid.measurePath === "function") {
       const path = canvas.grid.measurePath([{ ray }], { gridSpaces: true });
-      const d = path?.distance ?? null;
+      // API may return object with distance property or array of distances
+      const d = path?.distance ?? (Array.isArray(path) && path.length > 0 ? path[0] : null);
       if (Number.isFinite(d)) return d;
     } else {
       // Fallback for compatibility
