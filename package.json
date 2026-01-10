@@ -1,6 +1,6 @@
 {
   "name": "uesrpg-3ev4",
-  "version": "1.0.0-RC.77",
+  "version": "1.0.0-RC.78",
   "description": "A system used to play the UESRPG (Unofficial Elder Scrolls Roleplaying Game) 3ev4 d100 system.",
   "main": "module/entrypoint.js",
   "scripts": {
@@ -16,7 +16,9 @@
     "url": "git+https://github.com/jamesjtb/uesrpg-3ev4.git"
   },
   "author": "DogBoneZone",
-  "contributors": ["Greybard"],
+  "contributors": [
+    "Greybard"
+  ],
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/jamesjtb/uesrpg-3ev4/issues"
