@@ -469,7 +469,7 @@
                     {{#if actor.sheetCombatQuick.rangedWeaponId}}
                         <button type="button" class="uesrpg-quick-action" data-action="attack" data-weapon-id="{{actor.sheetCombatQuick.rangedWeaponId}}" data-label="Attack (Ranged)" {{#if actor.sheetCombatQuick.quickAttacksDisabled}}disabled="disabled" title="{{actor.sheetCombatQuick.quickAttacksDisabledReason}}"{{/if}}>Attack (Ranged)</button>
                     {{/if}}
-                    <button type="button" class="uesrpg-cast-magic" data-action="cast-magic" {{#unless actor.sheetCombatActions.canCastMagic}}disabled="disabled" title="No spells available to cast from this sheet."{{/unless}}>Cast Magic</button>
+                    <button type="button" class="uesrpg-cast-magic" data-action="cast-magic" data-action-type="primary" {{#unless actor.sheetCombatActions.canCastMagic}}disabled="disabled" title="No spells available to cast from this sheet."{{/unless}}>Cast Magic</button>
 
                     
                     <button type="button" class="uesrpg-quick-action" data-action="disengage" data-label="Disengage">Disengage</button>
@@ -491,6 +491,9 @@
                     <button type="button" class="uesrpg-quick-action" data-action="hide" data-label="Hide">Hide</button>
                     <button type="button" class="uesrpg-quick-action" data-action="reload-weapon" data-label="Reload Weapon">Reload Weapon</button>
                     <button type="button" class="uesrpg-quick-action" data-action="use-item" data-label="Use Item">Use Item</button>
+                    {{#if actor.sheetCombatActions.canCastInstantMagic}}
+                    <button type="button" class="uesrpg-cast-magic" data-action="cast-magic" data-action-type="secondary">Cast Magic (Instant)</button>
+                    {{/if}}
     
 </div>
             </div>

@@ -95,6 +95,24 @@
             </select>
             <input type="text" name="system.range" value="{{item.system.range}}" placeholder="e.g. 100m" style="width: 150px; margin-left: 10px;" />
           </div>
+          {{#if (eq item.system.rangeType "aoe")}}
+          <div class="attribute-row">
+            <label>AoE</label>
+            <select name="system.aoeShape" style="width: 140px;">
+              <option value="circle" {{#if (eq item.system.aoeShape "circle")}}selected{{/if}}>Circle (Radius)</option>
+              <option value="cone" {{#if (eq item.system.aoeShape "cone")}}selected{{/if}}>Cone</option>
+              <option value="ray" {{#if (eq item.system.aoeShape "ray")}}selected{{/if}}>Ray (Line)</option>
+              <option value="rect" {{#if (eq item.system.aoeShape "rect")}}selected{{/if}}>Rectangle</option>
+              <option value="pulse" {{#if (eq item.system.aoeShape "pulse")}}selected{{/if}}>Pulse (Affects Caster)</option>
+            </select>
+            <input type="number" name="system.aoeSize" value="{{item.system.aoeSize}}" min="0" step="0.5" placeholder="Size (m)" style="width: 110px; margin-left: 10px;" />
+            <input type="number" name="system.aoeWidth" value="{{item.system.aoeWidth}}" min="0" step="0.5" placeholder="Width (m)" style="width: 110px; margin-left: 10px;" />
+            <label style="margin-left:10px; display:flex; align-items:center; gap:6px;">
+              <input type="checkbox" name="system.aoePulse" {{#if item.system.aoePulse}}checked{{/if}} />
+              Pulse
+            </label>
+          </div>
+          {{/if}}
           <div class="attribute-row">
             <label>Duration</label>
             <input type="number" name="system.duration.value" value="{{item.system.duration.value}}" min="0" style="width: 80px;" />
@@ -154,13 +172,13 @@
       </header>
       <ol class="effects-list">
         {{#each effects as |effect id|}}
-        <li class="effect flexrow" data-effect-id="{{effect.id}}">
+        <li class="effect flexrow" data-effect-id="{{effect._id}}">
           <img src="{{effect.img}}" title="{{effect.name}}"/>
           <h4 class="effect-name">{{effect.name}}</h4>
           <div class="effect-controls">
-            <a class="effect-control" data-action="edit" title="Edit Effect"><i class="fas fa-edit"></i></a>
-            <a class="effect-control" data-action="delete" title="Delete Effect"><i class="fas fa-trash"></i></a>
-            <a class="effect-control" data-action="toggle" title="{{#if effect.disabled}}Enable{{else}}Disable{{/if}} Effect">
+            <a class="effect-control" data-action="edit" data-effect-id="{{effect._id}}" title="Edit Effect"><i class="fas fa-edit"></i></a>
+            <a class="effect-control" data-action="delete" data-effect-id="{{effect._id}}" title="Delete Effect"><i class="fas fa-trash"></i></a>
+            <a class="effect-control" data-action="toggle" data-effect-id="{{effect._id}}" title="{{#if effect.disabled}}Enable{{else}}Disable{{/if}} Effect">
               <i class="fas {{#if effect.disabled}}fa-check{{else}}fa-times{{/if}}"></i>
             </a>
           </div>
