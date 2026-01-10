@@ -150,10 +150,24 @@ function _roundTimeSeconds() {
  */
 function measureDistanceMeters(a, b) {
   if (!canvas?.grid || !a || !b) return 0;
-  const ray = new Ray(a, b);
-  const distances = canvas.grid.measureDistances([{ ray }], { gridSpaces: true });
-  const d = Array.isArray(distances) ? distances[0] : 0;
-  return Number.isFinite(d) ? d : 0;
+
+  // Use v13 namespaced Ray with fallback to global Ray for compatibility
+  const RayClass = foundry?.canvas?.geometry?.Ray ?? Ray;
+  const ray = new RayClass(a, b);
+
+  // Use v13 measurePath API with fallback to deprecated measureDistances
+  if (typeof canvas.grid.measurePath === "function") {
+    const path = canvas.grid.measurePath([{ ray }], { gridSpaces: true });
+    const d = path?.distance ?? null;
+    if (Number.isFinite(d)) return d;
+  } else {
+    // Fallback for compatibility
+    const distances = canvas.grid.measureDistances([{ ray }], { gridSpaces: true });
+    const d = Array.isArray(distances) ? distances[0] : 0;
+    if (Number.isFinite(d)) return d;
+  }
+
+  return 0;
 }
 
 /**

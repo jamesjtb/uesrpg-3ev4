@@ -67,11 +67,21 @@ function _measureDistanceMeters(aToken, bToken) {
 
     if (!canvas?.grid || !canvas?.scene) return Number.POSITIVE_INFINITY;
 
-    const ray = new Ray(a, b);
-    const distances = canvas.grid.measureDistances([{ ray }], { gridSpaces: true });
-    const d = Array.isArray(distances) ? distances[0] : null;
+    // Use v13 namespaced Ray with fallback to global Ray for compatibility
+    const RayClass = foundry?.canvas?.geometry?.Ray ?? Ray;
+    const ray = new RayClass(a, b);
 
-    if (Number.isFinite(d)) return d;
+    // Use v13 measurePath API with fallback to deprecated measureDistances
+    if (typeof canvas.grid.measurePath === "function") {
+      const path = canvas.grid.measurePath([{ ray }], { gridSpaces: true });
+      const d = path?.distance ?? null;
+      if (Number.isFinite(d)) return d;
+    } else {
+      // Fallback for compatibility
+      const distances = canvas.grid.measureDistances([{ ray }], { gridSpaces: true });
+      const d = Array.isArray(distances) ? distances[0] : null;
+      if (Number.isFinite(d)) return d;
+    }
 
     // Fallback: approximate using pixel distance and grid scale.
     const pixels = ray.distance;
@@ -200,8 +210,16 @@ export function initializeUpkeepSystem() {
     const data = message?.flags?.["uesrpg-3ev4"]?.upkeepGroup;
     if (!data) return;
 
-    // v13 renderChatMessageHTML provides an HTMLElement. Some legacy hooks pass a jQuery wrapper.
-    const root = (html instanceof HTMLElement) ? html : (html && html[0] instanceof HTMLElement ? html[0] : null);
+    // Normalize to HTMLElement (v13 provides HTMLElement directly)
+    let root = null;
+    if (html instanceof HTMLElement) {
+      root = html;
+    } else if (html?.[0] instanceof HTMLElement) {
+      root = html[0];
+    } else if (html?.jquery && html.length > 0) {
+      root = html.get(0);
+    }
+
     if (!root) return;
 
     const confirmBtn = root.querySelector(".uesrpg-upkeep-confirm");
