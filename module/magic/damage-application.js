@@ -1,132 +1,100 @@
 /**
  * module/magic/damage-application.js
  *
- * Magic damage application workflow for UESRPG 3ev4.
- * Handles applying damage from spells with proper resistance calculations.
+ * Magic damage/healing application wrappers which delegate to the unified combat
+ * damage/healing pipeline for full parity.
+ *
+ * Target: Foundry VTT v13.351
  */
 
-/**
- * Get magic resistance based on damage type
- * @param {Actor} actor - The target actor
- * @param {string} damageType - The damage type (fire, frost, shock, poison, magic, physical)
- * @returns {number} Resistance value
- */
-function getMagicResistance(actor, damageType) {
-  const system = actor.system;
-  switch (damageType.toLowerCase()) {
-    case "fire":
-      return Number(system?.resistance?.fireR ?? 0);
-    case "frost":
-      return Number(system?.resistance?.frostR ?? 0);
-    case "shock":
-      return Number(system?.resistance?.shockR ?? 0);
-    case "poison":
-      return Number(system?.resistance?.poisonR ?? 0);
-    case "magic":
-      return Number(system?.resistance?.magicR ?? 0);
-    case "physical":
-      return Number(system?.resistance?.natToughness ?? 0);
-    default:
-      return 0;
-  }
+import { applyDamage, applyHealing, DAMAGE_TYPES } from "../combat/damage-automation.js";
+
+function _str(v) {
+  return v === undefined || v === null ? "" : String(v);
+}
+
+function _bool(v) {
+  if (v === true || v === false) return v;
+  const s = _str(v).trim().toLowerCase();
+  if (!s) return false;
+  if (s === "true" || s === "1" || s === "yes" || s === "y" || s === "on") return true;
+  return false;
 }
 
 /**
- * Apply magic damage to target with proper type tracking
- * @param {Actor} targetActor - The target actor
- * @param {number} damage - The damage amount
- * @param {string} damageType - The damage type
- * @param {Item} spell - The spell item
- * @param {Object} options - Additional options
- * @returns {Promise<void>}
+ * Apply magic damage with combat-parity mitigation breakdown.
+ *
+ * @param {Actor} targetActor
+ * @param {number} damage
+ * @param {string} damageType
+ * @param {Item} spell
+ * @param {object} options
+ * @param {boolean} options.isCritical
+ * @param {string} options.hitLocation
+ * @param {string} options.rollHTML
+ * @param {boolean} options.isOverloaded
+ * @param {number} options.overloadBonus
+ * @param {boolean} options.isOvercharged
+ * @param {number[]} options.overchargeTotals
+ * @param {number} options.elementalBonus
+ * @param {string} options.elementalBonusLabel
  */
 export async function applyMagicDamage(targetActor, damage, damageType, spell, options = {}) {
-  if (!targetActor || damage <= 0) return;
-  
-  // Apply resistances based on damage type
-  const resistance = getMagicResistance(targetActor, damageType);
-  const finalDamage = Math.max(0, damage - resistance);
-  
-  // Deduct HP
-  const currentHP = Number(targetActor.system?.resources?.hp?.value ?? 0);
-  const newHP = Math.max(0, currentHP - finalDamage);
-  
-  await targetActor.update({ "system.resources.hp.value": newHP });
-  
-  // Create damage notification
-  await ChatMessage.create({
-    content: `
-      <div class="uesrpg-damage-applied" style="padding: 10px; background: rgba(139, 0, 0, 0.1); border-left: 3px solid #8b0000;">
-        <h3 style="margin-top: 0;">💥 ${spell.name} Damage Applied</h3>
-        <p><b>Target:</b> ${targetActor.name}</p>
-        <p><b>Damage Type:</b> ${damageType}</p>
-        <p><b>Raw Damage:</b> ${damage}</p>
-        ${resistance > 0 ? `<p><b>Resistance:</b> -${resistance}</p>` : ''}
-        <p><b>Final Damage:</b> ${finalDamage}</p>
-        <p><b>HP:</b> ${currentHP} → ${newHP}</p>
-        ${options.isCritical ? '<p style="color: green; font-weight: bold;">⭐ CRITICAL HIT</p>' : ''}
-      </div>
-    `,
-    speaker: ChatMessage.getSpeaker({ actor: targetActor })
+  if (!targetActor) return null;
+
+  const dt = _str(damageType).toLowerCase() || DAMAGE_TYPES.MAGIC;
+  const rollHTML = _str(options.rollHTML);
+  const hitLocation = options.hitLocation ?? "Body";
+  const source = _str(options.source ?? spell?.name ?? "Spell");
+
+  const extraBreakdownLines = [];
+  if (_bool(options.isOverloaded) && Number(options.overloadBonus || 0) > 0) {
+    extraBreakdownLines.push(`Overload Bonus: +${Number(options.overloadBonus || 0)}`);
+  }
+  if (Number(options.elementalBonus || 0) > 0) {
+    extraBreakdownLines.push(`${_str(options.elementalBonusLabel || "Elemental Talent")}: +${Number(options.elementalBonus || 0)}`);
+  }
+  if (_bool(options.isOvercharged) && Array.isArray(options.overchargeTotals) && options.overchargeTotals.length === 2) {
+    const a = Number(options.overchargeTotals[0] ?? 0) || 0;
+    const b = Number(options.overchargeTotals[1] ?? 0) || 0;
+    extraBreakdownLines.push(`Master of Magicka: rolled twice (kept ${Math.max(a, b)} of ${a} / ${b})`);
+  }
+
+  return applyDamage(targetActor, Number(damage || 0), dt, {
+    source,
+    hitLocation,
+    rollHTML,
+    // Magic damage usually ignores armor unless the item provides specific magical/elemental reduction.
+    // The unified pipeline already applies armor conditionally per damage type; keep default behavior.
+    extraBreakdownLines,
   });
 }
 
 /**
- * Add damage application buttons to magic opposed chat cards
- * @param {Array} targets - Array of target objects with uuid and name
- * @param {number} damage - The damage amount
- * @param {string} damageType - The damage type
- * @param {Item} spell - The spell item
- * @param {Object} options - Additional options
- * @returns {string} HTML string with damage buttons
+ * Apply magic healing using the unified healing pipeline.
+ *
+ * @param {Actor} targetActor
+ * @param {number} healing
+ * @param {Item} spell
+ * @param {object} options
  */
-export function renderMagicDamageButtons(targets, damage, damageType, spell, options = {}) {
-  if (!targets || !targets.length || !damage) return "";
-  
-  return targets.map(t => `
-    <button 
-      class="apply-magic-damage-btn"
-      data-target-uuid="${t.uuid}"
-      data-damage="${damage}"
-      data-damage-type="${damageType}"
-      data-spell-uuid="${spell.uuid}"
-      data-is-critical="${options.isCritical || false}"
-      style="margin: 0.25rem; padding: 0.25rem 0.5rem; background: #8b0000; color: white; border: none; border-radius: 3px; cursor: pointer; font-size: 12px;">
-      Apply ${damage} ${damageType} damage to ${t.name}
-    </button>
-  `).join("");
+export async function applyMagicHealing(targetActor, healing, spell, options = {}) {
+  if (!targetActor) return null;
+  const source = _str(options.source ?? spell?.name ?? "Spell");
+  const rollHTML = _str(options.rollHTML);
+  return applyHealing(targetActor, Number(healing || 0), {
+    source,
+    rollHTML,
+    // Per user requirement: omit current/max HP line to reduce metagame information.
+    hideHpLine: true,
+  });
 }
 
-/**
- * Initialize damage application chat listeners
- */
+// Legacy exports retained for compatibility (manual application lane not used by modern workflow).
+export function renderMagicDamageButtons() {
+  return "";
+}
+
 export function initializeDamageApplication() {
-  Hooks.on("renderChatMessage", (message, html) => {
-    html.find(".apply-magic-damage-btn").click(async (ev) => {
-      const btn = ev.currentTarget;
-      const targetUuid = btn.dataset.targetUuid;
-      const damage = Number(btn.dataset.damage);
-      const damageType = btn.dataset.damageType;
-      const spellUuid = btn.dataset.spellUuid;
-      const isCritical = btn.dataset.isCritical === "true";
-      
-      const target = await fromUuid(targetUuid);
-      const spell = await fromUuid(spellUuid);
-      
-      if (!target) {
-        ui.notifications.warn("Target not found.");
-        return;
-      }
-      
-      if (!spell) {
-        ui.notifications.warn("Spell not found.");
-        return;
-      }
-      
-      await applyMagicDamage(target, damage, damageType, spell, { isCritical });
-      btn.disabled = true;
-      btn.textContent = "✓ Damage Applied";
-      btn.style.background = "#666";
-    });
-  });
+  // No-op: the modern workflow uses unified damage buttons in the combat card and direct application.
 }

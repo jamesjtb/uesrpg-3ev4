@@ -18,6 +18,8 @@ import { calculateDegrees } from "../helpers/diceHelper.js";
 import { getDamageTypeFromWeapon, getHitLocationFromRoll } from "../combat/combat-utils.js";
 import { OpposedRoll } from "../combat/opposed-rolls.js";
 import { OpposedWorkflow } from "../combat/opposed-workflow.js";
+import { classifySpellForRouting, getUserSpellTargets, shouldUseTargetedSpellWorkflow, shouldUseModernSpellWorkflow, debugMagicRoutingLog } from "../magic/spell-routing.js";
+import { filterTargetsBySpellRange, getSpellRangeType, placeAoETemplateAndCollectTargets } from "../magic/spell-range.js";
 import { SkillOpposedWorkflow } from "../skills/opposed-workflow.js";
 import { computeSkillTN, SKILL_DIFFICULTIES } from "../skills/skill-tn.js";
 import { isItemEffectActive } from "../ae/transfer.js";
@@ -161,7 +163,8 @@ async getData(options = {}) {
       specialActions,
       // Spell availability drives the Cast Magic quick action enablement.
       canCastMagic: Boolean(this.actor?.items?.some?.(i => i.type === "spell"))
-    };
+    ,
+      canCastInstantMagic: Boolean(this.actor?.items?.some?.(i => i.type === "spell" && i?.system?.isInstant === true))};
   } catch (_e) {
     data.actor.sheetCombatActions = { activeCombatStyleId: "", combatStyles: [], activeCombatStyleName: null, specialActions: [], canCastMagic: false };
   }
@@ -1788,14 +1791,19 @@ if (isLucky(this.actor, roll.result)) {
   async _onCastMagicAction(event, preselectedSpell = null) {
     event?.preventDefault?.();
     
-    let spell = preselectedSpell;
+    
+    const castActionType = String(event?.currentTarget?.dataset?.actionType ?? "primary");
+let spell = preselectedSpell;
     
     // If no spell provided, show picker
     if (!spell) {
       // 1. Get all spells owned by actor
-      const spells = this.actor.items.filter(i => i.type === "spell");
+      const spellsAll = this.actor.items.filter(i => i.type === "spell");
+      const spells = (castActionType === "secondary")
+        ? spellsAll.filter(s => s?.system?.isInstant === true)
+        : spellsAll;
       if (!spells.length) {
-        ui.notifications.warn("No spells available to cast.");
+        ui.notifications.warn(castActionType === "secondary" ? "No Instant spells available to cast as a Secondary action." : "No spells available to cast.");
         return;
       }
       
@@ -1813,7 +1821,7 @@ if (isLucky(this.actor, roll.result)) {
         </form>`;
       
       const selectedSpellId = await Dialog.wait({
-        title: "Cast Magic",
+        title: castActionType === "secondary" ? "Cast Magic (Instant)" : "Cast Magic",
         content,
         buttons: {
           cast: {
@@ -1834,16 +1842,87 @@ if (isLucky(this.actor, roll.result)) {
       if (!spell) return;
     }
     
-    // 3. Check if attack spell and targets exist
-    const targets = [...(game.user.targets ?? [])];
-    const isAttack = Boolean(spell.system?.isAttackSpell);
-    
-    if (isAttack && targets.length > 0) {
+	    // 3. Centralized routing: modern casting engine for attack/healing spells.
+	const targets = getUserSpellTargets();
+	debugMagicRoutingLog({ source: "SimpleActorSheet._onCastMagicAction", actor: this.actor, spell, targets });
+	
+    // Range gating and AoE template placement (Package 3 follow-up)
+    // - Ranged/Melee: reject out-of-range targets before any rolls.
+    // - AoE: place a MeasuredTemplate and derive targets from the template area.
+    const rangeType = getSpellRangeType(spell);
+    const attackerToken = this.token?.object ?? this.token;
+
+    // Token is only required for range-gated spells.
+    if ((rangeType === "ranged" || rangeType === "melee" || rangeType === "aoe") && !attackerToken) {
+      ui.notifications.warn("You must have an active token selected to cast this spell (range-gated).");
+      return;
+    }
+
+    let workingTargets = Array.from(targets ?? []);
+
+    if (rangeType === "aoe") {
+      const placed = await placeAoETemplateAndCollectTargets({
+        casterToken: attackerToken,
+        spell,
+        includeCaster: Boolean(spell?.system?.aoePulse)
+      });
+      if (!placed) return;
+
+      // If we can compute affected tokens, use them; otherwise fall back to manual targets.
+      if (placed.targets?.length) workingTargets = placed.targets;
+      else workingTargets = workingTargets;
+      if (!workingTargets.length) {
+        // Allow AoE spells to be cast into empty space.
+        // This keeps template placement usable even when no tokens are within the area.
+        ui.notifications?.info?.("No tokens are affected by the spell template.");
+        workingTargets = [];
+      }
+    } else if (rangeType === "ranged" || rangeType === "melee") {
+      // If the user has not selected any targets, do not hard-stop casting here.
+      // This is critical for spells which may be cast untargeted (including some upkeep-capable spells)
+      // and for any casting flows that derive targets later.
+      if (workingTargets.length) {
+        const res = filterTargetsBySpellRange({
+          casterToken: attackerToken,
+          targets: workingTargets,
+          spell
+        }) ?? {};
+
+        const validTargets = Array.isArray(res.validTargets) ? res.validTargets : [];
+        const rejected = Array.isArray(res.rejected) ? res.rejected : [];
+        const maxRange = Number.isFinite(Number(res.maxRange)) ? Number(res.maxRange) : null;
+
+        if (rejected.length) {
+          const names = rejected
+            .map(r => `${r.token?.name ?? "?"} (${Math.round((r.distance ?? 0) * 10) / 10}m)`) 
+            .join(", ");
+          ui.notifications.warn(`Out of range: ${names}${maxRange ? ` (max ${maxRange}m)` : ""}.`);
+        }
+
+        workingTargets = validTargets;
+        if (!workingTargets.length) return;
+      }
+    }
+if (shouldUseTargetedSpellWorkflow(spell, workingTargets)) {
       // Attack spell with target -> show spell options dialog then opposed workflow
       const spellOptions = await this._showSpellOptionsDialog(spell);
       if (spellOptions === null) return; // Cancelled
       
-      await this._castAttackSpell(spell, targets, spellOptions);
+      // Targeted spells (attack OR healing) route through the MagicOpposedWorkflow.
+      // Healing is handled as an unopposed "direct" cast inside the workflow when detected.
+      await this._castAttackSpell(spell, workingTargets, spellOptions, castActionType);
+	} else if (shouldUseModernSpellWorkflow(spell)) {
+	  // Untargeted attack/healing spells: use modern unopposed casting engine (no defense, no application).
+	  const spellOptions = await this._showSpellOptionsDialog(spell);
+	  if (spellOptions === null) return;
+	  const { MagicOpposedWorkflow } = await import("../magic/opposed-workflow.js");
+	  await MagicOpposedWorkflow.castUnopposed({
+	    attackerActorUuid: this.actor.uuid,
+	    attackerTokenUuid: this.token?.document?.uuid ?? this.token?.uuid ?? null,
+	    spellUuid: spell.uuid,
+	    spellOptions,
+	    castActionType
+	  });
     } else {
       // Non-attack or no target -> use existing spell dialog
       // Trigger the existing _onSpellRoll with the spell item
@@ -1858,6 +1937,9 @@ if (isLucky(this.actor, roll.result)) {
   async _showSpellOptionsDialog(spell) {
     const wpBonus = Math.floor(Number(this.actor.system?.characteristics?.wp?.total ?? 0) / 10);
     const hasOverload = Boolean(spell.system?.hasOverload);
+	    // Scaffolding for future talent-based spell options (no mechanical effects applied in Package 3).
+	    const hasOverchargeTalent = this.actor.items?.some(i => i.type === "talent" && i.name === "Overcharge") ?? false;
+	    const hasMagickaCyclingTalent = this.actor.items?.some(i => i.type === "talent" && i.name === "Magicka Cycling") ?? false;
     const baseCost = Number(spell.system?.cost ?? 0);
     
     const content = `
@@ -1866,19 +1948,48 @@ if (isLucky(this.actor, roll.result)) {
         <div class="form-group">
           <label>MP Cost: <b>${baseCost}</b></label>
         </div>
+        <div class="form-group" style="margin-bottom:8px; margin-top:8px;">
+          <label style="display:block;"><b>Difficulty</b></label>
+          <select name="difficultyKey" style="width:100%;">
+            ${SKILL_DIFFICULTIES.map(df => {
+              const sign = df.mod >= 0 ? "+" : "";
+              const sel = df.key === "average" ? "selected" : "";
+              return `<option value="${df.key}" ${sel}>${df.label} (${sign}${df.mod})</option>`;
+            }).join("\n")}
+          </select>
+        </div>
+        <div class="form-group" style="display:flex; align-items:center; justify-content:space-between; gap:10px;">
+          <label style="margin:0;"><b>Manual Modifier</b></label>
+          <input type="number" name="manualModifier" value="0" style="width:120px; text-align:center;" />
+        </div>
+        <hr style="margin: 10px 0;"/>
         <div class="form-group" style="margin-top: 8px;">
           <label style="display: flex; align-items: center; gap: 8px;">
             <input type="checkbox" name="restrain" checked />
             <span><b>Spell Restraint</b> (reduce cost by ${wpBonus} to min 1)</span>
           </label>
         </div>
-        ${hasOverload ? `
+	        ${hasOverload ? `
         <div class="form-group" style="margin-top: 8px;">
           <label style="display: flex; align-items: center; gap: 8px;">
             <input type="checkbox" name="overload" />
             <span><b>Overload</b> (${spell.system.overloadEffect || 'double cost for enhanced effect'})</span>
           </label>
         </div>` : ''}
+	        ${hasOverchargeTalent ? `
+	        <div class="form-group" style="margin-top: 8px;">
+	          <label style="display: flex; align-items: center; gap: 8px;">
+	            <input type="checkbox" name="overcharge" />
+	            <span><b>Overcharge</b> (talent option; not yet implemented)</span>
+	          </label>
+	        </div>` : ''}
+	        ${hasMagickaCyclingTalent ? `
+	        <div class="form-group" style="margin-top: 8px;">
+	          <label style="display: flex; align-items: center; gap: 8px;">
+	            <input type="checkbox" name="magickaCycling" />
+	            <span><b>Magicka Cycling</b> (talent option; not yet implemented)</span>
+	          </label>
+	        </div>` : ''}
       </form>
     `;
     
@@ -1891,9 +2002,17 @@ if (isLucky(this.actor, roll.result)) {
           callback: (html) => {
             const root = html instanceof HTMLElement ? html : html?.[0];
             const form = root?.querySelector("form");
+
+            const difficultyKey = String(form?.difficultyKey?.value ?? "average");
+            const manualModifierRaw = form?.manualModifier?.value ?? "0";
+            const manualModifier = Number.parseInt(String(manualModifierRaw ?? "0"), 10) || 0;
             return {
               isRestrained: form?.restrain?.checked ?? false,
               isOverloaded: form?.overload?.checked ?? false,
+	              useOvercharge: form?.overcharge?.checked ?? false,
+	              useMagickaCycling: form?.magickaCycling?.checked ?? false,
+              difficultyKey,
+              manualModifier,
               restraintValue: wpBonus,
               baseCost
             };
@@ -1908,7 +2027,7 @@ if (isLucky(this.actor, roll.result)) {
   /**
    * Cast an attack spell using the magic opposed workflow.
    */
-  async _castAttackSpell(spell, targets, spellOptions = {}) {
+  async _castAttackSpell(spell, targets, spellOptions = {}, castActionType = "primary") {
     // Import MagicOpposedWorkflow
     const { MagicOpposedWorkflow } = await import("../magic/opposed-workflow.js");
     
@@ -1927,7 +2046,8 @@ if (isLucky(this.actor, roll.result)) {
         attackerTokenUuid: attackerToken.document?.uuid ?? attackerToken.uuid,
         defenderTokenUuid: defenderToken.document?.uuid ?? defenderToken.uuid,
         spellUuid: spell.uuid,
-        spellOptions
+        spellOptions,
+        castActionType
       });
     }
   }
@@ -1952,6 +2072,30 @@ if (isLucky(this.actor, roll.result)) {
     }
 
     // const spellToCast = this.actor.items.find(spell => spell.id === event.currentTarget.closest('.item').dataset.itemId)
+
+	    // Centralized routing for targeted spells invoked via legacy entry points (e.g. favorites/hotkeys).
+	    // If this spell is an attack OR healing spell and a target is selected, route into MagicOpposedWorkflow.
+	    const targets = getUserSpellTargets();
+	    debugMagicRoutingLog({ source: "SimpleActorSheet._onSpellRoll", actor: this.actor, spell: spellToCast, targets });
+	    if (shouldUseTargetedSpellWorkflow(spellToCast, targets)) {
+	      const spellOptions = await this._showSpellOptionsDialog(spellToCast);
+	      if (spellOptions === null) return;
+	      await this._castAttackSpell(spellToCast, targets, spellOptions, "primary");
+	      return;
+	    }
+	    if (shouldUseModernSpellWorkflow(spellToCast)) {
+	      const spellOptions = await this._showSpellOptionsDialog(spellToCast);
+	      if (spellOptions === null) return;
+	      const { MagicOpposedWorkflow } = await import("../magic/opposed-workflow.js");
+	      await MagicOpposedWorkflow.castUnopposed({
+	        attackerActorUuid: this.actor.uuid,
+	        attackerTokenUuid: this.token?.document?.uuid ?? this.token?.uuid ?? null,
+	        spellUuid: spellToCast.uuid,
+	        spellOptions,
+	        castActionType: "primary"
+	      });
+	      return;
+	    }
     const hasCreative = this.actor.items.find(
       (i) => i.type === "talent" && i.name === "Creative"
     )
@@ -2083,7 +2227,7 @@ if (isLucky(this.actor, roll.result)) {
 
             //Assign Tags for Chat Output
             const isRestrained = html.find(`[id="Restraint"]`)[0].checked;
-            const isOverloaded = html.find(`[id="Overload"]`)[0].checked;
+            const isOverloaded = html.find(`[id="Overload"]`)[0].checked && !isRestrained;
             let isMagickaCycled = "";
             let isOvercharged = "";
 
@@ -2188,14 +2332,12 @@ if (damageFormula && damageFormula !== "0") {
             } else {
               displayCost = actualCost;
             }
-
             // Stop The Function if the user does not have enough Magicka to Cast the Spell
-            if (game.settings.get("uesrpg-3ev4", "automateMagicka")) {
-              if (displayCost > this.actor.system.magicka.value) {
+            if (displayCost > this.actor.system.magicka.value) {
                 return ui.notifications.info(
                   `You do not have enough Magicka to cast this spell: Cost: ${spellToCast.system.cost} || Restraint: ${spellRestraint} || Other: ${stackCostMod}`
                 );
-              }
+              
             }
 
 // Calculate Degrees of Success/Failure for the spell cast
@@ -2304,13 +2446,10 @@ await castRoll.toMessage({
   content: contentString,
   rollMode: game.settings.get("core", "rollMode"),
 });
-
-            // If Automate Magicka Setting is on, reduce the character's magicka by the calculated output cost
-            if (game.settings.get("uesrpg-3ev4", "automateMagicka")) {
-              await this.actor.update({
-  "system.magicka.value": this.actor.system.magicka.value - displayCost,
-});
-            }
+            // Automate Magicka Cost (core): reduce the character's magicka by the calculated cost
+            await this.actor.update({
+              "system.magicka.value": this.actor.system.magicka.value - displayCost,
+            });
           },
         },
         two: {

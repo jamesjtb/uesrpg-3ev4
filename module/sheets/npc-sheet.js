@@ -34,6 +34,8 @@ import {
 import { bindCommonSheetListeners, bindCommonEditableInventoryListeners } from "./sheet-listeners.js";
 import { shouldHideFromMainInventory } from "./sheet-inventory.js";
 import { prepareCharacterItems } from "./sheet-prepare-items.js";
+import { classifySpellForRouting, getUserSpellTargets, shouldUseTargetedSpellWorkflow, shouldUseModernSpellWorkflow, debugMagicRoutingLog } from "../magic/spell-routing.js";
+import { filterTargetsBySpellRange, getSpellRangeType, placeAoETemplateAndCollectTargets } from "../magic/spell-range.js";
 
 export class npcSheet extends foundry.appv1.sheets.ActorSheet {
   /** @override */
@@ -125,7 +127,8 @@ export class npcSheet extends foundry.appv1.sheets.ActorSheet {
         activeCombatStyleName: activeStyleItem?.name ?? null,
         specialActions,
         canCastMagic: Boolean(this.actor?.items?.some?.(i => i.type === "spell"))
-      };
+      ,
+      canCastInstantMagic: Boolean(this.actor?.items?.some?.(i => i.type === "spell" && i?.system?.isInstant === true))};
     } catch (_e) {
       data.actor.sheetCombatActions = { activeCombatStyleId: "", combatStyles: [], activeCombatStyleName: null, specialActions: [], canCastMagic: false };
     }
@@ -1886,14 +1889,19 @@ async _onDefendRoll(event) {
   async _onCastMagicAction(event, preselectedSpell = null) {
     event?.preventDefault?.();
     
-    let spell = preselectedSpell;
+    
+    const castActionType = String(event?.currentTarget?.dataset?.actionType ?? "primary");
+let spell = preselectedSpell;
     
     // If no spell provided, show picker
     if (!spell) {
       // 1. Get all spells owned by actor
-      const spells = this.actor.items.filter(i => i.type === "spell");
+      const spellsAll = this.actor.items.filter(i => i.type === "spell");
+      const spells = (castActionType === "secondary")
+        ? spellsAll.filter(s => s?.system?.isInstant === true)
+        : spellsAll;
       if (!spells.length) {
-        ui.notifications.warn("No spells available to cast.");
+        ui.notifications.warn(castActionType === "secondary" ? "No Instant spells available to cast as a Secondary action." : "No spells available to cast.");
         return;
       }
       
@@ -1911,7 +1919,7 @@ async _onDefendRoll(event) {
         </form>`;
       
       const selectedSpellId = await Dialog.wait({
-        title: "Cast Magic",
+        title: castActionType === "secondary" ? "Cast Magic (Instant)" : "Cast Magic",
         content,
         buttons: {
           cast: {
@@ -1932,22 +1940,91 @@ async _onDefendRoll(event) {
       if (!spell) return;
     }
     
-    // 3. Check if attack spell and targets exist
-    const targets = [...(game.user.targets ?? [])];
-    const isAttack = Boolean(spell.system?.isAttackSpell);
-    
-    if (isAttack && targets.length > 0) {
+	    // 3. Centralized routing: modern casting engine for attack/healing spells.
+	    const targets = getUserSpellTargets();
+	    debugMagicRoutingLog({ source: "NpcSheet._onCastMagicAction", actor: this.actor, spell, targets });
+	    
+    // Range gating and AoE template placement (Package 3 follow-up)
+    // - Ranged/Melee: reject out-of-range targets before any rolls.
+    // - AoE: place a MeasuredTemplate and derive targets from the template area.
+    const rangeType = getSpellRangeType(spell);
+    const attackerToken = this.token?.object ?? this.token;
+
+    // Token is only required for range-gated spells.
+    if ((rangeType === "ranged" || rangeType === "melee" || rangeType === "aoe") && !attackerToken) {
+      ui.notifications.warn("You must have an active token selected to cast this spell (range-gated).");
+      return;
+    }
+
+    let workingTargets = Array.from(targets ?? []);
+
+    if (rangeType === "aoe") {
+      const placed = await placeAoETemplateAndCollectTargets({
+        casterToken: attackerToken,
+        spell,
+        includeCaster: Boolean(spell?.system?.aoePulse)
+      });
+      if (!placed) return;
+
+      // If we can compute affected tokens, use them; otherwise fall back to manual targets.
+      if (placed.targets?.length) workingTargets = placed.targets;
+      else workingTargets = workingTargets;
+      if (!workingTargets.length) {
+        // Allow AoE spells to be cast into empty space.
+        // This keeps template placement usable even when no tokens are within the area.
+        ui.notifications?.info?.("No tokens are affected by the spell template.");
+        workingTargets = [];
+      }
+    } else if (rangeType === "ranged" || rangeType === "melee") {
+      // If no targets are selected, do not hard-stop casting here.
+      // This is required for untargeted casting and any flows that derive targets later.
+      if (workingTargets.length) {
+        const res = filterTargetsBySpellRange({
+          casterToken: attackerToken,
+          targets: workingTargets,
+          spell
+        }) ?? {};
+
+        const validTargets = Array.isArray(res.validTargets) ? res.validTargets : [];
+        const rejected = Array.isArray(res.rejected) ? res.rejected : [];
+        const maxRange = Number.isFinite(Number(res.maxRange)) ? Number(res.maxRange) : null;
+
+        if (rejected.length) {
+          const names = rejected
+            .map(r => `${r.token?.name ?? "?"} (${Math.round((r.distance ?? 0) * 10) / 10}m)`) 
+            .join(", ");
+          ui.notifications.warn(`Out of range: ${names}${maxRange ? ` (max ${maxRange}m)` : ""}.`);
+        }
+
+        workingTargets = validTargets;
+        if (!workingTargets.length) return;
+      }
+    }
+if (shouldUseTargetedSpellWorkflow(spell, workingTargets)) {
       // Attack spell with target -> show spell options dialog then opposed workflow
       const spellOptions = await this._showSpellOptionsDialog(spell);
       if (spellOptions === null) return; // Cancelled
       
-      await this._castAttackSpell(spell, targets, spellOptions);
-    } else {
-      // Non-attack or no target -> use existing spell dialog
-      // Trigger the existing _onSpellRoll with the spell item
-      const fakeEvent = { currentTarget: { closest: () => ({ dataset: { itemId: spell.id } }) } };
-      await this._onSpellRoll.call(this, fakeEvent);
-    }
+      // Targeted spells (attack OR healing) route through the MagicOpposedWorkflow.
+      // Healing is handled as an unopposed "direct" cast inside the workflow when detected.
+      await this._castAttackSpell(spell, workingTargets, spellOptions, castActionType);
+	    } else if (shouldUseModernSpellWorkflow(spell)) {
+	      const spellOptions = await this._showSpellOptionsDialog(spell);
+	      if (spellOptions === null) return;
+	      const { MagicOpposedWorkflow } = await import("../magic/opposed-workflow.js");
+	      await MagicOpposedWorkflow.castUnopposed({
+	        attackerActorUuid: this.actor.uuid,
+	        attackerTokenUuid: this.token?.document?.uuid ?? this.token?.uuid ?? null,
+	        spellUuid: spell.uuid,
+	        spellOptions,
+	        castActionType
+	      });
+	      return;
+	    } else {
+	      // Non-attack/non-healing spells keep legacy behavior.
+	      const fakeEvent = { currentTarget: { closest: () => ({ dataset: { itemId: spell.id } }) } };
+	      await this._onSpellRoll.call(this, fakeEvent);
+	    }
   }
 
   /**
@@ -1956,6 +2033,9 @@ async _onDefendRoll(event) {
   async _showSpellOptionsDialog(spell) {
     const wpBonus = Math.floor(Number(this.actor.system?.characteristics?.wp?.total ?? 0) / 10);
     const hasOverload = Boolean(spell.system?.hasOverload);
+    // Scaffolding for future talent-based spell options (no mechanical effects applied in Package 3).
+    const hasOverchargeTalent = this.actor.items?.some(i => i.type === "talent" && i.name === "Overcharge") ?? false;
+    const hasMagickaCyclingTalent = this.actor.items?.some(i => i.type === "talent" && i.name === "Magicka Cycling") ?? false;
     const baseCost = Number(spell.system?.cost ?? 0);
     
     const content = `
@@ -1964,19 +2044,48 @@ async _onDefendRoll(event) {
         <div class="form-group">
           <label>MP Cost: <b>${baseCost}</b></label>
         </div>
+        <div class="form-group" style="margin-bottom:8px; margin-top:8px;">
+          <label style="display:block;"><b>Difficulty</b></label>
+          <select name="difficultyKey" style="width:100%;">
+            ${SKILL_DIFFICULTIES.map(df => {
+              const sign = df.mod >= 0 ? "+" : "";
+              const sel = df.key === "average" ? "selected" : "";
+              return `<option value="${df.key}" ${sel}>${df.label} (${sign}${df.mod})</option>`;
+            }).join("\n")}
+          </select>
+        </div>
+        <div class="form-group" style="display:flex; align-items:center; justify-content:space-between; gap:10px;">
+          <label style="margin:0;"><b>Manual Modifier</b></label>
+          <input type="number" name="manualModifier" value="0" style="width:120px; text-align:center;" />
+        </div>
+        <hr style="margin: 10px 0;"/>
         <div class="form-group" style="margin-top: 8px;">
           <label style="display: flex; align-items: center; gap: 8px;">
             <input type="checkbox" name="restrain" checked />
             <span><b>Spell Restraint</b> (reduce cost by ${wpBonus} to min 1)</span>
           </label>
         </div>
-        ${hasOverload ? `
+	        ${hasOverload ? `
         <div class="form-group" style="margin-top: 8px;">
           <label style="display: flex; align-items: center; gap: 8px;">
             <input type="checkbox" name="overload" />
             <span><b>Overload</b> (${spell.system.overloadEffect || 'double cost for enhanced effect'})</span>
           </label>
         </div>` : ''}
+	        ${hasOverchargeTalent ? `
+	        <div class="form-group" style="margin-top: 8px;">
+	          <label style="display: flex; align-items: center; gap: 8px;">
+	            <input type="checkbox" name="overcharge" />
+	            <span><b>Overcharge</b> (talent option; not yet implemented)</span>
+	          </label>
+	        </div>` : ''}
+	        ${hasMagickaCyclingTalent ? `
+	        <div class="form-group" style="margin-top: 8px;">
+	          <label style="display: flex; align-items: center; gap: 8px;">
+	            <input type="checkbox" name="magickaCycling" />
+	            <span><b>Magicka Cycling</b> (talent option; not yet implemented)</span>
+	          </label>
+	        </div>` : ''}
       </form>
     `;
     
@@ -1989,9 +2098,17 @@ async _onDefendRoll(event) {
           callback: (html) => {
             const root = html instanceof HTMLElement ? html : html?.[0];
             const form = root?.querySelector("form");
+
+            const difficultyKey = String(form?.difficultyKey?.value ?? "average");
+            const manualModifierRaw = form?.manualModifier?.value ?? "0";
+            const manualModifier = Number.parseInt(String(manualModifierRaw ?? "0"), 10) || 0;
             return {
               isRestrained: form?.restrain?.checked ?? false,
               isOverloaded: form?.overload?.checked ?? false,
+              useOvercharge: form?.overcharge?.checked ?? false,
+              useMagickaCycling: form?.magickaCycling?.checked ?? false,
+              difficultyKey,
+              manualModifier,
               restraintValue: wpBonus,
               baseCost
             };
@@ -2006,7 +2123,7 @@ async _onDefendRoll(event) {
   /**
    * Cast an attack spell using the magic opposed workflow.
    */
-  async _castAttackSpell(spell, targets, spellOptions = {}) {
+  async _castAttackSpell(spell, targets, spellOptions = {}, castActionType = "primary") {
     // Import MagicOpposedWorkflow
     const { MagicOpposedWorkflow } = await import("../magic/opposed-workflow.js");
     
@@ -2025,7 +2142,8 @@ async _onDefendRoll(event) {
         attackerTokenUuid: attackerToken.document?.uuid ?? attackerToken.uuid,
         defenderTokenUuid: defenderToken.document?.uuid ?? defenderToken.uuid,
         spellUuid: spell.uuid,
-        spellOptions
+        spellOptions,
+        castActionType
       });
     }
   }
@@ -2045,6 +2163,29 @@ async _onSpellRoll(event) {
     const fav = this.actor?.system?.favorites?.[event.currentTarget.dataset.hotkey];
     spellToCast = this.actor.getEmbeddedDocument?.("Item", fav?.id);
   }
+
+	  // Centralized routing for targeted spells invoked via legacy entry points (e.g. favorites/hotkeys).
+	  const targets = getUserSpellTargets();
+	  debugMagicRoutingLog({ source: "NpcSheet._onSpellRoll", actor: this.actor, spell: spellToCast, targets });
+	  if (shouldUseTargetedSpellWorkflow(spellToCast, targets)) {
+	    const spellOptions = await this._showSpellOptionsDialog(spellToCast);
+	    if (spellOptions === null) return;
+	    await this._castAttackSpell(spellToCast, targets, spellOptions, "primary");
+	    return;
+	  }
+	  if (shouldUseModernSpellWorkflow(spellToCast)) {
+	    const spellOptions = await this._showSpellOptionsDialog(spellToCast);
+	    if (spellOptions === null) return;
+	    const { MagicOpposedWorkflow } = await import("../magic/opposed-workflow.js");
+	    await MagicOpposedWorkflow.castUnopposed({
+	      attackerActorUuid: this.actor.uuid,
+	      attackerTokenUuid: this.token?.document?.uuid ?? this.token?.uuid ?? null,
+	      spellUuid: spellToCast.uuid,
+	      spellOptions,
+	      castActionType: "primary"
+	    });
+	    return;
+	  }
 
   const actorSys = this.actor?.system || {};
   const hasCreative = this.actor.items.find((i) => i.type === "talent" && i.name === "Creative") ? true : false;
@@ -2088,9 +2229,10 @@ async _onSpellRoll(event) {
       one: {
         label: "Cast Spell",
         callback: async (html) => {
+          const isRestrained = Boolean(html.find(`[id="Restraint"]`)[0]?.checked);
           const playerChecks = {
-            isRestrained: Boolean(html.find(`[id="Restraint"]`)[0]?.checked),
-            isOverloaded: Boolean(html.find(`[id="Overload"]`)[0]?.checked),
+            isRestrained,
+            isOverloaded: Boolean(html.find(`[id="Overload"]`)[0]?.checked) && !isRestrained,
             isMagickaCycled: hasMagickaCycling ? Boolean(html.find(`[id="MagickaCycling"]`)[0]?.checked) : false,
             isOvercharged: hasOvercharge ? Boolean(html.find(`[id="Overcharge"]`)[0]?.checked) : false
           };
@@ -2150,7 +2292,7 @@ async _onSpellRoll(event) {
 
           // Check magicka safely
           const magickaValue = Number(actorSys?.magicka?.value ?? 0);
-          if (game.settings.get("uesrpg-3ev4", "automateMagicka") && displayCost > magickaValue) {
+          if (displayCost > magickaValue) {
             return ui.notifications.info(`You do not have enough Magicka to cast this spell: Cost: ${baseCost} || Restraint: ${spellRestraint} || Other: ${stackCostMod}`);
           }
 
@@ -2174,11 +2316,10 @@ async _onSpellRoll(event) {
             });
           }
 
-          if (game.settings.get("uesrpg-3ev4", "automateMagicka")) {
-            await this.actor.update({
-              "system.magicka.value": magickaValue - displayCost,
-            });
-          }
+          // Automate Magicka Cost (core): reduce the character's magicka by the calculated cost
+          await this.actor.update({
+            "system.magicka.value": magickaValue - displayCost,
+          });
         },
       },
       two: {

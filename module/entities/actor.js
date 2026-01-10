@@ -1171,26 +1171,24 @@ actorSystemData.luck_points.max = lckBonus + actorSystemData.luck_points.bonus;
     actorSystemData.speed.value = this._addHalfSpeed(actorData);
 
     //ENC Burden Calculations
-    if (game.settings.get('uesrpg-3ev4', 'pcENCPenalty')) {
-      if (actorSystemData.carry_rating.current > actorSystemData.carry_rating.max * 3) {
-        actorSystemData.carry_rating.label = 'Crushing'
-        actorSystemData.carry_rating.penalty = -40
-        actorSystemData.speed.value = 0;
-        actorSystemData.stamina.max = actorSystemData.stamina.max - 5;
-      } else if (actorSystemData.carry_rating.current > actorSystemData.carry_rating.max * 2) {
-        actorSystemData.carry_rating.label = 'Severe'
-        actorSystemData.carry_rating.penalty = -20
-        actorSystemData.speed.value = Math.floor(actorSystemData.speed.base / 2);
-        actorSystemData.stamina.max = actorSystemData.stamina.max - 3;
-      } else if (actorSystemData.carry_rating.current > actorSystemData.carry_rating.max) {
-        actorSystemData.carry_rating.label = 'Moderate'
-        actorSystemData.carry_rating.penalty = -10
-        actorSystemData.speed.value = actorSystemData.speed.value - 1;
-        actorSystemData.stamina.max = actorSystemData.stamina.max - 1;
-      } else if (actorSystemData.carry_rating.current <= actorSystemData.carry_rating.max) {
-        actorSystemData.carry_rating.label = "Minimal"
-        actorSystemData.carry_rating.penalty = 0
-      }
+    if (actorSystemData.carry_rating.current > actorSystemData.carry_rating.max * 3) {
+      actorSystemData.carry_rating.label = 'Crushing'
+      actorSystemData.carry_rating.penalty = -40
+      actorSystemData.speed.value = 0;
+      actorSystemData.stamina.max = actorSystemData.stamina.max - 5;
+    } else if (actorSystemData.carry_rating.current > actorSystemData.carry_rating.max * 2) {
+      actorSystemData.carry_rating.label = 'Severe'
+      actorSystemData.carry_rating.penalty = -20
+      actorSystemData.speed.value = Math.floor(actorSystemData.speed.base / 2);
+      actorSystemData.stamina.max = actorSystemData.stamina.max - 3;
+    } else if (actorSystemData.carry_rating.current > actorSystemData.carry_rating.max) {
+      actorSystemData.carry_rating.label = 'Moderate'
+      actorSystemData.carry_rating.penalty = -10
+      actorSystemData.speed.value = actorSystemData.speed.value - 1;
+      actorSystemData.stamina.max = actorSystemData.stamina.max - 1;
+    } else if (actorSystemData.carry_rating.current <= actorSystemData.carry_rating.max) {
+      actorSystemData.carry_rating.label = 'Minimal'
+      actorSystemData.carry_rating.penalty = 0
     }
 
     // Encumbrance penalty AE modifier (applies after burden bracket computation)
@@ -1618,26 +1616,24 @@ actorSystemData.luck_points.max = lckBonus + actorSystemData.luck_points.bonus;
     actorSystemData.speed.value = this._addHalfSpeed(actorData);
 
     //ENC Burden Calculations
-    if (game.settings.get('uesrpg-3ev4', 'npcENCPenalty')) {
-      if (actorSystemData.carry_rating.current > actorSystemData.carry_rating.max * 3) {
-        actorSystemData.carry_rating.label = 'Crushing'
-        actorSystemData.carry_rating.penalty = -40
-        actorSystemData.speed.value = 0;
-        actorSystemData.stamina.max = actorSystemData.stamina.max - 5;
-      } else if (actorSystemData.carry_rating.current > actorSystemData.carry_rating.max * 2) {
-        actorSystemData.carry_rating.label = 'Severe'
-        actorSystemData.carry_rating.penalty = -20
-        actorSystemData.speed.value = Math.floor(actorSystemData.speed.base / 2);
-        actorSystemData.stamina.max = actorSystemData.stamina.max - 3;
-      } else if (actorSystemData.carry_rating.current > actorSystemData.carry_rating.max) {
-        actorSystemData.carry_rating.label = 'Moderate'
-        actorSystemData.carry_rating.penalty = -10
-        actorSystemData.speed.value = actorSystemData.speed.value - 1;
-        actorSystemData.stamina.max = actorSystemData.stamina.max - 1;
-      } else if (actorSystemData.carry_rating.current <= actorSystemData.carry_rating.max) {
-        actorSystemData.carry_rating.label = "Minimal"
-        actorSystemData.carry_rating.penalty = 0
-      }
+    if (actorSystemData.carry_rating.current > actorSystemData.carry_rating.max * 3) {
+      actorSystemData.carry_rating.label = 'Crushing'
+      actorSystemData.carry_rating.penalty = -40
+      actorSystemData.speed.value = 0;
+      actorSystemData.stamina.max = actorSystemData.stamina.max - 5;
+    } else if (actorSystemData.carry_rating.current > actorSystemData.carry_rating.max * 2) {
+      actorSystemData.carry_rating.label = 'Severe'
+      actorSystemData.carry_rating.penalty = -20
+      actorSystemData.speed.value = Math.floor(actorSystemData.speed.base / 2);
+      actorSystemData.stamina.max = actorSystemData.stamina.max - 3;
+    } else if (actorSystemData.carry_rating.current > actorSystemData.carry_rating.max) {
+      actorSystemData.carry_rating.label = 'Moderate'
+      actorSystemData.carry_rating.penalty = -10
+      actorSystemData.speed.value = actorSystemData.speed.value - 1;
+      actorSystemData.stamina.max = actorSystemData.stamina.max - 1;
+    } else if (actorSystemData.carry_rating.current <= actorSystemData.carry_rating.max) {
+      actorSystemData.carry_rating.label = 'Minimal'
+      actorSystemData.carry_rating.penalty = 0
     }
 
     // Encumbrance penalty AE modifier (applies after burden bracket computation)
@@ -2061,19 +2057,9 @@ this._applyMovementRestrictionSemantics(actorData, actorSystemData);
     }
     return 0;
   }
-
   _untrainedException(actorData) {
-    let attribute = (actorData.items || []).filter(item => item?.system?.untrainedException == true);
-    const legacyUntrained = game.settings.get("uesrpg-3ev4", "legacyUntrainedPenalty");
-    let x = 0;
-    if (legacyUntrained) {
-      if (attribute.length >= 1) {
-        x = 10;
-      }
-    } else if (attribute.length >= 1) {
-      x = 20;
-    }
-    return x
+    const attribute = (actorData.items || []).filter(item => item?.system?.untrainedException == true);
+    return attribute.length >= 1 ? 20 : 0;
   }
 
   _isMechanical(actorData) {

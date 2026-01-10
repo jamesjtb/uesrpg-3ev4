@@ -62,16 +62,6 @@ async function registerSettings() {
     default: "Cyrodiil"
   });
 
-  game.settings.register("uesrpg-3ev4", "legacyUntrainedPenalty", {
-    name: "v3 Untrained Penalty",
-    hint: "Checking this option enables the UESRPG v3 penalty for Untrained skills at -10 instead of the standard -20.",
-    scope: "world",
-    config: true,
-    default: false,
-    type: Boolean,
-    onChange: delayedReload,
-  });
-
   game.settings.register("uesrpg-3ev4", "noStartUpDialog", {
     name: "Do Not Show Dialog on Startup",
     hint: "Checking this box hides the startup popup dialog informing the user on additional game resources.",
@@ -79,16 +69,6 @@ async function registerSettings() {
     config: true,
     default: false,
     type: Boolean,
-  });
-
-  game.settings.register("uesrpg-3ev4", "automateMagicka", {
-    name: "Automate Magicka Cost",
-    hint: "Automatically deduct the cost of a spell after cost calculation from the token/character's current magicka.",
-    scope: "world",
-    config: true,
-    default: false,
-    type: Boolean,
-    onChange: delayedReload,
   });
 
   game.settings.register("uesrpg-3ev4", "actionPointAutomation", {
@@ -105,26 +85,6 @@ async function registerSettings() {
     },
   });
 
-  game.settings.register("uesrpg-3ev4", "npcENCPenalty", {
-    name: "NPC's Suffer Encumbrance Penalties",
-    hint: "If checked, NPC's suffer from the same overencumbrance penalties that player characters do. Otherwise, they suffer no ENC Penalties.",
-    scope: "world",
-    config: true,
-    default: true,
-    type: Boolean,
-    onChange: delayedReload,
-  });
-
-  game.settings.register("uesrpg-3ev4", "pcENCPenalty", {
-    name: "Player Characters Suffer Encumbrance Penalties",
-    hint: "If checked, player characters suffer from the same overencumbrance penalties as written in the Rules Compendium. Otherwise, they suffer no ENC Penalties.",
-    scope: "world",
-    config: true,
-    default: true,
-    type: Boolean,
-    onChange: delayedReload,
-  });
-
   game.settings.register("uesrpg-3ev4", "sortAlpha", {
     name: "Sort Actor Items Alphabetically",
     hint: "If checked, Actor items are automatically sorted alphabetically. Otherwise, items are not sorted and are organized manually.",
@@ -133,24 +93,6 @@ async function registerSettings() {
     default: true,
     type: Boolean,
     onChange: delayedReload,
-  });
-
-  game.settings.register("uesrpg-3ev4", "autoApplyDamage", {
-    name: "Automatically Apply Damage",
-    hint: "When enabled, damage from opposed rolls will automatically be applied to the defender. Otherwise, a button will be shown to manually apply damage.",
-    scope: "world",
-    config: true,
-    default: false,
-    type: Boolean,
-  });
-
-  game.settings.register("uesrpg-3ev4", "useDosBonus", {
-    name: "Apply Degree of Success Damage Bonus",
-    hint: "When enabled, half of the attacker's Degree of Success is added as bonus damage.",
-    scope: "world",
-    config: true,
-    default: true,
-    type: Boolean,
   });
 
   // Opposed workflow diagnostics
@@ -167,6 +109,16 @@ async function registerSettings() {
   game.settings.register("uesrpg-3ev4", "effectsProxyDebug", {
     name: "Effects/Proxy Debug Logging",
     hint: "When enabled, the authority proxy (ChatMessage updates + target-side ActiveEffect application) logs concise diagnostics to the browser console.",
+    scope: "world",
+    config: false,
+    default: false,
+    type: Boolean,
+  });
+
+  // Magic workflow routing diagnostics
+  game.settings.register("uesrpg-3ev4", "debugMagicRouting", {
+    name: "Magic: Routing Debug Logging",
+    hint: "When enabled, spell routing decisions (targeted vs unopposed vs legacy) are logged to the browser console. Recommended only for testing.",
     scope: "world",
     config: false,
     default: false,
@@ -247,12 +199,11 @@ async function registerSettings() {
     onChange: delayedReload
   });
 
-
-game.settings.register("uesrpg-3ev4", "debugAim", {
+  game.settings.register("uesrpg-3ev4", "debugAim", {
   name: "Aim: Debug Audit Logging",
   hint: "When enabled, logs Aim apply/stack, break, and consume events to the browser console.",
   scope: "client",
-  config: true,
+  config: false,
   type: Boolean,
   default: false
 });
@@ -395,113 +346,8 @@ game.uesrpg.combat.applyHealing = async (actor, amount, options = {}) => {
   }
 
 
-  // SPELL_EFFECT_APPLICATION_V1
-  // Spells do not use Item transfer semantics. Instead, when a spell is marked active, we
-  // clone its Item Active Effects onto the owning Actor as embedded ActiveEffects.
-  // This is deterministic, reversible, and aligns with future targeting work (self/target/area).
-  //
-  // - Activation flag: flags.uesrpg.activeSpell (on the Item)
-  // - Applied actor effects are tagged: flags.uesrpg.appliedFromSpell = <item.uuid>
-  // - On deactivation or deletion: tagged effects are removed.
-  if (!game.uesrpg._spellEffectApplicationHook) {
-    game.uesrpg._spellEffectApplicationHook = true;
-
-    const FLAG_SCOPE = game.system?.id ?? "uesrpg-3ev4";
-
-
-    const reconcileSpellEffects = async (item) => {
-      try {
-        if (!item || item.type !== "spell") return;
-        const actor = item.parent;
-        if (!actor || actor.documentName !== "Actor") return;
-        const active = (item.getFlag?.(FLAG_SCOPE, "activeSpell") ?? foundry.utils.getProperty(item, `flags.${FLAG_SCOPE}.activeSpell`) ?? false) === true;
-        const spellUuid = item.uuid;
-
-        // Remove previously applied effects for this spell (idempotent).
-        const existing = (actor.effects ?? []).filter(e => {
-          const f = e?.flags ?? {};
-          return f?.[FLAG_SCOPE]?.appliedFromSpell === spellUuid || f?.uesrpg?.appliedFromSpell === spellUuid;
-        });
-        if (existing.length) {
-          await actor.deleteEmbeddedDocuments("ActiveEffect", existing.map(e => e.id));
-        }
-
-        if (!active) return;
-
-        const itemEffects = Array.from(item.effects ?? []);
-        if (!itemEffects.length) return;
-
-        const toCreate = [];
-        for (const ef of itemEffects) {
-          // Copy only meaningful effects; disabled effects remain disabled on the actor, but still mirrored.
-          const changes = foundry.utils.duplicate(ef.changes ?? []);
-          if (!Array.isArray(changes) || !changes.length) continue;
-
-          toCreate.push({
-            name: ef.name ?? item.name ?? "Spell Effect",
-            // Foundry v13: ActiveEffect uses `img` (not legacy `icon`).
-            img: ef.img ?? ef.icon ?? item.img,
-            disabled: ef.disabled === true,
-            origin: spellUuid,
-            duration: {},
-            changes,
-            flags: {
-              [FLAG_SCOPE]: {
-                system: "uesrpg-3ev4",
-                appliedFromSpell: spellUuid,
-                sourceItemId: item.id,
-                sourceEffectId: ef.id ?? null
-              }
-            }
-          });
-        }
-
-        if (toCreate.length) {
-          await actor.createEmbeddedDocuments("ActiveEffect", toCreate);
-        }
-      } catch (err) {
-        console.error("UESRPG | Spell effect reconcile failed", err);
-      }
-    };
-
-    Hooks.on("updateItem", async (item, changed, options, userId) => {
-      try {
-        // Only the user performing the update should reconcile to avoid races.
-        if (game.userId !== userId) return;
-        if (!item || item.type !== "spell") return;
-
-        // Reconcile only when something relevant changes. If uncertain, reconcile.
-        const touched =
-          foundry.utils.getProperty(changed, `flags.${FLAG_SCOPE}.activeSpell`) !== undefined || foundry.utils.getProperty(changed, "flags.uesrpg.activeSpell") !== undefined ||
-          foundry.utils.getProperty(changed, "effects") !== undefined ||
-          foundry.utils.getProperty(changed, "name") !== undefined;
-
-        if (touched) await reconcileSpellEffects(item);
-      } catch (err) {
-        console.error("UESRPG | Spell updateItem hook failed", err);
-      }
-    });
-
-    Hooks.on("deleteItem", async (item, options, userId) => {
-      try {
-        if (game.userId !== userId) return;
-        if (!item || item.type !== "spell") return;
-        const actor = item.parent;
-        if (!actor || actor.documentName !== "Actor") return;
-
-        const spellUuid = item.uuid;
-        const existing = (actor.effects ?? []).filter(e => {
-          const f = e?.flags ?? {};
-          return f?.[FLAG_SCOPE]?.appliedFromSpell === spellUuid || f?.uesrpg?.appliedFromSpell === spellUuid;
-        });
-        if (existing.length) {
-          await actor.deleteEmbeddedDocuments("ActiveEffect", existing.map(e => e.id));
-        }
-      } catch (err) {
-        console.error("UESRPG | Spell deleteItem cleanup failed", err);
-      }
-    });
-  }
+  // NOTE: Spell Item Active Effects use the same deterministic transfer semantics as other item types.
+  // See module/ae/transfer.js for activation gating (spells require an explicit "Active" toggle).
 
 
   /**
@@ -539,6 +385,35 @@ game.uesrpg.combat.applyHealing = async (actor, amount, options = {}) => {
   registerCombatChatHooks();
   registerChatMessageSocket();
   registerActiveEffectProxy();
+
+  // DERIVED_DATA_CACHE_INVALIDATION_V1
+  // Ensure edits to embedded Item bonuses (Talents / Traits / Powers, but also any other embedded
+  // item that contributes to derived data) immediately reflect on the Actor.
+  //
+  // Root cause: SimpleActor#_aggregateItemStats caches aggregated embedded-item stats on the Actor
+  // instance (this._aggCache) and reuses them across prepare cycles when its lightweight signature
+  // does not change. Some non-encumbrance bonus fields (e.g., system.hpBonus) were not represented
+  // in that signature, causing stale derived data until a full server refresh recreated documents.
+  //
+  // Fix: invalidate the cache whenever an embedded Item is created, updated, or deleted.
+  if (!game.uesrpg._aggCacheInvalidationHooks) {
+    game.uesrpg._aggCacheInvalidationHooks = true;
+
+    /**
+     * Clear per-actor aggregation caches so derived data recomputes on the next prepare.
+     * @param {Item} item
+     */
+    const invalidateActorAggCacheFromItem = (item) => {
+      const actor = item?.parent;
+      if (!actor || actor.documentName !== "Actor") return;
+      if (Object.prototype.hasOwnProperty.call(actor, "_aggCache")) actor._aggCache = null;
+    };
+
+    Hooks.on("preUpdateItem", (item, _changes, _options, _userId) => invalidateActorAggCacheFromItem(item));
+    Hooks.on("updateItem", (item, _changes, _options, _userId) => invalidateActorAggCacheFromItem(item));
+    Hooks.on("createItem", (item, _options, _userId) => invalidateActorAggCacheFromItem(item));
+    Hooks.on("deleteItem", (item, _options, _userId) => invalidateActorAggCacheFromItem(item));
+  }
 
   // Chapter 5: conditions + wounds automation (AE-backed, deterministic)
   registerConditions();

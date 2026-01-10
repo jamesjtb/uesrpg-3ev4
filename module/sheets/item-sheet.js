@@ -1002,10 +1002,12 @@ export class SimpleItemSheet extends foundry.appv1.sheets.ItemSheet {
   async _onEffectControl(event) {
     event.preventDefault();
     const el = event.currentTarget;
-    if (!el || !el.dataset) return;
+    if (!el) return;
 
-    const action = el.dataset.action;
-    const effectId = el.dataset.effectId;
+    // In some templates the click target can be a nested element, or the control
+    // may not carry the effect id directly. Resolve deterministically.
+    const action = el.dataset?.action;
+    const effectId = el.dataset?.effectId ?? el.closest?.("[data-effect-id]")?.dataset?.effectId;
 
     if (!action) return;
     if (!this.item || !this.item.effects) return;
@@ -1025,6 +1027,7 @@ export class SimpleItemSheet extends foundry.appv1.sheets.ItemSheet {
       return;
     }
 
+    if (!effectId) return;
     const effect = this.item.effects.get(effectId);
     if (!effect) return;
 
@@ -1033,10 +1036,11 @@ export class SimpleItemSheet extends foundry.appv1.sheets.ItemSheet {
         if (effect.sheet) effect.sheet.render(true);
         break;
       case "delete":
-        await effect.delete();
+        // Use embedded document API explicitly; this is more reliable for Item-embedded effects.
+        await this.item.deleteEmbeddedDocuments("ActiveEffect", [effectId]);
         break;
       case "toggle":
-        await effect.update({ disabled: !effect.disabled });
+        await this.item.updateEmbeddedDocuments("ActiveEffect", [{ _id: effectId, disabled: !effect.disabled }]);
         break;
       default:
         break;
@@ -1055,8 +1059,25 @@ export class SimpleItemSheet extends foundry.appv1.sheets.ItemSheet {
     
     if (this.item?.type !== "spell") return;
     
-    const currentLevels = this.item.system.scaling?.levels ?? [];
-    const nextLevelNum = currentLevels.length + 1;
+    const rawLevels = foundry.utils.getProperty(this.item, "system.scaling.levels");
+    let currentLevels = [];
+    if (Array.isArray(rawLevels)) currentLevels = rawLevels;
+    else if (rawLevels && typeof rawLevels === "object") currentLevels = Object.values(rawLevels);
+
+    // Normalize to a stable, numeric-level-sorted array.
+    currentLevels = currentLevels
+      .filter(l => l && typeof l === "object")
+      .map((l, idx) => ({
+        level: Number(l.level) || (idx + 1),
+        cost: Number(l.cost) || 0,
+        damageFormula: String(l.damageFormula ?? ""),
+        effectStrength: Number(l.effectStrength) || 0,
+        duration: Number(l.duration) || 0
+      }))
+      .sort((a, b) => (a.level - b.level));
+
+    const maxLevel = currentLevels.reduce((m, l) => Math.max(m, Number(l.level) || 0), 0);
+    const nextLevelNum = maxLevel + 1;
     
     if (nextLevelNum > 7) {
       ui.notifications.warn("Maximum 7 spell levels (Novice to Grandmaster).");
@@ -1085,7 +1106,22 @@ export class SimpleItemSheet extends foundry.appv1.sheets.ItemSheet {
     const index = Number(event.currentTarget.closest("tr")?.dataset?.index ?? -1);
     if (index < 0) return;
     
-    const currentLevels = this.item.system.scaling?.levels ?? [];
+    const rawLevels = foundry.utils.getProperty(this.item, "system.scaling.levels");
+    let currentLevels = [];
+    if (Array.isArray(rawLevels)) currentLevels = rawLevels;
+    else if (rawLevels && typeof rawLevels === "object") currentLevels = Object.values(rawLevels);
+
+    currentLevels = currentLevels
+      .filter(l => l && typeof l === "object")
+      .map((l, idx) => ({
+        level: Number(l.level) || (idx + 1),
+        cost: Number(l.cost) || 0,
+        damageFormula: String(l.damageFormula ?? ""),
+        effectStrength: Number(l.effectStrength) || 0,
+        duration: Number(l.duration) || 0
+      }))
+      .sort((a, b) => (a.level - b.level));
+
     const newLevels = currentLevels.filter((_, i) => i !== index);
     
     await this.item.update({ "system.scaling.levels": newLevels });

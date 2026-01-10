@@ -15,19 +15,37 @@
  * @returns {Promise<void>}
  */
 export async function applySpellEffectsToTarget(casterActor, targetActor, spell, options = {}) {
+  // Permission-safe embedded document operations.
+  // We prefer direct operations when permitted; otherwise we proxy through an active GM/owner.
+  const { requestCreateEmbeddedDocuments, requestDeleteEmbeddedDocuments } = await import("../helpers/authority-proxy.js");
+
   const spellUuid = spell.uuid;
-  const duration = computeSpellDuration(spell);
+  let duration = computeSpellDuration(spell);
+  const durData = spell.system?.duration ?? {};
+  const durValue = Number(durData.value ?? 0);
+  const durUnit = durData.unit ?? "rounds";
+  const noListedDuration = (durUnit === "instant") || (durValue <= 0);
+  // RAW: If a spell has Upkeep but no listed duration, treat it as 1 round for upkeep purposes.
+  if (Boolean(spell.system?.hasUpkeep) && Number.isFinite(duration.rounds) && (duration.rounds ?? 0) <= 0 && (duration.seconds ?? 0) <= 0) {
+    const rt = CONFIG.time?.roundTime || 6;
+    duration = { rounds: 1, seconds: rt };
+  }
+
   
   // Remove existing effects from same spell (no stacking per RAW)
   const existing = targetActor.effects.filter(e => e.origin === spellUuid);
   if (existing.length) {
-    await targetActor.deleteEmbeddedDocuments("ActiveEffect", existing.map(e => e.id));
+    const ids = existing.map(e => e.id);
+    if (targetActor.isOwner) await targetActor.deleteEmbeddedDocuments("ActiveEffect", ids);
+    else await requestDeleteEmbeddedDocuments(targetActor, "ActiveEffect", ids);
   }
   
   // Remove opposing effects (Frenzy vs Calm, etc.)
   await removeOpposingSpellEffects(targetActor, spell);
   
-  // Clone spell's Active Effects to target
+  // Clone spell's Active Effects to target.
+  // If the spell has Upkeep but no embedded AEs, we still create a lightweight "tracker" AE so that
+  // duration/upkeep prompts have a concrete effect to operate on.
   const spellEffects = Array.from(spell.effects ?? []);
   const toCreate = [];
   
@@ -54,6 +72,8 @@ export async function applySpellEffectsToTarget(casterActor, targetActor, spell,
           spellSchool: spell.system.school,
           spellLevel: spell.system.level,
           casterUuid: casterActor.uuid,
+          originalCastWorldTime: game.time.worldTime,
+          noListedDuration,
           hasUpkeep: Boolean(spell.system?.hasUpkeep),
           upkeepCost: options.actualCost || spell.system.cost
         }
@@ -62,9 +82,41 @@ export async function applySpellEffectsToTarget(casterActor, targetActor, spell,
     
     toCreate.push(effectData);
   }
+
+  // Upkeep tracker: create one effect if none were provided by the item.
+  if (!toCreate.length && Boolean(spell.system?.hasUpkeep)) {
+    toCreate.push({
+      name: spell.name,
+      img: spell.img,
+      origin: spellUuid,
+      disabled: false,
+      duration: {
+        rounds: duration.rounds,
+        seconds: duration.seconds,
+        startRound: game.combat?.round,
+        startTime: game.time.worldTime
+      },
+      changes: [],
+      flags: {
+        "uesrpg-3ev4": {
+          spellEffect: true,
+          spellUuid,
+          spellName: spell.name,
+          spellSchool: spell.system.school,
+          spellLevel: spell.system.level,
+          casterUuid: casterActor.uuid,
+          originalCastWorldTime: game.time.worldTime,
+          noListedDuration,
+          hasUpkeep: true,
+          upkeepCost: options.actualCost || spell.system.cost
+        }
+      }
+    });
+  }
   
   if (toCreate.length) {
-    await targetActor.createEmbeddedDocuments("ActiveEffect", toCreate);
+    if (targetActor.isOwner) await targetActor.createEmbeddedDocuments("ActiveEffect", toCreate);
+    else await requestCreateEmbeddedDocuments(targetActor, "ActiveEffect", toCreate);
   }
 }
 

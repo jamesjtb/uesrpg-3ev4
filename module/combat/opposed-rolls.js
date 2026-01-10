@@ -28,7 +28,7 @@ export const OpposedRoll = {
     weapon = null,
     damageRoll = null,
     damageType = DAMAGE_TYPES.PHYSICAL,
-    autoApplyDamage = false,
+    autoApplyDamage = true,
     hitLocation = null,
     penetration = 0
   } = {}) {
@@ -61,12 +61,6 @@ export const OpposedRoll = {
       const roll = await new Roll(damageRoll).evaluate();
       const rawDamage = Number(roll.total);
       
-      // Calculate DoS bonus if enabled and attacker won
-      const useDosBonus = game.settings.get("uesrpg-3ev4", "useDosBonus");
-      const dosBonus = (useDosBonus && aRes.isSuccess)
-        ? Math.floor(aRes.degree / 2)
-        : 0;
-      
       // Calculate hit location if not provided
       // RAW: hit location comes from the ones digit of the *attack roll*
       const hitLoc = hitLocation || getHitLocationFromRoll(aRes.rollTotal);
@@ -74,15 +68,13 @@ export const OpposedRoll = {
       // Calculate damage with all reductions
       const damageCalc = calculateDamage(rawDamage, damageType, defender, {
         penetration: penetration || 0,
-        dosBonus,
         hitLocation: hitLoc
       });
       
       damageInfo = {
         roll,
         rawDamage,
-        dosBonus,
-        damageCalc,
+damageCalc,
         hitLocation: hitLoc,
         damageType
       };
@@ -91,8 +83,7 @@ export const OpposedRoll = {
       damageHtml = `
         <div style="margin-top:0.5rem; padding:0.5rem; background:#f5f5f5; border-radius:4px;">
           <strong>Damage Roll:</strong> [[${roll.total}]] (${roll.formula})
-          ${dosBonus > 0 ? `<br><strong>DoS Bonus:</strong> +${dosBonus}` : ''}
-          <br><strong>Hit Location:</strong> ${hitLoc}
+<br><strong>Hit Location:</strong> ${hitLoc}
           <br><strong>Type:</strong> ${damageType}
           ${damageCalc.reductions.total > 0 ? `
             <br><strong>Reduction:</strong> -${damageCalc.reductions.total} (Armor: ${damageCalc.reductions.armor}, Resist: ${damageCalc.reductions.resistance}, Tough: ${damageCalc.reductions.toughness})
@@ -106,7 +97,6 @@ export const OpposedRoll = {
               data-damage="${rawDamage}"
               data-damage-type="${damageType}"
               data-hit-location="${hitLoc}"
-              data-dos-bonus="${dosBonus}"
               data-penetration="${penetration || 0}"
               data-source="${weapon ? weapon.name : attacker.name}">
               Apply Damage
@@ -119,8 +109,7 @@ export const OpposedRoll = {
         await applyDamageResolved(defender, {
           rawDamage,
           damageType,
-          dosBonus,
-          penetration,
+penetration,
           hitLocation: hitLoc,
           source: weapon ? weapon.name : attacker.name,
           attackerActor: attacker,

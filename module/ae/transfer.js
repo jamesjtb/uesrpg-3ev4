@@ -44,9 +44,17 @@ export function isTransferEffectActive(actor, item, effect) {
   if (type === "armor") return equipped === true;
   
   // SPELL EFFECTS: EXPLICIT ACTIVATION ONLY
-  // Spells are handled via explicit application onto the Actor (see init.js SPELL_EFFECT_APPLICATION_V1).
-  // Item transfer effects on spells remain inactive to prevent implicit or double application.
-  if (type === "spell") return false;
+  // Spells may carry Item Active Effects, but they should not be implicitly "always on".
+  // We activate spell transfer effects only when the spell is explicitly marked active.
+  // Supported activation lanes (non-migrating):
+  //  - item.flags.<systemId>.activeSpell (preferred; sheet checkbox)
+  //  - item.system.active / item.system.isActive (legacy/compat)
+  if (type === "spell") {
+    const scope = game?.system?.id ?? "uesrpg-3ev4";
+    const flagActive = item.getFlag?.(scope, "activeSpell") ?? foundry.utils.getProperty(item, `flags.${scope}.activeSpell`);
+    const sysActive = item?.system?.active ?? item?.system?.isActive;
+    return flagActive === true || sysActive === true;
+  }
 
 
   // Conservative default: do not apply unless explicitly supported.

@@ -61,9 +61,8 @@ export async function performWeaponAttack(attackerToken, defenderToken, weapon, 
 
   // Get penetration if weapon has it
   const penetration = Number(weapon?.system?.penetration ?? 0);
-
-  // Check if auto-apply is enabled
-  const autoApplyDamage = game.settings.get("uesrpg-3ev4", "autoApplyDamage");
+  // Automatically Apply Damage is core behavior (always on).
+  const autoApplyDamage = true;
 
   // Perform opposed roll with damage
   const result = await OpposedRoll.perform(attackerToken, defenderToken, {

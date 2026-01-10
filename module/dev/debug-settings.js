@@ -43,6 +43,7 @@ export class DebugSettingsApp extends FormApplication {
     const client = {
       debugSkillTN: game.settings.get(NAMESPACE, "debugSkillTN"),
       sheetDiagnostics: game.settings.get(NAMESPACE, "sheetDiagnostics"),
+      debugAim: game.settings.get(NAMESPACE, "debugAim"),
     };
 
     return {
@@ -56,10 +57,12 @@ export class DebugSettingsApp extends FormApplication {
   async _updateObject(_event, formData) {
     // FormApplication gives us flattened keys.
     // We keep the mapping explicit for safety.
-    const setIfPresent = async (scope, key) => {
+        const setIfPresent = async (scope, key) => {
       const full = `${scope}.${key}`;
       if (!(full in formData)) return;
-      await game.settings.set(NAMESPACE, key, Boolean(formData[full]));
+      // Preserve types explicitly.
+      const value = (key === "opposedDebugFormula") ? String(formData[full] ?? "") : Boolean(formData[full]);
+      await game.settings.set(NAMESPACE, key, value);
     };
 
     // World settings: GM only.
@@ -74,6 +77,7 @@ export class DebugSettingsApp extends FormApplication {
     // Client settings: anyone can set their own client toggles.
     await setIfPresent("client", "debugSkillTN");
     await setIfPresent("client", "sheetDiagnostics");
+    await setIfPresent("client", "debugAim");
   }
 }
 

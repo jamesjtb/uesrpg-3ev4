@@ -227,43 +227,23 @@ export class SimpleItem extends Item {
   async _prepareCombatStyleData(actorData, itemData) {
 
     //Skill Bonus Calculation
-    const legacyUntrained = game.settings.get("uesrpg-3ev4", "legacyUntrainedPenalty");
-
-    //Combat Style Skill Bonus Calculation
-    if (legacyUntrained) {
-      if (itemData.rank === "untrained") {
-        itemData.bonus = -10 + this._untrainedException(actorData);
-      } else if (itemData.rank === "novice") {
-        itemData.bonus = 0;
-      } else if (itemData.rank === "apprentice") {
-        itemData.bonus = 10;
-      } else if (itemData.rank === "journeyman") {
-        itemData.bonus = 20;
-      } else if (itemData.rank === "adept") {
-        itemData.bonus = 30;
-      } else if (itemData.rank === "expert") {
-        itemData.bonus = 40;
-      } else if (itemData.rank === "master") {
-        itemData.bonus = 50;
-      }
-
-    } else {
-      if (itemData.rank == "untrained") {
-        itemData.bonus = -20 + this._untrainedException(actorData);
-      } else if (itemData.rank === "novice") {
-        itemData.bonus = 0;
-      } else if (itemData.rank === "apprentice") {
-        itemData.bonus = 10;
-      } else if (itemData.rank === "journeyman") {
-        itemData.bonus = 20;
-      } else if (itemData.rank === "adept") {
-        itemData.bonus = 30;
-      } else if (itemData.rank === "expert") {
-        itemData.bonus = 40;
-      } else if (itemData.rank === "master") {
-        itemData.bonus = 50;
-      }
+    // Combat Style Skill Bonus Calculation (standard -20 untrained penalty)
+    if (itemData.rank === "untrained") {
+      itemData.bonus = -20 + this._untrainedException(actorData);
+    } else if (itemData.rank === "novice") {
+      itemData.bonus = 0;
+    } else if (itemData.rank === "apprentice") {
+      itemData.bonus = 10;
+    } else if (itemData.rank === "journeyman") {
+      itemData.bonus = 20;
+    } else if (itemData.rank === "adept") {
+      itemData.bonus = 30;
+    } else if (itemData.rank === "expert") {
+      itemData.bonus = 40;
+    } else if (itemData.rank === "master") {
+      itemData.bonus = 50;
     }
+
 
     // Combat Style Skill Calculation
     const woundPenalty = Number(actorData.system?.woundPenalty || 0)
@@ -565,22 +545,11 @@ async _duplicateContainedItemsOnActor(actorData, itemData) {
     }
     return newContainedItems
   }
-
   _untrainedException(actorData) {
     // Defensive guard: safe property access and array filtering
-    let attribute = actorData.items?.filter(item => item?.system?.untrainedException == true) || [];
-    const legacyUntrained = game.settings.get("uesrpg-3ev4", "legacyUntrainedPenalty");
-    let x = 0;
-    if (this.type === "combatStyle") {
-      if (legacyUntrained === true) {
-        if (attribute.length >= 1) {
-          x = 10;
-        }
-      } else if (attribute.length >= 1) {
-        x = 20;
-      }
-    }
-    return x
+    const attribute = actorData.items?.filter(item => item?.system?.untrainedException == true) || [];
+    if (this.type !== "combatStyle") return 0;
+    return attribute.length >= 1 ? 20 : 0;
   }
 
 }

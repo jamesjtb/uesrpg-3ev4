@@ -2,30 +2,51 @@
  * module/magic/opposed-workflow.js
  *
  * Magic attack opposed workflow for UESRPG 3ev4.
- * Implements RAW Chapter 6 spell attack rules:
- *  - Attack spells use casting test as attack test
- *  - Only Block/Evade allowed as defense (no Parry/Counter)
- *  - No advantages with spells
- *  - Critical success: max damage OR double restraint reduction
- *  - MP consumed regardless of hit/miss
- *  - Backfire on critical failure or conditional failure
+ * Target: Foundry VTT v13.351.
+ *
+ * Package 2 upgrades:
+ *  - Spend AP at the moment the casting/defense test is rolled (combat-parity behavior).
+ *  - Secondary Cast Magic support (Instant spells only) via castActionType carried through the pending card.
+ *  - Chat card layout improvements: TN breakdown rendered as a dropdown (<details>) instead of a flat modifier list.
+ *  - Hook migrated to renderChatMessageHTML (v13) to avoid deprecated renderChatMessage.
  */
 
-import { doTestRoll, computeResultFromRollTotal, resolveOpposed, formatDegree } from "../helpers/degree-roll-helper.js";
-import { computeMagicCastingTN, consumeSpellMagicka, rollSpellDamage, getMaxSpellDamage } from "./magicka-utils.js";
-import { applySpellEffect } from "./spell-effects.js";
+import { doTestRoll, resolveOpposed, formatDegree } from "../helpers/degree-roll-helper.js";
+import {
+  computeMagicCastingTN,
+  computeSpellMagickaCost,
+  computeSpellAttemptMagickaCost,
+  consumeSpellMagicka,
+  applySpellRestraintRefund,
+  rollSpellDamage,
+  rollSpellHealing,
+  getSpellDamageFormula,
+  getSpellDamageType,
+  isHealingSpell
+} from "./magicka-utils.js";
+import { applySpellEffect, applySpellEffectsToTarget } from "./spell-effects.js";
+import { applyMagicDamage, applyMagicHealing } from "./damage-application.js";
 import { shouldBackfire, triggerBackfire } from "./backfire.js";
 import { safeUpdateChatMessage } from "../helpers/chat-message-socket.js";
-import { requireUserCanRollActor } from "../helpers/permissions.js";
-import { computeSkillTN } from "../skills/skill-tn.js";
-
+import { canUserRollActor, requireUserCanRollActor } from "../helpers/permissions.js";
+import { ActionEconomy } from "../combat/action-economy.js";
+import { getHitLocationFromRoll } from "../combat/combat-utils.js";
+import {
+  computeElementalDamageBonus,
+  isElementalDamageType,
+  canUseMasterOfMagicka
+} from "./magic-modifiers.js";
 const _FLAG_NS = "uesrpg-3ev4";
 const _FLAG_KEY = "magicOpposed";
-const _CARD_VERSION = 1;
+const _CARD_VERSION = 2;
 
 function _resolveDoc(uuid) {
   if (!uuid) return null;
-  try { return fromUuidSync(uuid); } catch (_e) { return null; }
+  try {
+    return fromUuidSync(uuid);
+  } catch (_e) {
+    return null;
+  }
 }
 
 function _resolveActor(docOrUuid) {
@@ -45,6 +66,11 @@ function _resolveToken(docOrUuid) {
   return null;
 }
 
+function _fmtSigned(n) {
+  const v = Number(n ?? 0) || 0;
+  return v >= 0 ? `+${v}` : `${v}`;
+}
+
 function _fmtDegree(result) {
   if (!result) return "";
   const deg = Number(result.degree ?? 0);
@@ -55,85 +81,215 @@ function _fmtDegree(result) {
 function _getMessageState(message) {
   const raw = message?.flags?.[_FLAG_NS]?.[_FLAG_KEY];
   if (!raw || typeof raw !== "object") return null;
-  // Support versioned structure
   if (Number(raw.version) >= 1 && raw.state) return raw.state;
-  // Legacy: state stored directly
   if (raw.attacker && raw.defender) return raw;
   return null;
 }
 
+function _renderBreakdownDetails(title, entries) {
+  const arr = Array.isArray(entries) ? entries : [];
+  if (!arr.length) return "";
+
+  // Only show modifiers that actually affect the TN (non-zero),
+  // but always keep the base lane for readability.
+  const filtered = arr.filter((m) => {
+    const value = Number(m?.value ?? 0) || 0;
+    if (m?.keepZero) return true;
+    return value !== 0;
+  });
+
+  if (!filtered.length) return "";
+
+  const rows = filtered
+    .map((m) => {
+      const label = String(m?.label ?? "Modifier");
+      const value = Number(m?.value ?? 0) || 0;
+      return `<div style="display:flex; justify-content:space-between; gap:10px; padding:2px 0;"><span>${label}</span><span style="font-variant-numeric: tabular-nums;">${_fmtSigned(value)}</span></div>`;
+    })
+    .join("");
+
+  return `
+    <details style="margin-top:6px;">
+      <summary style="cursor:pointer; user-select:none;">${String(title ?? "Breakdown")}</summary>
+      <div style="margin-top:4px; font-size:12px; opacity:0.95;">${rows}</div>
+    </details>
+  `;
+}
+
+function _btn({ label, action, disabled = false, title = "" } = {}) {
+  const safeLabel = String(label ?? "Action");
+  const safeAction = String(action ?? "");
+  const safeTitle = String(title ?? "");
+  return `
+    <button
+      type="button"
+      data-ues-magic-opposed-action="${safeAction}"
+      ${disabled ? "disabled=\"disabled\"" : ""}
+      ${safeTitle ? `title="${safeTitle.replaceAll('"', "&quot;")}"` : ""}
+      style="padding: 4px 10px; line-height: 1; min-height: 26px;"
+    >${safeLabel}</button>
+  `;
+}
+
 /**
- * Render the magic opposed card HTML
+ * Render the magic opposed card HTML.
+ *
+ * Design goal (Package 2): match the readability of opposed combat cards:
+ *  - Two-column layout (Caster / Target)
+ *  - TN breakdown uses <details>
+ *  - No public damage numbers; GM receives blind whispered damage report
  */
 function _renderCard(data, messageId) {
   const a = data.attacker;
   const d = data.defender;
-  
-  const spell = a.spellName ?? "Spell";
+
+  const spellName = a.spellName ?? "Spell";
   const spellSchool = a.spellSchool ?? "";
-  const spellLevel = a.spellLevel ?? 1;
-  const spellCost = a.spellCost ?? 0;
-  
-  // Attacker section
-  const aTNLabel = a.tn?.finalTN != null ? String(a.tn.finalTN) : "—";
-  const attackerActions = !a.result
-    ? `<button class="uesrpg-magic-opposed-btn" data-action="attacker-roll" style="margin-top:8px;">Roll Casting Test</button>`
+  const spellLevel = Number(a.spellLevel ?? 1);
+  const spellCost = Number(a.spellCost ?? 0);
+  const spellMpSpent = Number(a.mpSpent ?? 0) || 0;
+  const spellMpRefund = Number(a.mpRefund ?? 0) || 0;
+
+  const aTN = a.tn?.finalTN != null ? String(a.tn.finalTN) : "—";
+  const dTN = d.tn?.finalTN != null ? String(d.tn.finalTN) : (d.tn != null ? String(d.tn) : "—");
+
+  const aRollLine = a.result
+    ? (a.result.noRoll
+      ? `<div><b>Roll:</b> Automatic</div>`
+      : `<div><b>Roll:</b> ${a.result.rollTotal} — ${_fmtDegree(a.result)}${a.result.isCriticalSuccess ? ' <span style="color:green; font-weight:700;">CRITICAL</span>' : ''}${a.result.isCriticalFailure ? ' <span style="color:red; font-weight:700;">CRITICAL FAIL</span>' : ''}</div>`)
     : "";
-  
-  // Defender section
-  const dTNLabel = d.tn != null ? String(d.tn) : "—";
-  const defenderActions = (a.result && !d.result && !d.noDefense)
+
+  const dRollLine = (d.result && !d.noDefense)
+    ? `<div><b>Roll:</b> ${d.result.rollTotal} — ${_fmtDegree(d.result)}</div>`
+    : "";
+
+  const aBreakdown = _renderBreakdownDetails("TN breakdown", a.tn?.breakdown ?? a.tn?.modifiers);
+  const dBreakdown = _renderBreakdownDetails("TN breakdown", d.tn?.breakdown ?? d.tn?.modifiers);
+
+  const phase = String(data?.context?.phase ?? data?.status ?? "pending");
+  const awaitingDefense = phase === "awaiting-defense";
+  const resolved = phase === "resolved";
+
+  const canRollAttacker = Boolean(!a.result);
+  const canRollDefender = Boolean(a.result && !d.result && !d.noDefense);
+
+  const attackerControls = canRollAttacker
+    ? `<div style="margin-top:8px;">${_btn({ label: "Roll Casting Test", action: "attacker-roll" })}</div>`
+    : "";
+
+  const defenderControls = canRollDefender
     ? `
-      <button class="uesrpg-magic-opposed-btn" data-action="defender-roll-block" style="margin-top:8px;">Block</button>
-      <button class="uesrpg-magic-opposed-btn" data-action="defender-roll-evade" style="margin-top:8px; margin-left:4px;">Evade</button>
-      <button class="uesrpg-magic-opposed-btn" data-action="defender-no-defense" style="margin-top:8px; margin-left:4px;">No Defense</button>
+      <div style="margin-top:8px; display:flex; gap:6px; flex-wrap:wrap;">
+        ${_btn({ label: "Block", action: "defender-roll-block" })}
+        ${_btn({ label: "Evade", action: "defender-roll-evade" })}
+        ${_btn({ label: "No Defense", action: "defender-no-defense" })}
+      </div>
     `
     : "";
-  
-  // Outcome section
+
   let outcomeLine = "";
-  if (data.outcome) {
-    const winner = data.outcome.winner;
-    const outcomeText = data.outcome.text ?? "";
-    const color = winner === "attacker" ? "green" : (winner === "defender" ? "blue" : "gray");
-    outcomeLine = `<div style="margin-top:12px; padding:8px; background:rgba(0,0,0,0.05); border-left:3px solid ${color}; font-weight:600;">${outcomeText}</div>`;
+  if (resolved && data.outcome) {
+    const winner = String(data.outcome.winner ?? "");
+    const color = winner === "attacker" ? "green" : (winner === "defender" ? "#2a5db0" : "#666");
+    outcomeLine = `
+      <div style="margin-top:10px; padding:8px; background:rgba(0,0,0,0.05); border-left:3px solid ${color};">
+        <div style="font-weight:700;">${String(data.outcome.text ?? "Resolved")}</div>
+        ${data.outcome.attackerWins ? `<div style="margin-top:4px; font-size:12px; opacity:0.9;">Damage is applied automatically. Details are whispered to the GM.</div>` : ""}
+      </div>
+    `;
+  } else if (awaitingDefense) {
+    outcomeLine = `
+      <div style="margin-top:10px; padding:8px; background:rgba(0,0,0,0.05); border-left:3px solid #666;">
+        <div style="font-weight:700;">Awaiting defense selection</div>
+        <div style="margin-top:4px; font-size:12px; opacity:0.9;">Defender may choose Block, Evade, or No Defense.</div>
+      </div>
+    `;
   }
-  
-  const aTNBreakdown = a.tn?.modifiers ? a.tn.modifiers.map(m => `<div style="font-size:11px; opacity:0.8;">${m.label}: ${m.value >= 0 ? '+' : ''}${m.value}</div>`).join("") : "";
-  
+
   return `
-  <div class="ues-magic-opposed-card" data-message-id="${messageId}" style="padding:6px 6px;">
-    <div style="display:grid; grid-template-columns: 1fr 1fr; gap:12px; align-items:start;">
-      <div style="padding-right:10px; border-right:1px solid rgba(0,0,0,0.12);">
-        <div style="display:flex; justify-content:space-between; align-items:baseline;">
-          <div style="font-size:16px; font-weight:700;">Caster</div>
-          <div style="font-size:13px;"><b>${a.tokenName ?? a.name}</b></div>
+    <div class="ues-opposed-card ues-magic-opposed-card" data-message-id="${String(messageId ?? "")}" data-ues-magic-opposed="1" style="padding:6px 6px;">
+      <div style="display:grid; grid-template-columns: 1fr 1fr; gap:12px; align-items:start;">
+        <div style="padding-right:10px; border-right:1px solid rgba(0,0,0,0.12);">
+          <div style="display:flex; justify-content:space-between; align-items:baseline;">
+            <div style="font-size:16px; font-weight:700;">Caster</div>
+            <div style="font-size:13px;"><b>${a.tokenName ?? a.name ?? ""}</b></div>
+          </div>
+          <div style="margin-top:4px; font-size:13px; line-height:1.25;">
+            <div><b>Spell:</b> ${spellName}${spellSchool ? ` (${spellSchool} ${spellLevel})` : ""}</div>
+            <div><b>MP Cost:</b> ${spellCost}${spellMpSpent ? ` <span class="muted" style="opacity:0.8;">(paid: ${spellMpSpent}${spellMpRefund ? `, refunded: ${spellMpRefund}` : ""})</span>` : ""}</div>
+            <div><b>TN:</b> ${aTN}</div>
+            ${aRollLine}
+            ${aBreakdown}
+          </div>
+          ${attackerControls}
         </div>
-        <div style="margin-top:4px; font-size:13px; line-height:1.25;">
-          <div><b>Spell:</b> ${spell} ${spellSchool ? `(${spellSchool} ${spellLevel})` : ""}</div>
-          <div><b>MP Cost:</b> ${spellCost}</div>
-          <div><b>TN:</b> ${aTNLabel}</div>
-          ${a.result ? `<div><b>Roll:</b> ${a.result.rollTotal} — ${_fmtDegree(a.result)}${a.result.isCriticalSuccess ? ' <span style="color:green;">CRITICAL</span>' : ''}${a.result.isCriticalFailure ? ' <span style="color:red;">CRITICAL FAIL</span>' : ''}</div>` : ""}
-          ${aTNBreakdown}
+
+        <div style="padding-left:2px;">
+          <div style="display:flex; justify-content:space-between; align-items:baseline;">
+            <div style="font-size:16px; font-weight:700;">Target</div>
+            <div style="font-size:13px;"><b>${d.tokenName ?? d.name ?? ""}</b></div>
+          </div>
+          <div style="margin-top:4px; font-size:13px; line-height:1.25;">
+            <div><b>Defense:</b> ${d.noDefense ? "—" : (d.defenseType ?? "—")}</div>
+            <div><b>TN:</b> ${d.noDefense ? "—" : dTN}</div>
+            ${dRollLine}
+            ${d.noDefense ? '<div style="color:red; font-style:italic; margin-top:2px;">No Defense</div>' : ""}
+            ${d.noDefense ? "" : dBreakdown}
+          </div>
+          ${defenderControls}
         </div>
-        ${attackerActions}
       </div>
-      <div style="padding-left:2px;">
-        <div style="display:flex; justify-content:space-between; align-items:baseline;">
-          <div style="font-size:16px; font-weight:700;">Target</div>
-          <div style="font-size:13px;"><b>${d.tokenName ?? d.name}</b></div>
-        </div>
-        <div style="margin-top:4px; font-size:13px; line-height:1.25;">
-          <div><b>Defense:</b> ${d.defenseType ?? "—"}</div>
-          <div><b>TN:</b> ${dTNLabel}</div>
-          ${d.result ? `<div><b>Roll:</b> ${d.result.rollTotal} — ${_fmtDegree(d.result)}</div>` : ""}
-          ${d.noDefense ? '<div style="color:red; font-style:italic;">No Defense</div>' : ""}
-        </div>
-        ${defenderActions}
-      </div>
+      ${outcomeLine}
     </div>
-    ${outcomeLine}
-  </div>`;
+  `;
+}
+
+/**
+ * Render a modern unopposed magic casting card (no target selected).
+ * This is used to avoid legacy casting cards which have incorrect TN/DoS/DoF reporting.
+ */
+function _renderUnopposedCard(data, messageId) {
+  const a = data.attacker;
+  const spellName = a.spellName ?? "Spell";
+  const spellSchool = a.spellSchool ?? "";
+  const spellLevel = Number(a.spellLevel ?? 1);
+  const spellCost = Number(a.spellCost ?? 0);
+
+  
+  const spellMpSpent = Number(a.mpSpent ?? a.spellCost ?? 0) || 0;
+  const spellMpRefund = Number(a.mpRefund ?? 0) || 0;
+  const aTN = a.tn?.finalTN != null ? String(a.tn.finalTN) : "—";
+  const aRollLine = a.result
+    ? (a.result.noRoll
+      ? `<div><b>Roll:</b> Automatic</div>`
+      : `<div><b>Roll:</b> ${a.result.rollTotal} — ${_fmtDegree(a.result)}${a.result.isCriticalSuccess ? ' <span style="color:green; font-weight:700;">CRITICAL</span>' : ''}${a.result.isCriticalFailure ? ' <span style="color:red; font-weight:700;">CRITICAL FAIL</span>' : ''}</div>`)
+    : "";
+
+  const aBreakdown = _renderBreakdownDetails("TN breakdown", a.tn?.breakdown ?? a.tn?.modifiers);
+
+  const note = String(data?.context?.note ?? "");
+  const noteLine = note
+    ? `<div style="margin-top:10px; padding:8px; background:rgba(0,0,0,0.05); border-left:3px solid #666;">
+         <div style="font-weight:700;">${note}</div>
+       </div>`
+    : "";
+
+  return `
+    <div class="ues-opposed-card ues-magic-opposed-card" data-message-id="${String(messageId ?? "")}" style="padding:6px 6px;">
+      <div style="display:grid; grid-template-columns:1fr; gap:8px;">
+        <div>
+          <div style="font-size:18px; font-weight:800; margin-bottom:6px;">${spellName}</div>
+          <div><b>School:</b> ${spellSchool || "—"}</div>
+          <div><b>Level:</b> ${spellLevel}</div>
+          <div><b>MP Cost:</b> ${spellCost}${spellMpSpent ? ` <span class="muted" style="opacity:0.8;">(paid: ${spellMpSpent}${spellMpRefund ? `, refunded: ${spellMpRefund}` : ""})</span>` : ""}</div>
+          <div style="margin-top:6px;"><b>TN:</b> ${aTN}</div>
+          ${aRollLine}
+          ${aBreakdown}
+        </div>
+      </div>
+      ${noteLine}
+    </div>
+  `;
 }
 
 async function _updateCard(message, data) {
@@ -142,96 +298,140 @@ async function _updateCard(message, data) {
   data.context.updatedAt = Date.now();
   data.context.updatedBy = game.user.id;
   data.context.updatedSeq = (Number(data.context.updatedSeq) || 0) + 1;
-  
+
   const payload = {
     content: _renderCard(data, message.id),
     flags: { [_FLAG_NS]: { [_FLAG_KEY]: { version: _CARD_VERSION, state: data } } }
   };
-  
+
   await safeUpdateChatMessage(message, payload);
 }
 
-/**
- * Compute defense TN (Block or Evade only for spells)
- */
-function _computeDefenseTN(actor, defenseType) {
-  if (defenseType === "evade") {
-    // Use Evade skill
-    const evadeSkill = actor.items.find(i => i.type === "skill" && i.name?.toLowerCase().includes("evade"));
-    const baseTN = evadeSkill ? Number(evadeSkill.system?.value ?? 0) : 0;
-    
-    // Apply penalties
-    const fatiguePenalty = Number(actor.system?.fatigue?.penalty ?? 0);
-    const carryPenalty = Number(actor.system?.carry_rating?.penalty ?? 0);
-    const woundPenalty = Number(actor.system?.woundPenalty ?? 0);
-    
-    return baseTN + fatiguePenalty + carryPenalty + woundPenalty;
-  } else if (defenseType === "block") {
-    // Use Combat profession with shield bonus
-    const combatProf = Number(actor.system?.professions?.combat ?? 0);
-    
-    // Check for equipped shield
-    let shieldBonus = 0;
-    const shields = actor.items.filter(i => 
-      i.type === "armor" && 
-      i.system?.equipped === true &&
-      (i.name?.toLowerCase().includes("shield") || i.system?.armorType?.toLowerCase().includes("shield"))
-    );
-    if (shields.length > 0) {
-      // Simple +10 bonus for shield
-      shieldBonus = 10;
+function _computeEvadeTNWithBreakdown(defender) {
+  const sys = defender?.system ?? {};
+
+  // NPCs use professions.evade. PCs prefer the Evade skill item, but may also
+  // have an aggregated professions.evade lane in some data states.
+  let baseTN = 0;
+  let baseLabel = "Base TN";
+
+  if (defender?.type === "NPC") {
+    baseTN = Number(sys?.professions?.evade ?? sys?.professionsWound?.evade ?? 0) || 0;
+  } else {
+    const evadeSkill = defender?.items?.find((i) => i.type === "skill" && String(i.name ?? "").toLowerCase() === "evade")
+      ?? defender?.items?.find((i) => i.type === "skill" && String(i.name ?? "").toLowerCase().includes("evade"))
+      ?? null;
+    baseTN = Number(evadeSkill?.system?.value ?? 0) || 0;
+    if (!baseTN) {
+      baseTN = Number(sys?.professions?.evade ?? sys?.professionsWound?.evade ?? 0) || 0;
     }
-    
-    // Apply penalties
-    const fatiguePenalty = Number(actor.system?.fatigue?.penalty ?? 0);
-    const carryPenalty = Number(actor.system?.carry_rating?.penalty ?? 0);
-    const woundPenalty = Number(actor.system?.woundPenalty ?? 0);
-    
-    return combatProf + shieldBonus + fatiguePenalty + carryPenalty + woundPenalty;
+    if (!baseTN) {
+      baseTN = Number(defender?.system?.characteristics?.agi?.total ?? defender?.system?.characteristics?.agi?.value ?? 0) || 0;
+      baseLabel = "Agility";
+    }
   }
-  
-  return 0;
+
+  const fatiguePenalty = Number(defender?.system?.fatigue?.penalty ?? 0) || 0;
+  const carryPenalty = Number(defender?.system?.carry_rating?.penalty ?? 0) || 0;
+  const woundPenalty = Number(defender?.system?.woundPenalty ?? 0) || 0;
+
+  const breakdown = [
+    { label: baseLabel, value: baseTN, keepZero: true },
+    { label: "Fatigue Penalty", value: fatiguePenalty },
+    { label: "Carry Penalty", value: carryPenalty },
+    { label: "Wound Penalty", value: woundPenalty }
+  ];
+
+  const finalTN = Math.max(0, baseTN + fatiguePenalty + carryPenalty + woundPenalty);
+  return { finalTN, breakdown, modifiers: breakdown };
 }
 
-/**
- * Main workflow object
- */
+function _computeBlockTNWithBreakdown(defender) {
+  const sys = defender?.system ?? {};
+
+  // Preferred: Combat Profession lane (NPCs always; PCs when present).
+  // Fallback (PC data state): use the highest combatStyle.system.value.
+  let baseTN = Number(sys?.professions?.combat ?? sys?.professionsWound?.combat ?? 0) || 0;
+  let baseLabel = "Combat Profession";
+  if (!baseTN && defender?.type !== "NPC") {
+    const styles = (defender?.items ?? []).filter((i) => i.type === "combatStyle");
+    const best = styles.sort((a, b) => (Number(b?.system?.value ?? 0) || 0) - (Number(a?.system?.value ?? 0) || 0))[0] ?? null;
+    const v = Number(best?.system?.value ?? 0) || 0;
+    if (v) {
+      baseTN = v;
+      baseLabel = "Combat Style";
+    }
+  }
+
+  const fatiguePenalty = Number(defender?.system?.fatigue?.penalty ?? 0) || 0;
+  const carryPenalty = Number(defender?.system?.carry_rating?.penalty ?? 0) || 0;
+  const woundPenalty = Number(defender?.system?.woundPenalty ?? 0) || 0;
+
+  const breakdown = [
+    { label: baseLabel, value: baseTN, keepZero: true },
+    { label: "Fatigue Penalty", value: fatiguePenalty },
+    { label: "Carry Penalty", value: carryPenalty },
+    { label: "Wound Penalty", value: woundPenalty }
+  ];
+
+  const finalTN = Math.max(0, baseTN + fatiguePenalty + carryPenalty + woundPenalty);
+  return { finalTN, breakdown, modifiers: breakdown };
+}
+
 export const MagicOpposedWorkflow = {
   /**
-   * Create a pending magic attack opposed test
+   * Create a pending magic attack opposed test.
    */
   async createPending(cfg = {}) {
     const aDoc = _resolveDoc(cfg.attackerTokenUuid) ?? _resolveDoc(cfg.attackerActorUuid) ?? _resolveDoc(cfg.attackerUuid);
     const dDoc = _resolveDoc(cfg.defenderTokenUuid) ?? _resolveDoc(cfg.defenderActorUuid) ?? _resolveDoc(cfg.defenderUuid);
-    
+
     const aToken = _resolveToken(aDoc);
     const dToken = _resolveToken(dDoc);
     const attacker = _resolveActor(aDoc);
     const defender = _resolveActor(dDoc);
-    
+
     if (!attacker || !defender) {
       ui.notifications.warn("Magic attack requires both a caster and a target.");
       return null;
     }
-    
+
     const spell = await fromUuid(cfg.spellUuid);
     if (!spell) {
       ui.notifications.error("Could not resolve spell.");
       return null;
     }
-    
-    // Compute casting TN
-    const tn = computeMagicCastingTN(attacker, spell, cfg.spellOptions ?? {});
-    
+
+    // Direct spells resolve immediately (no casting/defense tests).
+    if (Boolean(spell?.system?.isDirect)) {
+      await this.castDirectTargeted({
+        attackerTokenUuid: cfg.attackerTokenUuid,
+        attackerActorUuid: cfg.attackerActorUuid,
+        attackerUuid: cfg.attackerUuid,
+        defenderTokenUuid: cfg.defenderTokenUuid,
+        defenderActorUuid: cfg.defenderActorUuid,
+        defenderUuid: cfg.defenderUuid,
+        spellUuid: cfg.spellUuid,
+        spellOptions: cfg.spellOptions,
+        castActionType: cfg.castActionType
+      });
+      return null;
+    }
+
+    const spellOptions = cfg.spellOptions ?? {};
+    const tn = computeMagicCastingTN(attacker, spell, spellOptions);
+    const healingDirect = isHealingSpell(spell);
+
     const data = {
       context: {
-        schemaVersion: 1,
+        schemaVersion: _CARD_VERSION,
         createdAt: Date.now(),
         createdBy: game.user.id,
+        originalCastWorldTime: Number(game.time?.worldTime ?? 0) || 0,
         updatedAt: Date.now(),
         updatedBy: game.user.id,
         phase: "pending",
-        waitingSince: null
+        healingDirect
       },
       status: "pending",
       mode: "magic",
@@ -245,9 +445,14 @@ export const MagicOpposedWorkflow = {
         spellSchool: spell.system?.school ?? "",
         spellLevel: Number(spell.system?.level ?? 1),
         spellCost: Number(spell.system?.cost ?? 0),
-        spellOptions: cfg.spellOptions ?? {},
+        spellOptions,
+        castActionType: String(cfg.castActionType ?? "primary"),
+        apCost: 1,
         result: null,
-        tn
+        tn,
+        mpSpent: null,
+        mpRemaining: null,
+        backfire: false
       },
       defender: {
         actorUuid: defender.uuid,
@@ -257,11 +462,12 @@ export const MagicOpposedWorkflow = {
         defenseType: null,
         result: null,
         tn: null,
-        noDefense: false
+        noDefense: false,
+        apCost: 1
       },
       outcome: null
     };
-    
+
     const message = await ChatMessage.create({
       user: game.user.id,
       speaker: ChatMessage.getSpeaker({ actor: attacker, token: aToken?.document ?? aToken ?? null }),
@@ -269,180 +475,725 @@ export const MagicOpposedWorkflow = {
       flags: { [_FLAG_NS]: { [_FLAG_KEY]: { version: _CARD_VERSION, state: data } } },
       style: CONST.CHAT_MESSAGE_STYLES.OTHER
     });
-    
+
     await message.update({ content: _renderCard(data, message.id) });
     return message;
   },
-  
+
   /**
-   * Handle actions on the opposed card
+   * Resolve a targeted Direct spell immediately (no casting/defense tests).
+   *
+   * This uses the same downstream resolution as the opposed workflow, but
+   * forces an automatic hit and suppresses test rolls.
+   */
+  async castDirectTargeted(cfg = {}) {
+    const aDoc = _resolveDoc(cfg.attackerTokenUuid) ?? _resolveDoc(cfg.attackerActorUuid) ?? _resolveDoc(cfg.attackerUuid);
+    const dDoc = _resolveDoc(cfg.defenderTokenUuid) ?? _resolveDoc(cfg.defenderActorUuid) ?? _resolveDoc(cfg.defenderUuid);
+
+    const aToken = _resolveToken(aDoc);
+    const dToken = _resolveToken(dDoc);
+    const attacker = _resolveActor(aDoc);
+    const defender = _resolveActor(dDoc);
+
+    if (!attacker || !defender) {
+      ui.notifications.warn("Direct spell requires both a caster and a target.");
+      return null;
+    }
+
+    const spell = await fromUuid(cfg.spellUuid);
+    if (!spell) {
+      ui.notifications.error("Could not resolve spell.");
+      return null;
+    }
+
+    if (!Boolean(spell?.system?.isDirect)) {
+      ui.notifications.warn("This spell is not marked as Direct.");
+      return null;
+    }
+
+    if (!canUserRollActor(game.user, attacker)) {
+      ui.notifications.warn("You do not have permission to cast with this caster.");
+      return null;
+    }
+
+    const spellOptions = cfg.spellOptions ?? {};
+
+    // Spend AP (casting always costs 1 AP in the current action economy).
+    const apCost = 1;
+    const currentAP = Number(attacker?.system?.action_points?.value ?? 0) || 0;
+    if (currentAP < apCost) {
+      ui.notifications.warn(`${attacker.name} does not have enough Action Points to cast.`);
+      return null;
+    }
+
+    const apReason = `Cast (Direct): ${spell.name}`;
+    const apSpentOk = await ActionEconomy.spendAP(attacker, apCost, { reason: apReason, silent: false });
+    if (!apSpentOk) return null;
+
+    // Spend MP (attempt cost). Restraint refund is treated as an automatic success.
+    const currentMagicka = Number(attacker?.system?.magicka?.value ?? 0) || 0;
+    const magickaInfo = computeSpellAttemptMagickaCost(attacker, spell, spellOptions);
+    const attemptCost = Number(magickaInfo?.attemptCost ?? 0) || 0;
+    if (currentMagicka < attemptCost) {
+      ui.notifications.warn(`${attacker.name} does not have enough Magicka (${currentMagicka}/${attemptCost}) to cast.`);
+      return null;
+    }
+
+    const magickaSpend = await consumeSpellMagicka(attacker, spell, spellOptions);
+    if (!magickaSpend?.ok) {
+      // consumeSpellMagicka already toasts a reason on failure.
+      return null;
+    }
+
+    const pseudoResult = {
+      noRoll: true,
+      rollTotal: 0,
+      isSuccess: true,
+      success: true,
+      degree: 1,
+      isCriticalSuccess: false,
+      isCriticalFailure: false
+    };
+
+    const refundInfo = await applySpellRestraintRefund(attacker, spell, spellOptions, pseudoResult, magickaSpend);
+
+    const data = {
+      context: {
+        schemaVersion: _CARD_VERSION,
+        createdAt: Date.now(),
+        createdBy: game.user.id,
+        originalCastWorldTime: Number(game.time?.worldTime ?? 0) || 0,
+        phase: "resolved",
+        directNoTest: true
+      },
+      attacker: {
+        uuid: attacker.uuid,
+        name: attacker.name,
+        tokenUuid: aToken?.document?.uuid ?? aToken?.uuid ?? cfg.attackerTokenUuid ?? null,
+        tokenName: aToken?.name ?? aToken?.document?.name ?? attacker.name,
+        spellUuid: spell.uuid,
+        spellName: spell.name,
+        spellSchool: spell.system?.school ?? "",
+        spellLevel: Number(spell.system?.level ?? 1),
+        spellCost: Number(spell.system?.cost ?? 0),
+        actionType: cfg.castActionType ?? "primary",
+        apCost,
+        tn: null,
+        result: pseudoResult,
+        spellOptions,
+        mpSpent: Number(magickaSpend?.spent ?? 0) || 0,
+        mpRefund: Number(refundInfo?.refund ?? 0) || 0
+      },
+      defender: {
+        uuid: defender.uuid,
+        name: defender.name,
+        tokenUuid: dToken?.document?.uuid ?? dToken?.uuid ?? cfg.defenderTokenUuid ?? null,
+        tokenName: dToken?.name ?? dToken?.document?.name ?? defender.name,
+        defenseType: "—",
+        tn: null,
+        result: null,
+        noDefense: true,
+        spellOptions: {}
+      },
+      outcome: null
+    };
+
+    const message = await ChatMessage.create({
+      user: game.user.id,
+      speaker: ChatMessage.getSpeaker({ actor: attacker, token: aToken?.document ?? aToken ?? null }),
+      content: _renderCard(data, ""),
+      flags: { [_FLAG_NS]: { [_FLAG_KEY]: { version: _CARD_VERSION, state: data } } },
+      style: CONST.CHAT_MESSAGE_STYLES.OTHER
+    });
+
+    await message.update({ content: _renderCard(data, message.id) });
+    await this._resolveOutcome(message, data, attacker, defender);
+    return message;
+  },
+
+  /**
+   * Resolve a spell cast with no target selected using the modern TN/DoS pipeline.
+   * This does not apply damage/healing/effects without a target; it only reports the casting test.
+   */
+  async castUnopposed(cfg = {}) {
+    const aDoc = _resolveDoc(cfg.attackerTokenUuid) ?? _resolveDoc(cfg.attackerActorUuid) ?? _resolveDoc(cfg.attackerUuid);
+    const aToken = _resolveToken(aDoc);
+    const attacker = _resolveActor(aDoc);
+    if (!attacker) {
+      ui.notifications.warn("Could not resolve caster.");
+      return null;
+    }
+
+    const spell = await fromUuid(cfg.spellUuid);
+    if (!spell) {
+      ui.notifications.error("Could not resolve spell.");
+      return null;
+    }
+
+    if (!canUserRollActor(game.user, attacker)) {
+      ui.notifications.warn("You do not have permission to roll for this caster.");
+      return null;
+    }
+
+    const spellOptions = cfg.spellOptions ?? {};
+    const tn = computeMagicCastingTN(attacker, spell, spellOptions);
+
+    const apCost = 1;
+    const currentAP = Number(attacker?.system?.action_points?.value ?? 0) || 0;
+    if (currentAP < apCost) {
+      ui.notifications.warn("Not enough Action Points to cast the spell.");
+      return null;
+    }
+
+    const magickaInfo = computeSpellAttemptMagickaCost(attacker, spell, spellOptions);
+    const currentMagicka = Number(attacker?.system?.magicka?.value ?? 0) || 0;
+    if (currentMagicka < magickaInfo.cost) {
+      ui.notifications.warn(`Not enough Magicka to cast ${spell?.name ?? "spell"}. Required: ${magickaInfo.cost}, Available: ${currentMagicka}.`);
+      return null;
+    }
+
+    const castActionType = String(cfg.castActionType ?? "primary");
+    const apReason = (castActionType === "secondary") ? "Cast Magic (Instant)" : "Cast Magic";
+    const apSpentOk = await ActionEconomy.spendAP(attacker, apCost, { reason: apReason, silent: false });
+    if (!apSpentOk) return null;
+
+    const magickaSpend = await consumeSpellMagicka(attacker, spell, spellOptions);
+    if (!magickaSpend?.ok) {
+      try {
+        await attacker.update({ "system.action_points.value": currentAP });
+      } catch (_e) {
+        // best-effort
+      }
+      return null;
+    }
+
+    const result = await doTestRoll(attacker, {
+      target: tn.finalTN,
+      allowLucky: true,
+      allowUnlucky: true
+    });
+
+    // RAW: Spell Restraint reduces Magicka cost only on a successful spellcast.
+    // We paid the attempt cost up-front; apply refund now that we know success/crit.
+    try {
+      const refundInfo = await applySpellRestraintRefund(attacker, spell, spellOptions, result, magickaSpend);
+      if (refundInfo?.refund > 0) {
+        // Mutate only our local spend record for reporting.
+        magickaSpend.consumed = refundInfo.finalCost;
+        magickaSpend.remaining = Number(attacker.system?.magicka?.value ?? magickaSpend.remaining);
+        magickaSpend.refund = refundInfo.refund;
+        magickaSpend.restraintBreakdown = refundInfo.breakdown;
+      }
+    } catch (err) {
+      console.warn("UESRPG | Spell restraint refund failed", err);
+    }
+
+    await result.roll.toMessage({
+      speaker: ChatMessage.getSpeaker({ actor: attacker }),
+      flavor: `<b>${spell.name}</b> — Casting Test`,
+      flags: { [_FLAG_NS]: { magicOpposedMeta: { stage: "unopposed" } } }
+    });
+
+    const needsBackfire = shouldBackfire(spell, attacker, result.isCriticalFailure, !result.isSuccess);
+    if (needsBackfire) {
+      await triggerBackfire(attacker, spell);
+    }
+
+    const note = "No target selected — casting test resolved (no defense).";
+
+    const data = {
+      context: {
+        schemaVersion: _CARD_VERSION,
+        createdAt: Date.now(),
+        createdBy: game.user.id,
+        originalCastWorldTime: Number(game.time?.worldTime ?? 0) || 0,
+        updatedAt: Date.now(),
+        updatedBy: game.user.id,
+        phase: "resolved",
+        unopposed: true,
+        note
+      },
+      status: "resolved",
+      mode: "magic",
+      attacker: {
+        actorUuid: attacker.uuid,
+        tokenUuid: aToken?.document?.uuid ?? aToken?.uuid ?? null,
+        tokenName: aToken?.name ?? null,
+        name: attacker.name,
+        spellUuid: spell.uuid,
+        spellName: spell.name,
+        spellSchool: spell.system?.school ?? "",
+        spellLevel: Number(spell.system?.level ?? 1),
+        spellCost: Number(spell.system?.cost ?? 0),
+        spellOptions,
+        castActionType,
+        apCost: 1,
+        result,
+        tn,
+        mpSpent: magickaSpend.consumed,
+        mpRemaining: magickaSpend.remaining,
+        mpRefund: Number(magickaSpend.refund ?? 0) || 0,
+        mpRestraintBreakdown: magickaSpend.restraintBreakdown ?? [],
+        backfire: needsBackfire
+      }
+    };
+
+    const message = await ChatMessage.create({
+      user: game.user.id,
+      speaker: ChatMessage.getSpeaker({ actor: attacker, token: aToken?.document ?? aToken ?? null }),
+      content: _renderUnopposedCard(data, ""),
+      flags: { [_FLAG_NS]: { [_FLAG_KEY]: { version: _CARD_VERSION, state: data } } },
+      style: CONST.CHAT_MESSAGE_STYLES.OTHER
+    });
+
+    await message.update({ content: _renderUnopposedCard(data, message.id) });
+    return message;
+  },
+
+  /**
+   * Handle actions on the opposed card.
    */
   async handleAction(message, action) {
     const data = _getMessageState(message);
     if (!data) return;
-    
+
     const attacker = _resolveActor(data.attacker.actorUuid);
     const defender = _resolveActor(data.defender.actorUuid);
-    
+
     if (!attacker || !defender) {
       ui.notifications.warn("Could not resolve actors.");
       return;
     }
-    
+
     if (action === "attacker-roll") {
-      if (data.attacker.result) return; // Already rolled
+      if (data.attacker.result) return;
       if (!requireUserCanRollActor(game.user, attacker)) return;
-      
+
       const spell = await fromUuid(data.attacker.spellUuid);
       if (!spell) {
         ui.notifications.error("Could not resolve spell.");
         return;
       }
-      
+
+      // Preflight resources (AP + Magicka) before spending.
+      const apCost = Number(data.attacker.apCost ?? 1) || 1;
+      const currentAP = Number(attacker?.system?.action_points?.value ?? 0) || 0;
+      if (currentAP < apCost) {
+        ui.notifications.warn("Not enough Action Points to cast a spell.");
+        return;
+      }
+
+      const magickaInfo = computeSpellAttemptMagickaCost(attacker, spell, data.attacker.spellOptions ?? {});
+      const currentMagicka = Number(attacker?.system?.magicka?.value ?? 0) || 0;
+      if (currentMagicka < magickaInfo.cost) {
+        ui.notifications.warn(`Not enough Magicka to cast ${spell?.name ?? "spell"}. Required: ${magickaInfo.cost}, Available: ${currentMagicka}.`);
+        return;
+      }
+
+      const apReason = (String(data.attacker.castActionType ?? "primary") === "secondary") ? "Cast Magic (Instant)" : "Cast Magic";
+      const apSpentOk = await ActionEconomy.spendAP(attacker, apCost, { reason: apReason, silent: false });
+      if (!apSpentOk) return;
+
+      // Consume Magicka at cast time. If this fails due to a race, we attempt to refund AP.
+      const magickaSpend = await consumeSpellMagicka(attacker, spell, data.attacker.spellOptions ?? {});
+      if (!magickaSpend?.ok) {
+        try {
+          await attacker.update({ "system.action_points.value": currentAP });
+        } catch (_e) {
+          // best-effort
+        }
+        return;
+      }
+
+      data.attacker.mpSpent = magickaSpend.consumed;
+      data.attacker.mpRemaining = magickaSpend.remaining;
+
       // Roll casting test
       const result = await doTestRoll(attacker, {
         target: data.attacker.tn.finalTN,
         allowLucky: true,
         allowUnlucky: true
       });
-      
-      // Post roll to chat with Dice So Nice
+
       await result.roll.toMessage({
         speaker: ChatMessage.getSpeaker({ actor: attacker }),
         flavor: `<b>${spell.name}</b> — Casting Test`,
         flags: { [_FLAG_NS]: { magicOpposedMeta: { parentMessageId: message.id, stage: "attacker" } } }
       });
-      
-      // Check for backfire
+
+      // Backfire (RAW / system rules)
       const needsBackfire = shouldBackfire(spell, attacker, result.isCriticalFailure, !result.isSuccess);
       if (needsBackfire) {
         await triggerBackfire(attacker, spell);
       }
-      
-      // Update card with result
+
+      // RAW: Spell Restraint reduces Magicka cost only on a successful spellcast.
+      // We paid the attempt cost up-front; apply refund now that we know success/crit.
+      try {
+        const refundInfo = await applySpellRestraintRefund(attacker, spell, data.attacker.spellOptions ?? {}, result, magickaSpend);
+        if (refundInfo?.refund > 0) {
+          data.attacker.mpSpent = refundInfo.finalCost;
+          data.attacker.mpRemaining = Number(attacker.system?.magicka?.value ?? data.attacker.mpRemaining);
+          data.attacker.mpRefund = refundInfo.refund;
+          data.attacker.mpRestraintBreakdown = refundInfo.breakdown;
+        }
+      } catch (err) {
+        console.warn("UESRPG | Spell restraint refund failed", err);
+      }
+
       data.attacker.result = result;
       data.attacker.backfire = needsBackfire;
+
+      // Healing spells are not opposed when a target is selected.
+      // Resolve immediately based on casting success.
+      if (Boolean(data.context?.healingDirect)) {
+        data.defender.noDefense = true;
+        data.defender.defenseType = "—";
+        data.defender.tn = null;
+        data.defender.result = { rollTotal: 0, isSuccess: false, degree: 0, isCriticalSuccess: false, isCriticalFailure: false };
+        data.context.phase = "resolved";
+        await this._resolveOutcome(message, data, attacker, defender);
+        return;
+      }
+
       data.context.phase = "awaiting-defense";
       await _updateCard(message, data);
-      
-    } else if (action === "defender-roll-block" || action === "defender-roll-evade") {
-      if (data.defender.result) return; // Already rolled
+      return;
+    }
+
+    if (action === "defender-roll-block" || action === "defender-roll-evade") {
+      if (data.defender.result || data.defender.noDefense) return;
       if (!requireUserCanRollActor(game.user, defender)) return;
-      
-      const defenseType = action === "defender-roll-block" ? "block" : "evade";
+
+      const apCost = Number(data.defender.apCost ?? 1) || 1;
+      const currentAP = Number(defender?.system?.action_points?.value ?? 0) || 0;
+      if (currentAP < apCost) {
+        ui.notifications.warn("Not enough Action Points to defend against the spell.");
+        return;
+      }
+
+      const defenseType = (action === "defender-roll-block") ? "block" : "evade";
       const defenseLabel = defenseType.charAt(0).toUpperCase() + defenseType.slice(1);
-      
-      // Compute defense TN
-      const defenseTN = _computeDefenseTN(defender, defenseType);
-      
-      // Roll defense
+
+      const apSpentOk = await ActionEconomy.spendAP(defender, apCost, { reason: `Defense (${defenseLabel})`, silent: false });
+      if (!apSpentOk) return;
+
+      const tnObj = (defenseType === "block") ? _computeBlockTNWithBreakdown(defender) : _computeEvadeTNWithBreakdown(defender);
+      const defenseTN = Number(tnObj.finalTN ?? 0) || 0;
+
       const result = await doTestRoll(defender, {
         target: defenseTN,
         allowLucky: true,
         allowUnlucky: true
       });
-      
-      // Post roll to chat with Dice So Nice
+
       await result.roll.toMessage({
         speaker: ChatMessage.getSpeaker({ actor: defender }),
         flavor: `<b>${defenseLabel}</b> vs ${data.attacker.spellName}`,
         flags: { [_FLAG_NS]: { magicOpposedMeta: { parentMessageId: message.id, stage: "defender" } } }
       });
-      
-      // Update card with result
+
       data.defender.result = result;
       data.defender.defenseType = defenseLabel;
-      data.defender.tn = defenseTN;
+      data.defender.tn = tnObj;
       data.context.phase = "resolved";
-      
-      // Resolve outcome
+
       await this._resolveOutcome(message, data, attacker, defender);
-      
-    } else if (action === "defender-no-defense") {
+      return;
+    }
+
+    if (action === "defender-no-defense") {
+      // No defense does not cost AP.
+      if (data.defender.result || data.defender.noDefense) return;
       if (!requireUserCanRollActor(game.user, defender)) return;
-      
+
       data.defender.noDefense = true;
-      data.defender.result = { rollTotal: 999, isSuccess: false, degree: 0 }; // Auto-fail
+      data.defender.defenseType = "—";
+      data.defender.tn = null;
+      data.defender.result = { rollTotal: 0, isSuccess: false, degree: 0, isCriticalSuccess: false, isCriticalFailure: false };
       data.context.phase = "resolved";
-      
-      // Resolve outcome
+
       await this._resolveOutcome(message, data, attacker, defender);
     }
   },
-  
+
   /**
-   * Resolve the outcome of the opposed test
+   * Resolve the outcome of the opposed test.
    */
   async _resolveOutcome(message, data, attacker, defender) {
     const spell = await fromUuid(data.attacker.spellUuid);
     if (!spell) return;
-    
-    // Determine winner
+
     const aResult = data.attacker.result;
     const dResult = data.defender.result;
-    
-    const outcome = resolveOpposed(aResult, dResult);
-    const attackerWins = outcome.winner === "attacker";
-    
-    const outcomeText = attackerWins
-      ? `${spell.name} hits ${defender.name}!`
-      : `${defender.name} defends against ${spell.name}!`;
-    
-    data.outcome = { ...outcome, text: outcomeText };
-    
-    // Apply effects if attacker wins
-    if (attackerWins) {
-      const isDamaging = Boolean(spell.system?.damage);
-      const isCritical = Boolean(aResult.isCriticalSuccess);
-      
-      if (isDamaging) {
-        // Roll and apply damage
-        let damageRoll = await rollSpellDamage(spell, {
-          isCritical,
-          isOverloaded: data.attacker.spellOptions?.isOverloaded,
-          wpBonus: Math.floor(Number(attacker.system?.characteristics?.wp?.total ?? 0) / 10)
-        });
-        
-        const damageValue = Number(damageRoll.total);
-        
-        // Apply damage to defender's HP
-        const currentHP = Number(defender.system?.resources?.hp?.value ?? 0);
-        const newHP = Math.max(0, currentHP - damageValue);
-        await defender.update({ "system.resources.hp.value": newHP });
-        
-        // Post damage to chat
-        await ChatMessage.create({
-          speaker: ChatMessage.getSpeaker({ actor: attacker }),
-          content: `<div class="uesrpg-damage"><b>${spell.name}</b> deals <b>${damageValue}</b> damage to ${defender.name}${isCritical ? " (CRITICAL - Maximum Damage!)" : ""}!</div>`
-        });
-      } else {
-        // Apply non-damaging spell effect
-        await applySpellEffect(defender, spell, {
-          isCritical,
-          duration: {} // TODO: parse from spell attributes
-        });
+
+    // Track last spell cast time/uuid for RAW upkeep restriction (no-duration spells).
+    if (aResult?.success) {
+      try {
+        await attacker.setFlag("uesrpg-3ev4", "lastSpellCastWorldTime", game.time.worldTime);
+        await attacker.setFlag("uesrpg-3ev4", "lastSpellCastSpellUuid", spell.uuid);
+      } catch (err) {
+        console.warn("UESRPG | Failed to set last spell cast flags", err);
       }
     }
-    
-    // Consume magicka (happens regardless of hit/miss per RAW p.128 line 191)
-    await consumeSpellMagicka(attacker, spell, data.attacker.spellOptions);
-    
+
+    // Direct spells: resolve immediately without any casting/defense tests.
+    if (Boolean(data.context?.directNoTest)) {
+      const isCritical = false;
+      const castOk = true;
+
+      data.outcome = {
+        winner: "attacker",
+        attackerDegree: 0,
+        defenderDegree: 0,
+        attackerWins: true,
+        text: `${attacker.name} casts ${spell.name} directly on ${defender.name}.`
+      };
+
+      const damageType = getSpellDamageType(spell);
+
+      // Healing: roll and apply immediately.
+      if (damageType === "healing") {
+        const healRoll = await rollSpellHealing(spell, { isCritical });
+        const healValue = Number(healRoll.total) || 0;
+        const rollHTML = await healRoll.render();
+        await applyMagicHealing(defender, healValue, spell, {
+          isCritical,
+          rollHTML,
+          source: spell.name
+        });
+
+        await _updateCard(message, data);
+        return;
+      }
+
+      const damageFormula = getSpellDamageFormula(spell);
+      const isDamaging = Boolean(damageFormula && damageFormula !== "0");
+
+      if (isDamaging) {
+        const spellOptions = data.attacker.spellOptions ?? {};
+
+        // Determine overload/overcharge effective state for reporting.
+        const costInfo = computeSpellMagickaCost(attacker, spell, {
+          ...spellOptions,
+          isCritical
+        });
+
+        const wpBonus = Math.floor(Number(attacker.system?.characteristics?.wp?.total ?? 0) / 10);
+        const isOverloaded = Boolean(costInfo?.isOverloaded);
+        const overloadBonus = isOverloaded ? wpBonus : 0;
+
+        const commonRollOptions = { isCritical, isOverloaded, wpBonus };
+
+        // Master of Magicka: if the caster chose to overcharge, roll twice and keep the highest.
+        const wantsOvercharge = Boolean(costInfo?.isOvercharged);
+        let damageRoll = null;
+        let overchargeTotals = null;
+        if (wantsOvercharge) {
+          const r1 = await rollSpellDamage(spell, commonRollOptions);
+          const r2 = await rollSpellDamage(spell, commonRollOptions);
+          const t1 = Number(r1.total) || 0;
+          const t2 = Number(r2.total) || 0;
+          damageRoll = (t2 > t1) ? r2 : r1;
+          overchargeTotals = [t1, t2];
+        } else {
+          damageRoll = await rollSpellDamage(spell, commonRollOptions);
+        }
+
+        const baseDamage = Number(damageRoll.total) || 0;
+        const elemBonusInfo = computeElementalDamageBonus(attacker, damageType);
+        const elementalBonus = Number(elemBonusInfo?.bonus ?? 0) || 0;
+        const damageValue = baseDamage + elementalBonus;
+        const rollHTML = await damageRoll.render();
+
+        await applyMagicDamage(defender, damageValue, damageType, spell, {
+          isCritical,
+          hitLocation: "Body",
+          rollHTML,
+          isOverloaded,
+          overloadBonus,
+          isOvercharged: wantsOvercharge,
+          overchargeTotals,
+          elementalBonus,
+          elementalBonusLabel: elemBonusInfo?.label || "",
+          source: spell.name
+        });
+
+        if (Boolean(spell.system?.hasUpkeep) || (spell.effects?.size ?? 0) > 0) {
+          await applySpellEffectsToTarget(attacker, defender, spell, { actualCost: Number(data.attacker?.mpSpent ?? data.context?.mpSpent ?? spell.system?.cost ?? 0), originalCastTime: Number(data.context?.originalCastWorldTime ?? game.time?.worldTime ?? 0) || 0 });
+        }
+
+        await _updateCard(message, data);
+        return;
+      }
+
+      // Non-damaging direct spell: apply effects immediately.
+      if ((spell.effects?.size ?? 0) > 0) {
+        await applySpellEffectsToTarget(attacker, defender, spell, { actualCost: Number(data.attacker?.mpSpent ?? data.context?.mpSpent ?? spell.system?.cost ?? 0), originalCastTime: Number(data.context?.originalCastWorldTime ?? game.time?.worldTime ?? 0) || 0 });
+      } else {
+        await applySpellEffect(defender, spell, {
+          isCritical,
+          duration: {}
+        });
+      }
+
+      await _updateCard(message, data);
+      return;
+    }
+
+    // Healing spells: not opposed. Only casting success matters.
+    if (Boolean(data.context?.healingDirect)) {
+      const isCritical = Boolean(aResult?.isCriticalSuccess);
+      const castOk = Boolean(aResult?.isSuccess);
+
+      data.outcome = {
+        winner: castOk ? "attacker" : "defender",
+        attackerDegree: aResult?.degree ?? 0,
+        defenderDegree: 0,
+        attackerWins: castOk,
+        text: castOk
+          ? `${attacker.name} successfully casts ${spell.name} on ${defender.name}.`
+          : `${attacker.name} fails to cast ${spell.name}.`
+      };
+
+      if (castOk) {
+        const healRoll = await rollSpellHealing(spell, { isCritical });
+        const healValue = Number(healRoll.total) || 0;
+        const rollHTML = await healRoll.render();
+        await applyMagicHealing(defender, healValue, spell, {
+          isCritical,
+          rollHTML,
+          source: spell.name
+        });
+      }
+
+      await _updateCard(message, data);
+      return;
+    }
+
+    const outcome = resolveOpposed(aResult, dResult);
+    const attackerWins = outcome.winner === "attacker";
+
+    data.outcome = {
+      ...outcome,
+      attackerWins,
+      text: attackerWins
+        ? `${spell.name} hits ${defender.name}.`
+        : `${defender.name} defends against ${spell.name}.`
+    };
+
+    if (attackerWins) {
+      const isCritical = Boolean(aResult?.isCriticalSuccess);
+      const hitLocation = getHitLocationFromRoll(Number(aResult?.rollTotal ?? 0));
+
+      const damageFormula = getSpellDamageFormula(spell);
+      const isDamaging = Boolean(damageFormula && damageFormula !== "0");
+
+      if (isDamaging) {
+        const spellOptions = data.attacker.spellOptions ?? {};
+        const damageType = getSpellDamageType(spell);
+
+        // Determine overload/overcharge effective state for reporting.
+        const costInfo = computeSpellMagickaCost(attacker, spell, {
+          ...spellOptions,
+          isCritical
+        });
+
+        const wpBonus = Math.floor(Number(attacker.system?.characteristics?.wp?.total ?? 0) / 10);
+        const isOverloaded = Boolean(costInfo?.isOverloaded);
+        const overloadBonus = isOverloaded ? wpBonus : 0;
+
+        // Roll damage (critical handling + overload bonus included in total).
+        const commonRollOptions = { isCritical, isOverloaded, wpBonus };
+
+        // Master of Magicka: if the caster chose to overcharge, roll twice and keep the highest.
+        const wantsOvercharge = Boolean(costInfo?.isOvercharged);
+        let damageRoll = null;
+        let overchargeTotals = null;
+        if (wantsOvercharge) {
+          const r1 = await rollSpellDamage(spell, commonRollOptions);
+          const r2 = await rollSpellDamage(spell, commonRollOptions);
+          const t1 = Number(r1.total) || 0;
+          const t2 = Number(r2.total) || 0;
+          damageRoll = (t2 > t1) ? r2 : r1;
+          overchargeTotals = [t1, t2];
+        } else {
+          damageRoll = await rollSpellDamage(spell, commonRollOptions);
+        }
+
+        const baseDamage = Number(damageRoll.total) || 0;
+        const elemBonusInfo = computeElementalDamageBonus(attacker, damageType);
+        const elementalBonus = Number(elemBonusInfo?.bonus ?? 0) || 0;
+        const damageValue = baseDamage + elementalBonus;
+        const rollHTML = await damageRoll.render();
+
+        await applyMagicDamage(defender, damageValue, damageType, spell, {
+          isCritical,
+          hitLocation,
+          rollHTML,
+          isOverloaded,
+          overloadBonus,
+          isOvercharged: wantsOvercharge,
+          overchargeTotals,
+          elementalBonus,
+          elementalBonusLabel: elemBonusInfo?.label || "",
+          source: spell.name
+        });
+
+        // If the spell defines Active Effects or has Upkeep, apply a spell effect marker on hit.
+        // This is required for:
+        //  - duration tracking (including Upkeep prompt windows)
+        //  - non-damaging secondary effects that accompany a damaging spell
+        // Damage resolution remains authoritative; the marker/effects are additive.
+        if (Boolean(spell.system?.hasUpkeep) || (spell.effects?.size ?? 0) > 0) {
+          await applySpellEffectsToTarget(attacker, defender, spell, { actualCost: Number(data.attacker?.mpSpent ?? data.context?.mpSpent ?? spell.system?.cost ?? 0), originalCastTime: Number(data.context?.originalCastWorldTime ?? game.time?.worldTime ?? 0) || 0 });
+        }
+      } else {
+        if ((spell.effects?.size ?? 0) > 0) {
+        await applySpellEffectsToTarget(attacker, defender, spell, { actualCost: Number(data.attacker?.mpSpent ?? data.context?.mpSpent ?? spell.system?.cost ?? 0), originalCastTime: Number(data.context?.originalCastWorldTime ?? game.time?.worldTime ?? 0) || 0 });
+      } else {
+        await applySpellEffect(defender, spell, {
+          isCritical,
+          duration: {}
+        });
+      }
+      }
+    }
+
     await _updateCard(message, data);
   }
 };
 
-/**
- * Hook to handle button clicks on magic opposed cards
- */
-Hooks.on("renderChatMessage", (message, html) => {
+// Chat hook: bind button clicks (v13).
+Hooks.on("renderChatMessageHTML", (message, html) => {
   const data = _getMessageState(message);
   if (!data) return;
-  
-  html.find(".uesrpg-magic-opposed-btn").on("click", async (event) => {
-    event.preventDefault();
-    const action = event.currentTarget.dataset.action;
-    if (!action) return;
-    
-    await MagicOpposedWorkflow.handleAction(message, action);
+
+  const root = html instanceof HTMLElement ? html : html?.[0];
+  if (!root) return;
+
+  root.querySelectorAll("[data-ues-magic-opposed-action]").forEach((el) => {
+    const action = el.dataset.uesMagicOpposedAction;
+
+    // Permission-aware button state
+    try {
+      const attackerUuid = data?.attacker?.actorUuid;
+      const defenderUuid = data?.defender?.actorUuid;
+      const actorUuid = (action === "attacker-roll") ? attackerUuid : (action?.startsWith?.("defender-") ? defenderUuid : null);
+      const actor = actorUuid ? _resolveActor(actorUuid) : null;
+      if (actor && !canUserRollActor(game.user, actor)) {
+        el.setAttribute("disabled", "disabled");
+        el.setAttribute("title", "You do not have permission to roll for this actor.");
+      }
+    } catch (_e) {
+      // no-op
+    }
+
+    el.addEventListener("click", async (ev) => {
+      ev.preventDefault();
+      const act = ev.currentTarget?.dataset?.uesMagicOpposedAction;
+      if (!act) return;
+      await MagicOpposedWorkflow.handleAction(message, act);
+    });
   });
 });

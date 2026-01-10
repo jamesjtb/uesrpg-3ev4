@@ -196,7 +196,44 @@ export function getDamageReduction(actor, damageType = DAMAGE_TYPES.PHYSICAL, hi
     base.armor = armor;
 
   } else {
-    // NON-PHYSICAL: resistance only
+    // NON-PHYSICAL:
+    //  - Resistance always applies.
+    //  - Armor usually does NOT mitigate magic/elemental damage.
+    //    However, when armor has explicit magic/elemental reduction lanes, it mitigates accordingly.
+    //    Schema (armor items):
+    //      - system.magic_ar (generic magic AR; intended for "magic" damage)
+    //      - system.special_ar_type + system.special_ar (typed mitigation; e.g. fire/frost/shock)
+    //    These reductions are location-based and use the same deterministic coverage resolver.
+
+    const equippedArmor = actor.items?.filter((i) => i.type === "armor" && i.system?.equipped === true) ?? [];
+    const dtLower = String(damageType ?? "").toLowerCase();
+
+    for (const item of equippedArmor) {
+      // Shields do not contribute AR; they are handled via Block in later steps.
+      if (item.system?.isShield) continue;
+
+      const covered = getCoveredLocations(item);
+      if (!covered.has(propertyName)) continue;
+
+      const sys = item.system ?? {};
+
+      // Typed mitigation (elemental, poison, etc.)
+      const specialType = String(sys.special_ar_type ?? "").toLowerCase();
+      const specialAR = Number(sys.special_arEffective ?? sys.special_ar ?? 0);
+      if (specialType && specialType === dtLower && Number.isFinite(specialAR) && specialAR) {
+        armor += Math.max(0, specialAR);
+      }
+
+      // Generic magic mitigation lane
+      if (dtLower === DAMAGE_TYPES.MAGIC) {
+        const magicAR = Number(sys.magic_arEffective ?? sys.magic_ar ?? 0);
+        if (Number.isFinite(magicAR) && magicAR) armor += Math.max(0, magicAR);
+      }
+    }
+
+    base.armor = armor;
+
+    // Resistance lane
     switch (damageType) {
       case DAMAGE_TYPES.FIRE:
         resistance = Number(actorData.resistance?.fireR ?? 0);
@@ -624,11 +661,32 @@ export async function applyDamage(actor, damage, damageType = DAMAGE_TYPES.PHYSI
   const hpDelta = Math.max(0, currentHP - newHP);
 
   const parts = [];
+  const rollHTML = String(options?.rollHTML ?? "");
+
+  const criticalNote = String(options?.criticalNote ?? "");
+  const extraBreakdownLines = Array.isArray(options?.extraBreakdownLines) ? options.extraBreakdownLines : [];
+
+  if (rollHTML) {
+    parts.push(`<div class="uesrpg-da-row"><span class="k">Roll</span><span class="v">${rollHTML}</span></div>`);
+  }
+
+  if (criticalNote) {
+    parts.push(`<div class="uesrpg-da-row"><span class="k">Critical</span><span class="v">${criticalNote}</span></div>`);
+  }
+
+  for (const line of extraBreakdownLines) {
+    const s = String(line ?? "");
+    if (!s) continue;
+    parts.push(`<div class="uesrpg-da-row"><span class="k"></span><span class="v muted">${s}</span></div>`);
+  }
+
   if (!ignoreReduction) {
     const rd = Number(damageCalc.rawDamage ?? 0);
     const db = Number(damageCalc.dosBonus ?? 0);
     const wb = Number(damageCalc.weaponBonus ?? 0);
-    const rawLine = [rd, db ? `+${db} DoS` : null, wb ? `+${wb} Wpn` : null].filter(Boolean).join(" ");
+    const showZeroDoS = Boolean(options?.showZeroDoS);
+    const dosPart = (db || showZeroDoS) ? `+${db} DoS` : null;
+    const rawLine = [rd, dosPart, wb ? `+${wb} Wpn` : null].filter(Boolean).join(" ");
     parts.push(`<div class="uesrpg-da-row"><span class="k">Raw</span><span class="v">${rawLine}</span></div>`);
     parts.push(`<div class="uesrpg-da-row"><span class="k">Reduction</span><span class="v">-${damageCalc.reductions.total} <span class="muted">(AR ${damageCalc.reductions.armor} / R ${damageCalc.reductions.resistance} / T ${damageCalc.reductions.toughness}${damageCalc.reductions.penetrated ? ` / Pen ${damageCalc.reductions.penetrated}` : ""})</span></span></div>`);
   }
@@ -993,13 +1051,20 @@ export async function applyHealing(actor, healing, options = {}) {
     await requestUpdateDocument(updateTarget, { "system.hp.value": newHP });
   }
 
+  const rollHTML = String(options?.rollHTML ?? "");
+
+  // Healing should not reveal current/max HP by default to avoid metagame information.
+  // Set { revealHP: true } explicitly if a specific workflow needs it.
+  const revealHP = options?.revealHP === true;
+
   const messageContent = `
     <div class="uesrpg-healing-applied">
       <h3>${updateTarget.name} receives healing!</h3>
+      ${rollHTML ? `<div class="dice-roll" style="margin:0.35rem 0;">${rollHTML}</div>` : ""}
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.5rem;margin:0.5rem 0;">
         <div><strong>Source:</strong></div><div>${source}</div>
         <div><strong>Healing:</strong></div><div style="color:#388e3c;font-weight:bold;">+${effectiveHealed}</div>
-        <div><strong>HP:</strong></div><div>${newHP} / ${maxHP}</div>
+        ${revealHP ? `<div><strong>HP:</strong></div><div>${newHP} / ${maxHP}</div>` : ""}
       </div>
     </div>
   `;
