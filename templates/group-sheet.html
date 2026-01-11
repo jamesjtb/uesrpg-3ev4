@@ -67,6 +67,22 @@
                         </div>
                       </div>
 
+                      <div class="member-qty-controls" style="display: flex; align-items: center; gap: 5px; flex-shrink: 0;">
+                        {{#if ../editable}}
+                          <button type="button" class="member-qty-decrement" title="Decrease Quantity" style="padding: 5px 8px;">
+                            <i class="fas fa-minus"></i>
+                          </button>
+                        {{/if}}
+                        <input type="number" class="member-qty-input" value="{{member.qty}}" min="1"
+                               style="width: 50px; text-align: center; {{#unless ../editable}}pointer-events: none; background: rgba(0,0,0,0.05);{{/unless}}"
+                               {{#unless ../editable}}readonly{{/unless}}>
+                        {{#if ../editable}}
+                          <button type="button" class="member-qty-increment" title="Increase Quantity" style="padding: 5px 8px;">
+                            <i class="fas fa-plus"></i>
+                          </button>
+                        {{/if}}
+                      </div>
+
                       {{#if ../editable}}
                         <div class="member-controls" style="display: flex; gap: 5px; flex-shrink: 0;">
                           <button type="button" class="member-move-up" title="Move Up" style="padding: 5px 10px;">

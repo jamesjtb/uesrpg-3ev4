@@ -66,7 +66,8 @@ export class GroupSheet extends ActorSheet {
           missing: true,
           canView: false,
           name: member.name || "Unknown Actor",
-          img: member.img || "icons/svg/mystery-man.svg"
+          img: member.img || "icons/svg/mystery-man.svg",
+          qty: member.qty || 1
         });
         continue;
       }
@@ -80,6 +81,7 @@ export class GroupSheet extends ActorSheet {
         img: actor.img,
         type: actor.type,
         sortOrder: member.sortOrder || 0,
+        qty: member.qty || 1,
         missing: false,
         canView: canView,
         actor: canView ? actor : null
@@ -97,6 +99,9 @@ export class GroupSheet extends ActorSheet {
     html.find(".member-delete").click(this._onRemoveMember.bind(this));
     html.find(".member-move-up").click(this._onMoveMember.bind(this, -1));
     html.find(".member-move-down").click(this._onMoveMember.bind(this, 1));
+    html.find(".member-qty-increment").click(this._onChangeQty.bind(this, 1));
+    html.find(".member-qty-decrement").click(this._onChangeQty.bind(this, -1));
+    html.find(".member-qty-input").change(this._onQtyInputChange.bind(this));
 
     if (!this.options.editable) return;
   }
@@ -150,6 +155,41 @@ export class GroupSheet extends ActorSheet {
     await this.actor.update({ "system.members": members });
   }
 
+  async _onChangeQty(delta, event) {
+    event.preventDefault();
+    const memberElement = event.currentTarget.closest(".member-item");
+    const uuid = memberElement.dataset.uuid;
+
+    const members = foundry.utils.duplicate(this.actor.system.members);
+    const member = members.find(m => m.id === uuid);
+
+    if (!member) return;
+
+    const newQty = Math.max(1, (member.qty || 1) + delta);
+
+    if (newQty === member.qty) return;
+
+    member.qty = newQty;
+    await this.actor.update({ "system.members": members });
+  }
+
+  async _onQtyInputChange(event) {
+    event.preventDefault();
+    const memberElement = event.currentTarget.closest(".member-item");
+    const uuid = memberElement.dataset.uuid;
+    const newQty = Math.max(1, parseInt(event.currentTarget.value) || 1);
+
+    const members = foundry.utils.duplicate(this.actor.system.members);
+    const member = members.find(m => m.id === uuid);
+
+    if (!member) return;
+
+    if (newQty === member.qty) return;
+
+    member.qty = newQty;
+    await this.actor.update({ "system.members": members });
+  }
+
   async _onDrop(event) {
     event.preventDefault();
 
@@ -184,19 +224,25 @@ export class GroupSheet extends ActorSheet {
     }
 
     // Check if already a member
-    const members = this.actor.system.members || [];
-    if (members.some(m => m.id === actor.uuid)) {
-      ui.notifications.info(`${actor.name} is already a member of this group.`);
-      return false;
+    const members = foundry.utils.duplicate(this.actor.system.members || []);
+    const existingIndex = members.findIndex(m => m.id === actor.uuid);
+
+    if (existingIndex !== -1) {
+      // Actor already exists, increment qty
+      members[existingIndex].qty = (members[existingIndex].qty || 1) + 1;
+      await this.actor.update({ "system.members": members });
+      ui.notifications.info(`Increased ${actor.name} quantity to ${members[existingIndex].qty}.`);
+      return true;
     }
 
-    // Add the member
+    // Add the member with qty of 1
     const newMember = {
       id: actor.uuid,
       name: actor.name,
       img: actor.img,
       type: actor.type,
-      sortOrder: members.length
+      sortOrder: members.length,
+      qty: 1
     };
 
     const updatedMembers = [...members, newMember];
