@@ -65,7 +65,8 @@ export class GroupSheet extends ActorSheet {
     
     // Display values with pace multiplier applied
     data.displayAverageSpeed = Math.round(baseAverageSpeed * speedMultiplier);
-    // UESRPG uses 1 m/round = 0.6 km/h conversion
+    // UESRPG conversion: 1 round = 6 seconds, so 600 rounds/hour
+    // Therefore: (m/round × 600 rounds/hour) ÷ 1000 = km/h, simplified to m/round × 0.6
     data.displayAverageSpeedKmh = (data.displayAverageSpeed * 0.6).toFixed(1);
     
     // Keep legacy fields for backward compatibility
