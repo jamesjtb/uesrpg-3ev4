@@ -63,6 +63,13 @@ export class GroupSheet extends ActorSheet {
   }
 
   /**
+   * Get GM user IDs for whispered chat messages
+   */
+  _getGMUserIds() {
+    return game.users.filter(u => u.isGM).map(u => u.id);
+  }
+
+  /**
    * Resolve member UUIDs to actual actor data
    */
   async _resolveMembers(members) {
@@ -83,7 +90,7 @@ export class GroupSheet extends ActorSheet {
         continue;
       }
 
-      const canView = actor.testUserPermission(game.user, "OBSERVER");
+      const canView = actor.testUserPermission(game.user, CONST.DOCUMENT_OWNERSHIP_LEVELS.OBSERVER);
 
       resolved.push({
         id: member.id,
@@ -207,7 +214,7 @@ export class GroupSheet extends ActorSheet {
       user: game.user.id,
       speaker: { alias: this.actor.name },
       content: content,
-      whisper: game.users.filter(u => u.isGM).map(u => u.id)
+      whisper: this._getGMUserIds()
     });
 
     ui.notifications.info("Short rest completed.");
@@ -274,7 +281,7 @@ export class GroupSheet extends ActorSheet {
       user: game.user.id,
       speaker: { alias: this.actor.name },
       content: content,
-      whisper: game.users.filter(u => u.isGM).map(u => u.id)
+      whisper: this._getGMUserIds()
     });
 
     ui.notifications.info("Long rest completed.");
