@@ -350,6 +350,8 @@ export class GroupSheet extends ActorSheet {
    * Returns true if placed, false if cancelled.
    */
   async _placeTokenWithPreview(tokenData, actorName) {
+    const GHOST_ALPHA = 0.6; // Semi-transparent preview
+    
     return new Promise((resolve) => {
       let settled = false;
       
@@ -362,7 +364,7 @@ export class GroupSheet extends ActorSheet {
       
       // Create preview token
       const preview = new CONFIG.Token.objectClass(tokenData);
-      preview.alpha = 0.6; // Semi-transparent ghost
+      preview.alpha = GHOST_ALPHA;
       
       canvas.tokens.preview.addChild(preview);
       
@@ -461,6 +463,10 @@ export class GroupSheet extends ActorSheet {
     
     // Handle Item drops (add to group inventory)
     if (data.type === "Item") {
+      const ALLOWED_ITEM_TYPES = ["weapon", "armor", "ammunition", "item"];
+      const STACKABLE_TYPES = ["ammunition"];
+      const DEFAULT_QUANTITY = 1;
+      
       if (!this.actor.isOwner) {
         ui.notifications.warn("You do not have permission to modify this group's inventory.");
         return;
@@ -473,8 +479,7 @@ export class GroupSheet extends ActorSheet {
       }
       
       // Accept weapon, armor, ammunition, and generic items
-      const allowedTypes = ["weapon", "armor", "ammunition", "item"];
-      if (!allowedTypes.includes(item.type)) {
+      if (!ALLOWED_ITEM_TYPES.includes(item.type)) {
         ui.notifications.warn(`Cannot add ${item.type} items to group inventory.`);
         return;
       }
@@ -483,8 +488,8 @@ export class GroupSheet extends ActorSheet {
       const itemData = item.toObject();
       
       // Reset quantity to 1 for single-drop unless it's stackable
-      if (itemData.system?.quantity !== undefined && itemData.type !== "ammunition") {
-        itemData.system.quantity = 1;
+      if (itemData.system?.quantity !== undefined && !STACKABLE_TYPES.includes(itemData.type)) {
+        itemData.system.quantity = DEFAULT_QUANTITY;
       }
       
       await this.actor.createEmbeddedDocuments("Item", [itemData]);
