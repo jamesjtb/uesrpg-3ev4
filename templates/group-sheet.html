@@ -74,7 +74,7 @@
             <div class="member-stats" style="display: flex; gap: 10px; font-size: 0.8em; flex-wrap: wrap; grid-row: 2; grid-column: 2;">
               <span title="Health Points"><i class="fas fa-heart" style="color: #c03030;"></i> {{member.hp.value}}/{{member.hp.max}}</span>
               <span title="Stamina Points"><i class="fas fa-bolt" style="color: #30a0c0;"></i> {{member.stamina.value}}/{{member.stamina.max}}</span>
-              <span title="Magicka Points"><i class="fas fa-hat-wizard" style="color: #9030c0;"></i> {{member.magicka.value}}/{{member.magicka.max}}</span>
+              {{#if member.magicka}}<span title="Magicka Points"><i class="fas fa-hat-wizard" style="color: #9030c0;"></i> {{member.magicka.value}}/{{member.magicka.max}}</span>{{/if}}
               <span title="Speed"><i class="fas fa-running" style="color: #60c030;"></i> {{member.speed}}</span>
               {{#if member.fatigue}}<span style="color: #d9534f;" title="Fatigue Level"><i class="fas fa-exclamation-triangle"></i> Fatigue {{member.fatigue}}</span>{{/if}}
             </div>

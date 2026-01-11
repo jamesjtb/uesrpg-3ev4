@@ -135,7 +135,7 @@ export class GroupSheet extends ActorSheet {
         // UESRPG-specific stats
         hp: canView ? { value: actor.system.hp.value, max: actor.system.hp.max } : null,
         stamina: canView ? { value: actor.system.stamina.value, max: actor.system.stamina.max } : null,
-        magicka: canView ? { value: actor.system.magicka.value, max: actor.system.magicka.max } : null,
+        magicka: canView && actor.system.magicka ? { value: actor.system.magicka.value, max: actor.system.magicka.max } : null,
         speed: canView ? actor.system.speed.value : null,
         fatigue: canView ? actor.system.fatigue.level : 0
       });
