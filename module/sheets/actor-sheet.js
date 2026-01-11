@@ -316,14 +316,17 @@ async activateListeners(html) {
     
     if (!table || !arrow || !groupKey) return;
     
-    const isCollapsed = table.style.display === 'none';
-    table.style.display = isCollapsed ? '' : 'none';
-    arrow.classList.toggle('fa-chevron-down', isCollapsed);
-    arrow.classList.toggle('fa-chevron-right', !isCollapsed);
+    // Check current state and toggle
+    const wasCollapsed = table.style.display === 'none';
+    const nowCollapsed = !wasCollapsed;
     
-    // Save state
+    table.style.display = nowCollapsed ? 'none' : '';
+    arrow.classList.toggle('fa-chevron-down', !nowCollapsed);
+    arrow.classList.toggle('fa-chevron-right', nowCollapsed);
+    
+    // Save the new state
     const collapsedGroups = this.actor.getFlag('uesrpg-3ev4', 'collapsedGroups') || {};
-    collapsedGroups[groupKey] = !isCollapsed;
+    collapsedGroups[groupKey] = nowCollapsed;
     await this.actor.setFlag('uesrpg-3ev4', 'collapsedGroups', collapsedGroups);
   });
 
