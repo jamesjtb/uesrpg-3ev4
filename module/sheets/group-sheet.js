@@ -151,6 +151,11 @@ export class GroupSheet extends ActorSheet {
     // Bind inventory listeners (if editable)
     if (this.options.editable) {
       bindCommonEditableInventoryListeners(this, html);
+      
+      // Additional inventory handlers
+      html.find(".itemEquip").click(this._onItemEquip.bind(this));
+      html.find(".plusQty").click(this._onPlusQty.bind(this));
+      html.find(".minusQty").contextmenu(this._onMinusQty.bind(this));
     }
 
     // Member management
@@ -178,6 +183,161 @@ export class GroupSheet extends ActorSheet {
 
     if (!this.options.editable) return;
   }
+
+  /**
+   * Handle creating a new Owned Item for the actor using initial data defined in the HTML dataset
+   * @param {Event} event   The originating click event
+   * @private
+   */
+  async _onItemCreate(event) {
+    event.preventDefault();
+    const element = event.currentTarget;
+    const itemType = element.id;
+
+    // Handle "createSelect" which should open a dialog for item type selection
+    if (itemType === "createSelect") {
+      const d = new Dialog({
+        title: "Create Item",
+        content: `<div style="padding: 10px 0;">
+                    <h2>Select an Item Type</h2>
+                    <label>Create an item in group inventory</label>
+                  </div>`,
+        buttons: {
+          one: {
+            label: "Item",
+            callback: async () => {
+              const itemData = [{ name: "New Item", type: "item" }];
+              const newItem = await this.actor.createEmbeddedDocuments("Item", itemData);
+              await newItem[0].sheet.render(true);
+            },
+          },
+          two: {
+            label: "Ammunition",
+            callback: async () => {
+              const itemData = [{ name: "New Ammunition", type: "ammunition" }];
+              const newItem = await this.actor.createEmbeddedDocuments("Item", itemData);
+              await newItem[0].sheet.render(true);
+            },
+          },
+          three: {
+            label: "Armor",
+            callback: async () => {
+              const itemData = [{ name: "New Armor", type: "armor" }];
+              const newItem = await this.actor.createEmbeddedDocuments("Item", itemData);
+              await newItem[0].sheet.render(true);
+            },
+          },
+          four: {
+            label: "Weapon",
+            callback: async () => {
+              const itemData = [{ name: "New Weapon", type: "weapon" }];
+              const newItem = await this.actor.createEmbeddedDocuments("Item", itemData);
+              await newItem[0].sheet.render(true);
+            },
+          },
+          five: {
+            label: "Cancel",
+            callback: () => {},
+          },
+        },
+        default: "one",
+        close: () => {},
+      });
+
+      d.render(true);
+    } else {
+      // Create item of the specified type directly
+      const itemData = [{ name: `New ${itemType}`, type: itemType }];
+      const newItem = await this.actor.createEmbeddedDocuments("Item", itemData);
+      await newItem[0].sheet.render(true);
+    }
+  }
+
+  /**
+   * Duplicate an item
+   * @param {Item} item The item to duplicate
+   * @private
+   */
+  async _duplicateItem(item) {
+    const d = new Dialog({
+      title: "Duplicate Item",
+      content: `<div style="padding: 10px; display: flex; flex-direction: row; align-items: center; justify-content: center;">
+                  <div>Duplicate Item?</div>
+                </div>`,
+      buttons: {
+        one: {
+          label: "Cancel",
+          callback: () => {},
+        },
+        two: {
+          label: "Duplicate",
+          callback: async () => {
+            const newItem = await this.actor.createEmbeddedDocuments("Item", [item.toObject()]);
+            await newItem[0].sheet.render(true);
+          },
+        },
+      },
+      default: "two",
+      close: () => {},
+    });
+
+    d.render(true);
+  }
+
+  /**
+   * Handle toggling item equipped state
+   * @param {Event} event The originating click event
+   * @private
+   */
+  async _onItemEquip(event) {
+    event.preventDefault();
+    const li = event.currentTarget.closest(".item");
+    const itemId = li?.dataset?.itemId;
+    if (!itemId) return;
+
+    const item = this.actor.items.get(itemId);
+    if (!item) return;
+
+    const current = Boolean(item?.system?.equipped);
+    await item.update({ "system.equipped": !current });
+  }
+
+  /**
+   * Handle incrementing item quantity
+   * @param {Event} event The originating click event
+   * @private
+   */
+  async _onPlusQty(event) {
+    event.preventDefault();
+    const li = event.currentTarget.closest(".item");
+    const item = this.actor.items.get(li.dataset.itemId);
+    if (!item) return;
+
+    const currentQty = Number(item.system.quantity ?? 0);
+    await item.update({ "system.quantity": currentQty + 1 });
+  }
+
+  /**
+   * Handle decrementing item quantity
+   * @param {Event} event The originating contextmenu event
+   * @private
+   */
+  async _onMinusQty(event) {
+    event.preventDefault();
+    const li = event.currentTarget.closest(".item");
+    const item = this.actor.items.get(li.dataset.itemId);
+    if (!item) return;
+
+    const currentQty = Number(item.system.quantity ?? 0);
+    const newQty = Math.max(currentQty - 1, 0);
+
+    if (newQty === 0 && currentQty > 0) {
+      ui.notifications.info(`You have used your last ${item.name}!`);
+    }
+
+    await item.update({ "system.quantity": newQty });
+  }
+
   async _onViewMember(event) {
     event.preventDefault();
     const uuid = event.currentTarget.dataset?.uuid || event.currentTarget.closest(".member-item")?.dataset?.uuid;
