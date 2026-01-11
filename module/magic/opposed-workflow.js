@@ -431,7 +431,14 @@ export const MagicOpposedWorkflow = {
         updatedAt: Date.now(),
         updatedBy: game.user.id,
         phase: "pending",
-        healingDirect
+        healingDirect,
+        bankChoicesEnabled: (() => {
+          try {
+            return Boolean(game.settings.get("uesrpg-3ev4", "opposedBankChoices"));
+          } catch (_e) {
+            return false;
+          }
+        })()
       },
       status: "pending",
       mode: "magic",
@@ -1161,6 +1168,28 @@ export const MagicOpposedWorkflow = {
     }
 
     await _updateCard(message, data);
+  },
+
+  /**
+   * Banked-choice auto-roll helper for GM-online scenarios (magic opposed).
+   * Placeholder for future implementation of banked choices for spell casting.
+   * Currently, magic opposed spells do not use banked choices infrastructure.
+   */
+  async maybeAutoRollBanked(message) {
+    // TODO: Implement banked choices for magic opposed workflow if needed
+    // For now, magic opposed spells resolve immediately without banking
+    return;
+  },
+
+  /**
+   * Banked-choice auto-roll helper for no-GM scenarios (magic opposed).
+   * Placeholder for future implementation of banked choices for spell casting.
+   * Currently, magic opposed spells do not use banked choices infrastructure.
+   */
+  async maybeAutoRollBankedNoGM(message) {
+    // TODO: Implement banked choices for magic opposed workflow if needed
+    // For now, magic opposed spells resolve immediately without banking
+    return;
   }
 };
 
