@@ -24,6 +24,7 @@ import { getDamageTypeFromWeapon, getHitLocationFromRoll, resolveHitLocationForT
 import { getBlockValue, normalizeHitLocation } from "./mitigation.js";
 import { DAMAGE_TYPES } from "./damage-automation.js";
 import { ActionEconomy } from "./action-economy.js";
+import { AttackTracker } from "./attack-tracker.js";
 import { safeUpdateChatMessage } from "../helpers/chat-message-socket.js";
 import { requestCreateActiveEffect } from "../helpers/active-effect-proxy.js";
 import { buildSpecialActionsForActor, isSpecialActionUsableNow } from "./combat-style-utils.js";
@@ -3804,6 +3805,10 @@ if (stage === "attacker-roll") {
           ui.notifications.warn("Insufficient Action Points to perform this attack.");
         }
       }
+      
+      // Increment attack counter after AP is spent successfully
+      await AttackTracker.incrementAttacks(attacker);
+      
       if (isRollCommitted) {
         // Banked-choice auto-roll: do not write roll results directly into the parent card.
         // The roll chat message will be banked into the parent card by the createChatMessage hook.
