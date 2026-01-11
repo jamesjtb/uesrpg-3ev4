@@ -2239,6 +2239,11 @@
   flex-direction: column;
 }
 
+/* Override Foundry's flex rule on .notes elements to fix spacing */
+.worldbuilding.sheet.item .uesrpg-combatstyle-panel .notes {
+  flex: none;
+}
+
 .worldbuilding.sheet.item .uesrpg-combatstyle-equipment-grid {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
