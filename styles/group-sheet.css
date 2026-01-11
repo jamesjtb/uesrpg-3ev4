@@ -1,4 +1,54 @@
 /* Group Sheet Compact UI */
+
+/* Compact horizontal header for group sheets */
+.uesrpg.sheet.actor.group .character-profile-container.group-header-horizontal {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  gap: 15px;
+  padding: 10px;
+  border-bottom: 2px solid #999;
+  background: rgba(0, 0, 0, 0.05);
+  max-height: 150px;
+  overflow: visible;
+}
+
+.uesrpg.sheet.actor.group .profile-img-container-compact {
+  flex-shrink: 0;
+  width: 100px;
+  height: 100px;
+  overflow: hidden;
+}
+
+.uesrpg.sheet.actor.group .profile-img-compact {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border: 2px solid #666;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.3);
+}
+
+.uesrpg.sheet.actor.group .header-right-section {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  min-width: 0; /* Allow text truncation */
+}
+
+/* Ensure tabs don't wrap awkwardly */
+.uesrpg.sheet.actor.group .sheet-tabs {
+  flex-wrap: nowrap;
+  white-space: nowrap;
+}
+
+/* Ensure sheet body scrolls independently */
+.uesrpg.sheet.actor.group .sheet-body {
+  overflow-y: auto;
+  max-height: calc(100% - 150px); /* Account for header */
+  padding: 15px;
+}
+
+/* Member items */
 .uesrpg.sheet.actor.group .member-item {
   background: rgba(0, 0, 0, 0.05);
   transition: background 0.2s ease;
@@ -22,10 +72,13 @@
   transition: background 0.2s ease;
 }
 
+/* Member delete button hover */
 .uesrpg.sheet.actor.group .member-delete:hover {
   background: rgba(200, 0, 0, 0.3);
+  border-color: rgba(200, 0, 0, 0.6);
 }
 
+/* Control buttons */
 .uesrpg.sheet.actor.group .controls button {
   padding: 8px 16px;
   border: 1px solid #999;
@@ -38,8 +91,16 @@
 .uesrpg.sheet.actor.group .controls button:hover {
   background: rgba(0, 100, 200, 0.2);
   border-color: #0064c8;
+  transform: translateY(-1px);
+  box-shadow: 0 2px 6px rgba(0,0,0,0.2);
 }
 
+.uesrpg.sheet.actor.group .controls button:active {
+  transform: translateY(0);
+  box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+}
+
+/* Travel stats */
 .uesrpg.sheet.actor.group .stat-card {
   padding: 15px;
   border: 1px solid #ccc;
@@ -59,6 +120,7 @@
   background: rgba(0, 100, 200, 0.3);
 }
 
+/* Inventory section */
 .uesrpg.sheet.actor.group .inventory-section {
   margin-bottom: 20px;
 }
@@ -83,12 +145,29 @@
   border-bottom: 1px solid #ddd;
 }
 
+/* Item list hover states */
 .uesrpg.sheet.actor.group .item-list .item:hover {
-  background: rgba(0, 100, 200, 0.05);
+  background: rgba(0, 100, 200, 0.08);
+  cursor: default;
+}
+
+.uesrpg.sheet.actor.group .item-image {
+  border: 1px solid #666;
+  transition: transform 0.2s ease;
+}
+
+.uesrpg.sheet.actor.group .item-image:hover {
+  transform: scale(1.15);
+  box-shadow: 0 2px 6px rgba(0,0,0,0.4);
 }
 
 .uesrpg.sheet.actor.group .item-name {
   flex-grow: 1;
+}
+
+.uesrpg.sheet.actor.group .item-name:hover {
+  color: #0064c8;
+  text-decoration: underline;
 }
 
 .uesrpg.sheet.actor.group .item-delete {
@@ -98,6 +177,36 @@
 
 .uesrpg.sheet.actor.group .item-delete:hover {
   color: #c9302c;
+}
+
+/* Drop zone hover state */
+.uesrpg.sheet.actor.group .member-drop-zone:hover,
+.uesrpg.sheet.actor.group .item-drop-zone:hover {
+  background: rgba(0, 100, 200, 0.05);
+  border-color: #0064c8;
+}
+
+/* Ensure scrollbars are visible but styled */
+.uesrpg.sheet.actor.group .member-list-scrollable::-webkit-scrollbar,
+.uesrpg.sheet.actor.group .inventory-sections::-webkit-scrollbar {
+  width: 8px;
+}
+
+.uesrpg.sheet.actor.group .member-list-scrollable::-webkit-scrollbar-track,
+.uesrpg.sheet.actor.group .inventory-sections::-webkit-scrollbar-track {
+  background: rgba(0,0,0,0.1);
+  border-radius: 4px;
+}
+
+.uesrpg.sheet.actor.group .member-list-scrollable::-webkit-scrollbar-thumb,
+.uesrpg.sheet.actor.group .inventory-sections::-webkit-scrollbar-thumb {
+  background: rgba(0,0,0,0.3);
+  border-radius: 4px;
+}
+
+.uesrpg.sheet.actor.group .member-list-scrollable::-webkit-scrollbar-thumb:hover,
+.uesrpg.sheet.actor.group .inventory-sections::-webkit-scrollbar-thumb:hover {
+  background: rgba(0,0,0,0.5);
 }
 
 /* Limited Sheet */

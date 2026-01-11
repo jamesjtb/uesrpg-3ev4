@@ -289,86 +289,207 @@ export class GroupSheet extends ActorSheet {
 
   async _onDeployGroup(event) {
     event.preventDefault();
-
+    
     if (!game.user.isGM) {
       ui.notifications.warn("Only GMs can deploy groups.");
       return;
     }
-
-    if (!canvas.ready) {
-      ui.notifications.warn("Canvas is not ready.");
+    
+    if (!canvas.ready || !canvas.scene) {
+      ui.notifications.warn("Canvas is not ready or no scene is active.");
       return;
     }
-
+    
     const members = await this._resolveMembers(this.actor.system.members);
     const deployable = members.filter(m => m.actor && !m.missing);
-
+    
     if (!deployable.length) {
       ui.notifications.warn("No members to deploy.");
       return;
     }
-
-    // Center point of scene
-    const centerX = canvas.scene.dimensions.width / 2;
-    const centerY = canvas.scene.dimensions.height / 2;
-    const gridSize = canvas.scene.grid.size;
-    const spacing = gridSize * 1.5;
-
-    // Grid layout: calculate positions
-    const cols = Math.ceil(Math.sqrt(deployable.length));
-    const rows = Math.ceil(deployable.length / cols);
-
-    const startX = centerX - ((cols - 1) * spacing) / 2;
-    const startY = centerY - ((rows - 1) * spacing) / 2;
-
-    const tokenData = [];
-
-    for (let i = 0; i < deployable.length; i++) {
-      const member = deployable[i];
-      const col = i % cols;
-      const row = Math.floor(i / cols);
-
-      tokenData.push({
-        actorId: member.actor.id,
-        x: startX + (col * spacing),
-        y: startY + (row * spacing),
-        hidden: false
-      });
+    
+    ui.notifications.info(`Click on the canvas to place each group member. Right-click to cancel.`);
+    
+    // Deploy members sequentially with ghost placement
+    let deployedCount = 0;
+    
+    for (const member of deployable) {
+      const actor = member.actor;
+      
+      try {
+        // Create token document data
+        const tokenData = await actor.getTokenDocument();
+        
+        // Show preview and wait for user placement
+        const placed = await this._placeTokenWithPreview(tokenData, actor.name);
+        
+        if (placed) {
+          deployedCount++;
+        } else {
+          // User cancelled - stop deploying
+          break;
+        }
+      } catch (err) {
+        console.error(`UESRPG | Failed to deploy ${actor.name}`, err);
+        ui.notifications.error(`Failed to deploy ${actor.name}. See console.`);
+      }
     }
+    
+    if (deployedCount > 0) {
+      ui.notifications.info(`Deployed ${deployedCount} of ${deployable.length} group members.`);
+    } else {
+      ui.notifications.warn("No members were deployed.");
+    }
+  }
 
-    await canvas.scene.createEmbeddedDocuments("Token", tokenData);
-
-    ui.notifications.info(`Deployed ${deployable.length} group members.`);
+  /**
+   * Place a single token with interactive ghost preview.
+   * Returns true if placed, false if cancelled.
+   */
+  async _placeTokenWithPreview(tokenData, actorName) {
+    return new Promise((resolve) => {
+      let settled = false;
+      
+      const settle = (result) => {
+        if (settled) return;
+        settled = true;
+        cleanup();
+        resolve(result);
+      };
+      
+      // Create preview token
+      const preview = new CONFIG.Token.objectClass(tokenData);
+      preview.alpha = 0.6; // Semi-transparent ghost
+      
+      canvas.tokens.preview.addChild(preview);
+      
+      // Track mouse movement
+      const onMouseMove = (event) => {
+        if (!event.interactionData) return;
+        
+        const position = event.interactionData.getLocalPosition(canvas.tokens);
+        const snapped = canvas.grid.getSnappedPosition(position.x, position.y, 1);
+        
+        preview.document.x = snapped.x;
+        preview.document.y = snapped.y;
+        preview.refresh();
+      };
+      
+      // Left-click to place
+      const onLeftClick = async (event) => {
+        if (!event.interactionData) return;
+        
+        const position = event.interactionData.getLocalPosition(canvas.tokens);
+        const snapped = canvas.grid.getSnappedPosition(position.x, position.y, 1);
+        
+        try {
+          // Create real token at this position
+          await canvas.scene.createEmbeddedDocuments("Token", [{
+            ...tokenData.toObject(),
+            x: snapped.x,
+            y: snapped.y,
+            hidden: false
+          }]);
+          
+          settle(true);
+        } catch (err) {
+          console.error("UESRPG | Token placement failed", err);
+          ui.notifications.error(`Failed to place ${actorName}.`);
+          settle(false);
+        }
+      };
+      
+      // Right-click to cancel
+      const onRightClick = () => {
+        ui.notifications.info(`Cancelled placement of ${actorName}.`);
+        settle(false);
+      };
+      
+      // Cleanup function
+      const cleanup = () => {
+        canvas.tokens.preview.removeChild(preview);
+        canvas.stage.off("mousemove", onMouseMove);
+        canvas.stage.off("click", onLeftClick);
+        canvas.stage.off("rightclick", onRightClick);
+      };
+      
+      // Register event listeners
+      canvas.stage.on("mousemove", onMouseMove);
+      canvas.stage.on("click", onLeftClick);
+      canvas.stage.on("rightclick", onRightClick);
+      
+      // Show instruction
+      ui.notifications.info(`Place ${actorName} on the canvas. Right-click to cancel.`);
+    });
   }
 
   async _onDrop(event) {
     const data = TextEditor.getDragEventData(event);
-
+    
+    // Handle Actor drops (add to members)
     if (data.type === "Actor") {
       const actor = await fromUuid(data.uuid);
-      if (!actor) return;
-
+      if (!actor) {
+        ui.notifications.warn("Could not find actor.");
+        return;
+      }
+      
       if (actor.type === "Group") {
         ui.notifications.warn("Cannot add a group to a group.");
         return;
       }
-
+      
       const members = this.actor.system.members || [];
       if (members.some(m => m.id === actor.uuid)) {
         ui.notifications.warn("This actor is already a member.");
         return;
       }
-
+      
       members.push({
         id: actor.uuid,
         uuid: actor.uuid,
         sortOrder: members.length
       });
-
+      
       await this.actor.update({ "system.members": members });
       ui.notifications.info(`${actor.name} added to group.`);
-    } else {
-      return super._onDrop(event);
+      return;
     }
+    
+    // Handle Item drops (add to group inventory)
+    if (data.type === "Item") {
+      if (!this.actor.isOwner) {
+        ui.notifications.warn("You do not have permission to modify this group's inventory.");
+        return;
+      }
+      
+      const item = await fromUuid(data.uuid);
+      if (!item) {
+        ui.notifications.warn("Could not find item.");
+        return;
+      }
+      
+      // Accept weapon, armor, ammunition, and generic items
+      const allowedTypes = ["weapon", "armor", "ammunition", "item"];
+      if (!allowedTypes.includes(item.type)) {
+        ui.notifications.warn(`Cannot add ${item.type} items to group inventory.`);
+        return;
+      }
+      
+      // Create a copy of the item in the group's inventory
+      const itemData = item.toObject();
+      
+      // Reset quantity to 1 for single-drop unless it's stackable
+      if (itemData.system?.quantity !== undefined && itemData.type !== "ammunition") {
+        itemData.system.quantity = 1;
+      }
+      
+      await this.actor.createEmbeddedDocuments("Item", [itemData]);
+      ui.notifications.info(`${item.name} added to group inventory.`);
+      return;
+    }
+    
+    // Fall back to default drop handler
+    return super._onDrop(event);
   }
 }
