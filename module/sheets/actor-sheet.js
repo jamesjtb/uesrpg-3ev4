@@ -3727,26 +3727,7 @@ await item.update({ "system.quantity": newQty });
     // Method retained for backward compatibility but is now a no-op
     const filterElement = this.form?.querySelector("#spellFilter");
     if (!filterElement) return;
-    
-    let filterBy = sessionStorage.getItem("savedSpellFilter");
-    if (filterBy !== null && filterBy !== undefined) {
-      filterElement.value = filterBy;
-      for (let spellItem of [
-        ...this.form.querySelectorAll(".spellList tbody .item"),
-      ]) {
-        switch (filterBy) {
-          case "All":
-            spellItem.classList.add("active");
-            break;
-
-          case `${filterBy}`:
-            filterBy == spellItem.dataset.spellSchool
-              ? spellItem.classList.add("active")
-              : spellItem.classList.remove("active");
-            break;
-        }
-      }
-    }
+    // Early return: filter element doesn't exist in new template
   }
 
   _createStatusTags() {

@@ -145,12 +145,15 @@ export function prepareCharacterItems(sheetData, { includeSkills = false, includ
   }
 
   // Convert spellsBySchool object to array for proper Handlebars iteration
-  const spellSchools = Object.keys(spellsBySchool).map(school => ({
-    key: school,
-    label: school.charAt(0).toUpperCase() + school.slice(1),
-    spells: spellsBySchool[school],
-    count: spellsBySchool[school].length
-  }));
+  const spellSchools = Object.keys(spellsBySchool).map(school => {
+    const spells = spellsBySchool[school];
+    return {
+      key: school,
+      label: school.charAt(0).toUpperCase() + school.slice(1),
+      spells: spells,
+      count: spells.length
+    };
+  });
 
   // Assign
   actorData.gear = gear;
