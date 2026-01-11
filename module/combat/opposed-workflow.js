@@ -3799,15 +3799,19 @@ if (stage === "attacker-roll") {
       const skipAP = Boolean(data.context?.skipAttackerAPDeduction);
       pendingApCost = Number(data.attacker?.pendingApCost ?? pendingApCost) || 0;
       const apVariant = String(data.attacker?.pendingApVariant ?? data.attacker.variant ?? "normal");
+      let apOk = true;
       if (pendingApCost > 0 && !skipAP) {
-        const ok = await ActionEconomy.spendAP(attacker, pendingApCost, { reason: `attackVariant:${apVariant}`, silent: true });
-        if (!ok) {
+        apOk = await ActionEconomy.spendAP(attacker, pendingApCost, { reason: `attackVariant:${apVariant}`, silent: true });
+        if (!apOk) {
           ui.notifications.warn("Insufficient Action Points to perform this attack.");
         }
       }
       
       // Increment attack counter after AP is spent successfully
-      await AttackTracker.incrementAttacks(attacker);
+      // This ensures attacks only count if they were properly resourced
+      if (apOk) {
+        await AttackTracker.incrementAttacks(attacker);
+      }
       
       if (isRollCommitted) {
         // Banked-choice auto-roll: do not write roll results directly into the parent card.
