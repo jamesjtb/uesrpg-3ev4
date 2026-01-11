@@ -58,15 +58,13 @@ export function shouldUseTargetedSpellWorkflow(spell, targets) {
 
 /**
  * Determine whether this spell should use the modern casting engine even when untargeted.
- * We currently scope this to attack/healing spells to avoid altering non-combat utility spells.
+ * All spells now use the modern pipeline for consistent Magicka handling and spell options.
  * @param {Item} spell
  * @returns {boolean}
  */
 export function shouldUseModernSpellWorkflow(spell) {
-  const cls = classifySpellForRouting(spell);
-  // Direct spells are handled separately (no casting/defense tests) and require a target.
-  // Keep the untargeted modern pipeline scoped to attack/healing spells only.
-  return Boolean(cls.isAttack || cls.isHealing);
+  // All spells use the modern rolling pipeline
+  return true;
 }
 
 /**

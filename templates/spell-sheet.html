@@ -36,7 +36,6 @@
   <nav class="sheet-tabs tabs" data-group="primary">
     <a class="item" data-tab="description">Description</a>
     <a class="item" data-tab="attributes">Attributes</a>
-    <a class="item" data-tab="scaling">Scaling</a>
     <a class="item" data-tab="effects">Effects</a>
   </nav>
 
@@ -126,41 +125,6 @@
             <span class="hint" style="margin-left: 8px;">Reduces max AP while active</span>
           </div>
         </section>
-      </div>
-    </div>
-
-    {{!-- Scaling Tab --}}
-    <div class="tab" data-group="primary" data-tab="scaling">
-      <div class="scaling-container">
-        <h3>Spell Scaling by Level</h3>
-        <p class="hint">Configure how spell power/cost scales at different spell levels. Level 1-7 (Novice-Grandmaster).</p>
-        
-        <table class="scaling-table">
-          <thead>
-            <tr>
-              <th>Level</th>
-              <th>MP Cost</th>
-              <th>Damage/Heal Formula</th>
-              <th>Effect Strength</th>
-              <th>Duration (rounds)</th>
-              <th>Actions</th>
-            </tr>
-          </thead>
-          <tbody>
-            {{#each item.system.scaling.levels as |lvl idx|}}
-            <tr data-index="{{idx}}">
-              <td>{{lvl.level}}</td>
-              <td><input type="number" name="system.scaling.levels.{{idx}}.cost" value="{{lvl.cost}}" min="0" /></td>
-              <td><input type="text" name="system.scaling.levels.{{idx}}.damageFormula" value="{{lvl.damageFormula}}" placeholder="e.g., 1d6" /></td>
-              <td><input type="number" name="system.scaling.levels.{{idx}}.effectStrength" value="{{lvl.effectStrength}}" /></td>
-              <td><input type="number" name="system.scaling.levels.{{idx}}.duration" value="{{lvl.duration}}" min="0" /></td>
-              <td><button type="button" class="remove-scaling-level" title="Remove Level"><i class="fas fa-trash"></i></button></td>
-            </tr>
-            {{/each}}
-          </tbody>
-        </table>
-        
-        <button type="button" class="add-scaling-level">Add Level</button>
       </div>
     </div>
 
