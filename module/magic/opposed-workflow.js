@@ -86,6 +86,41 @@ function _getMessageState(message) {
   return null;
 }
 
+function _isBankChoicesEnabledForData(data) {
+  // Magic banked choices enabled by default (same as combat)
+  return true;
+}
+
+function _ensureBankedScaffold(data) {
+  data.context = data.context ?? {};
+  data.attacker = data.attacker ?? {};
+  data.defender = data.defender ?? {};
+
+  data.attacker.banked = (data.attacker.banked && typeof data.attacker.banked === "object") 
+    ? data.attacker.banked 
+    : { committed: false, committedAt: null, committedBy: null };
+
+  data.defender.banked = (data.defender.banked && typeof data.defender.banked === "object") 
+    ? data.defender.banked 
+    : { committed: false, committedAt: null, committedBy: null };
+
+  return data;
+}
+
+function _getBankCommitState(data) {
+  _ensureBankedScaffold(data);
+  
+  const aCommitted = Boolean(data.attacker?.banked?.committed);
+  const dCommitted = Boolean(data.defender?.banked?.committed || data.defender?.noDefense);
+  
+  return {
+    aCommitted,
+    dCommitted,
+    bothCommitted: aCommitted && dCommitted
+  };
+}
+
+
 function _renderBreakdownDetails(title, entries) {
   const arr = Array.isArray(entries) ? entries : [];
   if (!arr.length) return "";
@@ -143,15 +178,24 @@ function _renderCard(data, messageId) {
   const a = data.attacker;
   const d = data.defender;
 
-  const spellName = a.spellName ?? "Spell";
-  const spellSchool = a.spellSchool ?? "";
-  const spellLevel = Number(a.spellLevel ?? 1);
-  const spellCost = Number(a.spellCost ?? 0);
-  const spellMpSpent = Number(a.mpSpent ?? 0) || 0;
-  const spellMpRefund = Number(a.mpRefund ?? 0) || 0;
+  const bankMode = _isBankChoicesEnabledForData(data);
+  const { aCommitted, dCommitted, bothCommitted } = _getBankCommitState(data);
+  
+  const phase = String(data?.context?.phase ?? data?.status ?? "pending");
+  const resolved = phase === "resolved";
+  
+  // Hide choices until both committed
+  const revealChoices = !bankMode || bothCommitted || resolved;
+  
+  const spellName = revealChoices ? (a.spellName ?? "Spell") : "—";
+  const spellSchool = revealChoices ? (a.spellSchool ?? "") : "";
+  const spellLevel = revealChoices ? Number(a.spellLevel ?? 1) : "—";
+  const spellCost = revealChoices ? Number(a.spellCost ?? 0) : "—";
+  const spellMpSpent = revealChoices ? (Number(a.mpSpent ?? 0) || 0) : "—";
+  const spellMpRefund = revealChoices ? (Number(a.mpRefund ?? 0) || 0) : 0;
 
-  const aTN = a.tn?.finalTN != null ? String(a.tn.finalTN) : "—";
-  const dTN = d.tn?.finalTN != null ? String(d.tn.finalTN) : (d.tn != null ? String(d.tn) : "—");
+  const aTN = revealChoices && a.tn?.finalTN != null ? String(a.tn.finalTN) : "—";
+  const dTN = revealChoices && d.tn?.finalTN != null ? String(d.tn.finalTN) : (revealChoices && d.tn != null ? String(d.tn) : "—");
 
   const aRollLine = a.result
     ? (a.result.noRoll
@@ -163,29 +207,70 @@ function _renderCard(data, messageId) {
     ? `<div><b>Roll:</b> ${d.result.rollTotal} — ${_fmtDegree(d.result)}</div>`
     : "";
 
-  const aBreakdown = _renderBreakdownDetails("TN breakdown", a.tn?.breakdown ?? a.tn?.modifiers);
-  const dBreakdown = _renderBreakdownDetails("TN breakdown", d.tn?.breakdown ?? d.tn?.modifiers);
+  const aBreakdown = revealChoices ? _renderBreakdownDetails("TN breakdown", a.tn?.breakdown ?? a.tn?.modifiers) : "";
+  const dBreakdown = revealChoices ? _renderBreakdownDetails("TN breakdown", d.tn?.breakdown ?? d.tn?.modifiers) : "";
 
-  const phase = String(data?.context?.phase ?? data?.status ?? "pending");
   const awaitingDefense = phase === "awaiting-defense";
-  const resolved = phase === "resolved";
 
   const canRollAttacker = Boolean(!a.result);
   const canRollDefender = Boolean(a.result && !d.result && !d.noDefense);
 
-  const attackerControls = canRollAttacker
-    ? `<div style="margin-top:8px;">${_btn({ label: "Roll Casting Test", action: "attacker-roll" })}</div>`
-    : "";
+  // Attacker commit/roll status
+  const attackerCommitLine = (() => {
+    if (!bankMode) return "";
+    const rolled = !!a.result;
+    const statusText = resolved ? "Resolved" : rolled ? "Rolled" : (aCommitted ? "✓ Committed" : "Awaiting choice");
+    return `<div style="margin-top:4px; font-size:12px; opacity:0.85;"><b>Status:</b> ${statusText}</div>`;
+  })();
 
-  const defenderControls = canRollDefender
-    ? `
-      <div style="margin-top:8px; display:flex; gap:6px; flex-wrap:wrap;">
-        ${_btn({ label: "Block", action: "defender-roll-block" })}
-        ${_btn({ label: "Evade", action: "defender-roll-evade" })}
-        ${_btn({ label: "No Defense", action: "defender-no-defense" })}
-      </div>
-    `
-    : "";
+  // Defender commit/roll status
+  const defenderCommitLine = (() => {
+    if (!bankMode) return "";
+    const rolled = !!d.result || !!d.noDefense;
+    const statusText = resolved ? "Resolved" : rolled ? "Rolled" : (dCommitted ? "✓ Committed" : "Awaiting choice");
+    return `<div style="margin-top:4px; font-size:12px; opacity:0.85;"><b>Status:</b> ${statusText}</div>`;
+  })();
+
+  const attackerControls = (() => {
+    if (a.result) return "";
+    
+    if (bankMode) {
+      if (!aCommitted) {
+        return `<div style="margin-top:8px;">${_btn({ label: "Commit Casting", action: "attacker-commit" })}</div>`;
+      }
+      return "";
+    }
+    
+    return `<div style="margin-top:8px;">${_btn({ label: "Roll Casting Test", action: "attacker-roll" })}</div>`;
+  })();
+
+  const defenderControls = (() => {
+    if (d.result || d.noDefense) return "";
+    
+    if (bankMode) {
+      if (!dCommitted) {
+        return `
+          <div style="margin-top:8px; display:flex; gap:6px; flex-wrap:wrap;">
+            ${_btn({ label: "Commit Block", action: "defender-commit-block" })}
+            ${_btn({ label: "Commit Evade", action: "defender-commit-evade" })}
+            ${_btn({ label: "Commit No Defense", action: "defender-commit-nodefense" })}
+          </div>
+        `;
+      }
+      return "";
+    }
+    
+    if (canRollDefender) {
+      return `
+        <div style="margin-top:8px; display:flex; gap:6px; flex-wrap:wrap;">
+          ${_btn({ label: "Block", action: "defender-roll-block" })}
+          ${_btn({ label: "Evade", action: "defender-roll-evade" })}
+          ${_btn({ label: "No Defense", action: "defender-no-defense" })}
+        </div>
+      `;
+    }
+    return "";
+  })();
 
   let outcomeLine = "";
   if (resolved && data.outcome) {
@@ -195,6 +280,16 @@ function _renderCard(data, messageId) {
       <div style="margin-top:10px; padding:8px; background:rgba(0,0,0,0.05); border-left:3px solid ${color};">
         <div style="font-weight:700;">${String(data.outcome.text ?? "Resolved")}</div>
         ${data.outcome.attackerWins ? `<div style="margin-top:4px; font-size:12px; opacity:0.9;">Damage is applied automatically. Details are whispered to the GM.</div>` : ""}
+      </div>
+    `;
+  } else if (bankMode && !bothCommitted) {
+    const aStatus = aCommitted ? "✓ Committed" : "Awaiting choice";
+    const dStatus = dCommitted ? "✓ Committed" : "Awaiting choice";
+    outcomeLine = `
+      <div style="margin-top:10px; padding:8px; background:rgba(0,0,0,0.05);">
+        <div><b>Attacker:</b> ${aStatus}</div>
+        <div><b>Defender:</b> ${dStatus}</div>
+        ${bothCommitted ? '<div style="margin-top:6px; font-style:italic;">Both sides committed. Ready to roll.</div>' : '<div style="margin-top:6px; font-style:italic;">Waiting for both sides to commit choices...</div>'}
       </div>
     `;
   } else if (awaitingDefense) {
@@ -216,10 +311,11 @@ function _renderCard(data, messageId) {
           </div>
           <div style="margin-top:4px; font-size:13px; line-height:1.25;">
             <div><b>Spell:</b> ${spellName}${spellSchool ? ` (${spellSchool} ${spellLevel})` : ""}</div>
-            <div><b>MP Cost:</b> ${spellCost}${spellMpSpent ? ` <span class="muted" style="opacity:0.8;">(paid: ${spellMpSpent}${spellMpRefund ? `, refunded: ${spellMpRefund}` : ""})</span>` : ""}</div>
+            <div><b>MP Cost:</b> ${spellCost}${spellMpSpent !== "—" && spellMpSpent ? ` <span class="muted" style="opacity:0.8;">(paid: ${spellMpSpent}${spellMpRefund ? `, refunded: ${spellMpRefund}` : ""})</span>` : ""}</div>
             <div><b>TN:</b> ${aTN}</div>
             ${aRollLine}
             ${aBreakdown}
+            ${attackerCommitLine}
           </div>
           ${attackerControls}
         </div>
@@ -235,6 +331,7 @@ function _renderCard(data, messageId) {
             ${dRollLine}
             ${d.noDefense ? '<div style="color:red; font-style:italic; margin-top:2px;">No Defense</div>' : ""}
             ${d.noDefense ? "" : dBreakdown}
+            ${defenderCommitLine}
           </div>
           ${defenderControls}
         </div>
@@ -772,6 +869,60 @@ export const MagicOpposedWorkflow = {
       return;
     }
 
+    const bankMode = _isBankChoicesEnabledForData(data);
+
+    // Handle attacker commit
+    if (action === "attacker-commit") {
+      if (!bankMode) return;
+      if (data.attacker.result) return;
+      if (!requireUserCanRollActor(game.user, attacker)) return;
+
+      _ensureBankedScaffold(data);
+      data.attacker.banked.committed = true;
+      data.attacker.banked.committedAt = Date.now();
+      data.attacker.banked.committedBy = game.user.id;
+
+      await _updateCard(message, data);
+
+      // Check if both committed -> auto-roll
+      const bank = _getBankCommitState(data);
+      if (bank.bothCommitted) {
+        await this._autoRollBanked(message);
+      }
+      return;
+    }
+
+    // Handle defender commit
+    if (action === "defender-commit-block" || action === "defender-commit-evade" || action === "defender-commit-nodefense") {
+      if (!bankMode) return;
+      if (data.defender.result || data.defender.noDefense) return;
+      if (!requireUserCanRollActor(game.user, defender)) return;
+
+      _ensureBankedScaffold(data);
+      
+      // Store defense choice
+      if (action === "defender-commit-nodefense") {
+        data.defender.defenseType = "none";
+        data.defender.noDefense = true;
+      } else {
+        data.defender.defenseType = (action === "defender-commit-block") ? "block" : "evade";
+        data.defender.noDefense = false;
+      }
+
+      data.defender.banked.committed = true;
+      data.defender.banked.committedAt = Date.now();
+      data.defender.banked.committedBy = game.user.id;
+
+      await _updateCard(message, data);
+
+      // Check if both committed -> auto-roll
+      const bank = _getBankCommitState(data);
+      if (bank.bothCommitted) {
+        await this._autoRollBanked(message);
+      }
+      return;
+    }
+
     if (action === "attacker-roll") {
       if (data.attacker.result) return;
       if (!requireUserCanRollActor(game.user, attacker)) return;
@@ -921,6 +1072,41 @@ export const MagicOpposedWorkflow = {
       data.context.phase = "resolved";
 
       await this._resolveOutcome(message, data, attacker, defender);
+    }
+  },
+
+  /**
+   * Auto-roll when both sides have committed (banked mode).
+   */
+  async _autoRollBanked(message) {
+    const data = _getMessageState(message);
+    if (!data) return;
+
+    const bank = _getBankCommitState(data);
+    if (!bank.bothCommitted) return;
+
+    const attacker = _resolveActor(data.attacker.actorUuid);
+    const defender = _resolveActor(data.defender.actorUuid);
+
+    if (!attacker || !defender) return;
+
+    // Roll attacker if not yet rolled
+    if (!data.attacker.result) {
+      await this.handleAction(message, "attacker-roll");
+      // Reload data after attacker roll
+      const updatedData = _getMessageState(message);
+      if (updatedData) Object.assign(data, updatedData);
+    }
+
+    // Roll defender if not yet rolled and not No Defense
+    if (!data.defender.result && !data.defender.noDefense) {
+      const defenseAction = data.defender.defenseType === "block" 
+        ? "defender-roll-block" 
+        : "defender-roll-evade";
+      await this.handleAction(message, defenseAction);
+    } else if (data.defender.noDefense) {
+      // Handle no-defense case
+      await this.handleAction(message, "defender-no-defense");
     }
   },
 
