@@ -2,7 +2,8 @@
   "Actor": {
     "types": [
       "Player Character",
-      "NPC"
+      "NPC",
+      "Group"
     ],
     "templates": {
       "equippedWeapons": {
@@ -636,6 +637,13 @@
           }
         }
       }
+    },
+    "Group": {
+      "description": "",
+      "notes": "",
+      "enrichedDescription": "",
+      "enrichedNotes": "",
+      "members": []
     }
   },
   "Item": {

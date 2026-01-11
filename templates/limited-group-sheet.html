@@ -1,0 +1,41 @@
+<form class="{{cssClass}}" autocomplete="off">
+  <header class="sheet-header">
+    <img class="profile-img" src="{{actor.img}}" title="{{actor.name}}" />
+    <div class="header-fields">
+      <h1 class="charname">{{actor.name}}</h1>
+    </div>
+  </header>
+
+  <section class="sheet-body">
+    <div style="padding: 20px;">
+      {{#if actor.system.enrichedDescription}}
+        <div class="description-section" style="margin-bottom: 20px;">
+          <h3>Description</h3>
+          <div class="content-container">
+            {{{actor.system.enrichedDescription}}}
+          </div>
+        </div>
+      {{/if}}
+
+      {{#if members}}
+        <div class="members-gallery">
+          <h3>Members</h3>
+          <div style="display: flex; flex-wrap: wrap; gap: 15px; margin-top: 10px;">
+            {{#each members}}
+              <div class="member-card" style="text-align: center; width: 120px;">
+                <img src="{{this.img}}" 
+                     style="width: 80px; height: 80px; border-radius: 4px; border: 2px solid #666;" 
+                     title="{{this.name}}" />
+                <div style="margin-top: 5px; font-size: 0.9em;">{{this.name}}</div>
+              </div>
+            {{/each}}
+          </div>
+        </div>
+      {{else}}
+        <div style="text-align: center; color: #666; padding: 20px;">
+          <p>No visible members</p>
+        </div>
+      {{/if}}
+    </div>
+  </section>
+</form>

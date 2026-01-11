@@ -58,6 +58,8 @@ export class SimpleActor extends Actor {
         this._prepareCharacterData(this);
       } else if (this.type === "NPC" && typeof this._prepareNPCData === "function") {
         this._prepareNPCData(this);
+      } else if (this.type === "Group" && typeof this._prepareGroupData === "function") {
+        this._prepareGroupData(this);
       }
     } catch (err) {
       console.error(`uesrpg-3ev4 | Error during prepareData for ${this.name || this.id}:`, err);
@@ -1900,6 +1902,14 @@ this._applyMovementRestrictionSemantics(actorData, actorSystemData);
 
     // PERF end
     // this._perfEnd('_prepareNPCData', t0);
+  }
+
+  _prepareGroupData(actorData) {
+    const actorSystemData = actorData.system;
+    if (!actorSystemData.members) {
+      actorSystemData.members = [];
+    }
+    actorSystemData.members.sort((a, b) => (a.sortOrder || 0) - (b.sortOrder || 0));
   }
 
   async _calculateItemSkillModifiers(actorData, agg) {
