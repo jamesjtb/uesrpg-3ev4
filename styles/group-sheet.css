@@ -1,5 +1,27 @@
 /* Group Sheet Compact UI */
 
+/* Override sidebar styling for horizontal header layout */
+.uesrpg.sheet.actor.group .sheet-fixed-container {
+  width: 100%;
+  min-width: 100%;
+  border-right: none;
+  border-bottom: 2px solid #999;
+  padding: 10px 15px;
+}
+
+/* Ensure consistent spacing for all inventory sections when collapsed */
+.uesrpg.sheet.actor.group .containerList,
+.uesrpg.sheet.actor.group .equipmentList {
+  margin-bottom: 0;
+}
+
+.uesrpg.sheet.actor.group .container-table,
+.uesrpg.sheet.actor.group .weapon-table,
+.uesrpg.sheet.actor.group .ammunition-table,
+.uesrpg.sheet.actor.group .armor-table {
+  margin-bottom: 15px;
+}
+
 /* Compact horizontal header for group sheets */
 .uesrpg.sheet.actor.group .character-profile-container.group-header-horizontal {
   display: flex;

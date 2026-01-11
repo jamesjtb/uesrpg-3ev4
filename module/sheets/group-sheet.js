@@ -11,8 +11,8 @@ export class GroupSheet extends ActorSheet {
   static get defaultOptions() {
     return foundry.utils.mergeObject(super.defaultOptions, {
       classes: ["uesrpg", "sheet", "actor", "group", "worldbuilding"],
-      width: 720,
-      height: 700,
+      width: 630,
+      height: 540,
       tabs: [{
         navSelector: ".sheet-tabs",
         contentSelector: ".sheet-body",
@@ -50,9 +50,9 @@ export class GroupSheet extends ActorSheet {
     // Resolve member UUIDs to actor data
     data.resolvedMembers = await this._resolveMembers(data.actor.system.members);
 
-    // Calculate base average speed from visible members
+    // Calculate minimum speed from visible members (group travels at slowest member's pace)
     const speeds = data.resolvedMembers.filter(m => m.canView && m.speed).map(m => m.speed);
-    const baseAverageSpeed = speeds.length > 0 ? Math.round(speeds.reduce((a, b) => a + b, 0) / speeds.length) : 0;
+    const baseAverageSpeed = speeds.length > 0 ? Math.min(...speeds) : 0;
     
     // Apply travel pace multiplier
     const currentPace = data.actor.system.travelPace || "normal";
@@ -135,6 +135,7 @@ export class GroupSheet extends ActorSheet {
         // UESRPG-specific stats
         hp: canView ? { value: actor.system.hp.value, max: actor.system.hp.max } : null,
         stamina: canView ? { value: actor.system.stamina.value, max: actor.system.stamina.max } : null,
+        magicka: canView && actor.system.magicka ? { value: actor.system.magicka.value, max: actor.system.magicka.max } : null,
         speed: canView ? actor.system.speed.value : null,
         fatigue: canView ? actor.system.fatigue.level : 0
       });
@@ -451,6 +452,8 @@ export class GroupSheet extends ActorSheet {
       whisper: this._getGMUserIds()
     });
 
+    // Refresh sheet to show updated stats
+    await this.render(false);
     ui.notifications.info("Short rest completed.");
   }
 
@@ -518,6 +521,8 @@ export class GroupSheet extends ActorSheet {
       whisper: this._getGMUserIds()
     });
 
+    // Refresh sheet to show updated stats
+    await this.render(false);
     ui.notifications.info("Long rest completed.");
   }
 
