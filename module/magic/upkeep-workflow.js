@@ -493,8 +493,19 @@ export async function handleUpkeepGroupConfirm(message) {
   const data = message?.flags?.["uesrpg-3ev4"]?.upkeepGroup;
   if (!data) return;
 
-  const casterActor = game.actors.get(data.casterActorId);
-  if (!casterActor) return;
+  // CRITICAL FIX: Re-fetch the caster actor to ensure we have the latest state
+  const casterDoc = await fromUuid(data.casterUuid);
+  const casterActor = casterDoc?.documentName === "Actor" ? casterDoc : casterDoc?.actor;
+  
+  if (!casterActor) {
+    console.error("UESRPG | upkeep-workflow | Could not resolve caster actor", data.casterUuid);
+    ui.notifications?.error?.("Could not find caster actor.");
+    return;
+  }
+
+  console.log(`UESRPG | upkeep-workflow | Upkeep confirm initiated for ${casterActor.name} (type: ${casterActor.type})`);
+  console.log(`UESRPG | upkeep-workflow | Current user: ${game.user.name}, isGM: ${game.user.isGM}`);
+  console.log(`UESRPG | upkeep-workflow | Actor isOwner: ${casterActor.isOwner}`);
 
   const matches = await _collectCurrentEffectsForGroup(data.groupKey);
   if (!matches.length) {
@@ -535,12 +546,28 @@ export async function handleUpkeepGroupConfirm(message) {
   // Spend Magicka once
   const upkeepCost = _num(data.upkeepCost, 0);
   const currentMP = _num(casterActor.system?.magicka?.value, 0);
+  
+  console.log(`UESRPG | upkeep-workflow | Upkeep check: cost=${upkeepCost}, current=${currentMP}`);
+  
   if (upkeepCost > currentMP) {
     ui.notifications?.warn?.("Not enough Magicka to upkeep this spell.");
     return;
   }
 
-  await requestUpdateDocument(casterActor, { "system.magicka.value": currentMP - upkeepCost });
+  // CRITICAL FIX: Always use requestUpdateDocument for consistency
+  // This ensures proper permission handling through the authority proxy
+  const newMagicka = currentMP - upkeepCost;
+  console.log(`UESRPG | upkeep-workflow | Deducting ${upkeepCost} magicka, new value: ${newMagicka}`);
+  
+  try {
+    // Use authority proxy for ALL actors (PC and NPC) to ensure proper permission routing
+    await requestUpdateDocument(casterActor, { "system.magicka.value": newMagicka });
+    console.log(`UESRPG | upkeep-workflow | Magicka updated successfully via authority proxy`);
+  } catch (err) {
+    console.error("UESRPG | upkeep-workflow | Failed to update magicka", err);
+    ui.notifications?.error?.("Failed to deduct magicka. See console.");
+    return;
+  }
 
   // Refresh duration by resetting start markers on all currently-matched effects
   const nowRound = _currentRound();
@@ -564,7 +591,11 @@ export async function handleUpkeepGroupConfirm(message) {
       }
     }
 
-    await requestUpdateDocument(m.effect, updates);
+    try {
+      await requestUpdateDocument(m.effect, updates);
+    } catch (err) {
+      console.error("UESRPG | upkeep-workflow | Failed to refresh effect duration", err);
+    }
   }
 
   ui.notifications?.info?.(`${data.spellName} upkept.`);
