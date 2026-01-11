@@ -144,6 +144,14 @@ export function prepareCharacterItems(sheetData, { includeSkills = false, includ
     }
   }
 
+  // Convert spellsBySchool object to array for proper Handlebars iteration
+  const spellSchools = Object.keys(spellsBySchool).map(school => ({
+    key: school,
+    label: school.charAt(0).toUpperCase() + school.slice(1),
+    spells: spellsBySchool[school],
+    count: spellsBySchool[school].length
+  }));
+
   // Assign
   actorData.gear = gear;
   actorData.weapon = weapon;
@@ -156,6 +164,7 @@ export function prepareCharacterItems(sheetData, { includeSkills = false, includ
   // Store spellsBySchool in ui namespace to avoid conflicts with Foundry's mergeObject
   actorData.ui = actorData.ui || {};
   actorData.ui.spellsBySchool = spellsBySchool;
+  actorData.spellSchools = spellSchools; // Array format for template iteration
   actorData.ammunition = ammunition;
   actorData.language = language;
   actorData.faction = faction;

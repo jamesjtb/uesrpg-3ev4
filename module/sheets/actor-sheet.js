@@ -299,11 +299,67 @@ async activateListeners(html) {
   // Item Create Buttons
   // (common handler binding happens via bindCommonSheetListeners)
   // Checks for UI Elements on Sheets and Updates
-  this._createSpellFilterOptions();
+  // this._createSpellFilterOptions(); // DISABLED: Spell filter dropdown removed in school-based categorization
   this._createItemFilterOptions();
-  this._setDefaultSpellFilter();
+  // this._setDefaultSpellFilter(); // DISABLED: Spell filter dropdown removed in school-based categorization
   this._setDefaultItemFilter();
   this._setResourceBars();
+
+  // Spell school collapse/expand handlers
+  html.find('.spell-school-header').on('click', async (ev) => {
+    ev.preventDefault();
+    const header = ev.currentTarget;
+    const section = header.closest('.spell-school-section');
+    const table = section?.querySelector('.spell-school-table');
+    const arrow = header.querySelector('.collapse-arrow');
+    const groupKey = header.dataset.group;
+    
+    if (!table || !arrow || !groupKey) return;
+    
+    const isCollapsed = table.style.display === 'none';
+    table.style.display = isCollapsed ? '' : 'none';
+    arrow.classList.toggle('fa-chevron-down', isCollapsed);
+    arrow.classList.toggle('fa-chevron-right', !isCollapsed);
+    
+    // Save state
+    const collapsedGroups = this.actor.getFlag('uesrpg-3ev4', 'collapsedGroups') || {};
+    collapsedGroups[groupKey] = !isCollapsed;
+    await this.actor.setFlag('uesrpg-3ev4', 'collapsedGroups', collapsedGroups);
+  });
+
+  // Spell item click to open sheet
+  html.find('.spell-row .item-img, .spell-row .item-name').on('click', async (ev) => {
+    ev.preventDefault();
+    ev.stopPropagation();
+    const row = ev.currentTarget.closest('.spell-row');
+    const itemId = row?.dataset?.itemId;
+    if (!itemId) return;
+    
+    const item = this.actor.items.get(itemId);
+    if (item) {
+      item.sheet.render(true);
+    }
+  });
+
+  // Per-school "Add Spell" button handler
+  html.find('.spell-school-header .item-create').on('click', async (ev) => {
+    ev.preventDefault();
+    ev.stopPropagation(); // Don't trigger collapse
+    
+    const school = ev.currentTarget.dataset.school;
+    
+    const itemData = {
+      name: `New ${school.charAt(0).toUpperCase() + school.slice(1)} Spell`,
+      type: 'spell',
+      system: {
+        school: school,
+        level: 1,
+        cost: 0
+      }
+    };
+    
+    await this.actor.createEmbeddedDocuments('Item', [itemData]);
+  });
 
   // Common listener binding (PC + NPC)
   bindCommonSheetListeners(this, html);
@@ -1101,11 +1157,11 @@ async activateListeners(html) {
       }
     }
 
-    // Spell school sections
+    // Spell school sections - updated to use new template structure
     const spellSchool = toggleEl.closest(".spell-school-section");
     if (spellSchool) {
-      const content = spellSchool.querySelector(".spell-school-content");
-      if (content) content.style.display = collapsed ? "none" : "";
+      const table = spellSchool.querySelector(".spell-school-table");
+      if (table) table.style.display = collapsed ? "none" : "";
       return;
     }
 

@@ -449,64 +449,50 @@
 
                     <div class="spellListContainer">
                         <div class="spellList">
-                            <div class="spell-header">
-                                <div class="item-create spell-create" id="spell">
-                                    <i class="fas fa-plus"></i> Add Spell
-                                </div>
-                            </div>
-
                             {{!-- Spell schools organized by category --}}
-                            {{#each actor.ui.spellsBySchool}}
-                                <div class="spell-school-section" data-school="{{@key}}">
-                                    <div class="spell-school-header uesrpg-group-toggle" data-group="spell-school-{{@key}}">
-                                        <i class="fas fa-caret-down"></i>
-                                        <h4 class="school-name">
-                                            {{capitalize @key}}
-                                            <span class="spell-count">({{this.length}})</span>
-                                        </h4>
-                                    </div>
-                                    <div class="spell-school-content">
-                                        <table>
-                                            <thead>
-                                                <tr>
-                                                    <th>Name</th>
-                                                    <th>Rank</th>
-                                                    <th>MP Cost</th>
-                                                    <th><i class="fas fa-trash"></i></th>
+                            {{#each actor.spellSchools as |schoolData|}}
+                                <div class="spell-school-section" data-school="{{schoolData.key}}">
+                                    <h3 class="spell-school-header" data-group="spell-{{schoolData.key}}">
+                                        <i class="fas fa-chevron-down collapse-arrow"></i>
+                                        <span class="school-name">{{schoolData.label}}</span>
+                                        <span class="school-count">({{schoolData.count}})</span>
+                                        <a class="item-create" data-type="spell" data-school="{{schoolData.key}}" title="Create Spell">
+                                            <i class="fas fa-plus"></i>
+                                        </a>
+                                    </h3>
+                                    <table class="spell-school-table" data-group-content="spell-{{schoolData.key}}">
+                                        <thead>
+                                            <tr>
+                                                <th>Name</th>
+                                                <th>Rank</th>
+                                                <th>MP Cost</th>
+                                                <th><i class="fas fa-trash"></i></th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {{#each schoolData.spells as |spell|}}
+                                                <tr class="spell-row item" data-item-id="{{spell._id}}">
+                                                    <td class="spell-name-cell">
+                                                        <img class="item-img" src="{{spell.img}}" />
+                                                        <span class="item-name">{{spell.name}}</span>
+                                                    </td>
+                                                    <td class="spell-rank-cell">
+                                                        {{#if (eq spell.system.level 1)}}Novice{{/if}}
+                                                        {{#if (eq spell.system.level 2)}}Apprentice{{/if}}
+                                                        {{#if (eq spell.system.level 3)}}Adept{{/if}}
+                                                        {{#if (eq spell.system.level 4)}}Expert{{/if}}
+                                                        {{#if (eq spell.system.level 5)}}Master{{/if}}
+                                                        {{#if (eq spell.system.level 6)}}Grandmaster{{/if}}
+                                                        {{#if (eq spell.system.level 7)}}Legendary{{/if}}
+                                                    </td>
+                                                    <td class="spell-mp-cell">{{spell.system.cost}}</td>
+                                                    <td class="spell-actions-cell">
+                                                        <a class="item-delete" title="Delete"><i class="fas fa-trash"></i></a>
+                                                    </td>
                                                 </tr>
-                                            </thead>
-                                            <tbody>
-                                                {{#each this as |item|}}
-                                                    <tr class="item active" data-item-id="{{item._id}}" data-spell-school="{{item.system.school}}">
-                                                        <td>
-                                                            <div class="tableItemNameCell">
-                                                                <i class="fas fa-dice-d20 magic-roll"></i>
-                                                                <img class="item-img" src="{{item.img}}" title="Cast Spell"/>
-                                                                <div class="item-name">{{item.name}}</div>
-                                                            </div>
-                                                        </td>
-                                                        <td class="spell-rank">
-                                                            {{#if item.system.level}}
-                                                                {{#if (eq item.system.level 1)}}Novice{{/if}}
-                                                                {{#if (eq item.system.level 2)}}Apprentice{{/if}}
-                                                                {{#if (eq item.system.level 3)}}Adept{{/if}}
-                                                                {{#if (eq item.system.level 4)}}Expert{{/if}}
-                                                                {{#if (eq item.system.level 5)}}Master{{/if}}
-                                                                {{#if (eq item.system.level 6)}}Grandmaster{{/if}}
-                                                                {{#if (eq item.system.level 7)}}Legendary{{/if}}
-                                                            {{else}}
-                                                                —
-                                                            {{/if}}
-                                                        </td>
-                                                        <td>{{item.system.cost}}</td>
-                                                        <td>
-                                                            <a class="item-control item-delete" title="Delete Item"><i class="fas fa-trash"></i></a>
-                                                        </td>
-                                                    </tr>
-                                                {{/each}}
-                                            </tbody>
-                                        </table>
-                                    </div>
+                                            {{/each}}
+                                        </tbody>
+                                    </table>
                                 </div>
                             {{/each}}
                         </div>
