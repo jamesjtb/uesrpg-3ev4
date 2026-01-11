@@ -904,6 +904,11 @@ export const MagicOpposedWorkflow = {
       if (action === "defender-commit-nodefense") {
         data.defender.defenseType = "none";
         data.defender.noDefense = true;
+        
+        // CRITICAL FIX: Set result immediately so _autoRollBanked doesn't call defender-no-defense again
+        // This matches the pattern used in combat opposed workflow
+        data.defender.tn = { finalTN: 0, baseTN: 0, totalMod: 0, breakdown: [{ key: "base", label: "No Defense", value: 0, source: "base" }] };
+        data.defender.result = { rollTotal: 0, isSuccess: false, degree: 0, isCriticalSuccess: false, isCriticalFailure: false };
       } else {
         data.defender.defenseType = (action === "defender-commit-block") ? "block" : "evade";
         data.defender.noDefense = false;
@@ -1061,6 +1066,13 @@ export const MagicOpposedWorkflow = {
     }
 
     if (action === "defender-no-defense") {
+      // This action should only be called in NON-banked mode
+      // In banked mode, No Defense is committed and result is set immediately
+      if (bankMode) {
+        console.warn("UESRPG | defender-no-defense called in banked mode - this should not happen");
+        return;
+      }
+      
       // No defense does not cost AP.
       if (data.defender.result || data.defender.noDefense) return;
       if (!requireUserCanRollActor(game.user, defender)) return;
@@ -1099,14 +1111,20 @@ export const MagicOpposedWorkflow = {
     }
 
     // Roll defender if not yet rolled and not No Defense
+    // FIXED: When defender committed No Defense, result is already set, so this won't execute
     if (!data.defender.result && !data.defender.noDefense) {
       const defenseAction = data.defender.defenseType === "block" 
         ? "defender-roll-block" 
         : "defender-roll-evade";
       await this.handleAction(message, defenseAction);
-    } else if (data.defender.noDefense) {
-      // Handle no-defense case
-      await this.handleAction(message, "defender-no-defense");
+    }
+    
+    // FIXED: After both sides rolled (or defender chose No Defense), resolve
+    // Reload one more time to ensure we have latest data
+    const finalData = _getMessageState(message);
+    if (finalData && finalData.attacker.result && finalData.defender.result) {
+      // Both sides have results → resolve
+      await this._resolveOutcome(message, finalData, attacker, defender);
     }
   },
 
