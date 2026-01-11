@@ -1,0 +1,140 @@
+<form class="{{cssClass}}" autocomplete="off">
+
+  <div class="sheet-section-container">
+
+    <div class="sheet-fixed-container">
+      <div class="character-profile-container">
+        <div class="profile-img-container">
+          <img class="profile-img" src="{{actor.img}}" data-edit="img" title="{{actor.name}}">
+        </div>
+
+        <nav class="sheet-tabs tabs" data-group="primary">
+          <a class="item" data-tab="members">Members</a>
+          <a class="item" data-tab="details">Details</a>
+        </nav>
+
+        <div>
+          <h1 class="charname">
+            <input type="text" name="name" value="{{actor.name}}" placeholder="Group Name">
+          </h1>
+        </div>
+      </div>
+    </div>
+
+    <section class="sheet-body">
+
+      <!-- Members Tab -->
+      <div class="tab members" data-group="primary" data-tab="members">
+        <div class="tab-container">
+
+          <div class="member-drop-zone" style="border: 2px dashed #999; padding: 20px; margin: 10px 0; text-align: center; background: rgba(0,0,0,0.1);">
+            <i class="fas fa-users" style="font-size: 2em; opacity: 0.5;"></i>
+            <p style="margin: 10px 0 0 0; opacity: 0.7;">
+              {{#if editable}}
+                Drag actors here to add them to this group
+              {{else}}
+                Group Members
+              {{/if}}
+            </p>
+          </div>
+
+          <div class="member-list">
+            <h2>
+              <label>Members ({{resolvedMembers.length}})</label>
+            </h2>
+
+            {{#if resolvedMembers.length}}
+              <ol class="member-items">
+                {{#each resolvedMembers as |member index|}}
+                  <li class="member-item" data-uuid="{{member.uuid}}">
+                    <div class="member-content" style="display: flex; align-items: center; padding: 10px; border-bottom: 1px solid #ccc; gap: 10px;">
+
+                      <div class="member-portrait" style="cursor: pointer; flex-shrink: 0;">
+                        <img src="{{member.img}}" width="48" height="48"
+                             title="{{#if member.canView}}Click to view{{else}}No permission{{/if}}"
+                             style="border-radius: 4px; {{#if member.missing}}opacity: 0.5; filter: grayscale(100%);{{/if}}">
+                      </div>
+
+                      <div class="member-info" style="flex-grow: 1;">
+                        <div class="member-name" style="cursor: pointer; font-weight: bold;">
+                          {{member.name}}
+                          {{#if member.missing}}
+                            <span style="color: #d9534f; font-size: 0.9em;">(Missing)</span>
+                          {{/if}}
+                        </div>
+                        <div class="member-type" style="font-size: 0.85em; opacity: 0.7;">
+                          {{member.type}}
+                        </div>
+                      </div>
+
+                      <div class="member-qty-controls" style="display: flex; align-items: center; gap: 5px; flex-shrink: 0;">
+                        {{#if ../editable}}
+                          <button type="button" class="member-qty-decrement" title="Decrease Quantity" style="padding: 5px 8px;">
+                            <i class="fas fa-minus"></i>
+                          </button>
+                        {{/if}}
+                        <input type="number" class="member-qty-input" value="{{member.qty}}" min="1"
+                               style="width: 50px; text-align: center; {{#unless ../editable}}pointer-events: none; background: rgba(0,0,0,0.05);{{/unless}}"
+                               {{#unless ../editable}}readonly{{/unless}}>
+                        {{#if ../editable}}
+                          <button type="button" class="member-qty-increment" title="Increase Quantity" style="padding: 5px 8px;">
+                            <i class="fas fa-plus"></i>
+                          </button>
+                        {{/if}}
+                      </div>
+
+                      {{#if ../editable}}
+                        <div class="member-controls" style="display: flex; gap: 5px; flex-shrink: 0;">
+                          <button type="button" class="member-move-up" title="Move Up" style="padding: 5px 10px;">
+                            <i class="fas fa-angle-up"></i>
+                          </button>
+                          <button type="button" class="member-move-down" title="Move Down" style="padding: 5px 10px;">
+                            <i class="fas fa-angle-down"></i>
+                          </button>
+                          <button type="button" class="member-delete" title="Remove from Group" style="padding: 5px 10px;">
+                            <i class="fas fa-trash"></i>
+                          </button>
+                        </div>
+                      {{/if}}
+
+                    </div>
+                  </li>
+                {{/each}}
+              </ol>
+            {{else}}
+              <div style="padding: 20px; text-align: center; opacity: 0.5;">
+                <p>No members in this group yet.</p>
+                {{#if editable}}
+                  <p style="font-size: 0.9em;">Drag actors from the sidebar to add them.</p>
+                {{/if}}
+              </div>
+            {{/if}}
+
+          </div>
+        </div>
+      </div>
+
+      <!-- Details Tab -->
+      <div class="tab details" data-group="primary" data-tab="details">
+        <div class="tab-container">
+
+          <div class="description-section">
+            <h2>Description</h2>
+            <div class="content-container">
+              {{editor actor.system.enrichedDescription target="system.description" button=true owner=owner editable=editable}}
+            </div>
+          </div>
+
+          <div class="notes-section" style="margin-top: 20px;">
+            <h2>Notes</h2>
+            <div class="content-container">
+              {{editor actor.system.enrichedNotes target="system.notes" button=true owner=owner editable=editable}}
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+    </section>
+  </div>
+</form>

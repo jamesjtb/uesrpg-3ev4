@@ -647,7 +647,15 @@
       "name": "",
       "description": "",
       "notes": "",
-      "members": []
+      "members": [],
+      "travel": {
+        "pace": "normal",
+        "averageSpeed": 0
+      },
+      "lastRest": {
+        "short": 0,
+        "long": 0
+      }
     }
   },
   "Item": {

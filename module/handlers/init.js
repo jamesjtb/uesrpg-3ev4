@@ -252,6 +252,11 @@ function registerHandlebarsHelpers() {
   Handlebars.registerHelper('gte', function(a, b) {
     return a >= b;
   });
+
+  // Equality helper for template comparisons
+  Handlebars.registerHelper('eq', function(a, b) {
+    return a === b;
+  });
 }
 
 async function registerSheets () {

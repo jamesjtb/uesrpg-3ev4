@@ -1,14 +1,14 @@
 /**
  * Group Actor Sheet
- * Simple container sheet for managing group members
+ * Enhanced sheet for managing group members with travel, rest automation, and deployment
  * @extends {ActorSheet}
  */
 export class GroupSheet extends ActorSheet {
 
   static get defaultOptions() {
     return foundry.utils.mergeObject(super.defaultOptions, {
-      classes: ["worldbuilding", "sheet", "actor", "group"],
-      width: 600,
+      classes: ["uesrpg", "sheet", "actor", "group"],
+      width: 720,
       height: 700,
       tabs: [{
         navSelector: ".sheet-tabs",
@@ -16,7 +16,7 @@ export class GroupSheet extends ActorSheet {
         initial: "members",
       }],
       dragDrop: [{
-        dragSelector: ".member-list .member-item",
+        dragSelector: ".member-item",
         dropSelector: ".member-drop-zone"
       }],
     });
@@ -39,13 +39,25 @@ export class GroupSheet extends ActorSheet {
     // Resolve member UUIDs to actor data
     data.resolvedMembers = await this._resolveMembers(data.actor.system.members);
 
-    // Enrich HTML fields
+    // Calculate average speed from visible members
+    const speeds = data.resolvedMembers.filter(m => m.canView && m.speed).map(m => m.speed);
+    data.averageSpeed = speeds.length > 0 ? Math.round(speeds.reduce((a, b) => a + b, 0) / speeds.length) : 0;
+
+    // Enrich HTML fields using exact jamesjtb pattern
     data.actor.system.enrichedDescription = await TextEditor.enrichHTML(
-      (data.actor.system.description ?? ""), {async: true}
+      data.actor.system.description, { async: true }
     );
     data.actor.system.enrichedNotes = await TextEditor.enrichHTML(
-      (data.actor.system.notes ?? ""), {async: true}
+      data.actor.system.notes, { async: true }
     );
+
+    // Travel pace data (UESRPG RAW Chapter 1)
+    data.travelPaces = {
+      fast: { speed: 7, daily: 56, penalty: "−20 to Observe" },
+      normal: { speed: 5, daily: 40, penalty: "—" },
+      slow: { speed: 3, daily: 24, penalty: "Can move stealthily" }
+    };
+    data.currentPace = data.actor.system.travel?.pace || "normal";
 
     return data;
   }
@@ -66,13 +78,12 @@ export class GroupSheet extends ActorSheet {
           missing: true,
           canView: false,
           name: member.name || "Unknown Actor",
-          img: member.img || "icons/svg/mystery-man.svg",
-          qty: member.qty || 1
+          img: member.img || "icons/svg/mystery-man.svg"
         });
         continue;
       }
 
-      const canView = actor.testUserPermission(game.user, CONST.DOCUMENT_OWNERSHIP_LEVELS.OBSERVER);
+      const canView = actor.testUserPermission(game.user, "OBSERVER");
 
       resolved.push({
         id: member.id,
@@ -81,10 +92,14 @@ export class GroupSheet extends ActorSheet {
         img: actor.img,
         type: actor.type,
         sortOrder: member.sortOrder || 0,
-        qty: member.qty || 1,
         missing: false,
         canView: canView,
-        actor: canView ? actor : null
+        actor: canView ? actor : null,
+        // UESRPG-specific stats
+        hp: canView ? { value: actor.system.hp.value, max: actor.system.hp.max } : null,
+        stamina: canView ? { value: actor.system.stamina.value, max: actor.system.stamina.max } : null,
+        speed: canView ? actor.system.speed.value : null,
+        fatigue: canView ? actor.system.fatigue.level : 0
       });
     }
 
@@ -94,166 +109,256 @@ export class GroupSheet extends ActorSheet {
   async activateListeners(html) {
     super.activateListeners(html);
 
-    html.find(".member-name, .member-name-limited").click(this._onViewMember.bind(this));
-    html.find(".member-portrait, .member-portrait-limited").click(this._onViewMember.bind(this));
+    // Member management
+    html.find(".member-name").click(this._onViewMember.bind(this));
+    html.find(".member-portrait").click(this._onViewMember.bind(this));
     html.find(".member-delete").click(this._onRemoveMember.bind(this));
-    html.find(".member-move-up").click(this._onMoveMember.bind(this, -1));
-    html.find(".member-move-down").click(this._onMoveMember.bind(this, 1));
-    html.find(".member-qty-increment").click(this._onChangeQty.bind(this, 1));
-    html.find(".member-qty-decrement").click(this._onChangeQty.bind(this, -1));
-    html.find(".member-qty-input").change(this._onQtyInputChange.bind(this));
+
+    // Travel
+    html.find(".change-pace").click(this._onChangePace.bind(this));
+
+    // Rest
+    html.find(".short-rest").click(this._onShortRest.bind(this));
+    html.find(".long-rest").click(this._onLongRest.bind(this));
+
+    // Token deployment (GM only)
+    if (game.user.isGM) {
+      html.find(".deploy-group").click(this._onDeployGroup.bind(this));
+    }
 
     if (!this.options.editable) return;
   }
   async _onViewMember(event) {
     event.preventDefault();
-
-    const uuid = event.currentTarget?.dataset?.uuid
-      ?? event.currentTarget?.closest?.(".member-item")?.dataset?.uuid;
-
-    if (!uuid) return;
-
-    const member = this.resolvedMembers.find(m => m.uuid === uuid);
-    if (!member || !member.actor) return;
-
-    return member.actor.sheet.render(true);
+    const uuid = event.currentTarget.closest(".member-item").dataset.uuid;
+    const actor = await fromUuid(uuid);
+    if (actor) actor.sheet.render(true);
   }
-
 
   async _onRemoveMember(event) {
     event.preventDefault();
-    const memberElement = event.currentTarget.closest(".member-item");
-    const uuid = memberElement.dataset.uuid;
+    if (!this.actor.isOwner) return;
 
-    const members = foundry.utils.duplicate(this.actor.system.members);
-    const index = members.findIndex(m => m.id === uuid);
-
-    if (index !== -1) {
-      members.splice(index, 1);
-      await this.actor.update({ "system.members": members });
-    }
-  }
-
-  async _onMoveMember(direction, event) {
-    event.preventDefault();
-    const memberElement = event.currentTarget.closest(".member-item");
-    const uuid = memberElement.dataset.uuid;
-
-    const members = foundry.utils.duplicate(this.actor.system.members);
-    const index = members.findIndex(m => m.id === uuid);
-
-    if (index === -1) return;
-
-    const newIndex = index + direction;
-    if (newIndex < 0 || newIndex >= members.length) return;
-
-    // Swap elements
-    [members[index], members[newIndex]] = [members[newIndex], members[index]];
-
-    // Update sort orders
-    members.forEach((m, i) => m.sortOrder = i);
-
+    const uuid = event.currentTarget.closest(".member-item").dataset.uuid;
+    const members = this.actor.system.members.filter(m => m.id !== uuid);
     await this.actor.update({ "system.members": members });
   }
 
-  async _onChangeQty(delta, event) {
+  async _onChangePace(event) {
     event.preventDefault();
-    const memberElement = event.currentTarget.closest(".member-item");
-    const uuid = memberElement.dataset.uuid;
-
-    const members = foundry.utils.duplicate(this.actor.system.members);
-    const member = members.find(m => m.id === uuid);
-
-    if (!member) return;
-
-    const newQty = Math.max(1, (member.qty || 1) + delta);
-
-    if (newQty === member.qty) return;
-
-    member.qty = newQty;
-    await this.actor.update({ "system.members": members });
+    const paces = ["slow", "normal", "fast"];
+    const current = this.actor.system.travel?.pace || "normal";
+    const currentIndex = paces.indexOf(current);
+    const newIndex = (currentIndex + 1) % paces.length;
+    await this.actor.update({ "system.travel.pace": paces[newIndex] });
   }
 
-  async _onQtyInputChange(event) {
-    event.preventDefault();
-    const memberElement = event.currentTarget.closest(".member-item");
-    const uuid = memberElement.dataset.uuid;
-    const newQty = Math.max(1, parseInt(event.currentTarget.value) || 1);
-
-    const members = foundry.utils.duplicate(this.actor.system.members);
-    const member = members.find(m => m.id === uuid);
-
-    if (!member) return;
-
-    if (newQty === member.qty) return;
-
-    member.qty = newQty;
-    await this.actor.update({ "system.members": members });
-  }
-
-  async _onDrop(event) {
+  async _onShortRest(event) {
     event.preventDefault();
 
-    let data;
-    try {
-      data = JSON.parse(event.dataTransfer.getData('text/plain'));
-    } catch (err) {
-      return false;
+    const members = await this._resolveMembers(this.actor.system.members);
+    const visibleMembers = members.filter(m => m.canView && m.actor);
+
+    if (!visibleMembers.length) {
+      ui.notifications.warn("No members available for rest.");
+      return;
     }
 
-    if (data.type !== "Actor") return;
+    let content = "<h3>Short Rest (1 hour)</h3><ul>";
 
-    const actor = await fromUuid(data.uuid);
-    if (!actor) {
-      ui.notifications.error("Could not find the dropped actor.");
-      return false;
-    }
+    for (const member of visibleMembers) {
+      const actor = member.actor;
+      const fatigueLevel = actor.system.fatigue?.level || 0;
+      const currentSP = actor.system.stamina?.value || 0;
+      const maxSP = actor.system.stamina?.max || 0;
+      const currentMP = actor.system.magicka?.value || 0;
+      const maxMP = actor.system.magicka?.max || 0;
 
-    // Prevent self-reference
-    if (actor.uuid === this.actor.uuid) {
-      ui.notifications.warn("A group cannot contain itself.");
-      return false;
-    }
+      // RAW: Remove 1 fatigue OR recover 1 SP
+      if (fatigueLevel > 0) {
+        await actor.update({ "system.fatigue.level": fatigueLevel - 1 });
+        content += `<li><b>${actor.name}</b>: Removed 1 fatigue (now ${fatigueLevel - 1})</li>`;
+      } else if (currentSP < maxSP) {
+        await actor.update({ "system.stamina.value": currentSP + 1 });
+        content += `<li><b>${actor.name}</b>: Recovered 1 SP (now ${currentSP + 1}/${maxSP})</li>`;
+      } else {
+        content += `<li><b>${actor.name}</b>: No recovery needed</li>`;
+      }
 
-    // Check for circular references
-    if (actor.type === 'Group') {
-      const wouldBeCircular = await this.actor._wouldCreateCircularReference(actor.uuid);
-      if (wouldBeCircular) {
-        ui.notifications.warn("Cannot add this group - it would create a circular reference.");
-        return false;
+      // RAW: Recover MP = floor(maxMP / 10)
+      const mpRecover = Math.floor(maxMP / 10);
+      if (mpRecover > 0 && currentMP < maxMP) {
+        const newMP = Math.min(currentMP + mpRecover, maxMP);
+        await actor.update({ "system.magicka.value": newMP });
+        content += ` (+${mpRecover} MP)`;
       }
     }
 
-    // Check if already a member
-    const members = foundry.utils.duplicate(this.actor.system.members || []);
-    const existingIndex = members.findIndex(m => m.id === actor.uuid);
+    content += "</ul>";
 
-    if (existingIndex !== -1) {
-      // Actor already exists, increment qty
-      members[existingIndex].qty = (members[existingIndex].qty || 1) + 1;
-      await this.actor.update({ "system.members": members });
-      ui.notifications.info(`Increased ${actor.name} quantity to ${members[existingIndex].qty}.`);
-      return true;
-    }
+    // Update last rest timestamp
+    await this.actor.update({ "system.lastRest.short": game.time.worldTime });
 
-    // Add the member with qty of 1
-    const newMember = {
-      id: actor.uuid,
-      name: actor.name,
-      img: actor.img,
-      type: actor.type,
-      sortOrder: members.length,
-      qty: 1
-    };
+    // Post to chat
+    await ChatMessage.create({
+      user: game.user.id,
+      speaker: { alias: this.actor.name },
+      content: content,
+      whisper: game.users.filter(u => u.isGM).map(u => u.id)
+    });
 
-    const updatedMembers = [...members, newMember];
-    await this.actor.update({ "system.members": updatedMembers });
-
-    ui.notifications.info(`Added ${actor.name} to ${this.actor.name}.`);
-    return true;
+    ui.notifications.info("Short rest completed.");
   }
 
-  async _onDropActor(event, data) {
-    return this._onDrop(event);
+  async _onLongRest(event) {
+    event.preventDefault();
+
+    const members = await this._resolveMembers(this.actor.system.members);
+    const visibleMembers = members.filter(m => m.canView && m.actor);
+
+    if (!visibleMembers.length) {
+      ui.notifications.warn("No members available for rest.");
+      return;
+    }
+
+    let content = "<h3>Long Rest (8 hours)</h3><ul>";
+
+    for (const member of visibleMembers) {
+      const actor = member.actor;
+      const endBonus = Math.floor((actor.system.characteristics?.end?.total || 0) / 10);
+      const fatigueLevel = actor.system.fatigue?.level || 0;
+      const currentHP = actor.system.hp?.value || 0;
+      const maxHP = actor.system.hp?.max || 0;
+      const maxSP = actor.system.stamina?.max || 0;
+      const maxMP = actor.system.magicka?.max || 0;
+      const hasWounds = actor.system.wounded || false;
+
+      let recoveryText = "";
+
+      // RAW: Remove END bonus fatigue levels
+      if (fatigueLevel > 0) {
+        const fatigueRemoved = Math.min(fatigueLevel, endBonus);
+        await actor.update({ "system.fatigue.level": fatigueLevel - fatigueRemoved });
+        recoveryText += `Removed ${fatigueRemoved} fatigue; `;
+      }
+
+      // RAW: Heal END bonus HP (only if no wounds)
+      if (!hasWounds && currentHP < maxHP) {
+        const hpHealed = Math.min(endBonus, maxHP - currentHP);
+        await actor.update({ "system.hp.value": currentHP + hpHealed });
+        recoveryText += `Healed ${hpHealed} HP; `;
+      } else if (hasWounds) {
+        recoveryText += "Cannot heal HP (wounded); ";
+      }
+
+      // RAW: Recover all SP and MP
+      await actor.update({
+        "system.stamina.value": maxSP,
+        "system.magicka.value": maxMP
+      });
+      recoveryText += `Recovered all SP and MP`;
+
+      content += `<li><b>${actor.name}</b>: ${recoveryText}</li>`;
+    }
+
+    content += "</ul>";
+
+    // Update last rest timestamp
+    await this.actor.update({ "system.lastRest.long": game.time.worldTime });
+
+    // Post to chat
+    await ChatMessage.create({
+      user: game.user.id,
+      speaker: { alias: this.actor.name },
+      content: content,
+      whisper: game.users.filter(u => u.isGM).map(u => u.id)
+    });
+
+    ui.notifications.info("Long rest completed.");
+  }
+
+  async _onDeployGroup(event) {
+    event.preventDefault();
+
+    if (!game.user.isGM) {
+      ui.notifications.warn("Only GMs can deploy groups.");
+      return;
+    }
+
+    if (!canvas.ready) {
+      ui.notifications.warn("Canvas is not ready.");
+      return;
+    }
+
+    const members = await this._resolveMembers(this.actor.system.members);
+    const deployable = members.filter(m => m.actor && !m.missing);
+
+    if (!deployable.length) {
+      ui.notifications.warn("No members to deploy.");
+      return;
+    }
+
+    // Center point of scene
+    const centerX = canvas.scene.dimensions.width / 2;
+    const centerY = canvas.scene.dimensions.height / 2;
+    const gridSize = canvas.scene.grid.size;
+    const spacing = gridSize * 1.5;
+
+    // Grid layout: calculate positions
+    const cols = Math.ceil(Math.sqrt(deployable.length));
+    const rows = Math.ceil(deployable.length / cols);
+
+    const startX = centerX - ((cols - 1) * spacing) / 2;
+    const startY = centerY - ((rows - 1) * spacing) / 2;
+
+    const tokenData = [];
+
+    for (let i = 0; i < deployable.length; i++) {
+      const member = deployable[i];
+      const col = i % cols;
+      const row = Math.floor(i / cols);
+
+      tokenData.push({
+        actorId: member.actor.id,
+        x: startX + (col * spacing),
+        y: startY + (row * spacing),
+        hidden: false
+      });
+    }
+
+    await canvas.scene.createEmbeddedDocuments("Token", tokenData);
+
+    ui.notifications.info(`Deployed ${deployable.length} group members.`);
+  }
+
+  async _onDrop(event) {
+    const data = TextEditor.getDragEventData(event);
+
+    if (data.type === "Actor") {
+      const actor = await fromUuid(data.uuid);
+      if (!actor) return;
+
+      if (actor.type === "Group") {
+        ui.notifications.warn("Cannot add a group to a group.");
+        return;
+      }
+
+      const members = this.actor.system.members || [];
+      if (members.some(m => m.id === actor.uuid)) {
+        ui.notifications.warn("This actor is already a member.");
+        return;
+      }
+
+      members.push({
+        id: actor.uuid,
+        uuid: actor.uuid,
+        sortOrder: members.length
+      });
+
+      await this.actor.update({ "system.members": members });
+      ui.notifications.info(`${actor.name} added to group.`);
+    } else {
+      return super._onDrop(event);
+    }
   }
 }

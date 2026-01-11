@@ -1,13 +1,10 @@
 <form class="{{cssClass}}" autocomplete="off">
-
   <div class="sheet-section-container">
-
     <div class="sheet-fixed-container">
       <div class="character-profile-container">
         <div class="profile-img-container">
           <img class="profile-img" src="{{actor.img}}" title="{{actor.name}}">
         </div>
-
         <div>
           <h1 class="charname">{{actor.name}}</h1>
         </div>
@@ -15,44 +12,34 @@
     </div>
 
     <section class="sheet-body">
-      <div class="tab-container">
-
-        <div class="limited-info" style="padding: 20px; text-align: center;">
-          <i class="fas fa-users" style="font-size: 3em; opacity: 0.3; margin-bottom: 10px;"></i>
-          <h2>{{actor.name}}</h2>
-          <p style="opacity: 0.7;">A group of adventurers</p>
-        </div>
-
-        {{#if resolvedMembers.length}}
-          <div class="visible-members">
-            <h3 style="text-align: center; margin: 20px 0;">Known Members</h3>
-            <div class="member-portraits" style="display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; padding: 10px;">
-              {{#each resolvedMembers as |member|}}
-                {{#if member.canView}}
-                  <div class="member-portrait-limited" style="text-align: center;">
-                    <img src="{{member.img}}" width="64" height="64"
-                         title="{{member.name}}"
-                         style="border-radius: 50%; border: 2px solid #666; cursor: pointer;"
-                         data-uuid="{{member.uuid}}"
-                         class="member-portrait-clickable">
-                    <div style="font-size: 0.85em; margin-top: 5px;">{{member.name}}</div>
-                  </div>
-                {{/if}}
-              {{/each}}
-            </div>
-          </div>
-        {{/if}}
-
-        {{#if actor.system.enrichedDescription}}
-          <div class="description-section" style="margin-top: 20px; padding: 0 20px;">
-            <h3>Description</h3>
-            <div class="content-container">
-              {{{actor.system.enrichedDescription}}}
-            </div>
-          </div>
-        {{/if}}
-
+      <div class="limited-info" style="padding: 20px; text-align: center;">
+        <i class="fas fa-users" style="font-size: 3em; opacity: 0.3; margin-bottom: 10px;"></i>
+        <h2>{{actor.name}}</h2>
+        <p style="opacity: 0.7;">A group of adventurers</p>
       </div>
+
+      {{#if resolvedMembers.length}}
+      <div class="visible-members">
+        <h3 style="text-align: center; margin: 20px 0;">Known Members</h3>
+        <div class="member-portraits" style="display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; padding: 10px;">
+          {{#each resolvedMembers as |member|}}
+          {{#if member.canView}}
+          <div class="member-portrait-limited" style="text-align: center;">
+            <img src="{{member.img}}" width="64" height="64" title="{{member.name}}" style="border-radius: 50%; border: 2px solid #666; cursor: pointer;" data-uuid="{{member.uuid}}" class="member-portrait-clickable">
+            <div style="font-size: 0.85em; margin-top: 5px;">{{member.name}}</div>
+          </div>
+          {{/if}}
+          {{/each}}
+        </div>
+      </div>
+      {{/if}}
+
+      {{#if actor.system.enrichedDescription}}
+      <div class="description-section" style="margin-top: 20px; padding: 0 20px;">
+        <h3>Description</h3>
+        <div class="content-container">{{{actor.system.enrichedDescription}}}</div>
+      </div>
+      {{/if}}
     </section>
   </div>
 </form>

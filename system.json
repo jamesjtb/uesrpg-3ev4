@@ -7,7 +7,8 @@
   ],
   "styles": [
     "styles/main.css",
-    "styles/spell-sheet-compact.css"
+    "styles/spell-sheet-compact.css",
+    "styles/group-sheet.css"
   ],
   "packs": [
     {

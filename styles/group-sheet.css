@@ -1,0 +1,107 @@
+/* Group Sheet Compact UI */
+.uesrpg.sheet.actor.group .member-item {
+  background: rgba(0, 0, 0, 0.05);
+  transition: background 0.2s ease;
+}
+
+.uesrpg.sheet.actor.group .member-item:hover {
+  background: rgba(0, 100, 200, 0.1);
+}
+
+.uesrpg.sheet.actor.group .member-portrait img {
+  object-fit: cover;
+  border: 1px solid #666;
+}
+
+.uesrpg.sheet.actor.group .member-delete {
+  background: rgba(200, 0, 0, 0.1);
+  border: 1px solid rgba(200, 0, 0, 0.3);
+  padding: 4px 8px;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.uesrpg.sheet.actor.group .member-delete:hover {
+  background: rgba(200, 0, 0, 0.3);
+}
+
+.uesrpg.sheet.actor.group .controls button {
+  padding: 8px 16px;
+  border: 1px solid #999;
+  border-radius: 4px;
+  background: rgba(255, 255, 255, 0.1);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.uesrpg.sheet.actor.group .controls button:hover {
+  background: rgba(0, 100, 200, 0.2);
+  border-color: #0064c8;
+}
+
+.uesrpg.sheet.actor.group .stat-card {
+  padding: 15px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.uesrpg.sheet.actor.group .change-pace {
+  border: 2px solid #0064c8;
+  background: rgba(0, 100, 200, 0.1);
+  cursor: pointer;
+  border-radius: 6px;
+  transition: all 0.2s ease;
+}
+
+.uesrpg.sheet.actor.group .change-pace:hover {
+  background: rgba(0, 100, 200, 0.3);
+}
+
+.uesrpg.sheet.actor.group .inventory-section {
+  margin-bottom: 20px;
+}
+
+.uesrpg.sheet.actor.group .inventory-section h4 {
+  border-bottom: 2px solid #999;
+  padding-bottom: 5px;
+  margin-bottom: 10px;
+}
+
+.uesrpg.sheet.actor.group .item-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.uesrpg.sheet.actor.group .item-list .item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px;
+  border-bottom: 1px solid #ddd;
+}
+
+.uesrpg.sheet.actor.group .item-list .item:hover {
+  background: rgba(0, 100, 200, 0.05);
+}
+
+.uesrpg.sheet.actor.group .item-name {
+  flex-grow: 1;
+}
+
+.uesrpg.sheet.actor.group .item-delete {
+  color: #d9534f;
+  cursor: pointer;
+}
+
+.uesrpg.sheet.actor.group .item-delete:hover {
+  color: #c9302c;
+}
+
+/* Limited Sheet */
+.uesrpg.sheet.actor.group.limited .member-portrait-clickable:hover {
+  transform: scale(1.1);
+  transition: transform 0.2s ease;
+}
