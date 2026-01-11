@@ -3810,7 +3810,12 @@ if (stage === "attacker-roll") {
       // Increment attack counter after AP is spent successfully
       // This ensures attacks only count if they were properly resourced
       if (apOk) {
-        await AttackTracker.incrementAttacks(attacker);
+        try {
+          await AttackTracker.incrementAttacks(attacker);
+        } catch (err) {
+          console.error("UESRPG | Failed to increment attack counter", { actor: attacker?.uuid, err });
+          // Don't break the workflow if attack tracking fails
+        }
       }
       
       if (isRollCommitted) {
