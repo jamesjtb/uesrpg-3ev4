@@ -1928,6 +1928,71 @@
   min-height: 0 !important;
 }
 
+/* Equipment item sheets (armor/weapon/ammunition) scroll fix */
+.worldbuilding.sheet.item.armor .sheet-body,
+.worldbuilding.sheet.item.weapon .sheet-body,
+.worldbuilding.sheet.item.ammunition .sheet-body {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
+/* Ensure tab containers don't inflate */
+.worldbuilding.sheet.item.armor .tab,
+.worldbuilding.sheet.item.weapon .tab,
+.worldbuilding.sheet.item.ammunition .tab {
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+}
+
+/* Description tab editor fix */
+.worldbuilding.sheet.item.armor .tab[data-tab="description"],
+.worldbuilding.sheet.item.weapon .tab[data-tab="description"],
+.worldbuilding.sheet.item.ammunition .tab[data-tab="description"] {
+  flex: 1 1 auto;
+  min-height: 0;
+  padding: 12px;
+}
+
+/* Full-width editor container */
+.worldbuilding.sheet.item.armor .item-description-container,
+.worldbuilding.sheet.item.weapon .item-description-container,
+.worldbuilding.sheet.item.ammunition .item-description-container {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  min-height: 0;
+}
+
+/* Editor should fill available space and scroll internally */
+.worldbuilding.sheet.item.armor .editor,
+.worldbuilding.sheet.item.weapon .editor,
+.worldbuilding.sheet.item.ammunition .editor {
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 auto;
+  min-height: 200px;
+  width: 100%;
+}
+
+.worldbuilding.sheet.item.armor .editor-content,
+.worldbuilding.sheet.item.weapon .editor-content,
+.worldbuilding.sheet.item.ammunition .editor-content {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow-y: auto;
+}
+
+/* Attributes tab scroll containment */
+.worldbuilding.sheet.item.armor .tab[data-tab="attributes"],
+.worldbuilding.sheet.item.weapon .tab[data-tab="attributes"],
+.worldbuilding.sheet.item.ammunition .tab[data-tab="attributes"] {
+  overflow-y: auto;
+  padding: 12px;
+}
+
 /* Compact weapon attributes layout */
 .worldbuilding .weapon-attributes-container {
   display: grid;
