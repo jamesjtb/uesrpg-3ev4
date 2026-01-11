@@ -221,11 +221,18 @@ export function initializeUpkeepSystem() {
       root = html.get(0);
     }
 
-    if (!root) return;
+    if (!root) {
+      console.warn("UESRPG | upkeep-workflow | Could not normalize HTML element for upkeep card");
+      return;
+    }
 
     const confirmBtn = root.querySelector(".uesrpg-upkeep-confirm");
     const cancelBtn = root.querySelector(".uesrpg-upkeep-cancel");
-    if (!confirmBtn && !cancelBtn) return;
+    
+    if (!confirmBtn && !cancelBtn) {
+      console.warn("UESRPG | upkeep-workflow | Upkeep buttons not found in card", { hasData: !!data });
+      return;
+    }
 
     const disableBoth = () => {
       if (confirmBtn) confirmBtn.disabled = true;

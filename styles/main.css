@@ -2448,3 +2448,56 @@
   font-style: italic;
   margin-top: 0.25rem;
 }
+
+/* -------------------------------------------- */
+/* Upkeep Chat Cards                             */
+/* -------------------------------------------- */
+.uesrpg-upkeep-card {
+  padding: 12px;
+  border: 1px solid rgba(0, 0, 0, 0.15);
+  border-radius: 4px;
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.uesrpg-upkeep-card h3 {
+  margin: 0 0 8px 0;
+  font-size: 16px;
+  font-weight: 700;
+}
+
+.uesrpg-upkeep-card p {
+  margin: 4px 0;
+  font-size: 13px;
+}
+
+.uesrpg-upkeep-buttons {
+  display: flex;
+  gap: 8px;
+  margin-top: 12px;
+}
+
+.uesrpg-upkeep-confirm,
+.uesrpg-upkeep-cancel {
+  padding: 6px 12px;
+  border: 1px solid #999;
+  border-radius: 4px;
+  background: rgba(255, 255, 255, 0.1);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.uesrpg-upkeep-confirm:hover {
+  background: rgba(0, 150, 0, 0.2);
+  border-color: #0a0;
+}
+
+.uesrpg-upkeep-cancel:hover {
+  background: rgba(200, 0, 0, 0.2);
+  border-color: #c00;
+}
+
+.uesrpg-upkeep-confirm:disabled,
+.uesrpg-upkeep-cancel:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
