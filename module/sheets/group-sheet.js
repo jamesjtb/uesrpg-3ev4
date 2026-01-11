@@ -183,6 +183,16 @@ export class GroupSheet extends ActorSheet {
       html.find(".deploy-group").click(this._onDeployGroup.bind(this));
     }
 
+    // Register hook to refresh when member actors update
+    this._memberUpdateHook = Hooks.on("updateActor", (actor, updateData, options, userId) => {
+      // Check if updated actor is a member of this group
+      const isMember = this.actor.system.members?.some(m => m.id === actor.uuid);
+      if (isMember && this.rendered) {
+        // Re-render sheet without closing to show updated member data
+        this.render(false);
+      }
+    });
+
     if (!this.options.editable) return;
   }
 
@@ -688,5 +698,13 @@ export class GroupSheet extends ActorSheet {
     
     // Fall back to default drop handler
     return super._onDrop(event);
+  }
+
+  async close(options) {
+    if (this._memberUpdateHook) {
+      Hooks.off("updateActor", this._memberUpdateHook);
+      this._memberUpdateHook = null;
+    }
+    return super.close(options);
   }
 }
