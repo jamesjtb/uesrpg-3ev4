@@ -648,6 +648,7 @@
       "description": "",
       "notes": "",
       "members": [],
+      "travelPace": "normal",
       "travel": {
         "pace": "normal",
         "averageSpeed": 0
