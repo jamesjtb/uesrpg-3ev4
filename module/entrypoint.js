@@ -31,6 +31,13 @@ Hooks.once('ready', async function () {
 Hooks.once("init", async function() {
   console.log(`UESRPG | Initializing`);
   await initHandler();
+  
+  // Register Handlebars helpers
+  Handlebars.registerHelper('capitalize', function(str) {
+    const s = String(str || '');
+    if (!s) return '';
+    return s.charAt(0).toUpperCase() + s.slice(1);
+  });
   // Expose AE key inspection helper
   game.uesrpg = game.uesrpg || {};
   game.uesrpg.dumpAEKeys = dumpAEKeys;
