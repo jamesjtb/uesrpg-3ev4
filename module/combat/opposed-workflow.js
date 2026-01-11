@@ -24,6 +24,7 @@ import { getDamageTypeFromWeapon, getHitLocationFromRoll, resolveHitLocationForT
 import { getBlockValue, normalizeHitLocation } from "./mitigation.js";
 import { DAMAGE_TYPES } from "./damage-automation.js";
 import { ActionEconomy } from "./action-economy.js";
+import { AttackTracker } from "./attack-tracker.js";
 import { safeUpdateChatMessage } from "../helpers/chat-message-socket.js";
 import { requestCreateActiveEffect } from "../helpers/active-effect-proxy.js";
 import { buildSpecialActionsForActor, isSpecialActionUsableNow } from "./combat-style-utils.js";
@@ -3798,12 +3799,25 @@ if (stage === "attacker-roll") {
       const skipAP = Boolean(data.context?.skipAttackerAPDeduction);
       pendingApCost = Number(data.attacker?.pendingApCost ?? pendingApCost) || 0;
       const apVariant = String(data.attacker?.pendingApVariant ?? data.attacker.variant ?? "normal");
+      let apOk = true;
       if (pendingApCost > 0 && !skipAP) {
-        const ok = await ActionEconomy.spendAP(attacker, pendingApCost, { reason: `attackVariant:${apVariant}`, silent: true });
-        if (!ok) {
+        apOk = await ActionEconomy.spendAP(attacker, pendingApCost, { reason: `attackVariant:${apVariant}`, silent: true });
+        if (!apOk) {
           ui.notifications.warn("Insufficient Action Points to perform this attack.");
         }
       }
+      
+      // Increment attack counter after AP is spent successfully
+      // This ensures attacks only count if they were properly resourced
+      if (apOk) {
+        try {
+          await AttackTracker.incrementAttacks(attacker);
+        } catch (err) {
+          console.error("UESRPG | Failed to increment attack counter", { actor: attacker?.uuid, err });
+          // Don't break the workflow if attack tracking fails
+        }
+      }
+      
       if (isRollCommitted) {
         // Banked-choice auto-roll: do not write roll results directly into the parent card.
         // The roll chat message will be banked into the parent card by the createChatMessage hook.
