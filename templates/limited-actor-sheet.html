@@ -1,0 +1,41 @@
+<form class="{{cssClass}}" autocomplete="off">
+  <div class="sheet-section-container">
+    <div class="sheet-fixed-container">
+      <div class="character-profile-container">
+        <div class="profile-img-container">
+          <img class="profile-img" src="{{actor.img}}" title="{{actor.name}}" data-edit="img" alt="{{actor.name}} portrait">
+        </div>
+        <div>
+          <h1 class="charname">{{actor.name}}</h1>
+        </div>
+      </div>
+    </div>
+    <section class="sheet-body">
+      <div class="tab-container">
+        <div class="limited-info" style="padding: 20px; text-align: center;">
+          <h2>{{actor.name}}</h2>
+          {{#if actor.system.race}}
+            <p><strong>Race:</strong> {{actor.system.race}}</p>
+          {{/if}}
+          {{#if actor.system.age}}
+            <p><strong>Age:</strong> {{actor.system.age}}</p>
+          {{/if}}
+          {{#if actor.system.height}}
+            <p><strong>Height:</strong> {{actor.system.height}}</p>
+          {{/if}}
+          {{#if actor.system.weight}}
+            <p><strong>Weight:</strong> {{actor.system.weight}}</p>
+          {{/if}}
+        </div>
+        {{#if actor.system.enrichedBio}}
+          <div class="bio-section" style="margin-top: 20px; padding: 0 20px;">
+            <h3>Biography</h3>
+            <div class="content-container">
+              {{{actor.system.enrichedBio}}}
+            </div>
+          </div>
+        {{/if}}
+      </div>
+    </section>
+  </div>
+</form>

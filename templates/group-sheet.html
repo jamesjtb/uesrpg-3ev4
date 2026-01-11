@@ -1,0 +1,66 @@
+<form class="{{cssClass}}" autocomplete="off">
+  <header class="sheet-header">
+    <img class="profile-img" src="{{actor.img}}" data-edit="img" title="{{actor.name}}" alt="{{actor.name}} portrait" />
+    <div class="header-fields">
+      <h1 class="charname">
+        <input name="name" type="text" value="{{actor.name}}" placeholder="Group Name" />
+      </h1>
+    </div>
+  </header>
+
+  {{!-- Sheet Tab Navigation --}}
+  <nav class="sheet-tabs tabs" data-group="primary">
+    <a class="item" data-tab="members">Members</a>
+    <a class="item" data-tab="details">Details</a>
+  </nav>
+
+  {{!-- Sheet Body --}}
+  <section class="sheet-body">
+    {{!-- Members Tab --}}
+    <div class="tab members" data-group="primary" data-tab="members">
+      <div class="member-drop-zone" role="button" aria-label="Drop actors here to add them to the group" tabindex="0" style="border: 2px dashed #999; padding: 20px; margin: 10px; text-align: center; min-height: 100px;">
+        <p><i class="fas fa-users"></i> Drag actors here to add them to the group</p>
+      </div>
+
+      {{#if members}}
+        <div class="members-list" style="margin: 10px;">
+          <h3>Group Members ({{members.length}})</h3>
+          {{#each members}}
+            <div class="member-item" style="display: flex; align-items: center; padding: 10px; border-bottom: 1px solid #ccc;">
+              <img class="member-portrait" src="{{this.img}}" data-uuid="{{this.uuid}}" 
+                   style="width: 48px; height: 48px; border-radius: 4px; cursor: pointer; margin-right: 10px;" 
+                   title="Click to open {{this.name}}'s sheet" />
+              <div style="flex: 1;">
+                <strong>{{this.name}}</strong>
+                <div style="font-size: 0.9em; color: #666;">{{this.type}}</div>
+              </div>
+              {{#if @root.editable}}
+                <button type="button" class="member-remove" data-uuid="{{this.uuid}}" 
+                        style="background: #8b0000; color: white; border: none; padding: 5px 10px; cursor: pointer; border-radius: 3px;">
+                  <i class="fas fa-times"></i> Remove
+                </button>
+              {{/if}}
+            </div>
+          {{/each}}
+        </div>
+      {{else}}
+        <div style="margin: 10px; text-align: center; color: #666;">
+          <p>No members yet. Drag actors to the drop zone above to add them.</p>
+        </div>
+      {{/if}}
+    </div>
+
+    {{!-- Details Tab --}}
+    <div class="tab details" data-group="primary" data-tab="details">
+      <div class="form-group" style="margin: 10px;">
+        <label>Description</label>
+        {{editor actor.system.enrichedDescription target="system.description" engine="prosemirror" button=true owner=owner editable=editable}}
+      </div>
+
+      <div class="form-group" style="margin: 10px;">
+        <label>Notes</label>
+        {{editor actor.system.enrichedNotes target="system.notes" engine="prosemirror" button=true owner=owner editable=editable}}
+      </div>
+    </div>
+  </section>
+</form>

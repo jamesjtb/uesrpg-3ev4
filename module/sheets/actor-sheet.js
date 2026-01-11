@@ -90,6 +90,14 @@ export class SimpleActorSheet extends foundry.appv1.sheets.ActorSheet {
     });
   }
 
+  get template() {
+    const path = "systems/uesrpg-3ev4/templates";
+    if (!game.user.isGM && this.actor.limited) {
+      return `${path}/limited-actor-sheet.html`;
+    }
+    return `${path}/actor-sheet.html`;
+  }
+
   /* -------------------------------------------- */
 
   /** @override */
@@ -194,6 +202,12 @@ async getData(options = {}) {
   const enrichFn = foundry.applications.ux.TextEditor.implementation.enrichHTML;
   const bio = (data.actor && data.actor.system && typeof data.actor.system.bio === "string") ? data.actor.system.bio : "";
   data.actor.system.enrichedBio = await enrichFn(bio, { async: true });
+  
+  // Enrich HTML fields
+  const journal = (data.actor && data.actor.system && typeof data.actor.system.journal === "string") ? data.actor.system.journal : "";
+  data.actor.system.enrichedJournal = await enrichFn(journal, { async: true });
+  const notes = (data.actor && data.actor.system && typeof data.actor.system.notes === "string") ? data.actor.system.notes : "";
+  data.actor.system.enrichedNotes = await enrichFn(notes, { async: true });
     // Normalize rank values for rendering (prevents UI defaulting to 'untrained' due to legacy typos)
     try {
       const items = data?.items || [];

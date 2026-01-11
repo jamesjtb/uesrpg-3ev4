@@ -160,6 +160,10 @@ export class npcSheet extends foundry.appv1.sheets.ActorSheet {
         ? data.actor.system.bio
         : "";
     data.actor.system.enrichedBio = await enrichFn(bio, { async: true });
+    
+    // Enrich HTML fields
+    const notes = (data.actor && data.actor.system && typeof data.actor.system.notes === "string") ? data.actor.system.notes : "";
+    data.actor.system.enrichedNotes = await enrichFn(notes, { async: true });
     // Active Effects (for Effects tab templates)
     if (this.actor && this.actor.effects) {
       data.effects = this.actor.effects.contents.map(e => e.toObject());
@@ -177,6 +181,9 @@ export class npcSheet extends foundry.appv1.sheets.ActorSheet {
 
   get template() {
     const path = "systems/uesrpg-3ev4/templates";
+    if (!game.user.isGM && this.actor.limited) {
+      return `${path}/limited-npc-sheet.html`;
+    }
     return `${path}/${this.actor.type.toLowerCase()}-sheet.html`;
   }
 
