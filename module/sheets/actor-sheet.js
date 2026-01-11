@@ -305,31 +305,6 @@ async activateListeners(html) {
   this._setDefaultItemFilter();
   this._setResourceBars();
 
-  // Spell school collapse/expand handlers
-  html.find('.spell-school-header').on('click', async (ev) => {
-    ev.preventDefault();
-    const header = ev.currentTarget;
-    const section = header.closest('.spell-school-section');
-    const table = section?.querySelector('.spell-school-table');
-    const arrow = header.querySelector('.collapse-arrow');
-    const groupKey = header.dataset.group;
-    
-    if (!table || !arrow || !groupKey) return;
-    
-    // Check current state and toggle
-    const wasCollapsed = table.style.display === 'none';
-    const nowCollapsed = !wasCollapsed;
-    
-    table.style.display = nowCollapsed ? 'none' : '';
-    arrow.classList.toggle('fa-chevron-down', !nowCollapsed);
-    arrow.classList.toggle('fa-chevron-right', nowCollapsed);
-    
-    // Save the new state
-    const collapsedGroups = this.actor.getFlag('uesrpg-3ev4', 'collapsedGroups') || {};
-    collapsedGroups[groupKey] = nowCollapsed;
-    await this.actor.setFlag('uesrpg-3ev4', 'collapsedGroups', collapsedGroups);
-  });
-
   // Spell item click to open sheet
   html.find('.spell-row .item-img, .spell-row .item-name').on('click', async (ev) => {
     ev.preventDefault();
@@ -345,9 +320,8 @@ async activateListeners(html) {
   });
 
   // Per-school "Add Spell" button handler
-  html.find('.spell-school-header .item-create').on('click', async (ev) => {
+  html.find('.spell-school-actions .item-create').on('click', async (ev) => {
     ev.preventDefault();
-    ev.stopPropagation(); // Don't trigger collapse
     
     const school = ev.currentTarget.dataset.school;
     

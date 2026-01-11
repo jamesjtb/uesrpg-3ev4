@@ -274,17 +274,6 @@
   background: rgba(0, 0, 0, 0.15);
 }
 
-.spell-school-header .item-create {
-  margin-left: auto;
-  color: #444;
-  font-size: 12px;
-  cursor: pointer;
-}
-
-.spell-school-header .item-create:hover {
-  color: #000;
-}
-
 .spell-school-header .school-count {
   opacity: 0.6;
   font-size: 11px;
@@ -294,6 +283,35 @@
 .spell-school-header .collapse-arrow {
   font-size: 10px;
   transition: transform 0.2s;
+}
+
+.spell-school-actions {
+  padding: 6px 10px;
+  background: rgba(0, 0, 0, 0.03);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.spell-school-actions .item-create {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 10px;
+  background: #333;
+  color: white;
+  border-radius: 3px;
+  cursor: pointer;
+  font-size: 11px;
+  font-weight: 600;
+  transition: background 0.2s;
+  text-decoration: none;
+}
+
+.spell-school-actions .item-create:hover {
+  background: #000;
+}
+
+.spell-school-actions .item-create i {
+  font-size: 10px;
 }
 
 .spell-school-table {
