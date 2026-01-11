@@ -1,25 +1,19 @@
 <form class="{{cssClass}}" autocomplete="off">
   <div class="sheet-section-container">
     <div class="sheet-fixed-container">
-      <div class="character-profile-container group-header-horizontal">
-        <div class="profile-img-container-compact">
-          <img class="profile-img-compact" src="{{actor.img}}" data-edit="img" title="{{actor.name}}" 
-               style="width: 100px; height: 100px; object-fit: cover; border-radius: 8px; cursor: pointer; flex-shrink: 0;">
+      <div class="character-profile-container">
+        <div class="profile-img-container">
+          <img class="profile-img" src="{{actor.img}}" data-edit="img" title="{{actor.name}}">
         </div>
-
-        <div class="header-right-section" style="flex-grow: 1; display: flex; flex-direction: column; gap: 10px; min-width: 0;">
-          <div class="group-name-input" style="width: 100%;">
-            <input type="text" name="name" value="{{actor.name}}" placeholder="Group Name" 
-                   style="width: 100%; font-size: 1.5em; font-weight: bold; border: none; background: transparent;">
-          </div>
-
-          <nav class="sheet-tabs tabs" data-group="primary" style="display: flex; gap: 5px; flex-wrap: wrap;">
-            <a class="item" data-tab="members">Members</a>
-            <a class="item" data-tab="inventory">Inventory</a>
-            <a class="item" data-tab="travel">Travel</a>
-            <a class="item" data-tab="details">Details</a>
-          </nav>
+        <div>
+          <h1 class="charname"><input type="text" name="name" value="{{actor.name}}" placeholder="Group Name"></h1>
         </div>
+        <nav class="sheet-tabs tabs" data-group="primary">
+          <a class="item" data-tab="members">Members</a>
+          <a class="item" data-tab="inventory">Inventory</a>
+          <a class="item" data-tab="travel">Travel</a>
+          <a class="item" data-tab="details">Details</a>
+        </nav>
       </div>
     </div>
 
@@ -367,7 +361,7 @@
         
         <div class="travel-stats" style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin: 20px 0;">
           <div class="stat-card">
-            <h4>Average Speed</h4>
+            <h4>Group Speed</h4>
             <div style="font-size: 20px; font-weight: bold;">{{displayAverageSpeed}} m/round</div>
             <div style="font-size: 16px; font-weight: bold; margin-top: 4px; color: #0064c8;">{{displayAverageSpeedKmh}} km/h</div>
             <p style="opacity: 0.7; font-size: 12px; margin-top: 4px;">Speed of slowest member with pace multiplier</p>
