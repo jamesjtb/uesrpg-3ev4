@@ -54,32 +54,33 @@ export class SimpleActor extends Actor {
       })
     }
   }
-
   prepareData() {
     super.prepareData();
 
     // Ensure required data structures exist so downstream derived-data logic is resilient,
     // even when actors are partially migrated or have inconsistent embedded item data.
     this._ensureSystemData();
-    
+
     // Apply legacy characteristic bonuses from talents/traits/powers
     this._applyLegacyCharacteristicBonuses();
 
-try {
-  const actorData = this;
+    try {
+      const actorData = this;
 
-  if (actorData.type === "Player Character" && typeof this._prepareCharacterData === "function") {
-    this._prepareCharacterData(actorData);
-  } else if (actorData.type === "NPC" && typeof this._prepareNPCData === "function") {
-    this._prepareNPCData(actorData);
-  } else if (actorData.type === "Group" && typeof this._prepareGroupData === "function") {
-    this._prepareGroupData(actorData);
+      if (actorData.type === "Player Character" && typeof this._prepareCharacterData === "function") {
+        this._prepareCharacterData(actorData);
+      } else if (actorData.type === "NPC" && typeof this._prepareNPCData === "function") {
+        this._prepareNPCData(actorData);
+      } else if (actorData.type === "Group" && typeof this._prepareGroupData === "function") {
+        this._prepareGroupData(actorData);
+      }
+    } catch (err) {
+      console.error(`uesrpg-3ev4 | Error during prepareData for ${this.name || this.id}:`, err);
+      // Re-ensure minimum safe defaults after a failure to prevent cascading errors in rendering.
+      this._ensureSystemData();
+    }
   }
-} catch (err) {
-  console.error(`uesrpg-3ev4 | Error during prepareData for ${this.name || this.id}:`, err);
-  // Re-ensure minimum safe defaults after a failure to prevent cascading errors in rendering.
-  this._ensureSystemData();
-}
+
 
   /**
    * Ensure required system data objects exist with safe defaults.
@@ -1360,7 +1361,7 @@ this._applyMovementRestrictionSemantics(actorData, actorSystemData);
     // this._perfEnd('_prepareCharacterData', t0);
   }
 
-  async _prepareNPCData(actorData) {
+   _prepareNPCData(actorData) {
     const actorSystemData = actorData.system;
 
     // PERF: optional profiling (comment out in production)
@@ -1963,7 +1964,7 @@ this._applyMovementRestrictionSemantics(actorData, actorSystemData);
     return checkActor(actorUuid);
   }
     
-  async _calculateItemSkillModifiers(actorData, agg) {
+   _calculateItemSkillModifiers(actorData, agg) {
     // If aggregator is provided, apply skillModifiers from it (fast, no item.filter)
     if (agg && agg.skillModifiers && Object.keys(agg.skillModifiers).length > 0) {
       for (let [name, value] of Object.entries(agg.skillModifiers)) {
