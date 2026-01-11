@@ -207,7 +207,7 @@ export class GroupSheet extends ActorSheet {
           one: {
             label: "Item",
             callback: async () => {
-              const itemData = [{ name: "New Item", type: "item" }];
+              const itemData = [{ name: "item", type: "item" }];
               const newItem = await this.actor.createEmbeddedDocuments("Item", itemData);
               await newItem[0].sheet.render(true);
             },
@@ -215,7 +215,7 @@ export class GroupSheet extends ActorSheet {
           two: {
             label: "Ammunition",
             callback: async () => {
-              const itemData = [{ name: "New Ammunition", type: "ammunition" }];
+              const itemData = [{ name: "ammunition", type: "ammunition" }];
               const newItem = await this.actor.createEmbeddedDocuments("Item", itemData);
               await newItem[0].sheet.render(true);
             },
@@ -223,7 +223,7 @@ export class GroupSheet extends ActorSheet {
           three: {
             label: "Armor",
             callback: async () => {
-              const itemData = [{ name: "New Armor", type: "armor" }];
+              const itemData = [{ name: "armor", type: "armor" }];
               const newItem = await this.actor.createEmbeddedDocuments("Item", itemData);
               await newItem[0].sheet.render(true);
             },
@@ -231,7 +231,7 @@ export class GroupSheet extends ActorSheet {
           four: {
             label: "Weapon",
             callback: async () => {
-              const itemData = [{ name: "New Weapon", type: "weapon" }];
+              const itemData = [{ name: "weapon", type: "weapon" }];
               const newItem = await this.actor.createEmbeddedDocuments("Item", itemData);
               await newItem[0].sheet.render(true);
             },
@@ -248,7 +248,7 @@ export class GroupSheet extends ActorSheet {
       d.render(true);
     } else {
       // Create item of the specified type directly
-      const itemData = [{ name: `New ${itemType}`, type: itemType }];
+      const itemData = [{ name: itemType, type: itemType }];
       const newItem = await this.actor.createEmbeddedDocuments("Item", itemData);
       await newItem[0].sheet.render(true);
     }
