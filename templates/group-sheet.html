@@ -1,22 +1,24 @@
 <form class="{{cssClass}}" autocomplete="off">
   <div class="sheet-section-container">
     <div class="sheet-fixed-container">
-      <div class="character-profile-container">
-        <div class="profile-img-container">
-          <img class="profile-img" src="{{actor.img}}" data-edit="img" title="{{actor.name}}">
+      <div class="character-profile-container group-header-horizontal">
+        <div class="profile-img-container-compact">
+          <img class="profile-img-compact" src="{{actor.img}}" data-edit="img" title="{{actor.name}}" 
+               style="width: 100px; height: 100px; object-fit: cover; border-radius: 8px; cursor: pointer; flex-shrink: 0;">
         </div>
 
-        <nav class="sheet-tabs tabs" data-group="primary">
-          <a class="item" data-tab="members">Members</a>
-          <a class="item" data-tab="inventory">Inventory</a>
-          <a class="item" data-tab="travel">Travel</a>
-          <a class="item" data-tab="details">Details</a>
-        </nav>
+        <div class="header-right-section" style="flex-grow: 1; display: flex; flex-direction: column; gap: 10px; min-width: 0;">
+          <div class="group-name-input" style="width: 100%;">
+            <input type="text" name="name" value="{{actor.name}}" placeholder="Group Name" 
+                   style="width: 100%; font-size: 1.5em; font-weight: bold; border: none; background: transparent;">
+          </div>
 
-        <div>
-          <h1 class="charname">
-            <input type="text" name="name" value="{{actor.name}}" placeholder="Group Name">
-          </h1>
+          <nav class="sheet-tabs tabs" data-group="primary" style="display: flex; gap: 5px; flex-wrap: wrap;">
+            <a class="item" data-tab="members">Members</a>
+            <a class="item" data-tab="inventory">Inventory</a>
+            <a class="item" data-tab="travel">Travel</a>
+            <a class="item" data-tab="details">Details</a>
+          </nav>
         </div>
       </div>
     </div>
@@ -25,54 +27,60 @@
 
       <!-- Members Tab -->
       <div class="tab members" data-group="primary" data-tab="members">
-        <div class="member-drop-zone" style="border: 2px dashed #999; padding: 20px; margin: 10px 0; text-align: center;">
-          <i class="fas fa-users" style="font-size: 2em; opacity: 0.5;"></i>
-          <p style="margin: 10px 0 0 0; opacity: 0.7;">
+        <!-- Drop zone stays at top -->
+        <div class="member-drop-zone" style="border: 2px dashed #999; padding: 15px; margin-bottom: 15px; text-align: center; background: rgba(255,255,255,0.05);">
+          <i class="fas fa-users" style="font-size: 1.5em; opacity: 0.5;"></i>
+          <p style="margin: 8px 0 0 0; opacity: 0.7; font-size: 0.95em;">
             {{#if editable}}Drag actors here to add them to this group{{else}}Group Members{{/if}}
           </p>
         </div>
 
         {{#if resolvedMembers.length}}
-        <div class="controls" style="margin: 10px 0; display: flex; gap: 10px;">
+        <!-- Controls row -->
+        <div class="controls" style="margin-bottom: 15px; display: flex; gap: 8px;">
           {{#if isGM}}
-          <button type="button" class="deploy-group" style="flex: 1;">
+          <button type="button" class="deploy-group" style="flex: 1; padding: 8px 12px; font-size: 0.95em;">
             <i class="fas fa-chess-board"></i> Deploy Group
           </button>
           {{/if}}
-          <button type="button" class="short-rest" style="flex: 1;">
+          <button type="button" class="short-rest" style="flex: 1; padding: 8px 12px; font-size: 0.95em;">
             <i class="fas fa-coffee"></i> Short Rest
           </button>
-          <button type="button" class="long-rest" style="flex: 1;">
+          <button type="button" class="long-rest" style="flex: 1; padding: 8px 12px; font-size: 0.95em;">
             <i class="fas fa-bed"></i> Long Rest
           </button>
         </div>
 
-        <div class="member-list" style="display: flex; flex-direction: column; gap: 8px;">
+        <!-- Member list with guaranteed visibility -->
+        <div class="member-list-scrollable" style="display: flex; flex-direction: column; gap: 8px; max-height: 400px; overflow-y: auto; padding-right: 5px;">
           {{#each resolvedMembers as |member|}}
-          <div class="member-item" data-uuid="{{member.uuid}}" style="display: flex; align-items: center; padding: 8px; border: 1px solid #ccc; border-radius: 4px; gap: 10px;">
+          <div class="member-item" data-uuid="{{member.uuid}}" 
+               style="display: flex; align-items: center; padding: 8px; border: 1px solid #999; border-radius: 4px; gap: 10px; background: rgba(255,255,255,0.03);">
             
             <div class="member-portrait" style="cursor: pointer; flex-shrink: 0;">
-              <img src="{{member.img}}" width="36" height="36" title="{{member.name}}" style="border-radius: 4px; {{#if member.missing}}opacity: 0.5; filter: grayscale(100%);{{/if}}">
+              <img src="{{member.img}}" width="36" height="36" title="{{member.name}}" 
+                   style="border-radius: 4px; object-fit: cover; {{#if member.missing}}opacity: 0.5; filter: grayscale(100%);{{/if}}">
             </div>
 
-            <div class="member-info" style="flex-grow: 1;">
-              <div class="member-name" style="cursor: pointer; font-weight: bold; font-size: 14px;">
+            <div class="member-info" style="flex-grow: 1; min-width: 0;">
+              <div class="member-name" style="cursor: pointer; font-weight: bold; font-size: 0.95em; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
                 {{member.name}}
-                {{#if member.missing}}<span style="color: #d9534f; font-size: 0.9em;">(Missing)</span>{{/if}}
+                {{#if member.missing}}<span style="color: #d9534f; font-size: 0.85em;">(Missing)</span>{{/if}}
               </div>
               
               {{#if member.canView}}
-              <div class="member-stats" style="display: flex; gap: 12px; font-size: 12px; margin-top: 4px;">
-                <span><i class="fas fa-heart"></i> {{member.hp.value}}/{{member.hp.max}}</span>
-                <span><i class="fas fa-bolt"></i> {{member.stamina.value}}/{{member.stamina.max}}</span>
-                <span><i class="fas fa-running"></i> {{member.speed}}</span>
-                {{#if member.fatigue}}<span style="color: #d9534f;"><i class="fas fa-exclamation-triangle"></i> Fatigue {{member.fatigue}}</span>{{/if}}
+              <div class="member-stats" style="display: flex; gap: 10px; font-size: 0.85em; margin-top: 4px; flex-wrap: wrap;">
+                <span title="Health Points"><i class="fas fa-heart" style="color: #c03030;"></i> {{member.hp.value}}/{{member.hp.max}}</span>
+                <span title="Stamina Points"><i class="fas fa-bolt" style="color: #30a0c0;"></i> {{member.stamina.value}}/{{member.stamina.max}}</span>
+                <span title="Speed"><i class="fas fa-running" style="color: #60c030;"></i> {{member.speed}}</span>
+                {{#if member.fatigue}}<span style="color: #d9534f;" title="Fatigue Level"><i class="fas fa-exclamation-triangle"></i> Fatigue {{member.fatigue}}</span>{{/if}}
               </div>
               {{/if}}
             </div>
 
             {{#if ../editable}}
-            <button type="button" class="member-delete" style="flex-shrink: 0;" title="Remove">
+            <button type="button" class="member-delete" title="Remove from group" 
+                    style="flex-shrink: 0; padding: 4px 8px; background: rgba(200,0,0,0.15); border: 1px solid rgba(200,0,0,0.4); border-radius: 3px; cursor: pointer;">
               <i class="fas fa-times"></i>
             </button>
             {{/if}}
@@ -80,54 +88,132 @@
           {{/each}}
         </div>
         {{else}}
-        <p style="text-align: center; opacity: 0.7; margin-top: 20px;">No members in this group.</p>
+        <p style="text-align: center; opacity: 0.6; margin-top: 30px; font-style: italic;">No members in this group.</p>
         {{/if}}
       </div>
 
       <!-- Inventory Tab -->
       <div class="tab inventory" data-group="primary" data-tab="inventory">
-        <h3>Group Inventory</h3>
-        <p style="opacity: 0.7; font-size: 12px; margin-bottom: 10px;">Items stored in the group (not tracked from members)</p>
+        <div class="inventory-header" style="border-bottom: 2px solid #999; padding-bottom: 8px; margin-bottom: 15px;">
+          <h3 style="margin: 0 0 5px 0;">Group Inventory</h3>
+          <p style="opacity: 0.7; font-size: 0.9em; margin: 0;">Items stored in the group (drag items here to add)</p>
+        </div>
         
-        <div class="inventory-section">
-          <h4>Weapons</h4>
-          <ol class="item-list">
-            {{#each actor.weapon as |item|}}
-            <li class="item" data-item-id="{{item._id}}">
-              <img src="{{item.img}}" title="{{item.name}}" width="24" height="24">
-              <span class="item-name">{{item.name}}</span>
-              <span class="item-qty">Qty: {{item.system.quantity}}</span>
-              {{#if ../editable}}<a class="item-control item-delete" title="Delete"><i class="fas fa-trash"></i></a>{{/if}}
-            </li>
-            {{/each}}
-          </ol>
+        <!-- Drop zone for items -->
+        <div class="item-drop-zone" style="border: 2px dashed #999; padding: 15px; margin-bottom: 15px; text-align: center; background: rgba(255,255,255,0.05);">
+          <i class="fas fa-box-open" style="font-size: 1.5em; opacity: 0.5;"></i>
+          <p style="margin: 8px 0 0 0; opacity: 0.7; font-size: 0.9em;">
+            Drag weapons, armor, ammunition, or gear here
+          </p>
         </div>
+        
+        <div class="inventory-sections" style="display: flex; flex-direction: column; gap: 20px; max-height: 450px; overflow-y: auto; padding-right: 5px;">
+          <!-- Weapons -->
+          <div class="inventory-section">
+            <h4 style="border-bottom: 1px solid #999; padding-bottom: 5px; margin-bottom: 8px;">
+              <i class="fas fa-sword"></i> Weapons ({{actor.weapon.length}})
+            </h4>
+            {{#if actor.weapon.length}}
+            <ol class="item-list" style="list-style: none; padding: 0; margin: 0;">
+              {{#each actor.weapon as |item|}}
+              <li class="item" data-item-id="{{item._id}}" 
+                  style="display: flex; align-items: center; gap: 8px; padding: 6px; border-bottom: 1px solid #ddd; transition: background 0.2s;">
+                <img src="{{item.img}}" title="{{item.name}}" width="28" height="28" style="border-radius: 3px; object-fit: cover; cursor: pointer;" class="item-image">
+                <span class="item-name" style="flex-grow: 1; cursor: pointer; font-size: 0.95em;">{{item.name}}</span>
+                {{#if item.system.quantity}}
+                <span class="item-qty" style="opacity: 0.8; font-size: 0.85em;">×{{item.system.quantity}}</span>
+                {{/if}}
+                {{#if ../editable}}
+                <a class="item-control item-delete" title="Delete" style="color: #d9534f; cursor: pointer; padding: 4px;">
+                  <i class="fas fa-trash"></i>
+                </a>
+                {{/if}}
+              </li>
+              {{/each}}
+            </ol>
+            {{else}}
+            <p style="opacity: 0.6; font-style: italic; font-size: 0.9em; margin: 10px 0;">No weapons</p>
+            {{/if}}
+          </div>
 
-        <div class="inventory-section">
-          <h4>Armor</h4>
-          <ol class="item-list">
-            {{#each actor.armor as |item|}}
-            <li class="item" data-item-id="{{item._id}}">
-              <img src="{{item.img}}" title="{{item.name}}" width="24" height="24">
-              <span class="item-name">{{item.name}}</span>
-              {{#if ../editable}}<a class="item-control item-delete" title="Delete"><i class="fas fa-trash"></i></a>{{/if}}
-            </li>
-            {{/each}}
-          </ol>
-        </div>
+          <!-- Armor -->
+          <div class="inventory-section">
+            <h4 style="border-bottom: 1px solid #999; padding-bottom: 5px; margin-bottom: 8px;">
+              <i class="fas fa-shield-alt"></i> Armor ({{actor.armor.length}})
+            </h4>
+            {{#if actor.armor.length}}
+            <ol class="item-list" style="list-style: none; padding: 0; margin: 0;">
+              {{#each actor.armor as |item|}}
+              <li class="item" data-item-id="{{item._id}}" 
+                  style="display: flex; align-items: center; gap: 8px; padding: 6px; border-bottom: 1px solid #ddd;">
+                <img src="{{item.img}}" title="{{item.name}}" width="28" height="28" style="border-radius: 3px; object-fit: cover; cursor: pointer;" class="item-image">
+                <span class="item-name" style="flex-grow: 1; cursor: pointer; font-size: 0.95em;">{{item.name}}</span>
+                {{#if ../editable}}
+                <a class="item-control item-delete" title="Delete" style="color: #d9534f; cursor: pointer; padding: 4px;">
+                  <i class="fas fa-trash"></i>
+                </a>
+                {{/if}}
+              </li>
+              {{/each}}
+            </ol>
+            {{else}}
+            <p style="opacity: 0.6; font-style: italic; font-size: 0.9em; margin: 10px 0;">No armor</p>
+            {{/if}}
+          </div>
 
-        <div class="inventory-section">
-          <h4>Gear</h4>
-          <ol class="item-list">
-            {{#each actor.gear as |item|}}
-            <li class="item" data-item-id="{{item._id}}">
-              <img src="{{item.img}}" title="{{item.name}}" width="24" height="24">
-              <span class="item-name">{{item.name}}</span>
-              <span class="item-qty">Qty: {{item.system.quantity}}</span>
-              {{#if ../editable}}<a class="item-control item-delete" title="Delete"><i class="fas fa-trash"></i></a>{{/if}}
-            </li>
-            {{/each}}
-          </ol>
+          <!-- Ammunition -->
+          <div class="inventory-section">
+            <h4 style="border-bottom: 1px solid #999; padding-bottom: 5px; margin-bottom: 8px;">
+              <i class="fas fa-crosshairs"></i> Ammunition ({{actor.ammunition.length}})
+            </h4>
+            {{#if actor.ammunition.length}}
+            <ol class="item-list" style="list-style: none; padding: 0; margin: 0;">
+              {{#each actor.ammunition as |item|}}
+              <li class="item" data-item-id="{{item._id}}" 
+                  style="display: flex; align-items: center; gap: 8px; padding: 6px; border-bottom: 1px solid #ddd;">
+                <img src="{{item.img}}" title="{{item.name}}" width="28" height="28" style="border-radius: 3px; object-fit: cover; cursor: pointer;" class="item-image">
+                <span class="item-name" style="flex-grow: 1; cursor: pointer; font-size: 0.95em;">{{item.name}}</span>
+                <span class="item-qty" style="opacity: 0.8; font-size: 0.85em;">×{{item.system.quantity}}</span>
+                {{#if ../editable}}
+                <a class="item-control item-delete" title="Delete" style="color: #d9534f; cursor: pointer; padding: 4px;">
+                  <i class="fas fa-trash"></i>
+                </a>
+                {{/if}}
+              </li>
+              {{/each}}
+            </ol>
+            {{else}}
+            <p style="opacity: 0.6; font-style: italic; font-size: 0.9em; margin: 10px 0;">No ammunition</p>
+            {{/if}}
+          </div>
+
+          <!-- Gear -->
+          <div class="inventory-section">
+            <h4 style="border-bottom: 1px solid #999; padding-bottom: 5px; margin-bottom: 8px;">
+              <i class="fas fa-box"></i> Gear ({{actor.gear.length}})
+            </h4>
+            {{#if actor.gear.length}}
+            <ol class="item-list" style="list-style: none; padding: 0; margin: 0;">
+              {{#each actor.gear as |item|}}
+              <li class="item" data-item-id="{{item._id}}" 
+                  style="display: flex; align-items: center; gap: 8px; padding: 6px; border-bottom: 1px solid #ddd;">
+                <img src="{{item.img}}" title="{{item.name}}" width="28" height="28" style="border-radius: 3px; object-fit: cover; cursor: pointer;" class="item-image">
+                <span class="item-name" style="flex-grow: 1; cursor: pointer; font-size: 0.95em;">{{item.name}}</span>
+                {{#if item.system.quantity}}
+                <span class="item-qty" style="opacity: 0.8; font-size: 0.85em;">×{{item.system.quantity}}</span>
+                {{/if}}
+                {{#if ../editable}}
+                <a class="item-control item-delete" title="Delete" style="color: #d9534f; cursor: pointer; padding: 4px;">
+                  <i class="fas fa-trash"></i>
+                </a>
+                {{/if}}
+              </li>
+              {{/each}}
+            </ol>
+            {{else}}
+            <p style="opacity: 0.6; font-style: italic; font-size: 0.9em; margin: 10px 0;">No gear</p>
+            {{/if}}
+          </div>
         </div>
       </div>
 
