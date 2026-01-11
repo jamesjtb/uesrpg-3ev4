@@ -11,8 +11,8 @@ export class GroupSheet extends ActorSheet {
   static get defaultOptions() {
     return foundry.utils.mergeObject(super.defaultOptions, {
       classes: ["uesrpg", "sheet", "actor", "group", "worldbuilding"],
-      width: 630,
-      height: 540,
+      width: 550,
+      height: 420,
       tabs: [{
         navSelector: ".sheet-tabs",
         contentSelector: ".sheet-body",
