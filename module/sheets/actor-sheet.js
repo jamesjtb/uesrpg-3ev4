@@ -291,7 +291,7 @@ async activateListeners(html) {
   // Register stamina button handler after incrementResource
   registerStaminaButtonHandler(this, html);
   
-  html.find("#spellFilter").click(this._filterSpells.bind(this));
+  // html.find("#spellFilter").click(this._filterSpells.bind(this)); // DISABLED: Spell filter dropdown removed
   html.find("#itemFilter").click(this._filterItems.bind(this));
   html.find(".incrementFatigue").click(this._incrementFatigue.bind(this));
   html.find(".equip-items").click(this._onEquipItems.bind(this));

@@ -252,9 +252,9 @@ async activateListeners(html) {
   html.find(".equip-items").click(this._onEquipItems.bind(this));
 
   // Checks UI Elements for update
-  // this._createSpellFilterOptions(); // DISABLED: Uses old spell filter dropdown (NPC sheet uses flat list)
+  this._createSpellFilterOptions();
   this._createItemFilterOptions();
-  // this._setDefaultSpellFilter(); // DISABLED: Uses old spell filter dropdown (NPC sheet uses flat list)
+  this._setDefaultSpellFilter();
   this._setDefaultItemFilter();
   this._setResourceBars();
   this._createStatusTags();
