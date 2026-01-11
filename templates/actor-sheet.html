@@ -452,13 +452,13 @@
                             {{!-- Spell schools organized by category --}}
                             {{#each actor.spellSchools as |schoolData|}}
                                 <div class="spell-school-section" data-school="{{schoolData.key}}">
-                                    <h3 class="spell-school-header uesrpg-group-toggle" data-group="spell-school-{{schoolData.key}}">
-                                        <i class="fas fa-chevron-down collapse-arrow"></i>
-                                        <span class="school-name">{{schoolData.label}}</span>
-                                        <span class="school-count">({{schoolData.count}})</span>
-                                    </h3>
-                                    <div class="spell-school-actions">
-                                        <a class="item-create" data-type="spell" data-school="{{schoolData.key}}" title="Create Spell">
+                                    <div class="spell-school-header-row">
+                                        <h3 class="spell-school-header uesrpg-group-toggle" data-group="spell-school-{{schoolData.key}}">
+                                            <i class="fas fa-chevron-down collapse-arrow"></i>
+                                            <span class="school-name">{{schoolData.label}}</span>
+                                            <span class="school-count">({{schoolData.count}})</span>
+                                        </h3>
+                                        <a class="item-create spell-school-add-btn" data-type="spell" data-school="{{schoolData.key}}" title="Create {{schoolData.label}} Spell">
                                             <i class="fas fa-plus"></i> Add {{schoolData.label}} Spell
                                         </a>
                                     </div>

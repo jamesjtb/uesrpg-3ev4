@@ -265,12 +265,15 @@ function computeBlockTN(defender, styleItem) {
   const strTotal = getCharTotal(defender, "str");
   const styleBonus = asNumber(styleItem?.system?.bonus ?? 0);
   const miscValue = asNumber(styleItem?.system?.miscValue ?? 0);
-  const itemChaBonus = asNumber(skillHelper(defender, "str") ?? 0);
+  
+  // REMOVED: itemChaBonus from skillHelper - this was double-counting Trait/Talent bonuses
+  // Traits/Talents modify characteristics directly, which are already included in strTotal
+  
   const itemSkillBonus = asNumber(skillModHelper(defender, styleItem?.name ?? "") ?? 0);
 
   // Chapter 5: wound penalties are derived from Wound Active Effects and exposed via system.woundPenalty.
   // Do not use legacy system.wounded flags.
-  return strTotal + styleBonus + miscValue + itemChaBonus + itemSkillBonus + fatiguePenalty + woundPenalty;
+  return strTotal + styleBonus + miscValue + itemSkillBonus + fatiguePenalty + woundPenalty;
 }
 
 function computeEvadeTN(defender) {
