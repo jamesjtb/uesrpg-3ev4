@@ -97,7 +97,7 @@ export function getSpellCost(spell, level = null) {
  * Scaling system is deprecated and ignored.
  * @param {Item} spell
  * @param {number|null} level - Ignored; kept for API compatibility
- * @returns {string}
+ * @returns {string} Damage formula or "0" for non-damaging spells
  */
 export function getSpellDamageFormula(spell, level = null) {
   // Prefer primary damageFormula field
@@ -106,6 +106,7 @@ export function getSpellDamageFormula(spell, level = null) {
 
   // Legacy fallback for older spells
   const legacy = _str(spell?.system?.damage);
+  // Return "0" for spells without damage (used in isDamaging checks)
   return legacy || "0";
 }
 
