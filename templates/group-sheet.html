@@ -98,123 +98,264 @@
       <div class="tab inventory" data-group="primary" data-tab="inventory">
         <div class="inventory-header" style="border-bottom: 2px solid #999; padding-bottom: 8px; margin-bottom: 15px;">
           <h3 style="margin: 0 0 5px 0;">Group Inventory</h3>
-          <p style="opacity: 0.7; font-size: 0.9em; margin: 0;">Items stored in the group (drag items here to add)</p>
+          <p style="opacity: 0.7; font-size: 0.9em; margin: 0;">Drag items here to add to group inventory</p>
         </div>
         
-        <!-- Drop zone for items -->
-        <div class="item-drop-zone" style="border: 2px dashed #999; padding: 15px; margin-bottom: 15px; text-align: center; background: rgba(255,255,255,0.05);">
-          <i class="fas fa-box-open" style="font-size: 1.5em; opacity: 0.5;"></i>
-          <p style="margin: 8px 0 0 0; opacity: 0.7; font-size: 0.9em;">
-            Drag weapons, armor, ammunition, or gear here
-          </p>
-        </div>
-        
-        <div class="inventory-sections" style="display: flex; flex-direction: column; gap: 20px; max-height: 450px; overflow-y: auto; padding-right: 5px;">
+        <div class="itemListContainer" style="max-height: 500px; overflow-y: auto;">
+          <!-- Containers -->
+          <div class="containerList">
+            <table class="container-table">
+              <thead>
+                <tr>
+                  <th class="item-name-cell item-create" id="container">Containers +</th>
+                  <th>Capacity</th>
+                  <th>Items</th>
+                  <th><i class="fas fa-trash"></i></th>
+                </tr>
+              </thead>
+              <tbody>
+                {{#each actor.container as |item id|}}
+                  <tr class="item active" data-item-id="{{item._id}}" data-item-type="{{item.type}}">
+                    <td>
+                      <div class="tableItemNameCell">
+                        <div class="qty-controls">
+                          <input type="checkbox" class="itemEquip checkbox" {{checked item.system.equipped}} title="Equip">
+                        </div>
+                        <img class="item-img" src="{{item.img}}" title="{{item.name}}"/>
+                        <div class="item-name">{{item.name}}</div>
+                      </div>
+                    </td>
+                    <td>{{item.system.container_enc.current}}/{{item.system.container_enc.max}}</td>
+                    <td>{{item.system.container_enc.item_count}}</td>
+                    <td>
+                      <a class="item-control item-delete" title="Delete Item"><i class="fas fa-trash"></i></a>
+                    </td>
+                  </tr>
+                {{/each}}
+              </tbody>
+            </table>
+          </div>
+
           <!-- Weapons -->
-          <div class="inventory-section">
-            <h4 style="border-bottom: 1px solid #999; padding-bottom: 5px; margin-bottom: 8px;">
-              <i class="fas fa-sword"></i> Weapons ({{actor.weapon.length}})
-            </h4>
-            {{#if actor.weapon.length}}
-            <ol class="item-list" style="list-style: none; padding: 0; margin: 0;">
-              {{#each actor.weapon as |item|}}
-              <li class="item" data-item-id="{{item._id}}" 
-                  style="display: flex; align-items: center; gap: 8px; padding: 6px; border-bottom: 1px solid #ddd; transition: background 0.2s;">
-                <img src="{{item.img}}" title="{{item.name}}" width="28" height="28" style="border-radius: 3px; object-fit: cover; cursor: pointer;" class="item-image">
-                <span class="item-name" style="flex-grow: 1; cursor: pointer; font-size: 0.95em;">{{item.name}}</span>
-                {{#if item.system.quantity}}
-                <span class="item-qty" style="opacity: 0.8; font-size: 0.85em;">×{{item.system.quantity}}</span>
-                {{/if}}
-                {{#if ../editable}}
-                <a class="item-control item-delete" title="Delete" style="color: #d9534f; cursor: pointer; padding: 4px;">
-                  <i class="fas fa-trash"></i>
-                </a>
-                {{/if}}
-              </li>
-              {{/each}}
-            </ol>
-            {{else}}
-            <p style="opacity: 0.6; font-style: italic; font-size: 0.9em; margin: 10px 0;">No weapons</p>
-            {{/if}}
-          </div>
+          <div class="equipmentList">
+            <table class="weapon-table">
+              <thead>
+                <tr>
+                  <th class="item-name-cell item-create" id="weapon">Weapons +</th>
+                  <th>Damage</th>
+                  <th>Reach/Range</th>
+                  <th class="right-align-cell"><i class="fas fa-trash"></i></th>
+                </tr>
+              </thead>
+              <tbody>
+                {{#each actor.weapon.equipped as |item id|}}
+                  <tr class="item active" data-item-id="{{item._id}}" data-item-type="{{item.type}}">
+                    <td class="item-name-cell">
+                      <div class="flex-container">
+                        <input type="checkbox" class="itemEquip checkbox" {{checked item.system.equipped}} title="Equip">
+                        <img class="item-img" src="{{item.img}}">
+                        {{#if item.system.containerStats.contained}}
+                          <i title="Open Container" class="fa-solid fa-backpack" data-container-id="{{item.system.containerStats.container_id}}"></i>
+                        {{/if}}
+                        <div class="item-name">{{item.name}}</div>
+                      </div>
+                    </td>
+                    <td class="damage-entry">{{item.system.damage3}}</td>
+                    <td>
+                      {{#if (eq item.system.attackMode "ranged")}}
+                        {{item.system.range}}
+                      {{else}}
+                        {{item.system.reach}}
+                      {{/if}}
+                    </td>
+                    <td class="right-align-cell"><a class="item-control item-delete" title="Delete Item"><i class="fas fa-trash"></i></a></td>
+                  </tr>
+                {{/each}}
+                {{#each actor.weapon.unequipped as |item id|}}
+                  <tr class="item active" data-item-id="{{item._id}}" data-item-type="{{item.type}}">
+                    <td class="item-name-cell">
+                      <div class="flex-container">
+                        <input type="checkbox" class="itemEquip checkbox" {{checked item.system.equipped}} title="Equip">
+                        <img class="item-img" src="{{item.img}}">
+                        {{#if item.system.containerStats.contained}}
+                          <i title="Open Container" class="fa-solid fa-backpack" data-container-id="{{item.system.containerStats.container_id}}"></i>
+                        {{/if}}
+                        <div class="item-name">{{item.name}}</div>
+                      </div>
+                    </td>
+                    <td class="damage-entry">{{item.system.damage3}}</td>
+                    <td>
+                      {{#if (eq item.system.attackMode "ranged")}}
+                        {{item.system.range}}
+                      {{else}}
+                        {{item.system.reach}}
+                      {{/if}}
+                    </td>
+                    <td class="right-align-cell"><a class="item-control item-delete" title="Delete Item"><i class="fas fa-trash"></i></a></td>
+                  </tr>
+                {{/each}}
+              </tbody>
+            </table>
 
-          <!-- Armor -->
-          <div class="inventory-section">
-            <h4 style="border-bottom: 1px solid #999; padding-bottom: 5px; margin-bottom: 8px;">
-              <i class="fas fa-shield-alt"></i> Armor ({{actor.armor.length}})
-            </h4>
-            {{#if actor.armor.length}}
-            <ol class="item-list" style="list-style: none; padding: 0; margin: 0;">
-              {{#each actor.armor as |item|}}
-              <li class="item" data-item-id="{{item._id}}" 
-                  style="display: flex; align-items: center; gap: 8px; padding: 6px; border-bottom: 1px solid #ddd;">
-                <img src="{{item.img}}" title="{{item.name}}" width="28" height="28" style="border-radius: 3px; object-fit: cover; cursor: pointer;" class="item-image">
-                <span class="item-name" style="flex-grow: 1; cursor: pointer; font-size: 0.95em;">{{item.name}}</span>
-                {{#if ../editable}}
-                <a class="item-control item-delete" title="Delete" style="color: #d9534f; cursor: pointer; padding: 4px;">
-                  <i class="fas fa-trash"></i>
-                </a>
-                {{/if}}
-              </li>
-              {{/each}}
-            </ol>
-            {{else}}
-            <p style="opacity: 0.6; font-style: italic; font-size: 0.9em; margin: 10px 0;">No armor</p>
-            {{/if}}
-          </div>
+            <!-- Ammunition -->
+            <table class="ammunition-table">
+              <thead>
+                <tr>
+                  <th class="item-name-cell item-create" id="ammunition">Ammunition +</th>
+                  <th>Bonus</th>
+                  <th>Qty</th>
+                  <th class="right-align-cell"><i class="fas fa-trash"></i></th>
+                </tr>
+              </thead>
+              <tbody>
+                {{#each actor.ammunition.equipped as |item id|}}
+                  <tr class="item active" data-item-id="{{item._id}}" data-item-type="{{item.type}}">
+                    <td class="item-name-cell">
+                      <div class="flex-container">
+                        <input type="checkbox" class="itemEquip checkbox" {{checked item.system.equipped}} title="Equip">
+                        <img class="item-img" src="{{item.img}}">
+                        {{#if item.system.containerStats.contained}}
+                          <i title="Open Container" class="fa-solid fa-backpack" data-container-id="{{item.system.containerStats.container_id}}"></i>
+                        {{/if}}
+                        <div class="item-name">{{item.name}}</div>
+                      </div>
+                    </td>
+                    <td>{{item.system.damage}}</td>
+                    <td><button type="button" class="minusQty plusQty" title="Click to Increase, right-click to decrease">{{item.system.quantity}}</button></td>
+                    <td class="right-align-cell"><a class="item-control item-delete" title="Delete Item"><i class="fas fa-trash"></i></a></td>
+                  </tr>
+                {{/each}}
+                {{#each actor.ammunition.unequipped as |item id|}}
+                  <tr class="item active" data-item-id="{{item._id}}" data-item-type="{{item.type}}">
+                    <td class="item-name-cell">
+                      <div class="flex-container">
+                        <input type="checkbox" class="itemEquip checkbox" {{checked item.system.equipped}} title="Equip">
+                        <img class="item-img" src="{{item.img}}">
+                        {{#if item.system.containerStats.contained}}
+                          <i title="Open Container" class="fa-solid fa-backpack" data-container-id="{{item.system.containerStats.container_id}}"></i>
+                        {{/if}}
+                        <div class="item-name">{{item.name}}</div>
+                      </div>
+                    </td>
+                    <td>{{item.system.damage}}</td>
+                    <td><button type="button" class="minusQty plusQty" title="Click to Increase, right-click to decrease">{{item.system.quantity}}</button></td>
+                    <td class="right-align-cell"><a class="item-control item-delete" title="Delete Item"><i class="fas fa-trash"></i></a></td>
+                  </tr>
+                {{/each}}
+              </tbody>
+            </table>
 
-          <!-- Ammunition -->
-          <div class="inventory-section">
-            <h4 style="border-bottom: 1px solid #999; padding-bottom: 5px; margin-bottom: 8px;">
-              <i class="fas fa-crosshairs"></i> Ammunition ({{actor.ammunition.length}})
-            </h4>
-            {{#if actor.ammunition.length}}
-            <ol class="item-list" style="list-style: none; padding: 0; margin: 0;">
-              {{#each actor.ammunition as |item|}}
-              <li class="item" data-item-id="{{item._id}}" 
-                  style="display: flex; align-items: center; gap: 8px; padding: 6px; border-bottom: 1px solid #ddd;">
-                <img src="{{item.img}}" title="{{item.name}}" width="28" height="28" style="border-radius: 3px; object-fit: cover; cursor: pointer;" class="item-image">
-                <span class="item-name" style="flex-grow: 1; cursor: pointer; font-size: 0.95em;">{{item.name}}</span>
-                <span class="item-qty" style="opacity: 0.8; font-size: 0.85em;">×{{item.system.quantity}}</span>
-                {{#if ../editable}}
-                <a class="item-control item-delete" title="Delete" style="color: #d9534f; cursor: pointer; padding: 4px;">
-                  <i class="fas fa-trash"></i>
-                </a>
-                {{/if}}
-              </li>
-              {{/each}}
-            </ol>
-            {{else}}
-            <p style="opacity: 0.6; font-style: italic; font-size: 0.9em; margin: 10px 0;">No ammunition</p>
-            {{/if}}
-          </div>
+            <!-- Armor -->
+            <table class="armor-table">
+              <thead>
+                <tr>
+                  <th class="item-name-cell item-create" id="armor" data-alt-type="item">Armor +</th>
+                  <th>AR</th>
+                  <th>MR</th>
+                  <th>BR</th>
+                  <th class="right-align-cell"><i class="fas fa-trash"></i></th>
+                </tr>
+              </thead>
+              <tbody>
+                {{#each actor.armor.equipped as |item id|}}
+                  <tr class="item active" data-item-id="{{item._id}}" data-item-type="{{item.type}}">
+                    <td class="item-name-cell">
+                      <div class="flex-container">
+                        <input type="checkbox" class="itemEquip checkbox" {{checked item.system.equipped}} title="Equip">
+                        <img class="item-img" src="{{item.img}}">
+                        {{#if item.system.containerStats.contained}}
+                          <i title="Open Container" class="fa-solid fa-backpack" data-container-id="{{item.system.containerStats.container_id}}"></i>
+                        {{/if}}
+                        <div class="item-name">{{item.name}}</div>
+                      </div>
+                    </td>
+                    <td>{{#if item.system.armorEffective}}{{item.system.armorEffective}}{{else}}{{item.system.armor}}{{/if}}</td>
+                    <td>{{#if item.system.magic_arEffective}}{{item.system.magic_arEffective}}{{#if item.system.special_ar_typeEffective}} {{item.system.special_ar_typeEffective}}{{/if}}{{else}}{{item.system.magic_ar}}{{/if}}</td>
+                    <td>{{#if item.system.blockRatingEffective}}{{item.system.blockRatingEffective}}{{else}}{{item.system.blockRating}}{{/if}}</td>
+                    <td class="right-align-cell"><a class="item-control item-delete" title="Delete Item"><i class="fas fa-trash"></i></a></td>
+                  </tr>
+                {{/each}}
+                {{#each actor.armor.unequipped as |item id|}}
+                  <tr class="item active" data-item-id="{{item._id}}" data-item-type="{{item.type}}">
+                    <td class="item-name-cell">
+                      <div class="flex-container">
+                        <input type="checkbox" class="itemEquip checkbox" {{checked item.system.equipped}} title="Equip">
+                        <img class="item-img" src="{{item.img}}">
+                        {{#if item.system.containerStats.contained}}
+                          <i title="Open Container" class="fa-solid fa-backpack" data-container-id="{{item.system.containerStats.container_id}}"></i>
+                        {{/if}}
+                        <div class="item-name">{{item.name}}</div>
+                      </div>
+                    </td>
+                    <td>{{#if item.system.armorEffective}}{{item.system.armorEffective}}{{else}}{{item.system.armor}}{{/if}}</td>
+                    <td>{{#if item.system.magic_arEffective}}{{item.system.magic_arEffective}}{{#if item.system.special_ar_typeEffective}} {{item.system.special_ar_typeEffective}}{{/if}}{{else}}{{item.system.magic_ar}}{{/if}}</td>
+                    <td>{{#if item.system.blockRatingEffective}}{{item.system.blockRatingEffective}}{{else}}{{item.system.blockRating}}{{/if}}</td>
+                    <td class="right-align-cell"><a class="item-control item-delete" title="Delete Item"><i class="fas fa-trash"></i></a></td>
+                  </tr>
+                {{/each}}
+              </tbody>
+            </table>
 
-          <!-- Gear -->
-          <div class="inventory-section">
-            <h4 style="border-bottom: 1px solid #999; padding-bottom: 5px; margin-bottom: 8px;">
-              <i class="fas fa-box"></i> Gear ({{actor.gear.length}})
-            </h4>
-            {{#if actor.gear.length}}
-            <ol class="item-list" style="list-style: none; padding: 0; margin: 0;">
-              {{#each actor.gear as |item|}}
-              <li class="item" data-item-id="{{item._id}}" 
-                  style="display: flex; align-items: center; gap: 8px; padding: 6px; border-bottom: 1px solid #ddd;">
-                <img src="{{item.img}}" title="{{item.name}}" width="28" height="28" style="border-radius: 3px; object-fit: cover; cursor: pointer;" class="item-image">
-                <span class="item-name" style="flex-grow: 1; cursor: pointer; font-size: 0.95em;">{{item.name}}</span>
-                {{#if item.system.quantity}}
-                <span class="item-qty" style="opacity: 0.8; font-size: 0.85em;">×{{item.system.quantity}}</span>
-                {{/if}}
-                {{#if ../editable}}
-                <a class="item-control item-delete" title="Delete" style="color: #d9534f; cursor: pointer; padding: 4px;">
-                  <i class="fas fa-trash"></i>
-                </a>
-                {{/if}}
-              </li>
-              {{/each}}
-            </ol>
-            {{else}}
-            <p style="opacity: 0.6; font-style: italic; font-size: 0.9em; margin: 10px 0;">No gear</p>
-            {{/if}}
+            <!-- Gear/Items -->
+            <table>
+              <thead>
+                <tr>
+                  <th class="item-name-cell item-create" id="createSelect">Items +</th>
+                  <th>Qty</th>
+                  <th><i class="fas fa-trash"></i></th>
+                </tr>
+              </thead>
+              <tbody>
+                {{#each actor.gear.equipped as |item id|}}
+                  <tr class="item active" data-item-id="{{item._id}}" data-item-type="{{item.type}}">
+                    <td>
+                      <div class="tableItemNameCell">
+                        <div class="qty-controls">
+                          <input type="checkbox" class="itemEquip checkbox" {{checked item.system.equipped}} title="Equip">
+                        </div>
+                        <img class="item-img" src="{{item.img}}" title="{{item.name}}"/>
+                        {{#if item.system.containerStats.contained}}
+                          <i title="Open Container" class="fa-solid fa-backpack" data-container-id="{{item.system.containerStats.container_id}}"></i>
+                        {{/if}}
+                        <div class="item-name">{{item.name}}</div>
+                      </div>
+                    </td>
+                    <td>
+                      <button type="button" class="minusQty plusQty" title="Click to increase, right click to decrease">
+                        <div>{{item.system.quantity}}</div>
+                      </button>
+                    </td>
+                    <td>
+                      <a class="item-control item-delete" title="Delete Item"><i class="fas fa-trash"></i></a>
+                    </td>
+                  </tr>
+                {{/each}}
+                {{#each actor.gear.unequipped as |item id|}}
+                  <tr class="item active" data-item-id="{{item._id}}" data-item-type="{{item.type}}">
+                    <td>
+                      <div class="tableItemNameCell">
+                        <div class="qty-controls">
+                          <input type="checkbox" class="itemEquip checkbox" {{checked item.system.equipped}} title="Equip">
+                        </div>
+                        <img class="item-img" src="{{item.img}}" title="{{item.name}}"/>
+                        {{#if item.system.containerStats.contained}}
+                          <i title="Open Container" class="fa-solid fa-backpack" data-container-id="{{item.system.containerStats.container_id}}"></i>
+                        {{/if}}
+                        <div class="item-name">{{item.name}}</div>
+                      </div>
+                    </td>
+                    <td>
+                      <button type="button" class="minusQty plusQty" title="Click to increase, right click to decrease">
+                        <div>{{item.system.quantity}}</div>
+                      </button>
+                    </td>
+                    <td>
+                      <a class="item-control item-delete" title="Delete Item"><i class="fas fa-trash"></i></a>
+                    </td>
+                  </tr>
+                {{/each}}
+              </tbody>
+            </table>
           </div>
         </div>
       </div>
@@ -226,9 +367,9 @@
         <div class="travel-stats" style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin: 20px 0;">
           <div class="stat-card">
             <h4>Average Speed</h4>
-            <div style="font-size: 20px; font-weight: bold;">{{averageSpeed}} m/round</div>
-            <div style="font-size: 16px; font-weight: bold; margin-top: 4px; color: #0064c8;">{{averageSpeedKmh}} km/h</div>
-            <p style="opacity: 0.7; font-size: 12px; margin-top: 4px;">Calculated from all members</p>
+            <div style="font-size: 20px; font-weight: bold;">{{displayAverageSpeed}} m/round</div>
+            <div style="font-size: 16px; font-weight: bold; margin-top: 4px; color: #0064c8;">{{displayAverageSpeedKmh}} km/h</div>
+            <p style="opacity: 0.7; font-size: 12px; margin-top: 4px;">Calculated from members with pace multiplier</p>
           </div>
 
           <div class="stat-card">
@@ -240,7 +381,7 @@
                 {{#if (eq currentPace "slow")}}Slow{{/if}}
               </button>
             </div>
-            <p style="opacity: 0.7; font-size: 12px; margin-top: 5px;">Click to cycle pace</p>
+            <p style="opacity: 0.7; font-size: 12px; margin-top: 5px;">Click to cycle pace (affects speed display)</p>
           </div>
         </div>
 
