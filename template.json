@@ -637,6 +637,17 @@
           }
         }
       }
+    },
+    "Group": {
+      "templates": [
+        "equippedWeapons",
+        "favorites",
+        "combatTracking"
+      ],
+      "name": "",
+      "description": "",
+      "notes": "",
+      "members": []
     }
   },
   "Item": {
@@ -741,13 +752,6 @@
         }
       }
     },
-    "Group": {
-    "name": "",
-    "description": "",
-    "notes": "",
-    "members": []
-    }
-  },
     "item": {
       "templates": [
         "characteristicArray",
