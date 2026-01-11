@@ -112,6 +112,7 @@ export class GroupSheet extends ActorSheet {
     // Member management
     html.find(".member-name").click(this._onViewMember.bind(this));
     html.find(".member-portrait").click(this._onViewMember.bind(this));
+    html.find(".member-portrait-clickable").click(this._onViewMember.bind(this));
     html.find(".member-delete").click(this._onRemoveMember.bind(this));
 
     // Travel
@@ -130,7 +131,9 @@ export class GroupSheet extends ActorSheet {
   }
   async _onViewMember(event) {
     event.preventDefault();
-    const uuid = event.currentTarget.closest(".member-item").dataset.uuid;
+    const uuid = event.currentTarget.dataset?.uuid || event.currentTarget.closest(".member-item")?.dataset?.uuid;
+    if (!uuid) return;
+    
     const actor = await fromUuid(uuid);
     if (actor) actor.sheet.render(true);
   }
