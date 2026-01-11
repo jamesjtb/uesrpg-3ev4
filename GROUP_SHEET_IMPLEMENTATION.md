@@ -56,19 +56,22 @@ This implementation adds a production-ready Group actor type to the UESRPG 3ev4 
 - Updates `lastRest.long` timestamp
 
 #### Token Deployment (GM Only)
-- Deploys all group members to active scene
-- Arranges tokens in grid pattern
-- Centers deployment on scene
-- Handles variable group sizes
+- Deploys all group members to active scene automatically
+- Calculates optimal grid layout based on member count (cols = √memberCount)
+- Centers deployment on scene with boundary checking
+- Uses batch token creation for efficiency
+- Foundry v13 API compatible
 
 #### Event Handlers
 - `_onViewMember`: Opens member's actor sheet
 - `_onRemoveMember`: Removes member from group
+- `_onItemShow`: Opens item sheet when clicking item name/image
+- `_onItemDelete`: Deletes item with confirmation dialog
 - `_onChangePace`: Cycles through travel paces
 - `_onShortRest`: Executes short rest automation
 - `_onLongRest`: Executes long rest automation
-- `_onDeployGroup`: Deploys tokens to scene
-- `_onDrop`: Handles actor drag-and-drop
+- `_onDeployGroup`: Deploys tokens to scene in grid pattern
+- `_onDrop`: Handles actor and item drag-and-drop
 
 ### 3. Templates
 
@@ -77,19 +80,20 @@ This implementation adds a production-ready Group actor type to the UESRPG 3ev4 
 
 **Members Tab:**
 - Drop zone for adding actors
-- Member list with portraits and stats
+- Member list with CSS Grid layout (compact, no overflow)
 - Control buttons: Deploy Group, Short Rest, Long Rest
 - Member stats display (HP, SP, Speed, Fatigue)
-- Remove member button
+- Compact 24×24px remove member button
 
 **Inventory Tab:**
-- Sections for Weapons, Armor, Gear
+- Sections for Weapons, Armor, Ammunition, Gear
 - Item drag-and-drop support
 - Quantity display
-- Delete controls
+- Delete controls with confirmation
+- Click item name/image to open item sheet
 
 **Travel Tab:**
-- Average speed display
+- Average speed display (m/round and km/h)
 - Travel pace selector with cycling
 - RAW travel pace reference table
 - Current pace highlighting
