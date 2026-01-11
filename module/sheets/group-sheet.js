@@ -41,10 +41,10 @@ export class GroupSheet extends ActorSheet {
 
     // Enrich HTML fields
     data.actor.system.enrichedDescription = await TextEditor.enrichHTML(
-      data.actor.system.description, {async: true}
+      (data.actor.system.description ?? ""), {async: true}
     );
     data.actor.system.enrichedNotes = await TextEditor.enrichHTML(
-      data.actor.system.notes, {async: true}
+      (data.actor.system.notes ?? ""), {async: true}
     );
 
     return data;
@@ -72,7 +72,7 @@ export class GroupSheet extends ActorSheet {
         continue;
       }
 
-      const canView = actor.testUserPermission(game.user, "OBSERVER");
+      const canView = actor.testUserPermission(game.user, CONST.DOCUMENT_OWNERSHIP_LEVELS.OBSERVER);
 
       resolved.push({
         id: member.id,
@@ -94,8 +94,8 @@ export class GroupSheet extends ActorSheet {
   async activateListeners(html) {
     super.activateListeners(html);
 
-    html.find(".member-name").click(this._onViewMember.bind(this));
-    html.find(".member-portrait").click(this._onViewMember.bind(this));
+    html.find(".member-name, .member-name-limited").click(this._onViewMember.bind(this));
+    html.find(".member-portrait, .member-portrait-limited").click(this._onViewMember.bind(this));
     html.find(".member-delete").click(this._onRemoveMember.bind(this));
     html.find(".member-move-up").click(this._onMoveMember.bind(this, -1));
     html.find(".member-move-down").click(this._onMoveMember.bind(this, 1));
@@ -105,19 +105,20 @@ export class GroupSheet extends ActorSheet {
 
     if (!this.options.editable) return;
   }
-
   async _onViewMember(event) {
     event.preventDefault();
-    const memberElement = event.currentTarget.closest(".member-item");
-    const uuid = memberElement.dataset.uuid;
 
-    const actor = await fromUuid(uuid);
-    if (actor && actor.testUserPermission(game.user, "OBSERVER")) {
-      actor.sheet.render(true);
-    } else {
-      ui.notifications.warn("You do not have permission to view this actor.");
-    }
+    const uuid = event.currentTarget?.dataset?.uuid
+      ?? event.currentTarget?.closest?.(".member-item")?.dataset?.uuid;
+
+    if (!uuid) return;
+
+    const member = this.resolvedMembers.find(m => m.uuid === uuid);
+    if (!member || !member.actor) return;
+
+    return member.actor.sheet.render(true);
   }
+
 
   async _onRemoveMember(event) {
     event.preventDefault();
