@@ -319,25 +319,6 @@ async activateListeners(html) {
     }
   });
 
-  // Per-school "Add Spell" button handler
-  html.find('.spell-school-actions .item-create').on('click', async (ev) => {
-    ev.preventDefault();
-    
-    const school = ev.currentTarget.dataset.school;
-    
-    const itemData = {
-      name: `New ${school.charAt(0).toUpperCase() + school.slice(1)} Spell`,
-      type: 'spell',
-      system: {
-        school: school,
-        level: 1,
-        cost: 0
-      }
-    };
-    
-    await this.actor.createEmbeddedDocuments('Item', [itemData]);
-  });
-
   // Common listener binding (PC + NPC)
   bindCommonSheetListeners(this, html);
   bindCommonEditableInventoryListeners(this, html);

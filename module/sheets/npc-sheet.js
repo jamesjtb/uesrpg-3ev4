@@ -226,6 +226,20 @@ async activateListeners(html) {
     if (item.sheet) item.sheet.render(true);
   });
 
+  // Spell item click to open sheet (matching PC behavior)
+  html.find('.spell-row .item-img, .spell-row .item-name').on('click', async (ev) => {
+    ev.preventDefault();
+    ev.stopPropagation();
+    const row = ev.currentTarget.closest('.spell-row');
+    const itemId = row?.dataset?.itemId;
+    if (!itemId) return;
+    
+    const item = this.actor.items.get(itemId);
+    if (item) {
+      item.sheet.render(true);
+    }
+  });
+
   // Update Item Attributes from Actor Sheet
   html.find(".toggle2H").click(this._onToggle2H.bind(this));
   html.find(".plusQty").click(this._onPlusQty.bind(this));
