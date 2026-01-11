@@ -1,7 +1,6 @@
 import { UESRPG } from "../constants.js";
 import { SimpleActor } from "../entities/actor.js";
 import { npcSheet } from "../sheets/npc-sheet.js";
-import { GroupSheet } from "../sheets/group-sheet.js";
 import { SimpleActorSheet } from "../sheets/actor-sheet.js";
 import { SimpleItem } from "../entities/item.js";
 import { SimpleItemSheet } from "../sheets/item-sheet.js";
@@ -54,7 +53,6 @@ async function registerSettings() {
     scope: "world",
     requiresReload: true,
     config: true,
-    default: false,
     type: String,
     choices: {
       "Cyrodiil": "Сyrodiil - Default",
@@ -261,7 +259,7 @@ foundry.documents.collections.Actors.unregisterSheet("core", foundry.appv1.sheet
 foundry.documents.collections.Items.unregisterSheet("core", foundry.appv1.sheets.ItemSheet);
 
 foundry.documents.collections.Actors.registerSheet("uesrpg-3ev4", SimpleActorSheet, {
-  types: ['Player Character'],
+  types: ['Player Character', 'Group'],
   makeDefault: true,
   label: "Default UESRPG Character Sheet",
 });
@@ -274,11 +272,6 @@ foundry.documents.collections.Actors.registerSheet("uesrpg-3ev4", npcSheet, {
   makeDefault: true,
   label: "Default UESRPG NPC Sheet",
 });
-    Actors.registerSheet("uesrpg-3ev4", GroupSheet, {
-      types: ["Group"],
-      makeDefault: true,
-      label: "Default UESRPG Group Sheet",
-    });
 }
 
 export default async function initHandler() {
