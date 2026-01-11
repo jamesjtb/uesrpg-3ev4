@@ -46,7 +46,8 @@ export class GroupSheet extends ActorSheet {
     const speeds = data.resolvedMembers.filter(m => m.canView && m.speed).map(m => m.speed);
     data.averageSpeed = speeds.length > 0 ? Math.round(speeds.reduce((a, b) => a + b, 0) / speeds.length) : 0;
     
-    // Calculate km/h: (m/round × 600 rounds/hour) / 1000
+    // Calculate km/h: UESRPG uses 1 round = 6 seconds, so 600 rounds/hour
+    // Formula: (m/round × 600 rounds/hour) / 1000 = km/h
     data.averageSpeedKmh = data.averageSpeed > 0 ? ((data.averageSpeed * 600) / 1000).toFixed(1) : 0;
 
     // Enrich HTML fields using exact jamesjtb pattern
@@ -181,9 +182,10 @@ export class GroupSheet extends ActorSheet {
     if (!item) return;
 
     // Show confirmation dialog
+    const itemNameEscaped = item.name.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;");
     const confirmed = await Dialog.confirm({
       title: "Delete Item",
-      content: `<p>Are you sure you want to delete <strong>${item.name}</strong>?</p>`,
+      content: `<p>Are you sure you want to delete <strong>${itemNameEscaped}</strong>?</p>`,
       yes: () => true,
       no: () => false,
       defaultYes: false
@@ -358,10 +360,19 @@ export class GroupSheet extends ActorSheet {
     const gridSize = canvas.grid.size;
     const spacing = gridSize; // One grid square spacing
     
-    // Calculate center position on canvas
-    const canvasCenter = canvas.dimensions.sceneRect;
-    const startX = canvasCenter.x + (canvasCenter.width / 2) - ((cols * spacing) / 2);
-    const startY = canvasCenter.y + (canvasCenter.height / 2) - ((rows * spacing) / 2);
+    // Calculate center position on canvas with boundary checks
+    const canvasRect = canvas.dimensions.sceneRect;
+    const gridWidth = cols * spacing;
+    const gridHeight = rows * spacing;
+    
+    // Ensure grid fits within canvas bounds, default to top-left if too large
+    let startX = canvasRect.x + (canvasRect.width / 2) - (gridWidth / 2);
+    let startY = canvasRect.y + (canvasRect.height / 2) - (gridHeight / 2);
+    
+    // Clamp to canvas boundaries with padding
+    const padding = gridSize;
+    startX = Math.max(canvasRect.x + padding, Math.min(startX, canvasRect.x + canvasRect.width - gridWidth - padding));
+    startY = Math.max(canvasRect.y + padding, Math.min(startY, canvasRect.y + canvasRect.height - gridHeight - padding));
     
     // Create token documents for batch creation
     const tokenDocuments = [];
