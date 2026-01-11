@@ -154,7 +154,7 @@ export function prepareCharacterItems(sheetData, { includeSkills = false, includ
   actorData.combatStyle = combatStyle;
   actorData.spell = spell;
   // Store spellsBySchool in ui namespace to avoid conflicts with Foundry's mergeObject
-  if (!actorData.ui) actorData.ui = {};
+  actorData.ui = actorData.ui || {};
   actorData.ui.spellsBySchool = spellsBySchool;
   actorData.ammunition = ammunition;
   actorData.language = language;

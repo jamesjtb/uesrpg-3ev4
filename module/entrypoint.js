@@ -34,8 +34,9 @@ Hooks.once("init", async function() {
   
   // Register Handlebars helpers
   Handlebars.registerHelper('capitalize', function(str) {
-    if (!str || typeof str !== 'string') return '';
-    return str.charAt(0).toUpperCase() + str.slice(1);
+    const s = String(str || '');
+    if (!s) return '';
+    return s.charAt(0).toUpperCase() + s.slice(1);
   });
   // Expose AE key inspection helper
   game.uesrpg = game.uesrpg || {};
