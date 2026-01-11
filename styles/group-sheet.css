@@ -26,6 +26,13 @@
   cursor: pointer;
 }
 
+/* Tab navigation grid layout */
+.uesrpg.sheet.actor.group .sheet-tabs {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 4px;
+}
+
 /* Consistent spacing for all inventory sections */
 .uesrpg.sheet.actor.group .containerList,
 .uesrpg.sheet.actor.group .equipmentList {
