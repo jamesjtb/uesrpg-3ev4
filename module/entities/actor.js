@@ -1923,18 +1923,30 @@ this._applyMovementRestrictionSemantics(actorData, actorSystemData);
    * Groups are simple containers with no calculations needed
    */
   _prepareGroupData(actorData) {
-    const actorSystemData = actorData.system;
+    const actorSystemData = actorData.system || {};
 
-    // Initialize members array if missing
-    if (!actorSystemData.members) {
-      actorSystemData.members = [];
+    // Ensure common Group fields exist.
+    if (typeof actorSystemData.description !== "string") actorSystemData.description = "";
+    if (typeof actorSystemData.notes !== "string") actorSystemData.notes = "";
+
+    // Ensure members is always an Array.
+    if (!Array.isArray(actorSystemData.members)) actorSystemData.members = [];
+
+    // Normalize member records.
+    for (const m of actorSystemData.members) {
+      if (!m || typeof m !== "object") continue;
+      if (!Number.isFinite(m.sortOrder)) m.sortOrder = 0;
+      if (!Number.isFinite(m.qty) || m.qty < 1) m.qty = 1;
     }
 
-    // Sort members by sortOrder
-    actorSystemData.members.sort((a, b) => (a.sortOrder || 0) - (b.sortOrder || 0));
-
-    // No calculations needed - Groups are simple containers
+    // Sort by the stored order.
+    actorSystemData.members.sort((a, b) => {
+      const as = Number.isFinite(a?.sortOrder) ? a.sortOrder : 0;
+      const bs = Number.isFinite(b?.sortOrder) ? b.sortOrder : 0;
+      return as - bs;
+    });
   }
+
 
   /**
    * Check if adding an actor would create a circular reference
