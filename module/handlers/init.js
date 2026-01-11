@@ -1,6 +1,7 @@
 import { UESRPG } from "../constants.js";
 import { SimpleActor } from "../entities/actor.js";
 import { npcSheet } from "../sheets/npc-sheet.js";
+import { GroupSheet } from "../sheets/group-sheet.js";
 import { SimpleActorSheet } from "../sheets/actor-sheet.js";
 import { SimpleItem } from "../entities/item.js";
 import { SimpleItemSheet } from "../sheets/item-sheet.js";
@@ -273,6 +274,11 @@ foundry.documents.collections.Actors.registerSheet("uesrpg-3ev4", npcSheet, {
   makeDefault: true,
   label: "Default UESRPG NPC Sheet",
 });
+    Actors.registerSheet("uesrpg-3ev4", GroupSheet, {
+      types: ["Group"],
+      makeDefault: true,
+      label: "Default UESRPG Group Sheet",
+    });
 }
 
 export default async function initHandler() {
