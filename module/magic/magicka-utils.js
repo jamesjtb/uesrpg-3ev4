@@ -93,24 +93,21 @@ export function getSpellCost(spell, level = null) {
 
 /**
  * Canonical spell damage formula getter.
- * Prefers scaling lane when present, otherwise falls back to system.damageFormula,
- * and finally legacy system.damage.
+ * Returns damageFormula, falling back to legacy damage field.
+ * Scaling system is deprecated and ignored.
  * @param {Item} spell
- * @param {number|null} level
- * @returns {string}
+ * @param {number|null} level - Ignored; kept for API compatibility
+ * @returns {string} Damage formula or "0" for non-damaging spells
  */
 export function getSpellDamageFormula(spell, level = null) {
-  const scaling = getSpellScalingEntry(spell, level);
-
-  const scaled = scaling ? _str(scaling.damageFormula) : "";
-  if (scaled) return scaled;
-
+  // Prefer primary damageFormula field
   const primary = _str(spell?.system?.damageFormula);
   if (primary) return primary;
 
-  // Legacy lane used by older chat output paths in this repo
+  // Legacy fallback for older spells
   const legacy = _str(spell?.system?.damage);
-  return legacy;
+  // Return "0" for spells without damage (used in isDamaging checks)
+  return legacy || "0";
 }
 
 /**

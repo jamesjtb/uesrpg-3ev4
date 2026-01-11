@@ -449,38 +449,66 @@
 
                     <div class="spellListContainer">
                         <div class="spellList">
-                            <table>
-                                <thead>
-                                    <tr>
-                                        <th class="item-create item-name-cell" id="spell">+ Spell</th>
-                                        <th>MP Cost</th>
-                                        <th>
-                                            <select id="spellFilter">
-                                                <option>All</option>
-                                            </select>
-                                        </th>
-                                        <th><i class="fas fa-trash"></i></th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    {{#each actor.itemTypes.spell as |item id|}}
-                                        <tr class="item active" data-item-id="{{item._id}}" data-spell-school="{{item.system.school}}">
-                                            <td>
-                                                <div class="tableItemNameCell">
-                                                    <i class="fas fa-dice-d20 magic-roll"></i>
-                                                    <img class="item-img" src="{{item.img}}" title="Send to Chat"/>
-                                                    <div class="item-name">{{item.name}}</div>
-                                                </div>
-                                            </td>
-                                            <td>{{item.system.cost}}</td>
-                                            <td>{{item.system.school}}</td>
-                                            <td>
-                                                <a class="item-control item-delete" title="Delete Item"><i class="fas fa-trash"></i></a>
-                                            </td>
-                                        </tr>
-                                    {{/each}}
-                                </tbody>
-                            </table>
+                            <div class="spell-header">
+                                <div class="item-create spell-create" id="spell">
+                                    <i class="fas fa-plus"></i> Add Spell
+                                </div>
+                            </div>
+
+                            {{!-- Spell schools organized by category --}}
+                            {{#each actor.spellsBySchool}}
+                                <div class="spell-school-section" data-school="{{@key}}">
+                                    <div class="spell-school-header uesrpg-group-toggle" data-group="spell-school-{{@key}}">
+                                        <i class="fas fa-caret-down"></i>
+                                        <h4 class="school-name">
+                                            {{capitalize @key}}
+                                            <span class="spell-count">({{this.length}})</span>
+                                        </h4>
+                                    </div>
+                                    <div class="spell-school-content">
+                                        <table>
+                                            <thead>
+                                                <tr>
+                                                    <th>Name</th>
+                                                    <th>Rank</th>
+                                                    <th>MP Cost</th>
+                                                    <th><i class="fas fa-trash"></i></th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                {{#each this as |item|}}
+                                                    <tr class="item active" data-item-id="{{item._id}}" data-spell-school="{{item.system.school}}">
+                                                        <td>
+                                                            <div class="tableItemNameCell">
+                                                                <i class="fas fa-dice-d20 magic-roll"></i>
+                                                                <img class="item-img" src="{{item.img}}" title="Cast Spell"/>
+                                                                <div class="item-name">{{item.name}}</div>
+                                                            </div>
+                                                        </td>
+                                                        <td class="spell-rank">
+                                                            {{#if item.system.level}}
+                                                                {{#if (eq item.system.level 1)}}Novice{{/if}}
+                                                                {{#if (eq item.system.level 2)}}Apprentice{{/if}}
+                                                                {{#if (eq item.system.level 3)}}Adept{{/if}}
+                                                                {{#if (eq item.system.level 4)}}Expert{{/if}}
+                                                                {{#if (eq item.system.level 5)}}Master{{/if}}
+                                                                {{#if (eq item.system.level 6)}}Grandmaster{{/if}}
+                                                                {{#if (eq item.system.level 7)}}Legendary{{/if}}
+                                                            {{else}}
+                                                                —
+                                                            {{/if}}
+                                                        </td>
+                                                        <td>{{item.system.cost}}</td>
+                                                        <td>
+                                                            <a class="item-control item-delete" title="Delete Item"><i class="fas fa-trash"></i></a>
+                                                        </td>
+                                                    </tr>
+                                                {{/each}}
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            {{/each}}
                         </div>
                     </div>
 

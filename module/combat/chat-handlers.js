@@ -288,14 +288,32 @@ export function initializeChatHandlers() {
     // Banked-choice opposed workflows: once both sides have committed, rolling proceeds automatically.
     // Guard against unrelated message updates to minimize hook overhead.
     try {
+      // Check for combat opposed workflow
       const opposed = message?.flags?.["uesrpg-3ev4"]?.opposed ?? null;
-      if (!opposed) return;
-      if (!_isRelevantOpposedUpdate(changes)) return;
-      const activeGM = game.users.activeGM ?? null;
-      if (activeGM) {
-        OpposedWorkflow.maybeAutoRollBanked(message).catch((err) => console.error("UESRPG | Opposed banked GM auto-roll hook failed", err));
-      } else {
-        OpposedWorkflow.maybeAutoRollBankedNoGM(message).catch((err) => console.error("UESRPG | Opposed banked no-GM auto-roll hook failed", err));
+      if (opposed) {
+        if (!_isRelevantOpposedUpdate(changes)) return;
+        const activeGM = game.users.activeGM ?? null;
+        if (activeGM) {
+          OpposedWorkflow.maybeAutoRollBanked(message).catch((err) => console.error("UESRPG | Opposed banked GM auto-roll hook failed", err));
+        } else {
+          OpposedWorkflow.maybeAutoRollBankedNoGM(message).catch((err) => console.error("UESRPG | Opposed banked no-GM auto-roll hook failed", err));
+        }
+        return;
+      }
+
+      // Check for magic opposed workflow
+      const magicOpposed = message?.flags?.["uesrpg-3ev4"]?.magicOpposed ?? null;
+      if (magicOpposed) {
+        if (!_isRelevantOpposedUpdate(changes)) return;
+        const activeGM = game.users.activeGM ?? null;
+        // Import MagicOpposedWorkflow dynamically to avoid circular dependencies
+        import("../magic/opposed-workflow.js").then(({ MagicOpposedWorkflow }) => {
+          if (activeGM) {
+            MagicOpposedWorkflow.maybeAutoRollBanked?.(message).catch((err) => console.error("UESRPG | Magic opposed banked GM auto-roll hook failed", err));
+          } else {
+            MagicOpposedWorkflow.maybeAutoRollBankedNoGM?.(message).catch((err) => console.error("UESRPG | Magic opposed banked no-GM auto-roll hook failed", err));
+          }
+        }).catch((err) => console.error("UESRPG | Failed to load MagicOpposedWorkflow for banked auto-roll", err));
       }
     } catch (err) {
       console.error("UESRPG | Opposed banked auto-roll update hook failed", err);
