@@ -45,11 +45,12 @@ This document provides manual testing procedures for the enhanced Group Actor Sh
 
 ### 4. Member Management - Remove Member
 **Steps:**
-1. Click the × (delete) button on a member
+1. Click the compact × (delete) button (24×24px) on a member
 
 **Expected Result:**
 - Member is removed from the group
 - Group sheet updates immediately
+- Delete button is properly sized and aligned
 
 ### 5. Travel Pace - Average Speed Calculation
 **Steps:**
@@ -59,7 +60,8 @@ This document provides manual testing procedures for the enhanced Group Actor Sh
 
 **Expected Result:**
 - Average speed is calculated from all visible members
-- Display shows "X m/round"
+- Display shows "X m/round" and "Y km/h"
+- km/h value is calculated as: (m/round × 600) / 1000
 
 ### 6. Travel Pace - Cycle Pace
 **Steps:**
@@ -109,22 +111,43 @@ This document provides manual testing procedures for the enhanced Group Actor Sh
 4. Click "Deploy Group" button
 
 **Expected Result:**
-- Tokens for all group members are created on the scene
-- Tokens are arranged in a grid pattern
-- Tokens are centered on the scene
-- Notification: "Deployed X group members."
+- Tokens for all group members are created on the scene automatically
+- Tokens are arranged in an optimal grid pattern (cols = √memberCount)
+- Tokens are centered on the scene with boundary checking
+- Notification: "Deployed X group members in a Y×Z grid."
+- No interactive placement required
 
-### 10. Inventory Tab
+### 10. Inventory Tab - Add Items
 **Steps:**
 1. Open Group sheet
 2. Navigate to Inventory tab
-3. Drag a weapon, armor, or gear item to the group sheet
+3. Drag a weapon, armor, ammunition, or gear item to the group sheet
 
 **Expected Result:**
 - Item is added to the group's inventory
-- Item displays in the appropriate section (Weapons/Armor/Gear)
+- Item displays in the appropriate section (Weapons/Armor/Ammunition/Gear)
 - Quantity displays for items that support it
 - Delete button appears for editable sheets
+
+### 10a. Inventory Tab - View Items
+**Steps:**
+1. Click on an item's name or image in the inventory
+
+**Expected Result:**
+- Item sheet opens in a new window
+- Can view and edit item details (if permissions allow)
+
+### 10b. Inventory Tab - Delete Items
+**Steps:**
+1. Click the delete (trash) icon on an item
+2. Confirm deletion in the dialog
+
+**Expected Result:**
+- Confirmation dialog appears with item name
+- Item name is properly escaped (no XSS vulnerability)
+- Clicking "Yes" deletes the item
+- Clicking "No" cancels the operation
+- Notification appears: "X deleted from group inventory."
 
 ### 11. Details Tab - Text Enrichment
 **Steps:**
@@ -152,12 +175,18 @@ This document provides manual testing procedures for the enhanced Group Actor Sh
 - No edit controls
 - Clicking member portraits opens their sheets (if permission allows)
 
-### 13. Group Stats Display
+### 13. Group Stats Display - CSS Grid Layout
 **Steps:**
 1. Add members with varying HP, Stamina, Speed values
 2. Add a member with fatigue
 
 **Expected Result:**
+- Each member item uses CSS Grid layout (2 rows × 3 columns)
+- Portrait (40×40px) spans rows 1-2, column 1
+- Member name in row 1, column 2
+- Stats (HP, Stamina, Speed) in row 2, column 2
+- Compact delete button (24×24px) spans rows 1-2, column 3
+- No overflow or misalignment issues
 - Each member shows current/max HP
 - Each member shows current/max Stamina
 - Each member shows speed
