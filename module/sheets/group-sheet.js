@@ -128,7 +128,7 @@ export class GroupSheet extends foundry.appv1.sheets.ActorSheet {
 
     // Don't add self or other groups
     if (actor.id === this.actor.id || actor.type === "Group") {
-      ui.notifications.warn("Cannot add this actor to the group.");
+      ui.notifications.warn("Cannot add self or other groups to this group.");
       return;
     }
 

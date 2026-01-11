@@ -1,6 +1,6 @@
 <form class="{{cssClass}}" autocomplete="off">
   <header class="sheet-header">
-    <img class="profile-img" src="{{actor.img}}" data-edit="img" title="{{actor.name}}" />
+    <img class="profile-img" src="{{actor.img}}" data-edit="img" title="{{actor.name}}" alt="{{actor.name}} portrait" />
     <div class="header-fields">
       <h1 class="charname">
         <input name="name" type="text" value="{{actor.name}}" placeholder="Group Name" />
@@ -18,7 +18,7 @@
   <section class="sheet-body">
     {{!-- Members Tab --}}
     <div class="tab members" data-group="primary" data-tab="members">
-      <div class="member-drop-zone" style="border: 2px dashed #999; padding: 20px; margin: 10px; text-align: center; min-height: 100px;">
+      <div class="member-drop-zone" role="button" aria-label="Drop actors here to add them to the group" tabindex="0" style="border: 2px dashed #999; padding: 20px; margin: 10px; text-align: center; min-height: 100px;">
         <p><i class="fas fa-users"></i> Drag actors here to add them to the group</p>
       </div>
 
