@@ -246,3 +246,113 @@
   font-size: 12px;
   padding: 4px 6px;
 }
+
+/* Spell school section styling for actor sheets */
+.spell-school-section {
+  margin-bottom: 10px;
+  border: 1px solid rgba(138, 43, 226, 0.2);
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.spell-school-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 12px;
+  background: rgba(138, 43, 226, 0.1);
+  cursor: pointer;
+  user-select: none;
+  transition: background 0.2s;
+}
+
+.spell-school-header:hover {
+  background: rgba(138, 43, 226, 0.15);
+}
+
+.spell-school-header i {
+  color: #8a2be2;
+  transition: transform 0.2s;
+}
+
+.spell-school-header h4 {
+  margin: 0;
+  font-size: 14px;
+  font-weight: 600;
+  color: #8a2be2;
+  text-transform: capitalize;
+}
+
+.spell-school-header .spell-count {
+  font-size: 12px;
+  opacity: 0.7;
+  font-weight: normal;
+}
+
+.spell-school-content {
+  background: white;
+}
+
+.spell-school-content table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 0;
+}
+
+.spell-school-content thead tr {
+  background: rgba(0, 0, 0, 0.05);
+}
+
+.spell-school-content th {
+  padding: 6px 8px;
+  text-align: left;
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.spell-school-content td {
+  padding: 6px 8px;
+  font-size: 12px;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+.spell-school-content .spell-rank {
+  color: #8a2be2;
+  font-weight: 500;
+  font-size: 11px;
+}
+
+.spell-school-content tr:hover {
+  background: rgba(138, 43, 226, 0.05);
+}
+
+.spell-header {
+  padding: 10px;
+  background: rgba(138, 43, 226, 0.05);
+  border-bottom: 1px solid rgba(138, 43, 226, 0.2);
+}
+
+.spell-create {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  background: #8a2be2;
+  color: white;
+  border-radius: 3px;
+  cursor: pointer;
+  font-size: 12px;
+  font-weight: 600;
+  transition: background 0.2s;
+}
+
+.spell-create:hover {
+  background: #7a1fd2;
+}
+
+.spell-create i {
+  font-size: 10px;
+}
+

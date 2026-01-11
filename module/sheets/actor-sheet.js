@@ -1089,10 +1089,22 @@ async activateListeners(html) {
 
     const icon = toggleEl.querySelector("i");
     if (icon) {
-      icon.classList.remove("fa-chevron-down", "fa-chevron-right");
+      icon.classList.remove("fa-chevron-down", "fa-chevron-right", "fa-caret-down", "fa-caret-right");
       icon.classList.add(collapsed ? "fa-chevron-right" : "fa-chevron-down");
+      // Also support caret icons for spell schools
+      if (icon.classList.contains("fa-caret-down") || icon.classList.contains("fa-caret-right")) {
+        icon.classList.remove("fa-chevron-down", "fa-chevron-right");
+        icon.classList.add(collapsed ? "fa-caret-right" : "fa-caret-down");
+      }
     }
 
+    // Spell school sections
+    const spellSchool = toggleEl.closest(".spell-school-section");
+    if (spellSchool) {
+      const content = spellSchool.querySelector(".spell-school-content");
+      if (content) content.style.display = collapsed ? "none" : "";
+      return;
+    }
 
     // Generic collapsible blocks (non-table, non-list)
     const collapsible = toggleEl.closest(".uesrpg-collapsible");

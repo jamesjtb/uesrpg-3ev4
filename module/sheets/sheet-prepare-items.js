@@ -23,6 +23,7 @@ export function prepareCharacterItems(sheetData, { includeSkills = false, includ
   const talent = [];
   const combatStyle = [];
   const spell = [];
+  const spellsBySchool = {}; // Organized by school for categorized display
   const ammunition = { equipped: [], unequipped: [] };
   const language = [];
   const faction = [];
@@ -121,6 +122,28 @@ export function prepareCharacterItems(sheetData, { includeSkills = false, includ
     }
   }
 
+  // Group spells by school
+  for (const s of spell) {
+    const school = String(s?.system?.school ?? "").toLowerCase().trim() || "unknown";
+    if (!spellsBySchool[school]) {
+      spellsBySchool[school] = [];
+    }
+    spellsBySchool[school].push(s);
+  }
+
+  // Sort spells within each school if sortAlpha enabled
+  if (game.settings.get("uesrpg-3ev4", "sortAlpha")) {
+    for (const schoolKey in spellsBySchool) {
+      spellsBySchool[schoolKey].sort((a, b) => {
+        const nameA = (a?.name ?? "").toLowerCase();
+        const nameB = (b?.name ?? "").toLowerCase();
+        if (nameA > nameB) return 1;
+        if (nameA < nameB) return -1;
+        return 0;
+      });
+    }
+  }
+
   // Assign
   actorData.gear = gear;
   actorData.weapon = weapon;
@@ -130,6 +153,7 @@ export function prepareCharacterItems(sheetData, { includeSkills = false, includ
   actorData.talent = talent;
   actorData.combatStyle = combatStyle;
   actorData.spell = spell;
+  actorData.spellsBySchool = spellsBySchool;
   actorData.ammunition = ammunition;
   actorData.language = language;
   actorData.faction = faction;

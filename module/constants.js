@@ -430,7 +430,35 @@ export const UESRPG = {
       qualitiesStructured: [],
       qualitiesTraits: []
     }
-  }
+  },
+
+  /**
+   * Spell rank labels by level (1-7).
+   * Used for display in school-based spell categorization.
+   */
+  SPELL_RANKS: {
+    1: "Novice",
+    2: "Apprentice",
+    3: "Adept",
+    4: "Expert",
+    5: "Master",
+    6: "Grandmaster",
+    7: "Legendary"
+  },
+
+  /**
+   * Magic school categories.
+   * Maps to spell.system.school field values.
+   */
+  SPELL_SCHOOLS: [
+    { value: "alteration", label: "Alteration" },
+    { value: "conjuration", label: "Conjuration" },
+    { value: "destruction", label: "Destruction" },
+    { value: "illusion", label: "Illusion" },
+    { value: "mysticism", label: "Mysticism" },
+    { value: "necromancy", label: "Necromancy" },
+    { value: "restoration", label: "Restoration" }
+  ]
 };
 
 export default UESRPG;
