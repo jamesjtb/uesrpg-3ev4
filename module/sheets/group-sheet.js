@@ -36,6 +36,9 @@ export class GroupSheet extends ActorSheet {
     data.isGM = game.user.isGM;
     data.editable = data.options.editable;
 
+    // Map "item" type to "gear" for template compatibility
+    data.actor.gear = data.actor.item || [];
+
     // Resolve member UUIDs to actor data
     data.resolvedMembers = await this._resolveMembers(data.actor.system.members);
 
