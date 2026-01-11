@@ -45,6 +45,9 @@ export class GroupSheet extends ActorSheet {
     // Calculate average speed from visible members
     const speeds = data.resolvedMembers.filter(m => m.canView && m.speed).map(m => m.speed);
     data.averageSpeed = speeds.length > 0 ? Math.round(speeds.reduce((a, b) => a + b, 0) / speeds.length) : 0;
+    
+    // Calculate km/h: (m/round × 600 rounds/hour) / 1000
+    data.averageSpeedKmh = data.averageSpeed > 0 ? ((data.averageSpeed * 600) / 1000).toFixed(1) : 0;
 
     // Enrich HTML fields using exact jamesjtb pattern
     data.actor.system.enrichedDescription = await TextEditor.enrichHTML(
@@ -125,6 +128,11 @@ export class GroupSheet extends ActorSheet {
     html.find(".member-portrait-clickable").click(this._onViewMember.bind(this));
     html.find(".member-delete").click(this._onRemoveMember.bind(this));
 
+    // Item management
+    html.find(".item-image").click(this._onItemShow.bind(this));
+    html.find(".item-name").click(this._onItemShow.bind(this));
+    html.find(".item-delete").click(this._onItemDelete.bind(this));
+
     // Travel
     html.find(".change-pace").click(this._onChangePace.bind(this));
 
@@ -155,6 +163,36 @@ export class GroupSheet extends ActorSheet {
     const uuid = event.currentTarget.closest(".member-item").dataset.uuid;
     const members = this.actor.system.members.filter(m => m.id !== uuid);
     await this.actor.update({ "system.members": members });
+  }
+
+  async _onItemShow(event) {
+    event.preventDefault();
+    const itemId = event.currentTarget.closest(".item").dataset.itemId;
+    const item = this.actor.items.get(itemId);
+    if (item) item.sheet.render(true);
+  }
+
+  async _onItemDelete(event) {
+    event.preventDefault();
+    if (!this.actor.isOwner) return;
+
+    const itemId = event.currentTarget.closest(".item").dataset.itemId;
+    const item = this.actor.items.get(itemId);
+    if (!item) return;
+
+    // Show confirmation dialog
+    const confirmed = await Dialog.confirm({
+      title: "Delete Item",
+      content: `<p>Are you sure you want to delete <strong>${item.name}</strong>?</p>`,
+      yes: () => true,
+      no: () => false,
+      defaultYes: false
+    });
+
+    if (confirmed) {
+      await item.delete();
+      ui.notifications.info(`${item.name} deleted from group inventory.`);
+    }
   }
 
   async _onChangePace(event) {
@@ -311,121 +349,65 @@ export class GroupSheet extends ActorSheet {
       return;
     }
     
-    ui.notifications.info(`Click on the canvas to place each group member. Right-click to cancel.`);
+    // Calculate grid layout
+    const memberCount = deployable.length;
+    const cols = Math.ceil(Math.sqrt(memberCount));
+    const rows = Math.ceil(memberCount / cols);
     
-    // Deploy members sequentially with ghost placement
-    let deployedCount = 0;
+    // Get grid size
+    const gridSize = canvas.grid.size;
+    const spacing = gridSize; // One grid square spacing
     
-    for (const member of deployable) {
+    // Calculate center position on canvas
+    const canvasCenter = canvas.dimensions.sceneRect;
+    const startX = canvasCenter.x + (canvasCenter.width / 2) - ((cols * spacing) / 2);
+    const startY = canvasCenter.y + (canvasCenter.height / 2) - ((rows * spacing) / 2);
+    
+    // Create token documents for batch creation
+    const tokenDocuments = [];
+    
+    for (let i = 0; i < deployable.length; i++) {
+      const member = deployable[i];
       const actor = member.actor;
       
+      // Calculate position in grid
+      const col = i % cols;
+      const row = Math.floor(i / cols);
+      const x = startX + (col * spacing);
+      const y = startY + (row * spacing);
+      
+      // Snap to grid
+      const snapped = canvas.grid.getSnappedPosition(x, y, 1);
+      
       try {
-        // Create token document data
+        // Get token data from actor
         const tokenData = await actor.getTokenDocument();
         
-        // Show preview and wait for user placement
-        const placed = await this._placeTokenWithPreview(tokenData, actor.name);
-        
-        if (placed) {
-          deployedCount++;
-        } else {
-          // User cancelled - stop deploying
-          break;
-        }
+        // Create token document data
+        tokenDocuments.push({
+          ...tokenData.toObject(),
+          x: snapped.x,
+          y: snapped.y,
+          hidden: false
+        });
       } catch (err) {
-        console.error(`UESRPG | Failed to deploy ${actor.name}`, err);
-        ui.notifications.error(`Failed to deploy ${actor.name}. See console.`);
+        console.error(`UESRPG | Failed to prepare token for ${actor.name}`, err);
+        ui.notifications.warn(`Could not prepare token for ${actor.name}.`);
       }
     }
     
-    if (deployedCount > 0) {
-      ui.notifications.info(`Deployed ${deployedCount} of ${deployable.length} group members.`);
+    // Batch create all tokens
+    if (tokenDocuments.length > 0) {
+      try {
+        await canvas.scene.createEmbeddedDocuments("Token", tokenDocuments);
+        ui.notifications.info(`Deployed ${tokenDocuments.length} group members in a ${cols}×${rows} grid.`);
+      } catch (err) {
+        console.error("UESRPG | Failed to deploy group tokens", err);
+        ui.notifications.error("Failed to deploy group. See console for details.");
+      }
     } else {
-      ui.notifications.warn("No members were deployed.");
+      ui.notifications.warn("No tokens could be deployed.");
     }
-  }
-
-  /**
-   * Place a single token with interactive ghost preview.
-   * Returns true if placed, false if cancelled.
-   */
-  async _placeTokenWithPreview(tokenData, actorName) {
-    const GHOST_ALPHA = 0.6; // Semi-transparent preview
-    
-    return new Promise((resolve) => {
-      let settled = false;
-      
-      const settle = (result) => {
-        if (settled) return;
-        settled = true;
-        cleanup();
-        resolve(result);
-      };
-      
-      // Create preview token
-      const preview = new CONFIG.Token.objectClass(tokenData);
-      preview.alpha = GHOST_ALPHA;
-      
-      canvas.tokens.preview.addChild(preview);
-      
-      // Track mouse movement
-      const onMouseMove = (event) => {
-        if (!event.interactionData) return;
-        
-        const position = event.interactionData.getLocalPosition(canvas.tokens);
-        const snapped = canvas.grid.getSnappedPosition(position.x, position.y, 1);
-        
-        preview.document.x = snapped.x;
-        preview.document.y = snapped.y;
-        preview.refresh();
-      };
-      
-      // Left-click to place
-      const onLeftClick = async (event) => {
-        if (!event.interactionData) return;
-        
-        const position = event.interactionData.getLocalPosition(canvas.tokens);
-        const snapped = canvas.grid.getSnappedPosition(position.x, position.y, 1);
-        
-        try {
-          // Create real token at this position
-          await canvas.scene.createEmbeddedDocuments("Token", [{
-            ...tokenData.toObject(),
-            x: snapped.x,
-            y: snapped.y,
-            hidden: false
-          }]);
-          
-          settle(true);
-        } catch (err) {
-          console.error("UESRPG | Token placement failed", err);
-          ui.notifications.error(`Failed to place ${actorName}.`);
-          settle(false);
-        }
-      };
-      
-      // Right-click to cancel
-      const onRightClick = () => {
-        ui.notifications.info(`Cancelled placement of ${actorName}.`);
-        settle(false);
-      };
-      
-      // Cleanup function
-      const cleanup = () => {
-        canvas.tokens.preview.removeChild(preview);
-        canvas.stage.off("mousemove", onMouseMove);
-        canvas.stage.off("click", onLeftClick);
-        canvas.stage.off("rightclick", onRightClick);
-      };
-      
-      // Register event listeners
-      canvas.stage.on("mousemove", onMouseMove);
-      canvas.stage.on("click", onLeftClick);
-      canvas.stage.on("rightclick", onRightClick);
-      
-      // Show instruction
-      ui.notifications.info(`Place ${actorName} on the canvas. Right-click to cancel.`);
-    });
   }
 
   async _onDrop(event) {
