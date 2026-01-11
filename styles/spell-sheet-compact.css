@@ -249,61 +249,82 @@
 
 /* Spell school section styling for actor sheets */
 .spell-school-section {
-  margin-bottom: 10px;
-  border: 1px solid rgba(0, 0, 0, 0.15);
-  border-radius: 4px;
-  overflow: hidden;
+  margin-bottom: 8px;
+  border: 1px solid rgba(0, 0, 0, 0.2);
+  border-radius: 3px;
+  background: rgba(0, 0, 0, 0.02);
 }
 
 .spell-school-header {
   display: flex;
   align-items: center;
   gap: 8px;
-  padding: 8px 12px;
-  background: rgba(0, 0, 0, 0.08);
+  padding: 6px 10px;
+  background: rgba(0, 0, 0, 0.1);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.2);
   cursor: pointer;
+  margin: 0;
+  font-size: 13px;
+  font-weight: 600;
   user-select: none;
   transition: background 0.2s;
 }
 
 .spell-school-header:hover {
-  background: rgba(0, 0, 0, 0.12);
+  background: rgba(0, 0, 0, 0.15);
 }
 
-.spell-school-header i {
-  color: #333;
-  transition: transform 0.2s;
-}
-
-.spell-school-header h4 {
-  margin: 0;
-  font-size: 14px;
-  font-weight: 600;
-  color: #333;
-  text-transform: capitalize;
-}
-
-.spell-school-header .spell-count {
-  font-size: 12px;
-  opacity: 0.7;
+.spell-school-header .school-count {
+  opacity: 0.6;
+  font-size: 11px;
   font-weight: normal;
 }
 
-.spell-school-content {
-  background: white;
+.spell-school-header .collapse-arrow {
+  font-size: 10px;
+  transition: transform 0.2s;
 }
 
-.spell-school-content table {
+.spell-school-actions {
+  padding: 6px 10px;
+  background: rgba(0, 0, 0, 0.03);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.spell-school-actions .item-create {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 10px;
+  background: #333;
+  color: white;
+  border-radius: 3px;
+  cursor: pointer;
+  font-size: 11px;
+  font-weight: 600;
+  transition: background 0.2s;
+  text-decoration: none;
+}
+
+.spell-school-actions .item-create:hover {
+  background: #000;
+}
+
+.spell-school-actions .item-create i {
+  font-size: 10px;
+}
+
+.spell-school-table {
   width: 100%;
   border-collapse: collapse;
-  margin: 0;
+  background: #fff;
 }
 
-.spell-school-content thead tr {
+.spell-school-table thead {
   background: rgba(0, 0, 0, 0.05);
 }
 
-.spell-school-content th {
+.spell-school-table th {
   padding: 6px 8px;
   text-align: left;
   font-size: 11px;
@@ -312,20 +333,55 @@
   border-bottom: 1px solid rgba(0, 0, 0, 0.1);
 }
 
-.spell-school-content td {
-  padding: 6px 8px;
-  font-size: 12px;
+.spell-row {
   border-bottom: 1px solid rgba(0, 0, 0, 0.05);
 }
 
-.spell-school-content .spell-rank {
-  color: #333;
-  font-weight: 500;
-  font-size: 11px;
+.spell-row:hover {
+  background: rgba(0, 0, 0, 0.03);
 }
 
-.spell-school-content tr:hover {
-  background: rgba(0, 0, 0, 0.03);
+.spell-name-cell {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  cursor: pointer;
+  padding: 4px 8px;
+}
+
+.spell-name-cell .item-img {
+  width: 24px;
+  height: 24px;
+  border-radius: 2px;
+  border: 1px solid rgba(0, 0, 0, 0.2);
+  flex-shrink: 0;
+}
+
+.spell-name-cell .item-name {
+  font-size: 13px;
+}
+
+.spell-rank-cell,
+.spell-mp-cell {
+  font-size: 12px;
+  color: #666;
+  text-align: center;
+  padding: 4px 8px;
+}
+
+.spell-actions-cell {
+  text-align: center;
+  padding: 4px 8px;
+}
+
+.spell-actions-cell .item-delete {
+  cursor: pointer;
+  color: #999;
+  font-size: 12px;
+}
+
+.spell-actions-cell .item-delete:hover {
+  color: #c00;
 }
 
 .spell-header {

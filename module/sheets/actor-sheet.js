@@ -291,7 +291,7 @@ async activateListeners(html) {
   // Register stamina button handler after incrementResource
   registerStaminaButtonHandler(this, html);
   
-  html.find("#spellFilter").click(this._filterSpells.bind(this));
+  // html.find("#spellFilter").click(this._filterSpells.bind(this)); // DISABLED: Spell filter dropdown removed
   html.find("#itemFilter").click(this._filterItems.bind(this));
   html.find(".incrementFatigue").click(this._incrementFatigue.bind(this));
   html.find(".equip-items").click(this._onEquipItems.bind(this));
@@ -299,11 +299,44 @@ async activateListeners(html) {
   // Item Create Buttons
   // (common handler binding happens via bindCommonSheetListeners)
   // Checks for UI Elements on Sheets and Updates
-  this._createSpellFilterOptions();
+  // this._createSpellFilterOptions(); // DISABLED: Spell filter dropdown removed in school-based categorization
   this._createItemFilterOptions();
-  this._setDefaultSpellFilter();
+  // this._setDefaultSpellFilter(); // DISABLED: Spell filter dropdown removed in school-based categorization
   this._setDefaultItemFilter();
   this._setResourceBars();
+
+  // Spell item click to open sheet
+  html.find('.spell-row .item-img, .spell-row .item-name').on('click', async (ev) => {
+    ev.preventDefault();
+    ev.stopPropagation();
+    const row = ev.currentTarget.closest('.spell-row');
+    const itemId = row?.dataset?.itemId;
+    if (!itemId) return;
+    
+    const item = this.actor.items.get(itemId);
+    if (item) {
+      item.sheet.render(true);
+    }
+  });
+
+  // Per-school "Add Spell" button handler
+  html.find('.spell-school-actions .item-create').on('click', async (ev) => {
+    ev.preventDefault();
+    
+    const school = ev.currentTarget.dataset.school;
+    
+    const itemData = {
+      name: `New ${school.charAt(0).toUpperCase() + school.slice(1)} Spell`,
+      type: 'spell',
+      system: {
+        school: school,
+        level: 1,
+        cost: 0
+      }
+    };
+    
+    await this.actor.createEmbeddedDocuments('Item', [itemData]);
+  });
 
   // Common listener binding (PC + NPC)
   bindCommonSheetListeners(this, html);
@@ -1101,11 +1134,11 @@ async activateListeners(html) {
       }
     }
 
-    // Spell school sections
+    // Spell school sections - updated to use new template structure
     const spellSchool = toggleEl.closest(".spell-school-section");
     if (spellSchool) {
-      const content = spellSchool.querySelector(".spell-school-content");
-      if (content) content.style.display = collapsed ? "none" : "";
+      const table = spellSchool.querySelector(".spell-school-table");
+      if (table) table.style.display = collapsed ? "none" : "";
       return;
     }
 
@@ -3694,26 +3727,7 @@ await item.update({ "system.quantity": newQty });
     // Method retained for backward compatibility but is now a no-op
     const filterElement = this.form?.querySelector("#spellFilter");
     if (!filterElement) return;
-    
-    let filterBy = sessionStorage.getItem("savedSpellFilter");
-    if (filterBy !== null && filterBy !== undefined) {
-      filterElement.value = filterBy;
-      for (let spellItem of [
-        ...this.form.querySelectorAll(".spellList tbody .item"),
-      ]) {
-        switch (filterBy) {
-          case "All":
-            spellItem.classList.add("active");
-            break;
-
-          case `${filterBy}`:
-            filterBy == spellItem.dataset.spellSchool
-              ? spellItem.classList.add("active")
-              : spellItem.classList.remove("active");
-            break;
-        }
-      }
-    }
+    // Early return: filter element doesn't exist in new template
   }
 
   _createStatusTags() {
