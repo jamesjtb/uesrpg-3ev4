@@ -67,7 +67,7 @@ export async function applyMagicDamage(targetActor, damage, damageType, spell, o
 
   // RAW: Spell damage is layered (Magic base + elemental type).
   // Calculate damage with layered resistance: elemental first, then magic.
-  const isElementalSpell = (dt !== DAMAGE_TYPES.MAGIC && dt !== "none" && dt !== "healing" && dt !== "physical");
+  const isElementalSpell = (dt !== DAMAGE_TYPES.MAGIC && dt !== DAMAGE_TYPES.PHYSICAL && dt !== DAMAGE_TYPES.HEALING && dt !== "none");
   
   if (isElementalSpell) {
     // Step 1: Get elemental resistance/weakness
