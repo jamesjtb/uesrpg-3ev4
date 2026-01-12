@@ -122,10 +122,14 @@ export function getSpellDamageType(spell) {
 
 /**
  * Determine whether this spell should be treated as healing.
+ * Checks both the isHealingSpell toggle and damageType for backwards compatibility.
  * @param {Item} spell
  * @returns {boolean}
  */
 export function isHealingSpell(spell) {
+  // Check the dedicated healing toggle first (new system)
+  if (_bool(spell?.system?.isHealingSpell)) return true;
+  // Fall back to damage type check (legacy/backwards compatibility)
   return getSpellDamageType(spell) === "healing";
 }
 

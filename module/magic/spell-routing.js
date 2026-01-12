@@ -27,7 +27,8 @@ function _bool(v) {
 export function classifySpellForRouting(spell) {
   const isAttack = (spell?.system?.isAttackSpell === true) || (_str(spell?.system?.isAttackSpell).toLowerCase() === "true");
   const damageType = _str(spell?.system?.damageType).toLowerCase();
-  const isHealing = (damageType === "healing") || _bool(spell?.system?.isHealingSpell);
+  // Check both the isHealingSpell toggle AND the damageType for backwards compatibility
+  const isHealing = _bool(spell?.system?.isHealingSpell) || (damageType === "healing");
   const isDirect = _bool(spell?.system?.isDirect);
   const isTargeted = isAttack || isHealing || isDirect;
   return { isAttack, isHealing, isDirect, isTargeted, damageType };

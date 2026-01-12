@@ -7,7 +7,7 @@
  * Target: Foundry VTT v13.351
  */
 
-import { applyDamage, applyHealing, DAMAGE_TYPES } from "../combat/damage-automation.js";
+import { applyDamage, applyHealing, DAMAGE_TYPES, getDamageReduction } from "../combat/damage-automation.js";
 
 function _str(v) {
   return v === undefined || v === null ? "" : String(v);
@@ -23,6 +23,11 @@ function _bool(v) {
 
 /**
  * Apply magic damage with combat-parity mitigation breakdown.
+ * 
+ * RAW (Chapter 6): Magic damage is layered - it has both Magic as base damage type AND 
+ * a specific elemental/typed damage. Resistances are applied in order:
+ * 1. Elemental/typed resistance (fire, frost, shock, etc.) - applied first
+ * 2. Magic resistance - applied second
  *
  * @param {Actor} targetActor
  * @param {number} damage
@@ -60,12 +65,52 @@ export async function applyMagicDamage(targetActor, damage, damageType, spell, o
     extraBreakdownLines.push(`Master of Magicka: rolled twice (kept ${Math.max(a, b)} of ${a} / ${b})`);
   }
 
+  // RAW: Spell damage is layered (Magic base + elemental type).
+  // Calculate damage with layered resistance: elemental first, then magic.
+  const isElementalSpell = (dt !== DAMAGE_TYPES.MAGIC && dt !== DAMAGE_TYPES.PHYSICAL && dt !== DAMAGE_TYPES.HEALING && dt !== "none");
+  
+  if (isElementalSpell) {
+    // Step 1: Get elemental resistance/weakness
+    const elementalReduction = getDamageReduction(targetActor, dt, hitLocation);
+    const elementalResistance = elementalReduction.resistance || 0;
+    
+    // Step 2: Get magic resistance
+    const magicReduction = getDamageReduction(targetActor, DAMAGE_TYPES.MAGIC, hitLocation);
+    const magicResistance = magicReduction.resistance || 0;
+    
+    // Step 3: Apply layered resistance
+    // Apply elemental resistance/weakness first (RAW: "Weakness is applied first")
+    const afterElemental = Number(damage || 0) - elementalResistance;
+    // Then apply magic resistance
+    const finalDamage = afterElemental - magicResistance;
+    
+    // Add resistance breakdown to chat
+    if (elementalResistance !== 0) {
+      const sign = elementalResistance >= 0 ? "-" : "+";
+      const absValue = Math.abs(elementalResistance);
+      extraBreakdownLines.push(`${dt.charAt(0).toUpperCase() + dt.slice(1)} Resistance: ${sign}${absValue}`);
+    }
+    if (magicResistance !== 0) {
+      const sign = magicResistance >= 0 ? "-" : "+";
+      const absValue = Math.abs(magicResistance);
+      extraBreakdownLines.push(`Magic Resistance: ${sign}${absValue}`);
+    }
+    
+    // Apply the layered damage with ignoreReduction=true since we calculated it manually
+    return applyDamage(targetActor, Math.max(0, finalDamage), dt, {
+      source,
+      hitLocation,
+      rollHTML,
+      ignoreReduction: true,
+      extraBreakdownLines,
+    });
+  }
+  
+  // Non-elemental spells (pure magic, physical, etc.) use normal damage pipeline
   return applyDamage(targetActor, Number(damage || 0), dt, {
     source,
     hitLocation,
     rollHTML,
-    // Magic damage usually ignores armor unless the item provides specific magical/elemental reduction.
-    // The unified pipeline already applies armor conditionally per damage type; keep default behavior.
     extraBreakdownLines,
   });
 }

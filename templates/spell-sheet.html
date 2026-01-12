@@ -57,13 +57,19 @@
             </label>
           </div>
           <div class="attribute-row">
+            <label class="checkbox-label">
+              <input type="checkbox" name="system.isHealingSpell" {{checked item.system.isHealingSpell}} />
+              Healing Spell
+            </label>
+          </div>
+          <div class="attribute-row">
             <label>Damage Type</label>
             <select name="system.damageType" style="width: 150px;">
               {{selectOptions item.system.damageTypes selected=item.system.damageType}}
             </select>
             <input type="text" name="system.damageFormula" value="{{item.system.damageFormula}}" placeholder="1d6" style="width: 100px; margin-left: 10px;" />
           </div>
-          <p class="hint">Select "Healing" to restore HP instead of dealing damage.</p>
+          <p class="hint">Healing spells restore HP. Attack spells use opposed rolls. Direct spells cannot be defended.</p>
         </section>
         
         <section class="attribute-section">
