@@ -2123,66 +2123,68 @@ if (shouldUseTargetedSpellWorkflow(spell, workingTargets)) {
       </form>
     `;
     
-    const dialog = new Dialog({
-      title: "Spell Options",
-      content,
-      buttons: {
-        cast: {
-          label: "Cast",
-          callback: (html) => {
-            const root = html instanceof HTMLElement ? html : html?.[0];
-            const form = root?.querySelector("form");
+    return new Promise((resolve) => {
+      const dialog = new Dialog({
+        title: "Spell Options",
+        content,
+        buttons: {
+          cast: {
+            label: "Cast",
+            callback: (html) => {
+              const root = html instanceof HTMLElement ? html : html?.[0];
+              const form = root?.querySelector("form");
 
-            const difficultyKey = String(form?.difficultyKey?.value ?? "average");
-            const manualModifierRaw = form?.manualModifier?.value ?? "0";
-            const manualModifier = Number.parseInt(String(manualModifierRaw ?? "0"), 10) || 0;
-            return {
-              isRestrained: form?.restrain?.checked ?? false,
-              isOverloaded: form?.overload?.checked ?? false,
-              useOvercharge: form?.overcharge?.checked ?? false,
-              useMagickaCycling: form?.magickaCycling?.checked ?? false,
-              difficultyKey,
-              manualModifier,
-              restraintValue: wpBonus,
-              baseCost
-            };
-          }
+              const difficultyKey = String(form?.difficultyKey?.value ?? "average");
+              const manualModifierRaw = form?.manualModifier?.value ?? "0";
+              const manualModifier = Number.parseInt(String(manualModifierRaw ?? "0"), 10) || 0;
+              resolve({
+                isRestrained: form?.restrain?.checked ?? false,
+                isOverloaded: form?.overload?.checked ?? false,
+                useOvercharge: form?.overcharge?.checked ?? false,
+                useMagickaCycling: form?.magickaCycling?.checked ?? false,
+                difficultyKey,
+                manualModifier,
+                restraintValue: wpBonus,
+                baseCost
+              });
+            }
+          },
+          cancel: { label: "Cancel", callback: () => resolve(null) }
         },
-        cancel: { label: "Cancel", callback: () => null }
-      },
-      default: "cast",
-      render: (html) => {
-        // Make Restrain and Overload mutually exclusive
-        if (hasOverload) {
-          const restrainCheckbox = html.find('#restrainCheckbox')[0];
-          const overloadCheckbox = html.find('#overloadCheckbox')[0];
-          const restrainGroup = html.find('#restrainGroup')[0];
-          const overloadGroup = html.find('#overloadGroup')[0];
-          
-          if (restrainCheckbox && overloadCheckbox) {
-            restrainCheckbox.addEventListener('change', (e) => {
-              if (e.target.checked) {
-                overloadCheckbox.checked = false;
-                overloadGroup.style.opacity = '0.5';
-              } else {
-                overloadGroup.style.opacity = '1';
-              }
-            });
+        default: "cast",
+        render: (html) => {
+          // Make Restrain and Overload mutually exclusive
+          if (hasOverload) {
+            const restrainCheckbox = html.find('#restrainCheckbox')[0];
+            const overloadCheckbox = html.find('#overloadCheckbox')[0];
+            const restrainGroup = html.find('#restrainGroup')[0];
+            const overloadGroup = html.find('#overloadGroup')[0];
             
-            overloadCheckbox.addEventListener('change', (e) => {
-              if (e.target.checked) {
-                restrainCheckbox.checked = false;
-                restrainGroup.style.opacity = '0.5';
-              } else {
-                restrainGroup.style.opacity = '1';
-              }
-            });
+            if (restrainCheckbox && overloadCheckbox) {
+              restrainCheckbox.addEventListener('change', (e) => {
+                if (e.target.checked) {
+                  overloadCheckbox.checked = false;
+                  overloadGroup.style.opacity = '0.5';
+                } else {
+                  overloadGroup.style.opacity = '1';
+                }
+              });
+              
+              overloadCheckbox.addEventListener('change', (e) => {
+                if (e.target.checked) {
+                  restrainCheckbox.checked = false;
+                  restrainGroup.style.opacity = '0.5';
+                } else {
+                  restrainGroup.style.opacity = '1';
+                }
+              });
+            }
           }
         }
-      }
-    }, { width: 420 });
-    
-    return dialog.render(true);
+      }, { width: 420 });
+      
+      dialog.render(true);
+    });
   }
 
   /**
