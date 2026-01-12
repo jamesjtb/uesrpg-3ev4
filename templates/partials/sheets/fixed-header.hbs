@@ -37,6 +37,11 @@
                             </div>
                             <div id="hpBar" class="currentBar" data-resource="hp"></div>
                         </div>
+                        {{#if (gt actor.system.tempHP 0)}}
+                        <div class="temp-hp-display" style="margin-top: 4px; font-size: 12px; color: #4A90E2; font-weight: bold;">
+                            <span title="Temporary Hit Points">Temp HP: {{actor.system.tempHP}}</span>
+                        </div>
+                        {{/if}}
                     </div>
                     <div id="staminaResource">
                         <div class="resourceLabel">
