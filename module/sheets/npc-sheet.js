@@ -260,15 +260,15 @@ async activateListeners(html) {
   html.find(".incrementResource").click(this._onIncrementResource.bind(this));
   // Resource restore (migrated from label button)
   html.find(".restoreResource").click(this._onResetResource.bind(this));
-  html.find("#spellFilter").click(this._filterSpells.bind(this));
+  // html.find("#spellFilter").click(this._filterSpells.bind(this)); // REMOVED: Spell filter dropdown removed in spell school categorization
   html.find("#itemFilter").click(this._filterItems.bind(this));
   html.find(".incrementFatigue").click(this._incrementFatigue.bind(this));
   html.find(".equip-items").click(this._onEquipItems.bind(this));
 
   // Checks UI Elements for update
-  this._createSpellFilterOptions();
+  // this._createSpellFilterOptions(); // REMOVED: Spell filter dropdown removed in spell school categorization
   this._createItemFilterOptions();
-  this._setDefaultSpellFilter();
+  // this._setDefaultSpellFilter(); // REMOVED: Spell filter dropdown removed in spell school categorization
   this._setDefaultItemFilter();
   this._setResourceBars();
   this._createStatusTags();
@@ -2530,23 +2530,25 @@ _onResetResource(event) {
   this.actor.update({ [dataPath]: Number(resource.max ?? 0) });
 }
 
-  _createSpellFilterOptions() {
-    for (let spell of this.actor.items.filter(
-      (item) => item.type === "spell"
-    )) {
-      if (
-        [...this.form.querySelectorAll("#spellFilter option")].some(
-          (i) => i.innerHTML === spell.system.school
-        )
-      ) {
-        continue;
-      } else {
-        let option = document.createElement("option");
-        option.innerHTML = spell.system.school;
-        this.form.querySelector("#spellFilter").append(option);
-      }
-    }
-  }
+  // REMOVED: _createSpellFilterOptions() - no longer used with spell school categorization
+  // The spell filter dropdown (#spellFilter) was removed when migrating to spell schools
+  // _createSpellFilterOptions() {
+  //   for (let spell of this.actor.items.filter(
+  //     (item) => item.type === "spell"
+  //   )) {
+  //     if (
+  //       [...this.form.querySelectorAll("#spellFilter option")].some(
+  //         (i) => i.innerHTML === spell.system.school
+  //       )
+  //     ) {
+  //       continue;
+  //     } else {
+  //       let option = document.createElement("option");
+  //       option.innerHTML = spell.system.school;
+  //       this.form.querySelector("#spellFilter").append(option);
+  //     }
+  //   }
+  // }
   _createItemFilterOptions() {
     const filterEl = this.form?.querySelector?.("#itemFilter");
     if (!filterEl) return;
@@ -2563,28 +2565,30 @@ _onResetResource(event) {
     }
   }
 
-  _filterSpells(event) {
-    event.preventDefault();
-    let filterBy = event.currentTarget.value;
-
-    for (let spellItem of [
-      ...this.form.querySelectorAll(".spellList tbody .item"),
-    ]) {
-      switch (filterBy) {
-        case "All":
-          spellItem.classList.add("active");
-          sessionStorage.setItem("savedSpellFilter", filterBy);
-          break;
-
-        case `${filterBy}`:
-          filterBy == spellItem.dataset.spellSchool
-            ? spellItem.classList.add("active")
-            : spellItem.classList.remove("active");
-          sessionStorage.setItem("savedSpellFilter", filterBy);
-          break;
-      }
-    }
-  }
+  // REMOVED: _filterSpells() - no longer used with spell school categorization
+  // The spell filter dropdown (#spellFilter) was removed when migrating to spell schools
+  // _filterSpells(event) {
+  //   event.preventDefault();
+  //   let filterBy = event.currentTarget.value;
+  //
+  //   for (let spellItem of [
+  //     ...this.form.querySelectorAll(".spellList tbody .item"),
+  //   ]) {
+  //     switch (filterBy) {
+  //       case "All":
+  //         spellItem.classList.add("active");
+  //         sessionStorage.setItem("savedSpellFilter", filterBy);
+  //         break;
+  //
+  //       case `${filterBy}`:
+  //         filterBy == spellItem.dataset.spellSchool
+  //           ? spellItem.classList.add("active")
+  //           : spellItem.classList.remove("active");
+  //         sessionStorage.setItem("savedSpellFilter", filterBy);
+  //         break;
+  //     }
+  //   }
+  // }
 
   _filterItems(event) {
     event.preventDefault();
@@ -2635,28 +2639,30 @@ _onResetResource(event) {
     }
   }
 
-  _setDefaultSpellFilter() {
-    let filterBy = sessionStorage.getItem("savedSpellFilter");
-
-    if (filterBy !== null || filterBy !== undefined) {
-      this.form.querySelector("#spellFilter").value = filterBy;
-      for (let spellItem of [
-        ...this.form.querySelectorAll(".spellList tbody .item"),
-      ]) {
-        switch (filterBy) {
-          case "All":
-            spellItem.classList.add("active");
-            break;
-
-          case `${filterBy}`:
-            filterBy == spellItem.dataset.spellSchool
-              ? spellItem.classList.add("active")
-              : spellItem.classList.remove("active");
-            break;
-        }
-      }
-    }
-  }
+  // REMOVED: _setDefaultSpellFilter() - no longer used with spell school categorization
+  // The spell filter dropdown (#spellFilter) was removed when migrating to spell schools
+  // _setDefaultSpellFilter() {
+  //   let filterBy = sessionStorage.getItem("savedSpellFilter");
+  //
+  //   if (filterBy !== null || filterBy !== undefined) {
+  //     this.form.querySelector("#spellFilter").value = filterBy;
+  //     for (let spellItem of [
+  //       ...this.form.querySelectorAll(".spellList tbody .item"),
+  //     ]) {
+  //       switch (filterBy) {
+  //         case "All":
+  //           spellItem.classList.add("active");
+  //           break;
+  //
+  //         case `${filterBy}`:
+  //           filterBy == spellItem.dataset.spellSchool
+  //             ? spellItem.classList.add("active")
+  //             : spellItem.classList.remove("active");
+  //           break;
+  //       }
+  //     }
+  //   }
+  // }
 
   _incrementFatigue(event) {
     event.preventDefault();
