@@ -36,6 +36,8 @@ import {
   isElementalDamageType,
   canUseMasterOfMagicka
 } from "./magic-modifiers.js";
+import { AttackTracker } from "../combat/attack-tracker.js";
+import { classifySpellForRouting } from "./spell-routing.js";
 const _FLAG_NS = "uesrpg-3ev4";
 const _FLAG_KEY = "magicOpposed";
 const _CARD_VERSION = 2;
