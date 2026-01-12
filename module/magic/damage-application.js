@@ -141,6 +141,8 @@ export async function applyMagicHealing(targetActor, healing, spell, options = {
     rollHTML,
     // Per user requirement: omit current/max HP line to reduce metagame information.
     hideHpLine: true,
+    // Skip chat message since healing is already shown in the magic opposed card
+    skipChatMessage: true,
   });
 }
 

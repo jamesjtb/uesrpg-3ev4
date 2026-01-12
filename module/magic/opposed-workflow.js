@@ -286,15 +286,20 @@ function _renderCard(data, messageId) {
     const dTN = (typeof dTNObj === 'object' && dTNObj?.finalTN != null) ? dTNObj.finalTN : (typeof dTNObj === 'number' ? dTNObj : "—");
     
     let resultsHtml = "";
-    // For healing spells (healingDirect), only show caster's result
+    // For healing spells (healingDirect), only show caster's result and healing amount
     if (Boolean(data.context?.healingDirect)) {
       if (aResult) {
         const aRoll = aResult.rollTotal ?? "—";
         const aDeg = Math.abs(aResult.degree ?? 0);
         const aDoSLabel = (aResult.isSuccess || false) ? "DoS" : "DoF";
+        const healingApplied = data.outcome?.healingApplied;
+        const healingHTML = data.outcome?.healingRollHTML ?? "";
+        
         resultsHtml = `
           <div style="margin-top:6px; font-size:12px; line-height:1.5;">
             <div><b>Casting Test:</b> ${aRoll} vs TN ${aTN} — ${aDeg} ${aDoSLabel}</div>
+            ${healingApplied != null ? `<div><b>Healing:</b> <span style="color:#388e3c;font-weight:bold;">+${healingApplied} HP</span></div>` : ""}
+            ${healingHTML ? `<div style="margin-top:4px;">${healingHTML}</div>` : ""}
           </div>
         `;
       }
@@ -1234,6 +1239,11 @@ export const MagicOpposedWorkflow = {
         const healRoll = await rollSpellHealing(spell, { isCritical });
         const healValue = Number(healRoll.total) || 0;
         const rollHTML = await healRoll.render();
+        
+        // Store healing info in data for chat card display
+        data.outcome.healingApplied = healValue;
+        data.outcome.healingRollHTML = rollHTML;
+        
         await applyMagicHealing(defender, healValue, spell, {
           isCritical,
           rollHTML,
@@ -1338,6 +1348,11 @@ export const MagicOpposedWorkflow = {
         const healRoll = await rollSpellHealing(spell, { isCritical });
         const healValue = Number(healRoll.total) || 0;
         const rollHTML = await healRoll.render();
+        
+        // Store healing info in data for chat card display
+        data.outcome.healingApplied = healValue;
+        data.outcome.healingRollHTML = rollHTML;
+        
         await applyMagicHealing(defender, healValue, spell, {
           isCritical,
           rollHTML,
@@ -1441,6 +1456,11 @@ export const MagicOpposedWorkflow = {
         const healRoll = await rollSpellHealing(spell, { isCritical });
         const healValue = Number(healRoll.total) || 0;
         const rollHTML = await healRoll.render();
+        
+        // Store healing info in data for chat card display
+        data.outcome.healingApplied = healValue;
+        data.outcome.healingRollHTML = rollHTML;
+        
         await applyMagicHealing(defender, healValue, spell, {
           isCritical,
           rollHTML,
