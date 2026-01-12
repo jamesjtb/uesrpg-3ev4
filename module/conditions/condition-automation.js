@@ -288,6 +288,10 @@ export function registerConditionAutomationHooks() {
         const key = _getConditionKeyFromAECreateData(data);
         if (!key) return;
 
+        // Frenzied is handled by frenzied.js with dynamic talent-based changes
+        // Skip it here to avoid interfering with its custom changes
+        if (key === "frenzied") return;
+
         // Only shape known condition effects from the Token HUD palette.
         const supported = new Set(["prone", "entangled", "bleeding", "burning"]);
         if (!supported.has(key)) return;
@@ -297,12 +301,18 @@ export function registerConditionAutomationHooks() {
         // Ensure canonical condition flags exist.
         next.flags = next.flags ?? {};
         next.flags.core = { ...(next.flags.core ?? {}), statusId: key };
+        const isNumericCondition = key === "bleeding" || key === "burning";
+        const stackRule = isNumericCondition ? "refresh" : "override";
         next.flags[FLAG_SCOPE] = {
           ...(next.flags[FLAG_SCOPE] ?? {}),
           condition: {
             ...((next.flags[FLAG_SCOPE] ?? {})?.condition ?? {}),
             key
-          }
+          },
+          owner: "system",
+          effectGroup: `condition.${key}`,
+          stackRule: stackRule,
+          source: "condition"
         };
 
         // Ensure value + readable name for X conditions

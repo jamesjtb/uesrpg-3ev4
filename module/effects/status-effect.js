@@ -44,6 +44,22 @@ export async function createOrUpdateStatusEffect(actor, { statusId, name, img, d
     }
   };
 
+  // Add standardized metadata for combat action effects (identified by flags.uesrpg.key)
+  if (key && !mergedFlags["uesrpg-3ev4"]?.effectGroup) {
+    // Combat action effects: defensiveStance, aim, powerAttack, etc.
+    const combatActionKeys = new Set(["defensiveStance", "aim", "powerAttack", "powerBlock", "powerDraw"]);
+    // Stamina effects: stamina-power-attack, stamina-power-block, etc.
+    const isStaminaEffect = key.startsWith("stamina-");
+    
+    if (combatActionKeys.has(key) || isStaminaEffect) {
+      if (!mergedFlags["uesrpg-3ev4"]) mergedFlags["uesrpg-3ev4"] = {};
+      mergedFlags["uesrpg-3ev4"].owner = "system";
+      mergedFlags["uesrpg-3ev4"].effectGroup = `combat.${key}`;
+      mergedFlags["uesrpg-3ev4"].stackRule = "override";
+      mergedFlags["uesrpg-3ev4"].source = "combat";
+    }
+  }
+
   if (sid) {
     mergedFlags.core = { ...(existing?.flags?.core ?? {}), ...(flags?.core ?? {}), statusId: sid };
   }

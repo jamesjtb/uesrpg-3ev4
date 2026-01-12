@@ -5,6 +5,7 @@
 
 
 import { isTransferEffectActive } from "../ae/transfer.js";
+import { evaluateAEModifierKeys } from "../ae/modifier-evaluator.js";
 
 export class SimpleActor extends Actor {
   async _preCreate(data, options, user) {
@@ -765,6 +766,96 @@ export class SimpleActor extends Actor {
     return { bonus: bonusLane, penalty: penaltyLane };
   }
   
+  /**
+   * Apply Active Effect modifiers to resistance values.
+   * Reads from multiple AE key paths for backward compatibility and Chapter 4 expansion:
+   * - Legacy: system.modifiers.resistance.*
+   * - New: system.resistances.*
+   * - New: system.traits.resistance.*
+   * 
+   * @param {object} resistanceData - The actor's resistance object to modify
+   * @returns {object} Modified resistance values with AE modifiers applied
+   */
+  _applyResistanceAEModifiers(resistanceData) {
+    if (!resistanceData || typeof resistanceData !== 'object') return resistanceData;
+    
+    // Map of resistance keys to their corresponding AE key paths
+    const resistanceKeyMap = {
+      fireR: {
+        legacy: "system.modifiers.resistance.fireR",
+        traits: "system.traits.resistance.fire"
+      },
+      frostR: {
+        legacy: "system.modifiers.resistance.frostR",
+        traits: "system.traits.resistance.frost"
+      },
+      shockR: {
+        legacy: "system.modifiers.resistance.shockR",
+        traits: "system.traits.resistance.shock"
+      },
+      poisonR: {
+        legacy: "system.modifiers.resistance.poisonR",
+        resistances: "system.resistances.poison",
+        traits: "system.traits.resistance.poison"
+      },
+      magicR: {
+        legacy: "system.modifiers.resistance.magicR",
+        resistances: "system.resistances.magic"
+      },
+      diseaseR: {
+        legacy: "system.modifiers.resistance.diseaseR",
+        resistances: "system.resistances.disease",
+        traits: "system.traits.resistance.disease"
+      },
+      silverR: {
+        legacy: "system.modifiers.resistance.silverR"
+      },
+      sunlightR: {
+        legacy: "system.modifiers.resistance.sunlightR"
+      },
+      natToughness: {
+        legacy: "system.modifiers.resistance.natToughness"
+      }
+    };
+    
+    // Collect all AE keys to evaluate
+    const allKeys = [];
+    for (const resKey in resistanceKeyMap) {
+      const paths = resistanceKeyMap[resKey];
+      if (paths.legacy) allKeys.push(paths.legacy);
+      if (paths.resistances) allKeys.push(paths.resistances);
+      if (paths.traits) allKeys.push(paths.traits);
+    }
+    
+    // Evaluate all resistance AE modifiers
+    const aeMods = evaluateAEModifierKeys(this, allKeys);
+    
+    // Apply modifiers to each resistance value
+    const result = { ...resistanceData };
+    for (const resKey in resistanceKeyMap) {
+      const paths = resistanceKeyMap[resKey];
+      let totalModifier = 0;
+      
+      // Sum all applicable AE modifiers for this resistance
+      if (paths.legacy) {
+        totalModifier += Number(aeMods[paths.legacy] ?? 0) || 0;
+      }
+      if (paths.resistances) {
+        totalModifier += Number(aeMods[paths.resistances] ?? 0) || 0;
+      }
+      if (paths.traits) {
+        totalModifier += Number(aeMods[paths.traits] ?? 0) || 0;
+      }
+      
+      // Apply the modifier to the base resistance value
+      if (totalModifier !== 0 && typeof result[resKey] === 'number') {
+        result[resKey] = Number(result[resKey] ?? 0) + totalModifier;
+      }
+    }
+    
+    return result;
+  }
+  
   
   
   
@@ -844,6 +935,57 @@ export class SimpleActor extends Actor {
   }
 
   /**
+   * Repair Frenzied effects that have empty changes arrays.
+   * This ensures effects created before fixes were applied get their changes populated.
+   * 
+   * NOTE: This should NOT be called during prepareData as it can cause timing issues.
+   * Use the hook-based repair mechanism in frenzied.js instead.
+   */
+  _repairFrenziedEffectsIfNeeded() {
+    // Defer to next tick to avoid prepareData timing issues
+    setTimeout(() => {
+      try {
+        const frenziedEffects = Array.from(this.effects ?? []).filter(e => {
+          const isFrenzied = e?.flags?.["uesrpg-3ev4"]?.condition?.key === "frenzied" ||
+                             e?.flags?.core?.statusId === "frenzied";
+          return isFrenzied && (!Array.isArray(e.changes) || e.changes.length === 0);
+        });
+
+        if (frenziedEffects.length > 0) {
+          // Import the frenzied module dynamically to avoid circular dependencies
+          import("../conditions/frenzied.js").then(({ _mkFrenziedChanges }) => {
+            for (const effect of frenziedEffects) {
+              try {
+                const changes = _mkFrenziedChanges(this);
+                const changesToApply = changes.map(c => ({
+                  key: String(c.key ?? ""),
+                  mode: Number(c.mode ?? CONST.ACTIVE_EFFECT_MODES.ADD),
+                  value: String(c.value ?? ""),
+                  priority: Number(c.priority ?? 20)
+                }));
+
+                if (changesToApply.length > 0) {
+                  // Use update without diff to force the changes
+                  effect.update({ changes: changesToApply }, { diff: false }).catch(err => {
+                    console.warn("UESRPG | Failed to repair Frenzied effect", { effectId: effect.id, err });
+                  });
+                }
+              } catch (err) {
+                console.warn("UESRPG | Error generating changes for Frenzied effect repair", { effectId: effect.id, err });
+              }
+            }
+          }).catch(err => {
+            console.warn("UESRPG | Failed to import frenzied module for repair", err);
+          });
+        }
+      } catch (err) {
+        // Silently fail - this is a repair mechanism, not critical path
+        console.debug("UESRPG | Frenzied effect repair check failed", err);
+      }
+    }, 0);
+  }
+
+  /**
    * Prepare Character type specific data
    */
   _prepareCharacterData(actorData) {
@@ -916,6 +1058,35 @@ export class SimpleActor extends Actor {
     actorSystemData.characteristics.prs.bonus = prsBonus;
     actorSystemData.characteristics.lck.bonus = lckBonus;
 
+    // Apply Active Effect modifiers to characteristic bonuses (e.g., Frenzied +SB)
+    // These are applied AFTER calculation from total to ensure they modify the final bonus
+    const charBonusKeys = [
+      "system.characteristics.str.bonus",
+      "system.characteristics.end.bonus",
+      "system.characteristics.agi.bonus",
+      "system.characteristics.int.bonus",
+      "system.characteristics.wp.bonus",
+      "system.characteristics.prc.bonus",
+      "system.characteristics.prs.bonus",
+      "system.characteristics.lck.bonus"
+    ];
+    const charBonusMods = this._collectAEModifiersForKeys(charBonusKeys);
+    for (const key of charBonusKeys) {
+      // Extract characteristic name from "system.characteristics.{charName}.bonus"
+      const parts = key.split('.');
+      const charKey = parts.length >= 3 ? parts[2] : null; // Get 'str', 'end', etc. from the path
+      if (!charKey || !actorSystemData.characteristics?.[charKey]) {
+        // Silently skip - this is expected for some actor types
+        continue;
+      }
+      const m = charBonusMods[key] ?? { add: 0, override: null };
+      if (m.override != null) {
+        actorSystemData.characteristics[charKey].bonus = Number(m.override);
+      } else if (m.add) {
+        actorSystemData.characteristics[charKey].bonus = Number(actorSystemData.characteristics[charKey].bonus ?? 0) + Number(m.add);
+      }
+    }
+
   //Set Campaign Rank
   if (actorSystemData.xpTotal >= 5000) {
     actorSystemData.campaignRank = "Master"
@@ -948,6 +1119,11 @@ export class SimpleActor extends Actor {
     actorSystemData.resistance.natToughness = agg.resist.natToughnessR;
     actorSystemData.resistance.silverR = agg.resist.silverR;
     actorSystemData.resistance.sunlightR = agg.resist.sunlightR;
+
+    // Apply Active Effect modifiers to resistances (Chapter 4 expansion)
+    // This ensures AE values are reflected in the actor sheet display
+    const resistanceWithAE = this._applyResistanceAEModifiers(actorSystemData.resistance);
+    Object.assign(actorSystemData.resistance, resistanceWithAE);
 
     //Derived Calculations
     if (this._isMechanical(actorData) == true) {
@@ -1401,6 +1577,35 @@ this._applyMovementRestrictionSemantics(actorData, actorSystemData);
     actorSystemData.characteristics.prs.bonus = prsBonus;
     actorSystemData.characteristics.lck.bonus = lckBonus;
 
+    // Apply Active Effect modifiers to characteristic bonuses (e.g., Frenzied +SB)
+    // These are applied AFTER calculation from total to ensure they modify the final bonus
+    const charBonusKeys = [
+      "system.characteristics.str.bonus",
+      "system.characteristics.end.bonus",
+      "system.characteristics.agi.bonus",
+      "system.characteristics.int.bonus",
+      "system.characteristics.wp.bonus",
+      "system.characteristics.prc.bonus",
+      "system.characteristics.prs.bonus",
+      "system.characteristics.lck.bonus"
+    ];
+    const charBonusMods = this._collectAEModifiersForKeys(charBonusKeys);
+    for (const key of charBonusKeys) {
+      // Extract characteristic name from "system.characteristics.{charName}.bonus"
+      const parts = key.split('.');
+      const charKey = parts.length >= 3 ? parts[2] : null; // Get 'str', 'end', etc. from the path
+      if (!charKey || !actorSystemData.characteristics?.[charKey]) {
+        // Silently skip - this is expected for some actor types
+        continue;
+      }
+      const m = charBonusMods[key] ?? { add: 0, override: null };
+      if (m.override != null) {
+        actorSystemData.characteristics[charKey].bonus = Number(m.override);
+      } else if (m.add) {
+        actorSystemData.characteristics[charKey].bonus = Number(actorSystemData.characteristics[charKey].bonus ?? 0) + Number(m.add);
+      }
+    }
+
     //Talent/Power/Trait Bonuses (use aggregated values)
     actorSystemData.hp.bonus = agg.hpBonus;
     actorSystemData.magicka.bonus = agg.mpBonus;
@@ -1420,6 +1625,11 @@ this._applyMovementRestrictionSemantics(actorData, actorSystemData);
     actorSystemData.resistance.natToughness = agg.resist.natToughnessR;
     actorSystemData.resistance.silverR = agg.resist.silverR;
     actorSystemData.resistance.sunlightR = agg.resist.sunlightR;
+
+    // Apply Active Effect modifiers to resistances (Chapter 4 expansion)
+    // This ensures AE values are reflected in the actor sheet display
+    const resistanceWithAE = this._applyResistanceAEModifiers(actorSystemData.resistance);
+    Object.assign(actorSystemData.resistance, resistanceWithAE);
 
     //Derived Calculations
     if (this._isMechanical(actorData) == true) {

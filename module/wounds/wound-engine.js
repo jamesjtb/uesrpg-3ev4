@@ -18,6 +18,7 @@
 
 import { doTestRoll } from "../helpers/degree-roll-helper.js";
 import { requestCreateEmbeddedDocuments, requestDeleteEmbeddedDocuments, requestUpdateDocument } from "../helpers/authority-proxy.js";
+import { applyGroupedEffect, getEffectGroup } from "../helpers/ae-grouping.js";
 
 let _woundHooksRegistered = false;
 
@@ -158,14 +159,14 @@ async function _applyShockUnconditional(actor, { region, hitLocationNorm, applic
         icon: "icons/svg/bones.svg",
         changes: [],
         flags: {
-          [FLAG_SCOPE]: {
+          [FLAG_SCOPE]: _addWoundMetadata({
             wounds: {
               kind: "shockCripple",
               applicationId: String(applicationId ?? ""),
               hitLocation: hitLocationNorm ?? null,
               hitLocationKey: _hitLocationKey(hitLocationNorm)
             }
-          }
+          })
         }
       }
     ]);
@@ -180,13 +181,13 @@ async function _applyShockUnconditional(actor, { region, hitLocationNorm, applic
         icon: "icons/svg/daze.svg",
         changes: [],
         flags: {
-          [FLAG_SCOPE]: {
+          [FLAG_SCOPE]: _addWoundMetadata({
             wounds: {
               kind: "shockStunned",
               applicationId: String(applicationId ?? ""),
               remainingTurns: 1
             }
-          }
+          })
         }
       }
     ]);
@@ -204,14 +205,14 @@ async function _applyShockFailConsequence(actor, { region, hitLocationNorm, appl
         icon: "icons/svg/bones.svg",
         changes: [],
         flags: {
-          [FLAG_SCOPE]: {
+          [FLAG_SCOPE]: _addWoundMetadata({
             wounds: {
               kind: "shockCrippleBody",
               applicationId: String(applicationId ?? ""),
               hitLocation: hitLocationNorm ?? "Body",
               hitLocationKey: _hitLocationKey(hitLocationNorm ?? "Body")
             }
-          }
+          })
         }
       }
     ]);
@@ -226,14 +227,14 @@ async function _applyShockFailConsequence(actor, { region, hitLocationNorm, appl
         icon: "icons/svg/bones.svg",
         changes: [],
         flags: {
-          [FLAG_SCOPE]: {
+          [FLAG_SCOPE]: _addWoundMetadata({
             wounds: {
               kind: "shockLostLimb",
               applicationId: String(applicationId ?? ""),
               hitLocation: hitLocationNorm ?? null,
               hitLocationKey: _hitLocationKey(hitLocationNorm)
             }
-          }
+          })
         }
       }
     ]);
@@ -253,13 +254,13 @@ async function _applyShockFailConsequence(actor, { region, hitLocationNorm, appl
 
     if (choice === "ear") {
       await requestCreateEmbeddedDocuments(actor, "ActiveEffect", [
-        { name: "Lost Ear (Shock)", icon: "icons/svg/skull.svg", changes: [], flags: { [FLAG_SCOPE]: { wounds: { kind: "shockLostEar", applicationId: String(applicationId ?? "") } } } }
+        { name: "Lost Ear (Shock)", icon: "icons/svg/skull.svg", changes: [], flags: { [FLAG_SCOPE]: _addWoundMetadata({ wounds: { kind: "shockLostEar", applicationId: String(applicationId ?? "") } }) } }
       ]);
       return { note: "Lost Ear" };
     }
 
     await requestCreateEmbeddedDocuments(actor, "ActiveEffect", [
-      { name: "Lost Eye (Shock)", icon: "icons/svg/eye.svg", changes: [], flags: { [FLAG_SCOPE]: { wounds: { kind: "shockLostEye", applicationId: String(applicationId ?? "") } } } }
+      { name: "Lost Eye (Shock)", icon: "icons/svg/eye.svg", changes: [], flags: { [FLAG_SCOPE]: _addWoundMetadata({ wounds: { kind: "shockLostEye", applicationId: String(applicationId ?? "") } }) } }
     ]);
     return { note: "Lost Eye" };
   }
@@ -506,6 +507,9 @@ async function _enforceWoundInvariants(actor, { context = "unknown" } = {}) {
       console.warn("UESRPG | Failed to clear system.wounded invariant", err);
     }
   }
+  
+  // Ensure "Wounded: Passive" effect matches current state
+  await _ensureWoundedPassiveEffect(actor);
 }
 
 function _effects(actor) {
@@ -573,7 +577,27 @@ function _findFirstEffectByAppId(actor, applicationId) {
 }
 
 
+/**
+ * Helper to add standardized metadata flags to wound effect flags
+ */
+function _addWoundMetadata(flags) {
+  const woundsData = flags?.wounds ?? {};
+  const kind = woundsData?.kind;
+  if (!kind) return flags;
+  
+  return {
+    ...flags,
+    owner: "system",
+    effectGroup: `wounds.marker.${kind}`,
+    stackRule: "refresh",
+    source: "wounds"
+  };
+}
+
 function _mkEffect({ name, img, icon, flags, changes = [], origin = null }) {
+  // Add standardized metadata flags for system-created wound effects
+  const enhancedFlags = _addWoundMetadata(flags);
+  
   return {
     name,
     // Foundry v13 ActiveEffect data uses "img".
@@ -583,7 +607,7 @@ function _mkEffect({ name, img, icon, flags, changes = [], origin = null }) {
     disabled: false,
     duration: {},
     changes,
-    flags: { [FLAG_SCOPE]: flags }
+    flags: { [FLAG_SCOPE]: enhancedFlags }
   };
 }
 
@@ -638,6 +662,64 @@ function _isWoundPenaltySuppressed(actor) {
   const firstAid = _findFirstEffectByKind(actor, "firstAid");
   if (firstAid) return true;
   return false;
+}
+
+/**
+ * Ensure "Wounded: Passive" penalty effect exists or is removed based on wound state.
+ * This effect applies -20 to all tests (via system.woundPenalty) and -2 to initiative rolls.
+ */
+async function _ensureWoundedPassiveEffect(actor) {
+  if (!actor) return;
+  
+  const sysWounded = actor.system?.wounded === true;
+  const isSuppressed = _isWoundPenaltySuppressed(actor);
+  const shouldHaveEffect = sysWounded && !isSuppressed;
+  
+  // Find existing "Wounded: Passive" effect
+  const existingEffect = actor.effects?.find((e) => {
+    if (e.disabled) return false;
+    const group = getEffectGroup(e);
+    return group === "wounds.passive";
+  });
+  
+  if (shouldHaveEffect) {
+    // Effect should exist - use applyGroupedEffect with override rule
+    if (!existingEffect || existingEffect.disabled) {
+      const effectData = {
+        name: "Wounded: Passive",
+        icon: "icons/svg/skull.svg",
+        disabled: false,
+        duration: {},
+        changes: [
+          { key: "system.woundPenalty", mode: CONST.ACTIVE_EFFECT_MODES.OVERRIDE, value: -20, priority: 20 },
+          { key: "system.modifiers.initiative.bonus", mode: CONST.ACTIVE_EFFECT_MODES.ADD, value: -2, priority: 20 }
+        ],
+        flags: {
+          [FLAG_SCOPE]: {
+            owner: "system",
+            effectGroup: "wounds.passive",
+            stackRule: "override",
+            source: "wounds"
+          }
+        }
+      };
+      
+      try {
+        await applyGroupedEffect(actor, effectData);
+      } catch (err) {
+        console.warn("UESRPG | Failed to create Wounded: Passive effect", err);
+      }
+    }
+  } else {
+    // Effect should not exist - remove it
+    if (existingEffect) {
+      try {
+        await requestDeleteEmbeddedDocuments(actor, "ActiveEffect", [existingEffect.id]);
+      } catch (err) {
+        console.warn("UESRPG | Failed to remove Wounded: Passive effect", err);
+      }
+    }
+  }
 }
 
 async function _ensureUnconsciousEffect(actor) {
@@ -760,6 +842,9 @@ export async function firstAid(actorLike) {
   });
 
   await requestCreateEmbeddedDocuments(actor, "ActiveEffect", [effect]);
+  
+  // Remove "Wounded: Passive" effect when First Aid is applied
+  await _ensureWoundedPassiveEffect(actor);
 
   return { removedBloodLoss, createdFirstAid: true };
 }

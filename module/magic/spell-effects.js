@@ -52,6 +52,9 @@ export async function applySpellEffectsToTarget(casterActor, targetActor, spell,
   for (const ef of spellEffects) {
     if (ef.disabled) continue;
     
+    const effectKey = ef.name || ef.id || String(toCreate.length);
+    const effectGroup = `spell.effect.${spell.id || spellUuid}.${effectKey}`;
+    
     const effectData = {
       name: ef.name || spell.name,
       img: ef.img || spell.img,
@@ -75,7 +78,11 @@ export async function applySpellEffectsToTarget(casterActor, targetActor, spell,
           originalCastWorldTime: game.time.worldTime,
           noListedDuration,
           hasUpkeep: Boolean(spell.system?.hasUpkeep),
-          upkeepCost: options.actualCost || spell.system.cost
+          upkeepCost: options.actualCost || spell.system.cost,
+          owner: "system",
+          effectGroup: effectGroup,
+          stackRule: "override",
+          source: "spell"
         }
       }
     };
@@ -85,6 +92,7 @@ export async function applySpellEffectsToTarget(casterActor, targetActor, spell,
 
   // Upkeep tracker: create one effect if none were provided by the item.
   if (!toCreate.length && Boolean(spell.system?.hasUpkeep)) {
+    const effectGroup = `spell.effect.${spell.id || spellUuid}.upkeep`;
     toCreate.push({
       name: spell.name,
       img: spell.img,
@@ -108,7 +116,11 @@ export async function applySpellEffectsToTarget(casterActor, targetActor, spell,
           originalCastWorldTime: game.time.worldTime,
           noListedDuration,
           hasUpkeep: true,
-          upkeepCost: options.actualCost || spell.system.cost
+          upkeepCost: options.actualCost || spell.system.cost,
+          owner: "system",
+          effectGroup: effectGroup,
+          stackRule: "refresh",
+          source: "spell"
         }
       }
     });
@@ -212,6 +224,7 @@ export async function applySpellEffect(target, spell, options = {}) {
     return;
   }
   
+  const effectGroup = `spell.effect.${spell.id || spell.uuid}.main`;
   const effectData = {
     name: spell.name,
     icon: spell.img,
@@ -224,7 +237,11 @@ export async function applySpellEffect(target, spell, options = {}) {
         spellEffect: true,
         spellUuid: spell.uuid,
         spellSchool: spell.system?.school ?? "",
-        canStack: false // RAW: effects don't stack with themselves
+        canStack: false, // RAW: effects don't stack with themselves
+        owner: "system",
+        effectGroup: effectGroup,
+        stackRule: "override",
+        source: "spell"
       }
     }
   };

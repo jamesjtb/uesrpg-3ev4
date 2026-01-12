@@ -335,6 +335,38 @@ game.uesrpg.combat.applyHealing = async (actor, amount, options = {}) => {
         } else {
           data.transfer = true;
         }
+
+        // Add constant enchantment metadata flags for Item Active Effects
+        // Constant enchantments are Item Active Effects with transfer=true
+        const FLAG_SCOPE = "uesrpg-3ev4";
+        const existingFlags = data?.flags ?? {};
+        const scopeFlags = existingFlags[FLAG_SCOPE] ?? {};
+        
+        // Ensure standardized metadata flags are present for constant enchantments
+        // effectGroup uses item UUID to ensure uniqueness per item
+        const itemUuid = parent?.uuid ?? parent?.id ?? "";
+        const effectName = String(data?.name ?? "").trim().toLowerCase().replace(/\s+/g, "-") || "effect";
+        const effectGroup = `enchantment.${itemUuid}.${effectName}`;
+        
+        const enhancedFlags = {
+          ...existingFlags,
+          [FLAG_SCOPE]: {
+            ...scopeFlags,
+            constant: true, // Mark as constant enchantment
+            owner: scopeFlags.owner ?? "item",
+            effectGroup: scopeFlags.effectGroup ?? effectGroup,
+            stackRule: scopeFlags.stackRule ?? "override", // Constant enchantments typically override
+            source: scopeFlags.source ?? "enchantment",
+            // Preserve cursed flag if present
+            cursed: scopeFlags.cursed ?? false
+          }
+        };
+        
+        if (foundry?.utils?.mergeObject) {
+          foundry.utils.mergeObject(data, { flags: enhancedFlags }, { inplace: true });
+        } else {
+          data.flags = enhancedFlags;
+        }
       } catch (err) {
         console.error("UESRPG | Default Item AE transfer preCreate failed", err);
       }

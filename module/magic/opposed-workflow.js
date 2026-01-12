@@ -831,7 +831,7 @@ export const MagicOpposedWorkflow = {
     const apSpentOk = await ActionEconomy.spendAP(attacker, apCost, { reason: apReason, silent: false });
     if (!apSpentOk) return null;
 
-  // Increment attack counter for attack spells (after AP is spent successfully)
+    // Increment attack counter for attack spells (after AP is spent successfully)
     const spellClassification = classifySpellForRouting(spell);
     if (spellClassification.isAttack) {
       try {

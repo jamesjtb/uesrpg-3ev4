@@ -129,6 +129,11 @@ function _isActiveCombatant(actor) {
 
 function _mkBaseEffectData({ name, img = null, icon = null, description = null, condition, changes = [], origin = null, statuses = null, coreStatusId = null }) {
   const effectImg = img ?? icon ?? null;
+  const conditionKey = condition?.key;
+  const isNumericCondition = conditionKey === "bleeding" || conditionKey === "burning";
+  const stackRule = isNumericCondition ? "refresh" : "override";
+  const effectGroup = conditionKey ? `condition.${conditionKey}` : null;
+  
   const data = {
     name,
     // Foundry v13 ActiveEffect data uses "img". Accept a legacy "icon" arg internally.
@@ -139,10 +144,18 @@ function _mkBaseEffectData({ name, img = null, icon = null, description = null, 
     changes,
     flags: {
       [FLAG_SCOPE]: {
-        condition
+        condition,
+        owner: "system",
+        source: "condition"
       }
     }
   };
+
+  // Add standardized metadata flags
+  if (effectGroup) {
+    data.flags[FLAG_SCOPE].effectGroup = effectGroup;
+    data.flags[FLAG_SCOPE].stackRule = stackRule;
+  }
 
   // Add description if provided (for tooltips and effect sheets)
   if (description) {
@@ -401,7 +414,11 @@ function _mkTokenHudStatusConfigForStatic(key) {
           key: k,
           value: 1,
           source: def.name
-        }
+        },
+        owner: "system",
+        effectGroup: `condition.${k}`,
+        stackRule: "override",
+        source: "condition"
       }
     }
   };
@@ -426,7 +443,11 @@ function _mkTokenHudStatusConfigForBleeding() {
           value: 1,
           delay: 0,
           source: "Bleeding"
-        }
+        },
+        owner: "system",
+        effectGroup: `condition.${k}`,
+        stackRule: "refresh",
+        source: "condition"
       }
     }
   };
@@ -451,7 +472,11 @@ function _mkTokenHudStatusConfigForBurning() {
           value: 1,
           hitLocation: "Body",
           source: "Burning"
-        }
+        },
+        owner: "system",
+        effectGroup: `condition.${k}`,
+        stackRule: "refresh",
+        source: "condition"
       }
     }
   };

@@ -288,26 +288,58 @@ export function getDamageReduction(actor, damageType = DAMAGE_TYPES.PHYSICAL, hi
     const armorModTotal = ae.armorRating.global.total + ae.armorRating.location.total;
     if (armorModTotal) armor += armorModTotal;
 
-    // Determine applicable resistance key for this damage type
+    // Determine applicable resistance keys for this damage type
+    // Support multiple AE key paths for backward compatibility and Chapter 4 expansion:
+    // 1. Legacy: system.modifiers.resistance.<resKey> (existing)
+    // 2. New: system.resistances.<type> (Chapter 4)
+    // 3. New: system.traits.resistance.<type> (Chapter 4 trait-specific)
     const resKeyByType = {
-      [DAMAGE_TYPES.FIRE]: "fireR",
-      [DAMAGE_TYPES.FROST]: "frostR",
-      [DAMAGE_TYPES.SHOCK]: "shockR",
-      [DAMAGE_TYPES.POISON]: "poisonR",
-      [DAMAGE_TYPES.MAGIC]: "magicR",
-      [DAMAGE_TYPES.SILVER]: "silverR",
-      [DAMAGE_TYPES.SUNLIGHT]: "sunlightR",
+      [DAMAGE_TYPES.FIRE]: { legacy: "fireR", resistances: null, traits: "fire" },
+      [DAMAGE_TYPES.FROST]: { legacy: "frostR", resistances: null, traits: "frost" },
+      [DAMAGE_TYPES.SHOCK]: { legacy: "shockR", resistances: null, traits: "shock" },
+      [DAMAGE_TYPES.POISON]: { legacy: "poisonR", resistances: "poison", traits: "poison" },
+      [DAMAGE_TYPES.MAGIC]: { legacy: "magicR", resistances: "magic", traits: null },
+      [DAMAGE_TYPES.SILVER]: { legacy: "silverR", resistances: null, traits: null },
+      [DAMAGE_TYPES.SUNLIGHT]: { legacy: "sunlightR", resistances: null, traits: null },
     };
 
-    const resKey = (damageType === DAMAGE_TYPES.PHYSICAL) ? null : (resKeyByType[damageType] ?? null);
-    if (resKey) {
-      const rKey = `system.modifiers.resistance.${resKey}`;
-      const resMods = evaluateAEModifierKeys(actor, [rKey]);
-      const r = resMods[rKey] ?? { total: 0, entries: [] };
-      ae.resistance.key = resKey;
-      ae.resistance.total = Number(r.total ?? 0) || 0;
-      ae.resistance.entries = Array.isArray(r.entries) ? r.entries : [];
-      resistance += ae.resistance.total;
+    const resKeyMap = (damageType === DAMAGE_TYPES.PHYSICAL) ? null : (resKeyByType[damageType] ?? null);
+    if (resKeyMap) {
+      // Collect all applicable resistance AE keys
+      const resistanceKeys = [];
+      
+      // Legacy key (always check for backward compatibility)
+      if (resKeyMap.legacy) {
+        resistanceKeys.push(`system.modifiers.resistance.${resKeyMap.legacy}`);
+      }
+      
+      // New system.resistances.* keys
+      if (resKeyMap.resistances) {
+        resistanceKeys.push(`system.resistances.${resKeyMap.resistances}`);
+      }
+      
+      // New system.traits.resistance.* keys
+      if (resKeyMap.traits) {
+        resistanceKeys.push(`system.traits.resistance.${resKeyMap.traits}`);
+      }
+      
+      // Evaluate all resistance keys and sum them
+      // evaluateAEModifierKeys returns Record<string, number>
+      if (resistanceKeys.length > 0) {
+        const resMods = evaluateAEModifierKeys(actor, resistanceKeys);
+        let totalResistance = 0;
+        
+        for (const rKey of resistanceKeys) {
+          const r = resMods[rKey] ?? 0;
+          const numericValue = Number(r) || 0;
+          totalResistance += numericValue;
+        }
+        
+        ae.resistance.key = resKeyMap.legacy || resKeyMap.resistances || resKeyMap.traits || "unknown";
+        ae.resistance.total = totalResistance;
+        ae.resistance.entries = []; // Legacy structure preserved for compatibility
+        resistance += totalResistance;
+      }
     }
 
     // Natural Toughness modifier applies to all damage types (RAW).

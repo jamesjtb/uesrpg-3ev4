@@ -167,7 +167,13 @@ export async function applyBleeding(actor, x, { source = "Bleeding" } = {}) {
     disabled: false,
     flags: {
       core: { statusId: CONDITION_KEY },
-      [FLAG_SCOPE]: { condition: { key: CONDITION_KEY, value: amt } }
+      [FLAG_SCOPE]: {
+        condition: { key: CONDITION_KEY, value: amt },
+        owner: "system",
+        effectGroup: `condition.${CONDITION_KEY}`,
+        stackRule: "refresh",
+        source: "condition"
+      }
     },
     origin: null,
     duration: {},
