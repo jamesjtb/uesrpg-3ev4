@@ -78,6 +78,13 @@ function _fmtDegree(result) {
   return `<span style="color: red;">${deg} DoF</span>`;
 }
 
+function _extractTN(tnObj) {
+  if (tnObj == null) return "—";
+  if (typeof tnObj === 'object' && tnObj.finalTN != null) return tnObj.finalTN;
+  if (typeof tnObj === 'number') return tnObj;
+  return "—";
+}
+
 function _getMessageState(message) {
   const raw = message?.flags?.[_FLAG_NS]?.[_FLAG_KEY];
   if (!raw || typeof raw !== "object") return null;
@@ -194,8 +201,8 @@ function _renderCard(data, messageId) {
   const spellMpSpent = revealChoices ? (Number(a.mpSpent ?? 0) || 0) : "—";
   const spellMpRefund = revealChoices ? (Number(a.mpRefund ?? 0) || 0) : 0;
 
-  const aTN = revealChoices && a.tn?.finalTN != null ? String(a.tn.finalTN) : "—";
-  const dTN = revealChoices && d.tn?.finalTN != null ? String(d.tn.finalTN) : (revealChoices && d.tn != null ? String(d.tn) : "—");
+  const aTN = revealChoices ? String(_extractTN(a.tn)) : "—";
+  const dTN = revealChoices ? String(_extractTN(d.tn)) : "—";
 
   const aRollLine = a.result
     ? (a.result.noRoll
@@ -280,10 +287,8 @@ function _renderCard(data, messageId) {
     // Build detailed result line
     const aResult = data.attacker?.result;
     const dResult = data.defender?.result;
-    const aTNObj = data.attacker?.tn;
-    const dTNObj = data.defender?.tn;
-    const aTN = (typeof aTNObj === 'object' && aTNObj?.finalTN != null) ? aTNObj.finalTN : (typeof aTNObj === 'number' ? aTNObj : "—");
-    const dTN = (typeof dTNObj === 'object' && dTNObj?.finalTN != null) ? dTNObj.finalTN : (typeof dTNObj === 'number' ? dTNObj : "—");
+    const aTN = _extractTN(data.attacker?.tn);
+    const dTN = _extractTN(data.defender?.tn);
     
     let resultsHtml = "";
     // For healing spells (healingDirect), only show caster's result and healing amount
