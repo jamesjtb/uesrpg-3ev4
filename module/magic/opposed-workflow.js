@@ -610,10 +610,10 @@ export const MagicOpposedWorkflow = {
   },
 
   /**
-   * Resolve a targeted Direct spell immediately (no casting/defense tests).
+   * Resolve a targeted Direct spell with casting test but no defense.
    *
-   * This uses the same downstream resolution as the opposed workflow, but
-   * forces an automatic hit and suppresses test rolls.
+   * RAW: "This spell has a target or targets but is not an attack and cannot be defended against by normal means."
+   * This means: Direct spells still require a casting test, but defenders cannot use Block/Evade/No Defense.
    */
   async castDirectTargeted(cfg = {}) {
     const aDoc = _resolveDoc(cfg.attackerTokenUuid) ?? _resolveDoc(cfg.attackerActorUuid) ?? _resolveDoc(cfg.attackerUuid);
@@ -646,6 +646,9 @@ export const MagicOpposedWorkflow = {
     }
 
     const spellOptions = cfg.spellOptions ?? {};
+    
+    // Compute casting TN
+    const tn = computeMagicCastingTN(attacker, spell, spellOptions);
 
     // Spend AP (casting always costs 1 AP in the current action economy).
     const apCost = 1;
@@ -659,7 +662,7 @@ export const MagicOpposedWorkflow = {
     const apSpentOk = await ActionEconomy.spendAP(attacker, apCost, { reason: apReason, silent: false });
     if (!apSpentOk) return null;
 
-    // Spend MP (attempt cost). Restraint refund is treated as an automatic success.
+    // Spend MP (attempt cost)
     const currentMagicka = Number(attacker?.system?.magicka?.value ?? 0) || 0;
     const magickaInfo = computeSpellAttemptMagickaCost(attacker, spell, spellOptions);
     const attemptCost = Number(magickaInfo?.attemptCost ?? 0) || 0;
@@ -674,17 +677,27 @@ export const MagicOpposedWorkflow = {
       return null;
     }
 
-    const pseudoResult = {
-      noRoll: true,
-      rollTotal: 0,
-      isSuccess: true,
-      success: true,
-      degree: 1,
-      isCriticalSuccess: false,
-      isCriticalFailure: false
-    };
+    // RAW: Direct spells still require a casting test
+    const result = await doTestRoll(attacker, {
+      target: tn.finalTN,
+      allowLucky: true,
+      allowUnlucky: true
+    });
 
-    const refundInfo = await applySpellRestraintRefund(attacker, spell, spellOptions, pseudoResult, magickaSpend);
+    await result.roll.toMessage({
+      speaker: ChatMessage.getSpeaker({ actor: attacker }),
+      flavor: `<b>${spell.name}</b> — Casting Test (Direct)`,
+      flags: { [_FLAG_NS]: { magicOpposedMeta: { stage: "direct-casting" } } }
+    });
+
+    // Check for backfire
+    const needsBackfire = shouldBackfire(spell, attacker, result.isCriticalFailure, !result.isSuccess);
+    if (needsBackfire) {
+      await triggerBackfire(attacker, spell);
+    }
+
+    // Apply spell restraint refund on successful cast
+    const refundInfo = await applySpellRestraintRefund(attacker, spell, spellOptions, result, magickaSpend);
 
     const data = {
       context: {
@@ -693,10 +706,10 @@ export const MagicOpposedWorkflow = {
         createdBy: game.user.id,
         originalCastWorldTime: Number(game.time?.worldTime ?? 0) || 0,
         phase: "resolved",
-        directNoTest: true
+        directUndefendable: true
       },
       attacker: {
-        uuid: attacker.uuid,
+        actorUuid: attacker.uuid,
         name: attacker.name,
         tokenUuid: aToken?.document?.uuid ?? aToken?.uuid ?? cfg.attackerTokenUuid ?? null,
         tokenName: aToken?.name ?? aToken?.document?.name ?? attacker.name,
@@ -707,18 +720,19 @@ export const MagicOpposedWorkflow = {
         spellCost: Number(spell.system?.cost ?? 0),
         actionType: cfg.castActionType ?? "primary",
         apCost,
-        tn: null,
-        result: pseudoResult,
+        tn,
+        result,
         spellOptions,
-        mpSpent: Number(magickaSpend?.spent ?? 0) || 0,
-        mpRefund: Number(refundInfo?.refund ?? 0) || 0
+        mpSpent: Number(refundInfo?.finalCost ?? magickaSpend?.consumed ?? 0) || 0,
+        mpRefund: Number(refundInfo?.refund ?? 0) || 0,
+        backfire: needsBackfire
       },
       defender: {
-        uuid: defender.uuid,
+        actorUuid: defender.uuid,
         name: defender.name,
         tokenUuid: dToken?.document?.uuid ?? dToken?.uuid ?? cfg.defenderTokenUuid ?? null,
         tokenName: dToken?.name ?? dToken?.document?.name ?? defender.name,
-        defenseType: "—",
+        defenseType: "Cannot Defend",
         tn: null,
         result: null,
         noDefense: true,
@@ -736,7 +750,12 @@ export const MagicOpposedWorkflow = {
     });
 
     await message.update({ content: _renderCard(data, message.id) });
-    await this._resolveOutcome(message, data, attacker, defender);
+    
+    // Only apply effects if casting was successful
+    if (result.isSuccess) {
+      await this._resolveOutcome(message, data, attacker, defender);
+    }
+    
     return message;
   },
 
@@ -1173,7 +1192,119 @@ export const MagicOpposedWorkflow = {
       }
     }
 
-    // Direct spells: resolve immediately without any casting/defense tests.
+    // Direct spells with casting test: resolve based on casting success/failure.
+    if (Boolean(data.context?.directUndefendable)) {
+      const isCritical = Boolean(aResult?.isCriticalSuccess);
+      const castOk = Boolean(aResult?.isSuccess);
+
+      data.outcome = {
+        winner: castOk ? "attacker" : "defender",
+        attackerDegree: aResult?.degree ?? 0,
+        defenderDegree: 0,
+        attackerWins: castOk,
+        text: castOk
+          ? `${attacker.name} casts ${spell.name} directly on ${defender.name}.`
+          : `${attacker.name} fails to cast ${spell.name}.`
+      };
+
+      // Only apply effects if casting was successful
+      if (!castOk) {
+        await _updateCard(message, data);
+        return;
+      }
+
+      const damageType = getSpellDamageType(spell);
+
+      // Healing: roll and apply immediately.
+      if (damageType === "healing") {
+        const healRoll = await rollSpellHealing(spell, { isCritical });
+        const healValue = Number(healRoll.total) || 0;
+        const rollHTML = await healRoll.render();
+        await applyMagicHealing(defender, healValue, spell, {
+          isCritical,
+          rollHTML,
+          source: spell.name
+        });
+
+        await _updateCard(message, data);
+        return;
+      }
+
+      const damageFormula = getSpellDamageFormula(spell);
+      const isDamaging = Boolean(damageFormula && damageFormula !== "0");
+
+      if (isDamaging) {
+        const spellOptions = data.attacker.spellOptions ?? {};
+
+        // Determine overload/overcharge effective state for reporting.
+        const costInfo = computeSpellMagickaCost(attacker, spell, {
+          ...spellOptions,
+          isCritical
+        });
+
+        const wpBonus = Math.floor(Number(attacker.system?.characteristics?.wp?.total ?? 0) / 10);
+        const isOverloaded = Boolean(costInfo?.isOverloaded);
+        const overloadBonus = isOverloaded ? wpBonus : 0;
+
+        const commonRollOptions = { isCritical, isOverloaded, wpBonus };
+
+        // Master of Magicka: if the caster chose to overcharge, roll twice and keep the highest.
+        const wantsOvercharge = Boolean(costInfo?.isOvercharged);
+        let damageRoll = null;
+        let overchargeTotals = null;
+        if (wantsOvercharge) {
+          const r1 = await rollSpellDamage(spell, commonRollOptions);
+          const r2 = await rollSpellDamage(spell, commonRollOptions);
+          const t1 = Number(r1.total) || 0;
+          const t2 = Number(r2.total) || 0;
+          damageRoll = (t2 > t1) ? r2 : r1;
+          overchargeTotals = [t1, t2];
+        } else {
+          damageRoll = await rollSpellDamage(spell, commonRollOptions);
+        }
+
+        const baseDamage = Number(damageRoll.total) || 0;
+        const elemBonusInfo = computeElementalDamageBonus(attacker, damageType);
+        const elementalBonus = Number(elemBonusInfo?.bonus ?? 0) || 0;
+        const damageValue = baseDamage + overloadBonus + elementalBonus;
+        const rollHTML = await damageRoll.render();
+
+        await applyMagicDamage(defender, damageValue, damageType, spell, {
+          isCritical,
+          hitLocation: "Body",
+          rollHTML,
+          isOverloaded,
+          overloadBonus,
+          isOvercharged: wantsOvercharge,
+          overchargeTotals,
+          elementalBonus,
+          elementalBonusLabel: elemBonusInfo?.label || "",
+          source: spell.name
+        });
+
+        if (Boolean(spell.system?.hasUpkeep) || (spell.effects?.size ?? 0) > 0) {
+          await applySpellEffectsToTarget(attacker, defender, spell, { actualCost: Number(data.attacker?.mpSpent ?? data.context?.mpSpent ?? spell.system?.cost ?? 0), originalCastTime: Number(data.context?.originalCastWorldTime ?? game.time?.worldTime ?? 0) || 0 });
+        }
+
+        await _updateCard(message, data);
+        return;
+      }
+
+      // Non-damaging direct spell: apply effects immediately.
+      if ((spell.effects?.size ?? 0) > 0) {
+        await applySpellEffectsToTarget(attacker, defender, spell, { actualCost: Number(data.attacker?.mpSpent ?? data.context?.mpSpent ?? spell.system?.cost ?? 0), originalCastTime: Number(data.context?.originalCastWorldTime ?? game.time?.worldTime ?? 0) || 0 });
+      } else {
+        await applySpellEffect(defender, spell, {
+          isCritical,
+          duration: {}
+        });
+      }
+
+      await _updateCard(message, data);
+      return;
+    }
+
+    // Legacy direct spells (no test, auto-success): for backwards compatibility
     if (Boolean(data.context?.directNoTest)) {
       const isCritical = false;
       const castOk = true;
@@ -1239,7 +1370,7 @@ export const MagicOpposedWorkflow = {
         const baseDamage = Number(damageRoll.total) || 0;
         const elemBonusInfo = computeElementalDamageBonus(attacker, damageType);
         const elementalBonus = Number(elemBonusInfo?.bonus ?? 0) || 0;
-        const damageValue = baseDamage + elementalBonus;
+        const damageValue = baseDamage + overloadBonus + elementalBonus;
         const rollHTML = await damageRoll.render();
 
         await applyMagicDamage(defender, damageValue, damageType, spell, {
@@ -1360,7 +1491,7 @@ export const MagicOpposedWorkflow = {
         const baseDamage = Number(damageRoll.total) || 0;
         const elemBonusInfo = computeElementalDamageBonus(attacker, damageType);
         const elementalBonus = Number(elemBonusInfo?.bonus ?? 0) || 0;
-        const damageValue = baseDamage + elementalBonus;
+        const damageValue = baseDamage + overloadBonus + elementalBonus;
         const rollHTML = await damageRoll.render();
 
         await applyMagicDamage(defender, damageValue, damageType, spell, {
