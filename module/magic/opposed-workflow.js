@@ -276,9 +276,34 @@ function _renderCard(data, messageId) {
   if (resolved && data.outcome) {
     const winner = String(data.outcome.winner ?? "");
     const color = winner === "attacker" ? "green" : (winner === "defender" ? "#2a5db0" : "#666");
+    
+    // Build detailed result line
+    const aResult = data.attacker?.result;
+    const dResult = data.defender?.result;
+    const aTN = data.attacker?.tn ?? "—";
+    const dTN = data.defender?.tn ?? "—";
+    
+    let resultsHtml = "";
+    if (aResult && dResult) {
+      const aRoll = aResult.rollTotal ?? "—";
+      const dRoll = dResult.rollTotal ?? "—";
+      const aDeg = Math.abs(aResult.degree ?? 0);
+      const dDeg = Math.abs(dResult.degree ?? 0);
+      const aDoSLabel = (aResult.isSuccess || false) ? "DoS" : "DoF";
+      const dDoSLabel = (dResult.isSuccess || false) ? "DoS" : "DoF";
+      
+      resultsHtml = `
+        <div style="margin-top:6px; font-size:12px; line-height:1.5;">
+          <div><b>Caster:</b> ${aRoll} vs TN ${aTN} (${aDeg} ${aDoSLabel})</div>
+          <div><b>Defender:</b> ${dRoll} vs TN ${dTN} (${dDeg} ${dDoSLabel})</div>
+        </div>
+      `;
+    }
+    
     outcomeLine = `
       <div style="margin-top:10px; padding:8px; background:rgba(0,0,0,0.05); border-left:3px solid ${color};">
         <div style="font-weight:700;">${String(data.outcome.text ?? "Resolved")}</div>
+        ${resultsHtml}
         ${data.outcome.attackerWins ? `<div style="margin-top:4px; font-size:12px; opacity:0.9;">Damage is applied automatically. Details are whispered to the GM.</div>` : ""}
       </div>
     `;

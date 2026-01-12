@@ -2093,16 +2093,16 @@ if (shouldUseTargetedSpellWorkflow(spell, workingTargets)) {
           <input type="number" name="manualModifier" value="0" style="width:120px; text-align:center;" />
         </div>
         <hr style="margin: 10px 0;"/>
-        <div class="form-group" style="margin-top: 8px;">
+        <div class="form-group" id="restrainGroup" style="margin-top: 8px;">
           <label style="display: flex; align-items: center; gap: 8px;">
-            <input type="checkbox" name="restrain" checked />
+            <input type="checkbox" name="restrain" id="restrainCheckbox" ${!hasOverload ? 'checked' : ''} />
             <span><b>Spell Restraint</b> (reduce cost by ${wpBonus} to min 1)</span>
           </label>
         </div>
 	        ${hasOverload ? `
-        <div class="form-group" style="margin-top: 8px;">
+        <div class="form-group" id="overloadGroup" style="margin-top: 8px;">
           <label style="display: flex; align-items: center; gap: 8px;">
-            <input type="checkbox" name="overload" />
+            <input type="checkbox" name="overload" id="overloadCheckbox" />
             <span><b>Overload</b> (${spell.system.overloadEffect || 'double cost for enhanced effect'})</span>
           </label>
         </div>` : ''}
@@ -2123,7 +2123,7 @@ if (shouldUseTargetedSpellWorkflow(spell, workingTargets)) {
       </form>
     `;
     
-    return Dialog.wait({
+    const dialog = new Dialog({
       title: "Spell Options",
       content,
       buttons: {
@@ -2150,8 +2150,39 @@ if (shouldUseTargetedSpellWorkflow(spell, workingTargets)) {
         },
         cancel: { label: "Cancel", callback: () => null }
       },
-      default: "cast"
+      default: "cast",
+      render: (html) => {
+        // Make Restrain and Overload mutually exclusive
+        if (hasOverload) {
+          const restrainCheckbox = html.find('#restrainCheckbox')[0];
+          const overloadCheckbox = html.find('#overloadCheckbox')[0];
+          const restrainGroup = html.find('#restrainGroup')[0];
+          const overloadGroup = html.find('#overloadGroup')[0];
+          
+          if (restrainCheckbox && overloadCheckbox) {
+            restrainCheckbox.addEventListener('change', (e) => {
+              if (e.target.checked) {
+                overloadCheckbox.checked = false;
+                overloadGroup.style.opacity = '0.5';
+              } else {
+                overloadGroup.style.opacity = '1';
+              }
+            });
+            
+            overloadCheckbox.addEventListener('change', (e) => {
+              if (e.target.checked) {
+                restrainCheckbox.checked = false;
+                restrainGroup.style.opacity = '0.5';
+              } else {
+                restrainGroup.style.opacity = '1';
+              }
+            });
+          }
+        }
+      }
     }, { width: 420 });
+    
+    return dialog.render(true);
   }
 
   /**
