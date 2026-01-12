@@ -831,6 +831,17 @@ export const MagicOpposedWorkflow = {
     const apSpentOk = await ActionEconomy.spendAP(attacker, apCost, { reason: apReason, silent: false });
     if (!apSpentOk) return null;
 
+  // Increment attack counter for attack spells (after AP is spent successfully)
+    const spellClassification = classifySpellForRouting(spell);
+    if (spellClassification.isAttack) {
+      try {
+        await AttackTracker.incrementAttacks(attacker);
+      } catch (err) {
+        console.error("UESRPG | Failed to increment attack counter", { actor: attacker?.uuid, err });
+        // Don't break the workflow if attack tracking fails
+      }
+    }
+
     const magickaSpend = await consumeSpellMagicka(attacker, spell, spellOptions);
     if (!magickaSpend?.ok) {
       try {
@@ -1026,6 +1037,17 @@ export const MagicOpposedWorkflow = {
       const apReason = (String(data.attacker.castActionType ?? "primary") === "secondary") ? "Cast Magic (Instant)" : "Cast Magic";
       const apSpentOk = await ActionEconomy.spendAP(attacker, apCost, { reason: apReason, silent: false });
       if (!apSpentOk) return;
+
+      // Increment attack counter for attack spells (after AP is spent successfully)
+      const spellClassification = classifySpellForRouting(spell);
+      if (spellClassification.isAttack) {
+        try {
+          await AttackTracker.incrementAttacks(attacker);
+        } catch (err) {
+          console.error("UESRPG | Failed to increment attack counter", { actor: attacker?.uuid, err });
+          // Don't break the workflow if attack tracking fails
+        }
+      }
 
       // Consume Magicka at cast time. If this fails due to a race, we attempt to refund AP.
       const magickaSpend = await consumeSpellMagicka(attacker, spell, data.attacker.spellOptions ?? {});
