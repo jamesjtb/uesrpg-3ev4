@@ -577,10 +577,35 @@ export async function applyDamage(actor, damage, damageType = DAMAGE_TYPES.PHYSI
     return Number.isFinite(v) ? v : 0;
   })();
 
-  // HP state
+  // HP state with temp HP support
   const currentHP = Number(actor.system?.hp?.value ?? 0);
   const maxHP = Number(actor.system?.hp?.max ?? 1);
-  const newHP = Math.max(0, currentHP - finalDamageAdjusted);
+  const currentTempHP = Number(actor.system?.tempHP ?? 0);
+  
+  // Temp HP absorbs damage first, then regular HP
+  let remainingDamage = finalDamageAdjusted;
+  let newTempHP = currentTempHP;
+  let newHP = currentHP;
+  let tempHPAbsorbed = 0;
+  
+  if (currentTempHP > 0 && remainingDamage > 0) {
+    if (remainingDamage <= currentTempHP) {
+      // Temp HP absorbs all damage
+      newTempHP = currentTempHP - remainingDamage;
+      tempHPAbsorbed = remainingDamage;
+      remainingDamage = 0;
+    } else {
+      // Temp HP absorbs some damage, rest goes to regular HP
+      tempHPAbsorbed = currentTempHP;
+      remainingDamage -= currentTempHP;
+      newTempHP = 0;
+    }
+  }
+  
+  // Apply remaining damage to regular HP
+  if (remainingDamage > 0) {
+    newHP = Math.max(0, currentHP - remainingDamage);
+  }
 
   // Choose update target: unlinked token actor if applicable, else base actor
   const activeToken = actor.token ?? actor.getActiveTokens?.()[0] ?? null;
@@ -598,7 +623,10 @@ export async function applyDamage(actor, damage, damageType = DAMAGE_TYPES.PHYSI
 
   // Persist Wounded flag if the damage exceeded the threshold.
   // Keep update minimal: only write the flag when it needs to be set.
-  const updateData = { "system.hp.value": newHP };
+  const updateData = { 
+    "system.hp.value": newHP,
+    "system.tempHP": newTempHP
+  };
   if (isWounded && !updateTarget.system?.wounded) updateData["system.wounded"] = true;
 
   await requestUpdateDocument(updateTarget, updateData);
@@ -672,6 +700,11 @@ export async function applyDamage(actor, damage, damageType = DAMAGE_TYPES.PHYSI
 
   if (criticalNote) {
     parts.push(`<div class="uesrpg-da-row"><span class="k">Critical</span><span class="v">${criticalNote}</span></div>`);
+  }
+  
+  // Show temp HP absorption if any
+  if (tempHPAbsorbed > 0) {
+    parts.push(`<div class="uesrpg-da-row"><span class="k">Temp HP Absorbed</span><span class="v">${tempHPAbsorbed}</span></div>`);
   }
 
   for (const line of extraBreakdownLines) {
@@ -822,6 +855,7 @@ export async function applyDamage(actor, damage, damageType = DAMAGE_TYPES.PHYSI
         
         <div class=\"uesrpg-da-row\"><span class=\"k\">Total Damage</span><span class=\"v final\">${finalDamageAdjusted}</span></div>
         <div class=\"uesrpg-da-row\"><span class=\"k\">HP</span><span class="v">${newHP} / ${maxHP}${hpDelta ? ` <span class="muted">(-${hpDelta})</span>` : ""}</span></div>
+        ${currentTempHP > 0 || newTempHP > 0 ? `<div class=\"uesrpg-da-row\"><span class=\"k\">Temp HP</span><span class="v">${newTempHP}${tempHPAbsorbed ? ` <span class="muted">(-${tempHPAbsorbed})</span>` : ""}</span></div>` : ""}
         ${woundStatus === "wounded" ? `<div class="status wounded">WOUNDED <span class="muted">(WT ${woundThreshold})</span></div>` : ""}
         ${woundStatus === "unconscious" ? `<div class="status unconscious">UNCONSCIOUS</div>` : ""}
 <details style="margin-top:6px;">

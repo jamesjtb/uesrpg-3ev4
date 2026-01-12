@@ -34,6 +34,7 @@ import {
 import { bindCommonSheetListeners, bindCommonEditableInventoryListeners } from "./sheet-listeners.js";
 import { shouldHideFromMainInventory } from "./sheet-inventory.js";
 import { prepareCharacterItems } from "./sheet-prepare-items.js";
+import { registerHPButtonHandler } from "./actor-sheet-hp-integration.js";
 import { classifySpellForRouting, getUserSpellTargets, shouldUseTargetedSpellWorkflow, shouldUseModernSpellWorkflow, debugMagicRoutingLog } from "../magic/spell-routing.js";
 import { filterTargetsBySpellRange, getSpellRangeType, placeAoETemplateAndCollectTargets } from "../magic/spell-range.js";
 
@@ -260,6 +261,10 @@ async activateListeners(html) {
   html.find(".incrementResource").click(this._onIncrementResource.bind(this));
   // Resource restore (migrated from label button)
   html.find(".restoreResource").click(this._onResetResource.bind(this));
+  
+  // Register HP button handler to open HP/Temp HP dialog
+  registerHPButtonHandler(this, html);
+  
   // html.find("#spellFilter").click(this._filterSpells.bind(this)); // REMOVED: Spell filter dropdown removed in spell school categorization
   html.find("#itemFilter").click(this._filterItems.bind(this));
   html.find(".incrementFatigue").click(this._incrementFatigue.bind(this));
@@ -1025,10 +1030,25 @@ async activateListeners(html) {
 
     const icon = toggleEl.querySelector("i");
     if (icon) {
-      icon.classList.remove("fa-chevron-down", "fa-chevron-right");
-      icon.classList.add(collapsed ? "fa-chevron-right" : "fa-chevron-down");
+      // Check if this is a caret icon (used for spell schools) or chevron icon
+      const isCaret = icon.classList.contains("fa-caret-down") || icon.classList.contains("fa-caret-right");
+      
+      if (isCaret) {
+        icon.classList.remove("fa-caret-down", "fa-caret-right");
+        icon.classList.add(collapsed ? "fa-caret-right" : "fa-caret-down");
+      } else {
+        icon.classList.remove("fa-chevron-down", "fa-chevron-right");
+        icon.classList.add(collapsed ? "fa-chevron-right" : "fa-chevron-down");
+      }
     }
 
+    // Spell school sections - updated to use new template structure
+    const spellSchool = toggleEl.closest(".spell-school-section");
+    if (spellSchool) {
+      const table = spellSchool.querySelector(".spell-school-table");
+      if (table) table.style.display = collapsed ? "none" : "";
+      return;
+    }
 
     // Generic collapsible blocks: hide/show an explicit collapse body
     const collapsible = toggleEl.closest(".uesrpg-collapsible");
@@ -2073,16 +2093,16 @@ if (shouldUseTargetedSpellWorkflow(spell, workingTargets)) {
           <input type="number" name="manualModifier" value="0" style="width:120px; text-align:center;" />
         </div>
         <hr style="margin: 10px 0;"/>
-        <div class="form-group" style="margin-top: 8px;">
+        <div class="form-group" id="restrainGroup" style="margin-top: 8px;">
           <label style="display: flex; align-items: center; gap: 8px;">
-            <input type="checkbox" name="restrain" checked />
+            <input type="checkbox" name="restrain" id="restrainCheckbox" ${!hasOverload ? 'checked' : ''} />
             <span><b>Spell Restraint</b> (reduce cost by ${wpBonus} to min 1)</span>
           </label>
         </div>
 	        ${hasOverload ? `
-        <div class="form-group" style="margin-top: 8px;">
+        <div class="form-group" id="overloadGroup" style="margin-top: 8px;">
           <label style="display: flex; align-items: center; gap: 8px;">
-            <input type="checkbox" name="overload" />
+            <input type="checkbox" name="overload" id="overloadCheckbox" />
             <span><b>Overload</b> (${spell.system.overloadEffect || 'double cost for enhanced effect'})</span>
           </label>
         </div>` : ''}
@@ -2103,35 +2123,68 @@ if (shouldUseTargetedSpellWorkflow(spell, workingTargets)) {
       </form>
     `;
     
-    return Dialog.wait({
-      title: "Spell Options",
-      content,
-      buttons: {
-        cast: {
-          label: "Cast",
-          callback: (html) => {
-            const root = html instanceof HTMLElement ? html : html?.[0];
-            const form = root?.querySelector("form");
+    return new Promise((resolve) => {
+      const dialog = new Dialog({
+        title: "Spell Options",
+        content,
+        buttons: {
+          cast: {
+            label: "Cast",
+            callback: (html) => {
+              const root = html instanceof HTMLElement ? html : html?.[0];
+              const form = root?.querySelector("form");
 
-            const difficultyKey = String(form?.difficultyKey?.value ?? "average");
-            const manualModifierRaw = form?.manualModifier?.value ?? "0";
-            const manualModifier = Number.parseInt(String(manualModifierRaw ?? "0"), 10) || 0;
-            return {
-              isRestrained: form?.restrain?.checked ?? false,
-              isOverloaded: form?.overload?.checked ?? false,
-              useOvercharge: form?.overcharge?.checked ?? false,
-              useMagickaCycling: form?.magickaCycling?.checked ?? false,
-              difficultyKey,
-              manualModifier,
-              restraintValue: wpBonus,
-              baseCost
-            };
-          }
+              const difficultyKey = String(form?.difficultyKey?.value ?? "average");
+              const manualModifierRaw = form?.manualModifier?.value ?? "0";
+              const manualModifier = Number.parseInt(String(manualModifierRaw ?? "0"), 10) || 0;
+              resolve({
+                isRestrained: form?.restrain?.checked ?? false,
+                isOverloaded: form?.overload?.checked ?? false,
+                useOvercharge: form?.overcharge?.checked ?? false,
+                useMagickaCycling: form?.magickaCycling?.checked ?? false,
+                difficultyKey,
+                manualModifier,
+                restraintValue: wpBonus,
+                baseCost
+              });
+            }
+          },
+          cancel: { label: "Cancel", callback: () => resolve(null) }
         },
-        cancel: { label: "Cancel", callback: () => null }
-      },
-      default: "cast"
-    }, { width: 420 });
+        default: "cast",
+        render: (html) => {
+          // Make Restrain and Overload mutually exclusive
+          if (hasOverload) {
+            const restrainCheckbox = html.find('#restrainCheckbox')[0];
+            const overloadCheckbox = html.find('#overloadCheckbox')[0];
+            const restrainGroup = html.find('#restrainGroup')[0];
+            const overloadGroup = html.find('#overloadGroup')[0];
+            
+            if (restrainCheckbox && overloadCheckbox) {
+              restrainCheckbox.addEventListener('change', (e) => {
+                if (e.target.checked) {
+                  overloadCheckbox.checked = false;
+                  overloadGroup.style.opacity = '0.5';
+                } else {
+                  overloadGroup.style.opacity = '1';
+                }
+              });
+              
+              overloadCheckbox.addEventListener('change', (e) => {
+                if (e.target.checked) {
+                  restrainCheckbox.checked = false;
+                  restrainGroup.style.opacity = '0.5';
+                } else {
+                  restrainGroup.style.opacity = '1';
+                }
+              });
+            }
+          }
+        }
+      }, { width: 420 });
+      
+      dialog.render(true);
+    });
   }
 
   /**

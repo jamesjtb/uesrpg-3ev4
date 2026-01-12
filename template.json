@@ -198,6 +198,7 @@
         "temp": 0,
         "bonus": 0
       },
+      "tempHP": 0,
       "action_points": {
         "value": 0,
         "max": 3
@@ -493,6 +494,7 @@
         "temp": 0,
         "bonus": 0
       },
+      "tempHP": 0,
       "action_points": {
         "value": 0,
         "max": 3
