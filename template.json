@@ -93,6 +93,60 @@
         "sunlightR": 0,
         "silverR": 0
       },
+      "resistances": {
+        "disease": 0,
+        "poison": 0,
+        "paralysis": 0,
+        "bleed": 0,
+        "fear": 0,
+        "magic": 0
+      },
+      "traits": {
+        "resistance": {
+          "fire": 0,
+          "frost": 0,
+          "shock": 0,
+          "acid": 0,
+          "poison": 0,
+          "disease": 0,
+          "bleed": 0
+        }
+      },
+      "recovery": {
+        "naturalHealing": {
+          "multiplier": 1,
+          "flatBonus": 0
+        },
+        "magickaRecovery": {
+          "multiplier": 1
+        },
+        "staminaRecovery": {
+          "multiplier": 1
+        }
+      },
+      "resources": {
+        "magicka": {
+          "maxBonus": 0
+        },
+        "stamina": {
+          "maxBonus": 0
+        },
+        "health": {
+          "maxBonus": 0
+        }
+      },
+      "movement": {
+        "speedBonus": 0,
+        "fallDamage": {
+          "multiplier": 1
+        },
+        "ignoreDifficultTerrain": false
+      },
+      "senses": {
+        "lowLightVision": false,
+        "darkvision": false,
+        "nightSightBonus": 0
+      },
       "lucky_numbers": {
         "ln1": 0,
         "ln2": 0,
@@ -322,6 +376,9 @@
             "parry": 0,
             "counter": 0
           }
+        },
+        "tests": {
+          "all": 0
         }
       }
     },
@@ -366,6 +423,60 @@
         "natToughness": 0,
         "silverR": 0,
         "sunlightR": 0
+      },
+      "resistances": {
+        "disease": 0,
+        "poison": 0,
+        "paralysis": 0,
+        "bleed": 0,
+        "fear": 0,
+        "magic": 0
+      },
+      "traits": {
+        "resistance": {
+          "fire": 0,
+          "frost": 0,
+          "shock": 0,
+          "acid": 0,
+          "poison": 0,
+          "disease": 0,
+          "bleed": 0
+        }
+      },
+      "recovery": {
+        "naturalHealing": {
+          "multiplier": 1,
+          "flatBonus": 0
+        },
+        "magickaRecovery": {
+          "multiplier": 1
+        },
+        "staminaRecovery": {
+          "multiplier": 1
+        }
+      },
+      "resources": {
+        "magicka": {
+          "maxBonus": 0
+        },
+        "stamina": {
+          "maxBonus": 0
+        },
+        "health": {
+          "maxBonus": 0
+        }
+      },
+      "movement": {
+        "speedBonus": 0,
+        "fallDamage": {
+          "multiplier": 1
+        },
+        "ignoreDifficultTerrain": false
+      },
+      "senses": {
+        "lowLightVision": false,
+        "darkvision": false,
+        "nightSightBonus": 0
       },
       "fatigue": {
         "level": 0,
@@ -637,6 +748,9 @@
             "parry": 0,
             "counter": 0
           }
+        },
+        "tests": {
+          "all": 0
         }
       }
     },
