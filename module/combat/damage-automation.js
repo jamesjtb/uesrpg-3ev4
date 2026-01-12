@@ -511,6 +511,8 @@ export async function applyDamage(actor, damage, damageType = DAMAGE_TYPES.PHYSI
     // Optional: enable RAW weapon-quality bonuses.
     weapon = null,
     attackerActor = null,
+    // For magic wounds: track damage by type for proper wound side effects
+    damageAppliedByType = null,
   } = options;
 
   if (!actor?.system) {
@@ -640,7 +642,7 @@ export async function applyDamage(actor, damage, damageType = DAMAGE_TYPES.PHYSI
       amountApplied: finalDamageAdjusted,
       hitLocation,
       damageType,
-      damageAppliedByType: null,
+      damageAppliedByType: damageAppliedByType,
       woundThreshold,
       woundTriggered: isWounded === true
     });

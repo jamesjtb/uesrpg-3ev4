@@ -280,11 +280,25 @@ function _renderCard(data, messageId) {
     // Build detailed result line
     const aResult = data.attacker?.result;
     const dResult = data.defender?.result;
-    const aTN = data.attacker?.tn ?? "—";
-    const dTN = data.defender?.tn ?? "—";
+    const aTNObj = data.attacker?.tn;
+    const dTNObj = data.defender?.tn;
+    const aTN = (typeof aTNObj === 'object' && aTNObj?.finalTN != null) ? aTNObj.finalTN : (typeof aTNObj === 'number' ? aTNObj : "—");
+    const dTN = (typeof dTNObj === 'object' && dTNObj?.finalTN != null) ? dTNObj.finalTN : (typeof dTNObj === 'number' ? dTNObj : "—");
     
     let resultsHtml = "";
-    if (aResult && dResult) {
+    // For healing spells (healingDirect), only show caster's result
+    if (Boolean(data.context?.healingDirect)) {
+      if (aResult) {
+        const aRoll = aResult.rollTotal ?? "—";
+        const aDeg = Math.abs(aResult.degree ?? 0);
+        const aDoSLabel = (aResult.isSuccess || false) ? "DoS" : "DoF";
+        resultsHtml = `
+          <div style="margin-top:6px; font-size:12px; line-height:1.5;">
+            <div><b>Casting Test:</b> ${aRoll} vs TN ${aTN} — ${aDeg} ${aDoSLabel}</div>
+          </div>
+        `;
+      }
+    } else if (aResult && dResult) {
       const aRoll = aResult.rollTotal ?? "—";
       const dRoll = dResult.rollTotal ?? "—";
       const aDeg = Math.abs(aResult.degree ?? 0);
@@ -304,7 +318,7 @@ function _renderCard(data, messageId) {
       <div style="margin-top:10px; padding:8px; background:rgba(0,0,0,0.05); border-left:3px solid ${color};">
         <div style="font-weight:700;">${String(data.outcome.text ?? "Resolved")}</div>
         ${resultsHtml}
-        ${data.outcome.attackerWins ? `<div style="margin-top:4px; font-size:12px; opacity:0.9;">Damage is applied automatically. Details are whispered to the GM.</div>` : ""}
+        ${data.outcome.attackerWins && !Boolean(data.context?.healingDirect) ? `<div style="margin-top:4px; font-size:12px; opacity:0.9;">Damage is applied automatically. Details are whispered to the GM.</div>` : ""}
       </div>
     `;
   } else if (bankMode && !bothCommitted) {

@@ -69,6 +69,13 @@ export async function applyMagicDamage(targetActor, damage, damageType, spell, o
   // Calculate damage with layered resistance: elemental first, then magic.
   const isElementalSpell = (dt !== DAMAGE_TYPES.MAGIC && dt !== DAMAGE_TYPES.PHYSICAL && dt !== DAMAGE_TYPES.HEALING && dt !== "none");
   
+  // For magic wound effects, track damage by type
+  // This enables proper wound side effects (Fire -> Burning, Shock -> Magicka loss, etc.)
+  const damageAppliedByType = {};
+  if (dt && dt !== "none" && dt !== DAMAGE_TYPES.PHYSICAL) {
+    damageAppliedByType[dt] = Number(damage || 0);
+  }
+  
   if (isElementalSpell) {
     // Step 1: Get elemental resistance/weakness
     const elementalReduction = getDamageReduction(targetActor, dt, hitLocation);
@@ -103,6 +110,7 @@ export async function applyMagicDamage(targetActor, damage, damageType, spell, o
       rollHTML,
       ignoreReduction: true,
       extraBreakdownLines,
+      damageAppliedByType,
     });
   }
   
@@ -112,6 +120,7 @@ export async function applyMagicDamage(targetActor, damage, damageType, spell, o
     hitLocation,
     rollHTML,
     extraBreakdownLines,
+    damageAppliedByType: dt && dt !== "none" && dt !== DAMAGE_TYPES.PHYSICAL ? damageAppliedByType : null,
   });
 }
 

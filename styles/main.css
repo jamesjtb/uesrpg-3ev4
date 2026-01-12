@@ -750,6 +750,13 @@
   color: white;
 }
 
+.worldbuilding .temp-hp-overlay {
+  margin-left: 4px;
+  color: #4a9eff;
+  font-weight: 700;
+  font-size: 13px;
+}
+
 .worldbuilding .currentBar {
   display: flex;
   flex-direction: row;
