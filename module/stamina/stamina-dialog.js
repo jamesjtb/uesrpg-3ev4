@@ -91,8 +91,8 @@ export async function openStaminaDialog(actor) {
   // Build dialog content
   const content = `
     <div class="stamina-dialog">
-      <div class="stamina-status" style="margin-bottom: 15px; padding: 10px; background: ${currentSP <= 0 ? '#4a1a1a' : '#1a3a1a'}; border-radius: 4px;">
-        <p style="margin: 0; font-weight: bold;">Current Stamina: ${currentSP} / ${maxSP}</p>
+      <div class="stamina-status" style="margin-bottom: 15px; padding: 10px; background: ${currentSP <= 0 ? '#4a1a1a' : 'green'}; border-radius: 4px;">
+        <p style="margin: 0; font-weight: bold; color: white;">Current Stamina: ${currentSP} / ${maxSP}</p>
         ${currentSP <= 0 ? '<p style="margin: 5px 0 0 0; color: #ff6b6b;">⚠️ Warning: Spending at or below 0 SP will increase fatigue!</p>' : ''}
       </div>
       <form>
