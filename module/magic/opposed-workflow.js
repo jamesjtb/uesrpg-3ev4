@@ -1191,6 +1191,10 @@ export const MagicOpposedWorkflow = {
     // Reload one more time to ensure we have latest data
     const finalData = _getMessageState(message);
     if (finalData && finalData.attacker.result && finalData.defender.result) {
+      // Check if already resolved (e.g., healing spells resolve immediately in attacker-roll)
+      if (finalData.context?.phase === "resolved") {
+        return;
+      }
       // Both sides have results → resolve
       await this._resolveOutcome(message, finalData, attacker, defender);
     }
@@ -1487,6 +1491,7 @@ export const MagicOpposedWorkflow = {
         ? `${spell.name} hits ${defender.name}.`
         : `${defender.name} defends against ${spell.name}.`
     };
+    data.context.phase = "resolved";
 
     if (attackerWins) {
       const isCritical = Boolean(aResult?.isCriticalSuccess);
