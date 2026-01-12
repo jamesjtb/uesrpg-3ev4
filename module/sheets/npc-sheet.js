@@ -34,6 +34,7 @@ import {
 import { bindCommonSheetListeners, bindCommonEditableInventoryListeners } from "./sheet-listeners.js";
 import { shouldHideFromMainInventory } from "./sheet-inventory.js";
 import { prepareCharacterItems } from "./sheet-prepare-items.js";
+import { registerHPButtonHandler } from "./actor-sheet-hp-integration.js";
 import { classifySpellForRouting, getUserSpellTargets, shouldUseTargetedSpellWorkflow, shouldUseModernSpellWorkflow, debugMagicRoutingLog } from "../magic/spell-routing.js";
 import { filterTargetsBySpellRange, getSpellRangeType, placeAoETemplateAndCollectTargets } from "../magic/spell-range.js";
 
@@ -260,6 +261,10 @@ async activateListeners(html) {
   html.find(".incrementResource").click(this._onIncrementResource.bind(this));
   // Resource restore (migrated from label button)
   html.find(".restoreResource").click(this._onResetResource.bind(this));
+  
+  // Register HP button handler to open HP/Temp HP dialog
+  registerHPButtonHandler(this, html);
+  
   // html.find("#spellFilter").click(this._filterSpells.bind(this)); // REMOVED: Spell filter dropdown removed in spell school categorization
   html.find("#itemFilter").click(this._filterItems.bind(this));
   html.find(".incrementFatigue").click(this._incrementFatigue.bind(this));

@@ -52,6 +52,7 @@ import { bindCommonSheetListeners, bindCommonEditableInventoryListeners } from "
 import { shouldHideFromMainInventory } from "./sheet-inventory.js";
 import { prepareCharacterItems } from "./sheet-prepare-items.js";
 import { registerStaminaButtonHandler } from "./actor-sheet-stamina-integration.js";
+import { registerHPButtonHandler } from "./actor-sheet-hp-integration.js";
 
 export class SimpleActorSheet extends foundry.appv1.sheets.ActorSheet {
   /** @override */
@@ -290,6 +291,9 @@ async activateListeners(html) {
   
   // Register stamina button handler after incrementResource
   registerStaminaButtonHandler(this, html);
+  
+  // Register HP button handler to open HP/Temp HP dialog
+  registerHPButtonHandler(this, html);
   
   // html.find("#spellFilter").click(this._filterSpells.bind(this)); // DISABLED: Spell filter dropdown removed
   html.find("#itemFilter").click(this._filterItems.bind(this));
