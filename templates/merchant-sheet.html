@@ -1,0 +1,497 @@
+<form class="{{cssClass}}" autocomplete="off">
+
+    {{!-- Character Sheet Sections --}}
+    <div class="sheet-section-container">
+
+        <div class="sheet-fixed-container">
+            <div class="character-profile-container">
+                <div class="profile-img-container">
+                    <img class="profile-img" src="{{actor.img}}" data-edit="img" title="{{actor.name}}">
+                    <div class="status-column">
+                        <div class="vertical-flex-container">
+                            <img id="wound-icon" src="icons/skills/wounds/blood-drip-droplet-red.webp" title="Wounded {{actor.system.woundPenalty}}">
+                            <img id="fatigue-icon" src="icons/magic/control/debuff-energy-hold-green.webp" title="Fatigued {{actor.system.fatigue.penalty}}">
+                            <img id="enc-icon" src="icons/containers/bags/pack-leather-brown.webp" title="{{actor.system.carry_rating.label}} {{actor.system.carry_rating.penalty}}">
+                        </div>
+                    </div>
+                </div>
+                <nav class="sheet-tabs tabs" data-group="primary">
+                    <a class="item" data-tab="merchant">Merchant</a>
+                    <a class="item" data-tab="core">Core</a>
+                    <a class="item" data-tab="abilities">Abilities</a>
+                </nav>
+                <div>
+                    <h1 class="charname"><input type="text" name="name" value="{{actor.name}}" placeholder="Name"></h1>
+                </div>
+            </div>
+            <div class="fixed-data-container">
+                <div class="merchant-resources">
+                    <div class="merchant-attribute-container">
+                        <div>Price Modifier</div>
+                        <div class="merchant-controls-container">
+                            <div id="priceModifierBox" title="Price Modifer adjusts costs of all merchant's items">
+                                <div>
+                                    <label id="merchantPriceValue">{{actor.system.priceMod}}%</label>
+                                </div>
+                            </div>
+                            <div class="resourceButton" style="display: inline-block">
+                                <i class="fas fa-angle-down fa-xs decreasePriceMod"></i>
+                                <i class="fas fa-angle-up fa-xs increasePriceMod"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="merchant-attribute-container">
+                        <div><i class="fas fa-balance-scale wealthCalc"></i> Wealth</div>
+                        <div class="merchant-controls-container">
+                            <input type="number" name="system.wealth" value="{{actor.system.wealth}}">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="characteristics-container">
+                    <h2>
+                        <button type="button" class="setBaseCharacteristics">Set</button>
+                        <div>Characteristics</div>
+                    </h2>
+                    <div class="characteristic-entry-container">
+                        <div class="characteristic">
+                            <input class="checkbox" type="checkbox" name="system.characteristics.str.favored" {{checked actor.system.characteristics.str.favored}}>
+                            <div id="str" name="Strength" class="characteristic-roll styled-font rollable">Strength</div>
+                            <div class="right-align-content">
+                                <div class="styled-font red">{{actor.system.characteristics.str.total}}</div>
+                            </div>
+                        </div>
+                        <div class="characteristic">
+                            <input class="checkbox" type="checkbox" name="system.characteristics.end.favored" {{checked actor.system.characteristics.end.favored}}>
+                            <div id="end" name="Endurance" class="characteristic-roll styled-font rollable">Endurance</div>
+                            <div class="right-align-content">
+                                <div class="styled-font red">{{actor.system.characteristics.end.total}}</div>
+                            </div>
+                        </div>
+                        <div class="characteristic">
+                            <input class="checkbox" type="checkbox" name="system.characteristics.agi.favored" {{checked actor.system.characteristics.agi.favored}}>
+                            <div id="agi" name="Agility" class="characteristic-roll styled-font rollable">Agility</div>
+                            <div class="right-align-content">
+                                <div class="styled-font red">{{actor.system.characteristics.agi.total}}</div>
+                            </div>
+                        </div>
+                        <div class="characteristic">
+                            <input class="checkbox" type="checkbox" name="system.characteristics.int.favored" {{checked actor.system.characteristics.int.favored}}>
+                            <div id="int" name="Intelligence" class="characteristic-roll styled-font rollable">Intelligence</div>
+                            <div class="right-align-content">
+                                <div class="styled-font red">{{actor.system.characteristics.int.total}}</div>
+                            </div>
+                        </div>
+                        <div class="characteristic">
+                            <input class="checkbox" type="checkbox" name="system.characteristics.wp.favored" {{checked actor.system.characteristics.wp.favored}}>
+                            <div id="wp" name="Willpower" class="characteristic-roll styled-font rollable">Willpower</div>
+                            <div class="right-align-content">
+                                <div class="styled-font red">{{actor.system.characteristics.wp.total}}</div>
+                            </div>
+                        </div>
+                        <div class="characteristic">
+                            <input class="checkbox" type="checkbox" name="system.characteristics.prc.favored" {{checked actor.system.characteristics.prc.favored}}>
+                            <div id="prc" name="Perception" class="characteristic-roll styled-font rollable">Perception</div>
+                            <div class="right-align-content">
+                                <div class="styled-font red">{{actor.system.characteristics.prc.total}}</div>
+                            </div>
+                        </div>
+                        <div class="characteristic">
+                            <input class="checkbox" type="checkbox" name="system.characteristics.prs.favored" {{checked actor.system.characteristics.prs.favored}}>
+                            <div id="prs" name="Personality" class="characteristic-roll styled-font rollable">Personality</div>
+                            <div class="right-align-content">
+                                <div class="styled-font red">{{actor.system.characteristics.prs.total}}</div>
+                            </div>
+                        </div>
+                        <div class="characteristic">
+                            <input class="checkbox" type="checkbox" name="system.characteristics.lck.favored" {{checked actor.system.characteristics.lck.favored}}>
+                            <div id="lck" name="Luck" class="characteristic-roll styled-font rollable">Luck</div>
+                            <div class="right-align-content">
+                                <div class="relative-container">
+                                    <div class="styled-font red">{{actor.system.characteristics.lck.total}}</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <section class="sheet-body">
+            <div class="tab merchant" data-group="primary" data-tab="merchant">
+                <div class="tabContainer">
+
+                    <h2 class="store-name">
+                        <input type="text" name="system.storeName" value="{{actor.system.storeName}}" placeholder="Store Name">
+                    </h2>
+
+                    <div class="combat-button-container">
+                        <div class="combat-button professions-roll" name="Commerce" id="commerce">
+                            <div class="flex-container">
+                                <div class="combat-button-value">{{actor.system.skills.commerce.tn}}</div>
+                                <div class="combat-button-label">Commerce</div>
+                            </div>
+                        </div>
+                        <div class="combat-button professions-roll" name="Social" id="social">
+                            <div class="flex-container">
+                                <div class="combat-button-value">{{actor.system.professions.social}}</div>
+                                <div class="combat-button-label">Social</div>
+                            </div>
+                        </div>
+                        <div class="combat-button professions-roll" name="Observe" id="observe">
+                            <div class="flex-container">
+                                <div class="combat-button-value">{{actor.system.professions.observe}}</div>
+                                <div class="combat-button-label">Observe</div>
+                            </div>
+                        </div>
+                        <div class="combat-button professions-roll" name="Knowledge" id="knowledge">
+                            <div class="flex-container">
+                                <div class="combat-button-value">{{actor.system.professions.knowledge}}</div>
+                                <div class="combat-button-label">Knowledge</div>
+                            </div>
+                        </div>
+                        <div class="combat-button professions-roll" name="Magic" id="magic">
+                            <div class="flex-container">
+                                <div class="combat-button-value">{{actor.system.professions.magic}}</div>
+                                <div class="combat-button-label">Magic</div>
+                            </div>
+                        </div>
+                        <div class="combat-button professions-roll" name="Evade" id="evade">
+                            <div class="flex-container">
+                                <div class="combat-button-value">{{actor.system.professions.evade}}</div>
+                                <div class="combat-button-label">Evade</div>
+                            </div>
+                        </div>
+                        <div class="combat-button professions-roll" name="Physical" id="physical">
+                            <div class="flex-container">
+                                <div class="combat-button-value">{{actor.system.professions.physical}}</div>
+                                <div class="combat-button-label">Physical</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <table class="merchant-item-list">
+                        <thead>
+                            <tr>
+                                <th>Buy</th>
+                                <th class="item-create merchant-item-name-cell" id="createSelect">+ Item</th>
+                                <th>
+                                    <select id="itemFilter">
+                                        <option>All</option>
+                                    </select>
+                                </th>
+                                <th>ENC</th>
+                                <th>QTY</th>
+                                <th><i class="fas fa-trash"></i></th>
+                            </tr>
+                        </thead>
+                        <tbody id="merchantItemList">
+                            {{#each actor.system.merchantItem as |item id|}}
+                            <tr class="item active" data-item-id="{{item._id}}" data-item-type="{{item.type}}">
+                                <td>
+                                    <div class="flex-container">
+                                        <a class="buyButton" title="Buy Item for {{item.system.modPrice}}">
+                                            <i class="fas fa-coins"></i>
+                                        </a>
+                                        <div>{{item.system.modPrice}}</div>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="tableItemNameCell">
+                                        <img class="item-img" src="{{item.img}}" title="Send to Chat"/>
+                                        <div class="item-name">{{item.name}}</div>
+                                    </div>
+                                </td>
+                                <td>{{item.type}}</td>
+                                <td>{{item.system.enc}}</td>
+                                <td>
+                                    <div class="qty-controls">
+                                        <button type="button" class="minusQty plusQty" title="Click to increase, right click to decrease">
+                                            <div>{{item.system.quantity}}</div>
+                                        </button>
+                                    </div>
+                                </td>
+                                <td>
+                                    <a class="item-control item-delete" title="Delete Item"><i class="fas fa-trash"></i></a>
+                                </td>
+                            </tr>
+                            {{/each}}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="tab core" data-group="primary" data-tab="core">
+                <div class="tabContainer">
+                    <div class="about-buttons">
+                        <div class="npc-button-stats">
+                            <div>
+                                <div class="styled-font">Soul Energy</div>
+                                <input type="text" name="system.soul_energy" placeholder="Soul Energy" value="{{actor.system.soul_energy}}">
+                            </div>
+                            <div>
+                                <div class="styled-font">Race</div>
+                                <input type="text" placeholder="Race" value="{{actor.system.race}}">
+                            </div>
+                            <div>
+                                <div class="styled-font">Threat</div>
+                                <select name="system.threat" data-type="String">
+                                    {{selectOptions actor.system.threatCategory selected=actor.system.threat localized=true}}
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="skillContainer">
+                        <h2 class="headerWithButton">
+                            <label>Professions</label>
+                        </h2>
+                        <ul class="skillList">
+                            <li class="npc-item">
+                                <div class="itemInfo">
+                                    <i class="fas fa-dice-d20 professions-roll" name="Combat" id="combat"></i>
+                                    <img class="item-img" src="icons/skills/melee/weapons-crossed-swords-yellow.webp" title="Send to Chat"/>
+                                    <div class="skill-name">Combat</div>
+                                </div>
+                                <div class="item-controls">
+                                    <div class="item-value profession"><input type="number" name="system.professions.combat" value="{{actor.system.professions.combat}}"/>%</div>
+                                </div>
+                            </li>
+                            <li class="npc-item">
+                                <div class="itemInfo">
+                                    <i class="fas fa-dice-d20 professions-roll" name="Evade" id="evade"></i>
+                                    <img class="item-img" src="icons/skills/movement/arrow-upward-yellow.webp" title="Send to Chat"/>
+                                    <div class="skill-name">Evade</div>
+                                </div>
+                                <div class="item-controls">
+                                    <div class="item-value profession"><input type="number" name="system.professions.evade" value="{{actor.system.professions.evade}}"/>%</div>
+                                </div>
+                            </li>
+                            <li class="npc-item">
+                                <div class="itemInfo">
+                                    <i class="fas fa-dice-d20 professions-roll" name="Knowledge" id="knowledge"></i>
+                                    <img class="item-img" src="icons/skills/trades/academics-study-reading-book.webp" title="Send to Chat"/>
+                                    <div class="skill-name">Knowledge</div>
+                                </div>
+                                <div class="item-controls">
+                                    <div class="item-value profession"><input type="number" name="system.professions.knowledge" value="{{actor.system.professions.knowledge}}"/>%</div>
+                                </div>
+                            </li>
+                            <li class="npc-item">
+                                <div class="itemInfo">
+                                    <i class="fas fa-dice-d20 professions-roll" name="Magic" id="magic"></i>
+                                    <img class="item-img" src="icons/sundries/books/book-open-purple.webp" title="Send to Chat"/>
+                                    <div class="skill-name">Magic</div>
+                                </div>
+                                <div class="item-controls">
+                                    <div class="item-value profession"><input type="number" name="system.professions.magic" value="{{actor.system.professions.magic}}"/>%</div>
+                                </div>
+                            </li>
+                            <li class="npc-item">
+                                <div class="itemInfo">
+                                    <i class="fas fa-dice-d20 professions-roll" name="Observe" id="observe"></i>
+                                    <img class="item-img" src="icons/magic/perception/eye-ringed-green.webp" title="Send to Chat"/>
+                                    <div class="skill-name">Observe</div>
+                                </div>
+                                <div class="item-controls">
+                                    <div class="item-value profession"><input type="number" name="system.professions.observe" value="{{actor.system.professions.observe}}"/>%</div>
+                                </div>
+                            </li>
+                            <li class="npc-item">
+                                <div class="itemInfo">
+                                    <i class="fas fa-dice-d20 professions-roll" name="Physical" id="physical"></i>
+                                    <img class="item-img" src="icons/skills/melee/unarmed-punch-fist.webp" title="Send to Chat"/>
+                                    <div class="skill-name">Physical</div>
+                                </div>
+                                <div class="item-controls">
+                                    <div class="item-value profession"><input type="number" name="system.professions.physical" value="{{actor.system.professions.physical}}"/>%</div>
+                                </div>
+                            </li>
+                            <li class="npc-item">
+                                <div class="itemInfo">
+                                    <i class="fas fa-dice-d20 professions-roll" name="Social" id="social"></i>
+                                    <img class="item-img" src="icons/skills/social/diplomacy-peace-alliance.webp" title="Send to Chat"/>
+                                    <div class="skill-name">Social</div>
+                                </div>
+                                <div class="item-controls">
+                                    <div class="item-value profession"><input type="number" name="system.professions.social" value="{{actor.system.professions.social}}"/>%</div>
+                                </div>
+                            </li>
+                            <li class="npc-item">
+                                <div class="itemInfo">
+                                    <i class="fas fa-dice-d20 professions-roll" name="Stealth" id="stealth"></i>
+                                    <img class="item-img" src="systems/uesrpg-3ev4/images/Icons/invisible.webp" title="Send to Chat"/>
+                                    <div class="skill-name">Stealth</div>
+                                </div>
+                                <div class="item-controls">
+                                    <div class="item-value profession"><input type="number" name="system.professions.stealth" value="{{actor.system.professions.stealth}}"/>%</div>
+                                </div>
+                            </li>
+                            <li class="npc-item">
+                                <div class="itemInfo">
+                                    <i class="fas fa-dice-d20 professions-roll" name="{{actor.system.skills.commerce.specialization}}" id="commerce"></i>
+                                    <img class="item-img" src="icons/skills/social/trading-justice-scale-yellow.webp" title="Send to Chat"/>
+                                    <div class="skill-name">
+                                        <div class="skill-name">Commerce</div>
+                                    </div>
+                                </div>
+                                <div class="item-controls">
+                                    <div class="item-value profession"><input type="number" name="system.skills.commerce.tn" value="{{actor.system.skills.commerce.tn}}"/>%</div>
+                                </div>
+                            </li>
+                            <li class="npc-item">
+                                <div class="itemInfo">
+                                    <i class="fas fa-dice-d20 professions-roll" name="{{actor.system.skills.profession1.specialization}}" id="profession1"></i>
+                                    <img class="item-img" src="icons/skills/social/trading-justice-scale-yellow.webp" title="Send to Chat"/>
+                                    <div class="skill-name">
+                                        <input type="text" placeholder="Profession 1" name="system.skills.profession1.specialization" value="{{actor.system.skills.profession1.specialization}}">
+                                    </div>
+                                </div>
+                                <div class="item-controls">
+                                    <div class="item-value profession"><input type="number" name="system.skills.profession1.tn" value="{{actor.system.skills.profession1.tn}}"/>%</div>
+                                </div>
+                            </li>
+                            <li class="npc-item">
+                                <div class="itemInfo">
+                                    <i class="fas fa-dice-d20 professions-roll" name="{{actor.system.skills.profession2.specialization}}" id="profession2"></i>
+                                    <img class="item-img" src="icons/skills/social/trading-justice-scale-yellow.webp" title="Send to Chat"/>
+                                    <div class="skill-name">
+                                        <input type="text" placeholder="Profession 2" name="system.skills.profession2.specialization" value="{{actor.system.skills.profession2.specialization}}">
+                                    </div>
+                                </div>
+                                <div class="item-controls">
+                                    <div class="item-value profession"><input type="number" name="system.skills.profession2.tn" value="{{actor.system.skills.profession2.tn}}"/>%</div>
+                                </div>
+                            </li>
+                            <li class="npc-item">
+                                <div class="itemInfo">
+                                    <i class="fas fa-dice-d20 professions-roll" name="{{actor.system.skills.profession3.specialization}}" id="profession3"></i>
+                                    <img class="item-img" src="icons/skills/social/trading-justice-scale-yellow.webp" title="Send to Chat"/>
+                                    <div class="skill-name">
+                                        <input type="text" placeholder="Profession 3" name="system.skills.profession3.specialization" value="{{actor.system.skills.profession3.specialization}}">
+                                    </div>
+                                </div>
+                                <div class="item-controls">
+                                    <div class="item-value profession"><input type="number" name="system.skills.profession3.tn" value="{{actor.system.skills.profession3.tn}}"/>%</div>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <div class="two-column-flex-container">
+                        <div class="languageContainer">
+                            <h2 class="headerWithButton">
+                                <button type="button" class="item-create" id="language">+</button>
+                                <label>Languages</label>
+                            </h2>
+                            <ol class="single-column-list">
+                                {{#each actor.system.language as |item id|}}
+                                    <li class="item" data-item-id="{{item._id}}">
+                                        <div class="itemInfo">
+                                            <img class="item-img" src="{{item.img}}" title="Send to Chat"/>
+                                            <div class="item-name">{{item.name}}</div>
+                                        </div>
+                                        <div class="item-controls">
+                                            <a class="item-control item-delete" title="Delete Item"><i class="fas fa-trash"></i></a>
+                                        </div>
+                                    </li>
+                                {{/each}}
+                            </ol>
+                        </div>
+                        <div class="factionContainer">
+                            <h2 class="headerWithButton">
+                                <button type="button" class="item-create" id="faction">+</button>
+                                <label>Factions</label>
+                            </h2>
+                            <ol class="single-column-list">
+                                {{#each actor.system.faction as |item id|}}
+                                    <li class="item" data-item-id="{{item._id}}">
+                                        <div class="itemInfo">
+                                            <img class="item-img" src="{{item.img}}" title="Send to Chat"/>
+                                            <div class="item-name">{{item.name}}</div>
+                                        </div>
+                                        <div class="item-controls">
+                                            <a class="item-control item-delete" title="Delete Item"><i class="fas fa-trash"></i></a>
+                                        </div>
+                                    </li>
+                                {{/each}}
+                            </ol>
+                        </div>
+                    </div>
+
+                    <div class="bioPage">
+                        <h2>Biography</h2>
+                        <div class="contentContainer">
+                            {{editor actor.system.enrichedBio target="system.bio" engine="prosemirror" button=true owner=owner editable=editable}}
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+            <div class="tab abilities" data-group="primary" data-tab="abilities">
+                <div class="three-column-flex-container">
+                    <div class="trait-container">
+                        <h2 class="headerWithButton">
+                            <button type="button" class="item-create" id="trait">+</button>
+                            <label>Traits</label>
+                        </h2>
+                        <ol class="single-column-list">
+                            {{#each actor.system.trait as |item id|}}
+                                <li class="item" data-item-id="{{item._id}}">
+                                    <div class="itemInfo">
+                                        <img class="item-img" src="{{item.img}}" title="Send to Chat"/>
+                                        <div class="item-name">{{item.name}}</div>
+                                    </div>
+                                    <div class="item-controls">
+                                        <a class="item-control item-delete" title="Delete Item"><i class="fas fa-trash"></i></a>
+                                    </div>
+                                </li>
+                            {{/each}}
+                        </ol>
+                    </div>
+                    <div class="talent-container">
+                        <h2 class="headerWithButton">
+                            <button type="button" class="item-create" id="talent">+</button>
+                            <label>Talents</label>
+                        </h2>
+                        <ol class="single-column-list">
+                            {{#each actor.system.talent as |item id|}}
+                                <li class="item" data-item-id="{{item._id}}">
+                                    <div class="itemInfo">
+                                        <img class="item-img" src="{{item.img}}" title="Send to Chat"/>
+                                        <div class="item-name">{{item.name}}</div>
+                                    </div>
+                                    <div class="item-controls">
+                                        <a class="item-control item-delete" title="Delete Item"><i class="fas fa-trash"></i></a>
+                                    </div>
+                                </li>
+                            {{/each}}
+                        </ol>
+                    </div>
+                    <div class="power-container">
+                        <h2 class="headerWithButton">
+                            <button type="button" class="item-create" id="power">+</button>
+                            <label>Powers</label>
+                        </h2>
+                        <ol class="single-column-list">
+                            {{#each actor.system.power as |item id|}}
+                                <li class="item" data-item-id="{{item._id}}">
+                                    <div class="itemInfo">
+                                        <img class="item-img" src="{{item.img}}" title="Send to Chat"/>
+                                        <div class="item-name">{{item.name}}</div>
+                                    </div>
+                                    <div class="item-controls">
+                                        <a class="item-control item-delete" title="Delete Item"><i class="fas fa-trash"></i></a>
+                                    </div>
+                                </li>
+                            {{/each}}
+                        </ol>
+                    </div>
+                </div>
+            </div>
+
+        </section>
+    </div>
+</form>
+

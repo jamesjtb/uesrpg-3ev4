@@ -1,0 +1,162 @@
+<form class="{{cssClass}}" autocomplete="off">
+
+    {{!-- Character Sheet Sections --}}
+    <div class="sheet-section-container">
+
+        <div class="sheet-fixed-container">
+            <div class="character-profile-container">
+                <div class="profile-img-container">
+                    <img class="profile-img" src="{{actor.img}}" data-edit="img" title="{{actor.name}}">
+                    <div class="status-column">
+                        <div class="vertical-flex-container">
+                            <img id="wound-icon" src="icons/skills/wounds/blood-drip-droplet-red.webp" title="Wounded {{actor.system.woundPenalty}}">
+                            <img id="fatigue-icon" src="icons/magic/control/debuff-energy-hold-green.webp" title="Fatigued {{actor.system.fatigue.penalty}}">
+                            <img id="enc-icon" src="icons/containers/bags/pack-leather-brown.webp" title="{{actor.system.carry_rating.label}} {{actor.system.carry_rating.penalty}}">
+                        </div>
+                    </div>
+                </div>
+                <nav class="sheet-tabs tabs" data-group="primary">
+                    <a class="item" data-tab="core">Core</a>
+                </nav>
+                <div>
+                    <h1 class="charname"><input type="text" name="name" value="{{actor.name}}" placeholder="Name"></h1>
+                </div>
+            </div>
+            <div class="fixed-data-container">
+                <div class="resourceBars">
+                    <div id="hpResource">
+                        <div class="resourceLabel">
+                            <button type="button" data-resource="hp">Health</button>
+                            <div class="resourceButton">
+                                <i data-action="increase" data-resource="hp" class="fas fa-angle-up incrementResource"></i>
+                                <i data-action="decrease" data-resource="hp" class="fas fa-angle-down incrementResource"></i>
+                            </div>
+                        </div>
+                        <div class="maxBar" data-resource="hp">
+                            <div id="hpBar" class="currentBar" data-resource="hp">
+                                <input type="number" name="system.hp.value" value="0"> / <label>0</label>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="staminaResource">
+                        <div class="resourceLabel">
+                            <button type="button" data-resource="stamina">Stamina</button>
+                            <div class="resourceButton">
+                                <i data-action="increase" data-resource="stamina" class="fas fa-angle-up incrementResource"></i>
+                                <i data-action="decrease" data-resource="stamina" class="fas fa-angle-down incrementResource"></i>
+                            </div>
+                        </div>
+                        <div class="maxBar" data-resource="stamina">
+                            <div id="staminaBar" class="currentBar" data-resource="stamina">
+                                <input type="number" name="system.stamina.value" value="0"> / <label>0</label>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="magickaResource">
+                        <div class="resourceLabel">
+                            <button type="button" data-resource="magicka">Magicka</button>
+                            <div class="resourceButton">
+                                <i data-action="increase" data-resource="magicka" class="fas fa-angle-up incrementResource"></i>
+                                <i data-action="decrease" data-resource="magicka" class="fas fa-angle-down incrementResource"></i>
+                            </div>
+                        </div>
+                        <div class="maxBar" data-resource="magicka">
+                            <div id="magickaBar" class="currentBar" data-resource="magicka">
+                                <input type="number" name="system.magicka.value" value="0"> / <label>0</label>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="luckResource">
+                        <div class="resourceLabel">
+                            <button type="button" data-resource="luck_points">Luck</button>
+                            <div class="resourceButton">
+                                <i data-action="increase" data-resource="luck_points" class="fas fa-angle-up incrementResource"></i>
+                                <i data-action="decrease" data-resource="luck_points" class="fas fa-angle-down incrementResource"></i>
+                            </div>
+                        </div>
+                        <div class="maxBar" data-resource="luck_points">
+                            <div id="luck_pointsBar" class="currentBar" data-resource="luck_points">
+                                <input type="number" name="system.luck_points.value" value="0"> / <label>0</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <section class="sheet-body">
+            <div class="tab core" data-group="primary" data-tab="core">
+                <div class="tabContainer">
+                    <div class="about-buttons">
+                        <div class="npc-button-stats">
+                            <div>
+                                <div class="styled-font">Soul Energy</div>
+                                <input type="text" name="system.soul_energy" placeholder="Soul Energy" value="---">
+                            </div>
+                            <div>
+                                <div class="styled-font">Race</div>
+                                <input type="text" placeholder="Race" value="{{actor.system.race}}">
+                            </div>
+                            <div>
+                                <div class="styled-font">Threat</div>
+                                <select name="system.threat" data-type="String">
+                                    {{selectOptions actor.system.threatCategory selected=actor.system.threat localized=true}}
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="bioPage">
+                        <h2>Biography</h2>
+                        <div class="contentContainer">
+                            {{editor actor.system.enrichedBio target="system.bio" button=true owner=owner editable=editable}}
+                        </div>
+                    </div>
+
+                    <div class="two-column-flex-container">
+                        <div class="languageContainer">
+                            <h2 class="headerWithButton">
+                                <button type="button" class="item-create" id="language">+</button>
+                                <label>Languages</label>
+                            </h2>
+                            <ol class="single-column-list">
+                                {{#each actor.system.language as |item id|}}
+                                    <li class="item" data-item-id="{{item._id}}">
+                                        <div class="itemInfo">
+                                            <img class="item-img" src="{{item.img}}" title="Send to Chat"/>
+                                            <div class="item-name">{{item.name}}</div>
+                                        </div>
+                                        <div class="item-controls">
+                                            <a class="item-control item-delete" title="Delete Item"><i class="fas fa-trash"></i></a>
+                                        </div>
+                                    </li>
+                                {{/each}}
+                            </ol>
+                        </div>
+                        <div class="factionContainer">
+                            <h2 class="headerWithButton">
+                                <button type="button" class="item-create" id="faction">+</button>
+                                <label>Factions</label>
+                            </h2>
+                            <ol class="single-column-list">
+                                {{#each actor.system.faction as |item id|}}
+                                    <li class="item" data-item-id="{{item._id}}">
+                                        <div class="itemInfo">
+                                            <img class="item-img" src="{{item.img}}" title="Send to Chat"/>
+                                            <div class="item-name">{{item.name}}</div>
+                                        </div>
+                                        <div class="item-controls">
+                                            <a class="item-control item-delete" title="Delete Item"><i class="fas fa-trash"></i></a>
+                                        </div>
+                                    </li>
+                                {{/each}}
+                            </ol>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+        </section>
+    </div>
+</form>
