@@ -511,6 +511,8 @@ export async function applyDamage(actor, damage, damageType = DAMAGE_TYPES.PHYSI
     // Optional: enable RAW weapon-quality bonuses.
     weapon = null,
     attackerActor = null,
+    // For magic wounds: track damage by type for proper wound side effects
+    damageAppliedByType = null,
   } = options;
 
   if (!actor?.system) {
@@ -640,7 +642,7 @@ export async function applyDamage(actor, damage, damageType = DAMAGE_TYPES.PHYSI
       amountApplied: finalDamageAdjusted,
       hitLocation,
       damageType,
-      damageAppliedByType: null,
+      damageAppliedByType: damageAppliedByType,
       woundThreshold,
       woundTriggered: isWounded === true
     });
@@ -1090,6 +1092,9 @@ export async function applyHealing(actor, healing, options = {}) {
   // Healing should not reveal current/max HP by default to avoid metagame information.
   // Set { revealHP: true } explicitly if a specific workflow needs it.
   const revealHP = options?.revealHP === true;
+  
+  // For magic healing workflow, skip chat message since it's already shown in the opposed card
+  const skipChatMessage = options?.skipChatMessage === true;
 
   const messageContent = `
     <div class="uesrpg-healing-applied">
@@ -1104,7 +1109,8 @@ export async function applyHealing(actor, healing, options = {}) {
   `;
 
   // Avoid chat spam when no HP is actually restored (but still dispatch the hook for Bleeding reduction).
-  if (effectiveHealed > 0) {
+  // Also skip chat message if requested (e.g., for magic healing where opposed card already shows result).
+  if (effectiveHealed > 0 && !skipChatMessage) {
     await ChatMessage.create({
       user: game.user.id,
       speaker: ChatMessage.getSpeaker({ actor: updateTarget }),

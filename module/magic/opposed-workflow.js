@@ -78,6 +78,13 @@ function _fmtDegree(result) {
   return `<span style="color: red;">${deg} DoF</span>`;
 }
 
+function _extractTN(tnObj) {
+  if (tnObj == null) return "—";
+  if (typeof tnObj === 'object' && tnObj.finalTN != null) return tnObj.finalTN;
+  if (typeof tnObj === 'number') return tnObj;
+  return "—";
+}
+
 function _getMessageState(message) {
   const raw = message?.flags?.[_FLAG_NS]?.[_FLAG_KEY];
   if (!raw || typeof raw !== "object") return null;
@@ -194,8 +201,8 @@ function _renderCard(data, messageId) {
   const spellMpSpent = revealChoices ? (Number(a.mpSpent ?? 0) || 0) : "—";
   const spellMpRefund = revealChoices ? (Number(a.mpRefund ?? 0) || 0) : 0;
 
-  const aTN = revealChoices && a.tn?.finalTN != null ? String(a.tn.finalTN) : "—";
-  const dTN = revealChoices && d.tn?.finalTN != null ? String(d.tn.finalTN) : (revealChoices && d.tn != null ? String(d.tn) : "—");
+  const aTN = revealChoices ? String(_extractTN(a.tn)) : "—";
+  const dTN = revealChoices ? String(_extractTN(d.tn)) : "—";
 
   const aRollLine = a.result
     ? (a.result.noRoll
@@ -280,11 +287,28 @@ function _renderCard(data, messageId) {
     // Build detailed result line
     const aResult = data.attacker?.result;
     const dResult = data.defender?.result;
-    const aTN = data.attacker?.tn ?? "—";
-    const dTN = data.defender?.tn ?? "—";
+    const aTN = _extractTN(data.attacker?.tn);
+    const dTN = _extractTN(data.defender?.tn);
     
     let resultsHtml = "";
-    if (aResult && dResult) {
+    // For healing spells (healingDirect), only show caster's result and healing amount
+    if (Boolean(data.context?.healingDirect)) {
+      if (aResult) {
+        const aRoll = aResult.rollTotal ?? "—";
+        const aDeg = Math.abs(aResult.degree ?? 0);
+        const aDoSLabel = (aResult.isSuccess || false) ? "DoS" : "DoF";
+        const healingApplied = data.outcome?.healingApplied;
+        const healingHTML = data.outcome?.healingRollHTML ?? "";
+        
+        resultsHtml = `
+          <div style="margin-top:6px; font-size:12px; line-height:1.5;">
+            <div><b>Casting Test:</b> ${aRoll} vs TN ${aTN} — ${aDeg} ${aDoSLabel}</div>
+            ${healingApplied != null ? `<div><b>Healing:</b> <span style="color:#388e3c;font-weight:bold;">+${healingApplied} HP</span></div>` : ""}
+            ${healingHTML ? `<div style="margin-top:4px;">${healingHTML}</div>` : ""}
+          </div>
+        `;
+      }
+    } else if (aResult && dResult) {
       const aRoll = aResult.rollTotal ?? "—";
       const dRoll = dResult.rollTotal ?? "—";
       const aDeg = Math.abs(aResult.degree ?? 0);
@@ -304,7 +328,7 @@ function _renderCard(data, messageId) {
       <div style="margin-top:10px; padding:8px; background:rgba(0,0,0,0.05); border-left:3px solid ${color};">
         <div style="font-weight:700;">${String(data.outcome.text ?? "Resolved")}</div>
         ${resultsHtml}
-        ${data.outcome.attackerWins ? `<div style="margin-top:4px; font-size:12px; opacity:0.9;">Damage is applied automatically. Details are whispered to the GM.</div>` : ""}
+        ${data.outcome.attackerWins && !Boolean(data.context?.healingDirect) ? `<div style="margin-top:4px; font-size:12px; opacity:0.9;">Damage is applied automatically. Details are whispered to the GM.</div>` : ""}
       </div>
     `;
   } else if (bankMode && !bothCommitted) {
@@ -1220,6 +1244,11 @@ export const MagicOpposedWorkflow = {
         const healRoll = await rollSpellHealing(spell, { isCritical });
         const healValue = Number(healRoll.total) || 0;
         const rollHTML = await healRoll.render();
+        
+        // Store healing info in data for chat card display
+        data.outcome.healingApplied = healValue;
+        data.outcome.healingRollHTML = rollHTML;
+        
         await applyMagicHealing(defender, healValue, spell, {
           isCritical,
           rollHTML,
@@ -1324,6 +1353,11 @@ export const MagicOpposedWorkflow = {
         const healRoll = await rollSpellHealing(spell, { isCritical });
         const healValue = Number(healRoll.total) || 0;
         const rollHTML = await healRoll.render();
+        
+        // Store healing info in data for chat card display
+        data.outcome.healingApplied = healValue;
+        data.outcome.healingRollHTML = rollHTML;
+        
         await applyMagicHealing(defender, healValue, spell, {
           isCritical,
           rollHTML,
@@ -1427,6 +1461,11 @@ export const MagicOpposedWorkflow = {
         const healRoll = await rollSpellHealing(spell, { isCritical });
         const healValue = Number(healRoll.total) || 0;
         const rollHTML = await healRoll.render();
+        
+        // Store healing info in data for chat card display
+        data.outcome.healingApplied = healValue;
+        data.outcome.healingRollHTML = rollHTML;
+        
         await applyMagicHealing(defender, healValue, spell, {
           isCritical,
           rollHTML,

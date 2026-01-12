@@ -50,24 +50,16 @@
       <div class="attributes-compact">
         <section class="attribute-section">
           <h4>Combat</h4>
-          <div class="attribute-row">
+          <div class="attribute-row" style="display: flex; align-items: center; gap: 15px;">
             <label class="checkbox-label">
               <input type="checkbox" name="system.isAttackSpell" {{checked item.system.isAttackSpell}} />
               Attack Spell
             </label>
-          </div>
-          <div class="attribute-row">
-            <label class="checkbox-label">
-              <input type="checkbox" name="system.isHealingSpell" {{checked item.system.isHealingSpell}} />
-              Healing Spell
-            </label>
-          </div>
-          <div class="attribute-row">
-            <label>Damage Type</label>
+            <label style="margin-left: 10px;">Damage Type</label>
             <select name="system.damageType" style="width: 150px;">
               {{selectOptions item.system.damageTypes selected=item.system.damageType}}
             </select>
-            <input type="text" name="system.damageFormula" value="{{item.system.damageFormula}}" placeholder="1d6" style="width: 100px; margin-left: 10px;" />
+            <input type="text" name="system.damageFormula" value="{{item.system.damageFormula}}" placeholder="1d6" style="width: 100px;" />
           </div>
           <p class="hint">Healing spells restore HP. Attack spells use opposed rolls. Direct spells cannot be defended.</p>
         </section>
@@ -118,15 +110,15 @@
             </label>
           </div>
           {{/if}}
-          <div class="attribute-row">
+          <div class="attribute-row" style="display: flex; align-items: center; gap: 10px;">
             <label>Duration</label>
-            <input type="number" name="system.duration.value" value="{{item.system.duration.value}}" min="0" style="width: 80px;" />
-            <select name="system.duration.unit" style="width: 120px; margin-left: 10px;">
+            {{#unless (or (eq item.system.duration.unit "instant") (eq item.system.duration.unit "permanent"))}}
+              <input type="number" name="system.duration.value" value="{{item.system.duration.value}}" min="0" style="width: 80px;" />
+            {{/unless}}
+            <select name="system.duration.unit" style="width: 120px;">
               {{selectOptions item.system.duration.units selected=item.system.duration.unit}}
             </select>
-          </div>
-          <div class="attribute-row">
-            <label>Mindlock</label>
+            <label style="margin-left: 20px;">Mindlock</label>
             <input type="number" name="system.mindlockValue" value="{{item.system.mindlockValue}}" min="0" style="width: 60px;" />
             <span class="hint" style="margin-left: 8px;">Reduces max AP while active</span>
           </div>
