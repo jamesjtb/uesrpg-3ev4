@@ -310,12 +310,14 @@ function _renderCard(data, messageId) {
         const aDeg = Math.abs(aResult.degree ?? 0);
         const aDoSLabel = (aResult.isSuccess || false) ? "DoS" : "DoF";
         const healingApplied = data.outcome?.healingApplied;
-        const healingHTML = data.outcome?.healingRollHTML ?? "";
+        const tempHealingApplied = data.outcome?.tempHealingApplied;
+        const healingHTML = data.outcome?.healingRollHTML ?? data.outcome?.tempHealingRollHTML ?? "";
         
         resultsHtml = `
           <div style="margin-top:6px; font-size:12px; line-height:1.5;">
             <div><b>Casting Test:</b> ${aRoll} vs TN ${aTN} — ${aDeg} ${aDoSLabel}</div>
             ${healingApplied != null ? `<div><b>Healing:</b> <span style="color:#388e3c;font-weight:bold;">+${healingApplied} HP</span></div>` : ""}
+            ${tempHealingApplied != null ? `<div><b>Temporary HP:</b> <span style="color:#2196f3;font-weight:bold;">+${tempHealingApplied} Temp HP</span></div>` : ""}
             ${healingHTML ? `<div style="margin-top:4px;">${healingHTML}</div>` : ""}
           </div>
         `;
@@ -1277,6 +1279,13 @@ export const MagicOpposedWorkflow = {
 
       const damageType = getSpellDamageType(spell);
 
+      console.log("UESRPG | _resolveOutcome: directUndefendable spell", {
+        spellName: spell.name,
+        damageType,
+        isHealingType: _isHealingType(damageType),
+        defender: defender.name
+      });
+
       // Healing: roll and apply immediately (includes temporary healing).
       if (_isHealingType(damageType)) {
         const healRoll = await rollSpellHealing(spell, { isCritical });
@@ -1284,6 +1293,14 @@ export const MagicOpposedWorkflow = {
         const rollHTML = await healRoll.render();
         
         const isTemporaryHealing = (damageType === "temporaryhealing" || damageType === "temporary healing");
+        
+        console.log("UESRPG | _resolveOutcome: Healing spell details", {
+          spellName: spell.name,
+          damageType,
+          isTemporaryHealing,
+          healValue,
+          defender: defender.name
+        });
         
         // Store healing info in data for chat card display
         if (isTemporaryHealing) {
@@ -1294,12 +1311,21 @@ export const MagicOpposedWorkflow = {
           data.outcome.healingRollHTML = rollHTML;
         }
         
+        console.log("UESRPG | _resolveOutcome: Calling applyMagicHealing", {
+          defender: defender.name,
+          healValue,
+          isTemporary: isTemporaryHealing,
+          source: spell.name
+        });
+        
         await applyMagicHealing(defender, healValue, spell, {
           isTemporary: isTemporaryHealing,
           isCritical,
           rollHTML,
           source: spell.name
         });
+
+        console.log("UESRPG | _resolveOutcome: applyMagicHealing completed");
 
         await _updateCard(message, data);
         return;

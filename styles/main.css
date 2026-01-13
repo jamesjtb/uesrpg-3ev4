@@ -2283,20 +2283,110 @@
   margin-right: 0.5rem;
 }
 
-/* Universal item sheet effect styling - compact 32x32 icons (Issue #4 fix) */
-.worldbuilding.sheet.item .effects-list .effect-icon {
+/* ===== ACTIVE EFFECTS STYLING - ALL ITEM SHEETS ===== */
+
+/* Effects list layout */
+.worldbuilding.sheet.item .effects-list {
+  list-style: none;
+  padding: 0;
+  margin: 10px 0;
+  overflow-y: auto;
+  max-height: calc(100vh - 400px); /* Prevent infinite scroll */
+}
+
+.worldbuilding.sheet.item .effects-list .effect {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 8px;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+  background: rgba(0, 0, 0, 0.02);
+  transition: background 0.2s ease;
+}
+
+.worldbuilding.sheet.item .effects-list .effect:hover {
+  background: rgba(0, 0, 0, 0.05);
+}
+
+/* CRITICAL: Effect icon sizing - force 32x32 for all item types */
+.worldbuilding.sheet.item .effects-list .effect-icon,
+.worldbuilding.sheet.spell .effects-list .effect-icon,
+.worldbuilding.sheet.weapon .effects-list .effect-icon,
+.worldbuilding.sheet.armor .effects-list .effect-icon,
+.worldbuilding.sheet.item .effect-icon {
   width: 32px !important;
   height: 32px !important;
+  min-width: 32px;
+  min-height: 32px;
   max-width: 32px;
   max-height: 32px;
   object-fit: contain;
+  border: 1px solid rgba(0, 0, 0, 0.2);
+  border-radius: 3px;
+  flex-shrink: 0;
   flex: 0 0 32px;
 }
 
-/* Prevent default Foundry large icon sizing on item sheets */
-.worldbuilding.sheet.item .effect-icon {
-  width: 32px;
-  height: 32px;
+/* Effect name */
+.worldbuilding.sheet.item .effects-list .effect-name {
+  flex: 1;
+  font-size: 14px;
+  font-weight: 500;
+  margin: 0;
+  color: #333;
+}
+
+/* Effect controls */
+.worldbuilding.sheet.item .effects-list .effect-controls {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+}
+
+.worldbuilding.sheet.item .effects-list .effect-control {
+  padding: 4px 6px;
+  border: 1px solid rgba(0, 0, 0, 0.2);
+  border-radius: 3px;
+  background: rgba(255, 255, 255, 0.3);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-size: 12px;
+  line-height: 1;
+}
+
+.worldbuilding.sheet.item .effects-list .effect-control:hover {
+  background: rgba(0, 100, 200, 0.2);
+  border-color: #0064c8;
+}
+
+/* Effects header */
+.worldbuilding.sheet.item .effects-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 0;
+  border-bottom: 2px solid rgba(0, 0, 0, 0.2);
+  margin-bottom: 10px;
+}
+
+.worldbuilding.sheet.item .effects-header h3 {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.worldbuilding.sheet.item .effects-header .effect-control {
+  padding: 6px 10px;
+  background: rgba(0, 100, 0, 0.1);
+  border: 1px solid rgba(0, 100, 0, 0.3);
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background 0.2s ease;
+  font-size: 14px;
+}
+
+.worldbuilding.sheet.item .effects-header .effect-control:hover {
+  background: rgba(0, 100, 0, 0.2);
 }
 .effects-list .effect-name {
   flex: 1;

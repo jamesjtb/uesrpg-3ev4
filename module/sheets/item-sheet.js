@@ -11,8 +11,8 @@ export class SimpleItemSheet extends foundry.appv1.sheets.ItemSheet {
   static get defaultOptions() {
     return foundry.utils.mergeObject(super.defaultOptions, {
       classes: ["worldbuilding", "sheet", "item"],
-      width: 480,
-      height: 520,
+      width: 520,
+      height: 600,  // Increased default height to ensure content is visible
       tabs: [{ navSelector: ".sheet-tabs", contentSelector: ".sheet-body", initial: "description" }],
       // Explicitly keep core ItemSheet behavior deterministic.
       // Some worlds/users run with non-default sheet settings; Combat Style editing relies on submit-on-close.

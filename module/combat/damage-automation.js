@@ -1089,13 +1089,22 @@ async function _applyForcefulImpact(targetActor, hitLocation) {
 export async function applyHealing(actor, healing, options = {}) {
   const { source = "Healing" } = options;
 
+  console.log("UESRPG | applyHealing CALLED", {
+    actor: actor?.name,
+    healing,
+    source,
+    isTemporary: options.isTemporary
+  });
+
   if (!actor?.system) {
+    console.error("UESRPG | applyHealing: Invalid actor");
     ui.notifications.error("Invalid actor for healing");
     return null;
   }
 
   // NEW: Check if this is temporary HP grant
   if (options.isTemporary === true) {
+    console.log("UESRPG | applyHealing: Routing to applyTemporaryHP");
     return await applyTemporaryHP(actor, healing, source, options);
   }
 
@@ -1195,26 +1204,52 @@ export async function applyHealing(actor, healing, options = {}) {
  * @param {object} options
  */
 async function applyTemporaryHP(actor, amount, source = "Spell", options = {}) {
+  console.log("UESRPG | applyTemporaryHP CALLED", {
+    actor: actor?.name,
+    amount,
+    source,
+    currentTempHP: actor?.system?.hp?.temp
+  });
+
   if (!actor?.system) {
+    console.error("UESRPG | applyTemporaryHP: Invalid actor");
     ui.notifications.error("Invalid actor for temporary HP");
     return null;
   }
 
   const grantAmount = Math.max(0, Number(amount || 0));
-  if (grantAmount === 0) return null;
+  if (grantAmount === 0) {
+    console.warn("UESRPG | applyTemporaryHP: Grant amount is 0");
+    return null;
+  }
 
   const currentTempHP = Number(actor.system?.hp?.temp ?? 0);
+
+  console.log(`UESRPG | applyTemporaryHP: Current temp HP: ${currentTempHP}, Grant amount: ${grantAmount}`);
 
   // RAW: Temp HP doesn't stack - take the higher value
   const newTempHP = Math.max(currentTempHP, grantAmount);
   const actualGranted = newTempHP - currentTempHP;
 
+  console.log(`UESRPG | applyTemporaryHP: New temp HP: ${newTempHP}, Actual granted: ${actualGranted}`);
+
   const activeToken = actor.token ?? actor.getActiveTokens?.()[0] ?? null;
   const isUnlinkedToken = !!(activeToken && actor.prototypeToken && actor.prototypeToken.actorLink === false);
   const updateTarget = isUnlinkedToken ? activeToken.actor : actor;
 
+  console.log(`UESRPG | applyTemporaryHP: Update target: ${updateTarget?.name}, isUnlinked: ${isUnlinkedToken}`);
+
   if (newTempHP !== currentTempHP) {
-    await requestUpdateDocument(updateTarget, { "system.hp.temp": newTempHP });
+    try {
+      console.log(`UESRPG | applyTemporaryHP: Updating actor with temp HP: ${newTempHP}`);
+      await requestUpdateDocument(updateTarget, { "system.hp.temp": newTempHP });
+      console.log("UESRPG | applyTemporaryHP: Actor updated successfully");
+    } catch (err) {
+      console.error("UESRPG | applyTemporaryHP: Actor update FAILED", err);
+      return null;
+    }
+  } else {
+    console.log("UESRPG | applyTemporaryHP: No update needed, temp HP unchanged");
   }
 
   const rollHTML = String(options?.rollHTML ?? "");
