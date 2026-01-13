@@ -105,6 +105,18 @@ function _isHealingType(damageType) {
   return dt === "healing" || dt === "temporaryhealing" || dt === "temporary healing";
 }
 
+/**
+ * Check if a damage type is temporary healing (normalized comparison).
+ * Handles case variations and both "temporaryhealing" and "temporary healing" formats.
+ * @param {string} damageType
+ * @returns {boolean}
+ */
+function _isTemporaryHealingType(damageType) {
+  if (!damageType) return false;
+  const dt = String(damageType).toLowerCase().trim();
+  return dt === "temporaryhealing" || dt === "temporary healing";
+}
+
 function _isBankChoicesEnabledForData(data) {
   // Magic banked choices enabled by default (same as combat)
   return true;
@@ -1278,9 +1290,11 @@ export const MagicOpposedWorkflow = {
       }
 
       const damageType = getSpellDamageType(spell);
+      const rawDamageType = spell?.system?.damageType;
 
       console.log("UESRPG | _resolveOutcome: directUndefendable spell", {
         spellName: spell.name,
+        rawDamageType,
         damageType,
         isHealingType: _isHealingType(damageType),
         defender: defender.name
@@ -1292,11 +1306,13 @@ export const MagicOpposedWorkflow = {
         const healValue = Number(healRoll.total) || 0;
         const rollHTML = await healRoll.render();
         
-        const isTemporaryHealing = (damageType === "temporaryhealing" || damageType === "temporary healing");
+        // Normalized check for temporary healing (handles case and spacing variations)
+        const isTemporaryHealing = _isTemporaryHealingType(damageType);
         
         console.log("UESRPG | _resolveOutcome: Healing spell details", {
           spellName: spell.name,
           damageType,
+          normalizedDamageType: String(damageType || "").toLowerCase().trim(),
           isTemporaryHealing,
           healValue,
           defender: defender.name
@@ -1419,6 +1435,7 @@ export const MagicOpposedWorkflow = {
       };
 
       const damageType = getSpellDamageType(spell);
+      const rawDamageType = spell?.system?.damageType;
 
       // Healing: roll and apply immediately (includes temporary healing).
       if (_isHealingType(damageType)) {
@@ -1426,7 +1443,18 @@ export const MagicOpposedWorkflow = {
         const healValue = Number(healRoll.total) || 0;
         const rollHTML = await healRoll.render();
         
-        const isTemporaryHealing = (damageType === "temporaryhealing" || damageType === "temporary healing");
+        // Normalized check for temporary healing (handles case and spacing variations)
+        const isTemporaryHealing = _isTemporaryHealingType(damageType);
+        
+        console.log("UESRPG | _resolveOutcome: Healing spell details (opposed)", {
+          spellName: spell.name,
+          rawDamageType,
+          damageType,
+          normalizedDamageType: String(damageType || "").toLowerCase().trim(),
+          isTemporaryHealing,
+          healValue,
+          defender: defender.name
+        });
         
         // Store healing info in data for chat card display
         if (isTemporaryHealing) {
@@ -1436,6 +1464,13 @@ export const MagicOpposedWorkflow = {
           data.outcome.healingApplied = healValue;
           data.outcome.healingRollHTML = rollHTML;
         }
+        
+        console.log("UESRPG | _resolveOutcome: Calling applyMagicHealing (opposed)", {
+          defender: defender.name,
+          healValue,
+          isTemporary: isTemporaryHealing,
+          source: spell.name
+        });
         
         await applyMagicHealing(defender, healValue, spell, {
           isTemporary: isTemporaryHealing,
@@ -1542,11 +1577,39 @@ export const MagicOpposedWorkflow = {
         const healValue = Number(healRoll.total) || 0;
         const rollHTML = await healRoll.render();
         
+        // Check for temporary healing
+        const damageType = getSpellDamageType(spell);
+        const rawDamageType = spell?.system?.damageType;
+        const isTemporaryHealing = _isTemporaryHealingType(damageType);
+        
+        console.log("UESRPG | _resolveOutcome: Healing direct spell details", {
+          spellName: spell.name,
+          rawDamageType,
+          damageType,
+          normalizedDamageType: String(damageType || "").toLowerCase().trim(),
+          isTemporaryHealing,
+          healValue,
+          defender: defender.name
+        });
+        
         // Store healing info in data for chat card display
-        data.outcome.healingApplied = healValue;
-        data.outcome.healingRollHTML = rollHTML;
+        if (isTemporaryHealing) {
+          data.outcome.tempHealingApplied = healValue;
+          data.outcome.tempHealingRollHTML = rollHTML;
+        } else {
+          data.outcome.healingApplied = healValue;
+          data.outcome.healingRollHTML = rollHTML;
+        }
+        
+        console.log("UESRPG | _resolveOutcome: Calling applyMagicHealing (healingDirect)", {
+          defender: defender.name,
+          healValue,
+          isTemporary: isTemporaryHealing,
+          source: spell.name
+        });
         
         await applyMagicHealing(defender, healValue, spell, {
+          isTemporary: isTemporaryHealing,
           isCritical,
           rollHTML,
           source: spell.name
