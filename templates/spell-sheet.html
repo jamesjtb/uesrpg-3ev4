@@ -135,7 +135,7 @@
       <ol class="effects-list">
         {{#each effects as |effect id|}}
         <li class="effect flexrow" data-effect-id="{{effect._id}}">
-          <img src="{{effect.img}}" title="{{effect.name}}"/>
+          <img class="effect-icon" src="{{effect.img}}" title="{{effect.name}}" alt="{{effect.name}}"/>
           <h4 class="effect-name">{{effect.name}}</h4>
           <div class="effect-controls">
             <a class="effect-control" data-action="edit" data-effect-id="{{effect._id}}" title="Edit Effect"><i class="fas fa-edit"></i></a>

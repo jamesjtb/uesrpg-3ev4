@@ -137,9 +137,28 @@ export async function applyMagicDamage(targetActor, damage, damageType, spell, o
  * @param {boolean} options.isTemporary - If true, grants temp HP instead of restoring HP
  */
 export async function applyMagicHealing(targetActor, healing, spell, options = {}) {
-  if (!targetActor) return null;
+  console.log("UESRPG | applyMagicHealing CALLED", {
+    targetActor: targetActor?.name,
+    healing,
+    spellName: spell?.name,
+    isTemporary: options.isTemporary
+  });
+
+  if (!targetActor) {
+    console.error("UESRPG | applyMagicHealing: No target actor");
+    return null;
+  }
+
   const source = _str(options.source ?? spell?.name ?? "Spell");
   const rollHTML = _str(options.rollHTML);
+  
+  console.log("UESRPG | applyMagicHealing: Calling applyHealing", {
+    targetActor: targetActor.name,
+    healing: Number(healing || 0),
+    source,
+    isTemporary: options.isTemporary === true
+  });
+
   return applyHealing(targetActor, Number(healing || 0), {
     source,
     rollHTML,
