@@ -34,7 +34,10 @@
   border-right: rgb(0, 0, 0) 5px solid;
   border-bottom: rgb(0, 0, 0) 5px solid;
   box-shadow: 5px 5px 30px 5px;
-  overflow-y: auto;
+  overflow: visible; /* CHANGED - allow child elements to manage scroll */
+  display: flex;
+  flex-direction: column;
+  height: 100%;
 }
 
 .window-title {
@@ -1806,8 +1809,9 @@
 /* Sheet body - scrollable container */
 .worldbuilding.sheet.item .sheet-body {
   flex: 1 1 auto;
-  min-height: 0;
-  overflow: hidden;
+  min-height: 0; /* Critical for flex child scrolling */
+  overflow-y: auto; /* Allow vertical scroll */
+  overflow-x: hidden; /* Prevent horizontal scroll */
   display: flex;
   flex-direction: column;
   padding: 6px;
@@ -1890,8 +1894,8 @@
 /* ProseMirror editor should fill container */
 .worldbuilding.sheet.item .ProseMirror {
   min-height: 200px;
-  height: 100% !important;
-  max-height: none !important;
+  max-height: 100%; /* Don't exceed container */
+  overflow-y: auto;
 }
 
 /* Ensure TinyMCE body doesn't force size */
@@ -1903,11 +1907,12 @@
 /* Equipment item sheets (armor/weapon/ammunition) scroll fix */
 .worldbuilding.sheet.item.armor .sheet-body,
 .worldbuilding.sheet.item.weapon .sheet-body,
-.worldbuilding.sheet.item.ammunition .sheet-body {
+.worldbuilding.sheet.item.ammunition .sheet-body,
+.worldbuilding.sheet.item.spell .sheet-body {
   flex: 1 1 auto;
   min-height: 0;
-  overflow-y: auto;
-  overflow-x: hidden;
+  overflow-y: auto !important; /* Force scroll on all item types */
+  overflow-x: hidden !important;
 }
 
 /* Ensure tab containers don't inflate */
