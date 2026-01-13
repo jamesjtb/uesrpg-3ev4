@@ -1267,38 +1267,25 @@ export const MagicOpposedWorkflow = {
 
       const damageType = getSpellDamageType(spell);
 
-      // Healing: roll and apply immediately.
-      if (damageType === "healing") {
+      // Healing: roll and apply immediately (includes temporary healing).
+      if (damageType === "healing" || damageType === "temporaryhealing" || damageType === "temporary healing") {
         const healRoll = await rollSpellHealing(spell, { isCritical });
         const healValue = Number(healRoll.total) || 0;
         const rollHTML = await healRoll.render();
         
+        const isTemporaryHealing = (damageType === "temporaryhealing" || damageType === "temporary healing");
+        
         // Store healing info in data for chat card display
-        data.outcome.healingApplied = healValue;
-        data.outcome.healingRollHTML = rollHTML;
+        if (isTemporaryHealing) {
+          data.outcome.tempHealingApplied = healValue;
+          data.outcome.tempHealingRollHTML = rollHTML;
+        } else {
+          data.outcome.healingApplied = healValue;
+          data.outcome.healingRollHTML = rollHTML;
+        }
         
         await applyMagicHealing(defender, healValue, spell, {
-          isCritical,
-          rollHTML,
-          source: spell.name
-        });
-
-        await _updateCard(message, data);
-        return;
-      }
-
-      // Temporary Healing: roll and apply temp HP.
-      if (damageType === "temporaryHealing") {
-        const { applyTemporaryHealing } = await import("./damage-application.js");
-        const tempHealRoll = await rollSpellHealing(spell, { isCritical });
-        const tempHpValue = Number(tempHealRoll.total) || 0;
-        const rollHTML = await tempHealRoll.render();
-        
-        // Store temp healing info in data for chat card display
-        data.outcome.tempHealingApplied = tempHpValue;
-        data.outcome.tempHealingRollHTML = rollHTML;
-        
-        await applyTemporaryHealing(defender, tempHpValue, spell, {
+          isTemporary: isTemporaryHealing,
           isCritical,
           rollHTML,
           source: spell.name
@@ -1397,38 +1384,25 @@ export const MagicOpposedWorkflow = {
 
       const damageType = getSpellDamageType(spell);
 
-      // Healing: roll and apply immediately.
-      if (damageType === "healing") {
+      // Healing: roll and apply immediately (includes temporary healing).
+      if (damageType === "healing" || damageType === "temporaryhealing" || damageType === "temporary healing") {
         const healRoll = await rollSpellHealing(spell, { isCritical });
         const healValue = Number(healRoll.total) || 0;
         const rollHTML = await healRoll.render();
         
+        const isTemporaryHealing = (damageType === "temporaryhealing" || damageType === "temporary healing");
+        
         // Store healing info in data for chat card display
-        data.outcome.healingApplied = healValue;
-        data.outcome.healingRollHTML = rollHTML;
+        if (isTemporaryHealing) {
+          data.outcome.tempHealingApplied = healValue;
+          data.outcome.tempHealingRollHTML = rollHTML;
+        } else {
+          data.outcome.healingApplied = healValue;
+          data.outcome.healingRollHTML = rollHTML;
+        }
         
         await applyMagicHealing(defender, healValue, spell, {
-          isCritical,
-          rollHTML,
-          source: spell.name
-        });
-
-        await _updateCard(message, data);
-        return;
-      }
-
-      // Temporary Healing: roll and apply temp HP.
-      if (damageType === "temporaryHealing") {
-        const { applyTemporaryHealing } = await import("./damage-application.js");
-        const tempHealRoll = await rollSpellHealing(spell, { isCritical });
-        const tempHpValue = Number(tempHealRoll.total) || 0;
-        const rollHTML = await tempHealRoll.render();
-        
-        // Store temp healing info in data for chat card display
-        data.outcome.tempHealingApplied = tempHpValue;
-        data.outcome.tempHealingRollHTML = rollHTML;
-        
-        await applyTemporaryHealing(defender, tempHpValue, spell, {
+          isTemporary: isTemporaryHealing,
           isCritical,
           rollHTML,
           source: spell.name

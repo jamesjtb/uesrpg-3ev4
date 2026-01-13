@@ -134,6 +134,7 @@ export async function applyMagicDamage(targetActor, damage, damageType, spell, o
  * @param {number} healing
  * @param {Item} spell
  * @param {object} options
+ * @param {boolean} options.isTemporary - If true, grants temp HP instead of restoring HP
  */
 export async function applyMagicHealing(targetActor, healing, spell, options = {}) {
   if (!targetActor) return null;
@@ -142,6 +143,7 @@ export async function applyMagicHealing(targetActor, healing, spell, options = {
   return applyHealing(targetActor, Number(healing || 0), {
     source,
     rollHTML,
+    isTemporary: options.isTemporary === true,
     // Per user requirement: omit current/max HP line to reduce metagame information.
     hideHpLine: true,
     // Skip chat message since healing is already shown in the magic opposed card
