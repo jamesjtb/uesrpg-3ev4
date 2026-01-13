@@ -1954,8 +1954,9 @@ async _onDefendRoll(event) {
     
     const castActionType = String(event?.currentTarget?.dataset?.actionType ?? "primary");
 
-    // NEW: Check Action Points BEFORE anything else
-    const requiredAP = castActionType === "secondary" ? 1 : 2; // Secondary = 1 AP, Primary = 2 AP
+    // FIXED: Check Action Points BEFORE anything else
+    // Casting magic costs 1 AP (RAW default) - individual spells can override via spell.system.apCost (future enhancement)
+    const requiredAP = 1; // CHANGED from conditional (was: castActionType === "secondary" ? 1 : 2)
     const currentAP = Number(this.actor?.system?.action_points?.value ?? 0);
     
     if (currentAP < requiredAP) {
