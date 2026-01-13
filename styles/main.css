@@ -1786,14 +1786,17 @@
 }
 /* === ITEM SHEET STRUCTURE === */
 
-/* Window content base - ensure proper scrolling */
+/* Window content base - single scroll container */
 .worldbuilding.sheet.item .window-content {
   display: flex;
   flex-direction: column;
-  overflow-y: auto; /* Ensure parent can scroll */
+  overflow-y: auto;
+  overflow-x: hidden;
+  height: 100%;
+  max-height: 100%;
 }
 
-/* Sticky header - fixed size */
+/* Sticky header - fixed size, stays at top when scrolling */
 .worldbuilding.sheet.item .stickyHeader {
   flex: 0 0 auto;
   position: sticky;
@@ -1801,38 +1804,44 @@
   z-index: 10;
   background: url("../images/parchment5.jpg") repeat;
   background-size: contain;
+  /* Ensure header doesn't overlay content */
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
-/* Sheet body - allow natural flex layout */
+/* Sheet body - flex container, no overflow (parent handles scroll) */
 .worldbuilding.sheet.item .sheet-body {
   flex: 1 1 auto;
-  overflow-y: visible; /* CHANGED - let parent handle scroll */
-  overflow-x: hidden;
+  overflow: hidden; /* Prevent nested scrolling */
   padding: 6px;
+  min-height: 0; /* Allow flex shrinking */
 }
 
-/* All tabs hidden by default - use natural layout */
+/* All tabs hidden by default - no overflow */
 .worldbuilding.sheet.item .sheet-body > .tab {
   display: none;
-  overflow: visible; /* CHANGED - let parent handle scroll */
+  overflow: hidden; /* Prevent nested scrolling */
+  height: 100%;
 }
 
 /* Active tab shown */
 .worldbuilding.sheet.item .sheet-body > .tab.active {
   display: flex;
   flex-direction: column;
+  height: 100%;
 }
 
-/* Description tab specific - natural layout */
+/* Description tab specific */
 .worldbuilding.sheet.item .sheet-body > .tab[data-tab="description"] {
   display: none;
-  overflow: visible; /* Let parent scroll */
+  overflow: hidden; /* Prevent nested scrolling */
   padding: 12px;
+  height: 100%;
 }
 
 .worldbuilding.sheet.item .sheet-body > .tab[data-tab="description"].active {
   display: flex;
   flex-direction: column;
+  height: 100%;
 }
 
 /* Editor within description tab */
@@ -1859,33 +1868,38 @@
   overflow-x: hidden;
 }
 
-/* Attributes tab - natural layout */
+/* Attributes tab - no nested scrolling */
 .worldbuilding.sheet.item .sheet-body > .tab[data-tab="attributes"] {
   display: none;
-  overflow: visible; /* Let parent scroll */
+  overflow: hidden; /* Prevent nested scrolling */
   padding: 12px;
+  height: 100%;
 }
 
 .worldbuilding.sheet.item .sheet-body > .tab[data-tab="attributes"].active {
   display: block;
+  height: 100%;
 }
 
-/* Effects tab - natural layout */
+/* Effects tab - no nested scrolling */
 .worldbuilding.sheet.item .sheet-body > .tab[data-tab="effects"] {
   display: none;
-  overflow: visible; /* Let parent scroll */
+  overflow: hidden; /* Prevent nested scrolling */
   padding: 12px;
+  height: 100%;
 }
 
 .worldbuilding.sheet.item .sheet-body > .tab[data-tab="effects"].active {
   display: block;
+  height: 100%;
 }
 
-/* ProseMirror editor should fill container */
+/* ProseMirror editor should fill container without creating nested scroll */
 .worldbuilding.sheet.item .ProseMirror {
   min-height: 200px;
-  max-height: 100%; /* Don't exceed container */
+  height: 100%;
   overflow-y: auto;
+  overflow-x: hidden;
 }
 
 /* Ensure TinyMCE body doesn't force size */
@@ -1894,17 +1908,32 @@
   min-height: 0 !important;
 }
 
-/* Equipment item sheets - removed aggressive !important overflow rules
-   that broke layout. Parent .window-content handles scrolling naturally. */
-/* .worldbuilding.sheet.item.armor .sheet-body,
-.worldbuilding.sheet.item.weapon .sheet-body,
-.worldbuilding.sheet.item.ammunition .sheet-body,
+/* Spell sheets use different template structure - ensure proper scrolling */
+.worldbuilding.sheet.item.spell .window-content {
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+  overflow-x: hidden;
+  height: 100%;
+  max-height: 100%;
+}
+
 .worldbuilding.sheet.item.spell .sheet-body {
   flex: 1 1 auto;
+  overflow: hidden; /* Prevent nested scrolling */
   min-height: 0;
-  overflow-y: auto !important;
-  overflow-x: hidden !important;
-} */
+}
+
+.worldbuilding.sheet.item.spell .sheet-body > .tab {
+  display: none;
+  overflow: hidden; /* Prevent nested scrolling */
+  height: 100%;
+}
+
+.worldbuilding.sheet.item.spell .sheet-body > .tab.active {
+  display: block;
+  height: 100%;
+}
 
 /* Ensure tab containers don't inflate - removed as part of overflow fix */
 /* .worldbuilding.sheet.item.armor .tab,
