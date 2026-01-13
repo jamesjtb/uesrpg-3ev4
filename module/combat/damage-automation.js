@@ -1208,7 +1208,7 @@ async function applyTemporaryHP(actor, amount, source = "Spell", options = {}) {
     actor: actor?.name,
     amount,
     source,
-    currentTempHP: actor?.system?.hp?.temp
+    currentTempHP: actor?.system?.tempHP ?? actor?.system?.hp?.temp ?? 0
   });
 
   if (!actor?.system) {
@@ -1223,7 +1223,8 @@ async function applyTemporaryHP(actor, amount, source = "Spell", options = {}) {
     return null;
   }
 
-  const currentTempHP = Number(actor.system?.hp?.temp ?? 0);
+  // Check both possible locations for backwards compatibility
+  const currentTempHP = Number(actor.system?.tempHP ?? actor.system?.hp?.temp ?? 0);
 
   console.log(`UESRPG | applyTemporaryHP: Current temp HP: ${currentTempHP}, Grant amount: ${grantAmount}`);
 
@@ -1242,7 +1243,11 @@ async function applyTemporaryHP(actor, amount, source = "Spell", options = {}) {
   if (newTempHP !== currentTempHP) {
     try {
       console.log(`UESRPG | applyTemporaryHP: Updating actor with temp HP: ${newTempHP}`);
-      await requestUpdateDocument(updateTarget, { "system.hp.temp": newTempHP });
+      // Update both fields for backwards compatibility, but system.tempHP is canonical
+      await requestUpdateDocument(updateTarget, { 
+        "system.tempHP": newTempHP,
+        "system.hp.temp": newTempHP 
+      });
       console.log("UESRPG | applyTemporaryHP: Actor updated successfully");
     } catch (err) {
       console.error("UESRPG | applyTemporaryHP: Actor update FAILED", err);
