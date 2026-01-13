@@ -151,50 +151,6 @@ export async function applyMagicHealing(targetActor, healing, spell, options = {
   });
 }
 
-/**
- * Apply temporary healing (temp HP) from spell.
- * Temp HP doesn't stack - takes the maximum of current and new value.
- * Temp HP doesn't exceed max HP.
- *
- * @param {Actor} targetActor
- * @param {number} tempHp - Amount of temporary HP to grant
- * @param {Item} spell
- * @param {object} options
- */
-export async function applyTemporaryHealing(targetActor, tempHp, spell, options = {}) {
-  if (!targetActor) return null;
-  
-  const amount = Number(tempHp || 0);
-  if (amount <= 0) return null;
-  
-  const source = _str(options.source ?? spell?.name ?? "Spell");
-  const currentTempHp = Number(targetActor.system.hp?.temp || 0);
-  
-  // Temp HP doesn't stack - take maximum of current and new value
-  const newTempHp = Math.max(currentTempHp, amount);
-  
-  // Update actor's temp HP
-  await targetActor.update({ "system.hp.temp": newTempHp });
-  
-  // Post chat card showing temp HP granted
-  const wasIncreased = newTempHp > currentTempHp;
-  const contentString = `
-    <div class="uesrpg-temp-healing-card">
-      <h3>${source}</h3>
-      <p><strong>${targetActor.name}</strong> ${wasIncreased ? 'gains' : 'already has'} <strong>${newTempHp}</strong> temporary HP.</p>
-      ${wasIncreased ? `<p class="temp-hp-detail">Previous temp HP: ${currentTempHp} → New temp HP: ${newTempHp}</p>` : ''}
-    </div>
-  `;
-  
-  await ChatMessage.create({
-    user: game.user.id,
-    speaker: ChatMessage.getSpeaker({ actor: targetActor }),
-    content: contentString
-  });
-  
-  return { tempHp: newTempHp, previous: currentTempHp };
-}
-
 
 // Legacy exports retained for compatibility (manual application lane not used by modern workflow).
 export function renderMagicDamageButtons() {

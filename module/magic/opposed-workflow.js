@@ -95,6 +95,16 @@ function _getMessageState(message) {
   return null;
 }
 
+/**
+ * Check if a damage type is a healing type (includes temporary healing).
+ * @param {string} damageType
+ * @returns {boolean}
+ */
+function _isHealingType(damageType) {
+  const dt = String(damageType || "").toLowerCase();
+  return dt === "healing" || dt === "temporaryhealing" || dt === "temporary healing";
+}
+
 function _isBankChoicesEnabledForData(data) {
   // Magic banked choices enabled by default (same as combat)
   return true;
@@ -1268,7 +1278,7 @@ export const MagicOpposedWorkflow = {
       const damageType = getSpellDamageType(spell);
 
       // Healing: roll and apply immediately (includes temporary healing).
-      if (damageType === "healing" || damageType === "temporaryhealing" || damageType === "temporary healing") {
+      if (_isHealingType(damageType)) {
         const healRoll = await rollSpellHealing(spell, { isCritical });
         const healValue = Number(healRoll.total) || 0;
         const rollHTML = await healRoll.render();
@@ -1385,7 +1395,7 @@ export const MagicOpposedWorkflow = {
       const damageType = getSpellDamageType(spell);
 
       // Healing: roll and apply immediately (includes temporary healing).
-      if (damageType === "healing" || damageType === "temporaryhealing" || damageType === "temporary healing") {
+      if (_isHealingType(damageType)) {
         const healRoll = await rollSpellHealing(spell, { isCritical });
         const healValue = Number(healRoll.total) || 0;
         const rollHTML = await healRoll.render();
