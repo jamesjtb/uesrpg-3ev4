@@ -1060,7 +1060,8 @@
         "poison": "Poison",
         "magic": "Magic",
         "physical": "Physical",
-        "healing": "Healing"
+        "healing": "Healing",
+        "temporaryHealing": "Temporary Healing"
       },
       "damageFormula": "",
       "healAmount": "",
