@@ -1953,6 +1953,18 @@ async _onDefendRoll(event) {
     
     
     const castActionType = String(event?.currentTarget?.dataset?.actionType ?? "primary");
+
+    // NEW: Check Action Points BEFORE anything else
+    const requiredAP = castActionType === "secondary" ? 1 : 2; // Secondary = 1 AP, Primary = 2 AP
+    const currentAP = Number(this.actor?.system?.action_points?.value ?? 0);
+    
+    if (currentAP < requiredAP) {
+      ui.notifications.warn(
+        `${this.actor.name} has insufficient Action Points. Required: ${requiredAP} AP, Available: ${currentAP} AP.`
+      );
+      return; // STOP - don't proceed with spell selection
+    }
+
 let spell = preselectedSpell;
     
     // If no spell provided, show picker

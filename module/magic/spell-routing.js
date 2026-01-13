@@ -28,7 +28,11 @@ export function classifySpellForRouting(spell) {
   const isAttack = (spell?.system?.isAttackSpell === true) || (_str(spell?.system?.isAttackSpell).toLowerCase() === "true");
   const damageType = _str(spell?.system?.damageType).toLowerCase();
   // Check both the isHealingSpell toggle AND the damageType for backwards compatibility
-  const isHealing = _bool(spell?.system?.isHealingSpell) || (damageType === "healing");
+  // Include temporary healing as healing type
+  const isHealing = _bool(spell?.system?.isHealingSpell) || 
+                    (damageType === "healing") ||
+                    (damageType === "temporaryhealing") ||
+                    (damageType === "temporary healing");
   const isDirect = _bool(spell?.system?.isDirect);
   const isTargeted = isAttack || isHealing || isDirect;
   return { isAttack, isHealing, isDirect, isTargeted, damageType };

@@ -327,9 +327,8 @@ export class SimpleItemSheet extends foundry.appv1.sheets.ItemSheet {
   /** @override */
   setPosition(options = {}) {
     const position = super.setPosition(options);
-    const sheetBody = this.element.find(".sheet-body");
-    const bodyHeight = position.height - 210;
-    sheetBody.css("height", bodyHeight);
+    // Let CSS flexbox handle heights naturally
+    // Removed old height calculation that breaks scrolling
     return position;
   }
 

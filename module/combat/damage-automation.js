@@ -1094,6 +1094,11 @@ export async function applyHealing(actor, healing, options = {}) {
     return null;
   }
 
+  // NEW: Check if this is temporary HP grant
+  if (options.isTemporary === true) {
+    return await applyTemporaryHP(actor, healing, source, options);
+  }
+
   const currentHP = Number(actor.system?.hp?.value ?? 0);
   const maxHP = Number(actor.system?.hp?.max ?? 1);
 
@@ -1179,6 +1184,67 @@ export async function applyHealing(actor, healing, options = {}) {
     totalHealed,
     overflow,
   };
+}
+
+/**
+ * Grant temporary hit points to actor
+ * Temp HP does NOT stack - always use the higher value (RAW)
+ * @param {Actor} actor
+ * @param {number} amount
+ * @param {string} source
+ * @param {object} options
+ */
+async function applyTemporaryHP(actor, amount, source = "Spell", options = {}) {
+  if (!actor?.system) {
+    ui.notifications.error("Invalid actor for temporary HP");
+    return null;
+  }
+
+  const grantAmount = Math.max(0, Number(amount || 0));
+  if (grantAmount === 0) return null;
+
+  const currentTempHP = Number(actor.system?.hp?.temp ?? 0);
+
+  // RAW: Temp HP doesn't stack - take the higher value
+  const newTempHP = Math.max(currentTempHP, grantAmount);
+  const actualGranted = newTempHP - currentTempHP;
+
+  const activeToken = actor.token ?? actor.getActiveTokens?.()[0] ?? null;
+  const isUnlinkedToken = !!(activeToken && actor.prototypeToken && actor.prototypeToken.actorLink === false);
+  const updateTarget = isUnlinkedToken ? activeToken.actor : actor;
+
+  if (newTempHP !== currentTempHP) {
+    await requestUpdateDocument(updateTarget, { "system.hp.temp": newTempHP });
+  }
+
+  const rollHTML = String(options?.rollHTML ?? "");
+  
+  // For magic healing workflow, skip chat message since it's already shown in the opposed card
+  const skipChatMessage = options?.skipChatMessage === true;
+
+  // Chat message
+  const content = `
+    <div class="uesrpg-temp-hp-card">
+      <h3>Temporary Hit Points</h3>
+      ${rollHTML ? `<div class="dice-roll" style="margin:0.35rem 0;">${rollHTML}</div>` : ""}
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.5rem;margin:0.5rem 0;">
+        <div><strong>Source:</strong></div><div>${source}</div>
+        <div><strong>Temp HP:</strong></div><div style="color:#2196f3;font-weight:bold;">${actualGranted > 0 ? `+${grantAmount}` : `${currentTempHP} (already higher)`}</div>
+        <div><strong>Total Temp HP:</strong></div><div><em>${newTempHP}</em></div>
+      </div>
+    </div>
+  `;
+
+  if (!skipChatMessage) {
+    await ChatMessage.create({
+      user: game.user.id,
+      speaker: ChatMessage.getSpeaker({ actor: updateTarget }),
+      content,
+      type: CONST.CHAT_MESSAGE_STYLES.OTHER
+    });
+  }
+
+  return { tempHP: newTempHP, granted: actualGranted, previous: currentTempHP };
 }
 
 // Global exposure for macros and console

@@ -1854,6 +1854,18 @@ if (isLucky(this.actor, roll.result)) {
     
     
     const castActionType = String(event?.currentTarget?.dataset?.actionType ?? "primary");
+
+    // NEW: Check Action Points BEFORE anything else
+    const requiredAP = castActionType === "secondary" ? 1 : 2; // Secondary = 1 AP, Primary = 2 AP
+    const currentAP = Number(this.actor?.system?.action_points?.value ?? 0);
+    
+    if (currentAP < requiredAP) {
+      ui.notifications.warn(
+        `Insufficient Action Points to cast magic. Required: ${requiredAP} AP, Available: ${currentAP} AP.`
+      );
+      return; // STOP - don't proceed with spell selection or Magicka consumption
+    }
+
 let spell = preselectedSpell;
     
     // If no spell provided, show picker
