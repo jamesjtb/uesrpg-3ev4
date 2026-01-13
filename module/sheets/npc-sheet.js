@@ -192,6 +192,7 @@ async activateListeners(html) {
   if (typeof this._onProfessionsRoll === "function") html.find(".professions-roll").click(this._onProfessionsRoll.bind(this));
   html.find(".damage-roll").click(this._onDamageRoll.bind(this));
   html.find(".magic-roll").click(this._onMagicSkillRoll.bind(this));
+  html.find(".magic-roll").contextmenu(this._postSpellDescriptionToChat.bind(this));
   html.find(".resistance-roll").click(this._onResistanceRoll.bind(this));
   html.find(".ammo-roll").click(this._onAmmoRoll.bind(this));
   html.find(".defend-roll").click(this._onDefendRoll.bind(this));
@@ -1912,6 +1913,33 @@ async _onDefendRoll(event) {
     
     // Route to new casting engine
     await this._onCastMagicAction(event, spell);
+  }
+
+  /**
+   * Handle right-click on spell dice icon to post spell description to chat.
+   */
+  async _postSpellDescriptionToChat(event) {
+    event.preventDefault();
+    
+    const button = event.currentTarget;
+    const li = button.closest(".item");
+    const spell = li ? this.actor.items.get(li.dataset.itemId) : null;
+    
+    if (!spell) {
+      ui.notifications.warn("Spell not found.");
+      return;
+    }
+    
+    // Post spell description to chat (NPC format without image in header)
+    const contentString = `<h2>${spell.name}</h2><p>
+    <i><b>Spell (${spell.system.school} L${spell.system.level}, ${spell.system.cost} MP)</b></i><p>
+      <i>${spell.system.description || "No description available."}</i>`;
+    
+    await ChatMessage.create({
+      user: game.user.id,
+      speaker: ChatMessage.getSpeaker({ actor: this.actor }),
+      content: contentString
+    });
   }
 
 /**

@@ -1287,6 +1287,27 @@ export const MagicOpposedWorkflow = {
         return;
       }
 
+      // Temporary Healing: roll and apply temp HP.
+      if (damageType === "temporaryHealing") {
+        const { applyTemporaryHealing } = await import("./damage-application.js");
+        const tempHealRoll = await rollSpellHealing(spell, { isCritical });
+        const tempHpValue = Number(tempHealRoll.total) || 0;
+        const rollHTML = await tempHealRoll.render();
+        
+        // Store temp healing info in data for chat card display
+        data.outcome.tempHealingApplied = tempHpValue;
+        data.outcome.tempHealingRollHTML = rollHTML;
+        
+        await applyTemporaryHealing(defender, tempHpValue, spell, {
+          isCritical,
+          rollHTML,
+          source: spell.name
+        });
+
+        await _updateCard(message, data);
+        return;
+      }
+
       const damageFormula = getSpellDamageFormula(spell);
       const isDamaging = Boolean(damageFormula && damageFormula !== "0");
 
@@ -1387,6 +1408,27 @@ export const MagicOpposedWorkflow = {
         data.outcome.healingRollHTML = rollHTML;
         
         await applyMagicHealing(defender, healValue, spell, {
+          isCritical,
+          rollHTML,
+          source: spell.name
+        });
+
+        await _updateCard(message, data);
+        return;
+      }
+
+      // Temporary Healing: roll and apply temp HP.
+      if (damageType === "temporaryHealing") {
+        const { applyTemporaryHealing } = await import("./damage-application.js");
+        const tempHealRoll = await rollSpellHealing(spell, { isCritical });
+        const tempHpValue = Number(tempHealRoll.total) || 0;
+        const rollHTML = await tempHealRoll.render();
+        
+        // Store temp healing info in data for chat card display
+        data.outcome.tempHealingApplied = tempHpValue;
+        data.outcome.tempHealingRollHTML = rollHTML;
+        
+        await applyTemporaryHealing(defender, tempHpValue, spell, {
           isCritical,
           rollHTML,
           source: spell.name

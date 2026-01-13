@@ -382,12 +382,15 @@
 
                 <div class="uesrpg-combatstyle-select">
                     <label style="display:block; font-weight:600; margin-bottom:4px;">Active Combat Style</label>
-                    <select class="uesrpg-active-combat-style" style="width:100%;">
-                        <option value="">— None —</option>
-                        {{#each actor.sheetCombatActions.combatStyles as |cs|}}
-                            <option value="{{cs.id}}" {{#if cs.isActive}}selected{{/if}}>{{cs.name}}</option>
-                        {{/each}}
-                    </select>
+                    <div style="padding: 6px; background: rgba(0,0,0,0.1); border: 1px solid rgba(0,0,0,0.3); border-radius: 3px;">
+                        {{#if actor.sheetCombatActions.combatStyles}}
+                            {{#each actor.sheetCombatActions.combatStyles as |cs|}}
+                                {{#if cs.isActive}}{{cs.name}}{{/if}}
+                            {{/each}}
+                        {{else}}
+                            — None —
+                        {{/if}}
+                    </div>
                     <div class="actions-help" style="margin-top:4px;">Only Special Actions marked as known in the active Combat Style are offered as Advantage options.</div>
                 </div>
 
@@ -470,6 +473,7 @@
                                             {{#each schoolData.spells as |spell|}}
                                                 <tr class="spell-row item active" data-item-id="{{spell._id}}">
                                                     <td class="spell-name-cell">
+                                                        <i class="fas fa-dice-d20 magic-roll" title="Cast Spell (Left-click) / Post Description (Right-click)"></i>
                                                         <img class="item-img" src="{{spell.img}}" />
                                                         <span class="item-name">{{spell.name}}</span>
                                                     </td>
