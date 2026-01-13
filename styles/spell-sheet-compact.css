@@ -412,3 +412,94 @@
   font-size: 10px;
 }
 
+/* Spell sheet Effects tab - match actor sheet styling (Issue #4 fix) */
+.spell-sheet .effects-list {
+  list-style: none;
+  padding: 0;
+  margin: 10px 0;
+}
+
+.spell-sheet .effects-list .effect {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 8px;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+  background: rgba(0, 0, 0, 0.02);
+  transition: background 0.2s ease;
+}
+
+.spell-sheet .effects-list .effect:hover {
+  background: rgba(0, 0, 0, 0.05);
+}
+
+/* Effect icon - compact size matching actor sheets (32x32px) */
+.spell-sheet .effects-list .effect-icon {
+  width: 32px;
+  height: 32px;
+  object-fit: contain;
+  border: 1px solid rgba(0, 0, 0, 0.2);
+  border-radius: 3px;
+  flex-shrink: 0;
+}
+
+/* Effect name */
+.spell-sheet .effects-list .effect-name {
+  flex: 1;
+  font-size: 14px;
+  font-weight: 500;
+  margin: 0;
+  color: #333;
+}
+
+/* Effect controls */
+.spell-sheet .effects-list .effect-controls {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+}
+
+.spell-sheet .effects-list .effect-control {
+  padding: 4px 6px;
+  border: 1px solid rgba(0, 0, 0, 0.2);
+  border-radius: 3px;
+  background: rgba(255, 255, 255, 0.3);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-size: 12px;
+}
+
+.spell-sheet .effects-list .effect-control:hover {
+  background: rgba(0, 100, 200, 0.2);
+  border-color: #0064c8;
+}
+
+/* Active Effects header */
+.spell-sheet .effects-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 0;
+  border-bottom: 2px solid rgba(0, 0, 0, 0.2);
+  margin-bottom: 10px;
+}
+
+.spell-sheet .effects-header h3 {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.spell-sheet .effects-header .effect-control {
+  padding: 6px 10px;
+  background: rgba(0, 100, 0, 0.1);
+  border: 1px solid rgba(0, 100, 0, 0.3);
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.spell-sheet .effects-header .effect-control:hover {
+  background: rgba(0, 100, 0, 0.2);
+}
+
