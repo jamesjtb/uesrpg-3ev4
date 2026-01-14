@@ -24,6 +24,14 @@ const _CARD_VERSION = 1;
 const _SKILL_ROLL_LAST_OPTIONS_KEY = "skillRollLastOptions";
 const _DEFAULT_COMBAT_STYLE_DEFENSE_TYPE = "parry";
 
+// Banked-choice (meta-limiting) automation locks.
+// Prevents duplicate auto-roll starts from multiple hook triggers.
+const _bankedAutoRollLocalLocks = new Set();
+
+function _bothSidesCommitted(data) {
+  return Boolean(data?.attacker?.committedAt) && Boolean(data?.defender?.committedAt);
+}
+
 function _normalizeCardFlag(raw) {
   // v1+ contract: { version, state }
   if (raw && typeof raw === "object" && Number(raw.version) >= 1 && raw.state) {
@@ -175,11 +183,30 @@ function _renderCard(data, messageId) {
   const a = data.attacker;
   const d = data.defender;
 
-  const aTNLabel = a.tn ? `${a.tn.finalTN}` : "—";
-  const dTNLabel = d.tn ? `${d.tn.finalTN}` : "—";
+  // Banked-choice mode: do not reveal TN/choice details until both sides have committed.
+  const bankMode = true;
+  const bothCommitted = Boolean(a?.committedAt) && Boolean(d?.committedAt);
+  const revealDetails = !bankMode || bothCommitted || data.status === "resolved" || !!data.outcome;
 
-  const attackerActions = a.result ? "" : `<div style="margin-top:6px;">${_btn("Roll Test", "attacker-roll")}</div>`;
-  const defenderActions = d.result ? "" : `<div style="margin-top:6px;">${_btn("Roll Opposed", "defender-roll")}</div>`;
+  const aTNLabel = (revealDetails && a.tn) ? `${a.tn.finalTN}` : "—";
+  const dTNLabel = (revealDetails && d.tn) ? `${d.tn.finalTN}` : "—";
+
+  const attackerActions = (() => {
+    if (a.result) return "";
+    if (!a.committedAt) return `<div style="margin-top:6px;">${_btn("Commit Choices", "attacker-roll")}</div>`;
+    // Committed; awaiting GM auto-roll or resolution.
+    return `<div style="margin-top:6px; opacity:0.85;"><i>Choices committed</i></div>`;
+  })();
+
+  const defenderActions = (() => {
+    if (d.result) return "";
+    if (!d.committedAt) return `<div style="margin-top:6px;">${_btn("Commit Choices", "defender-roll")}</div>`;
+    return `<div style="margin-top:6px; opacity:0.85;"><i>Choices committed</i></div>`;
+  })();
+
+  const beginRollActions = (bankMode && bothCommitted && !data.outcome && !data.status && !a.result && !d.result && game.user.isGM)
+    ? `<div style="margin-top:8px;">${_btn("Begin Opposed Roll", "begin-banked-roll")}</div>`
+    : "";
 
   const outcomeLine = data.outcome
     ? `<div style="margin-top:10px;"><b>Outcome:</b> ${data.outcome.text ?? ""}</div>`
@@ -226,7 +253,7 @@ function _renderCard(data, messageId) {
         </div>
         ${defenderActions}
       </div>
-    </div>
+    </div>    ${beginRollActions}
     ${outcomeLine}
   </div>`;
 }
@@ -588,6 +615,93 @@ async function _executeSpecialActionIfWinner(data) {
 
 export const SkillOpposedWorkflow = {
   /**
+   * Banked-choice auto roll hook helper (GM-present).
+   * Called from the global updateChatMessage hook when the parent card updates.
+   */
+  async maybeAutoRollBanked(message) {
+    try {
+      const activeGM = game.users.activeGM ?? null;
+      if (!activeGM) return;
+      if (game.user.id !== activeGM.id) return;
+
+      const data = _getMessageState(message);
+      if (!data) return;
+
+      // Only proceed once both sides have committed and no roll results exist yet.
+      if (!_bothSidesCommitted(data)) return;
+      if (data.attacker?.result || data.defender?.result || data.outcome || data.status === "resolved") return;
+
+      await this._autoRollBanked(message.id, { trigger: "hook" });
+    } catch (err) {
+      console.error("UESRPG | Skill opposed banked GM auto-roll hook failed", err);
+    }
+  },
+
+  /**
+   * Banked-choice auto roll hook helper (no active GM).
+   * Uses the parent message author as the authority runner.
+   */
+  async maybeAutoRollBankedNoGM(message) {
+    try {
+      const activeGM = game.users.activeGM ?? null;
+      if (activeGM) return;
+
+      // Only the message author should attempt auto-roll to avoid concurrent updates.
+      if (!message.isAuthor) return;
+
+      const data = _getMessageState(message);
+      if (!data) return;
+
+      if (!_bothSidesCommitted(data)) return;
+      if (data.attacker?.result || data.defender?.result || data.outcome || data.status === "resolved") return;
+
+      await this._autoRollBanked(message.id, { trigger: "hook-no-gm" });
+    } catch (err) {
+      console.error("UESRPG | Skill opposed banked no-GM auto-roll hook failed", err);
+    }
+  },
+
+  /**
+   * Begin rolling a banked-choice opposed skill test once both sides have committed.
+   * Rolls any unresolved lanes without prompting for additional choices.
+   */
+  async _autoRollBanked(parentMessageId, { trigger = "unknown" } = {}) {
+    if (!parentMessageId) return;
+    if (_bankedAutoRollLocalLocks.has(parentMessageId)) return;
+    _bankedAutoRollLocalLocks.add(parentMessageId);
+
+    try {
+      const message = game.messages.get(parentMessageId) ?? null;
+      if (!message) return;
+
+      const data = _getMessageState(message);
+      if (!data) return;
+
+      if (!_bothSidesCommitted(data)) return;
+
+      // If already resolved, do nothing.
+      if (data.outcome || data.status === "resolved" || (data.attacker?.result && data.defender?.result)) return;
+
+      // Roll attacker lane first if needed.
+      if (!data.attacker?.result) {
+        await this.handleAction(message, "attacker-roll-committed");
+      }
+
+      // Refresh after potential updates.
+      const fresh = game.messages.get(parentMessageId) ?? null;
+      if (!fresh) return;
+      const freshData = _getMessageState(fresh);
+      if (!freshData) return;
+
+      // Roll defender lane if needed.
+      if (!freshData.defender?.result) {
+        await this.handleAction(fresh, "defender-roll-committed");
+      }
+    } finally {
+      _bankedAutoRollLocalLocks.delete(parentMessageId);
+    }
+  },
+  /**
    * Bank an externally-created roll message (attacker-roll / defender-roll) into
    * the parent opposed skill card.
    *
@@ -848,8 +962,32 @@ if (!authorUser) return;
       ui.notifications.warn("Opposed Skill Test: could not resolve actors.");
       return;
     }
-    if (action === "attacker-roll") {
+
+    // Manual begin: GM-only when a GM is active; otherwise the parent author may begin.
+    if (action === "begin-banked-roll") {
+      const activeGM = game.users.activeGM ?? null;
+      if (activeGM) {
+        if (!game.user.isGM) {
+          ui.notifications.info("Requested GM to begin the opposed roll.");
+          return;
+        }
+      } else {
+        if (!message.isAuthor && !game.user.isGM) {
+          ui.notifications.warn("Only the message author may begin the opposed roll (no GM active).");
+          return;
+        }
+      }
+
+      await this._autoRollBanked(message.id, { trigger: "manual" });
+      return;
+    }
+
+    if (action === "attacker-roll" || action === "attacker-roll-committed") {
       if (data.attacker.result) return;
+
+      const isCommittedRoll = (action === "attacker-roll-committed");
+
+      // Committing choices requires roll permission for this actor.
       if (!requireUserCanRollActor(game.user, attacker)) return;
       
       // Always respect allowCombatStyle from state (default to true for universal access)
@@ -869,27 +1007,50 @@ if (!authorUser) return;
 
       let decl = null;
       const quick = Boolean(event?.shiftKey) && game.settings.get("uesrpg-3ev4", "skillRollQuickShift");
-      if (quick) {
-        decl = { skillUuid: selectedSkillUuid,
-          applyBlinded: (defaults.applyBlinded ?? true),
-          applyDeafened: (defaults.applyDeafened ?? true),
-          ...defaults };
+
+      if (isCommittedRoll) {
+        decl = data.attacker?.declaration ?? null;
+        if (!decl) {
+          ui.notifications.warn("Attacker has not committed choices yet.");
+          return;
+        }
       } else {
-        decl = await _skillRollDialog({
-          title: `Opposed — Choose Skill`,
-          actor: attacker,
-          showSkillSelect: true,
-          skills,
-          selectedSkillUuid,
-          allowSpecialization: true,
-          defaultUseSpec: defaults.useSpec,
-          defaultDifficultyKey: defaults.difficultyKey,
-          defaultManualMod: defaults.manualMod,
-          defaultApplyBlinded: (defaults.applyBlinded ?? true),
-          defaultApplyDeafened: (defaults.applyDeafened ?? true)
-        });
+        if (quick) {
+          decl = { skillUuid: selectedSkillUuid,
+            applyBlinded: (defaults.applyBlinded ?? true),
+            applyDeafened: (defaults.applyDeafened ?? true),
+            ...defaults };
+        } else {
+          decl = await _skillRollDialog({
+            title: "Opposed Skill Test — Attacker",
+            actor: attacker,
+            target: defender,
+            skills,
+            selectedSkillUuid,
+            canUseSpec: true,
+            defaultDifficultyKey: defaults.difficultyKey,
+            defaultManualMod: defaults.manualMod,
+            defaultApplyBlinded: (defaults.applyBlinded ?? true),
+            defaultApplyDeafened: (defaults.applyDeafened ?? true)
+          });
+        }
+        if (!decl) return;
+
+        // Normalize + clamp UI inputs.
+        decl = { ...decl, ...normalizeSkillRollOptions(decl, defaults) };
+
+        // Bank choices into the parent card; do not roll until both sides have committed.
+        data.attacker.declaration = decl;
+        data.attacker.skillUuid = decl.skillUuid;
+        data.attacker.committedAt = data.attacker.committedAt ?? Date.now();
+
+        data.context = data.context ?? {};
+        if (!data.context.phase || data.context.phase === "pending") data.context.phase = "waitingDefender";
+        if (!data.context.waitingSince) data.context.waitingSince = Date.now();
+
+        await _updateCard(message, data);
+        return;
       }
-      if (!decl) return;
 
       // Normalize + clamp UI inputs.
       decl = { ...decl, ...normalizeSkillRollOptions(decl, defaults) };
@@ -1062,8 +1223,12 @@ if (!authorUser) return;
       return;
     }
 
-    if (action === "defender-roll") {
+    if (action === "defender-roll" || action === "defender-roll-committed") {
       if (data.defender.result) return;
+
+      const isCommittedRoll = (action === "defender-roll-committed");
+
+      // Committing choices requires roll permission for this actor.
       if (!requireUserCanRollActor(game.user, defender, { message: "You do not have permission to roll for the target actor." })) return;
       
       // Always respect allowCombatStyle from state (default to true for universal access)
@@ -1088,25 +1253,52 @@ if (!authorUser) return;
 
       let decl = null;
       const quick = Boolean(event?.shiftKey) && game.settings.get("uesrpg-3ev4", "skillRollQuickShift");
-      if (quick) {
-        decl = { skillUuid: selectedSkillUuid, difficultyKey: defaults.difficultyKey, manualMod: defaults.manualMod, useSpec: defaults.useSpec };
+
+      if (isCommittedRoll) {
+        decl = data.defender?.declaration ?? null;
+        if (!decl) {
+          ui.notifications.warn("Defender has not committed choices yet.");
+          return;
+        }
       } else {
-        // Always show skill selection dropdown (removed pre-choice dialog dependency)
-        decl = await _skillRollDialog({
-          title: `Oppose — Choose Skill`,
-          actor: defender,
-          showSkillSelect: true,
-          skills,
-          selectedSkillUuid,
-          allowSpecialization: true,
-          defaultUseSpec: defaults.useSpec,
-          defaultDifficultyKey: defaults.difficultyKey,
-          defaultManualMod: defaults.manualMod,
-          defaultApplyBlinded: (defaults.applyBlinded ?? true),
-          defaultApplyDeafened: (defaults.applyDeafened ?? true)
-        });
+        if (quick) {
+          decl = { skillUuid: selectedSkillUuid, difficultyKey: defaults.difficultyKey, manualMod: defaults.manualMod, useSpec: defaults.useSpec, applyBlinded: (defaults.applyBlinded ?? true), applyDeafened: (defaults.applyDeafened ?? true) };
+        } else {
+          // Always show skill selection dropdown (removed pre-choice dialog dependency)
+          decl = await _skillRollDialog({
+            title: `Oppose — Choose Skill`,
+            actor: defender,
+            showSkillSelect: true,
+            skills,
+            selectedSkillUuid,
+            allowSpecialization: true,
+            defaultUseSpec: defaults.useSpec,
+            defaultDifficultyKey: defaults.difficultyKey,
+            defaultManualMod: defaults.manualMod,
+            defaultApplyBlinded: (defaults.applyBlinded ?? true),
+            defaultApplyDeafened: (defaults.applyDeafened ?? true)
+          });
+        }
+        if (!decl) return;
+
+        // Normalize + clamp UI inputs.
+        decl = { ...decl, ...normalizeSkillRollOptions(decl, defaults) };
+
+        // Bank choices into the parent card; do not roll until both sides have committed.
+        data.defender.declaration = decl;
+        data.defender.skillUuid = decl.skillUuid;
+        data.defender.committedAt = data.defender.committedAt ?? Date.now();
+
+        data.context = data.context ?? {};
+        if (!data.context.phase || data.context.phase === "pending") data.context.phase = "waitingAttacker";
+        if (!data.context.waitingSince) data.context.waitingSince = Date.now();
+
+        await _updateCard(message, data);
+        return;
       }
-      if (!decl) return;
+
+      // Normalize + clamp UI inputs.
+      decl = { ...decl, ...normalizeSkillRollOptions(decl, defaults) };
 
 
       // Handle Combat Style or Combat profession separately

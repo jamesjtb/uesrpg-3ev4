@@ -594,25 +594,9 @@ function _btn(label, action, extraDataset = {}) {
 // --- Banked choice (meta-limiting) helpers ---
 
 function _isBankChoicesEnabledForData(data) {
-  // Prefer a per-card snapshot if present; otherwise fall back to the world setting.
-  try {
-    const snap = data?.context?.bankChoicesEnabled;
-    if (typeof snap === "boolean") return snap;
-  } catch (_e) {
-    // ignore
-  }
-
-  try {
-    const getter = game?.settings?.get;
-    if (typeof getter === "function") {
-      const v = getter.call(game.settings, "uesrpg-3ev4", "opposedBankChoices");
-      return Boolean(v);
-    }
-  } catch (_e) {
-    // ignore
-  }
-
-  return false;
+  // Banking choices before rolling is core system behavior.
+  // Retain the function signature for minimal-change compatibility with older chat cards.
+  return true;
 }
 
 function _ensureBankedScaffold(data) {
@@ -3333,13 +3317,7 @@ if (stage === "attacker-roll") {
         weaponUuid: seededWeaponUuid || null,
         attackMode: seededAttackMode || "melee",
         skipAttackerAPDeduction: Boolean(cfg.skipAttackerAPDeduction),
-        bankChoicesEnabled: (() => {
-          try {
-            return Boolean(game.settings.get("uesrpg-3ev4", "opposedBankChoices"));
-          } catch (_e) {
-            return false;
-          }
-        })(),
+        bankChoicesEnabled: true,
         autoRollRequested: false,
         autoRollRequestedAt: null,
         autoRollRequestedBy: null,

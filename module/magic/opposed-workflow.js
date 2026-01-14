@@ -604,13 +604,7 @@ export const MagicOpposedWorkflow = {
         updatedBy: game.user.id,
         phase: "pending",
         healingDirect,
-        bankChoicesEnabled: (() => {
-          try {
-            return Boolean(game.settings.get("uesrpg-3ev4", "opposedBankChoices"));
-          } catch (_e) {
-            return false;
-          }
-        })()
+        bankChoicesEnabled: true
       },
       status: "pending",
       mode: "magic",

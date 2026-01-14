@@ -59,25 +59,6 @@ Hooks.once("init", async function() {
   // Expose attack tracker
   game.uesrpg.AttackTracker = AttackTracker;
 
-  // GM-only sheet header button to dump AE keys to console
-  Hooks.on("getActorSheetHeaderButtons", (sheet, buttons) => {
-    if (!game.user?.isGM) return;
-    // Only for this system's sheets (avoid affecting other systems if mixed)
-    if (sheet?.actor?.type === undefined) return;
-
-    buttons.unshift({
-      label: "AE Keys",
-      class: "uesrpg-ae-keys",
-      icon: "fas fa-list",
-      onclick: async () => {
-        try {
-          await dumpAEKeys(sheet.actor, { print: true, includeDerived: true });
-          ui.notifications?.info?.(`AE keys dumped to console for ${sheet.actor.name}`);
-        } catch (err) {
-          console.error(err);
-          ui.notifications?.error?.(`Failed to dump AE keys: ${err.message}`);
-        }
-      }
-    });
-  });
+  // Note: The prior GM-only "AE Keys" sheet header button was a debugging aid.
+  // It has been removed; the helper remains available as game.uesrpg.dumpAEKeys(...).
 });

@@ -2266,18 +2266,32 @@ async _onCombatRoll(event) {
       return;
     }
 
-    const tn = hasWoundPenalty ? woundedValue : regularValue;
-
-    await OpposedWorkflow.createPending({
+    // IMPORTANT WORKFLOW UPDATE (Combat Style dice icon only):
+    // When a target is selected, clicking the Combat Style die icon should create a *Skill Opposed* test,
+    // pre-selecting the clicked Combat Style as the initiating contestant's skill.
+    // This MUST NOT affect the Attack / Opportunity Attack action buttons, which have their own handlers.
+    const message = await SkillOpposedWorkflow.createPending({
       attackerTokenUuid: attackerToken.document?.uuid ?? attackerToken.uuid,
       defenderTokenUuid: defenderToken.document?.uuid ?? defenderToken.uuid,
-      attackerActorUuid: this.actor.uuid,
-      defenderActorUuid: defenderToken.actor?.uuid ?? null,
-      attackerItemUuid: item.uuid,
-      attackerLabel: item.name,
-      attackerTarget: tn,
-      mode: "attack"
+      attackerSkillUuid: item.uuid,
+      attackerSkillLabel: item.name
     });
+
+    // Ensure Combat Styles are valid selections in this opposed skill test.
+    const state = message?.flags?.["uesrpg-3ev4"]?.skillOpposed?.state;
+    if (state) {
+      state.allowCombatStyle = true;
+      await message.update({
+        flags: {
+          "uesrpg-3ev4": {
+            skillOpposed: {
+              version: state.version ?? 1,
+              state
+            }
+          }
+        }
+      });
+    }
 
     return;
   }

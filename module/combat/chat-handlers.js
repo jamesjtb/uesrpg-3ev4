@@ -301,6 +301,22 @@ export function initializeChatHandlers() {
         return;
       }
 
+      // Check for skill opposed workflow
+      const skillOpposed = message?.flags?.["uesrpg-3ev4"]?.skillOpposed ?? null;
+      if (skillOpposed) {
+        if (!_isRelevantOpposedUpdate(changes)) return;
+        const activeGM = game.users.activeGM ?? null;
+        // Import SkillOpposedWorkflow dynamically to avoid circular dependencies
+        import("../skills/opposed-workflow.js").then(({ SkillOpposedWorkflow }) => {
+          if (activeGM) {
+            SkillOpposedWorkflow.maybeAutoRollBanked?.(message).catch((err) => console.error("UESRPG | Skill opposed banked GM auto-roll hook failed", err));
+          } else {
+            SkillOpposedWorkflow.maybeAutoRollBankedNoGM?.(message).catch((err) => console.error("UESRPG | Skill opposed banked no-GM auto-roll hook failed", err));
+          }
+        }).catch((err) => console.error("UESRPG | Failed to load SkillOpposedWorkflow for banked auto-roll", err));
+        return;
+      }
+
       // Check for magic opposed workflow
       const magicOpposed = message?.flags?.["uesrpg-3ev4"]?.magicOpposed ?? null;
       if (magicOpposed) {

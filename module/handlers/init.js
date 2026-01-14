@@ -143,12 +143,13 @@ async function registerSettings() {
     type: Boolean,
   });
 
-  // Opposed workflow: bank choices before rolling to reduce meta-game information.
+  // Opposed workflow: banking choices before rolling is now core system behavior.
+  // Keep the setting registered (backward compatible for any stored world value), but hide it from the UI.
   game.settings.register("uesrpg-3ev4", "opposedBankChoices", {
     name: "Opposed: Bank Choices Before Rolling",
-    hint: "When enabled, attacker and defender choices are banked (committed) and the rolls are triggered only after both sides have committed. This reduces meta-game information on opposed chat cards.",
+    hint: "Bank attacker/defender choices before rolling.",
     scope: "world",
-    config: true,
+    config: false,
     default: true,
     type: Boolean,
   });
