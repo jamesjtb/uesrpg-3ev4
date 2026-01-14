@@ -380,19 +380,7 @@
             <div class="uesrpg-actions-card">
                 <div class="quickbar-title">Special Actions</div>
 
-                <div class="uesrpg-combatstyle-select">
-                    <label style="display:block; font-weight:600; margin-bottom:4px;">Active Combat Style</label>
-                    <div style="padding: 6px; background: rgba(0,0,0,0.1); border: 1px solid rgba(0,0,0,0.3); border-radius: 3px;">
-                        {{#if actor.sheetCombatActions.combatStyles}}
-                            {{#each actor.sheetCombatActions.combatStyles as |cs|}}
-                                {{#if cs.isActive}}{{cs.name}}{{/if}}
-                            {{/each}}
-                        {{else}}
-                            — None —
-                        {{/if}}
-                    </div>
-                    <div class="actions-help" style="margin-top:4px;">Only Special Actions marked as known in the active Combat Style are offered as Advantage options.</div>
-                </div>
+                <div class="actions-help" style="margin-bottom:6px;">Only Special Actions marked as known in the active Combat Style are offered as Advantage options.</div>
 
                 {{#if actor.sheetCombatActions.specialActions.length}}
                     <div class="uesrpg-special-actions-list">
