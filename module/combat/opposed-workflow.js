@@ -30,6 +30,7 @@ import { requestCreateActiveEffect } from "../helpers/active-effect-proxy.js";
 import { buildSpecialActionsForActor, isSpecialActionUsableNow } from "./combat-style-utils.js";
 import { SPECIAL_ACTIONS, getSpecialActionById } from "../config/special-actions.js";
 import { getActiveStaminaEffect, consumeStaminaEffect, STAMINA_EFFECT_KEYS } from "../stamina/stamina-dialog.js";
+import { isActorSkeletal } from "../traits/trait-registry.js";
 
 
 function _collectSensorySituationalMods(decl) {
@@ -2330,15 +2331,15 @@ function _listEquippedShields(actor) {
 
 // Block Rating resolver is centralized in module/combat/mitigation.js
 
-async function _promptWeaponAndAdvantages({ attackerActor, advantageCount = 0, attackMode = "melee", defaultWeaponUuid = null, defaultHitLocation = "Body" }) {
+async function _promptWeaponAndAdvantages({ attackerActor, advantageCount = 0, attackMode = "melee", defaultWeaponUuid = null, defaultHitLocation = "Body", allowNoWeapon = false }) {
   const weapons = _listEquippedWeapons(attackerActor);
-  if (!weapons.length) {
+  if (!weapons.length && !allowNoWeapon) {
     ui.notifications.warn("No equipped weapons found.");
     return null;
   }
 
   const max = Number(advantageCount || 0);
-  const defaultWeapon = weapons.find(w => w.uuid === defaultWeaponUuid) ?? weapons[0];
+  const defaultWeapon = weapons.find(w => w.uuid === defaultWeaponUuid) ?? weapons[0] ?? null;
 
   const allowedLocs = ["Head", "Body", "Right Arm", "Left Arm", "Right Leg", "Left Leg"];
   const safeDefaultLoc = allowedLocs.includes(defaultHitLocation) ? defaultHitLocation : "Body";
@@ -2378,9 +2379,11 @@ async function _promptWeaponAndAdvantages({ attackerActor, advantageCount = 0, a
     `;
   };
 
-  const weaponOptions = weapons
-    .map(w => `<option value="${w.uuid}" ${w.uuid === defaultWeapon.uuid ? "selected" : ""}>${w.name}</option>`)
-    .join("\n");
+  const noneSelected = allowNoWeapon && !defaultWeapon;
+  const noneOption = allowNoWeapon ? `<option value="" ${noneSelected ? "selected" : ""}>None</option>` : "";
+  const weaponOptions = `${noneOption}${weapons
+    .map(w => `<option value="${w.uuid}" ${w.uuid === defaultWeapon?.uuid ? "selected" : ""}>${w.name}</option>`)
+    .join("\n")}`;
 
   const content = `
     <form class="uesrpg-opp-dmg uesrpg-adv-dialog uesrpg-adv-dialog--attacker">
@@ -2709,6 +2712,17 @@ async function _rollWeaponDamage({ weapon, preConsumedAmmo = null }) {
   return { damageString, rollA: a, rollB: b, finalDamage: total, pendingAmmo, rerollMode, damagedValue };
 }
 
+async function _rollManualDamage({ formula }) {
+  const expr = normalizeDiceExpression(formula);
+  const rollA = await safeEvaluateRoll(expr);
+  return {
+    damageString: rollA.formula,
+    rollA,
+    rollB: null,
+    finalDamage: Number(rollA.total) || 0
+  };
+}
+
 async function _consumePendingAmmo(pendingAmmo) {
   if (!pendingAmmo) return true;
 
@@ -2770,6 +2784,149 @@ async function _consumePendingAmmo(pendingAmmo) {
   }
 }
 
+async function _postManualEffectChatCard({
+  attacker,
+  aToken,
+  itemLabel,
+  itemImg,
+  dmg,
+  hitLocation,
+  effectLabel = "Damage",
+  pillsInline = "",
+  applyButtonHtml = "",
+  extraNoteHtml = "",
+  parentMessageId = null,
+  stage = "damage",
+} = {}) {
+  if (!attacker || !dmg) return;
+
+  const headerImg = itemImg ? `<img src="${itemImg}" style="height:32px;width:32px;">` : "";
+  const headerLabel = itemLabel ?? "Effect";
+
+  const cardHtml = `
+    <div class="uesrpg-weapon-damage-card">
+      <h2 style="display:flex;gap:0.5rem;align-items:center;">
+        ${headerImg}
+        <div>${headerLabel}</div>
+      </h2>
+
+      <table class="uesrpg-weapon-damage-table">
+        <thead>
+          <tr>
+            <th>${effectLabel}</th>
+            <th class="tableCenterText">Result</th>
+            <th class="tableCenterText">Detail</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="tableAttribute">${effectLabel}</td>
+            <td class="tableCenterText">${dmg.finalDamage}</td>
+            <td class="tableCenterText">
+              <div>${dmg.damageString}</div>
+              <div style="margin-top:0.35rem;">${pillsInline}</div>
+            </td>
+          </tr>
+          ${hitLocation ? `
+          <tr>
+            <td class="tableAttribute">Hit Location</td>
+            <td class="tableCenterText">${hitLocation}</td>
+            <td class="tableCenterText">from attack roll</td>
+          </tr>` : ""}
+        </tbody>
+      </table>
+      ${extraNoteHtml ? `<div style="margin-top:0.5rem; opacity:0.9;">${extraNoteHtml}</div>` : ""}
+      ${applyButtonHtml ? `<div style="margin-top:0.75rem;display:flex;flex-wrap:wrap;gap:0.5rem;">${applyButtonHtml}</div>` : ""}
+    </div>
+  `;
+
+  const msgFlags = parentMessageId ? _opposedFlags(parentMessageId, stage) : undefined;
+  const created = await ChatMessage.create({
+    user: game.user.id,
+    speaker: ChatMessage.getSpeaker({ actor: attacker, token: aToken?.document ?? null }),
+    content: cardHtml,
+    style: CONST.CHAT_MESSAGE_STYLES.OTHER,
+    rolls: [dmg.rollA, dmg.rollB].filter(Boolean),
+    rollMode: game.settings.get("core", "rollMode"),
+    flags: msgFlags,
+  });
+  return created;
+}
+
+let _qualityLabelIndexCache = null;
+
+function _getQualityLabelIndex() {
+  if (_qualityLabelIndexCache) return _qualityLabelIndexCache;
+  const core = UESRPG?.QUALITIES_CORE_BY_TYPE?.weapon ?? UESRPG?.QUALITIES_CATALOG ?? [];
+  const traits = UESRPG?.TRAITS_BY_TYPE?.weapon ?? [];
+  const idx = new Map();
+  for (const q of [...core, ...traits, ...(UESRPG?.QUALITIES_CATALOG ?? [])]) {
+    if (!q?.key) continue;
+    idx.set(String(q.key).toLowerCase(), String(q.label ?? q.key));
+  }
+  _qualityLabelIndexCache = idx;
+  return idx;
+}
+
+function _buildInlineQualityTags({ structured = [], traits = [] } = {}) {
+  const labelIndex = _getQualityLabelIndex();
+  const out = [];
+
+  for (const q of structured) {
+    const key = String(q?.key ?? q ?? "").toLowerCase().trim();
+    if (!key) continue;
+    const label = labelIndex.get(key) ?? key;
+    const v = (q?.value !== undefined && q?.value !== null && q?.value !== "") ? Number(q.value) : null;
+    out.push(`<span class="tag">${v != null && !Number.isNaN(v) ? `${label} (${v})` : label}</span>`);
+  }
+
+  for (const t of traits) {
+    const key = String(t ?? "").toLowerCase().trim();
+    if (!key) continue;
+    const label = labelIndex.get(key) ?? key;
+    out.push(`<span class="tag">${label}</span>`);
+  }
+
+  if (!out.length) return '<span style="opacity:0.75;">-</span>';
+  return `<span class="uesrpg-inline-tags">${out.join("")}</span>`;
+}
+
+function _collectWeaponInlineQualities(weapon) {
+  if (!weapon) return { structured: [], traits: [] };
+  const structured = Array.isArray(weapon.system?.qualitiesStructuredInjected)
+    ? weapon.system.qualitiesStructuredInjected
+    : Array.isArray(weapon.system?.qualitiesStructured)
+      ? weapon.system.qualitiesStructured
+      : [];
+  const traits = Array.isArray(weapon.system?.qualitiesTraits) ? weapon.system.qualitiesTraits : [];
+  return { structured, traits };
+}
+
+function _collectActivationDamageQualities(activationDamage) {
+  if (!activationDamage) return { structured: [], traits: [] };
+  const structured = Array.isArray(activationDamage.qualitiesStructured) ? activationDamage.qualitiesStructured : [];
+  const traits = Array.isArray(activationDamage.qualitiesTraits) ? activationDamage.qualitiesTraits : [];
+  return { structured, traits };
+}
+
+function _buildWeaponPillsInline(weapon) {
+  if (!weapon) return "";
+  const injected = Array.isArray(weapon.system?.qualitiesStructuredInjected)
+    ? weapon.system.qualitiesStructuredInjected
+    : Array.isArray(weapon.system?.qualitiesStructured)
+      ? weapon.system.qualitiesStructured
+      : [];
+
+  const structured = injected
+    .filter(q => q?.active)
+    .map(q => q?.name)
+    .filter(Boolean);
+
+  const traits = Array.isArray(weapon.system?.qualitiesTraits) ? weapon.system.qualitiesTraits : [];
+  const pills = [...structured, ...traits].filter(Boolean);
+  return pills.map(p => `<span class="uesrpg-pill">${p}</span>`).join(" ");
+}
+
 /**
  * Post a weapon damage chat card.
  *
@@ -2791,22 +2948,7 @@ async function _postWeaponDamageChatCard({
 } = {}) {
   if (!attacker || !weapon || !dmg) return;
 
-  const injected = Array.isArray(weapon.system?.qualitiesStructuredInjected)
-    ? weapon.system.qualitiesStructuredInjected
-    : Array.isArray(weapon.system?.qualitiesStructured)
-      ? weapon.system.qualitiesStructured
-      : [];
-
-  const structured = injected
-    .filter(q => q?.active)
-    .map(q => q?.name)
-    .filter(Boolean);
-
-  const traits = Array.isArray(weapon.system?.qualitiesTraits) ? weapon.system.qualitiesTraits : [];
-  const pills = [...structured, ...traits].filter(Boolean);
-  const pillsInline = pills
-    .map(p => `<span class="uesrpg-pill">${p}</span>`)
-    .join(" ");
+  const pillsInline = _buildWeaponPillsInline(weapon);
 
   const altTag = dmg?.usedAltDamage ? ` <span style="opacity:0.85; font-size:12px;">(2H)</span>` : "";
 
@@ -3306,19 +3448,21 @@ if (stage === "attacker-roll") {
     const seededAttackMode = cfg.attackMode ? String(cfg.attackMode) : await _inferAttackModeFromPreferredWeapon(attacker);
 
     const data = {
-      context: {
-        schemaVersion: 1,
-        createdAt: Date.now(),
-        createdBy: game.user.id,
-        updatedAt: Date.now(),
-        updatedBy: game.user.id,
-        phase: 'pending',
-        waitingSince: null,
-        weaponUuid: seededWeaponUuid || null,
-        attackMode: seededAttackMode || "melee",
-        skipAttackerAPDeduction: Boolean(cfg.skipAttackerAPDeduction),
-        bankChoicesEnabled: true,
-        autoRollRequested: false,
+        context: {
+          schemaVersion: 1,
+          createdAt: Date.now(),
+          createdBy: game.user.id,
+          updatedAt: Date.now(),
+          updatedBy: game.user.id,
+          phase: 'pending',
+          waitingSince: null,
+          weaponUuid: seededWeaponUuid || null,
+          attackMode: seededAttackMode || "melee",
+          forcedHitLocation: cfg.forcedHitLocation ?? null,
+          activation: cfg.activation ?? null,
+          skipAttackerAPDeduction: Boolean(cfg.skipAttackerAPDeduction),
+          bankChoicesEnabled: true,
+          autoRollRequested: false,
         autoRollRequestedAt: null,
         autoRollRequestedBy: null,
         autoRollStarted: false,
@@ -3608,6 +3752,9 @@ if (stage === "attacker-roll") {
               }
             }
           }
+        }
+        if (String(data.context?.attackMode ?? "melee") === "ranged" && defender && isActorSkeletal(defender)) {
+          situationalMods.push({ key: "skeletal", label: "Skeletal (ranged)", value: -20 });
         }
         const tn = computeTN({
           actor: attacker,
@@ -4533,13 +4680,24 @@ if (stage === "attacker-roll") {
       const attackMode = getContextAttackMode(data.context);
       const advCount = (attackMode === "melee") ? Number(data.advantage?.attacker ?? 0) : 0;
       const defenderActor = _resolveDoc(data?.defender?.actorUuid);
-      const baseHitLocation = resolveHitLocationForTarget(defenderActor, getHitLocationFromRoll(data.attacker?.result?.rollTotal ?? 0));
+      const forcedHitLocationRaw = data?.context?.forcedHitLocation ?? null;
+      const forcedHitLocation = forcedHitLocationRaw
+        ? resolveHitLocationForTarget(defenderActor, forcedHitLocationRaw)
+        : null;
+      const baseHitLocation = forcedHitLocation
+        ?? resolveHitLocationForTarget(defenderActor, getHitLocationFromRoll(data.attacker?.result?.rollTotal ?? 0));
+      const activationCtx = data.context?.activation ?? null;
+      const activationDamage = activationCtx?.damage ?? null;
+      const activationMode = String(activationDamage?.mode ?? "weapon").toLowerCase().trim();
+      const allowNoWeapon = Boolean(activationDamage && activationMode !== "weapon");
+
       const selection = await _promptWeaponAndAdvantages({
         attackerActor: attacker,
         attackMode,
         advantageCount: advCount,
         defaultWeaponUuid: data.context?.lastWeaponUuid ?? _getPreferredWeaponUuid(attacker, { meleeOnly: false }) ?? null,
         defaultHitLocation: baseHitLocation,
+        allowNoWeapon,
       });
       if (!selection) return;
 
@@ -4555,16 +4713,18 @@ if (stage === "attacker-roll") {
       };
       await _updateCard(message, data);
 
-      const weapon = await fromUuid(selection.weaponUuid);
-      if (!weapon) {
-        ui.notifications.warn("Selected weapon could not be resolved.");
-        return;
-      }
+        const weapon = selection.weaponUuid ? await fromUuid(selection.weaponUuid) : null;
+        if (!weapon && !allowNoWeapon) {
+          ui.notifications.warn("Selected weapon could not be resolved.");
+          return;
+        }
 
-      // Persist last weapon for convenience within this single opposed workflow.
-      data.context = data.context ?? {};
-      data.context.lastWeaponUuid = weapon.uuid;
-      await _updateCard(message, data);
+        // Persist last weapon for convenience within this single opposed workflow.
+        if (weapon) {
+          data.context = data.context ?? {};
+          data.context.lastWeaponUuid = weapon.uuid;
+          await _updateCard(message, data);
+        }
 
       if (selection.pressAdvantage && attackMode === "melee") {
         const defenderActor = _resolveDoc(data?.defender?.actorUuid);
@@ -4652,22 +4812,38 @@ if (stage === "attacker-roll") {
       }
 
       // Hit location RAW: ones digit of attack roll, unless Precision Strike is used.
-      const hitLocationRaw = (advCount > 0 && selection.precisionStrike)
-        ? selection.precisionLocation
-        : getHitLocationFromRoll(data.attacker?.result?.rollTotal ?? 0);
+      const hitLocationRaw = forcedHitLocation
+        ?? ((advCount > 0 && selection.precisionStrike)
+          ? selection.precisionLocation
+          : getHitLocationFromRoll(data.attacker?.result?.rollTotal ?? 0));
       const hitLocation = resolveHitLocationForTarget(defenderActor, hitLocationRaw);
 
-      const dmg = await _rollWeaponDamage({ weapon, preConsumedAmmo: data.attacker?.preConsumedAmmo ?? null });
-      if (!dmg) return;
-      const damageType = getDamageTypeFromWeapon(weapon);
+      const activationFormula = String(activationDamage?.formula ?? "").trim();
+      const activationType = String(activationDamage?.type ?? "").trim().toLowerCase();
+      const activationTags = Array.isArray(activationCtx?.tags) ? activationCtx.tags : [];
+      const activationQualities = _collectActivationDamageQualities(activationDamage);
+      const hasActivationQualities = activationQualities.structured.length > 0 || activationQualities.traits.length > 0;
+
+      const useManual = activationDamage && activationMode !== "weapon";
+      const isHealingMode = activationMode === "healing" || activationMode === "temporary";
+      const isManualMode = activationMode === "manual";
+      if (useManual && !isHealingMode && !isManualMode) {
+        ui.notifications.warn("Unsupported activation damage mode.");
+        return;
+      }
+      if (useManual && !activationFormula) {
+        ui.notifications.warn("Manual damage/healing requires a formula.");
+        return;
+      }
 
       // Render a weapon damage chat card, gated by the opposed result.
-      const pillsInline = (() => {
-        const injected = Array.isArray(weapon.system?.qualitiesStructuredInjected)
-          ? weapon.system.qualitiesStructuredInjected
-          : Array.isArray(weapon.system?.qualitiesStructured)
-            ? weapon.system.qualitiesStructured
-            : [];
+        let pillsInline = (() => {
+          if (!weapon) return '<span style="opacity:0.75;">—</span>';
+          const injected = Array.isArray(weapon.system?.qualitiesStructuredInjected)
+            ? weapon.system.qualitiesStructuredInjected
+            : Array.isArray(weapon.system?.qualitiesStructured)
+              ? weapon.system.qualitiesStructured
+              : [];
 
         const labelIndex = (() => {
           const core = UESRPG?.QUALITIES_CORE_BY_TYPE?.weapon ?? UESRPG?.QUALITIES_CATALOG ?? [];
@@ -4699,6 +4875,112 @@ if (stage === "attacker-roll") {
         return `<span class="uesrpg-inline-tags">${out.join("")}</span>`;
       })();
 
+        const sourceLabel = activationCtx?.itemName ?? weapon?.name ?? "Attack";
+        const sourceImg = activationCtx?.itemImg ?? weapon?.img ?? null;
+      let magicSource = (() => {
+        const tags = activationTags.map(t => String(t ?? "").toLowerCase());
+        if (tags.includes("magic") || tags.includes("silver") || tags.includes("silvered")) return true;
+        if (activationMode === "manual") {
+          return activationType === "magic" || activationType === "silver" || activationType === "sunlight";
+        }
+        return false;
+      })();
+
+      pillsInline = hasActivationQualities
+        ? _buildInlineQualityTags(activationQualities)
+        : _buildInlineQualityTags(_collectWeaponInlineQualities(weapon));
+
+      magicSource = (() => {
+        const tags = activationTags.map(t => String(t ?? "").toLowerCase());
+        if (tags.includes("magic") || tags.includes("silver") || tags.includes("silvered")) return true;
+        const qualTokens = [
+          ...activationQualities.structured.map(q => String(q?.key ?? q ?? "").toLowerCase().trim()),
+          ...activationQualities.traits.map(t => String(t ?? "").toLowerCase().trim())
+        ].filter(Boolean);
+        if (qualTokens.includes("magic") || qualTokens.includes("silver") || qualTokens.includes("silvered")) return true;
+        if (activationMode === "manual") {
+          return activationType === "magic" || activationType === "silver" || activationType === "sunlight";
+        }
+        return false;
+      })();
+
+      if (useManual && isHealingMode) {
+        const dmg = await _rollManualDamage({ formula: activationFormula });
+        if (!dmg) return;
+        const isTemporary = activationMode === "temporary";
+        const effectLabel = isTemporary ? "Temp HP" : "Healing";
+
+        const applyBtn = `<button type="button" class="apply-healing-btn"
+          data-target-uuid="${defender.uuid}"
+          data-healing="${dmg.finalDamage}"
+          data-temp-hp="${isTemporary ? "1" : "0"}"
+          data-source="${sourceLabel}">
+          Apply ${effectLabel} → ${dToken?.name ?? defender.name}
+        </button>`;
+
+        await _postManualEffectChatCard({
+          attacker,
+          aToken,
+          itemLabel: sourceLabel,
+          itemImg: sourceImg,
+          dmg,
+          hitLocation,
+          effectLabel,
+          pillsInline,
+          applyButtonHtml: applyBtn,
+          extraNoteHtml: `<b>Activation:</b> ${sourceLabel}`,
+          parentMessageId: message.id,
+          stage: "damage-card",
+        });
+        return;
+      }
+
+      if (useManual && isManualMode) {
+        const dmg = await _rollManualDamage({ formula: activationFormula });
+        if (!dmg) return;
+        const damageType = activationType || DAMAGE_TYPES.PHYSICAL;
+        const sourceItemUuid = activationCtx?.itemUuid ?? "";
+        const weaponUuidForDamage = sourceItemUuid ? "" : (weapon?.uuid ?? "");
+
+        const applyBtn = `<button type="button" class="apply-damage-btn"
+          data-target-uuid="${defender.uuid}"
+          data-attacker-actor-uuid="${attacker.uuid}"
+          data-weapon-uuid="${weaponUuidForDamage}"
+          data-source-item-uuid="${sourceItemUuid}"
+          data-damage="${dmg.finalDamage}"
+          data-damage-type="${damageType}"
+          data-hit-location="${hitLocation}"
+          data-dos-bonus="0"
+          data-penetration="0"
+          data-penetrate-armor="${selection.penetrateArmor ? "1" : "0"}"
+	      data-forceful-impact="${selection.forcefulImpact ? "1" : "0"}"
+	      data-press-advantage="${selection.pressAdvantage ? "1" : "0"}"
+          data-magic-source="${magicSource ? "1" : "0"}"
+          data-source="${sourceLabel}">
+          Apply Damage → ${dToken?.name ?? defender.name}
+        </button>`;
+
+        await _postManualEffectChatCard({
+          attacker,
+          aToken,
+          itemLabel: sourceLabel,
+          itemImg: sourceImg,
+          dmg,
+          hitLocation,
+          effectLabel: "Damage",
+          pillsInline,
+          applyButtonHtml: applyBtn,
+          extraNoteHtml: `<b>Activation:</b> ${sourceLabel}`,
+          parentMessageId: message.id,
+          stage: "damage-card",
+        });
+        return;
+      }
+
+      const dmg = await _rollWeaponDamage({ weapon, preConsumedAmmo: data.attacker?.preConsumedAmmo ?? null });
+      if (!dmg) return;
+      const damageType = getDamageTypeFromWeapon(weapon);
+
       const extraNotes = (() => {
         const notes = [];
         if (dmg?.damagedValue && Number(dmg.damagedValue) > 0) notes.push(`Damaged: -${Number(dmg.damagedValue)}`);
@@ -4714,15 +4996,15 @@ if (stage === "attacker-roll") {
       const applyBtn = `<button type="button" class="apply-damage-btn"
         data-target-uuid="${defender.uuid}"
         data-attacker-actor-uuid="${attacker.uuid}"
-        data-weapon-uuid="${weapon.uuid}"
+          data-weapon-uuid="${weapon?.uuid ?? ""}"
         data-damage="${dmg.finalDamage}"
         data-damage-type="${damageType}"
         data-hit-location="${hitLocation}"
         data-dos-bonus="0"
         data-penetration="0"
         data-penetrate-armor="${selection.penetrateArmor ? "1" : "0"}"
-	        data-forceful-impact="${selection.forcefulImpact ? "1" : "0"}"
-	        data-press-advantage="${selection.pressAdvantage ? "1" : "0"}"
+	      data-forceful-impact="${selection.forcefulImpact ? "1" : "0"}"
+	      data-press-advantage="${selection.pressAdvantage ? "1" : "0"}"
         data-source="${weapon.name}">
         Apply Damage → ${dToken?.name ?? defender.name}
       </button>`;
@@ -4765,7 +5047,7 @@ if (stage === "attacker-roll") {
       `;
 
       const damageFlags = _opposedFlags(message.id, "damage-card");
-const dmgMsg = await ChatMessage.create({
+      const dmgMsg = await ChatMessage.create({
         user: game.user.id,
         speaker: ChatMessage.getSpeaker({ actor: attacker, token: aToken?.document ?? null }),
         content: cardHtml,
