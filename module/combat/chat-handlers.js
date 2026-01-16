@@ -18,6 +18,7 @@ import { SkillOpposedWorkflow } from "../skills/opposed-workflow.js";
 import { canUserRollActor } from "../helpers/permissions.js";
 import { resolveShockTestFromChat } from "../wounds/wound-engine.js";
 import { requestUpdateChatMessage } from "../helpers/authority-proxy.js";
+import { getDiseaseResistancePercent } from "../traits/trait-registry.js";
 
 let _chatHooksRegistered = false;
 
@@ -58,6 +59,23 @@ function _resolveActor(message, uuid) {
   return null;
 }
 
+function _getWhisperRecipients(actor) {
+  const out = new Set();
+  const users = game.users?.contents ?? [];
+  for (const user of users) {
+    if (!user) continue;
+    if (user.isGM) {
+      out.add(user.id);
+      continue;
+    }
+    const hasOwner = typeof actor?.testUserPermission === "function"
+      ? actor.testUserPermission(user, CONST.DOCUMENT_OWNERSHIP_LEVELS.OWNER)
+      : Number(actor?.ownership?.[user.id] ?? 0) >= CONST.DOCUMENT_OWNERSHIP_LEVELS.OWNER;
+    if (hasOwner) out.add(user.id);
+  }
+  return Array.from(out);
+}
+
 async function _onApplyDamage(ev, message) {
   ev.preventDefault();
 
@@ -73,6 +91,8 @@ async function _onApplyDamage(ev, message) {
 	const forcefulImpact = String(btn.dataset.forcefulImpact ?? "0") === "1";
 	const pressAdvantage = String(btn.dataset.pressAdvantage ?? "0") === "1";
   const ignoreReduction = String(btn.dataset.ignoreReduction ?? "0") === "1";
+  const magicSource = String(btn.dataset.magicSource ?? "0") === "1";
+  const sourceItemUuid = btn.dataset.sourceItemUuid || null;
 
   // Optional enrichment for RAW weapon trait bonuses.
   // If present, these are resolved safely and passed through to applyDamage().
@@ -118,6 +138,8 @@ async function _onApplyDamage(ev, message) {
     pressAdvantage,
     weapon,
     attackerActor,
+    magicSource,
+    sourceItemUuid,
   });
 }
 
@@ -128,6 +150,7 @@ async function _onApplyHealing(ev, message) {
   const targetUuid = btn.dataset.targetUuid || null;
   const healing = Number(btn.dataset.healing || 0);
   const source = btn.dataset.source || (message?.speaker?.alias ?? "Healing");
+  const isTemporary = String(btn.dataset.tempHp ?? "0") === "1";
 
   const targetActor = _resolveActor(message, targetUuid);
   if (!targetActor) {
@@ -135,7 +158,7 @@ async function _onApplyHealing(ev, message) {
     return;
   }
 
-  await applyHealing(targetActor, healing, { source });
+  await applyHealing(targetActor, healing, { source, isTemporary });
 }
 
 
@@ -192,6 +215,141 @@ async function _onShockAction(event, message) {
     console.error("UESRPG | Shock roll handler failed", err);
     ui.notifications?.error?.("Shock roll failed. Check console for details.");
   }
+}
+
+async function _onDiseaseAction(event, message) {
+  event.preventDefault();
+  const el = event.currentTarget;
+  const action = el?.dataset?.uesDiseaseAction;
+  if (action !== "roll") return;
+
+  const state = message?.flags?.["uesrpg-3ev4"]?.diseaseCheck ?? {};
+  if (state?.resolved) return;
+
+  const actorUuid = el?.dataset?.actorUuid ?? state?.actorUuid;
+  const actor = actorUuid ? _resolveActor(message, actorUuid) : null;
+  if (!actor) {
+    ui.notifications?.warn?.("Disease check: actor not found.");
+    return;
+  }
+
+  if (!canUserRollActor(game.user, actor)) {
+    ui.notifications?.warn?.("You do not have permission to roll for this actor.");
+    return;
+  }
+
+  const traitValue = Number(el?.dataset?.traitValue ?? state?.traitValue ?? 0) || 0;
+  const sourceLabel = String(el?.dataset?.sourceLabel ?? state?.sourceLabel ?? "Disease").trim() || "Disease";
+
+  const endTotal = Number(actor.system?.characteristics?.end?.total ?? 0);
+  const woundPenalty = Number(actor.system?.woundPenalty ?? 0);
+  const fatiguePenalty = Number(actor.system?.fatigue?.penalty ?? 0);
+  const carryPenalty = Number(actor.system?.carry_rating?.penalty ?? 0);
+  const tn = endTotal + woundPenalty + fatiguePenalty + carryPenalty + traitValue;
+
+  const roll = new Roll("1d100");
+  await roll.evaluate();
+
+  const passed = Number(roll.total ?? 0) <= tn;
+  const resistPercent = getDiseaseResistancePercent(actor);
+  let resisted = false;
+  let resistRoll = null;
+
+  if (!passed && resistPercent > 0) {
+    resistRoll = new Roll("1d100");
+    await resistRoll.evaluate();
+    resisted = Number(resistRoll.total ?? 0) <= resistPercent;
+  }
+
+  await requestUpdateChatMessage(message, {
+    "flags.uesrpg-3ev4.diseaseCheck.resolved": true,
+    "flags.uesrpg-3ev4.diseaseCheck.resolvedAt": Date.now(),
+    "flags.uesrpg-3ev4.diseaseCheck.result": { passed, resisted }
+  });
+
+  const outcome = passed
+    ? "Success - no disease."
+    : (resisted ? "Failed test, but Disease Resistance prevented infection." : "Failed test - contracts disease.");
+
+  const lines = [
+    `<div><b>Source:</b> ${sourceLabel}</div>`,
+    `<div><b>Endurance TN:</b> ${tn}</div>`,
+    `<div><b>Roll:</b> ${roll.total}</div>`,
+    `<div><b>Outcome:</b> ${outcome}</div>`
+  ];
+  if (!passed && resistPercent > 0 && resistRoll) {
+    lines.push(`<div><b>Disease Resistance:</b> ${resistPercent}% - roll ${resistRoll.total}</div>`);
+  }
+
+  await ChatMessage.create({
+    user: game.user.id,
+    speaker: ChatMessage.getSpeaker({ actor }),
+    content: `<div class="uesrpg-disease-result"><h3>Disease Check</h3>${lines.join("")}</div>`,
+    whisper: _getWhisperRecipients(actor),
+    style: CONST.CHAT_MESSAGE_STYLES.OTHER
+  });
+}
+
+async function _onRegenerationAction(event, message) {
+  event.preventDefault();
+  const el = event.currentTarget;
+  const action = el?.dataset?.uesRegenerationAction;
+  if (action !== "roll") return;
+
+  const state = message?.flags?.["uesrpg-3ev4"]?.regenerationPrompt ?? {};
+  if (state?.resolved) return;
+
+  const actorUuid = el?.dataset?.actorUuid ?? state?.actorUuid;
+  const actor = actorUuid ? _resolveActor(message, actorUuid) : null;
+  if (!actor) {
+    ui.notifications?.warn?.("Regeneration: actor not found.");
+    return;
+  }
+
+  if (!canUserRollActor(game.user, actor)) {
+    ui.notifications?.warn?.("You do not have permission to roll for this actor.");
+    return;
+  }
+
+  const value = Number(el?.dataset?.regenValue ?? state?.value ?? 0) || 0;
+  if (value <= 0) return;
+
+  const endTotal = Number(actor.system?.characteristics?.end?.total ?? 0);
+  const woundPenalty = Number(actor.system?.woundPenalty ?? 0);
+  const fatiguePenalty = Number(actor.system?.fatigue?.penalty ?? 0);
+  const carryPenalty = Number(actor.system?.carry_rating?.penalty ?? 0);
+  const tn = endTotal + woundPenalty + fatiguePenalty + carryPenalty;
+
+  const roll = new Roll("1d100");
+  await roll.evaluate();
+  const passed = Number(roll.total ?? 0) <= tn;
+
+  await requestUpdateChatMessage(message, {
+    "flags.uesrpg-3ev4.regenerationPrompt.resolved": true,
+    "flags.uesrpg-3ev4.regenerationPrompt.resolvedAt": Date.now(),
+    "flags.uesrpg-3ev4.regenerationPrompt.result": { passed }
+  });
+
+  if (passed) {
+    await applyHealing(actor, value, { source: "Regeneration" });
+  }
+
+  const content = `
+    <div class="uesrpg-regeneration-result">
+      <h3>Regeneration</h3>
+      <div><b>Endurance TN:</b> ${tn}</div>
+      <div><b>Roll:</b> ${roll.total}</div>
+      <div><b>Outcome:</b> ${passed ? `Success - healed ${value} HP` : "Failed - no healing"}</div>
+    </div>
+  `;
+
+  await ChatMessage.create({
+    user: game.user.id,
+    speaker: ChatMessage.getSpeaker({ actor }),
+    content,
+    whisper: _getWhisperRecipients(actor),
+    style: CONST.CHAT_MESSAGE_STYLES.OTHER
+  });
 }
 
 async function _onOpposedAction(ev, message) {
@@ -390,6 +548,42 @@ export function initializeChatHandlers() {
       }
 
       el.addEventListener("click", (ev) => _onShockAction(ev, message));
+    });
+
+    // Disease check buttons
+    root.querySelectorAll("[data-ues-disease-action]").forEach((el) => {
+      const actorUuid = el.dataset.actorUuid;
+      let actor = null;
+      try {
+        actor = actorUuid ? fromUuidSync(actorUuid) : null;
+      } catch (_e) {
+        actor = null;
+      }
+
+      if (actor && !canUserRollActor(game.user, actor)) {
+        el.setAttribute("disabled", "disabled");
+        el.setAttribute("title", "You do not have permission to roll for this actor.");
+      }
+
+      el.addEventListener("click", (ev) => _onDiseaseAction(ev, message));
+    });
+
+    // Regeneration check buttons
+    root.querySelectorAll("[data-ues-regeneration-action]").forEach((el) => {
+      const actorUuid = el.dataset.actorUuid;
+      let actor = null;
+      try {
+        actor = actorUuid ? fromUuidSync(actorUuid) : null;
+      } catch (_e) {
+        actor = null;
+      }
+
+      if (actor && !canUserRollActor(game.user, actor)) {
+        el.setAttribute("disabled", "disabled");
+        el.setAttribute("title", "You do not have permission to roll for this actor.");
+      }
+
+      el.addEventListener("click", (ev) => _onRegenerationAction(ev, message));
     });
 
     // Special Action opposed test card buttons
