@@ -831,6 +831,9 @@
                                             <li class="item" data-item-id="{{item._id}}">
                                                 <div class="itemInfo">
                                                     <img class="item-img" src="{{item.img}}" title="Send to Chat"/>
+                                                    {{#with (lookup @root.actor.ui.traitStackingById item._id) as |stack|}}
+                                                        <i class="fas fa-layer-group" title="Trait stacking: key '{{stack.key}}' appears {{stack.count}} times{{#if stack.highest}}. Highest X: {{stack.highest}}{{#if stack.unit}} {{stack.unit}}{{/if}}{{/if}}"></i>
+                                                    {{/with}}
                                                     <div class="item-name">{{item.name}}</div>
                                                 </div>
                                                 <div class="item-controls">
