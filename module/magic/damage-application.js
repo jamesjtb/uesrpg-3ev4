@@ -8,6 +8,8 @@
  */
 
 import { applyDamage, applyHealing, DAMAGE_TYPES, getDamageReduction } from "../combat/damage-automation.js";
+import { requestUpdateDocument } from "../helpers/authority-proxy.js";
+import { getActorTraitValue } from "../traits/trait-registry.js";
 
 function _str(v) {
   return v === undefined || v === null ? "" : String(v);
@@ -19,6 +21,78 @@ function _bool(v) {
   if (!s) return false;
   if (s === "true" || s === "1" || s === "yes" || s === "y" || s === "on") return true;
   return false;
+}
+
+function _maxTraitValue(actor, key) {
+  return Math.max(0, Number(getActorTraitValue(actor, key, { mode: "max" })) || 0);
+}
+
+function _getWhisperRecipients(actor) {
+  const out = new Set();
+  const users = game.users?.contents ?? [];
+  for (const user of users) {
+    if (!user) continue;
+    if (user.isGM) {
+      out.add(user.id);
+      continue;
+    }
+    const hasOwner = typeof actor?.testUserPermission === "function"
+      ? actor.testUserPermission(user, CONST.DOCUMENT_OWNERSHIP_LEVELS.OWNER)
+      : Number(actor?.ownership?.[user.id] ?? 0) >= CONST.DOCUMENT_OWNERSHIP_LEVELS.OWNER;
+    if (hasOwner) out.add(user.id);
+  }
+  return Array.from(out);
+}
+
+async function _applySpellAbsorption(targetActor, { casterActor = null, magicCost = 0, allowSelfAbsorption = false, sourceLabel = "Spell" } = {}) {
+  if (!targetActor) return { absorbed: false, restored: 0, rollTotal: null, threshold: null };
+  const threshold = _maxTraitValue(targetActor, "spellAbsorption");
+  if (threshold <= 0) return { absorbed: false, restored: 0, rollTotal: null, threshold: null };
+
+  if (casterActor && targetActor && casterActor.uuid === targetActor.uuid && !allowSelfAbsorption) {
+    return { absorbed: false, restored: 0, rollTotal: null, threshold };
+  }
+
+  const roll = new Roll("1d10");
+  await roll.evaluate();
+  const rollTotal = Number(roll.total ?? 0) || 0;
+  const absorbed = rollTotal <= threshold;
+  let restored = 0;
+
+  if (absorbed) {
+    const currentMP = Number(targetActor.system?.magicka?.value ?? 0);
+    const maxMP = Number(targetActor.system?.magicka?.max ?? 0);
+    const missingMP = Math.max(0, maxMP - currentMP);
+    const restoreCap = Math.max(0, Number(magicCost ?? 0));
+    restored = Math.min(missingMP, restoreCap);
+
+    if (restored > 0) {
+      await requestUpdateDocument(targetActor, { "system.magicka.value": currentMP + restored });
+    }
+  }
+
+  try {
+    const content = `
+      <div class="uesrpg-spell-absorption">
+        <h3>Spell Absorption (${threshold})</h3>
+        <div><b>Source:</b> ${sourceLabel}</div>
+        <div><b>Roll:</b> ${rollTotal}</div>
+        <div><b>Outcome:</b> ${absorbed ? "Absorbed (no effect)" : "Failed"}</div>
+        ${absorbed && restored > 0 ? `<div><b>MP Restored:</b> +${restored}</div>` : ""}
+      </div>
+    `;
+    await ChatMessage.create({
+      user: game.user.id,
+      speaker: ChatMessage.getSpeaker({ actor: targetActor }),
+      content,
+      whisper: _getWhisperRecipients(targetActor),
+      style: CONST.CHAT_MESSAGE_STYLES.OTHER
+    });
+  } catch (_e) {
+    // Non-blocking
+  }
+
+  return { absorbed, restored, rollTotal, threshold };
 }
 
 /**
@@ -51,6 +125,19 @@ export async function applyMagicDamage(targetActor, damage, damageType, spell, o
   const rollHTML = _str(options.rollHTML);
   const hitLocation = options.hitLocation ?? "Body";
   const source = _str(options.source ?? spell?.name ?? "Spell");
+  const casterActor = options.casterActor ?? null;
+  const magicCost = Number(options.magicCost ?? 0) || 0;
+  const allowSelfAbsorption = options.allowSelfAbsorption === true;
+
+  const absorption = await _applySpellAbsorption(targetActor, {
+    casterActor,
+    magicCost,
+    allowSelfAbsorption,
+    sourceLabel: source
+  });
+  if (absorption.absorbed) {
+    return { spellAbsorbed: true, absorption };
+  }
 
   const extraBreakdownLines = [];
   if (_bool(options.isOverloaded) && Number(options.overloadBonus || 0) > 0) {
@@ -112,6 +199,7 @@ export async function applyMagicDamage(targetActor, damage, damageType, spell, o
       hitLocation,
       rollHTML,
       ignoreReduction: true,
+      magicSource: true,
       extraBreakdownLines,
       damageAppliedByType,
     });
@@ -122,6 +210,7 @@ export async function applyMagicDamage(targetActor, damage, damageType, spell, o
     source,
     hitLocation,
     rollHTML,
+    magicSource: true,
     extraBreakdownLines,
     damageAppliedByType: dt && dt !== "none" && dt !== DAMAGE_TYPES.PHYSICAL ? damageAppliedByType : null,
   });
@@ -151,6 +240,19 @@ export async function applyMagicHealing(targetActor, healing, spell, options = {
 
   const source = _str(options.source ?? spell?.name ?? "Spell");
   const rollHTML = _str(options.rollHTML);
+  const casterActor = options.casterActor ?? null;
+  const magicCost = Number(options.magicCost ?? 0) || 0;
+  const allowSelfAbsorption = options.allowSelfAbsorption === true;
+
+  const absorption = await _applySpellAbsorption(targetActor, {
+    casterActor,
+    magicCost,
+    allowSelfAbsorption,
+    sourceLabel: source
+  });
+  if (absorption.absorbed) {
+    return { spellAbsorbed: true, absorption };
+  }
   
   console.log("UESRPG | applyMagicHealing: Calling applyHealing", {
     targetActor: targetActor.name,

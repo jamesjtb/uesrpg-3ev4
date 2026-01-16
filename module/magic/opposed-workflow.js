@@ -1328,12 +1328,20 @@ export const MagicOpposedWorkflow = {
           source: spell.name
         });
         
-        await applyMagicHealing(defender, healValue, spell, {
+        const healResult = await applyMagicHealing(defender, healValue, spell, {
           isTemporary: isTemporaryHealing,
           isCritical,
           rollHTML,
-          source: spell.name
+          source: spell.name,
+          casterActor: attacker,
+          magicCost: Number(data.attacker?.mpSpent ?? data.context?.mpSpent ?? spell.system?.cost ?? 0)
         });
+
+        if (healResult?.spellAbsorbed) {
+          if (isTemporaryHealing) data.outcome.tempHealingApplied = null;
+          else data.outcome.healingApplied = null;
+          data.outcome.spellAbsorbed = true;
+        }
 
         console.log("UESRPG | _resolveOutcome: applyMagicHealing completed");
 
@@ -1380,7 +1388,7 @@ export const MagicOpposedWorkflow = {
         const damageValue = baseDamage + overloadBonus + elementalBonus;
         const rollHTML = await damageRoll.render();
 
-        await applyMagicDamage(defender, damageValue, damageType, spell, {
+        const damageResult = await applyMagicDamage(defender, damageValue, damageType, spell, {
           isCritical,
           hitLocation: "Body",
           rollHTML,
@@ -1390,11 +1398,17 @@ export const MagicOpposedWorkflow = {
           overchargeTotals,
           elementalBonus,
           elementalBonusLabel: elemBonusInfo?.label || "",
-          source: spell.name
+          source: spell.name,
+          casterActor: attacker,
+          magicCost: Number(data.attacker?.mpSpent ?? data.context?.mpSpent ?? spell.system?.cost ?? 0)
         });
 
-        if (Boolean(spell.system?.hasUpkeep) || (spell.effects?.size ?? 0) > 0) {
-          await applySpellEffectsToTarget(attacker, defender, spell, { actualCost: Number(data.attacker?.mpSpent ?? data.context?.mpSpent ?? spell.system?.cost ?? 0), originalCastTime: Number(data.context?.originalCastWorldTime ?? game.time?.worldTime ?? 0) || 0 });
+        if (!damageResult?.spellAbsorbed) {
+          if (Boolean(spell.system?.hasUpkeep) || (spell.effects?.size ?? 0) > 0) {
+            await applySpellEffectsToTarget(attacker, defender, spell, { actualCost: Number(data.attacker?.mpSpent ?? data.context?.mpSpent ?? spell.system?.cost ?? 0), originalCastTime: Number(data.context?.originalCastWorldTime ?? game.time?.worldTime ?? 0) || 0 });
+          }
+        } else {
+          data.outcome.spellAbsorbed = true;
         }
 
         await _updateCard(message, data);
@@ -1466,12 +1480,20 @@ export const MagicOpposedWorkflow = {
           source: spell.name
         });
         
-        await applyMagicHealing(defender, healValue, spell, {
+        const healResult = await applyMagicHealing(defender, healValue, spell, {
           isTemporary: isTemporaryHealing,
           isCritical,
           rollHTML,
-          source: spell.name
+          source: spell.name,
+          casterActor: attacker,
+          magicCost: Number(data.attacker?.mpSpent ?? data.context?.mpSpent ?? spell.system?.cost ?? 0)
         });
+
+        if (healResult?.spellAbsorbed) {
+          if (isTemporaryHealing) data.outcome.tempHealingApplied = null;
+          else data.outcome.healingApplied = null;
+          data.outcome.spellAbsorbed = true;
+        }
 
         await _updateCard(message, data);
         return;
@@ -1516,7 +1538,7 @@ export const MagicOpposedWorkflow = {
         const damageValue = baseDamage + overloadBonus + elementalBonus;
         const rollHTML = await damageRoll.render();
 
-        await applyMagicDamage(defender, damageValue, damageType, spell, {
+        const damageResult = await applyMagicDamage(defender, damageValue, damageType, spell, {
           isCritical,
           hitLocation: "Body",
           rollHTML,
@@ -1526,11 +1548,17 @@ export const MagicOpposedWorkflow = {
           overchargeTotals,
           elementalBonus,
           elementalBonusLabel: elemBonusInfo?.label || "",
-          source: spell.name
+          source: spell.name,
+          casterActor: attacker,
+          magicCost: Number(data.attacker?.mpSpent ?? data.context?.mpSpent ?? spell.system?.cost ?? 0)
         });
 
-        if (Boolean(spell.system?.hasUpkeep) || (spell.effects?.size ?? 0) > 0) {
-          await applySpellEffectsToTarget(attacker, defender, spell, { actualCost: Number(data.attacker?.mpSpent ?? data.context?.mpSpent ?? spell.system?.cost ?? 0), originalCastTime: Number(data.context?.originalCastWorldTime ?? game.time?.worldTime ?? 0) || 0 });
+        if (!damageResult?.spellAbsorbed) {
+          if (Boolean(spell.system?.hasUpkeep) || (spell.effects?.size ?? 0) > 0) {
+            await applySpellEffectsToTarget(attacker, defender, spell, { actualCost: Number(data.attacker?.mpSpent ?? data.context?.mpSpent ?? spell.system?.cost ?? 0), originalCastTime: Number(data.context?.originalCastWorldTime ?? game.time?.worldTime ?? 0) || 0 });
+          }
+        } else {
+          data.outcome.spellAbsorbed = true;
         }
 
         await _updateCard(message, data);
@@ -1602,12 +1630,20 @@ export const MagicOpposedWorkflow = {
           source: spell.name
         });
         
-        await applyMagicHealing(defender, healValue, spell, {
+        const healResult = await applyMagicHealing(defender, healValue, spell, {
           isTemporary: isTemporaryHealing,
           isCritical,
           rollHTML,
-          source: spell.name
+          source: spell.name,
+          casterActor: attacker,
+          magicCost: Number(data.attacker?.mpSpent ?? data.context?.mpSpent ?? spell.system?.cost ?? 0)
         });
+
+        if (healResult?.spellAbsorbed) {
+          if (isTemporaryHealing) data.outcome.tempHealingApplied = null;
+          else data.outcome.healingApplied = null;
+          data.outcome.spellAbsorbed = true;
+        }
       }
 
       await _updateCard(message, data);
@@ -1671,7 +1707,7 @@ export const MagicOpposedWorkflow = {
         const damageValue = baseDamage + overloadBonus + elementalBonus;
         const rollHTML = await damageRoll.render();
 
-        await applyMagicDamage(defender, damageValue, damageType, spell, {
+        const damageResult = await applyMagicDamage(defender, damageValue, damageType, spell, {
           isCritical,
           hitLocation,
           rollHTML,
@@ -1681,7 +1717,9 @@ export const MagicOpposedWorkflow = {
           overchargeTotals,
           elementalBonus,
           elementalBonusLabel: elemBonusInfo?.label || "",
-          source: spell.name
+          source: spell.name,
+          casterActor: attacker,
+          magicCost: Number(data.attacker?.mpSpent ?? data.context?.mpSpent ?? spell.system?.cost ?? 0)
         });
 
         // If the spell defines Active Effects or has Upkeep, apply a spell effect marker on hit.
@@ -1689,8 +1727,12 @@ export const MagicOpposedWorkflow = {
         //  - duration tracking (including Upkeep prompt windows)
         //  - non-damaging secondary effects that accompany a damaging spell
         // Damage resolution remains authoritative; the marker/effects are additive.
-        if (Boolean(spell.system?.hasUpkeep) || (spell.effects?.size ?? 0) > 0) {
-          await applySpellEffectsToTarget(attacker, defender, spell, { actualCost: Number(data.attacker?.mpSpent ?? data.context?.mpSpent ?? spell.system?.cost ?? 0), originalCastTime: Number(data.context?.originalCastWorldTime ?? game.time?.worldTime ?? 0) || 0 });
+        if (!damageResult?.spellAbsorbed) {
+          if (Boolean(spell.system?.hasUpkeep) || (spell.effects?.size ?? 0) > 0) {
+            await applySpellEffectsToTarget(attacker, defender, spell, { actualCost: Number(data.attacker?.mpSpent ?? data.context?.mpSpent ?? spell.system?.cost ?? 0), originalCastTime: Number(data.context?.originalCastWorldTime ?? game.time?.worldTime ?? 0) || 0 });
+          }
+        } else {
+          data.outcome.spellAbsorbed = true;
         }
       } else {
         if ((spell.effects?.size ?? 0) > 0) {
