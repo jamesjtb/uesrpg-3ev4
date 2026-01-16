@@ -1,3 +1,5 @@
+import { resolveCriticalFlags } from "../rules/npc-rules.js";
+
 export function skillHelper(actorData, characteristic) {
     // First, try to use an aggregated cache if present (fast)
     try {
@@ -47,19 +49,11 @@ export function skillModHelper(actorData, skillName) {
 }
 
 export function isLucky(actorData, rollResult) {
-    let luckyArray = []
-    for (let num in actorData.system.lucky_numbers) {
-        luckyArray.push(actorData.system.lucky_numbers[num])
-    }
-
-    return luckyArray.some(num => num == rollResult)
+    const crit = resolveCriticalFlags(actorData, Number(rollResult), { allowLucky: true, allowUnlucky: false });
+    return crit.isCriticalSuccess === true;
 }
 
 export function isUnlucky(actorData, rollResult) {
-    let unluckyArray = []
-    for (let num in actorData.system.unlucky_numbers) {
-        unluckyArray.push(actorData.system.unlucky_numbers[num])
-    }
-
-    return unluckyArray.some(num => num == rollResult)
+    const crit = resolveCriticalFlags(actorData, Number(rollResult), { allowLucky: false, allowUnlucky: true });
+    return crit.isCriticalFailure === true;
 }

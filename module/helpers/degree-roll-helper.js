@@ -1,4 +1,5 @@
 import { SYSTEM_ROLL_FORMULA } from "../constants.js";
+import { isNPC, resolveCriticalFlags } from "../rules/npc-rules.js";
 /**
  * module/helpers/degree-roll-helper.js
  * UESRPG v3e — Degree of Success / Degree of Failure helper
@@ -24,29 +25,10 @@ export async function doTestRoll(actor, { rollFormula = SYSTEM_ROLL_FORMULA, tar
 
   // Determine actor type / NPC status (deterministic)
   // Per project rules: NPCs use fixed critical bands; PCs use lucky/unlucky numbers.
-  const actorType = String(actor?.type ?? "");
-  const actorIsNPC = (actorType.toLowerCase() === "npc");
-
-  // Determine criticals via lucky/unlucky or NPC thresholds
-  let isCriticalSuccess = false;
-  let isCriticalFailure = false;
-
-  if (!actorIsNPC && actor?.system) {
-    if (allowLucky) {
-      const luckyNums = Object.values(actor.system.lucky_numbers || {}).map(n => Number(n));
-      if (luckyNums.includes(total)) isCriticalSuccess = true;
-    }
-    if (allowUnlucky) {
-      const unluckyNums = Object.values(actor.system.unlucky_numbers || {}).map(n => Number(n));
-      if (unluckyNums.includes(total)) isCriticalFailure = true;
-    }
-  }
-
-  // NPC criticals fallback
-  if (actorIsNPC && !isCriticalSuccess && !isCriticalFailure) {
-    if (total <= 3) isCriticalSuccess = true;
-    if (total >= 98) isCriticalFailure = true;
-  }
+  const actorIsNPC = isNPC(actor);
+  const crit = resolveCriticalFlags(actor, total, { allowLucky, allowUnlucky });
+  const isCriticalSuccess = crit.isCriticalSuccess;
+  const isCriticalFailure = crit.isCriticalFailure;
 
   // Success / failure vs target
   const tn = Number(target || 0);
@@ -110,27 +92,10 @@ export function computeResultFromRollTotal(actor, { rollTotal = 0, target = 0, a
   const total = Number(rollTotal);
   const tn = Number(target || 0);
 
-  const actorType = String(actor?.type ?? "");
-  const actorIsNPC = (actorType.toLowerCase() === "npc");
-
-  let isCriticalSuccess = false;
-  let isCriticalFailure = false;
-
-  if (!actorIsNPC && actor?.system) {
-    if (allowLucky) {
-      const luckyNums = Object.values(actor.system.lucky_numbers || {}).map(n => Number(n));
-      if (luckyNums.includes(total)) isCriticalSuccess = true;
-    }
-    if (allowUnlucky) {
-      const unluckyNums = Object.values(actor.system.unlucky_numbers || {}).map(n => Number(n));
-      if (unluckyNums.includes(total)) isCriticalFailure = true;
-    }
-  }
-
-  if (actorIsNPC && !isCriticalSuccess && !isCriticalFailure) {
-    if (total <= 3) isCriticalSuccess = true;
-    if (total >= 98) isCriticalFailure = true;
-  }
+  const actorIsNPC = isNPC(actor);
+  const crit = resolveCriticalFlags(actor, total, { allowLucky, allowUnlucky });
+  const isCriticalSuccess = crit.isCriticalSuccess;
+  const isCriticalFailure = crit.isCriticalFailure;
 
   let isSuccess = (total <= tn);
   if (!actorIsNPC) {
