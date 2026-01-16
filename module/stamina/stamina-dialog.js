@@ -5,6 +5,8 @@
 
 import { createOrUpdateStatusEffect } from "../effects/status-effect.js";
 import { requestUpdateDocument } from "../helpers/authority-proxy.js";
+import { canUseHeroicActions } from "../rules/npc-rules.js";
+import { isActorUndead } from "../traits/trait-registry.js";
 
 /**
  * Stamina effect key constants to avoid typos
@@ -88,6 +90,9 @@ export async function openStaminaDialog(actor) {
   const currentSP = actor.system?.stamina?.value ?? 0;
   const maxSP = actor.system?.stamina?.max ?? 0;
 
+  const allowHeroic = canUseHeroicActions(actor);
+  const options = STAMINA_OPTIONS.filter(opt => opt.id !== "heroic-action" || allowHeroic);
+
   // Build dialog content
   const content = `
     <div class="stamina-dialog">
@@ -100,7 +105,7 @@ export async function openStaminaDialog(actor) {
           <label><b>Select Stamina Action:</b></label>
           <select name="stamina-action" style="width: 100%; padding: 5px; margin-top: 5px;">
             <option value="">-- Select an option --</option>
-            ${STAMINA_OPTIONS.map(opt => 
+            ${options.map(opt => 
               `<option value="${opt.id}">${opt.name} (${opt.cost} SP) - ${opt.description}</option>`
             ).join('')}
           </select>
@@ -169,9 +174,17 @@ export async function openStaminaDialog(actor) {
 async function spendStamina(actor, option, spAmount = 1) {
   const cost = option.allowAmount ? spAmount : option.cost;
   const currentSP = actor.system?.stamina?.value ?? 0;
+  if (isActorUndead(actor) && (currentSP - cost) < 0) {
+    ui.notifications?.warn?.("Undead cannot spend Stamina below 0.");
+    return;
+  }
 
   // Handle Heroic Action immediately
   if (option.immediate) {
+    if (!canUseHeroicActions(actor)) {
+      ui.notifications.warn("Heroic Actions require the Elite trait for NPCs.");
+      return;
+    }
     const currentAP = Number(actor.system?.action_points?.value ?? 0);
     const maxAP = Number(actor.system?.action_points?.max ?? 0);
     
