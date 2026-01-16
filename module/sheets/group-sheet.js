@@ -1,5 +1,6 @@
 import { prepareCharacterItems } from "./sheet-prepare-items.js";
 import { bindCommonSheetListeners, bindCommonEditableInventoryListeners } from "./sheet-listeners.js";
+import { applyShortRest, applyLongRest, buildRestChatContent } from "./rest-workflow.js";
 
 /**
  * Group Actor Sheet
@@ -419,37 +420,13 @@ export class GroupSheet extends ActorSheet {
       return;
     }
 
-    let content = "<h3>Short Rest (1 hour)</h3><ul>";
-
+    const lines = [];
     for (const member of visibleMembers) {
-      const actor = member.actor;
-      const fatigueLevel = actor.system.fatigue?.level || 0;
-      const currentSP = actor.system.stamina?.value || 0;
-      const maxSP = actor.system.stamina?.max || 0;
-      const currentMP = actor.system.magicka?.value || 0;
-      const maxMP = actor.system.magicka?.max || 0;
-
-      // RAW: Remove 1 fatigue OR recover 1 SP
-      if (fatigueLevel > 0) {
-        await actor.update({ "system.fatigue.level": fatigueLevel - 1 });
-        content += `<li><b>${actor.name}</b>: Removed 1 fatigue (now ${fatigueLevel - 1})</li>`;
-      } else if (currentSP < maxSP) {
-        await actor.update({ "system.stamina.value": currentSP + 1 });
-        content += `<li><b>${actor.name}</b>: Recovered 1 SP (now ${currentSP + 1}/${maxSP})</li>`;
-      } else {
-        content += `<li><b>${actor.name}</b>: No recovery needed</li>`;
-      }
-
-      // RAW: Recover MP = floor(maxMP / 10)
-      const mpRecover = Math.floor(maxMP / 10);
-      if (mpRecover > 0 && currentMP < maxMP) {
-        const newMP = Math.min(currentMP + mpRecover, maxMP);
-        await actor.update({ "system.magicka.value": newMP });
-        content += ` (+${mpRecover} MP)`;
-      }
+      const { line } = await applyShortRest(member.actor);
+      if (line) lines.push(line);
     }
 
-    content += "</ul>";
+    const content = buildRestChatContent("Short Rest (1 hour)", lines);
 
     // Update last rest timestamp
     await this.actor.update({ "system.lastRest.short": game.time.worldTime });
@@ -478,47 +455,13 @@ export class GroupSheet extends ActorSheet {
       return;
     }
 
-    let content = "<h3>Long Rest (8 hours)</h3><ul>";
-
+    const lines = [];
     for (const member of visibleMembers) {
-      const actor = member.actor;
-      const endBonus = Math.floor((actor.system.characteristics?.end?.total || 0) / 10);
-      const fatigueLevel = actor.system.fatigue?.level || 0;
-      const currentHP = actor.system.hp?.value || 0;
-      const maxHP = actor.system.hp?.max || 0;
-      const maxSP = actor.system.stamina?.max || 0;
-      const maxMP = actor.system.magicka?.max || 0;
-      const hasWounds = actor.system.wounded || false;
-
-      let recoveryText = "";
-
-      // RAW: Remove END bonus fatigue levels
-      if (fatigueLevel > 0) {
-        const fatigueRemoved = Math.min(fatigueLevel, endBonus);
-        await actor.update({ "system.fatigue.level": fatigueLevel - fatigueRemoved });
-        recoveryText += `Removed ${fatigueRemoved} fatigue; `;
-      }
-
-      // RAW: Heal END bonus HP (only if no wounds)
-      if (!hasWounds && currentHP < maxHP) {
-        const hpHealed = Math.min(endBonus, maxHP - currentHP);
-        await actor.update({ "system.hp.value": currentHP + hpHealed });
-        recoveryText += `Healed ${hpHealed} HP; `;
-      } else if (hasWounds) {
-        recoveryText += "Cannot heal HP (wounded); ";
-      }
-
-      // RAW: Recover all SP and MP
-      await actor.update({
-        "system.stamina.value": maxSP,
-        "system.magicka.value": maxMP
-      });
-      recoveryText += `Recovered all SP and MP`;
-
-      content += `<li><b>${actor.name}</b>: ${recoveryText}</li>`;
+      const { line } = await applyLongRest(member.actor);
+      if (line) lines.push(line);
     }
 
-    content += "</ul>";
+    const content = buildRestChatContent("Long Rest (8 hours)", lines);
 
     // Update last rest timestamp
     await this.actor.update({ "system.lastRest.long": game.time.worldTime });

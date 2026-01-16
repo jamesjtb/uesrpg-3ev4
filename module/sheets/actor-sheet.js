@@ -53,6 +53,9 @@ import { shouldHideFromMainInventory } from "./sheet-inventory.js";
 import { prepareCharacterItems } from "./sheet-prepare-items.js";
 import { registerStaminaButtonHandler } from "./actor-sheet-stamina-integration.js";
 import { registerHPButtonHandler } from "./actor-sheet-hp-integration.js";
+import { applyShortRest, applyLongRest, buildRestChatContent } from "./rest-workflow.js";
+import { executeActivation, buildSpecialActionActivation } from "../system/activation/activation-executor.js";
+import { buildResistanceBonusSection, readResistanceBonusSelections, buildResistanceBonusMods } from "../traits/trait-resistance-ui.js";
 
 export class SimpleActorSheet extends foundry.appv1.sheets.ActorSheet {
   /** @override */
@@ -289,6 +292,8 @@ async activateListeners(html) {
   html.find(".incrementResource").click(this._onIncrementResource.bind(this));
   // Resource restore (migrated from label button)
   html.find(".restoreResource").click(this._onResetResource.bind(this));
+  html.find(".short-rest").click(this._onShortRest.bind(this));
+  html.find(".long-rest").click(this._onLongRest.bind(this));
   
   // Register stamina button handler after incrementResource
   registerStaminaButtonHandler(this, html);
@@ -445,9 +450,21 @@ async activateListeners(html) {
           return;
         }
 
-        // Consume AP
-        const ok = await requireAP(title, 1);
-        if (!ok) return;
+        const requiresTarget = specialId !== "arise";
+        const activation = buildSpecialActionActivation({
+          actionType: at === "secondary" ? "secondary" : "action",
+          apCost: 1,
+          requiresTarget
+        });
+
+        const activationResult = await executeActivation({
+          actor: this.actor,
+          activation,
+          label: title,
+          renderChat: false,
+          context: { targets: game.user?.targets }
+        });
+        if (!activationResult.ok) return;
 
         // Resolve tokens
         let actorToken = canvas.tokens?.controlled?.[0] ?? null;
@@ -458,10 +475,7 @@ async activateListeners(html) {
         const targets = Array.from(game.user.targets ?? []);
         const targetToken = targets[0] ?? null;
 
-        if (!targetToken && specialId !== "arise") {
-          ui.notifications.warn(`${def.name} requires a targeted token.`);
-          return;
-        }
+        if (!targetToken && requiresTarget) return;
 
         // Arise doesn't need opposed test
         if (specialId === "arise") {
@@ -1461,6 +1475,7 @@ let d = new Dialog({
 
     // Check for Physical Exertion stamina effect
     const staminaBonus = await applyPhysicalExertionBonus(this.actor, element.id);
+    const resistanceSection = buildResistanceBonusSection(this.actor);
 
     // Mobility: Heavy armor imposes -20 to Agility-based tests (except Combat Style).
     // For characteristic rolls, apply only when rolling Agility.
@@ -1523,6 +1538,7 @@ let d = new Dialog({
                   <label><b>${element.getAttribute(
         "name"
       )} Modifier: </b></label><input placeholder="ex. -20, +10" id="playerInput" value="0" style=" text-align: center; width: 50%; border-style: groove; float: right;" type="text"></input></div>
+                  ${resistanceSection.html}
                 </form>`,
       buttons: {
         one: {
@@ -1530,6 +1546,10 @@ let d = new Dialog({
           callback: async (html) => {
   const playerInputRaw = html.find('[id="playerInput"]').val();
   const playerInput = Number.parseInt(playerInputRaw, 10) || 0;
+  const root = html instanceof HTMLElement ? html : html?.[0];
+  const selectedRes = readResistanceBonusSelections(root, resistanceSection.options);
+  const resMods = buildResistanceBonusMods(selectedRes);
+  const resBonus = resMods.reduce((sum, m) => sum + Number(m.value ?? 0), 0);
 
   const roll = new Roll("1d100");
   await roll.evaluate();
@@ -1537,8 +1557,8 @@ let d = new Dialog({
   let contentString = "";
 
            const tn = hasWoundPenalty
-  ? woundedValue + playerInput
-  : regularValue + playerInput;
+  ? woundedValue + playerInput + resBonus
+  : regularValue + playerInput + resBonus;
 const { isSuccess, doS, doF } = calculateDegrees(Number(roll.total), tn);
 let degreesLine = `<br><b>${isSuccess ? "Degrees of Success" : "Degrees of Failure"}: ${isSuccess ? doS : doF}</b>`;
 
@@ -1561,6 +1581,11 @@ if (isLucky(this.actor, roll.result)) {
       : " <span style='color: rgb(168, 5, 5); font-size: 120%;'> <b>FAILURE!</b></span>"
     }</b>${degreesLine}`;
 }
+
+          if (resBonus) {
+            const labels = resMods.map(m => m.label).join(", ");
+            tags.push(`<span class="tag">Resistance Bonus ${resBonus >= 0 ? "+" : ""}${resBonus}${labels ? ` (${labels})` : ""}</span>`);
+          }
 
           await roll.toMessage({
   user: game.user.id,
@@ -1649,6 +1674,7 @@ if (isLucky(this.actor, roll.result)) {
 
     // --- Untargeted -> single skill test (dialog unless Shift quick-roll) ---
     const hasSpec = String(skillItem?.system?.trainedItems ?? "").trim().length > 0;
+    const resistanceSection = buildResistanceBonusSection(this.actor);
     const last = getLast();
 
     const defaults = normalizeSkillRollOptions(last, { difficultyKey: "average", manualMod: 0, useSpec: false });
@@ -1656,7 +1682,7 @@ if (isLucky(this.actor, roll.result)) {
     let decl = null;
 
     if (quickShift) {
-      decl = { difficultyKey: defaults.difficultyKey, manualMod: defaults.manualMod, useSpec: defaults.useSpec };
+      decl = { difficultyKey: defaults.difficultyKey, manualMod: defaults.manualMod, useSpec: defaults.useSpec, resistanceSelected: [] };
     } else {
       const difficultyOptions = SKILL_DIFFICULTIES.map(d => {
         const sign = d.mod >= 0 ? "+" : "";
@@ -1680,6 +1706,7 @@ if (isLucky(this.actor, roll.result)) {
             <label style="margin:0;"><b>Manual Modifier</b></label>
             <input name="manualMod" type="number" value="${Number(defaults.manualMod) || 0}" style="width:120px;" />
           </div>
+          ${resistanceSection.html}
         </form>`;
 
       try {
@@ -1695,7 +1722,9 @@ if (isLucky(this.actor, roll.result)) {
                 const useSpec = Boolean(root?.querySelector('input[name="useSpec"]')?.checked);
                 const rawManual = root?.querySelector('input[name="manualMod"]')?.value ?? "0";
                 const manualMod = Number.parseInt(String(rawManual), 10) || 0;
-                return normalizeSkillRollOptions({ difficultyKey, useSpec, manualMod }, defaults);
+                const selectedRes = readResistanceBonusSelections(root, resistanceSection.options);
+                const normalized = normalizeSkillRollOptions({ difficultyKey, useSpec, manualMod }, defaults);
+                return { ...normalized, resistanceSelected: selectedRes };
               }
             },
             cancel: { label: "Cancel", callback: () => null }
@@ -1710,7 +1739,9 @@ if (isLucky(this.actor, roll.result)) {
     if (!decl) return;
 
     // Normalize + clamp UI inputs (and also normalizes the difficulty key).
+    const selectedRes = Array.isArray(decl?.resistanceSelected) ? decl.resistanceSelected : [];
     decl = normalizeSkillRollOptions(decl, defaults);
+    decl.resistanceSelected = selectedRes;
 
     await setLast({
       difficultyKey: decl.difficultyKey,
@@ -1721,6 +1752,8 @@ if (isLucky(this.actor, roll.result)) {
 
     // Check for Physical Exertion stamina effect for STR/END skills
     const staminaBonus = await applyPhysicalExertionToSkill(this.actor, skillItem);
+    const resMods = buildResistanceBonusMods(decl.resistanceSelected ?? []);
+    const resBonus = resMods.reduce((sum, m) => sum + Number(m.value ?? 0), 0);
 
     const request = buildSkillRollRequest({
       actor: this.actor,
@@ -1736,7 +1769,8 @@ if (isLucky(this.actor, roll.result)) {
       skillItem,
       difficultyKey: decl.difficultyKey,
       manualMod: decl.manualMod + staminaBonus,
-      useSpecialization: hasSpec && decl.useSpec
+      useSpecialization: hasSpec && decl.useSpec,
+      situationalMods: resMods
     });
 
     skillRollDebug("untargeted TN", { finalTN: tn.finalTN, breakdown: tn.breakdown });
@@ -1756,6 +1790,10 @@ if (isLucky(this.actor, roll.result)) {
     if (tn?.difficulty?.mod) tags.push(`<span class="tag">${tn.difficulty.label} ${tn.difficulty.mod >= 0 ? "+" : ""}${tn.difficulty.mod}</span>`);
     if (hasSpec && decl.useSpec) tags.push(`<span class="tag">Specialization +10</span>`);
     if (decl.manualMod) tags.push(`<span class="tag">Mod ${decl.manualMod >= 0 ? "+" : ""}${decl.manualMod}</span>`);
+    if (resBonus) {
+      const labels = resMods.map(m => m.label).join(", ");
+      tags.push(`<span class="tag">Resistance Bonus ${resBonus >= 0 ? "+" : ""}${resBonus}${labels ? ` (${labels})` : ""}</span>`);
+    }
     if (staminaBonus > 0) tags.push(`<span class="tag">Physical Exertion +${staminaBonus}</span>`);
 
     const res = await doTestRoll(this.actor, { rollFormula: SYSTEM_ROLL_FORMULA, target: tn.finalTN, allowLucky: true, allowUnlucky: true });
@@ -3569,6 +3607,48 @@ await item.update({ "system.quantity": newQty });
     if (!resource || typeof resource.max !== "number") return;
     const dataPath = `system.${resourceLabel}.value`;
     return this.actor.update({ [dataPath]: resource.max });
+  }
+
+  async _onShortRest(event) {
+    event.preventDefault();
+    if (!this.actor) return;
+    if (!this.actor.isOwner && !game.user.isGM) {
+      ui.notifications.warn("You do not have permission to rest this actor.");
+      return;
+    }
+
+    const { line } = await applyShortRest(this.actor);
+    const content = buildRestChatContent("Short Rest (1 hour)", [line]);
+
+    await ChatMessage.create({
+      user: game.user.id,
+      speaker: ChatMessage.getSpeaker({ actor: this.actor }),
+      content
+    });
+
+    await this.render(false);
+    ui.notifications.info("Short rest completed.");
+  }
+
+  async _onLongRest(event) {
+    event.preventDefault();
+    if (!this.actor) return;
+    if (!this.actor.isOwner && !game.user.isGM) {
+      ui.notifications.warn("You do not have permission to rest this actor.");
+      return;
+    }
+
+    const { line } = await applyLongRest(this.actor);
+    const content = buildRestChatContent("Long Rest (8 hours)", [line]);
+
+    await ChatMessage.create({
+      user: game.user.id,
+      speaker: ChatMessage.getSpeaker({ actor: this.actor }),
+      content
+    });
+
+    await this.render(false);
+    ui.notifications.info("Long rest completed.");
   }
 
   _onXPMenu(event) {

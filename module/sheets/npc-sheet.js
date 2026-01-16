@@ -37,6 +37,10 @@ import { prepareCharacterItems } from "./sheet-prepare-items.js";
 import { registerHPButtonHandler } from "./actor-sheet-hp-integration.js";
 import { classifySpellForRouting, getUserSpellTargets, shouldUseTargetedSpellWorkflow, shouldUseModernSpellWorkflow, debugMagicRoutingLog } from "../magic/spell-routing.js";
 import { filterTargetsBySpellRange, getSpellRangeType, placeAoETemplateAndCollectTargets } from "../magic/spell-range.js";
+import { applyShortRest, applyLongRest, buildRestChatContent } from "./rest-workflow.js";
+import { executeActivation, buildSpecialActionActivation } from "../system/activation/activation-executor.js";
+import { resolveCriticalFlags } from "../rules/npc-rules.js";
+import { buildResistanceBonusSection, readResistanceBonusSelections, buildResistanceBonusMods } from "../traits/trait-resistance-ui.js";
 
 export class npcSheet extends foundry.appv1.sheets.ActorSheet {
   /** @override */
@@ -262,6 +266,8 @@ async activateListeners(html) {
   html.find(".incrementResource").click(this._onIncrementResource.bind(this));
   // Resource restore (migrated from label button)
   html.find(".restoreResource").click(this._onResetResource.bind(this));
+  html.find(".short-rest").click(this._onShortRest.bind(this));
+  html.find(".long-rest").click(this._onLongRest.bind(this));
   
   // Register HP button handler to open HP/Temp HP dialog
   registerHPButtonHandler(this, html);
@@ -397,9 +403,21 @@ async activateListeners(html) {
           return;
         }
 
-        // Consume AP
-        const ok = await requireAP(title, 1);
-        if (!ok) return;
+        const requiresTarget = specialId !== "arise";
+        const activation = buildSpecialActionActivation({
+          actionType: at === "secondary" ? "secondary" : "action",
+          apCost: 1,
+          requiresTarget
+        });
+
+        const activationResult = await executeActivation({
+          actor: this.actor,
+          activation,
+          label: title,
+          renderChat: false,
+          context: { targets: game.user?.targets }
+        });
+        if (!activationResult.ok) return;
 
         // Resolve tokens
         let actorToken = canvas.tokens?.controlled?.[0] ?? null;
@@ -410,10 +428,7 @@ async activateListeners(html) {
         const targets = Array.from(game.user.targets ?? []);
         const targetToken = targets[0] ?? null;
 
-        if (!targetToken && specialId !== "arise") {
-          ui.notifications.warn(`${def.name} requires a targeted token.`);
-          return;
-        }
+        if (!targetToken && requiresTarget) return;
 
         // Arise doesn't need opposed test
         if (specialId === "arise") {
@@ -1428,13 +1443,12 @@ async _onSetBaseCharacteristics(event) {
   // Defensive guards for actor/system and nested properties
   const actorSys = this.actor?.system || {};
   const charTotal = Number(actorSys?.characteristics?.[element.id]?.total ?? 0);
+  const resistanceSection = buildResistanceBonusSection(this.actor);
   const woundPenalty = Number(actorSys?.woundPenalty ?? 0);
   const fatiguePenalty = Number(actorSys?.fatigue?.penalty ?? 0);
   const carryPenalty = Number(actorSys?.carry_rating?.penalty ?? 0);
   const woundedValue = charTotal + woundPenalty + fatiguePenalty + carryPenalty;
   const regularValue = charTotal + fatiguePenalty + carryPenalty;
-  const lucky = actorSys.lucky_numbers || {};
-  const unlucky = actorSys.unlucky_numbers || {};
   const hasWoundPenalty = woundPenalty !== 0;
   let tags = [];
   if (hasWoundPenalty) {
@@ -1454,22 +1468,28 @@ async _onSetBaseCharacteristics(event) {
                 <label><b>${element.getAttribute("name")} Modifier: </b></label>
                 <input placeholder="ex. -20, +10" id="playerInput" value="0" style="text-align: center; width: 50%; border-style: groove; float: right;" type="text">
                 </div>
+                ${resistanceSection.html}
               </form>`,
     buttons: {
       one: {
         label: "Roll!",
         callback: async (html) => {
           const playerInput = parseInt(html.find('[id="playerInput"]').val()) || 0;
+          const root = html instanceof HTMLElement ? html : html?.[0];
+          const selectedRes = readResistanceBonusSelections(root, resistanceSection.options);
+          const resMods = buildResistanceBonusMods(selectedRes);
+          const resBonus = resMods.reduce((sum, m) => sum + Number(m.value ?? 0), 0);
 
           let contentString = "";
           let roll = new Roll("1d100");
           await roll.evaluate();
 
-          const isLucky = [lucky.ln1, lucky.ln2, lucky.ln3, lucky.ln4, lucky.ln5, lucky.ln6, lucky.ln7, lucky.ln8, lucky.ln9, lucky.ln10].includes(roll.total);
-          const isUnlucky = [unlucky.ul1, unlucky.ul2, unlucky.ul3, unlucky.ul4, unlucky.ul5, unlucky.ul6].includes(roll.total);
+          const crit = resolveCriticalFlags(this.actor, roll.total, { allowLucky: true, allowUnlucky: true });
+          const isLucky = crit.isCriticalSuccess;
+          const isUnlucky = crit.isCriticalFailure;
 
           if (hasWoundPenalty) {
-            const target = woundedValue + playerInput;
+            const target = woundedValue + playerInput + resBonus;
             if (isLucky) {
               contentString = `<h2>${element.getAttribute("name")}</h2><p></p><b>Target Number: [[${target}]]</b><p></p><b>Result: [[${roll.result}]]</b><p></p><span style='color:green; font-size:120%;'><b>LUCKY NUMBER!</b></span>`;
             } else if (isUnlucky) {
@@ -1478,7 +1498,7 @@ async _onSetBaseCharacteristics(event) {
               contentString = `<h2>${element.getAttribute("name")}</h2><p></p><b>Target Number: [[${target}]]</b><p></p><b>Result: [[${roll.result}]]</b><p></p>${roll.total <= target ? "<span style='color:green; font-size:120%;'><b>SUCCESS!</b></span>" : "<span style='color:rgb(168, 5, 5); font-size:120%;'><b>FAILURE!</b></span>"}`;
             }
           } else {
-            const target = regularValue + playerInput;
+            const target = regularValue + playerInput + resBonus;
             if (isLucky) {
               contentString = `<h2>${element.getAttribute("name")}</h2><p></p><b>Target Number: [[${target}]]</b><p></p><b>Result: [[${roll.result}]]</b><p></p><span style='color:green; font-size:120%;'><b>LUCKY NUMBER!</b></span>`;
             } else if (isUnlucky) {
@@ -1486,6 +1506,11 @@ async _onSetBaseCharacteristics(event) {
             } else {
               contentString = `<h2>${element.getAttribute("name")}</h2><p></p><b>Target Number: [[${target}]]</b><p></p><b>Result: [[${roll.result}]]</b><p></p>${roll.total <= target ? "<span style='color:green; font-size:120%;'><b>SUCCESS!</b></span>" : "<span style='color:rgb(168, 5, 5); font-size:120%;'><b>FAILURE!</b></span>"}`;
             }
+          }
+
+          if (resBonus) {
+            const labels = resMods.map(m => m.label).join(", ");
+            tags.push(`<span class="tag">Resistance Bonus ${resBonus >= 0 ? "+" : ""}${resBonus}${labels ? ` (${labels})` : ""}</span>`);
           }
 
           await roll.toMessage({
@@ -1592,6 +1617,7 @@ async _onProfessionsRoll(event) {
   };
 
   const hasSpec = Boolean(String(actorSystem?.skills?.[key]?.specialization ?? "").trim());
+  const resistanceSection = buildResistanceBonusSection(this.actor);
 
   // Pull last used defaults if present (falls back to PC defaults shape).
   const defaults = { difficultyKey: "average", manualMod: 0, useSpec: false };
@@ -1620,6 +1646,7 @@ async _onProfessionsRoll(event) {
         <label style="margin:0;">Use Specialization (+10)</label>
       </div>
       ` : ``}
+      ${resistanceSection.html}
     </form>
   `;
 
@@ -1633,14 +1660,18 @@ async _onProfessionsRoll(event) {
       const useSpec = Boolean(root?.querySelector('input[name="useSpec"]')?.checked);
       const rawManual = root?.querySelector('input[name="manualMod"]')?.value ?? "0";
       const manualMod = Number.parseInt(String(rawManual), 10) || 0;
-      return normalizeSkillRollOptions({ difficultyKey, useSpec, manualMod }, defaults);
+      const selectedRes = readResistanceBonusSelections(root, resistanceSection.options);
+      const normalized = normalizeSkillRollOptions({ difficultyKey, useSpec, manualMod }, defaults);
+      return { ...normalized, resistanceSelected: selectedRes };
     },
     rejectClose: false
   }).catch(() => null);
 
   if (!decl) return;
 
+  const selectedRes = Array.isArray(decl?.resistanceSelected) ? decl.resistanceSelected : [];
   const normalized = normalizeSkillRollOptions(decl, defaults);
+  normalized.resistanceSelected = selectedRes;
 
   // Build request for debug symmetry (no side effects).
   buildSkillRollRequest({
@@ -1651,12 +1682,16 @@ async _onProfessionsRoll(event) {
     context: { source: "npc-sheet", quick: false }
   });
 
+  const resMods = buildResistanceBonusMods(normalized.resistanceSelected ?? []);
+  const resBonus = resMods.reduce((sum, m) => sum + Number(m.value ?? 0), 0);
+
   const tn = computeSkillTN({
     actor: this.actor,
     skillItem: profSkillItem,
     difficultyKey: normalized.difficultyKey,
     manualMod: normalized.manualMod,
-    useSpecialization: hasSpec && normalized.useSpec
+    useSpecialization: hasSpec && normalized.useSpec,
+    situationalMods: resMods
   });
 
   const res = await doTestRoll(this.actor, {
@@ -1697,6 +1732,10 @@ async _onProfessionsRoll(event) {
   if (tn?.difficulty?.mod) tags.push(`<span class="tag">${tn.difficulty.label} ${tn.difficulty.mod >= 0 ? "+" : ""}${tn.difficulty.mod}</span>`);
   if (hasSpec && normalized.useSpec) tags.push(`<span class="tag">Specialization +10</span>`);
   if (normalized.manualMod) tags.push(`<span class="tag">Mod ${normalized.manualMod >= 0 ? "+" : ""}${normalized.manualMod}</span>`);
+  if (resBonus) {
+    const labels = resMods.map(m => m.label).join(", ");
+    tags.push(`<span class="tag">Resistance Bonus ${resBonus >= 0 ? "+" : ""}${resBonus}${labels ? ` (${labels})` : ""}</span>`);
+  }
 
   const flavor = `
     <div>
@@ -2301,8 +2340,6 @@ async _onSpellRoll(event) {
   event.preventDefault();
   const element = event.currentTarget;
   const actorSys = this.actor?.system || {};
-  const lucky = actorSys.lucky_numbers || {};
-  const unlucky = actorSys.unlucky_numbers || {};
   const baseRes = Number(actorSys?.resistance?.[element.id] ?? 0);
 
   let d = new Dialog({
@@ -2319,8 +2356,9 @@ async _onSpellRoll(event) {
           let roll = new Roll("1d100");
           await roll.evaluate();
 
-          const isLucky = [lucky.ln1, lucky.ln2, lucky.ln3, lucky.ln4, lucky.ln5].includes(roll.total);
-          const isUnlucky = [unlucky.ul1, unlucky.ul2, unlucky.ul3, unlucky.ul4, unlucky.ul5].includes(roll.total);
+          const crit = resolveCriticalFlags(this.actor, roll.total, { allowLucky: true, allowUnlucky: true });
+          const isLucky = crit.isCriticalSuccess;
+          const isUnlucky = crit.isCriticalFailure;
 
           const target = baseRes + playerInput;
           let contentString = `<h2>${element.name} Resistance</h2><p></p><b>Target Number: [[${target}]]</b><p></p><b>Result: [[${roll.result}]]</b><p></p>`;
@@ -2623,6 +2661,48 @@ _onResetResource(event) {
   const dataPath = `system.${resourceLabel}.value`;
   this.actor.update({ [dataPath]: Number(resource.max ?? 0) });
 }
+
+  async _onShortRest(event) {
+    event.preventDefault();
+    if (!this.actor) return;
+    if (!this.actor.isOwner && !game.user.isGM) {
+      ui.notifications.warn("You do not have permission to rest this actor.");
+      return;
+    }
+
+    const { line } = await applyShortRest(this.actor);
+    const content = buildRestChatContent("Short Rest (1 hour)", [line]);
+
+    await ChatMessage.create({
+      user: game.user.id,
+      speaker: ChatMessage.getSpeaker({ actor: this.actor }),
+      content
+    });
+
+    await this.render(false);
+    ui.notifications.info("Short rest completed.");
+  }
+
+  async _onLongRest(event) {
+    event.preventDefault();
+    if (!this.actor) return;
+    if (!this.actor.isOwner && !game.user.isGM) {
+      ui.notifications.warn("You do not have permission to rest this actor.");
+      return;
+    }
+
+    const { line } = await applyLongRest(this.actor);
+    const content = buildRestChatContent("Long Rest (8 hours)", [line]);
+
+    await ChatMessage.create({
+      user: game.user.id,
+      speaker: ChatMessage.getSpeaker({ actor: this.actor }),
+      content
+    });
+
+    await this.render(false);
+    ui.notifications.info("Long rest completed.");
+  }
 
   // REMOVED: _createSpellFilterOptions() - no longer used with spell school categorization
   // The spell filter dropdown (#spellFilter) was removed when migrating to spell schools

@@ -1,5 +1,6 @@
 import { UESRPG } from "../constants.js";
 import { SPECIAL_ACTIONS } from "../config/special-actions.js";
+import { activateTalentFromItemSheet, activatePowerFromItemSheet } from "./shared-handlers.js";
 
 /**
  * Extend the basic foundry.appv1.sheets.ItemSheet with some very simple modifications
@@ -71,6 +72,75 @@ export class SimpleItemSheet extends foundry.appv1.sheets.ItemSheet {
     data.armorMaterialOptions = UESRPG.ARMOR_MATERIALS;
     data.armorClassOptions = UESRPG.ARMOR_CLASSES;
     data.shieldTypeOptions = UESRPG.SHIELD_TYPES;
+    data.activationUsagePeriodOptions = {
+      none: "None",
+      encounter: "Encounter",
+      shortRest: "Short Rest",
+      longRest: "Long Rest",
+      day: "Day"
+    };
+    data.activationHitLocationModeOptions = {
+      roll: "Roll Location",
+      manual: "Manual Location"
+    };
+    data.activationDamageModeOptions = {
+      weapon: "Weapon Damage",
+      manual: "Manual Damage",
+      healing: "Healing",
+      temporary: "Temporary HP"
+    };
+    data.activationDamageTypeOptions = {
+      physical: "Physical",
+      fire: "Fire",
+      frost: "Frost",
+      shock: "Shock",
+      poison: "Poison",
+      magic: "Magic",
+      silver: "Silver",
+      sunlight: "Sunlight",
+      disease: "Disease"
+    };
+
+    // --------------------------------------------
+    // Talent: Activation helpers (non-breaking)
+    // IMPORTANT: Do not mutate document data in getData; it can create render loops.
+    // Provide only view-model data for the template.
+    if (data.item && data.item.type === "talent") {
+      data.talentActionTypeOptions = {
+        passive: "Passive",
+        free: "Free",
+        secondary: "Secondary",
+        action: "Action",
+        reaction: "Reaction",
+        special: "Special"
+      };
+    }
+    if (data.item && data.item.type === "trait") {
+      data.traitActionTypeOptions = {
+        passive: "Passive",
+        free: "Free",
+        secondary: "Secondary",
+        action: "Action",
+        reaction: "Reaction",
+        special: "Special"
+      };
+    }
+    if (data.item && data.item.type === "power") {
+      data.powerActionTypeOptions = {
+        passive: "Passive",
+        free: "Free",
+        secondary: "Secondary",
+        action: "Action",
+        reaction: "Reaction",
+        special: "Special"
+      };
+      data.powerResetOptions = {
+        none: "None",
+        longRest: "Long Rest",
+        shortRest: "Short Rest",
+        daily: "Daily"
+      };
+    }
 
     // --------------------------------------------
     // Weapon (ranged): ammunition selection options (actor inventory)
@@ -170,6 +240,42 @@ export class SimpleItemSheet extends foundry.appv1.sheets.ItemSheet {
     }
     data.qualitiesSelectedToggle = selectedToggle;
     data.qualitiesSelectedValue = selectedValue;
+
+    // --------------------------------------------
+    // Activation Damage Qualities (Talents/Traits/Powers)
+    // --------------------------------------------
+    if (itemType && ["trait", "talent", "power"].includes(itemType)) {
+      const weaponCoreCatalog = (coreByType && coreByType.weapon)
+        ? coreByType.weapon
+        : (UESRPG.QUALITIES_CORE_BY_TYPE?.weapon ?? UESRPG.QUALITIES_CATALOG ?? []);
+      const weaponTraitCatalog = (traitsByType && traitsByType.weapon) ? traitsByType.weapon : [];
+
+      const activationDamage = data.item?.system?.activation?.damage ?? {};
+      const activationStructured = Array.isArray(activationDamage.qualitiesStructured) ? activationDamage.qualitiesStructured : [];
+      const activationTraits = Array.isArray(activationDamage.qualitiesTraits) ? activationDamage.qualitiesTraits : [];
+
+      const activationSelectedToggle = {};
+      const activationSelectedValue = {};
+      for (const q of activationStructured) {
+        if (!q || !q.key) continue;
+        activationSelectedToggle[q.key] = true;
+        if (typeof q.value === "number") activationSelectedValue[q.key] = q.value;
+      }
+
+      data.activationDamageQualitiesCatalog = Array.isArray(weaponCoreCatalog) ? weaponCoreCatalog : [];
+      data.activationDamageSelectedToggle = activationSelectedToggle;
+      data.activationDamageSelectedValue = activationSelectedValue;
+
+      const activationTraitKeys = activationTraits.map(t => String(t ?? "")).filter(Boolean);
+      data.activationDamageTraitsCatalog = (Array.isArray(weaponTraitCatalog) ? weaponTraitCatalog : []).map(t => ({
+        ...t,
+        selected: activationTraitKeys.includes(t.key)
+      }));
+      data.activationDamageTraitsSelected = activationTraitKeys.reduce((acc, k) => {
+        acc[k] = true;
+        return acc;
+      }, {});
+    }
 
     // Active Effects list for templates (plain objects)
     data.effects = (this.item && this.item.effects) ? this.item.effects.contents.map(e => e.toObject()) : [];
@@ -292,6 +398,55 @@ export class SimpleItemSheet extends foundry.appv1.sheets.ItemSheet {
     formData["system.qualitiesStructured"] = structured;
 
     // ------------------------------------------------------------
+    // Activation Damage Qualities (Talents/Traits/Powers)
+    // ------------------------------------------------------------
+    const activationQualitiesPresent = Object.prototype.hasOwnProperty.call(formData, "activationDamageQualities.present");
+    if (activationQualitiesPresent) {
+      delete formData["activationDamageQualities.present"];
+
+      const activationTraits = new Set();
+      const activationStructuredMap = new Map();
+
+      const aTraitsPrefix = "activationDamageQualitiesTraits.toggle.";
+      const aTogglePrefix = "activationDamageQualitiesStructured.toggle.";
+      const aValuePrefix = "activationDamageQualitiesStructured.value.";
+
+      for (const [k, v] of Object.entries(formData)) {
+        if (k.startsWith(aTraitsPrefix)) {
+          const key = k.slice(aTraitsPrefix.length);
+          if (v) activationTraits.add(key);
+          delete formData[k];
+        }
+      }
+
+      for (const [k, v] of Object.entries(formData)) {
+        if (k.startsWith(aTogglePrefix)) {
+          const key = k.slice(aTogglePrefix.length);
+          if (v) activationStructuredMap.set(key, { key });
+          delete formData[k];
+          continue;
+        }
+
+        if (k.startsWith(aValuePrefix)) {
+          const key = k.slice(aValuePrefix.length);
+          const num = Number(v);
+          if (!Number.isNaN(num) && num !== 0) {
+            activationStructuredMap.set(key, { key, value: num });
+          }
+          delete formData[k];
+        }
+      }
+
+      const activationStructured = Array.from(activationStructuredMap.values());
+      activationStructured.sort((a, b) => (a.key || "").localeCompare(b.key || ""));
+
+      formData["system.activation.damage.qualitiesStructured"] = activationStructured;
+      formData["system.activation.damage.qualitiesTraits"] = Array.from(activationTraits)
+        .filter(Boolean)
+        .sort((a, b) => a.localeCompare(b));
+    }
+
+    // ------------------------------------------------------------
     // Combat Style: normalize Special Action known toggles
     // ------------------------------------------------------------
     if (this.item?.type === "combatStyle") {
@@ -337,6 +492,20 @@ export class SimpleItemSheet extends foundry.appv1.sheets.ItemSheet {
   /** @override */
   async activateListeners(html) {
     super.activateListeners(html);
+
+    // Talent: Use button (Activation tab)
+    if (this.item && this.item.type === "talent") {
+      html.find(".uesrpg-talent-use").off("click.uesrpg").on("click.uesrpg", async (ev) => {
+        ev.preventDefault();
+        await activateTalentFromItemSheet({ item: this.item, event: ev });
+      });
+    }
+    if (this.item && this.item.type === "power") {
+      html.find(".uesrpg-power-use").off("click.uesrpg").on("click.uesrpg", async (ev) => {
+        ev.preventDefault();
+        await activatePowerFromItemSheet({ item: this.item, event: ev });
+      });
+    }
 
     // Ammunition: live update derived Price / Shot display when Price / 10 changes.
     if (this.item && this.item.type === "ammunition") {

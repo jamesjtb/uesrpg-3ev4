@@ -11,6 +11,45 @@ import { shouldHideFromMainInventory } from "./sheet-inventory.js";
  * @param {boolean} [options.includeSkills=false] Whether to collect "skill" items.
  * @param {boolean} [options.includeMagicSkills=false] Whether to collect "magicSkill" items.
  */
+function _buildTraitStackingInfo(traits) {
+  const groups = new Map();
+
+  for (const t of traits ?? []) {
+    if (!t || t.type !== "trait") continue;
+    const key = String(t.system?.traitKey ?? "").trim();
+    if (!key) continue;
+
+    const id = t._id ?? t.id;
+    if (!id) continue;
+
+    const value = Number(t.system?.traitValue);
+    const unit = String(t.system?.traitUnit ?? "").trim();
+
+    const group = groups.get(key) ?? { key, items: [], highestValue: null, unit: "" };
+    group.items.push({ id, value, unit });
+    if (Number.isFinite(value)) {
+      group.highestValue = (group.highestValue == null) ? value : Math.max(group.highestValue, value);
+    }
+    if (!group.unit && unit) group.unit = unit;
+    groups.set(key, group);
+  }
+
+  const byId = {};
+  for (const group of groups.values()) {
+    if (group.items.length < 2) continue;
+    for (const entry of group.items) {
+      byId[entry.id] = {
+        key: group.key,
+        count: group.items.length,
+        highest: group.highestValue,
+        unit: group.unit
+      };
+    }
+  }
+
+  return byId;
+}
+
 export function prepareCharacterItems(sheetData, { includeSkills = false, includeMagicSkills = false } = {}) {
   const actorData = sheetData.actor;
 
@@ -167,6 +206,7 @@ export function prepareCharacterItems(sheetData, { includeSkills = false, includ
   // Store spellsBySchool in ui namespace to avoid conflicts with Foundry's mergeObject
   actorData.ui = actorData.ui || {};
   actorData.ui.spellsBySchool = spellsBySchool;
+  actorData.ui.traitStackingById = _buildTraitStackingInfo(trait);
   actorData.spellSchools = spellSchools; // Array format for template iteration
   actorData.ammunition = ammunition;
   actorData.language = language;
