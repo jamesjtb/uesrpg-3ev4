@@ -18,6 +18,7 @@
 
 import { doTestRoll } from "../helpers/degree-roll-helper.js";
 import { requestCreateEmbeddedDocuments, requestDeleteEmbeddedDocuments, requestUpdateDocument } from "../helpers/authority-proxy.js";
+import { isActorUndead, isActorUndeadBloodless } from "../traits/trait-registry.js";
 import { applyGroupedEffect, getEffectGroup } from "../helpers/ae-grouping.js";
 
 let _woundHooksRegistered = false;
@@ -651,6 +652,7 @@ async function _cleanupWoundStateIfNoWounds(actor) {
 }
 
 function _isWoundPenaltySuppressed(actor) {
+  if (isActorUndead(actor)) return true;
   // Suppression if:
   //  - Forestall remainingRounds > 0
   //  - First Aid present
@@ -670,6 +672,21 @@ function _isWoundPenaltySuppressed(actor) {
  */
 async function _ensureWoundedPassiveEffect(actor) {
   if (!actor) return;
+  if (isActorUndead(actor)) {
+    const existingEffect = actor.effects?.find((e) => {
+      if (e.disabled) return false;
+      const group = getEffectGroup(e);
+      return group === "wounds.passive";
+    });
+    if (existingEffect) {
+      try {
+        await requestDeleteEmbeddedDocuments(actor, "ActiveEffect", [existingEffect.id]);
+      } catch (err) {
+        console.warn("UESRPG | Failed to remove Wounded: Passive effect for undead", err);
+      }
+    }
+    return;
+  }
   
   const sysWounded = actor.system?.wounded === true;
   const isSuppressed = _isWoundPenaltySuppressed(actor);
@@ -784,6 +801,7 @@ export async function createWoundFromDamage(actor, { damage = 0, hitLocation = "
 
 export async function upsertBloodLoss(actor, { resetTo = 5 } = {}) {
   if (!actor) return;
+  if (isActorUndeadBloodless(actor)) return;
   const existing = _findFirstEffectByKind(actor, "bloodLoss");
   const next = Math.max(0, _toNumber(resetTo, 5));
 
@@ -1078,7 +1096,7 @@ async function _activateWoundPassiveState(actor, { resetBloodLoss = true } = {})
   }
 
   // Blood Loss countdown begins at the same moment.
-  if (resetBloodLoss) {
+  if (resetBloodLoss && !isActorUndeadBloodless(actor)) {
     try {
       await upsertBloodLoss(actor, { resetTo: 5 });
     } catch (err) {
@@ -1262,6 +1280,17 @@ async function _tickForestall(actor) {
 }
 
 async function _tickBloodLoss(actor) {
+  if (isActorUndeadBloodless(actor)) {
+    const ef = _findFirstEffectByKind(actor, "bloodLoss");
+    if (ef) {
+      try {
+        await requestDeleteEmbeddedDocuments(actor, "ActiveEffect", [ef.id]);
+      } catch (_err) {
+        // Non-blocking.
+      }
+    }
+    return;
+  }
   const ef = _findFirstEffectByKind(actor, "bloodLoss");
   if (!ef) return;
 
