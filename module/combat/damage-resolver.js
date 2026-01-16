@@ -16,9 +16,11 @@
  * NOTE: This system is not on ApplicationV2.
  */
 
-import { applyDamage, calculateDamage, DAMAGE_TYPES, applyForcefulImpact, ensureUnconsciousEffect } from "./damage-automation.js";
+import { applyDamage, calculateDamage, DAMAGE_TYPES, applyForcefulImpact, ensureUnconsciousEffect, isItemMagicSource, itemHasToken } from "./damage-automation.js";
 import { evaluateAEModifierKeys } from "../ae/modifier-evaluator.js";
 import { isTransferEffectActive } from "../ae/transfer.js";
+import { isActorIncorporeal, getActorTraitValue, getDiseaseResistancePercent, hasActorTrait, isActorUndead } from "../traits/trait-registry.js";
+import { postDiseasedCheckCard } from "../traits/trait-automation.js";
 
 /**
  * Normalize hit location values to engine keys used by damage-automation.js.
@@ -76,6 +78,36 @@ function asNumber(v) {
   if (Number.isFinite(n)) return n;
   const m = String(v).match(/-?\d+(?:\.\d+)?/);
   return m ? Number(m[0]) : 0;
+}
+
+function _asInt(v) {
+  const n = Number(v);
+  if (Number.isFinite(n)) return Math.floor(n);
+  const m = String(v ?? "").match(/-?\d+/);
+  return m ? Number(m[0]) : 0;
+}
+
+function _sumTraitValue(actor, key) {
+  return Math.max(0, Number(getActorTraitValue(actor, key, { mode: "sum" })) || 0);
+}
+
+function _maxTraitValue(actor, key) {
+  return Math.max(0, Number(getActorTraitValue(actor, key, { mode: "max" })) || 0);
+}
+
+function _isNaturalWeaponSource(item) {
+  if (!item) return false;
+  return itemHasToken(item, "handToHand");
+}
+
+function _isSilverSource(item) {
+  if (!item) return false;
+  return itemHasToken(item, "silver") || itemHasToken(item, "silvered");
+}
+
+function _isSunlightSource(item) {
+  if (!item) return false;
+  return itemHasToken(item, "sunlight");
 }
 
 /**
@@ -292,6 +324,25 @@ function buildDamageContext(payload = {}) {
   const hitLocation = normalizeHitLocation(payload.hitLocation ?? payload.location ?? "Body");
   const damageType = normalizeDamageType(payload.damageType ?? DAMAGE_TYPES.PHYSICAL);
 
+  let weapon = payload.weapon ?? null;
+  if (!weapon && payload.weaponUuid) {
+    try {
+      weapon = fromUuidSync(payload.weaponUuid) ?? null;
+    } catch (_err) {
+      weapon = null;
+    }
+  }
+  if (!weapon && payload.sourceItemUuid) {
+    try {
+      weapon = fromUuidSync(payload.sourceItemUuid) ?? null;
+    } catch (_err) {
+      weapon = null;
+    }
+  }
+  if (!weapon && payload.sourceItem) {
+    weapon = payload.sourceItem;
+  }
+
   const options = {
     // Damage-automation options (kept stable)
     ignoreReduction: payload.ignoreReduction === true,
@@ -304,8 +355,9 @@ function buildDamageContext(payload = {}) {
     penetration,
 
     // Optional enrichment
-    weapon: payload.weapon ?? null,
+    weapon,
     attackerActor: payload.attackerActor ?? null,
+    magicSource: payload.magicSource === true,
   };
 
  _toggleKnownOption(payload, options, "ignoreArmor");
@@ -454,7 +506,7 @@ export async function applyDamageResolved(targetActor, payload = {}) {
         amount: Math.max(0, amt),
         damageType: normalizeDamageType(dtype),
         applyDefenderAdjust: false,
-        sourceLabel: `${ctx.options.source ?? "Attack"} • AE Bonus [${dtype}]`,
+        sourceLabel: `${ctx.options.source ?? "Attack"} - AE Bonus [${dtype}]`,
         breakdown: {
           attackerTyped: t.entries ?? [],
         },
@@ -482,10 +534,54 @@ export async function applyDamageResolved(targetActor, payload = {}) {
   const isUnlinkedToken = !!(activeToken && targetActor.prototypeToken && targetActor.prototypeToken.actorLink === false);
   const updateTarget = isUnlinkedToken ? activeToken.actor : targetActor;
 
+  const defenderIncorporeal = isActorIncorporeal(updateTarget);
+  const sourceItem = ctx.options?.weapon ?? null;
+  const attackIsMagic = ctx.options.magicSource === true || isItemMagicSource(sourceItem);
+  const isSilverSource = _isSilverSource(sourceItem);
+  const isSunlightSource = _isSunlightSource(sourceItem);
+  const incorporealBlock = defenderIncorporeal && !attackIsMagic;
+
   /** @type {Array<any>} */
   const results = [];
   let totalApplied = 0;
   let woundTriggered = false;
+  const traitNotes = [];
+
+  // Spell Absorption (X): negate magic-typed bonus damage and restore MP.
+  const spellAbsorptionValue = _maxTraitValue(updateTarget, "spellAbsorption");
+  let spellAbsorptionRestored = 0;
+  if (spellAbsorptionValue > 0) {
+    const typedTotal = components
+      .filter(c => c.kind === "typed" && Number(c.amount ?? 0) > 0)
+      .reduce((s, c) => s + Number(c.amount ?? 0), 0);
+
+    if (typedTotal > 0) {
+      const roll = new Roll("1d10");
+      await roll.evaluate();
+      const rollTotal = Number(roll.total ?? 0) || 0;
+      const absorbed = rollTotal <= spellAbsorptionValue;
+
+      if (absorbed) {
+        for (const c of components) {
+          if (c.kind === "typed") {
+            c.amount = 0;
+            c.spellAbsorbed = true;
+          }
+        }
+
+        const currentMP = Number(updateTarget.system?.magicka?.value ?? 0);
+        const maxMP = Number(updateTarget.system?.magicka?.max ?? 0);
+        const missingMP = Math.max(0, maxMP - currentMP);
+        const restoreCap = Math.max(0, _asInt(typedTotal));
+        spellAbsorptionRestored = Math.min(missingMP, restoreCap);
+      }
+
+      traitNotes.push(`Spell Absorption (${spellAbsorptionValue}): Roll ${rollTotal} (${absorbed ? "absorbed" : "failed"})`);
+      if (spellAbsorptionRestored > 0) {
+        traitNotes.push(`Spell Absorption: +${spellAbsorptionRestored} MP`);
+      }
+    }
+  }
 
   for (const c of components) {
     const isPrimary = c.kind === "primary";
@@ -510,10 +606,14 @@ export async function applyDamageResolved(targetActor, payload = {}) {
           attackerActor: isPrimary ? (ctx.options?.attackerActor ?? null) : null,
         });
 
-    const baseFinal = Number(calc.finalDamage || 0);
-    const adjusted = c.applyDefenderAdjust
-      ? Math.max(0, baseFinal + asNumber(ctx.options?.aeDamageTaken) - asNumber(ctx.options?.aeMitigationFlat))
-      : Math.max(0, baseFinal);
+    let baseFinal = Number(calc.finalDamage || 0);
+    if (incorporealBlock) baseFinal = 0;
+
+    const adjusted = incorporealBlock
+      ? 0
+      : c.applyDefenderAdjust
+        ? Math.max(0, baseFinal + asNumber(ctx.options?.aeDamageTaken) - asNumber(ctx.options?.aeMitigationFlat))
+        : Math.max(0, baseFinal);
 
     totalApplied += adjusted;
 
@@ -528,8 +628,57 @@ export async function applyDamageResolved(targetActor, payload = {}) {
       reductions: calc.reductions,
       finalDamage: baseFinal,
       finalApplied: adjusted,
+      spellAbsorbed: c.spellAbsorbed === true,
+      incorporealBlock: incorporealBlock ? { isBlocked: true, reason: "non-magic source" } : null,
+      incorporealAttack: calc.incorporealAttack ?? null,
       breakdown: c.breakdown ?? null,
     });
+  }
+
+  // Trait-based post-mitigation adjustments (after reductions and AE adjustments).
+  if (totalApplied > 0) {
+    const resistNormal = _sumTraitValue(updateTarget, "resistNormalWeapons");
+    const silverScarred = _sumTraitValue(updateTarget, "silverScarred");
+    const sunScarred = _sumTraitValue(updateTarget, "sunScarred");
+
+    let delta = 0;
+
+    if (!attackIsMagic && resistNormal > 0) {
+      const reduction = Math.min(resistNormal, totalApplied);
+      if (reduction > 0) {
+        delta -= reduction;
+        traitNotes.push(`Resist Normal Weapons (${resistNormal}): -${reduction}`);
+      }
+    }
+
+    if (isSilverSource && silverScarred > 0) {
+      delta += silverScarred;
+      traitNotes.push(`Silver-Scarred (${silverScarred}): +${silverScarred}`);
+    }
+
+    if (isSunlightSource && sunScarred > 0) {
+      delta += sunScarred;
+      traitNotes.push(`Sun-Scarred (${sunScarred}): +${sunScarred}`);
+    }
+
+    if (delta !== 0) {
+      totalApplied = Math.max(0, totalApplied + delta);
+
+      // Apply delta to the primary component first, then spill to others if needed.
+      let remaining = delta;
+      for (const r of results) {
+        if (remaining === 0) break;
+        const applied = Number(r.finalApplied ?? 0);
+        if (remaining > 0) {
+          r.finalApplied = applied + remaining;
+          remaining = 0;
+        } else {
+          const reduceBy = Math.min(applied, Math.abs(remaining));
+          r.finalApplied = applied - reduceBy;
+          remaining += reduceBy;
+        }
+      }
+    }
   }
 
 
@@ -548,6 +697,12 @@ export async function applyDamageResolved(targetActor, payload = {}) {
   const newHP = Math.max(0, Number(currentHP) - Math.max(0, totalApplied));
 
   const updateData = { "system.hp.value": newHP };
+  if (spellAbsorptionRestored > 0) {
+    const currentMP = Number(updateTarget.system?.magicka?.value ?? 0);
+    const maxMP = Number(updateTarget.system?.magicka?.max ?? 0);
+    const nextMP = Math.min(maxMP, currentMP + spellAbsorptionRestored);
+    updateData["system.magicka.value"] = nextMP;
+  }
   await updateTarget.update(updateData);
 
   // Emit canonical damage-applied hook for downstream automation (e.g. Chapter 5 wounds/shock).
@@ -564,6 +719,22 @@ export async function applyDamageResolved(targetActor, payload = {}) {
     });
   } catch (err) {
     console.warn("UESRPG | uesrpgDamageApplied hook failed", err);
+  }
+
+  // Diseased (X): natural weapon damage > 0 triggers Endurance test.
+  try {
+    const diseasedValue = getActorTraitValue(attackerActor, "diseased", { mode: "sum" });
+    const hasDiseased = Number(diseasedValue || 0) !== 0;
+    if (hasDiseased && totalApplied > 0 && _isNaturalWeaponSource(sourceItem) && !hasActorTrait(updateTarget, "diseased") && !isActorUndead(updateTarget)) {
+      await postDiseasedCheckCard({
+        attacker: attackerActor,
+        defender: updateTarget,
+        traitValue: Number(diseasedValue || 0),
+        sourceItem
+      });
+    }
+  } catch (err) {
+    console.warn("UESRPG | Diseased trait automation failed", err);
   }
 
   // Forceful Impact: only meaningful for primary physical hits.
@@ -636,7 +807,7 @@ export async function applyDamageResolved(targetActor, payload = {}) {
       const bits = [];
       if (ae.armorRating.global?.total) bits.push(`Global ${fmt(ae.armorRating.global.total)}`);
       if (ae.armorRating.location?.total) bits.push(`${ae.armorRating.location.key} ${fmt(ae.armorRating.location.total)}`);
-      lines.push(`<div class="uesrpg-da-row"><span class="k"></span><span class="v muted">AR AE: ${bits.join(" • ")}</span></div>`);
+      lines.push(`<div class="uesrpg-da-row"><span class="k"></span><span class="v muted">AR AE: ${bits.join(" | ")}</span></div>`);
       lines.push(renderEntryLines("AR", ae.armorRating.global?.entries));
       lines.push(renderEntryLines("AR", ae.armorRating.location?.entries));
     }
@@ -703,6 +874,13 @@ export async function applyDamageResolved(targetActor, payload = {}) {
         }
       }
 
+      if (r.incorporealBlock?.isBlocked) {
+        rawLines.push(`<div class="uesrpg-da-row"><span class="k"></span><span class="v muted">Trait: Incorporeal (non-magic source)</span></div>`);
+      }
+      if (r.incorporealAttack?.ignoreNonMagicArmor) {
+        rawLines.push(`<div class="uesrpg-da-row"><span class="k"></span><span class="v muted">Trait: Incorporeal Attack (non-magic AR ignored)</span></div>`);
+      }
+
       // Defender AE adjustments only apply to primary
       const defLines = [];
       if (r.kind === "primary") {
@@ -733,15 +911,20 @@ export async function applyDamageResolved(targetActor, payload = {}) {
     return segs.join("\n");
   };
 
+  const traitNotesHtml = traitNotes.length
+    ? `<div class="uesrpg-da-row"><span class="k">Traits</span><span class="v">${traitNotes.join(" | ")}</span></div>`
+    : "";
+
   const messageContent = `
     <div class="uesrpg-damage-applied-card">
       <div class="hdr">
         <div class="title">${updateTarget.name}</div>
-        <div class="sub">${ctx.options.source ?? "Attack"}${hitLocation ? ` • ${hitLocation}` : ""}</div>
+        <div class="sub">${ctx.options.source ?? "Attack"}${hitLocation ? ` - ${hitLocation}` : ""}</div>
       </div>
       <div class="body">
         <div class="uesrpg-da-row"><span class="k">Total Damage</span><span class="v final">${Math.max(0, Number(totalApplied || 0))}</span></div>
         <div class="uesrpg-da-row"><span class="k">HP</span><span class="v">${newHP} / ${maxHP}${hpDelta ? ` <span class="muted">(-${hpDelta})</span>` : ""}</span></div>
+        ${traitNotesHtml}
         ${woundTriggered ? `<div class="status wounded">WOUNDED <span class="muted">(WT ${woundThreshold})</span></div>` : ""}
         ${newHP === 0 ? `<div class="status unconscious">UNCONSCIOUS</div>` : ""}
         <details style="margin-top:6px;">
