@@ -6,6 +6,7 @@
 
 import { isTransferEffectActive } from "../ae/transfer.js";
 import { evaluateAEModifierKeys } from "../ae/modifier-evaluator.js";
+import { collectTraitDamageModifiers, getResistanceKeyForTraitType, getActorTraitValue, isActorUndead } from "../traits/trait-registry.js";
 
 export class SimpleActor extends Actor {
   async _preCreate(data, options, user) {
@@ -347,6 +348,25 @@ export class SimpleActor extends Actor {
 
       if (item.type === 'trait' || item.type === 'talent') stats.traitsAndTalents.push(item);
       if (sys.shiftFormStyle) stats.shiftForms.push(sys.shiftFormStyle);
+    }
+
+    const traitDamage = collectTraitDamageModifiers(items);
+    stats.traitDamage = traitDamage;
+
+    for (const [typeKey, value] of Object.entries(traitDamage.resistance ?? {})) {
+      const resKey = getResistanceKeyForTraitType(typeKey);
+      if (!resKey || !Number.isFinite(value) || !value) continue;
+      if (Object.prototype.hasOwnProperty.call(stats.resist, resKey)) {
+        stats.resist[resKey] = Number(stats.resist[resKey] ?? 0) + Number(value);
+      }
+    }
+
+    for (const [typeKey, value] of Object.entries(traitDamage.weakness ?? {})) {
+      const resKey = getResistanceKeyForTraitType(typeKey);
+      if (!resKey || !Number.isFinite(value) || !value) continue;
+      if (Object.prototype.hasOwnProperty.call(stats.resist, resKey)) {
+        stats.resist[resKey] = Number(stats.resist[resKey] ?? 0) - Number(value);
+      }
     }
 
     this._aggCache = { signature, agg: stats };
@@ -869,6 +889,7 @@ export class SimpleActor extends Actor {
      */
   
     _hasWoundPenaltySuppression(actorData) {
+      if (isActorUndead(this)) return true;
       const scope = game.system?.id ?? "uesrpg-3ev4";
       const effectsRaw = actorData?.effects;
       const effects = Array.isArray(effectsRaw) ? effectsRaw : (effectsRaw ? Array.from(effectsRaw) : []);
@@ -1124,6 +1145,12 @@ export class SimpleActor extends Actor {
     // This ensures AE values are reflected in the actor sheet display
     const resistanceWithAE = this._applyResistanceAEModifiers(actorSystemData.resistance);
     Object.assign(actorSystemData.resistance, resistanceWithAE);
+
+    actorSystemData.ui = actorSystemData.ui ?? {};
+    actorSystemData.ui.traitAutomation = agg.traitDamage ?? null;
+
+    actorSystemData.ui = actorSystemData.ui ?? {};
+    actorSystemData.ui.traitAutomation = agg.traitDamage ?? null;
 
     //Derived Calculations
     if (this._isMechanical(actorData) == true) {
@@ -1529,9 +1556,18 @@ this._applyMovementRestrictionSemantics(actorData, actorSystemData);
       else if (m.add) actorSystemData.fatigue.penalty = Number(actorSystemData.fatigue.penalty ?? 0) + Number(m.add);
     }
 
+    if (isActorUndead(this)) {
+      actorSystemData.fatigue.penalty = 0;
+    }
+
 
     // Active Effects: Wound Threshold modifiers (bonus/value) applied after all other rule adjustments.
     this._applyWoundThresholdAEs(actorSystemData);
+
+    const weakBones = Math.max(0, Number(getActorTraitValue(this, "weakBones", { mode: "sum" })) || 0);
+    if (weakBones > 0) {
+      actorSystemData.wound_threshold.value = Math.max(0, Number(actorSystemData.wound_threshold.value ?? 0) - weakBones);
+    }
 
     // PERF end
     // this._perfEnd('_prepareCharacterData', t0);
@@ -1978,6 +2014,10 @@ this._applyMovementRestrictionSemantics(actorData, actorSystemData);
       else if (m.add) actorSystemData.fatigue.penalty = Number(actorSystemData.fatigue.penalty ?? 0) + Number(m.add);
     }
 
+    if (isActorUndead(this)) {
+      actorSystemData.fatigue.penalty = 0;
+    }
+
     // Set Lucky/Unlucky Numbers based on Threat Category
     if (actorSystemData.threat == "minorSolo") {
       actorSystemData.unlucky_numbers.ul1 = 95;
@@ -2119,6 +2159,11 @@ this._applyMovementRestrictionSemantics(actorData, actorSystemData);
 
     // Active Effects: Wound Threshold modifiers (bonus/value) applied after all other rule adjustments.
     this._applyWoundThresholdAEs(actorSystemData);
+
+    const weakBones = Math.max(0, Number(getActorTraitValue(this, "weakBones", { mode: "sum" })) || 0);
+    if (weakBones > 0) {
+      actorSystemData.wound_threshold.value = Math.max(0, Number(actorSystemData.wound_threshold.value ?? 0) - weakBones);
+    }
 
     // Calculate Item Profession Modifiers
     // Prefer aggregated modifiers; _calculateItemSkillModifiers accepts an optional agg
