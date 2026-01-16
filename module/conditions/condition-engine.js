@@ -15,6 +15,7 @@
 
 import { applyDamage, DAMAGE_TYPES } from "../combat/damage-automation.js";
 import { requestCreateEmbeddedDocuments, requestDeleteEmbeddedDocuments, requestUpdateDocument } from "../helpers/authority-proxy.js";
+import { isActorSkeletal, isActorUndead, isActorUndeadBloodless } from "../traits/trait-registry.js";
 
 let _conditionHooksRegistered = false;
 
@@ -675,6 +676,14 @@ export async function applyCondition(actor, key, { origin = null, source = null 
     return null;
   }
 
+  if (isActorUndead(actor)) {
+    const blocked = new Set(["dazed", "deafened", "poisoned", "disease"]);
+    if (blocked.has(k)) {
+      ui.notifications?.warn?.(`Undead are immune to ${def.name}.`);
+      return null;
+    }
+  }
+
 
   const coreStatusId = _coreStatusIdForKey(k);
   const statuses = coreStatusId ? [coreStatusId] : null;
@@ -839,6 +848,7 @@ async function _upsertConditionEffect(actor, key, { createData, updateFn }) {
  */
 export async function applyBleeding(actor, x, { origin = null, source = "Bleeding" } = {}) {
   if (!actor) return null;
+  if (isActorUndeadBloodless(actor)) return null;
   const add = Math.max(0, _toNumber(x, 0));
   if (add <= 0) return null;
 
@@ -893,6 +903,7 @@ export async function applyBleeding(actor, x, { origin = null, source = "Bleedin
  */
 export async function applyBurning(actor, x, { hitLocation = "Body", origin = null, source = "Burning" } = {}) {
   if (!actor) return null;
+  if (isActorSkeletal(actor)) return null;
   const add = Math.max(0, _toNumber(x, 0));
   if (add <= 0) return null;
 
