@@ -10,6 +10,9 @@
 
 import { tickConditionsEndTurn } from "./condition-engine.js";
 import { tickWoundsEndTurn } from "../wounds/wound-engine.js";
+import { getActorTraitValue } from "../traits/trait-registry.js";
+import { postRegenerationPrompt } from "../traits/trait-automation.js";
+import { requestUpdateDocument } from "../helpers/authority-proxy.js";
 
 let _registered = false;
 
@@ -103,6 +106,28 @@ async function _expireStartOfTurnEffects(combat, changed) {
   }
 }
 
+async function _postRegenerationPrompts(combat, changed) {
+  if (!combat) return;
+  if (!changed || !Object.prototype.hasOwnProperty.call(changed, "round")) return;
+
+  const round = Number(combat.round ?? 0);
+  const combatants = Array.isArray(combat.combatants) ? combat.combatants : Array.from(combat.combatants ?? []);
+
+  for (const c of combatants) {
+    const actor = c?.actor ?? null;
+    if (!actor) continue;
+
+    const value = Number(getActorTraitValue(actor, "regeneration", { mode: "max" })) || 0;
+    if (value <= 0) continue;
+
+    const lastRound = Number(actor.getFlag("uesrpg-3ev4", "regenerationPromptRound") ?? 0);
+    if (lastRound === round) continue;
+
+    await postRegenerationPrompt({ actor, traitValue: value, round });
+    await requestUpdateDocument(actor, { "flags.uesrpg-3ev4.regenerationPromptRound": round });
+  }
+}
+
 export function registerConditionTurnTicker() {
   if (_registered) return;
   _registered = true;
@@ -122,6 +147,9 @@ export function registerConditionTurnTicker() {
 
       // Start-of-turn expiry for temporary action effects (e.g., Defensive Stance).
       await _expireStartOfTurnEffects(combat, changed);
+
+      // Start-of-round regeneration prompts.
+      await _postRegenerationPrompts(combat, changed);
     } catch (err) {
       console.warn("UESRPG | Condition/Wound turn ticker failed", err);
     }
