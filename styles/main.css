@@ -588,14 +588,12 @@
 
 .worldbuilding .spellList table .item,
 .worldbuilding .equipmentList table .item,
-.worldbuilding .merchant-item-list .item,
 .worldbuilding .containerList .item {
   display: none;
 }
 
 .worldbuilding .spellList table .active,
 .worldbuilding .equipmentList table .active,
-.worldbuilding .merchant-item-list .active,
 .worldbuilding .containerList .active {
   display: table-row;
 }
@@ -1489,53 +1487,6 @@
   font-size: 18px;
   height: 25px;
   width: 100%;
-}
-
-
-/*----------------------------
-  Merchant Sheets
-------------------------------*/
-
-.worldbuilding .merchant-attribute-container {
-  display: grid;
-  grid-template-columns: 60% 40%;
-  align-items: center;
-  border-bottom: 1px solid rgba(128, 128, 128, 0.719);
-}
-
-.worldbuilding .merchant-resources {
-  display: flex;
-  flex-direction: column;
-}
-
-.worldbuilding .merchant-controls-container {
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  justify-content: flex-end;
-}
-
-.worldbuilding .merchant-attribute-container input {
-  text-align: center;
-  border: none;
-}
-
-.worldbuilding #merchantPriceValue {
-  font-family: var(--main-font-family);
-  font-size: 18px;
-  color: darkred;
-  width: 75px;
-}
-
-.worldbuilding .store-name input {
-  font-family: var(--main-font-family);
-  border: none;
-}
-
-.worldbuilding table .merchant-item-name-cell {
-  width: 50%;
-  text-align: left;
-  padding: 0 0 0 5px;
 }
 
 
