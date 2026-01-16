@@ -16,6 +16,7 @@ import { requireUserCanRollActor } from "../helpers/permissions.js";
 import { hasCondition } from "../conditions/condition-engine.js";
 import { buildSkillRollRequest, normalizeSkillRollOptions, skillRollDebug, validateSkillRollRequest } from "./roll-request.js";
 import { safeUpdateChatMessage } from "../helpers/chat-message-socket.js";
+import { buildResistanceBonusSection, readResistanceBonusSelections, buildResistanceBonusMods } from "../traits/trait-resistance-ui.js";
 
 const _SKILL_ROLL_SETTINGS_NS = "uesrpg-3ev4";
 const _FLAG_NS = "uesrpg-3ev4";
@@ -321,6 +322,7 @@ async function _skillRollDialog({
           <span><b>Use Specialization</b> (+10)${specDisabled ? ' <span style="opacity:0.75;">(none on this skill)</span>' : ""}</span>
         </label>
       </div>`;
+  const resistanceSection = buildResistanceBonusSection(actor);
   const hasBlinded = actor ? hasCondition(actor, "blinded") : false;
   const hasDeafened = actor ? hasCondition(actor, "deafened") : false;
 
@@ -348,6 +350,7 @@ async function _skillRollDialog({
 
       ${sensoryRow}
 
+      ${resistanceSection.html}
 
       <div class="form-group" style="margin-top:8px;">
         <label><b>Manual Modifier</b></label>
@@ -402,10 +405,11 @@ async function _skillRollDialog({
             const useSpec = Boolean(root?.querySelector('input[name="useSpec"]')?.checked);
             const applyBlinded = Boolean(root?.querySelector('input[name="applyBlinded"]')?.checked);
             const applyDeafened = Boolean(root?.querySelector('input[name="applyDeafened"]')?.checked);
+            const selectedRes = readResistanceBonusSelections(root, resistanceSection.options);
 
             const rawManual = root?.querySelector('input[name="manualMod"]')?.value ?? "0";
             const manualMod = Number.parseInt(String(rawManual), 10) || 0;
-            return { skillUuid, difficultyKey, useSpec, manualMod, applyBlinded, applyDeafened };
+            return { skillUuid, difficultyKey, useSpec, manualMod, applyBlinded, applyDeafened, resistanceSelected: selectedRes };
           }
         },
         cancel: { label: "Cancel", callback: () => null }
@@ -1061,6 +1065,7 @@ if (!authorUser) return;
       // Normalize+clamp options from UI.
       decl = { ...decl, ...normalizeSkillRollOptions(decl, defaults) };
 
+      const resMods = buildResistanceBonusMods(decl?.resistanceSelected ?? []);
 
       // Handle Combat Style or Combat profession separately
       let tn;
@@ -1079,6 +1084,9 @@ if (!authorUser) return;
         const situationalMods = [];
         if (decl?.applyBlinded) situationalMods.push({ label: "Blinded (sight)", value: -30 });
         if (decl?.applyDeafened) situationalMods.push({ label: "Deafened (hearing)", value: -30 });
+        if (resMods.length) situationalMods.push(...resMods);
+        if (resMods.length) situationalMods.push(...resMods);
+        if (resMods.length) situationalMods.push(...resMods);
         
         tn = computeTN({
           actor: attacker,
@@ -1095,6 +1103,7 @@ if (!authorUser) return;
         const situationalMods = [];
         if (decl?.applyBlinded) situationalMods.push({ label: "Blinded (sight)", value: -30 });
         if (decl?.applyDeafened) situationalMods.push({ label: "Deafened (hearing)", value: -30 });
+        if (resMods.length) situationalMods.push(...resMods);
         
         tn = computeTN({
           actor: attacker,
@@ -1129,6 +1138,24 @@ if (!authorUser) return;
           totalMod += -30;
           breakdown.push({ key: "deafened", label: "Deafened (hearing)", value: -30, source: "condition" });
         }
+
+        if (resMods.length) {
+          for (const mod of resMods) {
+            const value = Number(mod?.value ?? 0) || 0;
+            if (!value) continue;
+            totalMod += value;
+            breakdown.push({ key: mod.key ?? "resistance", label: mod.label ?? "Resistance Bonus", value, source: mod.source ?? "resistanceTrait" });
+          }
+        }
+
+        if (resMods.length) {
+          for (const mod of resMods) {
+            const value = Number(mod?.value ?? 0) || 0;
+            if (!value) continue;
+            totalMod += value;
+            breakdown.push({ key: mod.key ?? "resistance", label: mod.label ?? "Resistance Bonus", value, source: mod.source ?? "resistanceTrait" });
+          }
+        }
         
         const finalTN = baseValue + totalMod;
         tn = { finalTN, baseTN: baseValue, totalMod, breakdown };
@@ -1138,13 +1165,17 @@ if (!authorUser) return;
         // Regular skill roll
         skillItem = resolved.item;
         const allowSpec = _hasSpecializations(skillItem);
+        const situationalMods = [];
+        if (decl?.applyBlinded) situationalMods.push({ label: "Blinded (sight)", value: -30 });
+        if (decl?.applyDeafened) situationalMods.push({ label: "Deafened (hearing)", value: -30 });
+        if (resMods.length) situationalMods.push(...resMods);
         tn = computeSkillTN({
           actor: attacker,
           skillItem,
           difficultyKey: decl.difficultyKey,
           manualMod: decl.manualMod,
           useSpecialization: allowSpec && decl.useSpec,
-          situationalMods: (function(){ const out=[]; if (decl?.applyBlinded) out.push({ label: "Blinded (sight)", value: -30 }); if (decl?.applyDeafened) out.push({ label: "Deafened (hearing)", value: -30 }); return out; })()
+          situationalMods
         });
         skillLabel = skillItem.name;
       }
@@ -1300,6 +1331,7 @@ if (!authorUser) return;
       // Normalize + clamp UI inputs.
       decl = { ...decl, ...normalizeSkillRollOptions(decl, defaults) };
 
+      const resMods = buildResistanceBonusMods(decl?.resistanceSelected ?? []);
 
       // Handle Combat Style or Combat profession separately
       let tn;
@@ -1379,13 +1411,17 @@ if (!authorUser) return;
         // Regular skill roll
         defSkill = resolved.item;
         const allowSpec = _hasSpecializations(defSkill);
+        const situationalMods = [];
+        if (decl?.applyBlinded) situationalMods.push({ label: "Blinded (sight)", value: -30 });
+        if (decl?.applyDeafened) situationalMods.push({ label: "Deafened (hearing)", value: -30 });
+        if (resMods.length) situationalMods.push(...resMods);
         tn = computeSkillTN({
           actor: defender,
           skillItem: defSkill,
           difficultyKey: decl.difficultyKey,
           manualMod: decl.manualMod,
           useSpecialization: allowSpec && decl.useSpec,
-          situationalMods: (function(){ const out=[]; if (decl?.applyBlinded) out.push({ label: "Blinded (sight)", value: -30 }); if (decl?.applyDeafened) out.push({ label: "Deafened (hearing)", value: -30 }); return out; })()
+          situationalMods
         });
         skillLabel = defSkill.name;
       }
