@@ -1139,8 +1139,64 @@
       "halfFatiguePenalty": false,
       "mechanical": false,
       "crpCost": 0,
+      "traitKey": "",
+      "traitParam": "",
+      "traitValue": 0,
+      "traitUnit": "",
+      "traitNotes": "",
       "halfWoundPenalty": false,
-      "painIntolerant": false
+      "painIntolerant": false,
+      "activation": {
+        "enabled": false,
+        "actionType": "passive",
+        "spendCosts": false,
+        "consumeUse": false,
+        "costs": {
+          "action_points": 0,
+          "stamina": 0,
+          "magicka": 0,
+          "luck_points": 0,
+          "health": 0
+        },
+        "requirements": {
+          "requiresTarget": false,
+          "requiresEquippedWeapon": false,
+          "requiresMelee": false,
+          "requiresRanged": false,
+          "requiresHitLocation": false
+        },
+        "flags": {
+          "npcLuckAllowed": false,
+          "npcEliteAllowed": false
+        },
+        "usage": {
+          "max": 0,
+          "period": "",
+          "current": 0
+        },
+        "roll": {
+          "mode": "none",
+          "hitLocationMode": "roll",
+          "skillKey": "",
+          "opposed": {
+            "actor": "target",
+            "skillKey": ""
+          },
+          "formula": "",
+          "tags": []
+        },
+        "damage": {
+          "mode": "weapon",
+          "formula": "",
+          "type": "physical",
+          "qualitiesStructured": [],
+          "qualitiesTraits": []
+        },
+        "text": {
+          "short": "",
+          "full": ""
+        }
+      }
     },
     "power": {
       "templates": [
@@ -1163,6 +1219,58 @@
         "shiftFormWereCrocodile": "Werecrocodile",
         "shiftFormWereVulture": "Werevulture",
         "shiftFormWereLion": "Werelion"
+      },
+      "activation": {
+        "enabled": false,
+        "actionType": "action",
+        "spendCosts": false,
+        "consumeUse": false,
+        "costs": {
+          "action_points": 0,
+          "stamina": 0,
+          "magicka": 0,
+          "luck_points": 0,
+          "health": 0
+        },
+        "uses": {
+          "value": 0,
+          "max": 0,
+          "reset": "none"
+        },
+        "requirements": {
+          "requiresTarget": false,
+          "requiresEquippedWeapon": false,
+          "requiresMelee": false,
+          "requiresRanged": false,
+          "requiresHitLocation": false
+        },
+        "usage": {
+          "max": 0,
+          "period": "",
+          "current": 0
+        },
+        "roll": {
+          "mode": "none",
+          "hitLocationMode": "roll",
+          "skillKey": "",
+          "opposed": {
+            "actor": "target",
+            "skillKey": ""
+          },
+          "formula": "",
+          "tags": []
+        },
+        "damage": {
+          "mode": "weapon",
+          "formula": "",
+          "type": "physical",
+          "qualitiesStructured": [],
+          "qualitiesTraits": []
+        },
+        "text": {
+          "short": "",
+          "full": ""
+        }
       }
     },
     "talent": {
@@ -1187,6 +1295,52 @@
       "armorAcrobaticsException": false,
       "addHalfSpeed": false,
       "doubleSwimSpeed": false
+      ,"activation": {
+        "enabled": false,
+        "actionType": "passive",
+        "spendCosts": false,
+        "consumeUse": false,
+        "costs": {
+          "action_points": 0,
+          "stamina": 0,
+          "magicka": 0,
+          "luck_points": 0
+        },
+        "requirements": {
+          "requiresTarget": false,
+          "requiresEquippedWeapon": false,
+          "requiresMelee": false,
+          "requiresRanged": false,
+          "requiresHitLocation": false
+        },
+        "usage": {
+          "max": 0,
+          "period": "",
+          "current": 0
+        },
+        "roll": {
+          "mode": "none",
+          "hitLocationMode": "roll",
+          "skillKey": "",
+          "opposed": {
+            "actor": "target",
+            "skillKey": ""
+          },
+          "formula": "",
+          "tags": []
+        },
+        "damage": {
+          "mode": "weapon",
+          "formula": "",
+          "type": "physical",
+          "qualitiesStructured": [],
+          "qualitiesTraits": []
+        },
+        "text": {
+          "short": "",
+          "full": ""
+        }
+      }
     },
     "combatStyle": {
       "templates": [
