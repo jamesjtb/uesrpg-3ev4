@@ -20,6 +20,7 @@ import { evaluateAEModifierKeys } from "../ae/modifier-evaluator.js";
 import { UESRPG } from "../constants.js";
 import { requestCreateActiveEffect } from "../helpers/active-effect-proxy.js";
 import { requestUpdateDocument } from "../helpers/authority-proxy.js";
+import { isActorImmuneToDamageType, isActorIncorporeal, getActorTraitValue } from "../traits/trait-registry.js";
 
 export const DAMAGE_TYPES = {
   HEALING: "healing",
@@ -63,6 +64,103 @@ function _actorHasConditionKey(actor, key) {
   return false;
 }
 
+function _normalizeToken(token) {
+  return String(token ?? "").trim().toLowerCase();
+}
+
+function _normalizeTokenLoose(token) {
+  return _normalizeToken(token).replace(/[\s._-]+/g, "");
+}
+
+function _collectItemTokens(item) {
+  const sys = item?.system ?? {};
+  const tokens = [];
+
+  const structured = Array.isArray(sys.qualitiesStructuredInjected)
+    ? sys.qualitiesStructuredInjected
+    : Array.isArray(sys.qualitiesStructured)
+      ? sys.qualitiesStructured
+      : [];
+
+  for (const q of structured) {
+    if (!q) continue;
+    const key = typeof q === "string" ? q : (q.key ?? q.name ?? q.label ?? "");
+    if (key) tokens.push(key);
+  }
+
+  const traits = Array.isArray(sys.qualitiesTraitsInjected)
+    ? sys.qualitiesTraitsInjected
+    : Array.isArray(sys.qualitiesTraits)
+      ? sys.qualitiesTraits
+      : [];
+
+  for (const t of traits) {
+    if (!t) continue;
+    tokens.push(t);
+  }
+
+  const activationDamage = sys.activation?.damage ?? null;
+  const activationStructured = Array.isArray(activationDamage?.qualitiesStructured) ? activationDamage.qualitiesStructured : [];
+  for (const q of activationStructured) {
+    if (!q) continue;
+    const key = typeof q === "string" ? q : (q.key ?? q.name ?? q.label ?? "");
+    if (key) tokens.push(key);
+  }
+
+  const activationTraits = Array.isArray(activationDamage?.qualitiesTraits) ? activationDamage.qualitiesTraits : [];
+  for (const t of activationTraits) {
+    if (!t) continue;
+    tokens.push(t);
+  }
+
+  const tags = Array.isArray(sys.activation?.roll?.tags) ? sys.activation.roll.tags : [];
+  for (const tag of tags) {
+    if (!tag) continue;
+    tokens.push(tag);
+  }
+
+  return tokens.map(_normalizeToken).filter(Boolean);
+}
+
+export function collectItemTokens(item) {
+  return _collectItemTokens(item);
+}
+
+export function itemHasToken(item, tokenKey) {
+  const target = _normalizeTokenLoose(tokenKey);
+  if (!target) return false;
+  const tokens = _collectItemTokens(item);
+  if (!tokens.length) return false;
+  return tokens.some(t => _normalizeTokenLoose(t) === target);
+}
+
+export function isItemMagicSource(item) {
+  if (!item) return false;
+  const sys = item.system ?? {};
+  const tokens = _collectItemTokens(item);
+
+  const hasMagicToken = tokens.includes("magic");
+  const hasSilverToken = tokens.includes("silver") || tokens.includes("silvered");
+
+  const legacy = String(sys.qualities ?? "").toLowerCase();
+  const legacyMagic = legacy.includes("magic");
+  const legacySilver = legacy.includes("silver");
+
+  const runed = sys.runed === true;
+  const chargeValue = Number(sys.charge?.value ?? 0);
+  const chargeMax = Number(sys.charge?.max ?? 0);
+  const hasCharge = (Number.isFinite(chargeValue) && chargeValue > 0)
+    || (Number.isFinite(chargeMax) && chargeMax > 0);
+
+  if (String(item.type ?? "") === "armor") {
+    const magicAR = Number(sys.magic_arEffective ?? sys.magic_ar ?? 0);
+    const hasMagicAR = Number.isFinite(magicAR) && magicAR > 0;
+    return hasMagicAR || hasMagicToken || legacyMagic || runed || hasCharge;
+  }
+
+  return hasMagicToken || hasSilverToken || legacyMagic || legacySilver || runed || hasCharge;
+}
+
 /**
  * Get total damage reduction for an actor based on damage type.
  * Physical: armor (by hit location) + natToughness
@@ -73,10 +171,12 @@ function _actorHasConditionKey(actor, key) {
  * @param {string} hitLocation
  * @returns {{armor:number,resistance:number,toughness:number,total:number,penetrated:number}}
  */
-export function getDamageReduction(actor, damageType = DAMAGE_TYPES.PHYSICAL, hitLocation = "Body") {
+export function getDamageReduction(actor, damageType = DAMAGE_TYPES.PHYSICAL, hitLocation = "Body", options = {}) {
   if (!actor?.system) {
     return { armor: 0, resistance: 0, toughness: 0, total: 0, penetrated: 0 };
   }
+
+  const ignoreNonMagicArmor = options?.ignoreNonMagicArmor === true;
 
   // Template uses RightArm/LeftArm/RightLeg/LeftLeg keys; sheets might still pass "Right Arm" etc.
   const locationMap = {
@@ -162,6 +262,7 @@ export function getDamageReduction(actor, damageType = DAMAGE_TYPES.PHYSICAL, hi
     for (const item of equippedArmor) {
       // Shields do not contribute AR; they are handled via Block in later steps.
       if (item.system?.isShield) continue;
+      if (ignoreNonMagicArmor && !isItemMagicSource(item)) continue;
 
       const covered = getCoveredLocations(item);
       if (!covered.has(propertyName)) continue;
@@ -399,8 +500,11 @@ export function calculateDamage(rawDamage, damageType, targetActor, options = {}
   // Track the target's *pre-penetration* armor for RAW interactions (e.g., Crushing cap, Slashing trigger).
   let originalArmor = 0;
 
+  const attackerIncorporeal = isActorIncorporeal(attackerActor);
+  const ignoreNonMagicArmor = attackerIncorporeal && String(damageType ?? "").toLowerCase() === DAMAGE_TYPES.PHYSICAL;
+
   if (!ignoreArmor) {
-    reductions = getDamageReduction(targetActor, damageType, hitLocation);
+    reductions = getDamageReduction(targetActor, damageType, hitLocation, { ignoreNonMagicArmor });
 
     // Penetration reduces ARMOR only (not resistance/toughness)
     originalArmor = Number(reductions.armor ?? 0);
@@ -437,6 +541,7 @@ export function calculateDamage(rawDamage, damageType, targetActor, options = {}
     hitLocation,
     damageType,
     weaponBonus: qualBonus,
+    incorporealAttack: ignoreNonMagicArmor ? { ignoreNonMagicArmor: true } : null,
   };
 }
 
@@ -457,13 +562,21 @@ function computeBigThreeBonus({ damageType, weapon, attackerActor, originalArmor
 
   // Resolve attacker STR bonus (schema: actor.system.characteristics.str.bonus)
   const strBonus = Number(attackerActor?.system?.characteristics?.str?.bonus ?? 0) || 0;
+  const viciousValue = Math.max(0, Number(getActorTraitValue(attackerActor, "vicious", { mode: "max" })) || 0);
+  const effectiveBonus = viciousValue > 0 ? viciousValue : strBonus;
 
   // Pull structured qualities (manual + injected) if available.
-  const structured = Array.isArray(weapon?.system?.qualitiesStructuredInjected)
+  let structured = Array.isArray(weapon?.system?.qualitiesStructuredInjected)
     ? weapon.system.qualitiesStructuredInjected
     : Array.isArray(weapon?.system?.qualitiesStructured)
       ? weapon.system.qualitiesStructured
       : [];
+  if (!structured.length) {
+    const activationStructured = Array.isArray(weapon?.system?.activation?.damage?.qualitiesStructured)
+      ? weapon.system.activation.damage.qualitiesStructured
+      : [];
+    if (activationStructured.length) structured = activationStructured;
+  }
 
   const getQualityValue = (key) => {
     const q = structured.find(e => String(e?.key ?? e ?? "").toLowerCase() === key);
@@ -479,7 +592,7 @@ function computeBigThreeBonus({ damageType, weapon, attackerActor, originalArmor
 
   // Crushing (X)
   if (hasQuality("crushing")) {
-    const x = getQualityValue("crushing") ?? strBonus;
+    const x = getQualityValue("crushing") ?? effectiveBonus;
     const cap = Math.max(0, Number(originalArmor ?? 0));
     bonus += Math.max(0, Math.min(Math.max(0, x), cap));
   }
@@ -488,7 +601,7 @@ function computeBigThreeBonus({ damageType, weapon, attackerActor, originalArmor
   if (hasQuality("slashing")) {
     const isUnarmored = Number(triggerArmor ?? originalArmor ?? 0) <= 0;
     if (isUnarmored) {
-      const x = getQualityValue("slashing") ?? strBonus;
+      const x = getQualityValue("slashing") ?? effectiveBonus;
       bonus += Math.max(0, x);
     }
   }
@@ -497,7 +610,7 @@ function computeBigThreeBonus({ damageType, weapon, attackerActor, originalArmor
   if (hasQuality("splitting")) {
     const initialFinal = Math.max(0, Number(baseTotalDamage ?? 0) - Number(reductionsTotal ?? 0));
     if (initialFinal >= 1) {
-      const x = getQualityValue("splitting") ?? strBonus;
+      const x = getQualityValue("splitting") ?? effectiveBonus;
       bonus += Math.max(0, x);
     }
   }
@@ -543,6 +656,7 @@ export async function applyDamage(actor, damage, damageType = DAMAGE_TYPES.PHYSI
     // Optional: enable RAW weapon-quality bonuses.
     weapon = null,
     attackerActor = null,
+    magicSource = false,
     // For magic wounds: track damage by type for proper wound side effects
     damageAppliedByType = null,
   } = options;
@@ -586,6 +700,18 @@ export async function applyDamage(actor, damage, damageType = DAMAGE_TYPES.PHYSI
     }));
   }
 
+  if (isActorImmuneToDamageType(actor, damageType)) {
+    damageCalc.immunity = { isImmune: true, damageType: String(damageType ?? "") };
+    damageCalc.finalDamage = 0;
+  }
+
+  const defenderIncorporeal = isActorIncorporeal(actor);
+  const isMagicAttack = magicSource || isItemMagicSource(weapon);
+  if (defenderIncorporeal && !isMagicAttack) {
+    damageCalc.incorporealBlock = { isBlocked: true, reason: "non-magic source" };
+    damageCalc.finalDamage = 0;
+  }
+
   const finalDamage = Number(damageCalc.finalDamage || 0);
 
   // --- Active Effects: Damage & Mitigation modifiers (final resolution stage)
@@ -594,7 +720,9 @@ export async function applyDamage(actor, damage, damageType = DAMAGE_TYPES.PHYSI
   // - aeMitigationFlat: flat mitigation applied AFTER reductions (positive reduces damage)
   const aeDamageTaken = Number(options?.aeDamageTaken ?? 0) || 0;
   const aeMitigationFlat = Number(options?.aeMitigationFlat ?? 0) || 0;
-  const finalDamageAdjusted = Math.max(0, finalDamage + aeDamageTaken - aeMitigationFlat);
+  let finalDamageAdjusted = Math.max(0, finalDamage + aeDamageTaken - aeMitigationFlat);
+  if (damageCalc.immunity?.isImmune) finalDamageAdjusted = 0;
+  if (damageCalc.incorporealBlock?.isBlocked) finalDamageAdjusted = 0;
 
   // Wound Threshold (RAW): WOUNDED is applied when a *single* instance of damage meets/exceeds
   // the target's Wound Threshold value. This is not derived from remaining HP.
@@ -745,6 +873,20 @@ export async function applyDamage(actor, damage, damageType = DAMAGE_TYPES.PHYSI
     const s = String(line ?? "");
     if (!s) continue;
     parts.push(`<div class="uesrpg-da-row"><span class="k"></span><span class="v muted">${s}</span></div>`);
+  }
+
+  if (damageCalc.immunity?.isImmune) {
+    const immType = String(damageCalc.immunity?.damageType ?? damageType ?? "");
+    const label = immType ? `Immune (${immType})` : "Immune";
+    parts.push(`<div class="uesrpg-da-row"><span class="k">Trait</span><span class="v">${label}</span></div>`);
+  }
+
+  if (damageCalc.incorporealBlock?.isBlocked) {
+    parts.push(`<div class="uesrpg-da-row"><span class="k">Trait</span><span class="v">Incorporeal (non-magic source)</span></div>`);
+  }
+
+  if (damageCalc.incorporealAttack?.ignoreNonMagicArmor) {
+    parts.push(`<div class="uesrpg-da-row"><span class="k">Trait</span><span class="v">Incorporeal Attack (non-magic AR ignored)</span></div>`);
   }
 
   if (!ignoreReduction) {
@@ -918,6 +1060,9 @@ export async function applyDamage(actor, damage, damageType = DAMAGE_TYPES.PHYSI
     aeDamageTaken,
     aeMitigationFlat,
     reductions: damageCalc.reductions,
+    immunity: damageCalc.immunity ?? null,
+    incorporealBlock: damageCalc.incorporealBlock ?? null,
+    incorporealAttack: damageCalc.incorporealAttack ?? null,
     oldHP: currentHP,
     newHP,
     woundStatus,
