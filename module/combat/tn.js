@@ -116,11 +116,13 @@ function computeSizeToHitModifier({ attackerSize, targetSize, attackMode } = {})
   if (mode === "ranged") return _sizeToHitModForTargetSize(targetSize);
 
   // Melee: apply only the conditional clauses in Chapter 5.
-  // - Small targets are harder to hit by larger creatures.
-  // - Huge/Enormous targets are easier to hit by smaller creatures.
+  // RAW nuance:
+  //  - Puny/Tiny: harder to hit by attackers of larger size.
+  //  - Small: penalty applies at range only (NOT in melee).
+  //  - Huge/Enormous: easier to hit by attackers of smaller size.
   const tNorm = _normalizeSize(targetSize);
 
-  if (aIdx > tIdx && (tNorm === "puny" || tNorm === "tiny" || tNorm === "small")) {
+  if (aIdx > tIdx && (tNorm === "puny" || tNorm === "tiny")) {
     return _sizeToHitModForTargetSize(tNorm);
   }
 
