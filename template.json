@@ -1100,6 +1100,7 @@
       "aoeSize": 0,
       "aoeWidth": 0,
       "aoePulse": false,
+      "aoeIncludeCaster": false,
       "isDirect": false,
       "mindlockValue": 0,
       "duration": {
@@ -1220,6 +1221,13 @@
         "shiftFormWereVulture": "Werevulture",
         "shiftFormWereLion": "Werelion"
       },
+      "rangeType": "",
+      "range": "",
+      "aoeShape": "circle",
+      "aoeSize": 0,
+      "aoeWidth": 0,
+      "aoePulse": false,
+      "aoeIncludeCaster": false,
       "activation": {
         "enabled": false,
         "actionType": "action",
