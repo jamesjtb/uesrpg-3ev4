@@ -1,4 +1,4 @@
-/**
+﻿/**
  * module/magic/opposed-workflow.js
  *
  * Magic attack opposed workflow for UESRPG 3ev4.
@@ -29,8 +29,9 @@ import { applyMagicDamage, applyMagicHealing } from "./damage-application.js";
 import { shouldBackfire, triggerBackfire } from "./backfire.js";
 import { safeUpdateChatMessage } from "../helpers/chat-message-socket.js";
 import { canUserRollActor, requireUserCanRollActor } from "../helpers/permissions.js";
+import { canTokenEscapeTemplate } from "../helpers/aoe-utils.js";
 import { ActionEconomy } from "../combat/action-economy.js";
-import { getHitLocationFromRoll } from "../combat/combat-utils.js";
+import { getHitLocationFromRoll, resolveHitLocationForTarget } from "../combat/combat-utils.js";
 import {
   computeElementalDamageBonus,
   isElementalDamageType,
@@ -38,6 +39,7 @@ import {
 } from "./magic-modifiers.js";
 import { AttackTracker } from "../combat/attack-tracker.js";
 import { classifySpellForRouting } from "./spell-routing.js";
+import { getBlockValue } from "../combat/mitigation.js";
 const _FLAG_NS = "uesrpg-3ev4";
 const _FLAG_KEY = "magicOpposed";
 const _CARD_VERSION = 2;
@@ -95,6 +97,67 @@ function _getMessageState(message) {
   return null;
 }
 
+function _getDefenderEntries(data) {
+  if (!data || typeof data !== "object") return [];
+  if (Array.isArray(data.defenders) && data.defenders.length) return data.defenders;
+  if (data.defender && typeof data.defender === "object") return [data.defender];
+  return [];
+}
+
+function _isMultiDefender(data) {
+  const list = _getDefenderEntries(data);
+  return list.length > 1;
+}
+
+function _resolveDefenderIndex(data, opts = {}) {
+  const list = _getDefenderEntries(data);
+  if (!list.length) return null;
+
+  const idx = Number(opts.defenderIndex ?? opts.defenderIdx ?? NaN);
+  if (Number.isInteger(idx) && idx >= 0 && idx < list.length) return idx;
+
+  const tokenUuid = String(opts.defenderTokenUuid ?? "").trim();
+  if (tokenUuid) {
+    const tokenIndex = list.findIndex(def => String(def?.tokenUuid ?? "") === tokenUuid);
+    if (tokenIndex >= 0) return tokenIndex;
+  }
+
+  const actorUuid = String(opts.defenderActorUuid ?? opts.defenderUuid ?? "").trim();
+  if (actorUuid) {
+    const actorIndex = list.findIndex(def => String(def?.actorUuid ?? "") === actorUuid);
+    if (actorIndex >= 0) return actorIndex;
+  }
+
+  return 0;
+}
+
+function _selectDefenderEntry(data, opts = {}) {
+  const defenders = _getDefenderEntries(data);
+  const isMulti = _isMultiDefender(data);
+  const defenderIndex = _resolveDefenderIndex(data, opts);
+  const defender = (defenderIndex != null) ? defenders[defenderIndex] : null;
+  if (defender) data.defender = defender;
+  return { defender, defenderIndex, defenders, isMulti };
+}
+
+function _getDefenderOutcome(data, defender) {
+  return _isMultiDefender(data) ? (defender?.outcome ?? null) : (data?.outcome ?? null);
+}
+
+function _setDefenderOutcome(data, defender, outcome) {
+  if (_isMultiDefender(data)) {
+    if (defender) defender.outcome = outcome;
+  } else {
+    data.outcome = outcome;
+  }
+}
+
+function _markResolutionPhase(data) {
+  const allResolved = _getDefenderEntries(data).every(def => Boolean(_getDefenderOutcome(data, def)));
+  data.context = data.context ?? {};
+  data.context.phase = allResolved ? "resolved" : "awaiting-defense";
+}
+
 /**
  * Check if a damage type is a healing type (includes temporary healing).
  * @param {string} damageType
@@ -117,6 +180,120 @@ function _isTemporaryHealingType(damageType) {
   return dt === "temporaryhealing" || dt === "temporary healing";
 }
 
+function _shouldShareSpellDamage(data) {
+  const isAoE = Boolean(data?.context?.aoe?.isAoE || data?.context?.isAoE);
+  return isAoE || _isMultiDefender(data);
+}
+
+async function _computeSpellDamageShared({ attacker, spell, spellOptions, isCritical, damageType } = {}) {
+  const costInfo = computeSpellMagickaCost(attacker, spell, {
+    ...(spellOptions ?? {}),
+    isCritical
+  });
+
+  const wpBonus = Math.floor(Number(attacker.system?.characteristics?.wp?.total ?? 0) / 10);
+  const isOverloaded = Boolean(costInfo?.isOverloaded);
+  const overloadBonus = isOverloaded ? wpBonus : 0;
+
+  const commonRollOptions = { isCritical, isOverloaded, wpBonus };
+
+  const wantsOvercharge = Boolean(costInfo?.isOvercharged);
+  let damageRoll = null;
+  let overchargeTotals = null;
+  if (wantsOvercharge) {
+    const r1 = await rollSpellDamage(spell, commonRollOptions);
+    const r2 = await rollSpellDamage(spell, commonRollOptions);
+    const t1 = Number(r1.total) || 0;
+    const t2 = Number(r2.total) || 0;
+    damageRoll = (t2 > t1) ? r2 : r1;
+    overchargeTotals = [t1, t2];
+  } else {
+    damageRoll = await rollSpellDamage(spell, commonRollOptions);
+  }
+
+  const baseDamage = Number(damageRoll.total) || 0;
+  const elemBonusInfo = computeElementalDamageBonus(attacker, damageType);
+  const elementalBonus = Number(elemBonusInfo?.bonus ?? 0) || 0;
+  const damageValue = baseDamage + overloadBonus + elementalBonus;
+  const rollHTML = await damageRoll.render();
+
+  return {
+    spellUuid: spell?.uuid ?? null,
+    damageType,
+    baseDamage,
+    damageValue,
+    rollHTML,
+    isOverloaded,
+    overloadBonus,
+    isOvercharged: wantsOvercharge,
+    overchargeTotals,
+    elementalBonus,
+    elementalBonusLabel: elemBonusInfo?.label || ""
+  };
+}
+
+async function _getOrCreateSharedSpellDamage({ data, attacker, spell, spellOptions, isCritical, damageType } = {}) {
+  if (!_shouldShareSpellDamage(data)) return null;
+  data.context = data.context ?? {};
+  const existing = data.context.sharedSpellDamage;
+  if (existing && existing.spellUuid === spell?.uuid && existing.damageType === damageType) {
+    return existing;
+  }
+  const computed = await _computeSpellDamageShared({ attacker, spell, spellOptions, isCritical, damageType });
+  data.context.sharedSpellDamage = computed;
+  return computed;
+}
+
+async function _promptAoEEvadeEscape({ defenderName = "Defender", spellName = "the spell" } = {}) {
+  if (typeof Dialog?.confirm !== "function") return null;
+  try {
+    return await Dialog.confirm({
+      title: "AoE Evade",
+      content: `<p>${defenderName} successfully evaded ${spellName}. Can they move 1m to exit the area?</p>`,
+      yes: "Escapes AoE",
+      no: "Still in AoE",
+      defaultYes: true
+    });
+  } catch (_e) {
+    return null;
+  }
+}
+
+async function _maybeResolveAoEEvadeEscape({ data, defenderEntry, defenderActor } = {}) {
+  if (!data || !defenderEntry) return null;
+  const isAoE = Boolean(data?.context?.aoe?.isAoE || data?.context?.isAoE);
+  if (!isAoE) return null;
+
+  const defenseType = String(defenderEntry.defenseType ?? "").toLowerCase();
+  if (defenseType !== "evade") return null;
+
+  if (!defenderEntry?.result?.isSuccess) return null;
+  if (defenderEntry.aoeEvadeEscaped === true) return true;
+  if (defenderEntry.aoeEvadeEscaped === false) return false;
+
+  const templateUuid = data?.context?.aoe?.templateUuid ?? null;
+  const templateId = data?.context?.aoe?.templateId ?? null;
+  const token = _resolveToken(defenderEntry?.tokenUuid ?? defenderActor?.uuid);
+
+  let canEscape = canTokenEscapeTemplate({ templateUuid, templateId, token, stepMeters: 1 });
+  if (canEscape == null) {
+    const canPrompt = game.user?.isGM || (defenderActor && canUserRollActor(game.user, defenderActor));
+    if (canPrompt) {
+      canEscape = await _promptAoEEvadeEscape({
+        defenderName: defenderActor?.name ?? defenderEntry?.name ?? "Defender",
+        spellName: data?.attacker?.spellName ?? "the spell"
+      });
+    }
+  }
+
+  if (canEscape != null) {
+    defenderEntry.aoeEvadeEscaped = Boolean(canEscape);
+    defenderEntry.aoeEvadeFailed = !canEscape;
+  }
+
+  return canEscape;
+}
+
 function _isBankChoicesEnabledForData(data) {
   // Magic banked choices enabled by default (same as combat)
   return true;
@@ -126,29 +303,62 @@ function _ensureBankedScaffold(data) {
   data.context = data.context ?? {};
   data.attacker = data.attacker ?? {};
   data.defender = data.defender ?? {};
+  if (!Array.isArray(data.defenders)) {
+    data.defenders = (data.defender && typeof data.defender === "object") ? [data.defender] : [];
+  }
 
   data.attacker.banked = (data.attacker.banked && typeof data.attacker.banked === "object") 
     ? data.attacker.banked 
     : { committed: false, committedAt: null, committedBy: null };
 
-  data.defender.banked = (data.defender.banked && typeof data.defender.banked === "object") 
-    ? data.defender.banked 
-    : { committed: false, committedAt: null, committedBy: null };
+  const defenders = _getDefenderEntries(data);
+  for (const def of defenders) {
+    def.banked = (def.banked && typeof def.banked === "object") 
+      ? def.banked 
+      : { committed: false, committedAt: null, committedBy: null };
+  }
 
   return data;
 }
 
-function _getBankCommitState(data) {
+function _getBankCommitState(data, defender = null) {
   _ensureBankedScaffold(data);
   
   const aCommitted = Boolean(data.attacker?.banked?.committed);
-  const dCommitted = Boolean(data.defender?.banked?.committed || data.defender?.noDefense);
+  const def = defender ?? data.defender;
+  const dCommitted = Boolean(
+    def?.banked?.committed ||
+    def?.noDefense ||
+    def?.defenseType != null
+  );
   
   return {
     aCommitted,
     dCommitted,
     bothCommitted: aCommitted && dCommitted
   };
+}
+
+function _allDefendersCommitted(data) {
+  if (!_isMultiDefender(data)) {
+    // Single defender: use standard bothCommitted check
+    const state = _getBankCommitState(data);
+    return state.bothCommitted;
+  }
+  
+  // Multi-defender: attacker must be committed AND all defenders must be committed
+  const aCommitted = Boolean(data.attacker?.banked?.committed);
+  if (!aCommitted) return false;
+  
+  const defenders = _getDefenderEntries(data);
+  return defenders.every(def => {
+    if (!def) return true; // Skip null entries
+    return Boolean(
+      def?.banked?.committed ||
+      def?.noDefense ||
+      def?.defenseType != null
+    );
+  });
 }
 
 
@@ -182,16 +392,22 @@ function _renderBreakdownDetails(title, entries) {
   `;
 }
 
-function _btn({ label, action, disabled = false, title = "" } = {}) {
+function _btn({ label, action, disabled = false, title = "", dataset = null } = {}) {
   const safeLabel = String(label ?? "Action");
   const safeAction = String(action ?? "");
   const safeTitle = String(title ?? "");
+  const dataAttrs = dataset && typeof dataset === "object"
+    ? Object.entries(dataset)
+      .map(([key, val]) => `data-${String(key)}="${String(val).replaceAll('"', "&quot;")}"`)
+      .join(" ")
+    : "";
   return `
     <button
       type="button"
       data-ues-magic-opposed-action="${safeAction}"
       ${disabled ? "disabled=\"disabled\"" : ""}
       ${safeTitle ? `title="${safeTitle.replaceAll('"', "&quot;")}"` : ""}
+      ${dataAttrs}
       style="padding: 4px 10px; line-height: 1; min-height: 26px;"
     >${safeLabel}</button>
   `;
@@ -206,11 +422,254 @@ function _btn({ label, action, disabled = false, title = "" } = {}) {
  *  - No public damage numbers; GM receives blind whispered damage report
  */
 function _renderCard(data, messageId) {
+  const defenders = _getDefenderEntries(data);
+  const isMulti = _isMultiDefender(data);
+
+  if (isMulti) {
+    const a = data.attacker ?? {};
+    const bankMode = _isBankChoicesEnabledForData(data);
+    const anyOutcome = defenders.some(d => _getDefenderOutcome(data, d));
+    const { aCommitted } = _getBankCommitState(data, defenders[0] ?? null);
+    const revealAttacker = !bankMode || aCommitted || anyOutcome;
+    const isAoE = Boolean(data?.context?.aoe?.isAoE || data?.context?.isAoE);
+    const defenseNote = isAoE
+      ? "AoE: Block or Evade if aware. Choose No Defense if unable to defend."
+      : "Defender may choose Block, Evade, or No Defense.";
+
+    const spellName = revealAttacker ? (a.spellName ?? "Spell") : "-";
+    const spellSchool = revealAttacker ? (a.spellSchool ?? "") : "";
+    const spellLevel = revealAttacker ? Number(a.spellLevel ?? 1) : "-";
+    const spellCost = revealAttacker ? Number(a.spellCost ?? 0) : "-";
+    const spellMpSpent = revealAttacker ? (Number(a.mpSpent ?? 0) || 0) : "-";
+    const spellMpRefund = revealAttacker ? (Number(a.mpRefund ?? 0) || 0) : 0;
+
+    const aTN = revealAttacker ? String(_extractTN(a.tn)) : "-";
+    const aRollLine = a.result
+      ? (a.result.noRoll
+        ? `<div><b>Roll:</b> Automatic</div>`
+        : `<div><b>Roll:</b> ${a.result.rollTotal} - ${_fmtDegree(a.result)}${a.result.isCriticalSuccess ? ' <span style="color:green; font-weight:700;">CRITICAL</span>' : ''}${a.result.isCriticalFailure ? ' <span style="color:red; font-weight:700;">CRITICAL FAIL</span>' : ''}</div>`)
+      : "";
+
+    const aBreakdown = revealAttacker ? _renderBreakdownDetails("TN breakdown", a.tn?.breakdown ?? a.tn?.modifiers) : "";
+
+    const attackerCommitLine = (() => {
+      if (!bankMode) return "";
+      const resolved = anyOutcome;
+      const rolled = !!a.result;
+      const statusText = resolved ? "Resolved" : rolled ? "Rolled" : (aCommitted ? "Committed" : "Awaiting choice");
+      return `<div style="margin-top:4px; font-size:12px; opacity:0.85;"><b>Status:</b> ${statusText}</div>`;
+    })();
+
+    const attackerControls = (() => {
+      if (a.result) return "";
+      if (bankMode) {
+        if (!aCommitted) return `<div style="margin-top:8px;">${_btn({ label: "Commit Casting", action: "attacker-commit" })}</div>`;
+        return "";
+      }
+      return `<div style="margin-top:8px;">${_btn({ label: "Roll Casting Test", action: "attacker-roll" })}</div>`;
+    })();
+
+    const defenderBlocks = defenders.map((d, idx) => {
+      const { dCommitted, bothCommitted } = _getBankCommitState(data, d);
+      const outcome = _getDefenderOutcome(data, d);
+      const revealDefender = !bankMode || bothCommitted || Boolean(outcome);
+
+      const dTN = revealDefender ? String(_extractTN(d.tn)) : "-";
+      const dRollLine = (d.result && !d.noDefense)
+        ? `<div><b>Roll:</b> ${d.result.rollTotal} - ${_fmtDegree(d.result)}</div>`
+        : "";
+
+      const defenderCommitLine = (() => {
+        if (!bankMode) return "";
+        const resolved = Boolean(outcome);
+        const rolled = !!d.result || !!d.noDefense;
+        const statusText = resolved ? "Resolved" : rolled ? "Rolled" : (dCommitted ? "Committed" : "Awaiting choice");
+        return `<div style="margin-top:4px; font-size:12px; opacity:0.85;"><b>Status:</b> ${statusText}</div>`;
+      })();
+
+      const canRollDefender = Boolean(a.result && !d.result && !d.noDefense);
+      const defenderControls = (() => {
+        if (d.result || d.noDefense) return "";
+        if (bankMode) {
+          if (!dCommitted) {
+            return `
+              <div style="margin-top:8px; display:flex; gap:6px; flex-wrap:wrap;">
+                ${_btn({ label: "Commit Block", action: "defender-commit-block", dataset: { "defender-index": idx } })}
+                ${_btn({ label: "Commit Evade", action: "defender-commit-evade", dataset: { "defender-index": idx } })}
+                ${_btn({ label: "Commit No Defense", action: "defender-commit-nodefense", dataset: { "defender-index": idx } })}
+              </div>
+            `;
+          }
+          return "";
+        }
+
+        if (canRollDefender) {
+          return `
+            <div style="margin-top:8px; display:flex; gap:6px; flex-wrap:wrap;">
+              ${_btn({ label: "Block", action: "defender-roll-block", dataset: { "defender-index": idx } })}
+              ${_btn({ label: "Evade", action: "defender-roll-evade", dataset: { "defender-index": idx } })}
+              ${_btn({ label: "No Defense", action: "defender-no-defense", dataset: { "defender-index": idx } })}
+            </div>
+          `;
+        }
+        return "";
+      })();
+
+      let outcomeLine = "";
+      if (outcome) {
+        const winner = String(outcome.winner ?? "");
+        const color = winner === "attacker" ? "green" : (winner === "defender" ? "#2a5db0" : "#666");
+
+        const aResult = data.attacker?.result;
+        const dResult = d?.result;
+        const aTN = _extractTN(data.attacker?.tn);
+        const dTN = _extractTN(d?.tn);
+
+        let resultsHtml = "";
+        if (Boolean(data.context?.healingDirect)) {
+          if (aResult) {
+            const aRoll = aResult.rollTotal ?? "-";
+            const aDeg = Math.abs(aResult.degree ?? 0);
+            const aDoSLabel = (aResult.isSuccess || false) ? "DoS" : "DoF";
+            const healingApplied = outcome?.healingApplied;
+            const tempHealingApplied = outcome?.tempHealingApplied;
+            const healingHTML = outcome?.healingRollHTML ?? outcome?.tempHealingRollHTML ?? "";
+
+            resultsHtml = `
+              <div style="margin-top:6px; font-size:12px; line-height:1.5;">
+                <div><b>Casting Test:</b> ${aRoll} vs TN ${aTN} - ${aDeg} ${aDoSLabel}</div>
+                ${healingApplied != null ? `<div><b>Healing:</b> <span style="color:#388e3c;font-weight:bold;">+${healingApplied} HP</span></div>` : ""}
+                ${tempHealingApplied != null ? `<div><b>Temporary HP:</b> <span style="color:#2196f3;font-weight:bold;">+${tempHealingApplied} Temp HP</span></div>` : ""}
+                ${healingHTML ? `<div style="margin-top:4px;">${healingHTML}</div>` : ""}
+              </div>
+            `;
+          }
+        } else if (aResult && dResult) {
+          const aRoll = aResult.rollTotal ?? "-";
+          const dRoll = dResult.rollTotal ?? "-";
+          const aDeg = Math.abs(aResult.degree ?? 0);
+          const dDeg = Math.abs(dResult.degree ?? 0);
+          const aDoSLabel = (aResult.isSuccess || false) ? "DoS" : "DoF";
+          const dDoSLabel = (dResult.isSuccess || false) ? "DoS" : "DoF";
+
+          resultsHtml = `
+            <div style="margin-top:6px; font-size:12px; line-height:1.5;">
+              <div><b>Caster:</b> ${aRoll} vs TN ${aTN} (${aDeg} ${aDoSLabel})</div>
+              <div><b>Defender:</b> ${dRoll} vs TN ${dTN} (${dDeg} ${dDoSLabel})</div>
+            </div>
+          `;
+        }
+
+        const blockNote = (isAoE && String(d?.defenseType ?? "").toLowerCase() === "block" && outcome.winner === "defender")
+          ? `<div style="margin-top:4px; font-size:12px; opacity:0.9;">AoE block halves damage (round up).</div>`
+          : "";
+        
+        const blockResolveButton = (outcome?.needsBlockResolution && !isAoE)
+          ? `<div style="margin-top:8px;">${_btn({ label: "Resolve Block", action: "block-resolve", dataset: { "defender-index": idx } })}</div>`
+          : "";
+
+        outcomeLine = `
+          <div style="margin-top:10px; padding:8px; background:rgba(0,0,0,0.05); border-left:3px solid ${color};">
+            <div style="font-weight:700;">${String(outcome.text ?? "Resolved")}</div>
+            ${resultsHtml}
+            ${(outcome.damageApplied ?? outcome.attackerWins) && !Boolean(data.context?.healingDirect) ? `<div style="margin-top:4px; font-size:12px; opacity:0.9;">Damage is applied automatically. Details are whispered to the GM.</div>` : ""}
+            ${blockNote}
+            ${blockResolveButton}
+          </div>
+        `;
+      } else if (bankMode && !bothCommitted) {
+        const aStatus = aCommitted ? "Committed" : "Awaiting choice";
+        const dStatus = dCommitted ? "Committed" : "Awaiting choice";
+        outcomeLine = `
+          <div style="margin-top:10px; padding:8px; background:rgba(0,0,0,0.05);">
+            <div><b>Attacker:</b> ${aStatus}</div>
+            <div><b>Defender:</b> ${dStatus}</div>
+            ${_allDefendersCommitted(data) ? '<div style="margin-top:6px; font-style:italic;">All participants committed. Ready to roll.</div>' : (() => {
+              const aCommitted = Boolean(data.attacker?.banked?.committed);
+              const allDefendersCommitted = _isMultiDefender(data) 
+                ? _getDefenderEntries(data).every(def => {
+                    if (!def) return true;
+                    return Boolean(
+                      def?.banked?.committed ||
+                      def?.noDefense ||
+                      def?.defenseType != null
+                    );
+                  })
+                : _getBankCommitState(data, d).dCommitted;
+              if (!aCommitted) {
+                return '<div style="margin-top:6px; font-style:italic;">Waiting for caster to commit choice...</div>';
+              }
+              if (!allDefendersCommitted) {
+                return '<div style="margin-top:6px; font-style:italic;">Waiting for all defenders to commit choices...</div>';
+              }
+              return '<div style="margin-top:6px; font-style:italic;">Waiting for both sides to commit choices...</div>';
+            })()}
+          </div>
+        `;
+      } else if (a.result && !d.result && !d.noDefense) {
+        outcomeLine = `
+          <div style="margin-top:10px; padding:8px; background:rgba(0,0,0,0.05); border-left:3px solid #666;">
+            <div style="font-weight:700;">Awaiting defense selection</div>
+            <div style="margin-top:4px; font-size:12px; opacity:0.9;">${defenseNote}</div>
+          </div>
+        `;
+      }
+
+      return `
+        <div style="padding:6px; border:1px solid rgba(0,0,0,0.12); border-radius:6px;">
+          <div style="display:flex; justify-content:space-between; align-items:baseline;">
+            <div style="font-size:14px; font-weight:700;">Target</div>
+            <div style="font-size:12px;"><b>${d.tokenName ?? d.name ?? ""}</b></div>
+          </div>
+          <div style="margin-top:4px; font-size:13px; line-height:1.25;">
+            <div><b>Defense:</b> ${d.noDefense ? "-" : (d.defenseType ?? "-")}</div>
+            <div><b>TN:</b> ${d.noDefense ? "-" : dTN}</div>
+            ${dRollLine}
+            ${d.noDefense ? '<div style="color:red; font-style:italic; margin-top:2px;">No Defense</div>' : ""}
+            ${d.noDefense ? "" : (revealDefender ? _renderBreakdownDetails("TN breakdown", d.tn?.breakdown ?? d.tn?.modifiers) : "")}
+            ${defenderCommitLine}
+          </div>
+          ${defenderControls}
+          ${outcomeLine}
+        </div>
+      `;
+    }).join("");
+
+    return `
+      <div class="ues-opposed-card ues-magic-opposed-card" data-message-id="${String(messageId ?? "")}" data-ues-magic-opposed="1" style="padding:6px 6px;">
+        <div style="display:grid; grid-template-columns: 1fr; gap:12px;">
+          <div style="padding-bottom:8px; border-bottom:1px solid rgba(0,0,0,0.12);">
+            <div style="display:flex; justify-content:space-between; align-items:baseline;">
+              <div style="font-size:16px; font-weight:700;">Caster</div>
+              <div style="font-size:13px;"><b>${a.tokenName ?? a.name ?? ""}</b></div>
+            </div>
+            <div style="margin-top:4px; font-size:13px; line-height:1.25;">
+              <div><b>Spell:</b> ${spellName}${spellSchool ? ` (${spellSchool} ${spellLevel})` : ""}</div>
+              <div><b>MP Cost:</b> ${spellCost}${spellMpSpent !== "-" && spellMpSpent ? ` <span class="muted" style="opacity:0.8;">(paid: ${spellMpSpent}${spellMpRefund ? `, refunded: ${spellMpRefund}` : ""})</span>` : ""}</div>
+              <div><b>TN:</b> ${aTN}</div>
+              ${aRollLine}
+              ${aBreakdown}
+              ${attackerCommitLine}
+            </div>
+            ${attackerControls}
+          </div>
+          <div style="display:grid; grid-template-columns: 1fr; gap:10px;">
+            ${defenderBlocks}
+          </div>
+        </div>
+      </div>
+    `;
+  }
+
   const a = data.attacker;
   const d = data.defender;
 
   const bankMode = _isBankChoicesEnabledForData(data);
   const { aCommitted, dCommitted, bothCommitted } = _getBankCommitState(data);
+  const isAoE = Boolean(data?.context?.aoe?.isAoE || data?.context?.isAoE);
+  const defenseNote = isAoE
+    ? "AoE: Block or Evade if aware. Choose No Defense if unable to defend."
+    : "Defender may choose Block, Evade, or No Defense.";
   
   const phase = String(data?.context?.phase ?? data?.status ?? "pending");
   const resolved = phase === "resolved";
@@ -350,11 +809,17 @@ function _renderCard(data, messageId) {
       `;
     }
     
+    const blockNote = (isAoE && String(data.defender?.defenseType ?? "").toLowerCase() === "block" && winner === "defender")
+      ? `<div style="margin-top:4px; font-size:12px; opacity:0.9;">AoE block halves damage (round up).</div>`
+      : "";
+
     outcomeLine = `
       <div style="margin-top:10px; padding:8px; background:rgba(0,0,0,0.05); border-left:3px solid ${color};">
         <div style="font-weight:700;">${String(data.outcome.text ?? "Resolved")}</div>
         ${resultsHtml}
-        ${data.outcome.attackerWins && !Boolean(data.context?.healingDirect) ? `<div style="margin-top:4px; font-size:12px; opacity:0.9;">Damage is applied automatically. Details are whispered to the GM.</div>` : ""}
+        ${(data.outcome.damageApplied ?? data.outcome.attackerWins) && !Boolean(data.context?.healingDirect) ? `<div style="margin-top:4px; font-size:12px; opacity:0.9;">Damage is applied automatically. Details are whispered to the GM.</div>` : ""}
+        ${blockNote}
+        ${(data.outcome?.needsBlockResolution && !isAoE) ? `<div style="margin-top:8px;">${_btn({ label: "Resolve Block", action: "block-resolve" })}</div>` : ""}
       </div>
     `;
   } else if (bankMode && !bothCommitted) {
@@ -371,7 +836,7 @@ function _renderCard(data, messageId) {
     outcomeLine = `
       <div style="margin-top:10px; padding:8px; background:rgba(0,0,0,0.05); border-left:3px solid #666;">
         <div style="font-weight:700;">Awaiting defense selection</div>
-        <div style="margin-top:4px; font-size:12px; opacity:0.9;">Defender may choose Block, Evade, or No Defense.</div>
+        <div style="margin-top:4px; font-size:12px; opacity:0.9;">${defenseNote}</div>
       </div>
     `;
   }
@@ -556,15 +1021,57 @@ export const MagicOpposedWorkflow = {
    */
   async createPending(cfg = {}) {
     const aDoc = _resolveDoc(cfg.attackerTokenUuid) ?? _resolveDoc(cfg.attackerActorUuid) ?? _resolveDoc(cfg.attackerUuid);
-    const dDoc = _resolveDoc(cfg.defenderTokenUuid) ?? _resolveDoc(cfg.defenderActorUuid) ?? _resolveDoc(cfg.defenderUuid);
 
     const aToken = _resolveToken(aDoc);
-    const dToken = _resolveToken(dDoc);
     const attacker = _resolveActor(aDoc);
-    const defender = _resolveActor(dDoc);
 
-    if (!attacker || !defender) {
-      ui.notifications.warn("Magic attack requires both a caster and a target.");
+    const defenderRefs = [];
+    const addDefenderRef = (ref) => {
+      if (!ref) return;
+      if (typeof ref === "string") defenderRefs.push(ref);
+      else if (ref?.uuid) defenderRefs.push(ref.uuid);
+    };
+
+    if (Array.isArray(cfg.defenders)) {
+      for (const def of cfg.defenders) {
+        addDefenderRef(def?.tokenUuid ?? def?.actorUuid ?? def?.uuid ?? def);
+      }
+    }
+    if (Array.isArray(cfg.defenderTokenUuids)) {
+      for (const ref of cfg.defenderTokenUuids) addDefenderRef(ref);
+    }
+    if (Array.isArray(cfg.defenderActorUuids)) {
+      for (const ref of cfg.defenderActorUuids) addDefenderRef(ref);
+    }
+    addDefenderRef(cfg.defenderTokenUuid ?? cfg.defenderActorUuid ?? cfg.defenderUuid);
+
+    const defenderEntries = [];
+    const seen = new Set();
+    for (const ref of defenderRefs) {
+      const dDoc = _resolveDoc(ref);
+      const dToken = _resolveToken(dDoc);
+      const dActor = _resolveActor(dDoc);
+      if (!dActor) continue;
+      const key = dToken?.document?.uuid ?? dToken?.uuid ?? dActor.uuid;
+      if (seen.has(key)) continue;
+      seen.add(key);
+
+      defenderEntries.push({
+        actorUuid: dActor.uuid,
+        tokenUuid: dToken?.document?.uuid ?? dToken?.uuid ?? null,
+        tokenName: dToken?.name ?? dToken?.document?.name ?? null,
+        name: dActor.name,
+        defenseType: null,
+        result: null,
+        tn: null,
+        noDefense: false,
+        apCost: 1,
+        banked: { committed: false, committedAt: null, committedBy: null }
+      });
+    }
+
+    if (!attacker || defenderEntries.length === 0) {
+      ui.notifications.warn("Magic attack requires both a caster and at least one target.");
       return null;
     }
 
@@ -576,17 +1083,19 @@ export const MagicOpposedWorkflow = {
 
     // Direct spells resolve immediately (no casting/defense tests).
     if (Boolean(spell?.system?.isDirect)) {
-      await this.castDirectTargeted({
-        attackerTokenUuid: cfg.attackerTokenUuid,
-        attackerActorUuid: cfg.attackerActorUuid,
-        attackerUuid: cfg.attackerUuid,
-        defenderTokenUuid: cfg.defenderTokenUuid,
-        defenderActorUuid: cfg.defenderActorUuid,
-        defenderUuid: cfg.defenderUuid,
-        spellUuid: cfg.spellUuid,
-        spellOptions: cfg.spellOptions,
-        castActionType: cfg.castActionType
-      });
+      for (const def of defenderEntries) {
+        await this.castDirectTargeted({
+          attackerTokenUuid: cfg.attackerTokenUuid,
+          attackerActorUuid: cfg.attackerActorUuid,
+          attackerUuid: cfg.attackerUuid,
+          defenderTokenUuid: def.tokenUuid ?? null,
+          defenderActorUuid: def.actorUuid ?? null,
+          defenderUuid: def.actorUuid ?? null,
+          spellUuid: cfg.spellUuid,
+          spellOptions: cfg.spellOptions,
+          castActionType: cfg.castActionType
+        });
+      }
       return null;
     }
 
@@ -594,6 +1103,7 @@ export const MagicOpposedWorkflow = {
     const tn = computeMagicCastingTN(attacker, spell, spellOptions);
     const healingDirect = isHealingSpell(spell);
 
+    const isAoE = Boolean(cfg?.aoe?.isAoE || cfg?.context?.aoe?.isAoE || cfg?.isAoE);
     const data = {
       context: {
         schemaVersion: _CARD_VERSION,
@@ -604,7 +1114,10 @@ export const MagicOpposedWorkflow = {
         updatedBy: game.user.id,
         phase: "pending",
         healingDirect,
-        bankChoicesEnabled: true
+        bankChoicesEnabled: true,
+        aoe: cfg?.aoe ? foundry.utils.deepClone(cfg.aoe) : undefined,
+        isAoE: cfg?.isAoE ?? undefined,
+        forcedHitLocation: isAoE ? "Body" : null
       },
       status: "pending",
       mode: "magic",
@@ -627,17 +1140,8 @@ export const MagicOpposedWorkflow = {
         mpRemaining: null,
         backfire: false
       },
-      defender: {
-        actorUuid: defender.uuid,
-        tokenUuid: dToken?.document?.uuid ?? dToken?.uuid ?? null,
-        tokenName: dToken?.name ?? null,
-        name: defender.name,
-        defenseType: null,
-        result: null,
-        tn: null,
-        noDefense: false,
-        apCost: 1
-      },
+      defenders: defenderEntries,
+      defender: defenderEntries[0] ?? null,
       outcome: null
     };
 
@@ -956,14 +1460,15 @@ export const MagicOpposedWorkflow = {
   /**
    * Handle actions on the opposed card.
    */
-  async handleAction(message, action) {
+  async handleAction(message, action, opts = {}) {
     const data = _getMessageState(message);
     if (!data) return;
 
     const attacker = _resolveActor(data.attacker.actorUuid);
-    const defender = _resolveActor(data.defender.actorUuid);
+    const { defender, defenderIndex, defenders } = _selectDefenderEntry(data, opts);
+    const defenderActor = _resolveActor(defender?.actorUuid);
 
-    if (!attacker || !defender) {
+    if (!attacker || !defenderActor) {
       ui.notifications.warn("Could not resolve actors.");
       return;
     }
@@ -983,9 +1488,9 @@ export const MagicOpposedWorkflow = {
 
       await _updateCard(message, data);
 
-      // Check if both committed -> auto-roll
-      const bank = _getBankCommitState(data);
-      if (bank.bothCommitted) {
+      // For banking: only trigger auto-roll when ALL defenders have committed
+      // This prevents metagaming by ensuring all choices are locked before any rolls
+      if (_allDefendersCommitted(data)) {
         await this._autoRollBanked(message);
       }
       return;
@@ -994,34 +1499,34 @@ export const MagicOpposedWorkflow = {
     // Handle defender commit
     if (action === "defender-commit-block" || action === "defender-commit-evade" || action === "defender-commit-nodefense") {
       if (!bankMode) return;
-      if (data.defender.result || data.defender.noDefense) return;
-      if (!requireUserCanRollActor(game.user, defender)) return;
+      if (defender?.result || defender?.noDefense) return;
+      if (!requireUserCanRollActor(game.user, defenderActor)) return;
 
       _ensureBankedScaffold(data);
       
       // Store defense choice
       if (action === "defender-commit-nodefense") {
-        data.defender.defenseType = "none";
-        data.defender.noDefense = true;
+        defender.defenseType = "none";
+        defender.noDefense = true;
         
         // CRITICAL FIX: Set result immediately so _autoRollBanked doesn't call defender-no-defense again
         // This matches the pattern used in combat opposed workflow
-        data.defender.tn = { finalTN: 0, baseTN: 0, totalMod: 0, breakdown: [{ key: "base", label: "No Defense", value: 0, source: "base" }] };
-        data.defender.result = { rollTotal: 0, isSuccess: false, degree: 0, isCriticalSuccess: false, isCriticalFailure: false };
+        defender.tn = { finalTN: 0, baseTN: 0, totalMod: 0, breakdown: [{ key: "base", label: "No Defense", value: 0, source: "base" }] };
+        defender.result = { rollTotal: 0, isSuccess: false, degree: 0, isCriticalSuccess: false, isCriticalFailure: false };
       } else {
-        data.defender.defenseType = (action === "defender-commit-block") ? "block" : "evade";
-        data.defender.noDefense = false;
+        defender.defenseType = (action === "defender-commit-block") ? "block" : "evade";
+        defender.noDefense = false;
       }
 
-      data.defender.banked.committed = true;
-      data.defender.banked.committedAt = Date.now();
-      data.defender.banked.committedBy = game.user.id;
+      defender.banked.committed = true;
+      defender.banked.committedAt = Date.now();
+      defender.banked.committedBy = game.user.id;
 
       await _updateCard(message, data);
 
-      // Check if both committed -> auto-roll
-      const bank = _getBankCommitState(data);
-      if (bank.bothCommitted) {
+      // For banking: only trigger auto-roll when ALL defenders have committed
+      // This prevents metagaming by ensuring all choices are locked before any rolls
+      if (_allDefendersCommitted(data)) {
         await this._autoRollBanked(message);
       }
       return;
@@ -1120,26 +1625,33 @@ export const MagicOpposedWorkflow = {
       // Healing spells are not opposed when a target is selected.
       // Resolve immediately based on casting success.
       if (Boolean(data.context?.healingDirect)) {
-        data.defender.noDefense = true;
-        data.defender.defenseType = "—";
-        data.defender.tn = null;
-        data.defender.result = { rollTotal: 0, isSuccess: false, degree: 0, isCriticalSuccess: false, isCriticalFailure: false };
+        for (const def of defenders) {
+          def.noDefense = true;
+          def.defenseType = "-";
+          def.tn = null;
+          def.result = { rollTotal: 0, isSuccess: false, degree: 0, isCriticalSuccess: false, isCriticalFailure: false };
+        }
         data.context.phase = "resolved";
-        await this._resolveOutcome(message, data, attacker, defender);
+        for (let i = 0; i < defenders.length; i += 1) {
+          const defActor = _resolveActor(defenders[i]?.actorUuid);
+          if (!defActor) continue;
+          await this._resolveOutcome(message, data, attacker, defActor, { defenderIndex: i });
+        }
         return;
       }
 
       data.context.phase = "awaiting-defense";
+      _markResolutionPhase(data);
       await _updateCard(message, data);
       return;
     }
 
     if (action === "defender-roll-block" || action === "defender-roll-evade") {
-      if (data.defender.result || data.defender.noDefense) return;
-      if (!requireUserCanRollActor(game.user, defender)) return;
+      if (defender?.result || defender?.noDefense) return;
+      if (!requireUserCanRollActor(game.user, defenderActor)) return;
 
-      const apCost = Number(data.defender.apCost ?? 1) || 1;
-      const currentAP = Number(defender?.system?.action_points?.value ?? 0) || 0;
+      const apCost = Number(defender?.apCost ?? 1) || 1;
+      const currentAP = Number(defenderActor?.system?.action_points?.value ?? 0) || 0;
       if (currentAP < apCost) {
         ui.notifications.warn("Not enough Action Points to defend against the spell.");
         return;
@@ -1148,30 +1660,29 @@ export const MagicOpposedWorkflow = {
       const defenseType = (action === "defender-roll-block") ? "block" : "evade";
       const defenseLabel = defenseType.charAt(0).toUpperCase() + defenseType.slice(1);
 
-      const apSpentOk = await ActionEconomy.spendAP(defender, apCost, { reason: `Defense (${defenseLabel})`, silent: false });
+      const apSpentOk = await ActionEconomy.spendAP(defenderActor, apCost, { reason: `Defense (${defenseLabel})`, silent: false });
       if (!apSpentOk) return;
 
-      const tnObj = (defenseType === "block") ? _computeBlockTNWithBreakdown(defender) : _computeEvadeTNWithBreakdown(defender);
+      const tnObj = (defenseType === "block") ? _computeBlockTNWithBreakdown(defenderActor) : _computeEvadeTNWithBreakdown(defenderActor);
       const defenseTN = Number(tnObj.finalTN ?? 0) || 0;
 
-      const result = await doTestRoll(defender, {
+      const result = await doTestRoll(defenderActor, {
         target: defenseTN,
         allowLucky: true,
         allowUnlucky: true
       });
 
       await result.roll.toMessage({
-        speaker: ChatMessage.getSpeaker({ actor: defender }),
+        speaker: ChatMessage.getSpeaker({ actor: defenderActor }),
         flavor: `<b>${defenseLabel}</b> vs ${data.attacker.spellName}`,
-        flags: { [_FLAG_NS]: { magicOpposedMeta: { parentMessageId: message.id, stage: "defender" } } }
+        flags: { [_FLAG_NS]: { magicOpposedMeta: { parentMessageId: message.id, stage: "defender", defenderIndex } } }
       });
 
-      data.defender.result = result;
-      data.defender.defenseType = defenseLabel;
-      data.defender.tn = tnObj;
-      data.context.phase = "resolved";
+      defender.result = result;
+      defender.defenseType = defenseLabel;
+      defender.tn = tnObj;
 
-      await this._resolveOutcome(message, data, attacker, defender);
+      await this._resolveOutcome(message, data, attacker, defenderActor, { defenderIndex });
       return;
     }
 
@@ -1184,16 +1695,118 @@ export const MagicOpposedWorkflow = {
       }
       
       // No defense does not cost AP.
-      if (data.defender.result || data.defender.noDefense) return;
-      if (!requireUserCanRollActor(game.user, defender)) return;
+      if (defender?.result || defender?.noDefense) return;
+      if (!requireUserCanRollActor(game.user, defenderActor)) return;
 
-      data.defender.noDefense = true;
-      data.defender.defenseType = "—";
-      data.defender.tn = null;
-      data.defender.result = { rollTotal: 0, isSuccess: false, degree: 0, isCriticalSuccess: false, isCriticalFailure: false };
-      data.context.phase = "resolved";
+      defender.noDefense = true;
+      defender.defenseType = "-";
+      defender.tn = null;
+      defender.result = { rollTotal: 0, isSuccess: false, degree: 0, isCriticalSuccess: false, isCriticalFailure: false };
 
-      await this._resolveOutcome(message, data, attacker, defender);
+      await this._resolveOutcome(message, data, attacker, defenderActor, { defenderIndex });
+    }
+
+    if (action === "block-resolve") {
+      const outcome = _getDefenderOutcome(data, defender);
+      if (!outcome || !outcome.needsBlockResolution) {
+        ui.notifications.warn("Block resolution is only available when the defender wins by blocking (both passed).");
+        return;
+      }
+      if (!requireUserCanRollActor(game.user, defenderActor)) return;
+
+      const spell = await fromUuid(data.attacker.spellUuid);
+      if (!spell) {
+        ui.notifications.warn("Could not resolve spell.");
+        return;
+      }
+
+      // Get equipped shield
+      const shields = defenderActor.items?.filter(i => {
+        if (!(i.type === "armor" || i.type === "item")) return false;
+        if (i.system?.equipped !== true) return false;
+        if (!Boolean(i.system?.isShieldEffective ?? i.system?.isShield)) return false;
+        const shieldType = String(i.system?.shieldType || "normal").toLowerCase();
+        if (shieldType === "buckler") return false;
+        return true;
+      }) ?? [];
+      const shield = shields[0] ?? null;
+      if (!shield) {
+        ui.notifications.warn("No equipped shield found on the defender.");
+        return;
+      }
+
+      // Roll spell damage
+      const spellOptions = data.attacker.spellOptions ?? {};
+      const damageType = getSpellDamageType(spell);
+      const isCritical = Boolean(data.attacker.result?.isCriticalSuccess);
+      const sharedDamage = await _getOrCreateSharedSpellDamage({ data, attacker, spell, spellOptions, isCritical, damageType });
+      const damageInfo = sharedDamage ?? await _computeSpellDamageShared({ attacker, spell, spellOptions, isCritical, damageType });
+      const damageValue = Number(damageInfo?.damageValue ?? 0) || 0;
+      const rollHTML = damageInfo?.rollHTML ?? "";
+
+      // Get Block Rating (magic damage treats BR as half, round up, unless magic BR exists)
+      const br = getBlockValue(shield, damageType);
+      const blocked = damageValue <= br;
+
+      const dToken = _resolveToken(defenderEntry?.tokenUuid);
+
+      if (blocked) {
+        await ChatMessage.create({
+          user: game.user.id,
+          speaker: ChatMessage.getSpeaker({ actor: defenderActor, token: dToken?.document ?? null }),
+          content: `<div class="ues-opposed-card" style="padding:6px;">
+            <h3>Block: ${spell.name}</h3>
+            <div><b>Damage Roll:</b> ${rollHTML || damageValue}</div>
+            <div><b>Block Rating:</b> ${br}</div>
+            <div style="margin-top:4px;"><b>Result:</b> Incoming damage <b>${damageValue}</b> does not exceed Block Rating <b>${br}</b>. No damage taken.</div>
+          </div>`,
+          style: CONST.CHAT_MESSAGE_STYLES.OTHER,
+          flags: { [_FLAG_NS]: { magicOpposedMeta: { stage: "block-result", parentMessageId: message.id } } }
+        });
+        return;
+      }
+
+      // Damage exceeds BR: apply full damage to shield arm
+      const shieldArm = "Left Arm";
+      const resolvedShieldArm = resolveHitLocationForTarget(defenderActor, shieldArm);
+
+      const damageResult = await applyMagicDamage(defenderActor, damageValue, damageType, spell, {
+        isCritical,
+        hitLocation: resolvedShieldArm,
+        rollHTML,
+        isOverloaded: Boolean(damageInfo?.isOverloaded),
+        overloadBonus: Number(damageInfo?.overloadBonus ?? 0) || 0,
+        isOvercharged: Boolean(damageInfo?.isOvercharged),
+        overchargeTotals: Array.isArray(damageInfo?.overchargeTotals) ? damageInfo.overchargeTotals : null,
+        elementalBonus: Number(damageInfo?.elementalBonus ?? 0) || 0,
+        elementalBonusLabel: String(damageInfo?.elementalBonusLabel ?? ""),
+        source: spell.name,
+        casterActor: attacker,
+        magicCost: Number(data.attacker?.mpSpent ?? data.context?.mpSpent ?? spell.system?.cost ?? 0)
+      });
+
+      await ChatMessage.create({
+        user: game.user.id,
+        speaker: ChatMessage.getSpeaker({ actor: defenderActor, token: dToken?.document ?? null }),
+        content: `<div class="ues-opposed-card" style="padding:6px;">
+          <h3>Block Penetrated: ${spell.name}</h3>
+          <div><b>Damage Roll:</b> ${rollHTML || damageValue}</div>
+          <div><b>Block Rating:</b> ${br}</div>
+          <div style="margin-top:4px;"><b>Result:</b> Incoming damage <b>${damageValue}</b> exceeds Block Rating <b>${br}</b> (${shield?.name ?? "Shield"}). Full damage applied to ${shieldArm}.</div>
+        </div>`,
+        style: CONST.CHAT_MESSAGE_STYLES.OTHER,
+        flags: { [_FLAG_NS]: { magicOpposedMeta: { stage: "block-penetrated", parentMessageId: message.id } } }
+      });
+
+      // Apply spell effects if applicable
+      if (!damageResult?.spellAbsorbed) {
+        if (Boolean(spell.system?.hasUpkeep) || (spell.effects?.size ?? 0) > 0) {
+          await applySpellEffectsToTarget(attacker, defenderActor, spell, { 
+            actualCost: Number(data.attacker?.mpSpent ?? data.context?.mpSpent ?? spell.system?.cost ?? 0), 
+            originalCastTime: Number(data.context?.originalCastWorldTime ?? game.time?.worldTime ?? 0) || 0 
+          });
+        }
+      }
     }
   },
 
@@ -1204,13 +1817,14 @@ export const MagicOpposedWorkflow = {
     const data = _getMessageState(message);
     if (!data) return;
 
-    const bank = _getBankCommitState(data);
-    if (!bank.bothCommitted) return;
+    // For banking: require ALL defenders to be committed before rolling
+    if (!_allDefendersCommitted(data)) return;
+
+    const defenders = _getDefenderEntries(data);
+    const readyDefenders = defenders.map((def, idx) => ({ def, idx }));
 
     const attacker = _resolveActor(data.attacker.actorUuid);
-    const defender = _resolveActor(data.defender.actorUuid);
-
-    if (!attacker || !defender) return;
+    if (!attacker) return;
 
     // Roll attacker if not yet rolled
     if (!data.attacker.result) {
@@ -1220,37 +1834,38 @@ export const MagicOpposedWorkflow = {
       if (updatedData) Object.assign(data, updatedData);
     }
 
-    // Roll defender if not yet rolled and not No Defense
-    // FIXED: When defender committed No Defense, result is already set, so this won't execute
-    if (!data.defender.result && !data.defender.noDefense) {
-      const defenseAction = data.defender.defenseType === "block" 
-        ? "defender-roll-block" 
-        : "defender-roll-evade";
-      await this.handleAction(message, defenseAction);
-    }
-    
-    // FIXED: After both sides rolled (or defender chose No Defense), resolve
-    // Reload one more time to ensure we have latest data
-    const finalData = _getMessageState(message);
-    if (finalData && finalData.attacker.result && finalData.defender.result) {
-      // Check if already resolved (e.g., healing spells resolve immediately in attacker-roll)
-      if (finalData.context?.phase === "resolved") {
-        return;
+    for (const { def, idx } of readyDefenders) {
+      const defActor = _resolveActor(def?.actorUuid);
+      if (!defActor) continue;
+
+      if (def?.noDefense && def?.result && !_getDefenderOutcome(data, def)) {
+        await this._resolveOutcome(message, data, attacker, defActor, { defenderIndex: idx });
+        continue;
       }
-      // Both sides have results → resolve
-      await this._resolveOutcome(message, finalData, attacker, defender);
+
+      if (!def?.result && !def?.noDefense) {
+        const defenseAction = def?.defenseType === "block"
+          ? "defender-roll-block"
+          : "defender-roll-evade";
+        await this.handleAction(message, defenseAction, { defenderIndex: idx });
+      }
     }
   },
 
   /**
    * Resolve the outcome of the opposed test.
    */
-  async _resolveOutcome(message, data, attacker, defender) {
+  async _resolveOutcome(message, data, attacker, defender, opts = {}) {
     const spell = await fromUuid(data.attacker.spellUuid);
     if (!spell) return;
 
+    const { defender: defenderEntry } = _selectDefenderEntry(data, opts);
+    if (!defenderEntry || !defender) return;
+
     const aResult = data.attacker.result;
-    const dResult = data.defender.result;
+    const dResult = defenderEntry.result;
+    const isAoE = Boolean(data?.context?.aoe?.isAoE || data?.context?.isAoE);
+    const forcedHitLocation = String(data?.context?.forcedHitLocation ?? "").trim();
 
     // Track last spell cast time/uuid for RAW upkeep restriction (no-duration spells).
     if (aResult?.success) {
@@ -1267,18 +1882,21 @@ export const MagicOpposedWorkflow = {
       const isCritical = Boolean(aResult?.isCriticalSuccess);
       const castOk = Boolean(aResult?.isSuccess);
 
-      data.outcome = {
+      const outcome = {
         winner: castOk ? "attacker" : "defender",
         attackerDegree: aResult?.degree ?? 0,
         defenderDegree: 0,
         attackerWins: castOk,
+        damageApplied: castOk,
         text: castOk
           ? `${attacker.name} casts ${spell.name} directly on ${defender.name}.`
           : `${attacker.name} fails to cast ${spell.name}.`
       };
+      _setDefenderOutcome(data, defenderEntry, outcome);
 
       // Only apply effects if casting was successful
       if (!castOk) {
+        _markResolutionPhase(data);
         await _updateCard(message, data);
         return;
       }
@@ -1314,11 +1932,11 @@ export const MagicOpposedWorkflow = {
         
         // Store healing info in data for chat card display
         if (isTemporaryHealing) {
-          data.outcome.tempHealingApplied = healValue;
-          data.outcome.tempHealingRollHTML = rollHTML;
+          outcome.tempHealingApplied = healValue;
+          outcome.tempHealingRollHTML = rollHTML;
         } else {
-          data.outcome.healingApplied = healValue;
-          data.outcome.healingRollHTML = rollHTML;
+          outcome.healingApplied = healValue;
+          outcome.healingRollHTML = rollHTML;
         }
         
         console.log("UESRPG | _resolveOutcome: Calling applyMagicHealing", {
@@ -1338,13 +1956,14 @@ export const MagicOpposedWorkflow = {
         });
 
         if (healResult?.spellAbsorbed) {
-          if (isTemporaryHealing) data.outcome.tempHealingApplied = null;
-          else data.outcome.healingApplied = null;
-          data.outcome.spellAbsorbed = true;
+          if (isTemporaryHealing) outcome.tempHealingApplied = null;
+          else outcome.healingApplied = null;
+          outcome.spellAbsorbed = true;
         }
 
         console.log("UESRPG | _resolveOutcome: applyMagicHealing completed");
 
+        _markResolutionPhase(data);
         await _updateCard(message, data);
         return;
       }
@@ -1354,50 +1973,21 @@ export const MagicOpposedWorkflow = {
 
       if (isDamaging) {
         const spellOptions = data.attacker.spellOptions ?? {};
-
-        // Determine overload/overcharge effective state for reporting.
-        const costInfo = computeSpellMagickaCost(attacker, spell, {
-          ...spellOptions,
-          isCritical
-        });
-
-        const wpBonus = Math.floor(Number(attacker.system?.characteristics?.wp?.total ?? 0) / 10);
-        const isOverloaded = Boolean(costInfo?.isOverloaded);
-        const overloadBonus = isOverloaded ? wpBonus : 0;
-
-        const commonRollOptions = { isCritical, isOverloaded, wpBonus };
-
-        // Master of Magicka: if the caster chose to overcharge, roll twice and keep the highest.
-        const wantsOvercharge = Boolean(costInfo?.isOvercharged);
-        let damageRoll = null;
-        let overchargeTotals = null;
-        if (wantsOvercharge) {
-          const r1 = await rollSpellDamage(spell, commonRollOptions);
-          const r2 = await rollSpellDamage(spell, commonRollOptions);
-          const t1 = Number(r1.total) || 0;
-          const t2 = Number(r2.total) || 0;
-          damageRoll = (t2 > t1) ? r2 : r1;
-          overchargeTotals = [t1, t2];
-        } else {
-          damageRoll = await rollSpellDamage(spell, commonRollOptions);
-        }
-
-        const baseDamage = Number(damageRoll.total) || 0;
-        const elemBonusInfo = computeElementalDamageBonus(attacker, damageType);
-        const elementalBonus = Number(elemBonusInfo?.bonus ?? 0) || 0;
-        const damageValue = baseDamage + overloadBonus + elementalBonus;
-        const rollHTML = await damageRoll.render();
+        const sharedDamage = await _getOrCreateSharedSpellDamage({ data, attacker, spell, spellOptions, isCritical, damageType });
+        const damageInfo = sharedDamage ?? await _computeSpellDamageShared({ attacker, spell, spellOptions, isCritical, damageType });
+        const damageValue = Number(damageInfo?.damageValue ?? 0) || 0;
+        const rollHTML = damageInfo?.rollHTML ?? "";
 
         const damageResult = await applyMagicDamage(defender, damageValue, damageType, spell, {
           isCritical,
           hitLocation: "Body",
           rollHTML,
-          isOverloaded,
-          overloadBonus,
-          isOvercharged: wantsOvercharge,
-          overchargeTotals,
-          elementalBonus,
-          elementalBonusLabel: elemBonusInfo?.label || "",
+          isOverloaded: Boolean(damageInfo?.isOverloaded),
+          overloadBonus: Number(damageInfo?.overloadBonus ?? 0) || 0,
+          isOvercharged: Boolean(damageInfo?.isOvercharged),
+          overchargeTotals: Array.isArray(damageInfo?.overchargeTotals) ? damageInfo.overchargeTotals : null,
+          elementalBonus: Number(damageInfo?.elementalBonus ?? 0) || 0,
+          elementalBonusLabel: String(damageInfo?.elementalBonusLabel ?? ""),
           source: spell.name,
           casterActor: attacker,
           magicCost: Number(data.attacker?.mpSpent ?? data.context?.mpSpent ?? spell.system?.cost ?? 0)
@@ -1408,9 +1998,10 @@ export const MagicOpposedWorkflow = {
             await applySpellEffectsToTarget(attacker, defender, spell, { actualCost: Number(data.attacker?.mpSpent ?? data.context?.mpSpent ?? spell.system?.cost ?? 0), originalCastTime: Number(data.context?.originalCastWorldTime ?? game.time?.worldTime ?? 0) || 0 });
           }
         } else {
-          data.outcome.spellAbsorbed = true;
+          outcome.spellAbsorbed = true;
         }
 
+        _markResolutionPhase(data);
         await _updateCard(message, data);
         return;
       }
@@ -1425,6 +2016,7 @@ export const MagicOpposedWorkflow = {
         });
       }
 
+      _markResolutionPhase(data);
       await _updateCard(message, data);
       return;
     }
@@ -1434,13 +2026,15 @@ export const MagicOpposedWorkflow = {
       const isCritical = false;
       const castOk = true;
 
-      data.outcome = {
+      const outcome = {
         winner: "attacker",
         attackerDegree: 0,
         defenderDegree: 0,
         attackerWins: true,
+        damageApplied: true,
         text: `${attacker.name} casts ${spell.name} directly on ${defender.name}.`
       };
+      _setDefenderOutcome(data, defenderEntry, outcome);
 
       const damageType = getSpellDamageType(spell);
       const rawDamageType = spell?.system?.damageType;
@@ -1466,11 +2060,11 @@ export const MagicOpposedWorkflow = {
         
         // Store healing info in data for chat card display
         if (isTemporaryHealing) {
-          data.outcome.tempHealingApplied = healValue;
-          data.outcome.tempHealingRollHTML = rollHTML;
+          outcome.tempHealingApplied = healValue;
+          outcome.tempHealingRollHTML = rollHTML;
         } else {
-          data.outcome.healingApplied = healValue;
-          data.outcome.healingRollHTML = rollHTML;
+          outcome.healingApplied = healValue;
+          outcome.healingRollHTML = rollHTML;
         }
         
         console.log("UESRPG | _resolveOutcome: Calling applyMagicHealing (opposed)", {
@@ -1490,11 +2084,12 @@ export const MagicOpposedWorkflow = {
         });
 
         if (healResult?.spellAbsorbed) {
-          if (isTemporaryHealing) data.outcome.tempHealingApplied = null;
-          else data.outcome.healingApplied = null;
-          data.outcome.spellAbsorbed = true;
+          if (isTemporaryHealing) outcome.tempHealingApplied = null;
+          else outcome.healingApplied = null;
+          outcome.spellAbsorbed = true;
         }
 
+        _markResolutionPhase(data);
         await _updateCard(message, data);
         return;
       }
@@ -1504,50 +2099,21 @@ export const MagicOpposedWorkflow = {
 
       if (isDamaging) {
         const spellOptions = data.attacker.spellOptions ?? {};
-
-        // Determine overload/overcharge effective state for reporting.
-        const costInfo = computeSpellMagickaCost(attacker, spell, {
-          ...spellOptions,
-          isCritical
-        });
-
-        const wpBonus = Math.floor(Number(attacker.system?.characteristics?.wp?.total ?? 0) / 10);
-        const isOverloaded = Boolean(costInfo?.isOverloaded);
-        const overloadBonus = isOverloaded ? wpBonus : 0;
-
-        const commonRollOptions = { isCritical, isOverloaded, wpBonus };
-
-        // Master of Magicka: if the caster chose to overcharge, roll twice and keep the highest.
-        const wantsOvercharge = Boolean(costInfo?.isOvercharged);
-        let damageRoll = null;
-        let overchargeTotals = null;
-        if (wantsOvercharge) {
-          const r1 = await rollSpellDamage(spell, commonRollOptions);
-          const r2 = await rollSpellDamage(spell, commonRollOptions);
-          const t1 = Number(r1.total) || 0;
-          const t2 = Number(r2.total) || 0;
-          damageRoll = (t2 > t1) ? r2 : r1;
-          overchargeTotals = [t1, t2];
-        } else {
-          damageRoll = await rollSpellDamage(spell, commonRollOptions);
-        }
-
-        const baseDamage = Number(damageRoll.total) || 0;
-        const elemBonusInfo = computeElementalDamageBonus(attacker, damageType);
-        const elementalBonus = Number(elemBonusInfo?.bonus ?? 0) || 0;
-        const damageValue = baseDamage + overloadBonus + elementalBonus;
-        const rollHTML = await damageRoll.render();
+        const sharedDamage = await _getOrCreateSharedSpellDamage({ data, attacker, spell, spellOptions, isCritical, damageType });
+        const damageInfo = sharedDamage ?? await _computeSpellDamageShared({ attacker, spell, spellOptions, isCritical, damageType });
+        const damageValue = Number(damageInfo?.damageValue ?? 0) || 0;
+        const rollHTML = damageInfo?.rollHTML ?? "";
 
         const damageResult = await applyMagicDamage(defender, damageValue, damageType, spell, {
           isCritical,
           hitLocation: "Body",
           rollHTML,
-          isOverloaded,
-          overloadBonus,
-          isOvercharged: wantsOvercharge,
-          overchargeTotals,
-          elementalBonus,
-          elementalBonusLabel: elemBonusInfo?.label || "",
+          isOverloaded: Boolean(damageInfo?.isOverloaded),
+          overloadBonus: Number(damageInfo?.overloadBonus ?? 0) || 0,
+          isOvercharged: Boolean(damageInfo?.isOvercharged),
+          overchargeTotals: Array.isArray(damageInfo?.overchargeTotals) ? damageInfo.overchargeTotals : null,
+          elementalBonus: Number(damageInfo?.elementalBonus ?? 0) || 0,
+          elementalBonusLabel: String(damageInfo?.elementalBonusLabel ?? ""),
           source: spell.name,
           casterActor: attacker,
           magicCost: Number(data.attacker?.mpSpent ?? data.context?.mpSpent ?? spell.system?.cost ?? 0)
@@ -1558,9 +2124,10 @@ export const MagicOpposedWorkflow = {
             await applySpellEffectsToTarget(attacker, defender, spell, { actualCost: Number(data.attacker?.mpSpent ?? data.context?.mpSpent ?? spell.system?.cost ?? 0), originalCastTime: Number(data.context?.originalCastWorldTime ?? game.time?.worldTime ?? 0) || 0 });
           }
         } else {
-          data.outcome.spellAbsorbed = true;
+          outcome.spellAbsorbed = true;
         }
 
+        _markResolutionPhase(data);
         await _updateCard(message, data);
         return;
       }
@@ -1575,6 +2142,7 @@ export const MagicOpposedWorkflow = {
         });
       }
 
+      _markResolutionPhase(data);
       await _updateCard(message, data);
       return;
     }
@@ -1584,15 +2152,17 @@ export const MagicOpposedWorkflow = {
       const isCritical = Boolean(aResult?.isCriticalSuccess);
       const castOk = Boolean(aResult?.isSuccess);
 
-      data.outcome = {
+      const outcome = {
         winner: castOk ? "attacker" : "defender",
         attackerDegree: aResult?.degree ?? 0,
         defenderDegree: 0,
         attackerWins: castOk,
+        damageApplied: castOk,
         text: castOk
           ? `${attacker.name} successfully casts ${spell.name} on ${defender.name}.`
           : `${attacker.name} fails to cast ${spell.name}.`
       };
+      _setDefenderOutcome(data, defenderEntry, outcome);
 
       if (castOk) {
         const healRoll = await rollSpellHealing(spell, { isCritical });
@@ -1616,11 +2186,11 @@ export const MagicOpposedWorkflow = {
         
         // Store healing info in data for chat card display
         if (isTemporaryHealing) {
-          data.outcome.tempHealingApplied = healValue;
-          data.outcome.tempHealingRollHTML = rollHTML;
+          outcome.tempHealingApplied = healValue;
+          outcome.tempHealingRollHTML = rollHTML;
         } else {
-          data.outcome.healingApplied = healValue;
-          data.outcome.healingRollHTML = rollHTML;
+          outcome.healingApplied = healValue;
+          outcome.healingRollHTML = rollHTML;
         }
         
         console.log("UESRPG | _resolveOutcome: Calling applyMagicHealing (healingDirect)", {
@@ -1640,9 +2210,9 @@ export const MagicOpposedWorkflow = {
         });
 
         if (healResult?.spellAbsorbed) {
-          if (isTemporaryHealing) data.outcome.tempHealingApplied = null;
-          else data.outcome.healingApplied = null;
-          data.outcome.spellAbsorbed = true;
+          if (isTemporaryHealing) outcome.tempHealingApplied = null;
+          else outcome.healingApplied = null;
+          outcome.spellAbsorbed = true;
         }
       }
 
@@ -1651,20 +2221,64 @@ export const MagicOpposedWorkflow = {
     }
 
     const outcome = resolveOpposed(aResult, dResult);
-    const attackerWins = outcome.winner === "attacker";
+    const defenseType = String(defenderEntry.defenseType ?? "").toLowerCase();
+    const isBlock = defenseType === "block";
+    const isEvade = defenseType === "evade";
+    
+    // RAW: When both pass and defender blocks, defender wins regardless of DoS
+    // Attack vs Block: The defender blocks the attack regardless of attacker degrees of success
+    const bothPassed = Boolean(aResult?.isSuccess && dResult?.isSuccess);
+    const defenderWinsByBlock = bothPassed && isBlock;
+    
+    // Override outcome if both passed and defender blocked
+    const finalOutcomeWinner = defenderWinsByBlock ? "defender" : outcome.winner;
+    
+    const defenderBlock = (isAoE && finalOutcomeWinner === "defender" && isBlock) || defenderWinsByBlock;
+    const defenderEvade = isAoE && finalOutcomeWinner === "defender" && isEvade;
+    let aoeEvadeEscaped = null;
 
-    data.outcome = {
+    if (defenderEvade && Boolean(aResult?.isSuccess)) {
+      aoeEvadeEscaped = await _maybeResolveAoEEvadeEscape({ data, defenderEntry, defenderActor: defender });
+    }
+
+    const attackerWins = finalOutcomeWinner === "attacker";
+    // For AoE blocks when both pass: apply half damage
+    // For non-AoE blocks when both pass: need to resolve block with BR check (handled by block-resolve action)
+    const applyOnBlock = isAoE && defenderBlock && Boolean(aResult?.isSuccess);
+    const applyOnEvadeFail = defenderEvade && aoeEvadeEscaped === false && Boolean(aResult?.isSuccess);
+    const damageApplied = attackerWins || applyOnBlock || applyOnEvadeFail;
+
+    const resultText = attackerWins
+      ? `${spell.name} hits ${defender.name}.`
+      : (defenderBlock
+        ? (isAoE && applyOnBlock
+          ? `${defender.name} blocks ${spell.name}, taking half damage.`
+          : `${defender.name} blocks ${spell.name}.`)
+        : (defenderEvade
+          ? (aoeEvadeEscaped === true
+            ? `${defender.name} evades ${spell.name} and escapes the area.`
+            : (aoeEvadeEscaped === false
+              ? `${defender.name} evades ${spell.name} but remains in the area, taking full damage.`
+              : `${defender.name} evades ${spell.name}.`))
+          : `${defender.name} defends against ${spell.name}.`));
+
+    const finalOutcome = {
       ...outcome,
+      winner: finalOutcomeWinner,
       attackerWins,
-      text: attackerWins
-        ? `${spell.name} hits ${defender.name}.`
-        : `${defender.name} defends against ${spell.name}.`
+      damageApplied,
+      blockHalfDamage: applyOnBlock,
+      defenderWinsByBlock: defenderWinsByBlock,
+      needsBlockResolution: defenderWinsByBlock && !isAoE,
+      aoeEvadeEscaped: aoeEvadeEscaped === true,
+      aoeEvadeFailed: aoeEvadeEscaped === false,
+      text: resultText
     };
-    data.context.phase = "resolved";
+    _setDefenderOutcome(data, defenderEntry, finalOutcome);
 
-    if (attackerWins) {
+    if (damageApplied) {
       const isCritical = Boolean(aResult?.isCriticalSuccess);
-      const hitLocation = getHitLocationFromRoll(Number(aResult?.rollTotal ?? 0));
+      const hitLocation = forcedHitLocation || (isAoE ? "Body" : getHitLocationFromRoll(Number(aResult?.rollTotal ?? 0)));
 
       const damageFormula = getSpellDamageFormula(spell);
       const isDamaging = Boolean(damageFormula && damageFormula !== "0");
@@ -1672,51 +2286,22 @@ export const MagicOpposedWorkflow = {
       if (isDamaging) {
         const spellOptions = data.attacker.spellOptions ?? {};
         const damageType = getSpellDamageType(spell);
+        const sharedDamage = await _getOrCreateSharedSpellDamage({ data, attacker, spell, spellOptions, isCritical, damageType });
+        const damageInfo = sharedDamage ?? await _computeSpellDamageShared({ attacker, spell, spellOptions, isCritical, damageType });
+        const damageValue = Number(damageInfo?.damageValue ?? 0) || 0;
+        const appliedDamage = applyOnBlock ? Math.ceil(damageValue / 2) : damageValue;
+        const rollHTML = damageInfo?.rollHTML ?? "";
 
-        // Determine overload/overcharge effective state for reporting.
-        const costInfo = computeSpellMagickaCost(attacker, spell, {
-          ...spellOptions,
-          isCritical
-        });
-
-        const wpBonus = Math.floor(Number(attacker.system?.characteristics?.wp?.total ?? 0) / 10);
-        const isOverloaded = Boolean(costInfo?.isOverloaded);
-        const overloadBonus = isOverloaded ? wpBonus : 0;
-
-        // Roll damage (critical handling + overload bonus included in total).
-        const commonRollOptions = { isCritical, isOverloaded, wpBonus };
-
-        // Master of Magicka: if the caster chose to overcharge, roll twice and keep the highest.
-        const wantsOvercharge = Boolean(costInfo?.isOvercharged);
-        let damageRoll = null;
-        let overchargeTotals = null;
-        if (wantsOvercharge) {
-          const r1 = await rollSpellDamage(spell, commonRollOptions);
-          const r2 = await rollSpellDamage(spell, commonRollOptions);
-          const t1 = Number(r1.total) || 0;
-          const t2 = Number(r2.total) || 0;
-          damageRoll = (t2 > t1) ? r2 : r1;
-          overchargeTotals = [t1, t2];
-        } else {
-          damageRoll = await rollSpellDamage(spell, commonRollOptions);
-        }
-
-        const baseDamage = Number(damageRoll.total) || 0;
-        const elemBonusInfo = computeElementalDamageBonus(attacker, damageType);
-        const elementalBonus = Number(elemBonusInfo?.bonus ?? 0) || 0;
-        const damageValue = baseDamage + overloadBonus + elementalBonus;
-        const rollHTML = await damageRoll.render();
-
-        const damageResult = await applyMagicDamage(defender, damageValue, damageType, spell, {
+        const damageResult = await applyMagicDamage(defender, appliedDamage, damageType, spell, {
           isCritical,
           hitLocation,
           rollHTML,
-          isOverloaded,
-          overloadBonus,
-          isOvercharged: wantsOvercharge,
-          overchargeTotals,
-          elementalBonus,
-          elementalBonusLabel: elemBonusInfo?.label || "",
+          isOverloaded: Boolean(damageInfo?.isOverloaded),
+          overloadBonus: Number(damageInfo?.overloadBonus ?? 0) || 0,
+          isOvercharged: Boolean(damageInfo?.isOvercharged),
+          overchargeTotals: Array.isArray(damageInfo?.overchargeTotals) ? damageInfo.overchargeTotals : null,
+          elementalBonus: Number(damageInfo?.elementalBonus ?? 0) || 0,
+          elementalBonusLabel: String(damageInfo?.elementalBonusLabel ?? ""),
           source: spell.name,
           casterActor: attacker,
           magicCost: Number(data.attacker?.mpSpent ?? data.context?.mpSpent ?? spell.system?.cost ?? 0)
@@ -1732,20 +2317,21 @@ export const MagicOpposedWorkflow = {
             await applySpellEffectsToTarget(attacker, defender, spell, { actualCost: Number(data.attacker?.mpSpent ?? data.context?.mpSpent ?? spell.system?.cost ?? 0), originalCastTime: Number(data.context?.originalCastWorldTime ?? game.time?.worldTime ?? 0) || 0 });
           }
         } else {
-          data.outcome.spellAbsorbed = true;
+          finalOutcome.spellAbsorbed = true;
         }
-      } else {
+      } else if (attackerWins) {
         if ((spell.effects?.size ?? 0) > 0) {
-        await applySpellEffectsToTarget(attacker, defender, spell, { actualCost: Number(data.attacker?.mpSpent ?? data.context?.mpSpent ?? spell.system?.cost ?? 0), originalCastTime: Number(data.context?.originalCastWorldTime ?? game.time?.worldTime ?? 0) || 0 });
-      } else {
-        await applySpellEffect(defender, spell, {
-          isCritical,
-          duration: {}
-        });
-      }
+          await applySpellEffectsToTarget(attacker, defender, spell, { actualCost: Number(data.attacker?.mpSpent ?? data.context?.mpSpent ?? spell.system?.cost ?? 0), originalCastTime: Number(data.context?.originalCastWorldTime ?? game.time?.worldTime ?? 0) || 0 });
+        } else {
+          await applySpellEffect(defender, spell, {
+            isCritical,
+            duration: {}
+          });
+        }
       }
     }
 
+    _markResolutionPhase(data);
     await _updateCard(message, data);
   },
 
@@ -1782,11 +2368,14 @@ Hooks.on("renderChatMessageHTML", (message, html) => {
 
   root.querySelectorAll("[data-ues-magic-opposed-action]").forEach((el) => {
     const action = el.dataset.uesMagicOpposedAction;
+    const defenderIndex = Number.isFinite(Number(el.dataset?.defenderIndex)) ? Number(el.dataset.defenderIndex) : null;
 
     // Permission-aware button state
     try {
       const attackerUuid = data?.attacker?.actorUuid;
-      const defenderUuid = data?.defender?.actorUuid;
+      const defenders = _getDefenderEntries(data);
+      const defEntry = (defenderIndex != null && defenders[defenderIndex]) ? defenders[defenderIndex] : data?.defender;
+      const defenderUuid = defEntry?.actorUuid;
       const actorUuid = (action === "attacker-roll") ? attackerUuid : (action?.startsWith?.("defender-") ? defenderUuid : null);
       const actor = actorUuid ? _resolveActor(actorUuid) : null;
       if (actor && !canUserRollActor(game.user, actor)) {
@@ -1801,7 +2390,8 @@ Hooks.on("renderChatMessageHTML", (message, html) => {
       ev.preventDefault();
       const act = ev.currentTarget?.dataset?.uesMagicOpposedAction;
       if (!act) return;
-      await MagicOpposedWorkflow.handleAction(message, act);
+      await MagicOpposedWorkflow.handleAction(message, act, { defenderIndex });
     });
   });
 });
+

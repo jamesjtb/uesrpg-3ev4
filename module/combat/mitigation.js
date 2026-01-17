@@ -51,5 +51,8 @@ export function getBlockValue(shield, damageType = "physical") {
   }
 
   const magicBR = Number(sys.magic_brEffective ?? sys.magic_br ?? 0);
-  return Math.max(0, Number.isFinite(magicBR) ? magicBR : 0);
+  if (Number.isFinite(magicBR) && magicBR > 0) return Math.max(0, magicBR);
+
+  // RAW: Magic damage treats Block Rating as half (round up) unless there is a magic BR.
+  return Math.max(0, Math.ceil(baseBR / 2));
 }

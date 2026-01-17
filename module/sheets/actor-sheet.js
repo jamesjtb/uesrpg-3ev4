@@ -19,7 +19,7 @@ import { getDamageTypeFromWeapon, getHitLocationFromRoll } from "../combat/comba
 import { OpposedRoll } from "../combat/opposed-rolls.js";
 import { OpposedWorkflow } from "../combat/opposed-workflow.js";
 import { classifySpellForRouting, getUserSpellTargets, shouldUseTargetedSpellWorkflow, shouldUseModernSpellWorkflow, debugMagicRoutingLog } from "../magic/spell-routing.js";
-import { filterTargetsBySpellRange, getSpellRangeType, placeAoETemplateAndCollectTargets } from "../magic/spell-range.js";
+import { filterTargetsBySpellRange, getSpellAoEConfig, getSpellRangeType, placeAoETemplateAndCollectTargets } from "../magic/spell-range.js";
 import { SkillOpposedWorkflow } from "../skills/opposed-workflow.js";
 import { computeSkillTN, SKILL_DIFFICULTIES } from "../skills/skill-tn.js";
 import { isItemEffectActive } from "../ae/transfer.js";
@@ -33,7 +33,6 @@ import {
   buildCollapsedActionCardHtml,
   getAimStateFromEffect,
   getEnabledEffectByKey,
-  resolveFirstTargetedToken,
   resolveTokenForActor,
   spendActionPoints
 } from "./combat-actions-utils.js";
@@ -557,8 +556,8 @@ async activateListeners(html) {
           return;
         }
 
-        const defenderToken = resolveFirstTargetedToken();
-        if (!defenderToken) {
+        const defenderTokens = Array.from(game?.user?.targets ?? []);
+        if (!defenderTokens.length) {
           ui.notifications.warn("Please target an enemy token.");
           return;
         }
@@ -580,11 +579,10 @@ async activateListeners(html) {
 
         await OpposedWorkflow.createPending({
           attackerTokenUuid: attackerToken.document?.uuid ?? attackerToken.uuid,
-          defenderTokenUuid: defenderToken.document?.uuid ?? defenderToken.uuid,
+          defenderTokenUuids: defenderTokens.map(t => t?.document?.uuid ?? t?.uuid).filter(Boolean),
           attackerActorUuid: this.actor.uuid,
-          defenderActorUuid: defenderToken.actor?.uuid ?? null,
           attackerItemUuid: style.uuid,
-          attackerLabel: `${label} — ${style.name}`,
+          attackerLabel: `${label} - ${style.name}`,
           attackerTarget: tn,
           mode: "attack",
           attackMode,
@@ -1025,8 +1023,8 @@ async activateListeners(html) {
           return;
         }
 
-        const defenderToken = resolveFirstTargetedToken();
-        if (!defenderToken) {
+        const defenderTokens = Array.from(game?.user?.targets ?? []);
+        if (!defenderTokens.length) {
           ui.notifications.warn("Please target an enemy token for Attack of Opportunity.");
           return;
         }
@@ -1056,9 +1054,8 @@ async activateListeners(html) {
 
           await OpposedWorkflow.createPending({
             attackerTokenUuid: attackerToken.document?.uuid ?? attackerToken.uuid,
-            defenderTokenUuid: defenderToken.document?.uuid ?? defenderToken.uuid,
+            defenderTokenUuids: defenderTokens.map(t => t?.document?.uuid ?? t?.uuid).filter(Boolean),
             attackerActorUuid: this.actor.uuid,
-            defenderActorUuid: defenderToken.actor?.uuid ?? null,
             attackerItemUuid: style.uuid,
             attackerLabel: "Attack of Opportunity",
             attackerTarget: attackTN,
@@ -1077,9 +1074,8 @@ async activateListeners(html) {
 
           await OpposedWorkflow.createPending({
             attackerTokenUuid: attackerToken.document?.uuid ?? attackerToken.uuid,
-            defenderTokenUuid: defenderToken.document?.uuid ?? defenderToken.uuid,
+            defenderTokenUuids: defenderTokens.map(t => t?.document?.uuid ?? t?.uuid).filter(Boolean),
             attackerActorUuid: this.actor.uuid,
-            defenderActorUuid: defenderToken.actor?.uuid ?? null,
             attackerItemUuid: "prof:combat",
             attackerLabel: "Attack of Opportunity",
             attackerTarget: attackTN,
@@ -1971,14 +1967,20 @@ let spell = preselectedSpell;
     }
 
     let workingTargets = Array.from(targets ?? []);
+    let aoeTemplateUuid = null;
+    let aoeTemplateId = null;
 
     if (rangeType === "aoe") {
       const placed = await placeAoETemplateAndCollectTargets({
         casterToken: attackerToken,
         spell,
-        includeCaster: Boolean(spell?.system?.aoePulse)
+        includeCaster: Boolean(spell?.system?.aoeIncludeCaster)
       });
       if (!placed) return;
+      const templateDoc = placed?.templateDoc ?? null;
+      aoeTemplateId = templateDoc?.id ?? templateDoc?._id ?? null;
+      aoeTemplateUuid = templateDoc?.uuid
+        ?? (aoeTemplateId && canvas?.scene?.id ? `Scene.${canvas.scene.id}.MeasuredTemplate.${aoeTemplateId}` : null);
 
       // If we can compute affected tokens, use them; otherwise fall back to manual targets.
       if (placed.targets?.length) workingTargets = placed.targets;
@@ -2022,7 +2024,7 @@ if (shouldUseTargetedSpellWorkflow(spell, workingTargets)) {
       
       // Targeted spells (attack OR healing) route through the MagicOpposedWorkflow.
       // Healing is handled as an unopposed "direct" cast inside the workflow when detected.
-      await this._castAttackSpell(spell, workingTargets, spellOptions, castActionType);
+      await this._castAttackSpell(spell, workingTargets, spellOptions, castActionType, { aoeTemplateUuid, aoeTemplateId });
 	} else if (shouldUseModernSpellWorkflow(spell)) {
 	  // Untargeted attack/healing spells: use modern unopposed casting engine (no defense, no application).
 	  const spellOptions = await this._showSpellOptionsDialog(spell);
@@ -2172,7 +2174,7 @@ if (shouldUseTargetedSpellWorkflow(spell, workingTargets)) {
   /**
    * Cast an attack spell using the magic opposed workflow.
    */
-  async _castAttackSpell(spell, targets, spellOptions = {}, castActionType = "primary") {
+  async _castAttackSpell(spell, targets, spellOptions = {}, castActionType = "primary", { aoeTemplateUuid = null, aoeTemplateId = null } = {}) {
     // Import MagicOpposedWorkflow
     const { MagicOpposedWorkflow } = await import("../magic/opposed-workflow.js");
     
@@ -2185,16 +2187,29 @@ if (shouldUseTargetedSpellWorkflow(spell, workingTargets)) {
       return;
     }
     
-    // Create opposed workflow for each target
-    for (const defenderToken of targets) {
-      await MagicOpposedWorkflow.createPending({
-        attackerTokenUuid: attackerToken.document?.uuid ?? attackerToken.uuid,
-        defenderTokenUuid: defenderToken.document?.uuid ?? defenderToken.uuid,
-        spellUuid: spell.uuid,
-        spellOptions,
-        castActionType
-      });
-    }
+    const rangeType = getSpellRangeType(spell);
+    const aoeConfig = (rangeType === "aoe")
+      ? {
+          ...(getSpellAoEConfig(spell) ?? {}),
+          isAoE: true,
+          templateUuid: aoeTemplateUuid ?? null,
+          templateId: aoeTemplateId ?? null
+        }
+      : null;
+
+    const defenderTokenUuids = Array.from(targets ?? [])
+      .map((defenderToken) => defenderToken?.document?.uuid ?? defenderToken?.uuid)
+      .filter(Boolean);
+
+    await MagicOpposedWorkflow.createPending({
+      attackerTokenUuid: attackerToken.document?.uuid ?? attackerToken.uuid,
+      defenderTokenUuids,
+      spellUuid: spell.uuid,
+      spellOptions,
+      castActionType,
+      aoe: aoeConfig,
+      isAoE: rangeType === "aoe"
+    });
   }
 
   async _onSpellRoll(event) {

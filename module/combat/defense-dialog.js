@@ -47,12 +47,14 @@ export class DefenseDialog extends Dialog {
     const attackerWeaponTraits = options.attackerWeaponTraits ?? null;
     const defenderHasSmallWeapon = !!(options.defenderHasSmallWeapon);
     const attackMode = String(options?.context?.attackMode ?? options?.attackMode ?? "melee");
+    const allowedDefenseTypes = Array.isArray(options.allowedDefenseTypes) ? options.allowedDefenseTypes : null;
 
     const availability = computeDefenseAvailability({
       attackMode,
       attackerWeaponTraits,
       defenderHasSmallWeapon,
-      defenderHasShield: shieldOk
+      defenderHasShield: shieldOk,
+      allowedDefenseTypes
     });
 
     const defaultDefenseType = normalizeDefenseType(requestedDefaultDefenseType, availability, "evade");

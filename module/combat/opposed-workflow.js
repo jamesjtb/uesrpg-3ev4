@@ -31,6 +31,7 @@ import { buildSpecialActionsForActor, isSpecialActionUsableNow } from "./combat-
 import { SPECIAL_ACTIONS, getSpecialActionById } from "../config/special-actions.js";
 import { getActiveStaminaEffect, consumeStaminaEffect, STAMINA_EFFECT_KEYS } from "../stamina/stamina-dialog.js";
 import { isActorSkeletal } from "../traits/trait-registry.js";
+import { canTokenEscapeTemplate } from "../helpers/aoe-utils.js";
 
 
 function _collectSensorySituationalMods(decl) {
@@ -558,6 +559,81 @@ function _canControlActor(actor) {
   return game.user.isGM || actor?.isOwner;
 }
 
+async function _promptAoEEvadeEscape({ defenderName = "Defender", attackLabel = "the attack" } = {}) {
+  if (typeof Dialog?.confirm !== "function") return null;
+  try {
+    return await Dialog.confirm({
+      title: "AoE Evade",
+      content: `<p>${defenderName} successfully evaded ${attackLabel}. Can they move 1m to exit the area?</p>`,
+      yes: "Escapes AoE",
+      no: "Still in AoE",
+      defaultYes: true
+    });
+  } catch (_e) {
+    return null;
+  }
+}
+
+async function _maybeSetAoEEvadeEscape(data, defenderEntry, defenderActor) {
+  if (!data || !defenderEntry) return null;
+  const isAoE = Boolean(data?.context?.aoe?.isAoE || data?.context?.isAoE);
+  if (!isAoE) return null;
+
+  const defenseType = String(defenderEntry.defenseType ?? "").toLowerCase();
+  if (defenseType !== "evade") return null;
+
+  if (!defenderEntry?.result?.isSuccess) return null;
+  if (defenderEntry.aoeEvadeEscaped === true) return true;
+  if (defenderEntry.aoeEvadeEscaped === false) return false;
+
+  const templateUuid = data?.context?.aoe?.templateUuid ?? null;
+  const templateId = data?.context?.aoe?.templateId ?? null;
+  const token = _resolveToken(defenderEntry?.tokenUuid ?? defenderActor?.uuid);
+
+  let canEscape = canTokenEscapeTemplate({ templateUuid, templateId, token, stepMeters: 1 });
+  if (canEscape == null) {
+    const canPrompt = game.user?.isGM || (defenderActor && _canControlActor(defenderActor));
+    if (canPrompt) {
+      canEscape = await _promptAoEEvadeEscape({
+        defenderName: defenderActor?.name ?? defenderEntry?.name ?? "Defender",
+        attackLabel: data?.attacker?.label ?? "the attack"
+      });
+    }
+  }
+
+  if (canEscape != null) {
+    defenderEntry.aoeEvadeEscaped = Boolean(canEscape);
+    defenderEntry.aoeEvadeFailed = !canEscape;
+  }
+
+  return canEscape;
+}
+
+function _applyAoEEvadeOutcome(data, outcome, defenderEntry = null) {
+  if (!data || !outcome) return outcome;
+  const isAoE = Boolean(data?.context?.aoe?.isAoE || data?.context?.isAoE);
+  if (!isAoE) return outcome;
+
+  const def = defenderEntry ?? data.defender;
+  if (!def) return outcome;
+
+  const defenseType = String(def.defenseType ?? "none").toLowerCase();
+  if (defenseType !== "evade") return outcome;
+  if (outcome.winner !== "defender") return outcome;
+
+  const A = data.attacker?.result;
+  if (!A?.isSuccess) return outcome;
+
+  const name = def?.name ?? "Defender";
+  if (def.aoeEvadeEscaped === false) {
+    return { ...outcome, winner: "attacker", text: `${name} evades but remains in the area; attack hits.` };
+  }
+  if (def.aoeEvadeEscaped === true) {
+    return { ...outcome, winner: "defender", text: `${name} evades and escapes the area.` };
+  }
+  return { ...outcome, text: `${name} evades. Resolve 1m move to determine if the area still applies.` };
+}
+
 function _fmtDegree(res) {
   if (!res) return "—";
   return res.isSuccess ? `${res.degree} DoS` : `${res.degree} DoF`;
@@ -592,6 +668,97 @@ function _btn(label, action, extraDataset = {}) {
   return `<button type="button" data-ues-opposed-action="${action}" ${ds}>${label}</button>`;
 }
 
+function _getDefenderEntries(data) {
+  if (!data || typeof data !== "object") return [];
+  if (Array.isArray(data.defenders) && data.defenders.length) return data.defenders;
+  if (data.defender && typeof data.defender === "object") return [data.defender];
+  return [];
+}
+
+function _isMultiDefender(data) {
+  return Array.isArray(data?.defenders) && data.defenders.length > 1;
+}
+
+function _resolveDefenderIndex(data, opts = {}) {
+  const list = _getDefenderEntries(data);
+  if (!list.length) return null;
+
+  const idx = Number(opts.defenderIndex ?? opts.defenderIdx ?? NaN);
+  if (Number.isInteger(idx) && idx >= 0 && idx < list.length) return idx;
+
+  const tokenUuid = String(opts.defenderTokenUuid ?? "").trim();
+  if (tokenUuid) {
+    const found = list.findIndex(d => String(d?.tokenUuid ?? "").trim() === tokenUuid);
+    if (found >= 0) return found;
+  }
+
+  const actorUuid = String(opts.defenderActorUuid ?? "").trim();
+  if (actorUuid) {
+    const found = list.findIndex(d => String(d?.actorUuid ?? "").trim() === actorUuid);
+    if (found >= 0) return found;
+  }
+
+  return 0;
+}
+
+function _selectDefenderEntry(data, opts = {}) {
+  const defenders = _getDefenderEntries(data);
+  const isMulti = _isMultiDefender(data);
+  const defenderIndex = _resolveDefenderIndex(data, opts);
+  const defender = (defenderIndex != null) ? defenders[defenderIndex] : null;
+  if (defender) data.defender = defender;
+  return { defender, defenderIndex, defenders, isMulti };
+}
+
+function _getDefenderOutcome(data, defender) {
+  return _isMultiDefender(data) ? (defender?.outcome ?? null) : (data?.outcome ?? null);
+}
+
+function _setDefenderOutcome(data, defender, outcome) {
+  if (_isMultiDefender(data)) {
+    if (defender) defender.outcome = outcome;
+  } else {
+    data.outcome = outcome;
+  }
+}
+
+function _getDefenderAdvantage(data, defender) {
+  return _isMultiDefender(data) ? (defender?.advantage ?? null) : (data?.advantage ?? null);
+}
+
+function _setDefenderAdvantage(data, defender, advantage) {
+  if (_isMultiDefender(data)) {
+    if (defender) defender.advantage = advantage;
+  } else {
+    data.advantage = advantage;
+  }
+}
+
+function _getDefenderResolutionState(data, defender) {
+  if (_isMultiDefender(data)) {
+    if (defender) {
+      defender.advantageResolution = defender.advantageResolution ?? {};
+      defender.advantageSpent = defender.advantageSpent ?? {};
+      defender.defenderAdvantage = defender.defenderAdvantage ?? {};
+      return {
+        advantageResolution: defender.advantageResolution,
+        advantageSpent: defender.advantageSpent,
+        defenderAdvantage: defender.defenderAdvantage
+      };
+    }
+    return { advantageResolution: {}, advantageSpent: {}, defenderAdvantage: {} };
+  }
+
+  data.advantageResolution = data.advantageResolution ?? {};
+  data.advantageSpent = data.advantageSpent ?? {};
+  data.defenderAdvantage = data.defenderAdvantage ?? {};
+  return {
+    advantageResolution: data.advantageResolution,
+    advantageSpent: data.advantageSpent,
+    defenderAdvantage: data.defenderAdvantage
+  };
+}
+
 // --- Banked choice (meta-limiting) helpers ---
 
 function _isBankChoicesEnabledForData(data) {
@@ -603,7 +770,7 @@ function _isBankChoicesEnabledForData(data) {
 function _ensureBankedScaffold(data) {
   data.context = data.context ?? {};
   data.attacker = data.attacker ?? {};
-  data.defender = data.defender ?? {};
+  if (!data.defender && !Array.isArray(data.defenders)) data.defender = {};
 
   data.attacker.banked = (data.attacker.banked && typeof data.attacker.banked === "object") ? data.attacker.banked : {
     committed: false,
@@ -611,49 +778,76 @@ function _ensureBankedScaffold(data) {
     committedBy: null
   };
 
-  data.defender.banked = (data.defender.banked && typeof data.defender.banked === "object") ? data.defender.banked : {
-    committed: false,
-    committedAt: null,
-    committedBy: null
-  };
-
-
   // Optional: auto-roll lane flags (non-breaking; used to reduce duplicate auto-roll attempts).
   if (typeof data.attacker.banked.rollStarted !== "boolean") data.attacker.banked.rollStarted = false;
   if (data.attacker.banked.rollStartedAt === undefined) data.attacker.banked.rollStartedAt = null;
   if (data.attacker.banked.rollStartedBy === undefined) data.attacker.banked.rollStartedBy = null;
 
-  if (typeof data.defender.banked.rollStarted !== "boolean") data.defender.banked.rollStarted = false;
-  if (data.defender.banked.rollStartedAt === undefined) data.defender.banked.rollStartedAt = null;
-  if (data.defender.banked.rollStartedBy === undefined) data.defender.banked.rollStartedBy = null;
+  const defenders = _getDefenderEntries(data);
+  for (const def of defenders) {
+    def.banked = (def.banked && typeof def.banked === "object") ? def.banked : {
+      committed: false,
+      committedAt: null,
+      committedBy: null
+    };
+    if (typeof def.banked.rollStarted !== "boolean") def.banked.rollStarted = false;
+    if (def.banked.rollStartedAt === undefined) def.banked.rollStartedAt = null;
+    if (def.banked.rollStartedBy === undefined) def.banked.rollStartedBy = null;
+  }
 
   // Back-compat: legacy cards use hasDeclared/defenseType/noDefense as the implicit commit state.
   if (data.attacker.hasDeclared === true && data.attacker.banked.committed !== true) {
     data.attacker.banked.committed = true;
   }
 
-  const defenderImplicitCommitted = Boolean(data.defender.noDefense === true || data.defender.defenseType || data.defender.testLabel || data.defender.label);
-  if (defenderImplicitCommitted && data.defender.banked.committed !== true) {
-    data.defender.banked.committed = true;
+  for (const def of defenders) {
+    const defenderImplicitCommitted = Boolean(def.noDefense === true || def.defenseType || def.testLabel || def.label);
+    if (defenderImplicitCommitted && def.banked?.committed !== true) {
+      def.banked.committed = true;
+    }
   }
 
   return data;
 }
 
-function _getBankCommitState(data) {
+function _getBankCommitState(data, defender = null) {
   data = _ensureBankedScaffold(data);
 
   const aCommitted = Boolean(data.attacker?.banked?.committed === true || data.attacker?.hasDeclared === true);
+  const def = defender ?? data.defender;
   const dCommitted = Boolean(
-    data.defender?.banked?.committed === true ||
-    data.defender?.noDefense === true ||
-    data.defender?.defenseType != null ||
-    data.defender?.testLabel != null
+    def?.banked?.committed === true ||
+    def?.noDefense === true ||
+    def?.defenseType != null ||
+    def?.testLabel != null
   );
 
   const bothCommitted = aCommitted && dCommitted;
 
   return { aCommitted, dCommitted, bothCommitted };
+}
+
+function _allDefendersCommitted(data) {
+  if (!_isMultiDefender(data)) {
+    // Single defender: use standard bothCommitted check
+    const state = _getBankCommitState(data);
+    return state.bothCommitted;
+  }
+  
+  // Multi-defender: attacker must be committed AND all defenders must be committed
+  const aCommitted = Boolean(data.attacker?.banked?.committed === true || data.attacker?.hasDeclared === true);
+  if (!aCommitted) return false;
+  
+  const defenders = _getDefenderEntries(data);
+  return defenders.every(def => {
+    if (!def) return true; // Skip null entries
+    return Boolean(
+      def?.banked?.committed === true ||
+      def?.noDefense === true ||
+      def?.defenseType != null ||
+      def?.testLabel != null
+    );
+  });
 }
 
 function _anyActiveGMOnline() {
@@ -825,14 +1019,13 @@ function _renderRollLine({ result = null, noDefense = false } = {}) {
   if (noDefense) {
     // Keep output consistent with normal failures: represent No Defense as a deterministic 1 DoF failure.
     const stub = { rollTotal: 100, isSuccess: false, degree: 1 };
-    return `<div><b>Roll:</b> 100 — ${_fmtDegree(stub)}</div>`;
+    return `<div><b>Roll:</b> 100 ?? ${_fmtDegree(stub)}</div>`;
   }
   if (!result) return "";
   const total = _extractRollTotal(result);
-  const totalText = (total == null) ? "—" : String(total);
-  return `<div><b>Roll:</b> ${totalText} — ${_fmtDegree(result)}</div>`;
+  const totalText = (total == null) ? "??" : String(total);
+  return `<div><b>Roll:</b> ${totalText} ?? ${_fmtDegree(result)}</div>`;
 }
-
 function _cleanupAutoRollContext(ctx) {
   if (!ctx || typeof ctx !== "object") return;
   ctx.autoRollRequested = false;
@@ -846,7 +1039,255 @@ function _cleanupAutoRollContext(ctx) {
   ctx.waitingSince = null;
 }
 
+
 function _renderCard(data, messageId) {
+  const defenders = _getDefenderEntries(data);
+  const isMulti = _isMultiDefender(data);
+
+  if (isMulti) {
+    const a = data.attacker ?? {};
+    const showResolutionDetails = !!(game?.settings?.get?.("uesrpg-3ev4", "opposedShowResolutionDetails"));
+    const bankMode = _isBankChoicesEnabledForData(data);
+    const anyGMOnline = _anyActiveGMOnline();
+    const anyOutcome = defenders.some(d => d?.outcome);
+    const { aCommitted } = _getBankCommitState(data, defenders[0] ?? null);
+    const revealAttacker = !bankMode || aCommitted || anyOutcome;
+    const isAoE = Boolean(data?.context?.aoe?.isAoE || data?.context?.isAoE);
+
+    const baseA = Number(a.baseTarget ?? 0);
+    const modA = Number(a.totalMod ?? 0);
+    const finalA = baseA + modA;
+    const aTargetLabel = (revealAttacker && a.hasDeclared === true)
+      ? `${finalA}${modA ? ` (${modA >= 0 ? "+" : ""}${modA})` : ""}`
+      : (revealAttacker ? `${baseA}` : "??");
+
+    const aVariantText = (revealAttacker && a.hasDeclared)
+      ? (a.variantLabel ?? "Attack")
+      : "??";
+
+    const aRollLine = _renderRollLine({ result: a.result, noDefense: false });
+    const attackerCommitLine = (() => {
+      if (!bankMode) return "";
+      const resolved = anyOutcome;
+      const rolled = !!a.result;
+      const statusText = resolved ? "Resolved" : rolled ? "Rolled" : (aCommitted ? "Committed" : "Awaiting choice");
+      return `<div style="margin-top:4px; font-size:12px; opacity:0.85;"><b>Status:</b> ${statusText}</div>`;
+    })();
+
+    const attackerActions = (() => {
+      if (a.result) return "";
+      if (bankMode) {
+        if (!aCommitted) return `<div style="margin-top:6px;">${_btn("Commit Attack", "attacker-commit")}</div>`;
+        return "";
+      }
+      return `<div style="margin-top:6px;">${_btn("Roll Attack", "attacker-roll")}</div>`;
+    })();
+
+    const defenderBlocks = defenders.map((d, idx) => {
+      const { dCommitted, bothCommitted } = _getBankCommitState(data, d);
+      const revealDefender = !bankMode || bothCommitted || Boolean(d.outcome);
+      const outcome = _getDefenderOutcome(data, d);
+      const advantage = _getDefenderAdvantage(data, d) ?? { attacker: 0, defender: 0 };
+      const resolutionState = _getDefenderResolutionState(data, d);
+
+      const dTargetLabel = (!revealDefender)
+        ? "??"
+        : (d.noDefense ? "0" : (d.targetLabel ?? (d.target ?? "??")));
+      const dTestLabel = (!revealDefender)
+        ? "??"
+        : (d.testLabel ?? "(choose)");
+      const dDefenseLabel = (!revealDefender)
+        ? "??"
+        : (d.defenseLabel ?? d.label ?? "(choose)");
+
+      const dRollLine = _renderRollLine({ result: d.result, noDefense: (d.noDefense === true) });
+      const defenderCommitLine = (() => {
+        if (!bankMode) return "";
+        const resolved = Boolean(outcome);
+        const rolled = !!d.result || !!d.noDefense;
+        const statusText = resolved ? "Resolved" : rolled ? "Rolled" : (dCommitted ? "Committed" : "Awaiting choice");
+        return `<div style="margin-top:4px; font-size:12px; opacity:0.85;"><b>Status:</b> ${statusText}</div>`;
+      })();
+
+      const defenderActions = (() => {
+        if (d.result || d.noDefense) return "";
+        if (bankMode) {
+          if (!dCommitted) {
+            return `
+              <div style="margin-top:6px; display:flex; gap:8px; flex-wrap:wrap;">
+                ${_btn("Commit Defense", "defender-commit", { "defender-index": idx })}
+                ${_btn("Commit No Defense", "defender-commit-nodefense", { "defender-index": idx })}
+              </div>`;
+          }
+          return "";
+        }
+        return `
+          <div style="margin-top:6px; display:flex; gap:8px; flex-wrap:wrap;">
+            ${_btn("Defend", "defender-roll", { "defender-index": idx })}
+            ${_btn("No Defense", "defender-nodefense", { "defender-index": idx })}
+          </div>`;
+      })();
+
+      const outcomeLine = (() => {
+        if (outcome) {
+          return `<div style="margin-top:10px;"><b>Outcome:</b> ${outcome.text ?? ""}</div>`;
+        }
+        if (bankMode) {
+          if (!_allDefendersCommitted(data)) {
+            const allDefendersCommitted = _isMultiDefender(data) 
+              ? _getDefenderEntries(data).every(def => {
+                  if (!def) return true;
+                  return Boolean(
+                    def?.banked?.committed === true ||
+                    def?.noDefense === true ||
+                    def?.defenseType != null ||
+                    def?.testLabel != null
+                  );
+                })
+              : dCommitted;
+            const aCommitted = Boolean(data.attacker?.banked?.committed === true || data.attacker?.hasDeclared === true);
+            if (!aCommitted) {
+              return `<div style="margin-top:10px;"><i>Waiting for attacker to commit choice.</i></div>`;
+            }
+            if (!allDefendersCommitted) {
+              return `<div style="margin-top:10px;"><i>Waiting for all defenders to commit choices.</i></div>`;
+            }
+          }
+          return `<div style="margin-top:10px;"><i>Rolling.</i></div>`;
+        }
+        return `<div style="margin-top:10px;"><i>Pending</i></div>`;
+      })();
+
+      const resolutionDetails = (() => {
+        if (!showResolutionDetails) return "";
+        if (!outcome) return "";
+        const aVariant = a.variantLabel ?? a.variant ?? "??";
+        const dDefense = d.defenseLabel ?? d.defenseType ?? "??";
+        const advA = Number(advantage?.attacker ?? 0);
+        const advD = Number(advantage?.defender ?? 0);
+        const aManual = Number(a.manualMod ?? 0);
+        const aHL = (a.precisionLocation ?? a.hitLocation ?? "").toString();
+        const dHL = (d.precisionLocation ?? d.hitLocation ?? "").toString();
+
+        const lines = [];
+        lines.push(`<div><b>Attack variation:</b> ${aVariant}</div>`);
+        lines.push(`<div><b>Manual modifier:</b> ${aManual >= 0 ? "+" : ""}${aManual}</div>`);
+        if (aHL) lines.push(`<div><b>Attacker hit location:</b> ${aHL}</div>`);
+        if (dHL) lines.push(`<div><b>Defender hit location:</b> ${dHL}</div>`);
+        lines.push(`<div><b>Advantage:</b> Attacker ${advA} / Defender ${advD}</div>`);
+        lines.push(`<div><b>Defense:</b> ${dDefense}</div>`);
+        if (Number(d?.result?.duelingBonus ?? 0) > 0) {
+          lines.push(`<div><b>Dueling Weapon:</b> +${Number(d.result.duelingBonus)} DoS</div>`);
+        }
+
+        return `
+          <details style="margin-top:8px;">
+            <summary style="cursor:pointer;">Resolution details</summary>
+            <div style="margin-top:6px; font-size:12px; opacity:0.9;">
+              ${lines.join("")}
+            </div>
+          </details>`;
+      })();
+
+      const resolvedActions = (() => {
+        if (!outcome) return "";
+        const advA = Number(advantage?.attacker ?? 0);
+        const advD = Number(advantage?.defender ?? 0);
+
+        if (outcome.winner === "attacker") {
+          return `
+            <div style="margin-top:10px; display:flex; gap:8px; flex-wrap:wrap; align-items:center;">
+              ${_btn("Roll Damage", "damage-roll", { "defender-index": idx })}
+              ${advA > 0 ? `<span style="opacity:0.85; font-size:12px;">Advantage: ${advA}</span>` : ``}
+            </div>
+          `;
+        }
+
+        if (outcome.winner === "defender" && (d.defenseType ?? "none") === "counter") {
+          return `
+            <div style="margin-top:10px; display:flex; gap:8px; flex-wrap:wrap; align-items:center;">
+              ${_btn("Roll Damage", "counter-damage-roll", { "defender-index": idx })}
+              ${advD > 0 ? `<span style="opacity:0.85; font-size:12px;">Advantage: ${advD}</span>` : ``}
+            </div>
+          `;
+        }
+
+        if (outcome.winner === "defender" && (d.defenseType ?? "none") === "block") {
+          const blockLabel = isAoE ? "Resolve Block (Half Damage)" : "Resolve Block";
+          return `
+            <div style="margin-top:10px; display:flex; gap:8px; flex-wrap:wrap; align-items:center;">
+              ${_btn(blockLabel, "block-resolve", { "defender-index": idx })}
+              ${advD > 0 ? `<span style="opacity:0.85; font-size:12px;">Advantage: ${advD}</span>` : ``}
+            </div>
+          `;
+        }
+
+        const defenderCanUseAdvantage = (outcome.winner === "defender")
+          && (d.noDefense !== true)
+          && !["block", "counter", "none"].includes(String(d.defenseType ?? "none"))
+          && (advD > 0)
+          && (resolutionState.defenderAdvantage?.resolved !== true);
+
+        if (defenderCanUseAdvantage) {
+          return `
+            <div style="margin-top:10px; display:flex; gap:8px; flex-wrap:wrap; align-items:center;">
+              ${_btn("Resolve Advantage", "defender-advantage", { "defender-index": idx })}
+              <span style="opacity:0.85; font-size:12px;">Advantage: ${advD}</span>
+            </div>
+          `;
+        }
+
+        return "";
+      })();
+
+      return `
+        <div style="padding:6px; border:1px solid rgba(0,0,0,0.12); border-radius:6px;">
+          <div style="display:flex; justify-content:space-between; align-items:baseline;">
+            <div style="font-size:14px; font-weight:700;">Defender</div>
+            <div style="font-size:12px;"><b>${d.tokenName ?? d.name}</b></div>
+          </div>
+          <div style="margin-top:4px; font-size:13px; line-height:1.25;">
+            <div><b>Test:</b> ${dTestLabel}</div>
+            <div><b>Defense:</b> ${dDefenseLabel}</div>
+            <div><b>TN:</b> ${dTargetLabel}</div>
+            ${dRollLine}
+            ${revealDefender ? _renderBreakdown(d.tn) : ""}
+            ${defenderCommitLine}
+          </div>
+          ${defenderActions}
+          ${outcomeLine}
+          ${resolutionDetails}
+          ${resolvedActions}
+        </div>
+      `;
+    }).join("");
+
+    return `
+      <div class="ues-opposed-card" data-message-id="${messageId}" style="padding:6px 6px;">
+        <div style="display:grid; grid-template-columns: 1fr; gap:12px;">
+          <div style="padding-bottom:8px; border-bottom:1px solid rgba(0,0,0,0.12);">
+            <div style="display:flex; justify-content:space-between; align-items:baseline;">
+              <div style="font-size:16px; font-weight:700;">Attacker</div>
+              <div style="font-size:13px;"><b>${a.tokenName ?? a.name}</b></div>
+            </div>
+            <div style="margin-top:4px; font-size:13px; line-height:1.25;">
+              <div><b>Test:</b> ${revealAttacker ? (a.label ?? "Attack") : "??"}</div>
+              <div><b>Attack:</b> ${aVariantText}</div>
+              <div><b>TN:</b> ${aTargetLabel}</div>
+              ${aRollLine}
+              ${revealAttacker ? _renderBreakdown(a.tn) : ""}
+              ${attackerCommitLine}
+            </div>
+            ${attackerActions}
+          </div>
+          <div style="display:grid; grid-template-columns: 1fr; gap:10px;">
+            ${defenderBlocks}
+          </div>
+        </div>
+      </div>
+    `;
+  }
+
   const a = data.attacker ?? {};
   const d = data.defender ?? {};
 
@@ -856,6 +1297,7 @@ function _renderCard(data, messageId) {
   const { aCommitted, dCommitted, bothCommitted } = _getBankCommitState(data);
 
   const anyGMOnline = _anyActiveGMOnline();
+  const isAoE = Boolean(data?.context?.aoe?.isAoE || data?.context?.isAoE);
 
   // When bankMode is enabled, suppress choice/tn details until both sides have committed.
   const revealChoices = !bankMode || bothCommitted || data.status === "resolved" || !!data.outcome;
@@ -865,22 +1307,22 @@ function _renderCard(data, messageId) {
   const finalA = baseA + modA;
   const aTargetLabel = (revealChoices && a.hasDeclared === true)
     ? `${finalA}${modA ? ` (${modA >= 0 ? "+" : ""}${modA})` : ""}`
-    : (revealChoices ? `${baseA}` : "—");
+    : (revealChoices ? `${baseA}` : "??");
 
   const aVariantText = (revealChoices && a.hasDeclared)
     ? (a.variantLabel ?? "Attack")
-    : "—";
+    : "??";
 
   const dTargetLabel = (!revealChoices)
-    ? "—"
-    : (d.noDefense ? "0" : (d.targetLabel ?? (d.target ?? "—")));
+    ? "??"
+    : (d.noDefense ? "0" : (d.targetLabel ?? (d.target ?? "??")));
 
   const dTestLabel = (!revealChoices)
-    ? "—"
+    ? "??"
     : (d.testLabel ?? "(choose)");
 
   const dDefenseLabel = (!revealChoices)
-    ? "—"
+    ? "??"
     : (d.defenseLabel ?? d.label ?? "(choose)");
 
   // Roll summaries: use a single formatter for parity across banked and non-banked modes.
@@ -916,27 +1358,36 @@ function _renderCard(data, messageId) {
     return `<div style="margin-top:6px;">${_btn("Roll Attack", "attacker-roll")}</div>`;
   })();
 
-  const defenderActions = (() => {
-    if (d.result || d.noDefense) return "";
+      const defenderActions = (() => {
+        if (d.result || d.noDefense) return "";
 
-    if (bankMode) {
-      if (!dCommitted) {
-        return `
+        if (bankMode) {
+          if (!dCommitted) {
+            return `
           <div style="margin-top:6px; display:flex; gap:8px; flex-wrap:wrap;">
-            ${_btn("Commit Defense", "defender-commit")}
-            ${_btn("Commit No Defense", "defender-commit-nodefense")}
+            ${_btn("Commit Defense", "defender-commit", { "defender-index": idx })}
+            ${_btn("Commit No Defense", "defender-commit-nodefense", { "defender-index": idx })}
           </div>`;
-      }
+          }
 
-      return "";
-    }
+          // For banking: only show roll button when ALL defenders have committed
+          // This ensures proper banking workflow where all choices are locked before rolls
+          if (dCommitted && _allDefendersCommitted(data) && !d.result) {
+            const dt = String(d?.defenseType ?? "").toLowerCase();
+            if (dt && dt !== "none") {
+              return `<div style="margin-top:6px;">${_btn("Roll Defense", "defender-roll-committed", { "defender-index": idx })}</div>`;
+            }
+          }
 
-    return `
+          return "";
+        }
+
+        return `
       <div style="margin-top:6px; display:flex; gap:8px; flex-wrap:wrap;">
-        ${_btn("Defend", "defender-roll")}
-        ${_btn("No Defense", "defender-nodefense")}
+        ${_btn("Defend", "defender-roll", { "defender-index": idx })}
+        ${_btn("No Defense", "defender-nodefense", { "defender-index": idx })}
       </div>`;
-  })();
+      })();
 
   const bankedRollActions = "";
 
@@ -947,14 +1398,14 @@ function _renderCard(data, messageId) {
 
     if (bankMode) {
       if (!bothCommitted) {
-        return `<div style="margin-top:10px;"><i>Waiting for both sides to commit choices…</i></div>`;
+        return `<div style="margin-top:10px;"><i>Waiting for both sides to commit choices...</i></div>`;
       }
 
       if (anyGMOnline) {
-        return `<div style="margin-top:10px;"><i>Rolling…</i></div>`;
+        return `<div style="margin-top:10px;"><i>Rolling...</i></div>`;
       }
 
-      return `<div style="margin-top:10px;"><i>Rolling…</i></div>`;
+      return `<div style="margin-top:10px;"><i>Rolling...</i></div>`;
     }
 
     // Legacy/non-banked pending hint
@@ -962,7 +1413,7 @@ function _renderCard(data, messageId) {
     const waitingSince = Number(data?.context?.waitingSince ?? 0);
     const ageMs = waitingSince ? (Date.now() - waitingSince) : 0;
     const isWaiting = (phase === "waitingdefender" || phase === "waitingDefender");
-    const isStale = isWaiting && ageMs > 60_000;
+    const isStale = isWaiting && ageMs > 60000;
     const note = isStale
       ? `<div style="margin-top:6px; font-size:12px; opacity:0.85;">
            Still waiting on the defender result. If this persists, ensure the defender roll message was posted, and have the attacker refresh the page to re-render the card.
@@ -974,8 +1425,8 @@ function _renderCard(data, messageId) {
   const resolutionDetails = (() => {
     if (!showResolutionDetails) return "";
     if (!data.outcome) return "";
-    const aVariant = a.variantLabel ?? a.variant ?? "—";
-    const dDefense = d.defenseLabel ?? d.defenseType ?? "—";
+    const aVariant = a.variantLabel ?? a.variant ?? "??";
+    const dDefense = d.defenseLabel ?? d.defenseType ?? "??";
     const advA = Number(data.advantage?.attacker ?? 0);
     const advD = Number(data.advantage?.defender ?? 0);
     const aManual = Number(a.manualMod ?? 0);
@@ -1031,9 +1482,10 @@ function _renderCard(data, messageId) {
     }
 
     if (data.outcome.winner === "defender" && (d.defenseType ?? "none") === "block") {
+      const blockLabel = isAoE ? "Resolve Block (Half Damage)" : "Resolve Block";
       return `
         <div style="margin-top:10px; display:flex; gap:8px; flex-wrap:wrap; align-items:center;">
-          ${_btn("Resolve Block", "block-resolve")}
+          ${_btn(blockLabel, "block-resolve")}
           ${advD > 0 ? `<span style="opacity:0.85; font-size:12px;">Advantage: ${advD}</span>` : ``}
         </div>
       `;
@@ -1069,7 +1521,7 @@ function _renderCard(data, messageId) {
           <div style="font-size:13px;"><b>${a.tokenName ?? a.name}</b></div>
         </div>
         <div style="margin-top:4px; font-size:13px; line-height:1.25;">
-          <div><b>Test:</b> ${revealChoices ? (a.label ?? "Attack") : "—"}</div>
+          <div><b>Test:</b> ${revealChoices ? (a.label ?? "Attack") : "??"}</div>
           <div><b>Attack:</b> ${aVariantText}</div>
           <div><b>TN:</b> ${aTargetLabel}</div>
 
@@ -1313,14 +1765,15 @@ async function _hydrateSideResultFromRollMessageId({ message, data, sideKey, exp
   return { dirty: true };
 }
 
-async function _selfHealOpposedCardFromStoredRolls(message, data, { reason = "" } = {}) {
-  if (!message || !data) return { dirty: false, resolved: Boolean(data?.status === "resolved" && data?.outcome) };
+async function _selfHealOpposedCardFromStoredRolls(message, data, { reason = "", defenderIndex = null, defenderTokenUuid = null, defenderActorUuid = null } = {}) {
+  if (!message || !data) return { dirty: false, resolved: false };
 
   let dirty = false;
   const fixes = [];
 
   data.context = data.context ?? {};
 
+  _selectDefenderEntry(data, { defenderIndex, defenderTokenUuid, defenderActorUuid });
   const attacker = _resolveActor(data.attacker?.actorUuid);
   const defender = _resolveActor(data.defender?.actorUuid);
 
@@ -1373,18 +1826,23 @@ async function _selfHealOpposedCardFromStoredRolls(message, data, { reason = "" 
   const hasDefender = Boolean(data.defender?.result) || Boolean(data.defender?.noDefense);
 
   if (hasAttacker && hasDefender) {
-    const needsOutcome = !data.outcome || typeof data.outcome !== "object";
-    const needsResolved = data.status !== "resolved";
+    const currentOutcome = _getDefenderOutcome(data, data.defender);
+    const needsOutcome = !currentOutcome || typeof currentOutcome !== "object";
 
-    if (needsOutcome || needsResolved) {
-      const outcome = data.outcome ?? _resolveOutcomeRAW(data);
+    if (needsOutcome) {
+      const baseOutcome = _resolveOutcomeRAW(data, data.defender);
+      const outcome = _applyAoEEvadeOutcome(data, baseOutcome);
       if (outcome) {
-        data.outcome = outcome;
-        data.advantage = _computeAdvantageRAW(data, outcome);
-        data.status = "resolved";
-        data.context.phase = "resolved";
-        if (!data.context.resolvedAt) data.context.resolvedAt = Date.now();
-        _cleanupAutoRollContext(data.context);
+        _setDefenderOutcome(data, data.defender, outcome);
+        _setDefenderAdvantage(data, data.defender, _computeAdvantageRAW(data, outcome, data.defender));
+
+        const allResolved = _getDefenderEntries(data).every(def => Boolean(_getDefenderOutcome(data, def)));
+        if (allResolved) {
+          data.status = "resolved";
+          data.context.phase = "resolved";
+          if (!data.context.resolvedAt) data.context.resolvedAt = Date.now();
+          _cleanupAutoRollContext(data.context);
+        }
         dirty = true;
         fixes.push("outcome/status");
       }
@@ -1411,7 +1869,7 @@ async function _selfHealOpposedCardFromStoredRolls(message, data, { reason = "" 
     await _updateCard(message, data);
   }
 
-  return { dirty, resolved: Boolean(data?.status === "resolved" && data?.outcome) };
+  return { dirty, resolved: Boolean(_getDefenderOutcome(data, data.defender)) };
 }
 //
 // Ensure the opposed card is in a resolved state before running post-resolution actions
@@ -1419,32 +1877,42 @@ async function _selfHealOpposedCardFromStoredRolls(message, data, { reason = "" 
 // flags are still missing outcome/status due to out-of-order or partial updates.
 // This helper is a safe, deterministic self-heal: if both roll results exist, it
 // computes outcome + advantage and persists them to the card.
-async function _ensureResolvedForPostActions(message, data) {
+async function _ensureResolvedForPostActions(message, data, { defenderIndex = null, defenderTokenUuid = null, defenderActorUuid = null } = {}) {
   try {
     if (!message || !data) return false;
-    if (data.status === "resolved" && data.outcome) return true;
+    _selectDefenderEntry(data, { defenderIndex, defenderTokenUuid, defenderActorUuid });
+    if (_getDefenderOutcome(data, data.defender)) return true;
 
     // Self-heal: if rollMessageIds exist but card flags are incomplete, rehydrate from the roll messages
     // and recompute outcome deterministically.
-    await _selfHealOpposedCardFromStoredRolls(message, data, { reason: "ensureResolvedForPostActions" });
+    await _selfHealOpposedCardFromStoredRolls(message, data, {
+      reason: "ensureResolvedForPostActions",
+      defenderIndex,
+      defenderTokenUuid,
+      defenderActorUuid
+    });
 
-    if (data.status === "resolved" && data.outcome) return true;
+    if (_getDefenderOutcome(data, data.defender)) return true;
 
     // Fallback: if both results exist in-memory but outcome is still missing, compute it once.
     const hasAttacker = Boolean(data.attacker?.result);
     const hasDefender = Boolean(data.defender?.result) || Boolean(data.defender?.noDefense);
     if (!hasAttacker || !hasDefender) return false;
 
-    const outcome = data.outcome ?? _resolveOutcomeRAW(data);
+    const baseOutcome = _resolveOutcomeRAW(data, data.defender);
+    const outcome = _applyAoEEvadeOutcome(data, baseOutcome);
     if (!outcome) return false;
 
-    data.outcome = outcome;
-    data.advantage = _computeAdvantageRAW(data, outcome);
-    data.status = "resolved";
+    _setDefenderOutcome(data, data.defender, outcome);
+    _setDefenderAdvantage(data, data.defender, _computeAdvantageRAW(data, outcome, data.defender));
+    const allResolved = _getDefenderEntries(data).every(def => Boolean(_getDefenderOutcome(data, def)));
+    if (allResolved) {
+      data.status = "resolved";
 
-    data.context = data.context ?? {};
-    data.context.phase = "resolved";
-    if (!data.context.resolvedAt) data.context.resolvedAt = Date.now();
+      data.context = data.context ?? {};
+      data.context.phase = "resolved";
+      if (!data.context.resolvedAt) data.context.resolvedAt = Date.now();
+    }
 
     await _updateCard(message, data);
     return true;
@@ -1677,9 +2145,9 @@ async function _attackerDeclareDialog(attackerActor, attackerLabel, { styles = [
   });
 }
 
-function _resolveOutcomeRAW(data) {
+function _resolveOutcomeRAW(data, defender = null) {
   const a = data.attacker;
-  const d = data.defender;
+  const d = defender ?? data.defender;
 
   const A = a.result;
   const D = d.result;
@@ -1767,14 +2235,14 @@ function _resolveOutcomeRAW(data) {
   return { winner: "defender", text: `Both succeed — no advantage; defense holds.` };
 }
 
-function _computeAdvantageRAW(data, outcome) {
+function _computeAdvantageRAW(data, outcome, defender = null) {
   // RAW: advantage is only gained in melee when:
   //  - exactly one character fails (winner gains 1 advantage)
   //  - a critical success occurs (winner gains 1 advantage)
   //  - critical success vs fail OR success vs critical fail (winner gains 2 advantages)
   // No advantage is gained when both pass (even if attacker wins on higher DoS).
   const A = data?.attacker?.result;
-  const D = data?.defender?.result;
+  const D = (defender ?? data?.defender)?.result;
   if (!A || !D || !outcome) return { attacker: 0, defender: 0 };
 
   // If neither side resolves, no advantage.
@@ -3006,6 +3474,35 @@ async function _postWeaponDamageChatCard({
   return created;
 }
 
+function _buildSharedDamagePayload({ mode, dmg, weaponUuid = null, damageType = null } = {}) {
+  if (!mode || !dmg) return null;
+  return {
+    mode,
+    weaponUuid: weaponUuid ?? null,
+    damageType: damageType ?? null,
+    damageString: dmg.damageString ?? "0",
+    finalDamage: Number(dmg.finalDamage ?? 0) || 0,
+    rollATotal: Number(dmg.rollA?.total ?? NaN),
+    rollBTotal: Number(dmg.rollB?.total ?? NaN),
+    rerollMode: dmg.rerollMode ?? null,
+    damagedValue: dmg.damagedValue ?? null,
+    usedAltDamage: Boolean(dmg.usedAltDamage)
+  };
+}
+
+function _inflateSharedDamage(shared) {
+  if (!shared) return null;
+  return {
+    damageString: shared.damageString ?? "0",
+    finalDamage: Number(shared.finalDamage ?? 0) || 0,
+    rollA: null,
+    rollB: null,
+    rerollMode: shared.rerollMode ?? null,
+    damagedValue: shared.damagedValue ?? null,
+    usedAltDamage: Boolean(shared.usedAltDamage)
+  };
+}
+
 const _bankedAutoRollLocalLocks = new Set();
 
 export const OpposedWorkflow = {
@@ -3038,13 +3535,13 @@ export const OpposedWorkflow = {
     const current = parent?.flags?.["uesrpg-3ev4"]?.opposed ?? null;
     if (!current || typeof current !== "object") return;
 
-
-
     // Anti-spoof + consistency checks: only bank roll messages that match the expected side.
     // This prevents other users from posting a roll message that is incorrectly attributed.
+    const defenderIndex = _resolveDefenderIndex(current, meta ?? {});
+    const defenderEntry = (defenderIndex != null) ? _getDefenderEntries(current)[defenderIndex] : current.defender;
     const expectedSide = (stage === "attacker-roll")
       ? current.attacker
-      : ((stage === "defender-roll" || stage === "defender-nodefense") ? current.defender : null);
+      : ((stage === "defender-roll" || stage === "defender-nodefense") ? defenderEntry : null);
 
     if (!expectedSide?.actorUuid) return;
 
@@ -3068,6 +3565,7 @@ export const OpposedWorkflow = {
 
     // Clone so we never mutate message.flags directly.
     const data = foundry.utils.deepClone(current);
+    _selectDefenderEntry(data, { defenderIndex, defenderTokenUuid: meta?.defenderTokenUuid, defenderActorUuid: meta?.defenderActorUuid });
 
     let dirty = false;
 
@@ -3210,6 +3708,10 @@ if (stage === "attacker-roll") {
         }
       }
     }
+    if (stage === "defender-roll") {
+      await _maybeSetAoEEvadeEscape(data, data.defender, expectedActor);
+      dirty = true;
+    }
     // Phase tracking (non-breaking; used for diagnostics).
     data.context = data.context ?? {};
     if (stage === "attacker-roll") {
@@ -3221,15 +3723,91 @@ if (stage === "attacker-roll") {
     }
 
     // Resolve if ready.
-    if (data.attacker?.result && data.defender?.result && !data.outcome) {
-      const outcome = _resolveOutcomeRAW(data);
-      data.outcome = outcome ?? { winner: "tie", text: "" };
-      data.advantage = _computeAdvantageRAW(data, data.outcome);
-      data.status = "resolved";
-      data.context = data.context ?? {};
-      data.context.phase = "resolved";
-      if (!data.context.resolvedAt) data.context.resolvedAt = Date.now();
-      _cleanupAutoRollContext(data.context);
+    const currentOutcome = _getDefenderOutcome(data, data.defender);
+    if (data.attacker?.result && (data.defender?.result || data.defender?.noDefense) && !currentOutcome) {
+      const baseOutcome = _resolveOutcomeRAW(data, data.defender) ?? { winner: "tie", text: "" };
+      const outcome = _applyAoEEvadeOutcome(data, baseOutcome);
+      _setDefenderOutcome(data, data.defender, outcome);
+      _setDefenderAdvantage(data, data.defender, _computeAdvantageRAW(data, outcome, data.defender));
+
+      const allResolved = _getDefenderEntries(data).every(def => Boolean(_getDefenderOutcome(data, def)));
+      if (allResolved) {
+        data.status = "resolved";
+        data.context = data.context ?? {};
+        data.context.phase = "resolved";
+        if (!data.context.resolvedAt) data.context.resolvedAt = Date.now();
+        _cleanupAutoRollContext(data.context);
+      }
+      dirty = true;
+    }
+
+    // Multi-defender: when the attacker roll arrives, resolve every committed defender lane.
+    if (stage === "attacker-roll" && _isMultiDefender(data) && data.attacker?.result) {
+      const originalDefender = data.defender;
+      const defenders = _getDefenderEntries(data);
+      let resolvedAny = false;
+
+      for (const def of defenders) {
+        if (!def) continue;
+        if (!(def.result || def.noDefense)) continue;
+        if (_getDefenderOutcome(data, def)) continue;
+
+        data.defender = def;
+        const baseOutcome = _resolveOutcomeRAW(data, def) ?? { winner: "tie", text: "" };
+        const outcome = _applyAoEEvadeOutcome(data, baseOutcome, def);
+        _setDefenderOutcome(data, def, outcome);
+        _setDefenderAdvantage(data, def, _computeAdvantageRAW(data, outcome, def));
+        resolvedAny = true;
+      }
+
+      if (resolvedAny) {
+        const allResolved = defenders.every(def => Boolean(_getDefenderOutcome(data, def)));
+        if (allResolved) {
+          data.status = "resolved";
+          data.context = data.context ?? {};
+          data.context.phase = "resolved";
+          if (!data.context.resolvedAt) data.context.resolvedAt = Date.now();
+          _cleanupAutoRollContext(data.context);
+        }
+        dirty = true;
+      }
+
+      data.defender = originalDefender;
+    }
+
+    // Multi-defender: when a defender roll arrives, also resolve other defenders who have already rolled.
+    // This ensures that when Defender A rolls after Defender B has already rolled, both get resolved.
+    if ((stage === "defender-roll" || stage === "defender-nodefense") && _isMultiDefender(data) && data.attacker?.result) {
+      const originalDefender = data.defender;
+      const defenders = _getDefenderEntries(data);
+      let resolvedAny = false;
+
+      for (const def of defenders) {
+        if (!def) continue;
+        if (!(def.result || def.noDefense)) continue;
+        if (_getDefenderOutcome(data, def)) continue;
+
+        data.defender = def;
+        const baseOutcome = _resolveOutcomeRAW(data, def) ?? { winner: "tie", text: "" };
+        const outcome = _applyAoEEvadeOutcome(data, baseOutcome, def);
+        _setDefenderOutcome(data, def, outcome);
+        _setDefenderAdvantage(data, def, _computeAdvantageRAW(data, outcome, def));
+        resolvedAny = true;
+      }
+
+      if (resolvedAny) {
+        const allResolved = defenders.every(def => Boolean(_getDefenderOutcome(data, def)));
+        if (allResolved) {
+          data.status = "resolved";
+          data.context = data.context ?? {};
+          data.context.phase = "resolved";
+          if (!data.context.resolvedAt) data.context.resolvedAt = Date.now();
+          _cleanupAutoRollContext(data.context);
+        }
+        dirty = true;
+      }
+
+      data.defender = originalDefender;
     }
 
     await _updateCard(parent, data);
@@ -3254,8 +3832,10 @@ if (stage === "attacker-roll") {
       if (!data?.context?.autoRollRequested) return;
       if (data?.context?.autoRollStarted) return;
 
-      const bank = _getBankCommitState(data);
-      if (!bank.bothCommitted) return;
+      const defenders = _getDefenderEntries(data);
+      // For banking: require ALL defenders to be committed before rolling
+      const allCommitted = _allDefendersCommitted(data);
+      if (!allCommitted) return;
 
       // Only the active GM should run the auto-roll.
       if (!_anyActiveGMOnline()) return;
@@ -3291,8 +3871,10 @@ if (stage === "attacker-roll") {
       const data = foundry.utils.deepClone(opposed);
       _ensureBankedScaffold(data);
 
-      const bank = _getBankCommitState(data);
-      if (!bank.bothCommitted) return;
+      const defenders = _getDefenderEntries(data);
+      // For banking: require ALL defenders to be committed before rolling
+      const allCommitted = _allDefendersCommitted(data);
+      if (!allCommitted) return;
 
       data.context = data.context ?? {};
       if (!data.context.autoRollRequested) {
@@ -3311,18 +3893,22 @@ if (stage === "attacker-roll") {
         // Only attempt if a declaration exists.
         const t = Number(data.attacker?.target ?? data.attacker?.tn?.finalTN ?? NaN);
         if (Number.isFinite(t)) {
-          await this.handleAction(message, "attacker-roll-committed");
+          const committedIdx = defenders.findIndex(def => _getBankCommitState(data, def).bothCommitted);
+          const idx = committedIdx >= 0 ? committedIdx : 0;
+          await this.handleAction(message, "attacker-roll-committed", { defenderIndex: idx });
         }
       }
 
       // Defender lane: only the committing user should auto-roll, and only if this is not No Defense.
-      if (!data.defender?.result && data.defender?.noDefense !== true && data.defender?.banked?.committed === true && data.defender?.banked?.committedBy === userId) {
-        const dt = String(data.defender?.defenseType ?? "");
-        if (dt && dt !== "none") {
-          const t = Number(data.defender?.target ?? data.defender?.tn?.finalTN ?? NaN);
-          if (Number.isFinite(t)) {
-            await this.handleAction(message, "defender-roll-committed");
-          }
+      for (let idx = 0; idx < defenders.length; idx += 1) {
+        const def = defenders[idx];
+        if (!def || def.result || def.noDefense === true) continue;
+        if (def?.banked?.committed !== true || def?.banked?.committedBy !== userId) continue;
+        const dt = String(def?.defenseType ?? "");
+        if (!dt || dt === "none") continue;
+        const t = Number(def?.target ?? def?.tn?.finalTN ?? NaN);
+        if (Number.isFinite(t)) {
+          await this.handleAction(message, "defender-roll-committed", { defenderIndex: idx });
         }
       }
     } catch (err) {
@@ -3353,8 +3939,10 @@ if (stage === "attacker-roll") {
       const data = foundry.utils.deepClone(opposed);
       _ensureBankedScaffold(data);
 
-      const bank = _getBankCommitState(data);
-      if (!bank.bothCommitted) return;
+      const defenders = _getDefenderEntries(data);
+      // For banking: require ALL defenders to be committed before rolling
+      const allCommitted = _allDefendersCommitted(data);
+      if (!allCommitted) return;
 
       data.context = data.context ?? {};
       if (data.context.autoRollStarted) return;
@@ -3383,13 +3971,18 @@ if (stage === "attacker-roll") {
       if (freshClaimId && freshClaimId !== claimId) return;
 
       // Roll unresolved lanes (committed).
-      if (!freshOpposed?.attacker?.result) {
-        await this.handleAction(fresh, "attacker-roll-committed");
+      const freshDefenders = _getDefenderEntries(freshOpposed);
+      const committedIdx = freshDefenders.findIndex(def => _getBankCommitState(freshOpposed, def).bothCommitted);
+      if (!freshOpposed?.attacker?.result && committedIdx >= 0) {
+        await this.handleAction(fresh, "attacker-roll-committed", { defenderIndex: committedIdx });
       }
 
-      // Defender lane rolls only if not already resolved and not No Defense.
-      if (!freshOpposed?.defender?.result && freshOpposed?.defender?.noDefense !== true) {
-        await this.handleAction(fresh, "defender-roll-committed");
+      for (let idx = 0; idx < freshDefenders.length; idx += 1) {
+        const def = freshDefenders[idx];
+        if (!def || def.result || def.noDefense === true) continue;
+        const bankState = _getBankCommitState(freshOpposed, def);
+        if (!bankState.bothCommitted) continue;
+        await this.handleAction(fresh, "defender-roll-committed", { defenderIndex: idx });
       }
     } finally {
       _bankedAutoRollLocalLocks.delete(parentMessageId);
@@ -3403,15 +3996,61 @@ if (stage === "attacker-roll") {
    */
   async createPending(cfg = {}) {
     const aDoc = _resolveDoc(cfg.attackerTokenUuid) ?? _resolveDoc(cfg.attackerActorUuid) ?? _resolveDoc(cfg.attackerUuid);
-    const dDoc = _resolveDoc(cfg.defenderTokenUuid) ?? _resolveDoc(cfg.defenderActorUuid) ?? _resolveDoc(cfg.defenderUuid);
-
     const aToken = _resolveToken(aDoc);
-    const dToken = _resolveToken(dDoc);
     const attacker = _resolveActor(aDoc);
-    const defender = _resolveActor(dDoc);
 
-    if (!attacker || !defender) {
-      ui.notifications.warn("Opposed test requires both an attacker and a defender (token or actor).");
+    const defenderRefs = [];
+    const addDefenderRef = (ref) => {
+      if (!ref) return;
+      if (typeof ref === "string") defenderRefs.push(ref);
+      else if (ref?.uuid) defenderRefs.push(ref.uuid);
+    };
+
+    if (Array.isArray(cfg.defenders)) {
+      for (const def of cfg.defenders) {
+        addDefenderRef(def?.tokenUuid ?? def?.actorUuid ?? def?.uuid ?? def);
+      }
+    }
+    if (Array.isArray(cfg.defenderTokenUuids)) {
+      for (const ref of cfg.defenderTokenUuids) addDefenderRef(ref);
+    }
+    if (Array.isArray(cfg.defenderActorUuids)) {
+      for (const ref of cfg.defenderActorUuids) addDefenderRef(ref);
+    }
+    addDefenderRef(cfg.defenderTokenUuid ?? cfg.defenderActorUuid ?? cfg.defenderUuid);
+
+    const defenderEntries = [];
+    const seen = new Set();
+    for (const ref of defenderRefs) {
+      const dDoc = _resolveDoc(ref);
+      const dToken = _resolveToken(dDoc);
+      const dActor = _resolveActor(dDoc);
+      if (!dActor) continue;
+      const key = dToken?.document?.uuid ?? dToken?.uuid ?? dActor.uuid;
+      if (seen.has(key)) continue;
+      seen.add(key);
+
+      defenderEntries.push({
+        actorUuid: dActor.uuid,
+        tokenUuid: dToken?.document?.uuid ?? null,
+        tokenName: dToken?.name ?? null,
+        name: dActor.name,
+        label: null,
+        testLabel: null,
+        defenseLabel: null,
+        target: null,
+        defenseType: null,
+        result: null,
+        noDefense: false,
+        banked: { committed: false, committedAt: null, committedBy: null },
+        tn: null,
+        outcome: null,
+        advantage: null
+      });
+    }
+
+    if (!attacker || defenderEntries.length === 0) {
+      ui.notifications.warn("Opposed test requires both an attacker and at least one defender (token or actor).");
       return null;
     }
 
@@ -3447,6 +4086,7 @@ if (stage === "attacker-roll") {
     if (!seededWeaponUuid) seededWeaponUuid = _getPreferredWeaponUuid(attacker, { meleeOnly: false }) || "";
     const seededAttackMode = cfg.attackMode ? String(cfg.attackMode) : await _inferAttackModeFromPreferredWeapon(attacker);
 
+    const isAoE = Boolean(cfg?.aoe?.isAoE || cfg?.context?.aoe?.isAoE || cfg?.isAoE);
     const data = {
         context: {
           schemaVersion: 1,
@@ -3458,7 +4098,9 @@ if (stage === "attacker-roll") {
           waitingSince: null,
           weaponUuid: seededWeaponUuid || null,
           attackMode: seededAttackMode || "melee",
-          forcedHitLocation: cfg.forcedHitLocation ?? null,
+          forcedHitLocation: isAoE ? "Body" : (cfg.forcedHitLocation ?? null),
+          aoe: cfg?.aoe ? foundry.utils.deepClone(cfg.aoe) : undefined,
+          isAoE: cfg?.isAoE ?? undefined,
           activation: cfg.activation ?? null,
           skipAttackerAPDeduction: Boolean(cfg.skipAttackerAPDeduction),
           bankChoicesEnabled: true,
@@ -3489,24 +4131,8 @@ if (stage === "attacker-roll") {
         tn: null,
         result: null
       },
-      defender: {
-        actorUuid: defender.uuid,
-        tokenUuid: dToken?.document?.uuid ?? null,
-        tokenName: dToken?.name ?? null,
-        name: defender.name,
-        // label: the chosen defense option label (e.g. Parry/Evade/Block/Counter-Attack)
-        label: null,
-        // testLabel: the actual test used for the roll (Combat Style/Profession name or Evade)
-        testLabel: null,
-        // defenseLabel: the chosen defensive action (Parry/Evade/Block/Counter-Attack/No Defense)
-        defenseLabel: null,
-        target: null,
-        defenseType: null,
-        result: null,
-        noDefense: false,
-        banked: { committed: false, committedAt: null, committedBy: null },
-        tn: null
-      },
+      defender: defenderEntries[0] ?? {},
+      defenders: defenderEntries,
       outcome: null
     };
 
@@ -3529,7 +4155,7 @@ if (stage === "attacker-roll") {
     return message;
   },
 
-  async handleAction(message, action) {
+  async handleAction(message, action, opts = {}) {
     const messageId = message?.id ?? message?._id ?? null;
     const liveMessage = messageId ? (game.messages.get(messageId) ?? message) : message;
     const raw = liveMessage?.flags?.["uesrpg-3ev4"]?.opposed;
@@ -3545,10 +4171,11 @@ if (stage === "attacker-roll") {
     data.context = data.context ?? {};
     if (!data.context.attackMode) data.context.attackMode = getContextAttackMode(data.context);
 
+    const { defender: defenderData, defenderIndex, defenders, isMulti } = _selectDefenderEntry(data, opts);
     const attacker = _resolveActor(data.attacker.actorUuid);
-    const defender = _resolveActor(data.defender.actorUuid);
+    const defender = defenderData ? _resolveActor(defenderData.actorUuid) : null;
     const aToken = _resolveToken(data.attacker.tokenUuid);
-    const dToken = _resolveToken(data.defender.tokenUuid);
+    const dToken = defenderData ? _resolveToken(defenderData.tokenUuid) : null;
 
     if (!attacker || !defender) {
       ui.notifications.warn("Opposed Test: could not resolve attacker/defender.");
@@ -3558,6 +4185,7 @@ if (stage === "attacker-roll") {
     // Banked choice mode (meta-limiting): snapshot and state scaffold
     const bankMode = _isBankChoicesEnabledForData(data);
     _ensureBankedScaffold(data);
+    const isAoE = Boolean(data?.context?.aoe?.isAoE || data?.context?.isAoE);
 
     // Back-compat: treat legacy actions as banked commits when bankMode is enabled.
     if (bankMode) {
@@ -3620,7 +4248,7 @@ if (stage === "attacker-roll") {
         return;
       }
 
-      const bank = bankMode ? _getBankCommitState(data) : null;
+      const bank = bankMode ? _getBankCommitState(data, data.defender) : null;
       if (isRollCommitted) {
         if (!bankMode) {
           ui.notifications.warn("Banked choices are not enabled for this opposed test.");
@@ -3808,37 +4436,44 @@ if (stage === "attacker-roll") {
 
           // Chapter 5 (Hidden): enemies cannot defend against attacks made by hidden characters.
           // To avoid deadlocks in banked mode, force the defender lane to No Defense immediately.
-          if (data.context?.attackFromHidden === true && !data.defender?.result && data.defender?.noDefense !== true) {
-            data.defender.banked = data.defender.banked ?? {};
-            data.defender.banked.committed = true;
-            data.defender.banked.committedAt = Date.now();
-            data.defender.banked.committedBy = "system";
-            data.defender.banked.forced = true;
-            data.defender.banked.reason = "hidden";
+          if (data.context?.attackFromHidden === true) {
+            for (const def of defenders) {
+              if (!def || def.result || def.noDefense === true) continue;
+              def.banked = def.banked ?? {};
+              def.banked.committed = true;
+              def.banked.committedAt = Date.now();
+              def.banked.committedBy = "system";
+              def.banked.forced = true;
+              def.banked.reason = "hidden";
 
-            data.defender.noDefense = true;
-            data.defender.defenseType = "none";
-            data.defender.label = "No Defense (Hidden)";
-            data.defender.testLabel = "No Defense";
-            data.defender.defenseLabel = "No Defense";
-            data.defender.target = 0;
-            data.defender.tn = {
-              finalTN: 0,
-              baseTN: 0,
-              totalMod: 0,
-              breakdown: [{ key: "base", label: "No Defense (Hidden)", value: 0, source: "base" }]
-            };
-            data.defender.result = { rollTotal: 100, target: 0, isSuccess: false, degree: 1 };
+              def.noDefense = true;
+              def.defenseType = "none";
+              def.label = "No Defense (Hidden)";
+              def.testLabel = "No Defense";
+              def.defenseLabel = "No Defense";
+              def.target = 0;
+              def.tn = {
+                finalTN: 0,
+                baseTN: 0,
+                totalMod: 0,
+                breakdown: [{ key: "base", label: "No Defense (Hidden)", value: 0, source: "base" }]
+              };
+              def.result = { rollTotal: 100, target: 0, isSuccess: false, degree: 1 };
+            }
           }
 
-          // Auto-request GM roll when both sides are committed and a GM is online.
-          const b = _getBankCommitState(data);
-          if (b.bothCommitted) {
+          // Auto-request GM roll when ALL participants have committed (banking workflow)
+          const b = _getBankCommitState(data, data.defender);
+          if (b.bothCommitted && _allDefendersCommitted(data)) {
             data.context = data.context ?? {};
             if (!data.context.autoRollRequested) {
               data.context.autoRollRequested = true;
               data.context.autoRollRequestedAt = Date.now();
               data.context.autoRollRequestedBy = game.user.id;
+            }
+            // Trigger auto-roll for all committed participants
+            if (!data.context.autoRollStarted) {
+              await this._autoRollBanked(message.id, { trigger: "all-committed" });
             }
           }
 
@@ -3964,20 +4599,23 @@ if (stage === "attacker-roll") {
       };
 
       // Chapter 5 (Hidden): enemies cannot defend against attacks made by hidden characters.
-      if (data.context?.attackFromHidden === true && !data.defender?.result && data.defender?.noDefense !== true) {
-        data.defender.noDefense = true;
-        data.defender.defenseType = "none";
-        data.defender.label = "No Defense (Hidden)";
-        data.defender.testLabel = "No Defense";
-        data.defender.defenseLabel = "No Defense";
-        data.defender.target = 0;
-        data.defender.tn = {
-          finalTN: 0,
-          baseTN: 0,
-          totalMod: 0,
-          breakdown: [{ key: "base", label: "No Defense (Hidden)", value: 0, source: "base" }]
-        };
-        data.defender.result = { rollTotal: 100, target: 0, isSuccess: false, degree: 1 };
+      if (data.context?.attackFromHidden === true) {
+        for (const def of defenders) {
+          if (!def || def.result || def.noDefense === true) continue;
+          def.noDefense = true;
+          def.defenseType = "none";
+          def.label = "No Defense (Hidden)";
+          def.testLabel = "No Defense";
+          def.defenseLabel = "No Defense";
+          def.target = 0;
+          def.tn = {
+            finalTN: 0,
+            baseTN: 0,
+            totalMod: 0,
+            breakdown: [{ key: "base", label: "No Defense (Hidden)", value: 0, source: "base" }]
+          };
+          def.result = { rollTotal: 100, target: 0, isSuccess: false, degree: 1 };
+        }
       }
 
       // RAW: attacking causes the Hidden condition to be lost immediately after the attack.
@@ -4023,19 +4661,41 @@ if (stage === "attacker-roll") {
       data.defender.tn = { finalTN: 0, baseTN: 0, totalMod: 0, breakdown: [{ key: "base", label: "No Defense", value: 0, source: "base" }] };
       data.defender.result = { rollTotal: 100, target: 0, isSuccess: false, degree: 1 };
 
+      // If the attacker has already rolled, resolve this defender immediately.
+      const currentOutcome = _getDefenderOutcome(data, data.defender);
+      if (data.attacker?.result && !currentOutcome) {
+        const baseOutcome = _resolveOutcomeRAW(data, data.defender) ?? { winner: "tie", text: "" };
+        const outcome = _applyAoEEvadeOutcome(data, baseOutcome);
+        _setDefenderOutcome(data, data.defender, outcome);
+        _setDefenderAdvantage(data, data.defender, _computeAdvantageRAW(data, outcome, data.defender));
+
+        const allResolved = _getDefenderEntries(data).every(def => Boolean(_getDefenderOutcome(data, def)));
+        if (allResolved) {
+          data.status = "resolved";
+          data.context = data.context ?? {};
+          data.context.phase = "resolved";
+          if (!data.context.resolvedAt) data.context.resolvedAt = Date.now();
+          _cleanupAutoRollContext(data.context);
+        }
+      }
+
       _logDebug("defenderCommitNoDefense", {
         defenderUuid: data.defender.actorUuid,
         attackerUuid: data.attacker.actorUuid
       });
 
-      // Auto-request GM roll when both sides are committed and a GM is online.
-      const b = _getBankCommitState(data);
-      if (b.bothCommitted) {
+      // Auto-request GM roll when ALL participants have committed (banking workflow)
+      const b = _getBankCommitState(data, data.defender);
+      if (b.bothCommitted && _allDefendersCommitted(data)) {
         data.context = data.context ?? {};
         if (!data.context.autoRollRequested) {
           data.context.autoRollRequested = true;
           data.context.autoRollRequestedAt = Date.now();
           data.context.autoRollRequestedBy = game.user.id;
+        }
+        // Trigger auto-roll for all committed participants
+        if (!data.context.autoRollStarted) {
+          await this._autoRollBanked(message.id, { trigger: "all-committed" });
         }
       }
 
@@ -4113,8 +4773,11 @@ if (stage === "attacker-roll") {
       const bank = _getBankCommitState(data);
 
       if (isRollCommitted) {
-        if (!bank.bothCommitted) {
-          ui.notifications.warn("Both sides must commit their choices before rolling.");
+        // For multi-defender: require ALL defenders to be committed before rolling
+        if (!bank.bothCommitted || !_allDefendersCommitted(data)) {
+          ui.notifications.warn(_isMultiDefender(data) 
+            ? "All participants must commit their choices before rolling." 
+            : "Both sides must commit their choices before rolling.");
           return;
         }
 
@@ -4157,14 +4820,18 @@ if (stage === "attacker-roll") {
         };
         data.defender.result = { rollTotal: 100, target: 0, isSuccess: false, degree: 1 };
 
-        // Auto-request GM roll when both sides are committed and a GM is online.
-        const b = _getBankCommitState(data);
-        if (b.bothCommitted) {
+        // Auto-request GM roll when ALL participants have committed (banking workflow)
+        const b = _getBankCommitState(data, data.defender);
+        if (b.bothCommitted && _allDefendersCommitted(data)) {
           data.context = data.context ?? {};
           if (!data.context.autoRollRequested) {
             data.context.autoRollRequested = true;
             data.context.autoRollRequestedAt = Date.now();
             data.context.autoRollRequestedBy = game.user.id;
+          }
+          // Trigger auto-roll for all committed participants
+          if (!data.context.autoRollStarted) {
+            await this._autoRollBanked(message.id, { trigger: "all-committed" });
           }
         }
 
@@ -4182,6 +4849,7 @@ if (stage === "attacker-roll") {
           attackerContext: data.attacker,
           attackerWeaponTraits,
           defenderHasSmallWeapon,
+          allowedDefenseTypes: isAoE ? ["block", "evade"] : null,
           context: {
             opponentUuid: attacker?.uuid ?? null,
             attackMode: data.context?.attackMode ?? "melee",
@@ -4198,7 +4866,8 @@ if (stage === "attacker-roll") {
             attackMode: data.context?.attackMode ?? "melee",
             attackerWeaponTraits,
             defenderHasSmallWeapon,
-            defenderHasShield: hasEquippedShield(defender)
+            defenderHasShield: hasEquippedShield(defender),
+            allowedDefenseTypes: isAoE ? ["block", "evade"] : null
           });
           const requested = String(choice.defenseType ?? "evade");
           const normalized = normalizeDefenseType(requested, availability, "evade");
@@ -4305,14 +4974,18 @@ if (stage === "attacker-roll") {
         data.defender.banked.committedAt = Date.now();
         data.defender.banked.committedBy = game.user.id;
 
-        // Auto-request GM roll when both sides are committed and a GM is online.
-        const b = _getBankCommitState(data);
-        if (b.bothCommitted) {
+        // Auto-request GM roll when ALL participants have committed (banking workflow)
+        const b = _getBankCommitState(data, data.defender);
+        if (b.bothCommitted && _allDefendersCommitted(data)) {
           data.context = data.context ?? {};
           if (!data.context.autoRollRequested) {
             data.context.autoRollRequested = true;
             data.context.autoRollRequestedAt = Date.now();
             data.context.autoRollRequestedBy = game.user.id;
+          }
+          // Trigger auto-roll for all committed participants
+          if (!data.context.autoRollStarted) {
+            await this._autoRollBanked(message.id, { trigger: "all-committed" });
           }
         }
 
@@ -4329,6 +5002,7 @@ if (stage === "attacker-roll") {
         flavor: `${data.defender.label} — Defender Roll`,
         rollMode: game.settings.get("core", "rollMode"),
         flags: _opposedFlags(message.id, "defender-roll", {
+          defenderIndex,
           commit: {
             defender: {
               defenseType: data.defender.defenseType,
@@ -4364,6 +5038,24 @@ if (stage === "attacker-roll") {
       data.defender.tn = { finalTN: 0, baseTN: 0, totalMod: 0, breakdown: [{ key: "base", label: "No Defense", value: 0, source: "base" }] };
       data.defender.result = { rollTotal: 100, target: 0, isSuccess: false, degree: 1 };
 
+      // Resolve immediately if the attacker already rolled.
+      const currentOutcome = _getDefenderOutcome(data, data.defender);
+      if (data.attacker?.result && !currentOutcome) {
+        const baseOutcome = _resolveOutcomeRAW(data, data.defender) ?? { winner: "tie", text: "" };
+        const outcome = _applyAoEEvadeOutcome(data, baseOutcome);
+        _setDefenderOutcome(data, data.defender, outcome);
+        _setDefenderAdvantage(data, data.defender, _computeAdvantageRAW(data, outcome, data.defender));
+
+        const allResolved = _getDefenderEntries(data).every(def => Boolean(_getDefenderOutcome(data, def)));
+        if (allResolved) {
+          data.status = "resolved";
+          data.context = data.context ?? {};
+          data.context.phase = "resolved";
+          if (!data.context.resolvedAt) data.context.resolvedAt = Date.now();
+          _cleanupAutoRollContext(data.context);
+        }
+      }
+
       _logDebug("defenderNoDefense", {
         defenderUuid: data.defender.actorUuid,
         attackerUuid: data.attacker.actorUuid
@@ -4380,7 +5072,7 @@ if (stage === "attacker-roll") {
           content: `<div class="ues-opposed-card" style="padding:6px;"><b>No Defense</b> declared.</div>`,
           style: CONST.CHAT_MESSAGE_STYLES.OTHER,
           rollMode: game.settings.get("core", "rollMode"),
-          flags: _opposedFlags(message.id, "defender-nodefense")
+          flags: _opposedFlags(message.id, "defender-nodefense", { defenderIndex })
         });
       } catch (err) {
         console.warn("UESRPG | opposed-workflow | failed to create defender-nodefense marker", err);
@@ -4487,6 +5179,7 @@ if (stage === "attacker-roll") {
         attackerContext: data.attacker,
         attackerWeaponTraits,
         defenderHasSmallWeapon,
+        allowedDefenseTypes: isAoE ? ["block", "evade"] : null,
         context: {
           opponentUuid: attacker?.uuid ?? null,
           attackMode: data.context?.attackMode ?? "melee",
@@ -4503,7 +5196,8 @@ if (stage === "attacker-roll") {
           attackMode: data.context?.attackMode ?? "melee",
           attackerWeaponTraits,
           defenderHasSmallWeapon,
-          defenderHasShield: hasEquippedShield(defender)
+          defenderHasShield: hasEquippedShield(defender),
+          allowedDefenseTypes: isAoE ? ["block", "evade"] : null
         });
         const requested = String(choice.defenseType ?? "evade");
         const normalized = normalizeDefenseType(requested, availability, "evade");
@@ -4614,6 +5308,7 @@ if (stage === "attacker-roll") {
           flavor: `${data.defender.label} — Defender Roll`,
           rollMode: game.settings.get("core", "rollMode"),
           flags: _opposedFlags(message.id, "defender-roll", {
+            defenderIndex,
             commit: {
               defender: {
                 defenseType: data.defender.defenseType,
@@ -4657,18 +5352,55 @@ if (stage === "attacker-roll") {
             console.warn("UESRPG | opposed-workflow | dueling weapon bonus lookup failed", err);
           }
         }
+        await _maybeSetAoEEvadeEscape(data, data.defender, defender);
+        
+        // Resolve immediately if the attacker has already rolled.
+        // For multi-defender scenarios, resolve all defenders who have rolled.
+        if (data.attacker?.result) {
+          const originalDefender = data.defender;
+          const defenders = _getDefenderEntries(data);
+          let resolvedAny = false;
+
+          for (const def of defenders) {
+            if (!def) continue;
+            if (!(def.result || def.noDefense)) continue;
+            if (_getDefenderOutcome(data, def)) continue;
+
+            data.defender = def;
+            const baseOutcome = _resolveOutcomeRAW(data, def) ?? { winner: "tie", text: "" };
+            const outcome = _applyAoEEvadeOutcome(data, baseOutcome, def);
+            _setDefenderOutcome(data, def, outcome);
+            _setDefenderAdvantage(data, def, _computeAdvantageRAW(data, outcome, def));
+            resolvedAny = true;
+          }
+
+          if (resolvedAny) {
+            const allResolved = defenders.every(def => Boolean(_getDefenderOutcome(data, def)));
+            if (allResolved) {
+              data.status = "resolved";
+              data.context = data.context ?? {};
+              data.context.phase = "resolved";
+              if (!data.context.resolvedAt) data.context.resolvedAt = Date.now();
+              _cleanupAutoRollContext(data.context);
+            }
+          }
+
+          data.defender = originalDefender;
+        }
+        
         await _updateCard(message, data);
       }
     }
 
     // --- Damage Roll (attacker won) ---
     if (action === "damage-roll") {
-      const ok = await _ensureResolvedForPostActions(message, data);
+      const ok = await _ensureResolvedForPostActions(message, data, { defenderIndex });
       if (!ok) {
         ui.notifications.warn("Damage cannot be rolled until the opposed test is resolved.");
         return;
       }
-      if (data.outcome?.winner !== "attacker") {
+      const outcome = _getDefenderOutcome(data, data.defender);
+      if (!outcome || outcome.winner !== "attacker") {
         ui.notifications.warn("Damage can only be rolled when the attacker wins the opposed test.");
         return;
       }
@@ -4677,8 +5409,14 @@ if (stage === "attacker-roll") {
         return;
       }
 
+      const isAoE = Boolean(data?.context?.aoe?.isAoE || data?.context?.isAoE);
+      const shareDamage = isAoE || _isMultiDefender(data);
+      let sharedDamage = shareDamage ? (data.context?.sharedDamage ?? null) : null;
+      const sharedSelection = shareDamage ? (data.context?.sharedDamageSelection ?? null) : null;
+
+      const advantage = _getDefenderAdvantage(data, data.defender) ?? { attacker: 0, defender: 0 };
       const attackMode = getContextAttackMode(data.context);
-      const advCount = (attackMode === "melee") ? Number(data.advantage?.attacker ?? 0) : 0;
+      const advCount = (attackMode === "melee") ? Number(advantage.attacker ?? 0) : 0;
       const defenderActor = _resolveDoc(data?.defender?.actorUuid);
       const forcedHitLocationRaw = data?.context?.forcedHitLocation ?? null;
       const forcedHitLocation = forcedHitLocationRaw
@@ -4691,7 +5429,7 @@ if (stage === "attacker-roll") {
       const activationMode = String(activationDamage?.mode ?? "weapon").toLowerCase().trim();
       const allowNoWeapon = Boolean(activationDamage && activationMode !== "weapon");
 
-      const selection = await _promptWeaponAndAdvantages({
+      const selection = sharedSelection ?? await _promptWeaponAndAdvantages({
         attackerActor: attacker,
         attackMode,
         advantageCount: advCount,
@@ -4701,9 +5439,11 @@ if (stage === "attacker-roll") {
       });
       if (!selection) return;
 
+      // Do not persist selection here; block resolution does not spend Advantage.
+
       // Record Advantage spend selections (including Special Actions) for downstream automation/rendering.
-      data.advantageResolution = data.advantageResolution ?? {};
-      data.advantageResolution.attacker = {
+      const resolutionState = _getDefenderResolutionState(data, data.defender);
+      resolutionState.advantageResolution.attacker = {
         precisionStrike: Boolean(selection.precisionStrike),
         precisionLocation: String(selection.precisionLocation ?? ""),
         penetrateArmor: Boolean(selection.penetrateArmor),
@@ -4905,8 +5645,15 @@ if (stage === "attacker-roll") {
       })();
 
       if (useManual && isHealingMode) {
-        const dmg = await _rollManualDamage({ formula: activationFormula });
+        const reuseShared = Boolean(sharedDamage && sharedDamage.mode === "manual-healing");
+        const dmg = reuseShared ? _inflateSharedDamage(sharedDamage) : await _rollManualDamage({ formula: activationFormula });
         if (!dmg) return;
+        if (shareDamage && (!sharedDamage || sharedDamage.mode !== "manual-healing")) {
+          sharedDamage = _buildSharedDamagePayload({ mode: "manual-healing", dmg, damageType: activationType || "healing" });
+          data.context = data.context ?? {};
+          data.context.sharedDamage = sharedDamage;
+          await _updateCard(message, data);
+        }
         const isTemporary = activationMode === "temporary";
         const effectLabel = isTemporary ? "Temp HP" : "Healing";
 
@@ -4936,8 +5683,15 @@ if (stage === "attacker-roll") {
       }
 
       if (useManual && isManualMode) {
-        const dmg = await _rollManualDamage({ formula: activationFormula });
+        const reuseShared = Boolean(sharedDamage && sharedDamage.mode === "manual-damage");
+        const dmg = reuseShared ? _inflateSharedDamage(sharedDamage) : await _rollManualDamage({ formula: activationFormula });
         if (!dmg) return;
+        if (shareDamage && (!sharedDamage || sharedDamage.mode !== "manual-damage")) {
+          sharedDamage = _buildSharedDamagePayload({ mode: "manual-damage", dmg, damageType: activationType || DAMAGE_TYPES.PHYSICAL });
+          data.context = data.context ?? {};
+          data.context.sharedDamage = sharedDamage;
+          await _updateCard(message, data);
+        }
         const damageType = activationType || DAMAGE_TYPES.PHYSICAL;
         const sourceItemUuid = activationCtx?.itemUuid ?? "";
         const weaponUuidForDamage = sourceItemUuid ? "" : (weapon?.uuid ?? "");
@@ -4977,8 +5731,17 @@ if (stage === "attacker-roll") {
         return;
       }
 
-      const dmg = await _rollWeaponDamage({ weapon, preConsumedAmmo: data.attacker?.preConsumedAmmo ?? null });
+      const reuseShared = Boolean(sharedDamage && sharedDamage.mode === "weapon" && (!sharedDamage.weaponUuid || sharedDamage.weaponUuid === weapon?.uuid));
+      const dmg = reuseShared
+        ? _inflateSharedDamage(sharedDamage)
+        : await _rollWeaponDamage({ weapon, preConsumedAmmo: data.attacker?.preConsumedAmmo ?? null });
       if (!dmg) return;
+      if (shareDamage && (!sharedDamage || sharedDamage.mode !== "weapon")) {
+        sharedDamage = _buildSharedDamagePayload({ mode: "weapon", dmg, weaponUuid: weapon?.uuid ?? null, damageType: getDamageTypeFromWeapon(weapon) });
+        data.context = data.context ?? {};
+        data.context.sharedDamage = sharedDamage;
+        await _updateCard(message, data);
+      }
       const damageType = getDamageTypeFromWeapon(weapon);
 
       const extraNotes = (() => {
@@ -4989,8 +5752,10 @@ if (stage === "attacker-roll") {
         return notes.length ? `<div style="margin-top:0.15rem;">${notes.join('<br>')}</div>` : "";
       })();
 
-      const altTag = dmg.rollB
-        ? `<div style="margin-top:0.25rem;font-size:x-small;line-height:1.2;">Roll A: ${dmg.rollA.total}<br>Roll B: ${dmg.rollB.total}${extraNotes}</div>`
+      const rollATotal = Number.isFinite(Number(dmg.rollA?.total)) ? dmg.rollA.total : (Number.isFinite(Number(sharedDamage?.rollATotal)) ? sharedDamage.rollATotal : null);
+      const rollBTotal = Number.isFinite(Number(dmg.rollB?.total)) ? dmg.rollB.total : (Number.isFinite(Number(sharedDamage?.rollBTotal)) ? sharedDamage.rollBTotal : null);
+      const altTag = (rollBTotal != null)
+        ? `<div style="margin-top:0.25rem;font-size:x-small;line-height:1.2;">Roll A: ${rollATotal ?? "?"}<br>Roll B: ${rollBTotal}${extraNotes}</div>`
         : (extraNotes ? `<div style="margin-top:0.25rem;font-size:x-small;line-height:1.2;">${extraNotes}</div>` : "");
 
       const applyBtn = `<button type="button" class="apply-damage-btn"
@@ -5061,7 +5826,7 @@ if (stage === "attacker-roll") {
 
     // --- Damage Roll (defender won via counter-attack) ---
     if (action === "counter-damage-roll") {
-      const ok = await _ensureResolvedForPostActions(message, data);
+      const ok = await _ensureResolvedForPostActions(message, data, { defenderIndex });
       if (!ok) {
         ui.notifications.warn("Counter-attack damage cannot be rolled until the opposed test is resolved.");
         return;
@@ -5078,7 +5843,8 @@ if (stage === "attacker-roll") {
         }
       }
 
-      if (data.outcome?.winner !== "defender" || defenseType !== "counter") {
+      const outcome = _getDefenderOutcome(data, data.defender);
+      if (!outcome || outcome.winner !== "defender" || defenseType !== "counter") {
         ui.notifications.warn("Counter-attack damage can only be rolled when the defender wins via Counter-Attack.");
         return;
       }
@@ -5087,7 +5853,8 @@ if (stage === "attacker-roll") {
         return;
       }
 
-      const advCount = Number(data.advantage?.defender ?? 0);
+      const advantage = _getDefenderAdvantage(data, data.defender) ?? { attacker: 0, defender: 0 };
+      const advCount = Number(advantage.defender ?? 0);
       const targetActor = _resolveDoc(data?.attacker?.actorUuid) ?? attacker;
       const baseHitLocation = resolveHitLocationForTarget(targetActor, getHitLocationFromRoll(data.defender?.result?.rollTotal ?? 0));
       const selection = await _promptWeaponAndAdvantages({
@@ -5173,13 +5940,14 @@ if (stage === "attacker-roll") {
 
     // --- Resolve Advantage (defender won via successful defense) ---
     if (action === "defender-advantage") {
-      const resolvedOk = await _ensureResolvedForPostActions(message, data);
+      const resolvedOk = await _ensureResolvedForPostActions(message, data, { defenderIndex });
       if (!resolvedOk) {
         ui.notifications.warn("Defender Advantage can only be resolved after the opposed test is resolved and the defender wins.");
         return;
       }
 
-      if (!data.outcome || data.status !== "resolved" || data.outcome?.winner !== "defender") {
+      const outcome = _getDefenderOutcome(data, data.defender);
+      if (!outcome || outcome.winner !== "defender") {
         ui.notifications.warn("Defender Advantage can only be resolved after the opposed test is resolved and the defender wins.");
         return;
       }
@@ -5200,15 +5968,16 @@ if (stage === "attacker-roll") {
         return;
       }
 
-      const advCount = Number(data.advantage?.defender ?? 0);
+      const advantage = _getDefenderAdvantage(data, data.defender) ?? { attacker: 0, defender: 0 };
+      const advCount = Number(advantage.defender ?? 0);
       if (!Number.isFinite(advCount) || advCount <= 0) {
         ui.notifications.warn("No Advantage is available to resolve for the defender.");
         return;
       }
 
       // Prevent double-resolution.
-      data.defenderAdvantage = data.defenderAdvantage ?? {};
-      if (data.defenderAdvantage.resolved === true || data.advantageSpent?.defender === true) {
+      const resolutionState = _getDefenderResolutionState(data, data.defender);
+      if (resolutionState.defenderAdvantage.resolved === true || resolutionState.advantageSpent?.defender === true) {
         ui.notifications.warn("Defender Advantage has already been resolved.");
         return;
       }
@@ -5228,16 +5997,14 @@ if (stage === "attacker-roll") {
       // If the dialog was closed, do not mark as spent.
       if (!choice) return;
 
-      data.advantageSpent = data.advantageSpent ?? {};
-      data.advantageResolution = data.advantageResolution ?? {};
-      data.advantageSpent.defender = true;
-      data.advantageResolution.defender = { 
+      resolutionState.advantageSpent.defender = true;
+      resolutionState.advantageResolution.defender = { 
         overextend: Boolean(choice.overextend), 
         overwhelm: Boolean(choice.overwhelm),
         specialActionsSelected: Array.isArray(choice.specialActionsSelected) ? choice.specialActionsSelected.slice() : []
       };
 
-      data.defenderAdvantage = {
+      resolutionState.defenderAdvantage = {
         resolved: true,
         choice: { 
           overextend: Boolean(choice.overextend), 
@@ -5358,13 +6125,14 @@ if (stage === "attacker-roll") {
 
     // --- Resolve Block (defender won via block) ---
     if (action === "block-resolve") {
-      const resolvedOk = await _ensureResolvedForPostActions(message, data);
+      const resolvedOk = await _ensureResolvedForPostActions(message, data, { defenderIndex });
       if (!resolvedOk) {
         ui.notifications.warn("Block resolution is only available when the opposed test is resolved.");
         return;
       }
 
-      if (data.status !== "resolved" || data.outcome?.winner !== "defender" || (data.defender.defenseType ?? "none") !== "block") {
+      const outcome = _getDefenderOutcome(data, data.defender);
+      if (!outcome || outcome.winner !== "defender" || (data.defender.defenseType ?? "none") !== "block") {
         ui.notifications.warn("Block resolution is only available when the defender wins by blocking.");
         return;
       }
@@ -5372,6 +6140,11 @@ if (stage === "attacker-roll") {
         ui.notifications.warn("You do not have permission to resolve this block.");
         return;
       }
+
+      const isAoE = Boolean(data?.context?.aoe?.isAoE || data?.context?.isAoE);
+      const shareDamage = isAoE || _isMultiDefender(data);
+      let sharedDamage = shareDamage ? (data.context?.sharedDamage ?? null) : null;
+      const sharedSelection = shareDamage ? (data.context?.sharedDamageSelection ?? null) : null;
 
       const shields = _listEquippedShields(defender);
       const shield = shields[0] ?? null;
@@ -5381,7 +6154,7 @@ if (stage === "attacker-roll") {
       }
 
       // Roll the incoming attack damage (attacker weapon selection).
-      const selection = await _promptWeaponAndAdvantages({
+      const selection = sharedSelection ?? (sharedDamage?.weaponUuid ? { weaponUuid: sharedDamage.weaponUuid } : null) ?? await _promptWeaponAndAdvantages({
         attackerActor: attacker,
         attackMode: data.context?.attackMode ?? "melee",
         advantageCount: 0,
@@ -5389,14 +6162,29 @@ if (stage === "attacker-roll") {
       });
       if (!selection) return;
 
+      if (shareDamage && !sharedSelection) {
+        data.context = data.context ?? {};
+        data.context.sharedDamageSelection = foundry.utils.deepClone(selection);
+        await _updateCard(message, data);
+      }
+
       const weapon = await fromUuid(selection.weaponUuid);
       if (!weapon) {
         ui.notifications.warn("Selected weapon could not be resolved.");
         return;
       }
 
-      const dmg = await _rollWeaponDamage({ weapon, preConsumedAmmo: data.attacker?.preConsumedAmmo ?? null });
+      const reuseShared = Boolean(sharedDamage && sharedDamage.mode === "weapon" && (!sharedDamage.weaponUuid || sharedDamage.weaponUuid === weapon?.uuid));
+      const dmg = reuseShared
+        ? _inflateSharedDamage(sharedDamage)
+        : await _rollWeaponDamage({ weapon, preConsumedAmmo: data.attacker?.preConsumedAmmo ?? null });
       if (!dmg) return;
+      if (shareDamage && (!sharedDamage || sharedDamage.mode !== "weapon")) {
+        sharedDamage = _buildSharedDamagePayload({ mode: "weapon", dmg, weaponUuid: weapon?.uuid ?? null, damageType: getDamageTypeFromWeapon(weapon) });
+        data.context = data.context ?? {};
+        data.context.sharedDamage = sharedDamage;
+        await _updateCard(message, data);
+      }
       const damageType = getDamageTypeFromWeapon(weapon);
       // Always post the weapon damage card so the chat log retains hit-location context,
       // even when the defender wins by blocking.
@@ -5411,6 +6199,38 @@ if (stage === "attacker-roll") {
         parentMessageId: message.id,
         stage: "block-damage-card",
       });
+      if (isAoE) {
+        const forcedLoc = data?.context?.forcedHitLocation ?? "Body";
+        const hitLocation = resolveHitLocationForTarget(defender, forcedLoc);
+        const reducedDamage = Math.ceil(Number(dmg.finalDamage) / 2);
+        const applyBtn = `<button type="button" class="apply-damage-btn"
+          data-target-uuid="${defender.uuid}"
+          data-attacker-actor-uuid="${attacker.uuid}"
+          data-weapon-uuid="${weapon.uuid}"
+          data-damage="${reducedDamage}"
+          data-damage-type="${damageType}"
+          data-hit-location="${hitLocation}"
+          data-dos-bonus="0"
+          data-penetration="0"
+          data-source="${weapon.name}">
+          Apply Block Damage → ${dToken?.name ?? defender.name}
+        </button>`;
+
+        await ChatMessage.create({
+          user: game.user.id,
+          speaker: ChatMessage.getSpeaker({ actor: defender, token: dToken?.document ?? null }),
+          content: `<div class="uesrpg-weapon-damage-card">
+            <h2 style="margin:0 0 0.25rem 0;">AoE Block</h2>
+            <div style="opacity:0.9; margin-bottom:0.5rem;">Incoming damage reduced by half (rounded up): <b>${reducedDamage}</b>.</div>
+            ${applyBtn}
+          </div>`,
+          style: CONST.CHAT_MESSAGE_STYLES.OTHER,
+          rollMode: game.settings.get("core", "rollMode"),
+          flags: _opposedFlags(message.id, "block-result"),
+        });
+        return;
+      }
+
       let br = getBlockValue(shield, damageType);
       
       // Check for Power Block stamina effect (only for physical damage)
@@ -5476,21 +6296,27 @@ if (stage === "attacker-roll") {
     }
 
     // --- Resolve ---
-    if (data.attacker.result && data.defender.result && !data.outcome) {
-      const outcome = _resolveOutcomeRAW(data);
-      data.outcome = outcome ?? { winner: "tie", text: "" };
-      data.advantage = _computeAdvantageRAW(data, data.outcome);
-      data.status = "resolved";
-      data.context = data.context ?? {};
-      data.context.phase = "resolved";
-      if (!data.context.resolvedAt) data.context.resolvedAt = Date.now();
-      _cleanupAutoRollContext(data.context);
+    const currentOutcome = _getDefenderOutcome(data, data.defender);
+    if (data.attacker.result && (data.defender.result || data.defender.noDefense) && !currentOutcome) {
+      const baseOutcome = _resolveOutcomeRAW(data, data.defender) ?? { winner: "tie", text: "" };
+      const outcome = _applyAoEEvadeOutcome(data, baseOutcome);
+      _setDefenderOutcome(data, data.defender, outcome);
+      _setDefenderAdvantage(data, data.defender, _computeAdvantageRAW(data, outcome, data.defender));
+
+      const allResolved = defenders.every(def => Boolean(_getDefenderOutcome(data, def)));
+      if (allResolved) {
+        data.status = "resolved";
+        data.context = data.context ?? {};
+        data.context.phase = "resolved";
+        if (!data.context.resolvedAt) data.context.resolvedAt = Date.now();
+        _cleanupAutoRollContext(data.context);
+      }
 
       _logDebug("resolve", {
         attackerUuid: data.attacker.actorUuid,
         defenderUuid: data.defender.actorUuid,
-        outcome: data.outcome,
-        advantage: data.advantage,
+        outcome,
+        advantage: _getDefenderAdvantage(data, data.defender),
         attackerResult: data.attacker
           ? { rollTotal: data.attacker.result?.rollTotal, isSuccess: data.attacker.result?.isSuccess, degree: data.attacker.result?.degree }
           : null,
@@ -5503,3 +6329,4 @@ if (stage === "attacker-roll") {
     }
   }
 };
+

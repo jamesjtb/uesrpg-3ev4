@@ -104,9 +104,10 @@ export function getSpellMaxRangeMeters(spell) {
  *  - system.aoeSize: number (meters)
  *  - system.aoeWidth: number (meters) for ray/rect
  *  - system.aoePulse: boolean (centered on caster)
+ *  - system.aoeIncludeCaster: boolean (include caster in pulse)
  *
  * @param {Item} spell
- * @returns {{shape: string|null, sizeMeters: number|null, widthMeters: number|null, pulse: boolean}|null}
+ * @returns {{shape: string|null, sizeMeters: number|null, widthMeters: number|null, pulse: boolean, includeCaster?: boolean}|null}
  */
 export function getSpellAoEConfig(spell) {
   const sys = spell?.system ?? {};
@@ -119,12 +120,14 @@ export function getSpellAoEConfig(spell) {
   // Pulse is a modifier (centered on caster), not a measured-template type.
   // For backwards compatibility with earlier prototypes, accept aoeShape="pulse".
   const pulseFromShape = (shapeRaw === "pulse");
-  const pulse = Boolean(sys.aoePulse ?? sys.aoe?.pulse) || pulseFromShape;
+  const pulseFromFlag = Boolean(sys.aoePulse ?? sys.aoe?.pulse);
+  const pulse = pulseFromShape || pulseFromFlag;
+  const includeCaster = Boolean(sys.aoeIncludeCaster ?? sys.aoe?.includeCaster);
 
   // MeasuredTemplate types
   const normalizedShape = ["circle", "cone", "rect", "ray"].includes(shapeRaw)
     ? shapeRaw
-    : (pulseFromShape ? "circle" : null);
+    : (pulse ? "circle" : null);
 
   // If the spell is not configured as AoE, do not return an AoE config.
   // NOTE: We do not infer shape/size from free-text range because it becomes ambiguous quickly.
@@ -134,7 +137,8 @@ export function getSpellAoEConfig(spell) {
     shape: normalizedShape,
     sizeMeters: Number.isFinite(sizeMeters) ? sizeMeters : null,
     widthMeters: Number.isFinite(widthMeters) ? widthMeters : null,
-    pulse
+    pulse,
+    includeCaster
   };
 }
 
@@ -282,11 +286,8 @@ async function previewPlaceTemplate(templateDoc, origin, maxRangeMeters) {
 
       const snapped = snapPoint({ x: pos.x, y: pos.y });
 
-      // Range gate the placement point (center) if maxRange provided
-      if (Number.isFinite(maxRangeMeters) && maxRangeMeters > 0 && origin) {
-        const d = measureDistanceMeters(origin, snapped);
-        if (d > maxRangeMeters) return; // silently ignore (DnD-style) until back in range
-      }
+      // Don't range gate during preview - allow free movement
+      // Range gating will happen only when the template is committed (on click)
 
       // Throttle document updates to rAF
       if (raf) return;
@@ -395,7 +396,8 @@ export async function placeAoETemplateAndCollectTargets({ casterToken, spell, in
     return null;
   }
 
-  const pulse = Boolean(aoe.pulse) || Boolean(includeCaster);
+  const pulse = Boolean(aoe.pulse);
+  const includeCasterFinal = pulse && (Boolean(includeCaster) || Boolean(aoe.includeCaster));
 
   // Initial placement point
   const initialPoint = pulse ? { x: origin.x, y: origin.y } : { x: origin.x, y: origin.y };
@@ -455,8 +457,18 @@ export async function placeAoETemplateAndCollectTargets({ casterToken, spell, in
 
   if (pulse) {
     const casterId = casterToken?.id ?? casterToken?.document?.id;
-    const already = affected.some(t => (t?.id ?? t?.document?.id) === casterId);
-    if (!already) affected.push(casterToken);
+    if (casterId) {
+      const isCaster = (t) => (t?.id ?? t?.document?.id) === casterId;
+      const already = affected.some(isCaster);
+
+      if (!includeCasterFinal && already) {
+        for (let i = affected.length - 1; i >= 0; i -= 1) {
+          if (isCaster(affected[i])) affected.splice(i, 1);
+        }
+      } else if (includeCasterFinal && !already) {
+        affected.push(casterToken);
+      }
+    }
   }
 
   if (!affected.length) {

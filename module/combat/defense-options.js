@@ -40,13 +40,15 @@ function _lower(v) {
  * @param {{flail?: boolean, entangling?: boolean, isTwoHanded?: boolean}|null} params.attackerWeaponTraits
  * @param {boolean} params.defenderHasSmallWeapon
  * @param {boolean} params.defenderHasShield
+ * @param {string[]|null} params.allowedDefenseTypes
  * @returns {DefenseAvailability}
  */
 export function computeDefenseAvailability({
   attackMode,
   attackerWeaponTraits,
   defenderHasSmallWeapon,
-  defenderHasShield
+  defenderHasShield,
+  allowedDefenseTypes
 } = {}) {
   const mode = _lower(attackMode);
   const isRangedAttack = (mode === "ranged");
@@ -113,6 +115,18 @@ export function computeDefenseAvailability({
   if (smallVsTwoHandedGate) {
     allowed.counter = false;
     reasons.counter.push("A Small weapon cannot Counter-Attack against a two-handed weapon.");
+  }
+
+  const allowedSet = Array.isArray(allowedDefenseTypes) && allowedDefenseTypes.length
+    ? new Set(allowedDefenseTypes.map(_lower))
+    : null;
+  if (allowedSet) {
+    for (const key of Object.keys(allowed)) {
+      if (!allowedSet.has(key)) {
+        allowed[key] = false;
+        reasons[key].push("Not available for this attack.");
+      }
+    }
   }
 
   return {

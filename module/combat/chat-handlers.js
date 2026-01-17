@@ -356,7 +356,9 @@ async function _onOpposedAction(ev, message) {
   ev.preventDefault();
   const btn = ev.currentTarget;
   const action = btn.dataset.uesOpposedAction;
-  await OpposedWorkflow.handleAction(message, action);
+  const defenderIndexRaw = btn.dataset.defenderIndex;
+  const defenderIndex = Number.isFinite(Number(defenderIndexRaw)) ? Number(defenderIndexRaw) : null;
+  await OpposedWorkflow.handleAction(message, action, { defenderIndex });
 }
 
 /**

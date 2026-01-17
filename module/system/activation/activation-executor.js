@@ -1,8 +1,9 @@
 import { requestUpdateDocument } from "../../helpers/authority-proxy.js";
 import { OpposedWorkflow } from "../../combat/opposed-workflow.js";
-import { getHitLocationFromRoll, resolveHitLocationForTarget } from "../../combat/combat-utils.js";
+import { getHitLocationFromRoll } from "../../combat/combat-utils.js";
 import { getExplicitActiveCombatStyleItem } from "../../combat/combat-style-utils.js";
 import { isActorUndead } from "../../traits/trait-registry.js";
+import { filterTargetsBySpellRange, getSpellAoEConfig, getSpellRangeType, placeAoETemplateAndCollectTargets } from "../../magic/spell-range.js";
 
 const SYSTEM_ID = "uesrpg-3ev4";
 const ACTION_TYPE_LABELS = {
@@ -524,28 +525,76 @@ export async function executeActivation({
   return { ok: true };
 }
 
-async function _prepareAttackActivationContext({ actor, activation, context = {} } = {}) {
+async function _prepareAttackActivationContext({ actor, item, activation, context = {} } = {}) {
   if (!actor) {
     ui.notifications?.warn?.("Attack activation requires an owning actor.");
     return { ok: false };
   }
 
-  const targets = _getTargetsFromContext(context);
-  const targetToken = targets[0] ?? null;
-  if (!targetToken) {
-    ui.notifications?.warn?.("This attack requires a target.");
+  const rangeType = item ? getSpellRangeType(item) : "none";
+  const attackerToken = _resolveTokenForActor(actor);
+  let workingTargets = _getTargetsFromContext(context);
+  let aoeTemplateUuid = null;
+  let aoeTemplateId = null;
+
+  if ((rangeType === "ranged" || rangeType === "melee" || rangeType === "aoe") && !attackerToken) {
+    ui.notifications?.warn?.("Please place and select a token for this actor.");
     return { ok: false };
   }
 
-  const defenderActor = targetToken?.actor ?? null;
-  if (!defenderActor) {
-    ui.notifications?.warn?.("Selected target does not have an actor.");
+  if (rangeType === "aoe") {
+    const includeCaster = Boolean(item?.system?.aoeIncludeCaster);
+    const placed = await placeAoETemplateAndCollectTargets({
+      casterToken: attackerToken,
+      spell: item,
+      includeCaster
+    });
+    if (!placed) return { ok: false };
+    const templateDoc = placed?.templateDoc ?? null;
+    aoeTemplateId = templateDoc?.id ?? templateDoc?._id ?? null;
+    aoeTemplateUuid = templateDoc?.uuid
+      ?? (aoeTemplateId && canvas?.scene?.id ? `Scene.${canvas.scene.id}.MeasuredTemplate.${aoeTemplateId}` : null);
+    if (placed.targets?.length) {
+      workingTargets = placed.targets;
+    } else {
+      if (!workingTargets.length) {
+        ui.notifications?.info?.("No tokens are affected by the template.");
+        workingTargets = [];
+      }
+    }
+  } else if (rangeType === "ranged" || rangeType === "melee") {
+    if (workingTargets.length) {
+      const res = filterTargetsBySpellRange({
+        casterToken: attackerToken,
+        targets: workingTargets,
+        spell: item
+      }) ?? {};
+
+      const validTargets = Array.isArray(res.validTargets) ? res.validTargets : [];
+      const rejected = Array.isArray(res.rejected) ? res.rejected : [];
+      const maxRange = Number.isFinite(Number(res.maxRange)) ? Number(res.maxRange) : null;
+
+      if (rejected.length) {
+        const names = rejected.map((r) => r?.token?.name ?? r?.token?.document?.name ?? "Target").join(", ");
+        const rangeLabel = (maxRange != null) ? `${maxRange}m` : "range";
+        ui.notifications?.warn?.(`Targets out of range (${rangeLabel}): ${names}`);
+      }
+
+      workingTargets = validTargets;
+    }
+  }
+
+  workingTargets = Array.from(workingTargets ?? []).filter(t => t?.actor);
+  if (!workingTargets.length) {
+    ui.notifications?.warn?.("This attack requires a target.");
     return { ok: false };
   }
 
   const hitLocationMode = _getHitLocationMode(activation);
   let hitLocationRaw = null;
-  if (hitLocationMode === "manual") {
+  if (rangeType === "aoe") {
+    hitLocationRaw = "Body";
+  } else if (hitLocationMode === "manual") {
     hitLocationRaw = await _promptHitLocationChoice({ title: "Select Hit Location" });
     if (!hitLocationRaw) return { ok: false };
   } else {
@@ -554,24 +603,31 @@ async function _prepareAttackActivationContext({ actor, activation, context = {}
     hitLocationRaw = getHitLocationFromRoll(roll.total);
   }
 
-  const hitLocation = resolveHitLocationForTarget(defenderActor, hitLocationRaw);
   const attackMode = _getAttackModeFromActivation(activation);
-  const attackerToken = _resolveTokenForActor(actor);
-  if (!attackerToken) {
-    ui.notifications?.warn?.("Please place and select a token for this actor.");
-    return { ok: false };
-  }
+  const aoeConfig = (rangeType === "aoe")
+    ? {
+        ...(getSpellAoEConfig(item) ?? {}),
+        isAoE: true,
+        templateUuid: aoeTemplateUuid ?? null,
+        templateId: aoeTemplateId ?? null
+      }
+    : null;
 
   return {
     ok: true,
     attackerToken,
-    defenderToken: targetToken,
-    defenderActor,
+    defenderToken: workingTargets[0] ?? null,
+    defenderActor: workingTargets[0]?.actor ?? null,
+    targets: workingTargets,
     attackMode,
-    hitLocation,
+    hitLocation: hitLocationRaw,
+    isAoE: rangeType === "aoe",
+    aoe: aoeConfig,
     context: {
-      targets,
-      hitLocation
+      targets: workingTargets,
+      hitLocation: hitLocationRaw,
+      isAoE: rangeType === "aoe",
+      aoe: aoeConfig
     }
   };
 }
@@ -583,8 +639,10 @@ async function _startAttackWorkflow({ actor, item, activation, attackContext } =
     return false;
   }
 
-  const defenderToken = attackContext?.defenderToken ?? null;
-  if (!defenderToken) {
+  const defenderTokens = Array.isArray(attackContext?.targets)
+    ? attackContext.targets
+    : (attackContext?.defenderToken ? [attackContext.defenderToken] : []);
+  if (!defenderTokens.length) {
     ui.notifications?.warn?.("Please target an enemy token.");
     return false;
   }
@@ -628,15 +686,16 @@ async function _startAttackWorkflow({ actor, item, activation, attackContext } =
 
   await OpposedWorkflow.createPending({
     attackerTokenUuid: attackerToken.document?.uuid ?? attackerToken.uuid,
-    defenderTokenUuid: defenderToken.document?.uuid ?? defenderToken.uuid,
+    defenderTokenUuids: defenderTokens.map(t => t?.document?.uuid ?? t?.uuid).filter(Boolean),
     attackerActorUuid: actor.uuid,
-    defenderActorUuid: defenderToken.actor?.uuid ?? null,
     attackerItemUuid,
     attackerLabel,
     attackerTarget,
     mode: "attack",
     attackMode,
     forcedHitLocation: attackContext?.hitLocation ?? null,
+    aoe: attackContext?.aoe ?? null,
+    isAoE: Boolean(attackContext?.isAoE),
     activation: activationContext
   });
 
@@ -661,7 +720,7 @@ export async function executeItemActivation({
   let attackContext = null;
   let mergedContext = context;
   if (isAttack) {
-    attackContext = await _prepareAttackActivationContext({ actor, activation, context });
+    attackContext = await _prepareAttackActivationContext({ actor, item, activation, context });
     if (!attackContext?.ok) return { ok: false };
     mergedContext = { ...(context ?? {}), ...(attackContext.context ?? {}) };
   }
