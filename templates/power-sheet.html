@@ -218,6 +218,57 @@
                                 </div>
                             </div>
 
+                            <h3 style="margin-top: 10px;">Range & AoE</h3>
+                            <div class="grid-container">
+                                <div>Range</div>
+                                <div class="right-align-content">
+                                    <select name="system.rangeType" data-type="String">
+                                        <option value="none" {{#if (eq item.system.rangeType "none")}}selected{{/if}}>None</option>
+                                        <option value="ranged" {{#if (eq item.system.rangeType "ranged")}}selected{{/if}}>Ranged</option>
+                                        <option value="melee" {{#if (eq item.system.rangeType "melee")}}selected{{/if}}>Melee</option>
+                                        <option value="aoe" {{#if (eq item.system.rangeType "aoe")}}selected{{/if}}>AoE</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="grid-container">
+                                <div>Range Value</div>
+                                <div class="right-align-content">
+                                    <input type="text" name="system.range" value="{{item.system.range}}" placeholder="e.g. 100m" />
+                                </div>
+                            </div>
+                            {{#if (eq item.system.rangeType "aoe")}}
+                            <div class="grid-container">
+                                <div>AoE Shape</div>
+                                <div class="right-align-content">
+                                    <select name="system.aoeShape" data-type="String">
+                                        <option value="circle" {{#if (eq item.system.aoeShape "circle")}}selected{{/if}}>Circle (Radius)</option>
+                                        <option value="cone" {{#if (eq item.system.aoeShape "cone")}}selected{{/if}}>Cone</option>
+                                        <option value="ray" {{#if (eq item.system.aoeShape "ray")}}selected{{/if}}>Ray (Line)</option>
+                                        <option value="rect" {{#if (eq item.system.aoeShape "rect")}}selected{{/if}}>Rectangle</option>
+                                        <option value="pulse" {{#if (eq item.system.aoeShape "pulse")}}selected{{/if}}>Pulse (Centered on Caster)</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="grid-container">
+                                <div>AoE Size (m)</div>
+                                <div class="right-align-content">
+                                    <input type="number" name="system.aoeSize" value="{{item.system.aoeSize}}" min="0" step="0.5" />
+                                </div>
+                            </div>
+                            <div class="grid-container">
+                                <div>AoE Width (m)</div>
+                                <div class="right-align-content">
+                                    <input type="number" name="system.aoeWidth" value="{{item.system.aoeWidth}}" min="0" step="0.5" />
+                                </div>
+                            </div>
+                            <div class="grid-container">
+                                <div>Affect Caster</div>
+                                <div class="right-align-content">
+                                    <input class="checkbox" type="checkbox" name="system.aoeIncludeCaster" {{checked item.system.aoeIncludeCaster}}>
+                                </div>
+                            </div>
+                            {{/if}}
+
                             <h3 style="margin-top: 10px;">Attack</h3>
                             <div class="grid-container">
                                 <div>Is Attack?</div>
