@@ -1290,6 +1290,9 @@ function _renderCard(data, messageId) {
 
   const a = data.attacker ?? {};
   const d = data.defender ?? {};
+  // Single-defender cards use the same button payload format as multi-defender cards.
+  // The handlers expect a numeric defender-index; in single-defender mode this is always 0.
+  const idx = 0;
 
   const showResolutionDetails = !!(game?.settings?.get?.("uesrpg-3ev4", "opposedShowResolutionDetails"));
 
