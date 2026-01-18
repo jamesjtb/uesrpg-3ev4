@@ -1,4 +1,5 @@
 import { migrateItemsIfNeeded } from "./migrations/items.js";
+import { migrateActorsIfNeeded } from "./migrations/actors.js";
 import startupHandler from './handlers/startup.js';
 import initHandler from './handlers/init.js';
 import { dumpAEKeys } from "./dev/ae-keys-dump.js";
@@ -18,6 +19,7 @@ import { initializeDamageApplication } from "./magic/damage-application.js";
 
 Hooks.once('ready', async function () {
   console.log(`UESRPG | Ready`);
+  await migrateActorsIfNeeded();
   await migrateItemsIfNeeded();
   await startupHandler();
   
