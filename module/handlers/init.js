@@ -114,7 +114,6 @@ async function registerSettings() {
     default: false,
     type: Boolean,
   });
-
   // Magic workflow routing diagnostics
   game.settings.register("uesrpg-3ev4", "debugMagicRouting", {
     name: "Magic: Routing Debug Logging",
