@@ -34,6 +34,7 @@ import { bindCommonSheetListeners, bindCommonEditableInventoryListeners } from "
 import { shouldHideFromMainInventory } from "./sheet-inventory.js";
 import { prepareCharacterItems } from "./sheet-prepare-items.js";
 import { registerHPButtonHandler } from "./actor-sheet-hp-integration.js";
+import { registerStaminaButtonHandler } from "./actor-sheet-stamina-integration.js";
 import { classifySpellForRouting, getUserSpellTargets, shouldUseTargetedSpellWorkflow, shouldUseModernSpellWorkflow, debugMagicRoutingLog } from "../magic/spell-routing.js";
 import { filterTargetsBySpellRange, getSpellAoEConfig, getSpellRangeType, placeAoETemplateAndCollectTargets } from "../magic/spell-range.js";
 import { applyShortRest, applyLongRest, buildRestChatContent } from "./rest-workflow.js";
@@ -270,6 +271,12 @@ async activateListeners(html) {
   
   // Register HP button handler to open HP/Temp HP dialog
   registerHPButtonHandler(this, html);
+
+  // Register stamina button handler to open Stamina spending dialog
+  registerStaminaButtonHandler(this, html);
+
+  // Register Stamina button handler to open the stamina spending dialog
+  registerStaminaButtonHandler(this, html);
   
   // html.find("#spellFilter").click(this._filterSpells.bind(this)); // REMOVED: Spell filter dropdown removed in spell school categorization
   html.find("#itemFilter").click(this._filterItems.bind(this));

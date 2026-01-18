@@ -296,6 +296,10 @@ export function getDamageReduction(actor, damageType = DAMAGE_TYPES.PHYSICAL, hi
 
     base.armor = armor;
 
+    // RAW: Physical resistance is separate from Natural Toughness and reduces physical damage like other resistances.
+    resistance = Number(actorData.resistance?.physicalR ?? 0);
+    base.resistance = resistance;
+
   } else {
     // NON-PHYSICAL:
     //  - Resistance always applies.
@@ -395,6 +399,7 @@ export function getDamageReduction(actor, damageType = DAMAGE_TYPES.PHYSICAL, hi
     // 2. New: system.resistances.<type> (Chapter 4)
     // 3. New: system.traits.resistance.<type> (Chapter 4 trait-specific)
     const resKeyByType = {
+      [DAMAGE_TYPES.PHYSICAL]: { legacy: "physicalR", resistances: null, traits: "physical" },
       [DAMAGE_TYPES.FIRE]: { legacy: "fireR", resistances: null, traits: "fire" },
       [DAMAGE_TYPES.FROST]: { legacy: "frostR", resistances: null, traits: "frost" },
       [DAMAGE_TYPES.SHOCK]: { legacy: "shockR", resistances: null, traits: "shock" },
@@ -404,7 +409,7 @@ export function getDamageReduction(actor, damageType = DAMAGE_TYPES.PHYSICAL, hi
       [DAMAGE_TYPES.SUNLIGHT]: { legacy: "sunlightR", resistances: null, traits: null },
     };
 
-    const resKeyMap = (damageType === DAMAGE_TYPES.PHYSICAL) ? null : (resKeyByType[damageType] ?? null);
+    const resKeyMap = (resKeyByType[damageType] ?? null);
     if (resKeyMap) {
       // Collect all applicable resistance AE keys
       const resistanceKeys = [];

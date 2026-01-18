@@ -561,8 +561,11 @@ Hooks.once("ready", async () => {
   // Developer-only: expose a skill TN debug helper for the GM.
   if (game.user?.isGM && game.settings.get("uesrpg-3ev4", "debugSkillTN")) {
     registerSkillTNDebug();
-  registerActorSelectDebug();
   }
+
+  // Developer-only: token control TN-context logger.
+  // Register unconditionally; it is inert unless the client toggle is enabled.
+  registerActorSelectDebug();
 });
 
 // Auto-execute Special Action outcomes when skill opposed test resolves

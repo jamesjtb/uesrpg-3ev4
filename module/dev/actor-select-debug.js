@@ -70,7 +70,9 @@ export function registerActorSelectDebug() {
     name: "Debug: Actor Select (TN Context)",
     hint: "When enabled, logs TN-relevant actor context to the console whenever you control a token.",
     scope: "client",
-    config: true,
+    // Keep this out of the main System Settings list; it is surfaced via the
+    // "Configure Debugging" submenu.
+    config: false,
     default: false,
     type: Boolean,
     restricted: true

@@ -44,6 +44,7 @@ export class DebugSettingsApp extends FormApplication {
       debugSkillTN: game.settings.get(NAMESPACE, "debugSkillTN"),
       sheetDiagnostics: game.settings.get(NAMESPACE, "sheetDiagnostics"),
       debugAim: game.settings.get(NAMESPACE, "debugAim"),
+      debugActorSelect: game.settings.get(NAMESPACE, "debugActorSelect"),
     };
 
     return {
@@ -78,6 +79,7 @@ export class DebugSettingsApp extends FormApplication {
     await setIfPresent("client", "debugSkillTN");
     await setIfPresent("client", "sheetDiagnostics");
     await setIfPresent("client", "debugAim");
+    await setIfPresent("client", "debugActorSelect");
   }
 }
 

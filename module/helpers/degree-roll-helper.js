@@ -153,32 +153,51 @@ export function formatDegree(result) {
  * - If one succeeds and the other fails -> success side wins.
  */
 export function resolveOpposed(aResult, dResult) {
+  // Null/undefined checks - return tie if either result is missing
+  if (!aResult || !dResult) {
+    return { winner: "tie", reason: "unresolved (missing result)" };
+  }
+
   const A = aResult;
   const D = dResult;
 
   // Critical success precedence
-  if (A.isCriticalSuccess && !D.isCriticalSuccess) return { winner: "attacker", reason: "attacker critical success" };
-  if (D.isCriticalSuccess && !A.isCriticalSuccess) return { winner: "defender", reason: "defender critical success" };
+  // Use safe property access with default false for isCriticalSuccess/isCriticalFailure
+  const aIsCritSuccess = Boolean(A.isCriticalSuccess ?? false);
+  const dIsCritSuccess = Boolean(D.isCriticalSuccess ?? false);
+  const aIsCritFailure = Boolean(A.isCriticalFailure ?? false);
+  const dIsCritFailure = Boolean(D.isCriticalFailure ?? false);
+
+  if (aIsCritSuccess && !dIsCritSuccess) return { winner: "attacker", reason: "attacker critical success" };
+  if (dIsCritSuccess && !aIsCritSuccess) return { winner: "defender", reason: "defender critical success" };
 
   // Critical failure precedence (other side wins)
-  if (A.isCriticalFailure && !D.isCriticalFailure) return { winner: "defender", reason: "attacker critical failure" };
-  if (D.isCriticalFailure && !A.isCriticalFailure) return { winner: "attacker", reason: "defender critical failure" };
+  if (aIsCritFailure && !dIsCritFailure) return { winner: "defender", reason: "attacker critical failure" };
+  if (dIsCritFailure && !aIsCritFailure) return { winner: "attacker", reason: "defender critical failure" };
 
   // One succeeds, other fails
-  if (A.isSuccess && !D.isSuccess) return { winner: "attacker", reason: "attacker success" };
-  if (D.isSuccess && !A.isSuccess) return { winner: "defender", reason: "defender success" };
+  // Use safe property access with default false
+  const aIsSuccess = Boolean(A.isSuccess ?? false);
+  const dIsSuccess = Boolean(D.isSuccess ?? false);
+  
+  if (aIsSuccess && !dIsSuccess) return { winner: "attacker", reason: "attacker success" };
+  if (dIsSuccess && !aIsSuccess) return { winner: "defender", reason: "defender success" };
 
   // Both succeed -> higher DoS wins; equal -> tie
-  if (A.isSuccess && D.isSuccess) {
-    if (A.degree > D.degree) return { winner: "attacker", reason: `attacker higher DoS (${A.degree} vs ${D.degree})` };
-    if (D.degree > A.degree) return { winner: "defender", reason: `defender higher DoS (${D.degree} vs ${A.degree})` };
+  if (aIsSuccess && dIsSuccess) {
+    const aDegree = Number(A.degree ?? 0);
+    const dDegree = Number(D.degree ?? 0);
+    if (aDegree > dDegree) return { winner: "attacker", reason: `attacker higher DoS (${aDegree} vs ${dDegree})` };
+    if (dDegree > aDegree) return { winner: "defender", reason: `defender higher DoS (${dDegree} vs ${aDegree})` };
     return { winner: "tie", reason: "equal DoS" };
   }
 
   // Both fail -> lower DoF wins; equal -> tie
-  if (!A.isSuccess && !D.isSuccess) {
-    if (A.degree < D.degree) return { winner: "attacker", reason: `attacker lower DoF (${A.degree} vs ${D.degree})` };
-    if (D.degree < A.degree) return { winner: "defender", reason: `defender lower DoF (${D.degree} vs ${A.degree})` };
+  if (!aIsSuccess && !dIsSuccess) {
+    const aDegree = Number(A.degree ?? 0);
+    const dDegree = Number(D.degree ?? 0);
+    if (aDegree < dDegree) return { winner: "attacker", reason: `attacker lower DoF (${aDegree} vs ${dDegree})` };
+    if (dDegree < aDegree) return { winner: "defender", reason: `defender lower DoF (${dDegree} vs ${aDegree})` };
     return { winner: "tie", reason: "equal DoF" };
   }
 

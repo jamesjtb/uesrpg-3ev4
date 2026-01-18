@@ -301,6 +301,38 @@ function _computeRangedRangeContext({ attackerToken, defenderToken, weapon }) {
   return { distance, band: "long", tnMod: -20, close, medium, long, outOfRange: false };
 }
 
+function _getWeaponReachBounds(weapon) {
+  const sys = weapon?.system ?? {};
+  const max = Number(sys.reach ?? 0);
+  const min = Number(sys.reachMin ?? 0);
+  return {
+    min: Number.isFinite(min) ? min : 0,
+    max: Number.isFinite(max) ? max : 0
+  };
+}
+
+function _computeMeleeReachContext({ attackerToken, defenderToken, weapon }) {
+  const { min, max } = _getWeaponReachBounds(weapon);
+  if (!(min > 0) && !(max > 0)) return null;
+
+  const distance = _measureTokenDistance(attackerToken, defenderToken);
+  if (distance == null) {
+    return { distance: null, min, max, inRange: true, reason: "no-distance" };
+  }
+
+  // Minimum reach (e.g., polearms). RAW: cannot attack targets closer than min.
+  if (min > 0 && distance < min) {
+    return { distance, min, max, inRange: false, reason: "too-close" };
+  }
+
+  // Maximum reach: cannot attack beyond max.
+  if (max > 0 && distance > max) {
+    return { distance, min, max, inRange: false, reason: "too-far" };
+  }
+
+  return { distance, min, max, inRange: true, reason: null };
+}
+
 
 /**
  * Canonical attack-type lane for all combat contexts.
@@ -4359,7 +4391,10 @@ if (stage === "attacker-roll") {
 
         // Range computation for ranged attacks.
         // Rules (Chapter 7): Close = +10, Medium = +0, Long = -20, beyond Long = cannot attack.
-        if (String(data.context?.attackMode ?? "melee") === "ranged") {
+        // Reach computation for melee attacks.
+        // RAW: weapons with a minimum reach (e.g., 2-3m) cannot attack targets closer than their minimum.
+        // RAW: weapons cannot attack targets beyond their maximum reach.
+        {
           let weapon = null;
           try {
             if (data.context.weaponUuid) weapon = await fromUuid(String(data.context.weaponUuid));
@@ -4367,19 +4402,40 @@ if (stage === "attacker-roll") {
             weapon = null;
           }
 
-          const rangeCtx = _computeRangedRangeContext({ attackerToken: aToken, defenderToken: dToken, weapon });
-          if (rangeCtx) {
-            data.context.range = rangeCtx;
-            if (rangeCtx.outOfRange) {
-              const wName = weapon?.name ? ` (${weapon.name})` : "";
-              ui.notifications.warn(`Target is out of range${wName}. Distance ${Math.round(rangeCtx.distance)} > Long ${rangeCtx.long}.`);
-              return;
+          if (String(data.context?.attackMode ?? "melee") === "ranged") {
+            const rangeCtx = _computeRangedRangeContext({ attackerToken: aToken, defenderToken: dToken, weapon });
+            if (rangeCtx) {
+              data.context.range = rangeCtx;
+              if (rangeCtx.outOfRange) {
+                const wName = weapon?.name ? ` (${weapon.name})` : "";
+                ui.notifications.warn(`Target is out of range${wName}. Distance ${Math.round(rangeCtx.distance)} > Long ${rangeCtx.long}.`);
+                return;
+              }
+              if (rangeCtx.band) {
+                const bandLabel = rangeCtx.band === "close" ? "Close" : rangeCtx.band === "medium" ? "Medium" : "Long";
+                // Only add when it actually modifies TN (Close/Long). Medium has no modifier.
+                if (Number(rangeCtx.tnMod) !== 0) {
+                  situationalMods.push({ key: "range", label: `Range (${bandLabel})`, value: Number(rangeCtx.tnMod) });
+                }
+              }
             }
-            if (rangeCtx.band) {
-              const bandLabel = rangeCtx.band === "close" ? "Close" : rangeCtx.band === "medium" ? "Medium" : "Long";
-              // Only add when it actually modifies TN (Close/Long). Medium has no modifier.
-              if (Number(rangeCtx.tnMod) !== 0) {
-                situationalMods.push({ key: "range", label: `Range (${bandLabel})`, value: Number(rangeCtx.tnMod) });
+          }
+
+          if (String(data.context?.attackMode ?? "melee") === "melee") {
+            const reachCtx = _computeMeleeReachContext({ attackerToken: aToken, defenderToken: dToken, weapon });
+            if (reachCtx) {
+              data.context.reach = reachCtx;
+              if (!reachCtx.inRange) {
+                const wName = weapon?.name ? ` (${weapon.name})` : "";
+                const d = reachCtx.distance == null ? "?" : Math.round(reachCtx.distance * 10) / 10;
+                if (reachCtx.reason === "too-close") {
+                  ui.notifications.warn(`Target is too close${wName}. Distance ${d} < Min Reach ${reachCtx.min}.`);
+                  return;
+                }
+                if (reachCtx.reason === "too-far") {
+                  ui.notifications.warn(`Target is out of reach${wName}. Distance ${d} > Reach ${reachCtx.max}.`);
+                  return;
+                }
               }
             }
           }

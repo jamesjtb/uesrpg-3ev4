@@ -65,6 +65,14 @@ export class SimpleItemSheet extends foundry.appv1.sheets.ItemSheet {
     // --------------------------------------------
     data.weaponQualityOptions = UESRPG.WEAPON_QUALITY_LEVELS;
     data.weaponMaterialOptions = UESRPG.WEAPON_MATERIALS;
+    // Weapon handedness (RAW support). Stored in system.hands.
+    // NOTE: selectOptions serializes option keys as strings; downstream usage should cast via Number().
+    data.weaponHandednessOptions = {
+      0: "—",
+      1: "1H",
+      1.5: "1.5H",
+      2: "2H"
+    };
     data.attackModeOptions = { melee: "Melee", ranged: "Ranged" };
     data.armorWeightClassOptions = UESRPG.ARMOR_WEIGHT_CLASSES;
     data.ammoArrowTypeOptions = UESRPG.AMMO_ARROW_TYPES;

@@ -25,7 +25,28 @@ export function canUseLuck(actor) {
 export function canUseHeroicActions(actor) {
   if (!actor) return false;
   if (!isNPC(actor)) return true;
+
+  // Primary rule: NPC Heroic Actions require the Elite trait.
+  // We support multiple world data patterns:
+  // - A trait named "Elite"
+  // - A trait that sets activation flag npcEliteAllowed
+  // - Legacy/GM override actor flag flags.uesrpg-3ev4.npcEliteAllowed
   try {
+    const items = actor.items ? Array.from(actor.items.values?.() ?? actor.items ?? []) : [];
+    const hasEliteTrait = items.some(i => {
+      if (!i) return false;
+      if (String(i.type ?? "").toLowerCase() !== "trait") return false;
+
+      const name = String(i.name ?? "").trim().toLowerCase();
+      if (name === "elite") return true;
+
+      const flag = i.system?.activation?.flags?.npcEliteAllowed;
+      return flag === true;
+    });
+
+    if (hasEliteTrait) return true;
+
+    // Non-breaking fallback: support previous flag-based gating.
     return actor.getFlag?.(SYSTEM_ID, NPC_ELITE_FLAG) === true;
   } catch (_e) {
     return false;

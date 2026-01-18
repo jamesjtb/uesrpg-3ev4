@@ -93,7 +93,22 @@ export class SimpleActor extends Actor {
    *  - This is derived-data scaffolding only; schema changes must occur in migrations.
    */
   _ensureSystemData() {
-    const system = (this.system ??= {});
+    // Defensive hardening: some legacy actors can end up with an invalid "system" payload
+    // (e.g. an empty string). If we don't tolerate that, Foundry can crash during
+    // initializeDocuments, before our GM-only migrations can run.
+    //
+    // NOTE: This only affects runtime derived-data scaffolding. Persisted schema repair
+    // happens in migrations.
+    let system = this.system;
+    if (!system || typeof system !== "object" || Array.isArray(system)) {
+      system = {};
+      // Best-effort: prefer to restore the Actor.system object reference if possible.
+      try {
+        this.system = system;
+      } catch (_e) {
+        // Ignore; we will continue using the local "system" reference for this prepare pass.
+      }
+    }
 
     // Characteristics
     system.characteristics ??= {};
@@ -144,17 +159,22 @@ export class SimpleActor extends Actor {
     system.unlucky_numbers ??= { ul1: 0, ul2: 0, ul3: 0, ul4: 0, ul5: 0, ul6: 0 };
 
     // Resistances
-    system.resistance ??= {
-      diseaseR: 0,
-      fireR: 0,
-      frostR: 0,
-      shockR: 0,
-      poisonR: 0,
-      magicR: 0,
-      natToughness: 0,
-      silverR: 0,
-      sunlightR: 0
-    };
+    // Ensure the container is an object even if a legacy actor has corrupted data.
+    if (!system.resistance || typeof system.resistance !== "object" || Array.isArray(system.resistance)) {
+      system.resistance = {};
+    }
+    // Keep defaults idempotent; do not overwrite existing values.
+    system.resistance.diseaseR ??= 0;
+    system.resistance.fireR ??= 0;
+    system.resistance.frostR ??= 0;
+    system.resistance.shockR ??= 0;
+    system.resistance.poisonR ??= 0;
+    system.resistance.magicR ??= 0;
+    system.resistance.natToughness ??= 0;
+    system.resistance.silverR ??= 0;
+    system.resistance.sunlightR ??= 0;
+    // New: Physical Resistance (separate from Natural Toughness)
+    system.resistance.physicalR ??= 0;
 
     // Professions / Skills containers
     system.professions ??= {};

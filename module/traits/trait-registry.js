@@ -1,4 +1,7 @@
 const DAMAGE_TYPE_MAP = {
+  // RAW: "Resistance (Normal Weapons, X)" is treated as Physical resistance.
+  // We map it to a dedicated resistance lane (physicalR).
+  physical: { label: "Physical", resistanceKey: "physicalR", damageType: "physical" },
   fire: { label: "Fire", resistanceKey: "fireR", damageType: "fire" },
   frost: { label: "Frost", resistanceKey: "frostR", damageType: "frost" },
   shock: { label: "Shock", resistanceKey: "shockR", damageType: "shock" },
@@ -9,12 +12,34 @@ const DAMAGE_TYPE_MAP = {
   disease: { label: "Disease", resistanceKey: "diseaseR", damageType: "disease" }
 };
 
+// Condition immunities (Immunity (Paralysis, Panic, Horror), etc.).
+// These are not damage types; they gate application of ActiveEffect-backed conditions.
+// NOTE: This is intentionally a conservative list matching the system condition keys.
+const CONDITION_TYPE_MAP = {
+  blinded: { label: "Blinded", conditionKey: "blinded" },
+  deafened: { label: "Deafened", conditionKey: "deafened" },
+  crippled: { label: "Crippled", conditionKey: "crippled" },
+  silenced: { label: "Silenced", conditionKey: "silenced" },
+  stunned: { label: "Stunned", conditionKey: "stunned" },
+  dazed: { label: "Dazed", conditionKey: "dazed" },
+  entangled: { label: "Entangled", conditionKey: "entangled" },
+  hidden: { label: "Hidden", conditionKey: "hidden" },
+  prone: { label: "Prone", conditionKey: "prone" },
+  bleeding: { label: "Bleeding", conditionKey: "bleeding" },
+  burning: { label: "Burning", conditionKey: "burning" },
+  poisoned: { label: "Poisoned", conditionKey: "poisoned" },
+  panic: { label: "Panic", conditionKey: "panic" },
+  horror: { label: "Horror", conditionKey: "horror" },
+  paralysis: { label: "Paralysis", conditionKey: "paralysis" }
+};
+
 const CATEGORY_KEYS = ["resistance", "weakness", "immunity"];
 
 export const TRAIT_REGISTRY = {
   resistance: { label: "Resistance", types: DAMAGE_TYPE_MAP },
   weakness: { label: "Weakness", types: DAMAGE_TYPE_MAP },
-  immunity: { label: "Immunity", types: DAMAGE_TYPE_MAP }
+  // Immunity supports both damage-type immunities and condition immunities.
+  immunity: { label: "Immunity", types: { ...DAMAGE_TYPE_MAP, ...CONDITION_TYPE_MAP } }
 };
 
 function _normalizeKey(value) {
@@ -30,10 +55,24 @@ function _normalizeCategory(value) {
   return CATEGORY_KEYS.includes(key) ? key : "";
 }
 
-function _normalizeType(value) {
+function _normalizeDamageType(value) {
   const raw = _normalizeKey(value).replace(/[\s_-]+/g, "");
   if (!raw) return "";
+
+  // Physical resistance aliases found in RAW text and legacy compendia.
+  // Examples: "Normal Weapons", "Normal Weapon".
+  if (["normalweapons", "normalweapon", "physical"].includes(raw)) return "physical";
+
   for (const key of Object.keys(DAMAGE_TYPE_MAP)) {
+    if (key.replace(/[\s_-]+/g, "") === raw) return key;
+  }
+  return "";
+}
+
+function _normalizeConditionType(value) {
+  const raw = _normalizeKey(value).replace(/[\s_-]+/g, "");
+  if (!raw) return "";
+  for (const key of Object.keys(CONDITION_TYPE_MAP)) {
     if (key.replace(/[\s_-]+/g, "") === raw) return key;
   }
   return "";
@@ -50,14 +89,25 @@ function _parseTraitKey(traitKey = "", traitParam = "") {
   if (keyRaw.includes(".")) {
     const [cat, ...rest] = keyRaw.split(".");
     category = _normalizeCategory(cat);
-    type = _normalizeType(rest.join("."));
+    // Type resolution depends on category: immunity supports both damage and condition types.
+    const rawType = rest.join(".");
+    if (category === "immunity") {
+      type = _normalizeDamageType(rawType) || _normalizeConditionType(rawType);
+    } else {
+      type = _normalizeDamageType(rawType);
+    }
   } else {
     category = _normalizeCategory(keyRaw);
-    type = _normalizeType(paramRaw);
+    if (category === "immunity") {
+      type = _normalizeDamageType(paramRaw) || _normalizeConditionType(paramRaw);
+    } else {
+      type = _normalizeDamageType(paramRaw);
+    }
   }
 
   if (!category || !type) return null;
-  const def = DAMAGE_TYPE_MAP[type];
+  // "type" can be a damage type or a condition type (immunity only).
+  const def = DAMAGE_TYPE_MAP[type] ?? CONDITION_TYPE_MAP[type];
   if (!def) return null;
 
   return { category, type, def };
@@ -108,12 +158,16 @@ function _buildEmptyProfile() {
     resistance: {},
     weakness: {},
     immunity: {},
+    immunityConditions: {},
     flags: { incorporeal: false, undead: false, skeletal: false, undeadBloodless: false }
   };
   for (const key of Object.keys(DAMAGE_TYPE_MAP)) {
     base.resistance[key] = 0;
     base.weakness[key] = 0;
     base.immunity[key] = false;
+  }
+  for (const key of Object.keys(CONDITION_TYPE_MAP)) {
+    base.immunityConditions[key] = false;
   }
   return base;
 }
@@ -159,7 +213,12 @@ export function collectTraitDamageModifiers(items = []) {
     const value = Number(item.system?.traitValue);
 
     if (category === "immunity") {
-      profile.immunity[type] = true;
+      // Immunity can target either a damage type or a condition.
+      if (Object.prototype.hasOwnProperty.call(profile.immunity, type)) {
+        profile.immunity[type] = true;
+      } else if (Object.prototype.hasOwnProperty.call(profile.immunityConditions, type)) {
+        profile.immunityConditions[type] = true;
+      }
       continue;
     }
 
@@ -177,11 +236,26 @@ export function getActorTraitDamageProfile(actor) {
 }
 
 export function isActorImmuneToDamageType(actor, damageType) {
-  const key = _normalizeType(damageType);
+  const key = _normalizeDamageType(damageType);
   if (!key) return false;
   if ((key === "poison" || key === "disease") && isActorUndead(actor)) return true;
   const profile = getActorTraitDamageProfile(actor);
   return profile?.immunity?.[key] === true;
+}
+
+export function isActorImmuneToCondition(actor, conditionKey) {
+  const k = _normalizeConditionType(conditionKey);
+  if (!actor || !k) return false;
+
+  // Allow ActiveEffects or sheet-derived flags to set condition immunities without requiring item parsing.
+  // This is intentionally permissive: if an AE populates system.traits.immunity.<key> truthy,
+  // the condition engine should respect it.
+  try {
+    if (actor?.system?.traits?.immunity && actor.system.traits.immunity[k]) return true;
+  } catch (_e) {}
+
+  const profile = getActorTraitDamageProfile(actor);
+  return profile?.immunityConditions?.[k] === true;
 }
 
 export function isActorIncorporeal(actor) {

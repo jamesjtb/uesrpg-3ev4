@@ -25,37 +25,6 @@ function _debugEnabled() {
   }
 }
 
-function _itemHasTransferEffects(item) {
-  try {
-    const effects = item?.effects?.contents ?? item?.effects ?? [];
-    return Array.isArray(effects) && effects.some(e => {
-      const obj = typeof e?.toObject === "function" ? e.toObject() : e;
-      return !!(obj?.transfer);
-    });
-  } catch (_e) {
-    return false;
-  }
-}
-
-function _normalizeEnchantLevel(item, sys = {}) {
-  const update = {};
-  const raw = sys.enchant_level;
-  const n = Number(raw);
-
-  if (raw === undefined || raw === null || raw === "" || !Number.isFinite(n)) {
-    update["system.enchant_level"] = 0;
-    return update;
-  }
-
-  // Legacy artifact: some imports/migrations defaulted enchant_level to 1.
-  // If the item has no transfer Active Effects, treat it as unenchanted.
-  if (n === 1 && !_itemHasTransferEffects(item)) {
-    update["system.enchant_level"] = 0;
-  }
-
-  return update;
-}
-
 /**
  * Best-effort, deterministic inference of weapon attack mode from existing weapon data.
  *
@@ -137,19 +106,40 @@ function _normalizeWeaponSystem(item, sys = {}) {
   // Ensure structured qualities array
   if (!Array.isArray(sys.qualitiesStructured)) update["system.qualitiesStructured"] = [];
 
-  // Reach bounds: Reach is a numeric field (max reach). Minimum reach is optional (0 for none).
-  if (sys.reachMin === undefined || sys.reachMin === null || sys.reachMin === "") update["system.reachMin"] = 0;
-  else {
-    const n = Number(sys.reachMin);
-    if (!Number.isFinite(n) || n < 0) update["system.reachMin"] = 0;
-  }
+  // ------------------------------------------------------------
+  // Reach migration
+  // ------------------------------------------------------------
+  // Reach used to exist as a structured quality (reach (X)) that was mirrored into system.reach.
+  // Reach is now a dedicated Basic Property (system.reach) and is removed from qualitiesStructured.
+  // We migrate any legacy structured reach into system.reach (non-destructive) and strip it.
+  try {
+    const structured = Array.isArray(sys.qualitiesStructured) ? sys.qualitiesStructured : [];
+    const reachEntry = structured.find(q => String(q?.key ?? "").toLowerCase() === "reach") || null;
+    const reachFromStructured = Number(reachEntry?.value ?? 0);
 
-  Object.assign(update, _normalizeEnchantLevel(item, sys));
+    const reachFromSystemRaw = sys.reach;
+    const reachFromSystem = Number(reachFromSystemRaw ?? 0);
+    const systemHasReach = Number.isFinite(reachFromSystem) && reachFromSystem !== 0;
+
+    if (!systemHasReach && Number.isFinite(reachFromStructured) && reachFromStructured !== 0) {
+      update["system.reach"] = reachFromStructured;
+    }
+
+    if (reachEntry) {
+      const filtered = structured.filter(q => String(q?.key ?? "").toLowerCase() !== "reach");
+      // Only write if a change is required (avoids unnecessary embedded updates)
+      if (filtered.length !== structured.length) {
+        update["system.qualitiesStructured"] = filtered;
+      }
+    }
+  } catch (_e) {
+    // Ignore and continue; migration must be best-effort and non-blocking.
+  }
 
   return update;
 }
 
-function _normalizeArmorSystem(item, sys = {}) {
+function _normalizeArmorSystem(sys = {}) {
   const update = {};
 
   if (!sys.qualityLevel) update["system.qualityLevel"] = "common";
@@ -158,12 +148,10 @@ function _normalizeArmorSystem(item, sys = {}) {
 
   if (!Array.isArray(sys.qualitiesStructured)) update["system.qualitiesStructured"] = [];
 
-  Object.assign(update, _normalizeEnchantLevel(item, sys));
-
   return update;
 }
 
-function _normalizeAmmoSystem(item, sys = {}) {
+function _normalizeAmmoSystem(sys = {}) {
   const update = {};
 
   // Per-10 pricing: if missing, backfill from legacy per-item price
@@ -177,8 +165,6 @@ function _normalizeAmmoSystem(item, sys = {}) {
 
   if (!Array.isArray(sys.qualitiesStructured)) update["system.qualitiesStructured"] = [];
 
-  Object.assign(update, _normalizeEnchantLevel(item, sys));
-
   return update;
 }
 
@@ -189,8 +175,8 @@ async function _migrateWorldItems() {
     const sys = item.system ?? {};
     const update =
       item.type === "weapon" ? _normalizeWeaponSystem(item, sys)
-      : item.type === "armor" ? _normalizeArmorSystem(item, sys)
-      : _normalizeAmmoSystem(item, sys);
+      : item.type === "armor" ? _normalizeArmorSystem(sys)
+      : _normalizeAmmoSystem(sys);
 
     if (Object.keys(update).length) {
       update._id = item.id;
@@ -212,8 +198,8 @@ async function _migrateActorItems() {
       const sys = item.system ?? {};
       const update =
         item.type === "weapon" ? _normalizeWeaponSystem(item, sys)
-        : item.type === "armor" ? _normalizeArmorSystem(item, sys)
-        : _normalizeAmmoSystem(item, sys);
+        : item.type === "armor" ? _normalizeArmorSystem(sys)
+        : _normalizeAmmoSystem(sys);
 
       if (Object.keys(update).length) {
         update._id = item.id;
