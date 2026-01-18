@@ -181,14 +181,8 @@ function measureDistanceMeters(a, b) {
  * @returns {{x:number,y:number}}
  */
 function snapPoint(pt) {
-  if (!canvas?.grid) return pt;
-  if (typeof canvas.grid.getSnappedPoint === "function") {
-    // Foundry v13: getSnappedPoint(point, {mode})
-    // Some grid implementations destructure {mode} from the 2nd argument; always provide it.
-    const mode = CONST?.GRID_SNAPPING_MODES?.CENTER ?? CONST?.GRID_SNAPPING_MODES?.TOP_LEFT ?? 0;
-    return canvas.grid.getSnappedPoint(pt, { mode });
-  }
-  // Fallback (should be rare): return as-is.
+  // System default: allow free placement (no snapping) so templates can be dropped on hex borders/vertices.
+  // This is intentional and global (no setting).
   return pt;
 }
 
@@ -446,9 +440,40 @@ export async function placeAoETemplateAndCollectTargets({ casterToken, spell, in
 
   if (templateObj?.shape && typeof templateObj.shape.contains === "function") {
     for (const tok of tokens) {
-      const c = tok?.center ?? tok?.object?.center ?? null;
+      const tokObj = tok?.object ?? tok;
+      const c = tokObj?.center ?? null;
       if (!c) continue;
-      const inside = templateObj.shape.contains(c.x - templateObj.x, c.y - templateObj.y);
+
+      // For small templates (e.g., 1x1), the template can overlap a token without containing its center.
+      // We therefore sample multiple points on the token bounds.
+      const w = Number(tokObj?.w ?? tokObj?.width ?? 0);
+      const h = Number(tokObj?.h ?? tokObj?.height ?? 0);
+      const x0 = Number(tokObj?.x ?? tokObj?.document?.x ?? (c.x - w / 2));
+      const y0 = Number(tokObj?.y ?? tokObj?.document?.y ?? (c.y - h / 2));
+
+      const points = [];
+      // Center
+      points.push({ x: c.x, y: c.y });
+      if (w > 0 && h > 0) {
+        // Corners
+        points.push({ x: x0, y: y0 });
+        points.push({ x: x0 + w, y: y0 });
+        points.push({ x: x0, y: y0 + h });
+        points.push({ x: x0 + w, y: y0 + h });
+        // Edge midpoints
+        points.push({ x: x0 + w / 2, y: y0 });
+        points.push({ x: x0 + w / 2, y: y0 + h });
+        points.push({ x: x0, y: y0 + h / 2 });
+        points.push({ x: x0 + w, y: y0 + h / 2 });
+      }
+
+      let inside = false;
+      for (const p of points) {
+        if (templateObj.shape.contains(p.x - templateObj.x, p.y - templateObj.y)) {
+          inside = true;
+          break;
+        }
+      }
       if (inside) affected.push(tok);
     }
   } else {
