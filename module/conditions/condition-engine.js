@@ -667,12 +667,48 @@ export function hasCondition(actor, key) {
   return _fallbackHasConditionByName(actor, k);
 }
 
+/**
+ * Determine whether an actor is immune to a condition.
+ *
+ * Immunities are boolean-semantic flags which may be contributed by traits/talents/powers
+ * or Active Effects. Foundry Active Effect values are strings, so we treat any non-zero
+ * numeric value as "true".
+ *
+ * Canonical storage: actor.system.traits.immunity[conditionKey] = 1
+ */
+export function isImmuneToCondition(actor, key) {
+  const k = _normalizeConditionKey(key);
+  if (!actor || !k) return false;
+
+  const lane = actor?.system?.traits?.immunity ?? null;
+  if (!lane || typeof lane !== "object") return false;
+
+  const raw = lane?.[k];
+  if (raw === true) return true;
+  if (raw === false || raw == null) return false;
+
+  // Numeric or numeric-string.
+  const n = Number(raw);
+  if (Number.isFinite(n)) return n !== 0;
+
+  // Final fallback: treat common truthy strings as true.
+  const s = String(raw).trim().toLowerCase();
+  return s === "true" || s === "yes" || s === "on";
+}
+
 export async function applyCondition(actor, key, { origin = null, source = null } = {}) {
   if (!actor) return null;
   const k = _normalizeConditionKey(key);
   const def = STATIC_CONDITIONS[k];
   if (!def) {
     ui.notifications?.warn?.(`Unknown condition key: ${k}`);
+    return null;
+  }
+
+  // Global immunity gate (traits/talents/powers + Active Effects).
+  // This must apply to all condition entry points, including manual Token HUD toggles.
+  if (isImmuneToCondition(actor, k)) {
+    ui.notifications?.warn?.(`${actor.name} is immune to ${def.name}.`);
     return null;
   }
 
@@ -730,6 +766,13 @@ export async function toggleCondition(actor, key, { origin = null, source = null
         await requestDeleteEmbeddedDocuments(actor, "ActiveEffect", [ef.id]);
       } catch (_e) {}
     }
+    return null;
+  }
+
+  // Immunity gate: prevent manual Token HUD / core status toggles from applying.
+  if (isImmuneToCondition(actor, k)) {
+    const def = STATIC_CONDITIONS[k];
+    ui.notifications?.warn?.(`${actor.name} is immune to ${def?.name ?? k}.`);
     return null;
   }
 
@@ -849,6 +892,10 @@ async function _upsertConditionEffect(actor, key, { createData, updateFn }) {
 export async function applyBleeding(actor, x, { origin = null, source = "Bleeding" } = {}) {
   if (!actor) return null;
   if (isActorUndeadBloodless(actor)) return null;
+  if (isImmuneToCondition(actor, "bleeding")) {
+    ui.notifications?.warn?.(`${actor.name} is immune to Bleeding.`);
+    return null;
+  }
   const add = Math.max(0, _toNumber(x, 0));
   if (add <= 0) return null;
 
@@ -904,6 +951,10 @@ export async function applyBleeding(actor, x, { origin = null, source = "Bleedin
 export async function applyBurning(actor, x, { hitLocation = "Body", origin = null, source = "Burning" } = {}) {
   if (!actor) return null;
   if (isActorSkeletal(actor)) return null;
+  if (isImmuneToCondition(actor, "burning")) {
+    ui.notifications?.warn?.(`${actor.name} is immune to Burning.`);
+    return null;
+  }
   const add = Math.max(0, _toNumber(x, 0));
   if (add <= 0) return null;
 
@@ -965,6 +1016,14 @@ export async function setConditionValue(actor, key, value, { preserveTiming = tr
 
   // Apply if missing
   const existing = _findConditionEffect(actor, k);
+
+  // Immunity gate: allow removal (next<=0), but block any attempt to apply/set a positive
+  // value for an immune condition. This closes the "manual token HUD" bypass.
+  if (next > 0 && isImmuneToCondition(actor, k)) {
+    const def = STATIC_CONDITIONS[k];
+    ui.notifications?.warn?.(`${actor.name} is immune to ${def?.name ?? k}.`);
+    return existing ?? null;
+  }
 
   if (!existing) {
     if (next <= 0) return null;
