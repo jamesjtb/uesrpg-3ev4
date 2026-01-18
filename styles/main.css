@@ -1980,6 +1980,40 @@
   width: 120px;
 }
 
+/* Weapon Reach: inline Min/Max controls in a single row */
+.worldbuilding .weapon-reach-inline {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 6px;
+  flex-wrap: nowrap;
+  min-width: 0;
+}
+
+.worldbuilding .weapon-reach-label {
+  font-weight: 500;
+  font-size: 11px;
+  white-space: nowrap;
+}
+
+.worldbuilding .weapon-reach-input {
+  /*
+    Keep reach controls compact to prevent the weapon sheet from stretching.
+    We apply both width and flex-basis and add !important to ensure this wins
+    over any generic input width rules.
+  */
+  width: 40px !important;
+  flex: 0 0 40px !important;
+  min-width: 40px !important;
+}
+
+/* Even higher specificity for the reach row, to defeat any selector collisions */
+.worldbuilding .weapon-field-row--reach .weapon-reach-input {
+  width: 40px !important;
+  flex: 0 0 40px !important;
+  min-width: 40px !important;
+}
+
 /* Structured qualities: multi-column grid instead of a single vertical list */
 .worldbuilding .structured-qualities-grid {
   display: grid;
