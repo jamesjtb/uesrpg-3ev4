@@ -83,6 +83,7 @@
       "notes": "",
       "paperDoll": "systems/uesrpg-3ev4/images/paperDoll_Male_Outline_White.png",
       "resistance": {
+        "physicalR": 0,
         "fireR": 0,
         "frostR": 0,
         "shockR": 0,
@@ -414,6 +415,7 @@
         "legendaryGroup": "Legendary Group"
       },
       "resistance": {
+        "physicalR": 0,
         "fireR": 0,
         "frostR": 0,
         "shockR": 0,
@@ -1013,7 +1015,8 @@
       "quantity": 1,
       "enc": 0,
       "totalENC": 0,
-      "reach": "",
+      "reach": 0,
+      "reachMin": 0,
       "damage": 0,
       "damage2": 0,
       "damage3": 0,
@@ -1423,7 +1426,7 @@
       "modPrice": 0,
       "armor": 0,
       "magic_ar": 0,
-      "enchant_level": 1,
+      "enchant_level": 0,
       "qualities": "",
       "charge": {
         "value": 0,
