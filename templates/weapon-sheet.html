@@ -140,22 +140,34 @@
                                         {{selectOptions weaponMaterialOptions selected=item.system.material}}
                                     </select>
                                 </div>
-                            </div>
 
-                            <div class="weapon-attributes-section">
-                                <h3>Basic Properties</h3>
-                                
-                                {{#unless (eq item.system.attackMode "ranged")}}
-                                <div class="weapon-field-row">
-                                    <label>Reach</label>
-                                    <input type="number" name="system.reach" value="{{item.system.reach}}"/>
-                                </div>
-                                {{/unless}}
-                                
                                 <div class="weapon-field-row">
                                     <label>Ignore ENC</label>
                                     <input class="checkbox" type="checkbox" name="system.excludeENC" {{checked item.system.excludeENC}}>
                                 </div>
+                            </div>
+
+                            <div class="weapon-attributes-section">
+                                <h3>Basic Properties</h3>
+
+                                <div class="weapon-field-row">
+                                    <label>Handedness</label>
+                                    <select name="system.hands">
+                                        {{selectOptions weaponHandednessOptions selected=item.system.hands}}
+                                    </select>
+                                </div>
+                                
+                                {{#unless (eq item.system.attackMode "ranged")}}
+                                <div class="weapon-field-row weapon-field-row--reach">
+                                    <label>Reach</label>
+                                    <div class="weapon-reach-inline">
+                                        <span class="weapon-reach-label">Min Reach</span>
+                                        <input class="weapon-reach-input" type="number" name="system.reachMin" value="{{item.system.reachMin}}" min="0" step="1"/>
+                                        <span class="weapon-reach-label">Max Reach</span>
+                                        <input class="weapon-reach-input" type="number" name="system.reach" value="{{item.system.reach}}" min="0" step="1"/>
+                                    </div>
+                                </div>
+                                {{/unless}}
 
                                 <div class="weapon-field-row">
                                     <label>Roll 2H Damage</label>

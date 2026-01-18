@@ -49,6 +49,18 @@
       <input type="checkbox" name="client.sheetDiagnostics" {{checked client.sheetDiagnostics}}>
       <p class="notes">Shows additional diagnostics info on actor sheets (client only). Useful for testing.</p>
     </div>
+
+    <div class="form-group">
+      <label>Debug Aim (Client)</label>
+      <input type="checkbox" name="client.debugAim" {{checked client.debugAim}}>
+      <p class="notes">Enable aim-related diagnostics on your client.</p>
+    </div>
+
+    <div class="form-group">
+      <label>Debug: Actor Select (TN Context) (Client)</label>
+      <input type="checkbox" name="client.debugActorSelect" {{checked client.debugActorSelect}}>
+      <p class="notes">When enabled, logs TN-relevant actor context to the console whenever you control a token.</p>
+    </div>
   </fieldset>
 
   <footer class="sheet-footer flexrow">
