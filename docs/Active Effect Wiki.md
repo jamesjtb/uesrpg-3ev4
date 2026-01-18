@@ -88,6 +88,7 @@ system.modifiers.resistance.poisonR
 system.modifiers.resistance.magicR
 system.modifiers.resistance.silverR
 system.modifiers.resistance.sunlightR
+system.modifiers.resistance.physicalR
 
 Natural Toughness (RAW-aligned)
 system.modifiers.resistance.natToughness
@@ -177,7 +178,32 @@ Works for:
 - Encumbrance
 - Fatigue
 
-10. Deferred / Not Implemented (by design)
+10. Condition immunities
+| Condition (UI / rules text) | AE Key                               |
+| --------------------------- | ------------------------------------ |
+| Paralysis                   | `system.traits.immunity.paralysis`   |
+| Stunned                     | `system.traits.immunity.stunned`     |
+| Unconscious                 | `system.traits.immunity.unconscious` |
+| Prone                       | `system.traits.immunity.prone`       |
+| Fear / Panic                | `system.traits.immunity.fear`        |
+| Horror                      | `system.traits.immunity.horror`      |
+| Charm / Mind Control        | `system.traits.immunity.charm`       |
+
+| Condition | AE Key                            |
+| --------- | --------------------------------- |
+| Bleeding  | `system.traits.immunity.bleeding` |
+| Burning   | `system.traits.immunity.burning`  |
+| Poisoned  | `system.traits.immunity.poisoned` |
+| Disease   | `system.traits.immunity.disease`  |
+
+| Condition  | AE Key                              |
+| ---------- | ----------------------------------- |
+| Fatigue    | `system.traits.immunity.fatigue`    |
+| Exhaustion | `system.traits.immunity.exhaustion` |
+
+
+
+11. Deferred / Not Implemented (by design)
 
 These are explicitly not implemented yet and safe to ignore until future updates:
 
