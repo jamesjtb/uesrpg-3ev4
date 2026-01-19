@@ -1,0 +1,161 @@
+        <div class="sheet-fixed-container">
+            <div class="character-profile-container">
+                <div class="profile-img-container">
+                    <img class="profile-img" src="{{actor.img}}" data-edit="img" title="{{actor.name}}">
+                    <div class="status-column">
+                        <div class="vertical-flex-container">
+                            <img id="wound-icon" src="icons/skills/wounds/blood-drip-droplet-red.webp" title="Wounded {{actor.system.woundPenalty}}">
+                            <img id="fatigue-icon" src="icons/magic/control/debuff-energy-hold-green.webp" title="Fatigued {{actor.system.fatigue.penalty}}">
+                            <img id="enc-icon" src="icons/containers/bags/pack-leather-brown.webp" title="{{actor.system.carry_rating.label}} {{actor.system.carry_rating.penalty}}">
+                        </div>
+                    </div>
+                </div>
+                <nav class="sheet-tabs tabs" data-group="primary">
+                    <a class="item" data-tab="core">Core</a>
+                    <a class="item" data-tab="combat">Combat</a>
+                    <a class="item" data-tab="magic">Magic</a>
+                    <a class="item" data-tab="equipment">Items</a>
+                </nav>
+                <div>
+                    <h1 class="charname"><input type="text" name="name" value="{{actor.name}}" placeholder="Name"></h1>
+                </div>
+            </div>
+            <div class="fixed-data-container">
+                <div class="resourceBars">
+                    <div id="hpResource">
+                        <div class="resourceLabel">
+                            <button type="button" data-resource="hp">Health</button>
+                            <div class="resourceButton">
+                                <i data-action="increase" data-resource="hp" class="fas fa-angle-up incrementResource"></i>
+                                <i data-action="restore" data-resource="hp" class="fas fa-undo restoreResource" title="Restore"></i>
+                                <i data-action="decrease" data-resource="hp" class="fas fa-angle-down incrementResource"></i>
+                            </div>
+                        </div>
+                        <div class="maxBar" data-resource="hp">
+                            <div class="bar-values">
+                                <input type="number" name="system.hp.value" value="{{actor.system.hp.value}}"> / <label>{{actor.system.hp.max}}</label>
+                                {{#if (gt actor.system.tempHP 0)}}
+                                    <span class="temp-hp-overlay">+{{actor.system.tempHP}}</span>
+                                {{/if}}
+                            </div>
+                            <div id="hpBar" class="currentBar" data-resource="hp"></div>
+                        </div>
+                    </div>
+                    <div id="staminaResource">
+                        <div class="resourceLabel">
+                            <button type="button" data-resource="stamina">Stamina</button>
+                            <div class="resourceButton">
+                                <i data-action="increase" data-resource="stamina" class="fas fa-angle-up incrementResource"></i>
+                                <i data-action="restore" data-resource="stamina" class="fas fa-undo restoreResource" title="Restore"></i>
+                                <i data-action="decrease" data-resource="stamina" class="fas fa-angle-down incrementResource"></i>
+                            </div>
+                        </div>
+                        <div class="maxBar" data-resource="hp">
+                            <div class="bar-values">
+                                <input type="number" name="system.stamina.value" value="{{actor.system.stamina.value}}"> / <label>{{actor.system.stamina.max}}</label>
+                            </div>
+                            <div id="staminaBar" class="currentBar" data-resource="stamina"></div>
+                        </div>
+                    </div>
+                    <div id="magickaResource">
+                        <div class="resourceLabel">
+                            <button type="button" data-resource="magicka">Magicka</button>
+                            <div class="resourceButton">
+                                <i data-action="increase" data-resource="magicka" class="fas fa-angle-up incrementResource"></i>
+                                <i data-action="restore" data-resource="magicka" class="fas fa-undo restoreResource" title="Restore"></i>
+                                <i data-action="decrease" data-resource="magicka" class="fas fa-angle-down incrementResource"></i>
+                            </div>
+                        </div>
+                        <div class="maxBar" data-resource="hp">
+                            <div class="bar-values">
+                                <input type="number" name="system.magicka.value" value="{{actor.system.magicka.value}}"> / <label>{{actor.system.magicka.max}}</label>
+                            </div>
+                            <div id="magickaBar" class="currentBar" data-resource="magicka"></div>
+                        </div>
+                    </div>
+                    <div id="luckResource">
+                        <div class="resourceLabel">
+                            <button type="button" data-resource="luck_points">Luck</button>
+                            <div class="resourceButton">
+                                <i data-action="increase" data-resource="luck_points" class="fas fa-angle-up incrementResource"></i>
+                                <i data-action="restore" data-resource="luck_points" class="fas fa-undo restoreResource" title="Restore"></i>
+                                <i data-action="decrease" data-resource="luck_points" class="fas fa-angle-down incrementResource"></i>
+                            </div>
+                        </div>
+                        <div class="maxBar" data-resource="hp">
+                            <div class="bar-values">
+                                <input type="number" name="system.luck_points.value" value="{{actor.system.luck_points.value}}"> / <label>{{actor.system.luck_points.max}}</label>
+                            </div>
+                            <div id="luck_pointsBar" class="currentBar" data-resource="luck_points"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="rest-controls" style="display: flex; gap: 8px; margin: 6px 0 10px 0;">
+                    <button type="button" class="short-rest" title="Short Rest (1 hour)" style="flex: 1; padding: 4px 6px; font-size: 0.8em;">
+                        Short Rest
+                    </button>
+                    <button type="button" class="long-rest" title="Long Rest (8 hours)" style="flex: 1; padding: 4px 6px; font-size: 0.8em;">
+                        Long Rest
+                    </button>
+                </div>
+
+                <div class="characteristics-container">
+                    <h2>
+                        <div class="characteristics-config" role="button" tabindex="0" style="cursor: pointer;">Characteristics</div>
+                    </h2>
+                    <div class="characteristic-entry-container">
+                        <div class="characteristic">
+                            <div id="str" name="Strength" class="characteristic-roll styled-font rollable">Strength</div>
+                            <div class="right-align-content">
+                                <div class="styled-font red">{{actor.system.characteristics.str.total}}</div>
+                            </div>
+                        </div>
+                        <div class="characteristic">
+                            <div id="end" name="Endurance" class="characteristic-roll styled-font rollable">Endurance</div>
+                            <div class="right-align-content">
+                                <div class="styled-font red">{{actor.system.characteristics.end.total}}</div>
+                            </div>
+                        </div>
+                        <div class="characteristic">
+                            <div id="agi" name="Agility" class="characteristic-roll styled-font rollable">Agility</div>
+                            <div class="right-align-content">
+                                <div class="styled-font red">{{actor.system.characteristics.agi.total}}</div>
+                            </div>
+                        </div>
+                        <div class="characteristic">
+                            <div id="int" name="Intelligence" class="characteristic-roll styled-font rollable">Intelligence</div>
+                            <div class="right-align-content">
+                                <div class="styled-font red">{{actor.system.characteristics.int.total}}</div>
+                            </div>
+                        </div>
+                        <div class="characteristic">
+                            <div id="wp" name="Willpower" class="characteristic-roll styled-font rollable">Willpower</div>
+                            <div class="right-align-content">
+                                <div class="styled-font red">{{actor.system.characteristics.wp.total}}</div>
+                            </div>
+                        </div>
+                        <div class="characteristic">
+                            <div id="prc" name="Perception" class="characteristic-roll styled-font rollable">Perception</div>
+                            <div class="right-align-content">
+                                <div class="styled-font red">{{actor.system.characteristics.prc.total}}</div>
+                            </div>
+                        </div>
+                        <div class="characteristic">
+                            <div id="prs" name="Personality" class="characteristic-roll styled-font rollable">Personality</div>
+                            <div class="right-align-content">
+                                <div class="styled-font red">{{actor.system.characteristics.prs.total}}</div>
+                            </div>
+                        </div>
+                        <div class="characteristic">
+                            <div id="lck" name="Luck" class="characteristic-roll styled-font rollable">Luck</div>
+                            <div class="right-align-content">
+                                <div class="relative-container">
+                                    <div class="styled-font red">{{actor.system.characteristics.lck.total}}</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>

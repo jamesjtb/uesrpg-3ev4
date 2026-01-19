@@ -1,0 +1,69 @@
+<form class="uesrpg debug-settings" autocomplete="off">
+  {{#if isGM}}
+  <fieldset>
+    <legend>World (GM)</legend>
+
+    <div class="form-group">
+      <label>Opposed Workflow Debug</label>
+      <input type="checkbox" name="world.opposedDebug" {{checked world.opposedDebug}}>
+      <p class="notes">Enable verbose opposed-workflow diagnostics in the console and chat context.</p>
+    </div>
+
+    <div class="form-group">
+      <label>Effects/Proxy Debug</label>
+      <input type="checkbox" name="world.effectsProxyDebug" {{checked world.effectsProxyDebug}}>
+      <p class="notes">Enable concise logging for authority-proxy mutations (ChatMessage updates and target-side effect application).</p>
+    </div>
+
+    <div class="form-group">
+      <label>Opposed Debug Formula</label>
+      <input type="text" name="world.opposedDebugFormula" value="{{world.opposedDebugFormula}}">
+      <p class="notes">Optional formula override used by debugging helpers.</p>
+    </div>
+
+    <div class="form-group">
+      <label>Show Resolution Details</label>
+      <input type="checkbox" name="world.opposedShowResolutionDetails" {{checked world.opposedShowResolutionDetails}}>
+      <p class="notes">Show extra TN breakdown and resolution details on chat cards.</p>
+    </div>
+
+    <div class="form-group">
+      <label>Skill Roll Debug</label>
+      <input type="checkbox" name="world.skillRollDebug" {{checked world.skillRollDebug}}>
+      <p class="notes">Enable additional skill-roll diagnostics.</p>
+    </div>
+  </fieldset>
+  {{/if}}
+
+  <fieldset>
+    <legend>Client</legend>
+
+    <div class="form-group">
+      <label>Debug Skill TN (Client)</label>
+      <input type="checkbox" name="client.debugSkillTN" {{checked client.debugSkillTN}}>
+      <p class="notes">Shows TN composition helpers for your client only.</p>
+    </div>
+
+    <div class="form-group">
+      <label>Sheet Diagnostics Panel (Client)</label>
+      <input type="checkbox" name="client.sheetDiagnostics" {{checked client.sheetDiagnostics}}>
+      <p class="notes">Shows additional diagnostics info on actor sheets (client only). Useful for testing.</p>
+    </div>
+
+    <div class="form-group">
+      <label>Debug Aim (Client)</label>
+      <input type="checkbox" name="client.debugAim" {{checked client.debugAim}}>
+      <p class="notes">Enable aim-related diagnostics on your client.</p>
+    </div>
+
+    <div class="form-group">
+      <label>Debug: Actor Select (TN Context) (Client)</label>
+      <input type="checkbox" name="client.debugActorSelect" {{checked client.debugActorSelect}}>
+      <p class="notes">When enabled, logs TN-relevant actor context to the console whenever you control a token.</p>
+    </div>
+  </fieldset>
+
+  <footer class="sheet-footer flexrow">
+    <button type="submit" class="save"><i class="fas fa-save"></i> Save</button>
+  </footer>
+</form>

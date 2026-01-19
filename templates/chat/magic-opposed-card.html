@@ -1,0 +1,116 @@
+<!-- templates/chat/magic-opposed-card.html -->
+<div class="uesrpg-magic-opposed-card" style="padding: 8px; border: 1px solid rgba(138, 43, 226, 0.3); background: rgba(138, 43, 226, 0.05);">
+  <div class="opposed-header" style="margin-bottom: 12px; padding-bottom: 8px; border-bottom: 2px solid rgba(138, 43, 226, 0.4);">
+    <h3 style="margin: 0 0 4px 0; color: #8a2be2; font-size: 16px;">🔮 {{spell.name}} {{#if spell.school}}({{spell.school}} {{spell.level}}){{/if}}</h3>
+    <div class="opposed-participants" style="display: flex; align-items: center; justify-content: center; gap: 10px; font-size: 13px;">
+      <span class="attacker" style="font-weight: bold;">{{attacker.name}}</span>
+      <span class="vs" style="opacity: 0.7;">vs</span>
+      <span class="defender" style="font-weight: bold;">{{defender.name}}</span>
+    </div>
+  </div>
+
+  {{#if (eq state "pending")}}
+  <div class="opposed-state-pending">
+    <h4 style="margin: 8px 0; color: #666;">⏳ Awaiting Caster Roll</h4>
+    <div class="tn-breakdown" style="background: rgba(0, 0, 0, 0.05); padding: 8px; margin-bottom: 8px; border-radius: 3px;">
+      <div class="tn-line" style="margin-bottom: 4px;"><b>Casting TN:</b> {{attackerTN}}</div>
+      {{#each tnBreakdown}}
+      <div class="tn-detail" style="font-size: 11px; opacity: 0.8; margin-left: 10px;">{{this.label}}: {{#if (ge this.value 0)}}+{{/if}}{{this.value}}</div>
+      {{/each}}
+    </div>
+    {{#if spellOptions}}
+    <div class="spell-options" style="margin-bottom: 8px;">
+      {{#if spellOptions.isRestrained}}
+      <div class="spell-option" style="font-size: 12px; padding: 3px 0;">✓ Spell Restraint (-{{spellOptions.restraintValue}} MP, min 1)</div>
+      {{/if}}
+      {{#if spellOptions.isOverloaded}}
+      <div class="spell-option" style="font-size: 12px; padding: 3px 0;">⚡ Overload (2x MP cost, bonus effect)</div>
+      {{/if}}
+    </div>
+    {{/if}}
+    <button class="uesrpg-magic-opposed-roll" data-action="attacker-roll" style="width: 100%; padding: 8px; background: #8a2be2; color: white; border: none; border-radius: 3px; cursor: pointer; font-weight: bold;">
+      Cast Spell (Roll 1d100)
+    </button>
+  </div>
+  {{/if}}
+
+  {{#if (eq state "awaiting-defense")}}
+  <div class="opposed-state-defense">
+    <h4 style="margin: 8px 0;">🎲 Caster Rolled: {{attackerRoll}}</h4>
+    <div class="degrees-result" style="margin-bottom: 12px;">
+      {{#if attackerCrit}}
+      <span class="crit-success" style="color: green; font-weight: bold;">⭐ CRITICAL SUCCESS!</span>
+      {{/if}}
+      <span class="dos" style="display: block; margin-top: 4px;">{{attackerDoS}} Degrees of Success</span>
+    </div>
+    
+    <div class="defender-options">
+      <h4 style="margin: 8px 0;">🛡️ Defender: Choose Defense</h4>
+      <p class="hint" style="font-size: 11px; font-style: italic; opacity: 0.8; margin-bottom: 8px;">Spells can only be Block or Evade (no Parry/Counter per RAW)</p>
+      <div class="defense-buttons" style="display: flex; gap: 6px; margin-bottom: 8px;">
+        <button class="uesrpg-magic-opposed-defend" data-action="defender-roll" data-defense="block" style="flex: 1; padding: 6px; background: #4169e1; color: white; border: none; border-radius: 3px; cursor: pointer; font-size: 12px;">
+          Block ({{defenderBlockTN}})
+        </button>
+        <button class="uesrpg-magic-opposed-defend" data-action="defender-roll" data-defense="evade" style="flex: 1; padding: 6px; background: #228b22; color: white; border: none; border-radius: 3px; cursor: pointer; font-size: 12px;">
+          Evade ({{defenderEvadeTN}})
+        </button>
+        <button class="uesrpg-magic-opposed-defend" data-action="defender-no-defense" style="flex: 1; padding: 6px; background: #666; color: white; border: none; border-radius: 3px; cursor: pointer; font-size: 12px;">
+          No Defense
+        </button>
+      </div>
+      
+      {{#if defenderAdvantages}}
+      <div class="advantages-section" style="background: rgba(0, 0, 0, 0.05); padding: 8px; border-radius: 3px; margin-top: 8px;">
+        <h5 style="margin: 0 0 6px 0; font-size: 12px;">Available Advantages (Defender Only)</h5>
+        {{#each defenderAdvantages}}
+        <div class="advantage-option" style="margin-bottom: 4px;">
+          <label style="font-size: 11px; cursor: pointer;">
+            <input type="checkbox" name="advantage-{{@index}}" value="{{this.id}}" style="margin-right: 4px;" />
+            {{this.name}}: {{this.effect}}
+          </label>
+        </div>
+        {{/each}}
+      </div>
+      {{/if}}
+    </div>
+  </div>
+  {{/if}}
+
+  {{#if (eq state "resolved")}}
+  <div class="opposed-state-resolved">
+    <div class="opposed-results">
+      <div class="result-row" style="padding: 4px 0; border-bottom: 1px solid rgba(0, 0, 0, 0.1);">
+        <span class="label" style="font-weight: bold;">Caster Roll:</span>
+        <span class="value" style="margin-left: 8px;">{{attackerRoll}} ({{attackerDoS}} DoS)</span>
+      </div>
+      <div class="result-row" style="padding: 4px 0; border-bottom: 1px solid rgba(0, 0, 0, 0.1);">
+        <span class="label" style="font-weight: bold;">Defender {{defenseType}}:</span>
+        <span class="value" style="margin-left: 8px;">{{defenderRoll}} ({{defenderDoS}} DoS)</span>
+      </div>
+      <div class="result-outcome" style="margin-top: 10px; padding: 10px; border-radius: 3px; {{#if attackerWins}}background: rgba(0, 200, 0, 0.1); border-left: 3px solid green;{{else}}background: rgba(0, 100, 200, 0.1); border-left: 3px solid blue;{{/if}}">
+        {{#if attackerWins}}
+        <h4 class="outcome-hit" style="margin: 0 0 6px 0; color: green;">✅ Spell Hit!</h4>
+        {{#if damage}}
+        <div class="damage-info">
+          <b>Damage:</b> {{damage}} {{damageType}}
+          {{#if attackerCrit}}
+          <span class="crit-note" style="display: block; color: green; font-style: italic; margin-top: 4px;">(MAX damage from critical)</span>
+          {{/if}}
+        </div>
+        {{/if}}
+        {{#if damageButtons}}
+        <div class="damage-buttons" style="margin-top: 8px;">
+          {{{damageButtons}}}
+        </div>
+        {{/if}}
+        {{else}}
+        <h4 class="outcome-miss" style="margin: 0; color: blue;">🛡️ Spell Defended!</h4>
+        {{/if}}
+      </div>
+      <div class="mp-consumed" style="margin-top: 10px; padding: 8px; background: rgba(0, 0, 0, 0.05); border-radius: 3px;">
+        <b>MP Consumed:</b> {{mpConsumed}} ({{mpRemaining}} MP remaining)
+      </div>
+    </div>
+  </div>
+  {{/if}}
+</div>

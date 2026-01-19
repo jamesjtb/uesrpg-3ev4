@@ -18,7 +18,12 @@
                     </div>
                     <div class="item-resource">
                         <div class="stat-value-label">
-                            <input type="text" name="system.enc" value="{{item.system.enc}}" data-dtype="Number"/>
+                            {{#if item.system.encEffective}}
+                                <input type="text" value="{{item.system.encEffective}}" readonly/>
+                                <input type="text" name="system.enc" value="{{item.system.enc}}" data-dtype="Number" style="display:none"/>
+                            {{else}}
+                                <input type="text" name="system.enc" value="{{item.system.enc}}" data-dtype="Number"/>
+                            {{/if}}
                         </div>
                         <div class="flex-container">
                             <div class="small-text-label">ENC</div>
@@ -26,7 +31,12 @@
                     </div>
                     <div class="item-resource">
                         <div class="stat-value-label">
-                            <input type="text" name="system.price" value="{{item.system.price}}" data-dtype="Number"/>
+                            {{#if item.system.priceEffective}}
+                                <input type="text" value="{{item.system.priceEffective}}" readonly/>
+                                <input type="text" name="system.price" value="{{item.system.price}}" data-dtype="Number" style="display:none"/>
+                            {{else}}
+                                <input type="text" name="system.price" value="{{item.system.price}}" data-dtype="Number"/>
+                            {{/if}}
                         </div>
                         <div class="flex-container">
                             <div class="small-text-label">Price</div>
@@ -34,7 +44,12 @@
                     </div>
                     <div class="item-resource">
                         <div class="stat-value-label">
-                            <input type="text" name="system.damage" value="{{item.system.damage}}" data-dtype="Number"/>
+                            {{#if item.system.damageEffective}}
+                                <input type="text" value="{{item.system.damageEffective}}" readonly/>
+                                <input type="text" name="system.damage" value="{{item.system.damage}}" data-dtype="Number" style="display:none"/>
+                            {{else}}
+                                <input type="text" name="system.damage" value="{{item.system.damage}}" data-dtype="Number"/>
+                            {{/if}}
                         </div>
                         <div class="flex-container">
                             <div class="small-text-label">Damage</div>
@@ -43,6 +58,9 @@
                     <div class="item-resource">
                         <div class="stat-value-label">
                             <input type="text" name="system.enchant_level" value="{{item.system.enchant_level}}" data-dtype="Number"/>
+                            {{#if item.system.enchant_levelEffective}}
+                                <div class="effective-hint"><span class="label">Eff</span>{{item.system.enchant_levelEffective}}</div>
+                            {{/if}}
                         </div>
                         <div class="flex-container">
                             <div class="small-text-label">Enchant Lv.</div>
@@ -57,7 +75,8 @@
     <nav class="sheet-tabs tabs" data-group="primary">
         <a class="item" data-tab="description">Description</a>
         <a class="item" data-tab="attributes">Attributes</a>
-    </nav>
+                        <a class="item" data-tab="effects">Effects</a>
+</nav>
     </div>
 
     {{!-- Sheet Body --}}
@@ -65,7 +84,11 @@
 
         {{!-- Description Tab --}}
         <div class="tab" data-group="primary" data-tab="description">
-            {{editor item.system.enrichedDescription target="system.description" engine="prosemirror" button=true owner=owner editable=editable}}
+            <div class="item-description-container">
+                <div class="basic-padding">
+                    {{editor item.system.enrichedDescription target="system.description" engine="prosemirror" button=true owner=owner editable=editable}}
+                </div>
+            </div>
         </div>
 
         {{!-- Attributes Tab --}}
@@ -76,6 +99,28 @@
                         <h2>Attributes</h2>
                         <div class="selection-container">
                             <div class="grid-container">
+                                <div>Price / 10</div>
+                                <div class="right-align-content">
+                                    <input type="text" name="system.pricePer10" value="{{item.system.pricePer10}}" data-dtype="Number"/>
+                                    {{#if item.system.pricePer10Effective}}
+                                        <div class="effective-hint"><span class="label">Eff</span>{{item.system.pricePer10Effective}}</div>
+                                    {{/if}}
+                                </div>
+
+                                <div>Price / Shot</div>
+                                <div class="right-align-content">
+                                    <input type="text" value="{{item.system.pricePerShot}}" data-uesrpg="pricePerShot" readonly/>
+                                    {{#if item.system.pricePerShotEffective}}
+                                        <div class="effective-hint"><span class="label">Eff</span>{{item.system.pricePerShotEffective}}</div>
+                                    {{/if}}
+                                </div>
+<div>Ammo Material</div>
+                                <div class="right-align-content">
+                                    <select name="system.ammoMaterial">
+                                        {{selectOptions ammoMaterialOptions selected=item.system.ammoMaterial}}
+                                    </select>
+                                </div>
+
                                 <div>Ignore ENC</div>
                                 <div class="right-align-content">
                                     <input class="checkbox" type="checkbox" name="system.excludeENC" {{checked item.system.excludeENC}}>
@@ -84,12 +129,60 @@
                         </div>
                     </div>
                 </div>
+
                 <div class="quality-container">
                     <div class="flex-container">
-                        <h2>Qualities</h2>
-                        <div>{{editor item.system.qualities target="system.qualities" engine="prosemirror" button=true owner=owner editable=editable}}</div>
+                        <h2>Structured Qualities</h2>
                     </div>
+
+                    <div class="structured-qualities-grid">
+                        {{#each coreQualitiesCatalog}}
+                            <div class="structured-qualities-cell">
+                                <div>{{this.label}}</div>
+                                <div class="right-align-content">
+                                    {{#if this.optionalValue}}
+                                        <div class="structured-optional-value">
+                                            <input class="checkbox" type="checkbox" name="qualitiesStructured.toggle.{{this.key}}" {{checked (lookup ../qualitiesSelectedToggle this.key)}} />
+                                            <input class="structured-value structured-value--opt" type="number" name="qualitiesStructured.value.{{this.key}}" value="{{lookup ../qualitiesSelectedValue this.key}}" min="0" step="1" placeholder="X" />
+                                        </div>
+                                    {{else}}
+                                        {{#if this.hasValue}}
+                                            <input class="structured-value" type="number" name="qualitiesStructured.value.{{this.key}}" value="{{lookup ../qualitiesSelectedValue this.key}}" min="{{this.min}}" step="1" />
+                                        {{else}}
+                                            <input class="checkbox" type="checkbox" name="qualitiesStructured.toggle.{{this.key}}" {{checked (lookup ../qualitiesSelectedToggle this.key)}} />
+                                        {{/if}}
+                                    {{/if}}
+                                </div>
+                            </div>
+                        {{/each}}
+                    </div>
+
+
+                    <!-- Ammunition does not use an extended trait list; specializations are represented via core qualities. -->
                 </div>
             </div>
+        </div>
+
+        {{!-- Effects Tab --}}
+        <div class="tab effects" data-group="primary" data-tab="effects">
+            <header class="effects-header flexrow">
+                <h3>Effects</h3>
+                <a class="effect-control" data-action="create" title="Create Effect"><i class="fas fa-plus"></i></a>
+            </header>
+            <ol class="effects-list">
+                {{#each effects as |effect|}}
+                <li class="effect flexrow" data-effect-id="{{effect._id}}">
+                    <img class="effect-icon" src="{{effect.img}}" />
+                    <h4 class="effect-name">{{effect.name}}</h4>
+                    <div class="effect-controls flexrow">
+                        <a class="effect-control" data-action="toggle" data-effect-id="{{effect._id}}" title="Toggle"><i class="fas {{#if effect.disabled}}fa-toggle-off{{else}}fa-toggle-on{{/if}}"></i></a>
+                        <a class="effect-control" data-action="edit" data-effect-id="{{effect._id}}" title="Edit"><i class="fas fa-edit"></i></a>
+                        <a class="effect-control" data-action="delete" data-effect-id="{{effect._id}}" title="Delete"><i class="fas fa-trash"></i></a>
+                    </div>
+                </li>
+                {{/each}}
+            </ol>
+        </div>
     </section>
+</form>
 </form>

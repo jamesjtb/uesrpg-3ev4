@@ -19,7 +19,12 @@
                         </div>
                         <div class="item-resource">
                             <div class="stat-value-label">
-                                <input type="number" name="system.enc" value="{{item.system.enc}}"/>
+                                {{#if item.system.encEffective}}
+                                    <input type="text" value="{{item.system.encEffective}}" readonly/>
+                                    <input type="number" name="system.enc" value="{{item.system.enc}}" style="display:none"/>
+                                {{else}}
+                                    <input type="number" name="system.enc" value="{{item.system.enc}}"/>
+                                {{/if}}
                             </div>
                             <div class="flex-container">
                                 <div class="small-text-label">ENC</div>
@@ -27,18 +32,15 @@
                         </div>
                         <div class="item-resource">
                             <div class="stat-value-label">
-                                <input type="number" name="system.price" value="{{item.system.price}}"/>
+                                {{#if item.system.priceEffective}}
+                                    <input type="text" value="{{item.system.priceEffective}}" readonly/>
+                                    <input type="number" name="system.price" value="{{item.system.price}}" style="display:none"/>
+                                {{else}}
+                                    <input type="number" name="system.price" value="{{item.system.price}}"/>
+                                {{/if}}
                             </div>
                             <div class="flex-container">
                                 <div class="small-text-label">Price</div>
-                            </div>
-                        </div>
-                        <div class="item-resource">
-                            <div class="stat-value-label">
-                                <input type="number" name="system.enchant_level" value="{{item.system.enchant_level}}"/>
-                            </div>
-                            <div class="flex-container">
-                                <div class="small-text-label">Enchant Lv.</div>
                             </div>
                         </div>
                         <div class="item-resource set-size-container">
@@ -53,7 +55,12 @@
                     <div class="item-resource-row">
                         <div class="item-resource">
                             <div class="stat-value-label">
-                                <input type="number" name="system.armor" value="{{item.system.armor}}"/>
+                                {{#if item.system.armorEffective}}
+                                    <input type="text" value="{{item.system.armorEffective}}" readonly/>
+                                    <input type="number" name="system.armor" value="{{item.system.armor}}" style="display:none"/>
+                                {{else}}
+                                    <input type="number" name="system.armor" value="{{item.system.armor}}"/>
+                                {{/if}}
                             </div>
                             <div class="flex-container">
                                 <div class="small-text-label">Armor</div>
@@ -61,7 +68,12 @@
                         </div>
                         <div class="item-resource">
                             <div class="stat-value-label">
-                                <input type="text" name="system.magic_ar" value="{{item.system.magic_ar}}"/>
+                                {{#if item.system.magic_arEffective}}
+                                    <input type="text" value="{{item.system.magic_arEffective}}{{#if item.system.special_ar_typeEffective}} {{item.system.special_ar_typeEffective}}{{/if}}" readonly/>
+                                    <input type="text" name="system.magic_ar" value="{{item.system.magic_ar}}" style="display:none"/>
+                                {{else}}
+                                    <input type="text" name="system.magic_ar" value="{{item.system.magic_ar}}"/>
+                                {{/if}}
                             </div>
                             <div class="flex-container">
                                 <div class="small-text-label">Magic AR</div>
@@ -69,22 +81,15 @@
                         </div>
                         <div class="item-resource">
                             <div class="stat-value-label">
-                                <input type="text" name="system.blockRating" value="{{item.system.blockRating}}"/>
+                                {{#if item.system.blockRatingEffective}}
+                                    <input type="text" value="{{item.system.blockRatingEffective}}" readonly/>
+                                    <input type="text" name="system.blockRating" value="{{item.system.blockRating}}" style="display:none"/>
+                                {{else}}
+                                    <input type="text" name="system.blockRating" value="{{item.system.blockRating}}"/>
+                                {{/if}}
                             </div>
                             <div class="flex-container">
                                 <div class="small-text-label">Block</div>
-                            </div>
-                        </div>
-                        <div class="item-resource">
-                            <div class="stat-value-label">
-                                <div class="flex-container">
-                                    <input type="number" name="system.charge.value" value="{{item.system.charge.value}}"> / <input type="number" name="system.charge.max" value="{{item.system.charge.max}}">
-                                </div>
-                            </div>
-                            <div class="flex-container">
-                                <i class="fas fa-angle-down fa-xs chargeMinus"></i>
-                                <div class="small-text-label">Charge</div>
-                                <i class="fas fa-angle-up fa-xs chargePlus"></i>
                             </div>
                         </div>
                     </div>
@@ -96,7 +101,8 @@
         <nav class="sheet-tabs tabs" data-group="primary">
             <a class="item" data-tab="description">Description</a>
             <a class="item" data-tab="attributes">Attributes</a>
-        </nav>
+                            <a class="item" data-tab="effects">Effects</a>
+</nav>
         </div>
     
         {{!-- Sheet Body --}}
@@ -105,15 +111,8 @@
             {{!-- Description Tab --}}
             <div class="tab" data-group="primary" data-tab="description">
                 <div class="item-description-container">
-                    <div class="item-selection-container">
-                        <h2 class="headerWithButton">
-                            <button type="button" class="modifier-create">+</button>
-                            <div>Modifiers</div>
-                        </h2>
-                        <div class="selection-container" id="item-modifiers"></div>
-                    </div>
                     <div class="basic-padding">
-                        {{editor item.system.enrichedDescription target="system.description" button=true owner=owner editable=editable}}
+                        {{editor item.system.enrichedDescription target="system.description" engine="prosemirror" button=true owner=owner editable=editable}}
                     </div>
                 </div>
             </div>
@@ -123,6 +122,87 @@
                 <div class="attribute-tab-container">
                     <div class="item-selection-container">
                         <h2>Attributes</h2>
+
+                            <h3>Quality</h3>
+                            <div class="grid-container">
+                                <div>Quality</div>
+                                <div class="right-align-content">
+                                    <select name="system.qualityLevel">
+  {{selectOptions weaponQualityOptions selected=item.system.qualityLevel}}
+</select>
+                                </div>
+                            </div>
+                            <div class="grid-container">
+                                <div>Runed</div>
+                                <div class="right-align-content">
+                                    <input class="checkbox" type="checkbox" name="system.runed" {{checked item.system.runed}}>
+                                </div>
+                            </div>
+
+                            <h3>Type</h3>
+                            <div class="grid-container">
+                                <div>Armor Class</div>
+                                <div class="right-align-content">
+                                    <select name="system.armorClass">
+                                      {{selectOptions armorClassOptions selected=item.system.armorClass}}
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="grid-container">
+                                <div>Material</div>
+                                <div class="right-align-content">
+                                    <select name="system.material">
+                                      {{selectOptions armorMaterialOptions selected=item.system.material}}
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="grid-container">
+                                <div>Is Shield</div>
+                                <div class="right-align-content">
+                                    <input class="checkbox" type="checkbox" name="system.isShield" {{checked item.system.isShield}}>
+                                </div>
+                            </div>
+                            {{#if item.system.isShieldEffective}}
+                            <div class="grid-container">
+                                <div>Shield Type</div>
+                                <div class="right-align-content">
+                                    <select name="system.shieldType">
+                                      {{selectOptions shieldTypeOptions selected=item.system.shieldType}}
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="grid-container">
+                                <div>Magic BR</div>
+                                <div class="right-align-content">
+                                    <input type="text" value="{{item.system.magic_brEffective}}" disabled>
+                                </div>
+                            </div>
+                            {{#if item.system.magic_brSpecial}}
+                            <div class="grid-container">
+                                <div>Magic BR (Special)</div>
+                                <div class="right-align-content">
+                                    <input type="text" value="{{item.system.magic_brSpecial.value}} vs {{item.system.magic_brSpecial.type}}" disabled>
+                                </div>
+                            </div>
+                            {{/if}}
+                            {{/if}}
+
+                            <h3>Weight</h3>
+                            <div class="grid-container">
+                                <div>Weight Class</div>
+                                <div class="right-align-content">
+                                    <select name="system.weightClass">
+  {{selectOptions armorWeightClassOptions selected=item.system.weightClass}}
+</select>
+                                </div>
+                            </div>
+                            <div class="grid-container">
+                                <div>Effective Weight Class</div>
+                                <div class="right-align-content">
+                                    <input type="text" value="{{#if item.system.weightClassEffective}}{{item.system.weightClassEffective}}{{else}}{{item.system.effectiveWeightClass}}{{/if}}" disabled>
+                                </div>
+                            </div>
+
                         <div class="selection-container">
                             <div class="grid-container">
                                 <div>Ignore ENC</div>
@@ -130,101 +210,124 @@
                                     <input class="checkbox" type="checkbox" name="system.excludeENC" {{checked item.system.excludeENC}}>
                                 </div>
                             </div>
+</div>
+                    </div>
+
+                    {{! -- ENCHANTING SECTION --}}
+                    <div class="item-selection-container">
+                        <h2>Enchanting</h2>
+                        <div class="selection-container">
                             <div class="grid-container">
-                                <div>Charge Reduction</div>
+                                <div>Enchant Level</div>
                                 <div class="right-align-content">
-                                    <input type="number" name="system.charge.reduction" value="{{item.system.charge.reduction}}">
+                                    <input type="number" name="system.enchant_level" value="{{item.system.enchant_level}}"/>
+                                </div>
+                            </div>
+                            <div class="grid-container">
+                                <div>Charge (Current / Max)</div>
+                                <div class="right-align-content">
+                                    <input type="number" name="system.charge.value" value="{{item.system.charge.value}}" style="width:50px">
+                                    /
+                                    <input type="number" name="system.charge.max" value="{{item.system.charge.max}}" style="width:50px">
                                 </div>
                             </div>
                         </div>
                     </div>
-                    <div class="attribute-container">
-                        <div class="item-characteristic-container">
-                            <h2>Characteristics</h2>
-                            <div class="modifier-container">
-                                <div class="grid-container">
-                                    <div>Strength</div>
-                                    <div><input type="number" name="system.characteristicBonus.strChaBonus" value="{{item.system.characteristicBonus.strChaBonus}}"></div>
-                                </div>
-                                <div class="grid-container">
-                                    <div>Endurance</div>
-                                    <div><input type="number" name="system.characteristicBonus.endChaBonus" value="{{item.system.characteristicBonus.endChaBonus}}"></div>
-                                </div>
-                                <div class="grid-container">
-                                    <div>Agility</div>
-                                    <div><input type="number" name="system.characteristicBonus.agiChaBonus" value="{{item.system.characteristicBonus.agiChaBonus}}"></div>
-                                </div>
-                                <div class="grid-container">
-                                    <div>Intelligence</div>
-                                    <div><input type="number" name="system.characteristicBonus.intChaBonus" value="{{item.system.characteristicBonus.intChaBonus}}"></div>
-                                </div>
-                                <div class="grid-container">
-                                    <div>Willpower</div>
-                                    <div><input type="number" name="system.characteristicBonus.wpChaBonus" value="{{item.system.characteristicBonus.wpChaBonus}}"></div>
-                                </div>
-                                <div class="grid-container">
-                                    <div>Perception</div>
-                                    <div><input type="number" name="system.characteristicBonus.prcChaBonus" value="{{item.system.characteristicBonus.prcChaBonus}}"></div>
-                                </div>
-                                <div class="grid-container">
-                                    <div>Personality</div>
-                                    <div><input type="number" name="system.characteristicBonus.prsChaBonus" value="{{item.system.characteristicBonus.prsChaBonus}}"></div>
-                                </div>
-                                <div class="grid-container">
-                                    <div>Luck</div>
-                                    <div><input type="number" name="system.characteristicBonus.lckChaBonus" value="{{item.system.characteristicBonus.lckChaBonus}}"></div>
+
+                                        {{! -- HIT LOCATIONS SECTION --}}
+                    {{#unless item.system.isShieldEffective}}
+                    <div class="item-selection-container">
+                        <h2>Hit Locations Covered</h2>
+                        <div class="selection-container">
+                            <div class="grid-container">
+                                <div>Head</div>
+                                <div class="right-align-content">
+                                    <input class="checkbox" type="checkbox" name="system.hitLocations.Head" {{checked item.system.hitLocations.Head}}>
                                 </div>
                             </div>
-                        </div>
-                        <div class="item-resistance-container">
-                            <h2>Resistances</h2>
-                            <div class="modifier-container">
-                                <div class="grid-container">
-                                    <div>Disease</div>
-                                    <div><input type="number" name="system.diseaseR" value="{{item.system.diseaseR}}"></div>
+                            <div class="grid-container">
+                                <div>Body</div>
+                                <div class="right-align-content">
+                                    <input class="checkbox" type="checkbox" name="system.hitLocations.Body" {{checked item.system.hitLocations.Body}}>
                                 </div>
-                                <div class="grid-container">
-                                    <div>Fire</div>
-                                    <div><input type="number" name="system.fireR" value="{{item.system.fireR}}"></div>
+                            </div>
+                            <div class="grid-container">
+                                <div>Right Arm</div>
+                                <div class="right-align-content">
+                                   <input class="checkbox" type="checkbox" name="system.hitLocations.RightArm" {{checked item.system.hitLocations.RightArm}}>
                                 </div>
-                                <div class="grid-container">
-                                    <div>Frost</div>
-                                    <div><input type="number" name="system.frostR" value="{{item.system.frostR}}"></div>
+                            </div>
+                            <div class="grid-container">
+                                <div>Left Arm</div>
+                                <div class="right-align-content">
+                                   <input class="checkbox" type="checkbox" name="system.hitLocations.LeftArm" {{checked item.system.hitLocations.LeftArm}}>
                                 </div>
-                                <div class="grid-container">
-                                    <div>Shock</div>
-                                    <div><input type="number" name="system.shockR" value="{{item.system.shockR}}"></div>
+                            </div>
+                            <div class="grid-container">
+                                <div>Right Leg</div>
+                                <div class="right-align-content">
+                                  <input class="checkbox" type="checkbox" name="system.hitLocations.RightLeg" {{checked item.system.hitLocations.RightLeg}}>
                                 </div>
-                                <div class="grid-container">
-                                    <div>Poison</div>
-                                    <div><input type="number" name="system.poisonR" value="{{item.system.poisonR}}"></div>
-                                </div>
-                                <div class="grid-container">
-                                    <div>Magic</div>
-                                    <div><input type="number" name="system.magicR" value="{{item.system.magicR}}"></div>
-                                </div>
-                                <div class="grid-container">
-                                    <div>Toughness</div>
-                                    <div><input type="number" name="system.natToughnessR" value="{{item.system.natToughnessR}}"></div>
-                                </div>
-                                <div class="grid-container">
-                                    <div>Silver</div>
-                                    <div><input type="number" name="system.silverR" value="{{item.system.silverR}}"></div>
-                                </div>
-                                <div class="grid-container">
-                                    <div>Sunlight</div>
-                                    <div><input type="number" name="system.sunlightR" value="{{item.system.sunlightR}}"></div>
+                            </div>
+                            <div class="grid-container">
+                                <div>Left Leg</div>
+                                <div class="right-align-content">
+                                   <input class="checkbox" type="checkbox" name="system.hitLocations.LeftLeg" {{checked item.system.hitLocations.LeftLeg}}>
                                 </div>
                             </div>
                         </div>
                     </div>
+                    {{/unless}}
+
                     <div class="quality-container">
                         <div class="flex-container">
                             <h2>Qualities</h2>
-                            <div>{{editor item.system.qualities target="system.qualities" engine="prosemirror" button=true owner=owner editable=editable}}</div>
                         </div>
+                        <div class="structured-qualities-grid is-armor">
+                            {{#each coreQualitiesCatalog}}
+                                <div class="structured-qualities-cell">
+                                    <div>{{this.label}}</div>
+                                    <div class="right-align-content">
+                                        {{#if this.isTrait}}
+                                            <input class="checkbox" type="checkbox" name="qualitiesTraits.toggle.{{this.key}}" {{checked this.selected}} />
+                                        {{else}}
+                                            {{#if this.hasValue}}
+                                                <input class="structured-value" type="number" name="qualitiesStructured.value.{{this.key}}" value="{{lookup ../qualitiesSelectedValue this.key}}" min="{{this.min}}" step="1" />
+                                            {{else}}
+                                                <input class="checkbox" type="checkbox" name="qualitiesStructured.toggle.{{this.key}}" {{checked (lookup ../qualitiesSelectedToggle this.key)}} />
+                                            {{/if}}
+                                        {{/if}}
+                                    </div>
+                                </div>
+                            {{/each}}
+                        </div>
+
+                        <!-- Armor does not use an extended trait list; Shield is surfaced above. -->
                     </div>
                 </div>
             </div>
-        </section>
+        
+
+
+        {{!-- Effects Tab --}}
+        <div class="tab effects" data-group="primary" data-tab="effects">
+            <header class="effects-header flexrow">
+                <h3>Effects</h3>
+                <a class="effect-control" data-action="create" title="Create Effect"><i class="fas fa-plus"></i></a>
+            </header>
+            <ol class="effects-list">
+                {{#each effects as |effect|}}
+                <li class="effect flexrow" data-effect-id="{{effect._id}}">
+                    <img class="effect-icon" src="{{effect.img}}" />
+                    <h4 class="effect-name">{{effect.name}}</h4>
+                    <div class="effect-controls flexrow">
+                        <a class="effect-control" data-action="toggle" data-effect-id="{{effect._id}}" title="Toggle"><i class="fas {{#if effect.disabled}}fa-toggle-off{{else}}fa-toggle-on{{/if}}"></i></a>
+                        <a class="effect-control" data-action="edit" data-effect-id="{{effect._id}}" title="Edit"><i class="fas fa-edit"></i></a>
+                        <a class="effect-control" data-action="delete" data-effect-id="{{effect._id}}" title="Delete"><i class="fas fa-trash"></i></a>
+                    </div>
+                </li>
+                {{/each}}
+            </ol>
+        </div>
+</section>
 </form>

@@ -1,0 +1,505 @@
+/* styles/spell-sheet-compact.css */
+/* Compact spell sheet styling for improved UX */
+
+/* Compact header with flexbox */
+.spell-sheet .compact-header {
+  display: flex;
+  gap: 15px;
+  padding: 10px;
+  background: rgba(0, 0, 0, 0.03);
+  border-bottom: 2px solid rgba(0, 0, 0, 0.15);
+}
+
+.spell-sheet .compact-header .profile-img {
+  flex-shrink: 0;
+  border: 2px solid rgba(0, 0, 0, 0.2);
+  border-radius: 4px;
+}
+
+.spell-sheet .header-fields-compact {
+  flex: 1;
+  min-width: 0;
+}
+
+.spell-sheet .spell-name input {
+  font-size: 20px;
+  font-weight: bold;
+  border: none;
+  background: transparent;
+  width: 100%;
+  padding: 2px 0;
+}
+
+.spell-sheet .spell-stats-row {
+  display: flex;
+  gap: 10px;
+  margin-top: 8px;
+  flex-wrap: wrap;
+  align-items: flex-end;
+}
+
+.spell-sheet .stat-compact {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 60px;
+}
+
+.spell-sheet .stat-compact label {
+  font-size: 11px;
+  font-weight: bold;
+  text-transform: uppercase;
+  opacity: 0.7;
+  line-height: 1;
+}
+
+.spell-sheet .stat-compact input,
+.spell-sheet .stat-compact select {
+  height: 24px;
+  padding: 2px 4px;
+  font-size: 13px;
+}
+
+.spell-sheet .checkbox-compact {
+  display: flex;
+  align-items: center;
+}
+
+.spell-sheet .checkbox-compact label {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 12px;
+  text-transform: none;
+  opacity: 1;
+  cursor: pointer;
+}
+
+.spell-sheet .checkbox-compact input[type="checkbox"] {
+  margin: 0;
+  width: auto;
+  height: auto;
+}
+
+/* Compact attributes section */
+.spell-sheet .attributes-compact {
+  padding: 10px;
+}
+
+.spell-sheet .attribute-section {
+  margin-bottom: 15px;
+  padding: 10px;
+  background: rgba(0, 0, 0, 0.03);
+  border-radius: 4px;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.spell-sheet .attribute-section h4 {
+  margin: 0 0 8px 0;
+  font-size: 14px;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.2);
+  padding-bottom: 4px;
+  color: #333;
+  font-weight: 600;
+}
+
+.spell-sheet .attribute-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 6px;
+}
+
+.spell-sheet .attribute-row label {
+  min-width: 80px;
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.spell-sheet .attribute-row input[type="text"],
+.spell-sheet .attribute-row input[type="number"],
+.spell-sheet .attribute-row select {
+  font-size: 12px;
+  padding: 4px 6px;
+  height: 26px;
+}
+
+.spell-sheet .checkboxes-inline {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 15px;
+}
+
+.spell-sheet .checkboxes-inline label {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 12px;
+  cursor: pointer;
+  user-select: none;
+}
+
+.spell-sheet .checkboxes-inline input[type="checkbox"] {
+  margin: 0;
+  width: auto;
+  height: auto;
+}
+
+/* Hide legacy fields section */
+.spell-sheet .legacy-fields,
+.spell-sheet .attribute-tab-container > h3[data-legacy="true"] {
+  display: none;
+}
+
+/* Improve scaling table */
+.spell-sheet .scaling-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 10px;
+  font-size: 12px;
+}
+
+.spell-sheet .scaling-table th {
+  background: rgba(0, 0, 0, 0.08);
+  padding: 6px 8px;
+  text-align: left;
+  font-weight: 600;
+  border-bottom: 2px solid rgba(0, 0, 0, 0.2);
+}
+
+.spell-sheet .scaling-table td {
+  padding: 4px 8px;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.spell-sheet .scaling-table input {
+  width: 100%;
+  font-size: 12px;
+  padding: 2px 4px;
+}
+
+.spell-sheet .scaling-table button.remove-scaling-level {
+  padding: 4px 8px;
+  background: #dc3545;
+  color: white;
+  border: none;
+  border-radius: 3px;
+  cursor: pointer;
+  font-size: 11px;
+}
+
+.spell-sheet .scaling-table button.remove-scaling-level:hover {
+  background: #c82333;
+}
+
+.spell-sheet button.add-scaling-level {
+  padding: 6px 12px;
+  background: #333;
+  color: white;
+  border: none;
+  border-radius: 3px;
+  cursor: pointer;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.spell-sheet button.add-scaling-level:hover {
+  background: #000;
+}
+
+/* Hint text styling */
+.spell-sheet .hint {
+  font-size: 11px;
+  font-style: italic;
+  opacity: 0.7;
+  margin-top: 2px;
+  line-height: 1.3;
+}
+
+/* Tab content spacing */
+.spell-sheet .tab {
+  padding: 10px;
+}
+
+/* Form group improvements */
+.spell-sheet .form-group {
+  margin-bottom: 12px;
+}
+
+.spell-sheet .form-group label {
+  display: block;
+  font-size: 12px;
+  font-weight: 600;
+  margin-bottom: 4px;
+}
+
+.spell-sheet .form-group input[type="checkbox"] {
+  margin-right: 6px;
+  vertical-align: middle;
+}
+
+.spell-sheet .form-group input[type="text"],
+.spell-sheet .form-group input[type="number"],
+.spell-sheet .form-group select {
+  width: 100%;
+  max-width: 400px;
+  font-size: 12px;
+  padding: 4px 6px;
+}
+
+/* Spell school section styling for actor sheets */
+.spell-school-section {
+  margin-bottom: 8px;
+  border: 1px solid rgba(0, 0, 0, 0.2);
+  border-radius: 3px;
+  background: rgba(0, 0, 0, 0.02);
+}
+
+.spell-school-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 10px;
+  background: rgba(0, 0, 0, 0.1);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.2);
+  cursor: pointer;
+  margin: 0;
+  font-size: 13px;
+  font-weight: 600;
+  user-select: none;
+  transition: background 0.2s;
+}
+
+.spell-school-header:hover {
+  background: rgba(0, 0, 0, 0.15);
+}
+
+.spell-school-header .school-count {
+  opacity: 0.6;
+  font-size: 11px;
+  font-weight: normal;
+}
+
+.spell-school-header .collapse-arrow {
+  font-size: 10px;
+  transition: transform 0.2s;
+}
+
+.spell-school-actions {
+  padding: 6px 10px;
+  background: rgba(0, 0, 0, 0.03);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.spell-school-actions .item-create {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 10px;
+  background: #333;
+  color: white;
+  border-radius: 3px;
+  cursor: pointer;
+  font-size: 11px;
+  font-weight: 600;
+  transition: background 0.2s;
+  text-decoration: none;
+}
+
+.spell-school-actions .item-create:hover {
+  background: #000;
+}
+
+.spell-school-actions .item-create i {
+  font-size: 10px;
+}
+
+.spell-school-table {
+  width: 100%;
+  border-collapse: collapse;
+  background: #fff;
+}
+
+.spell-school-table thead {
+  background: rgba(0, 0, 0, 0.05);
+}
+
+.spell-school-table th {
+  padding: 6px 8px;
+  text-align: left;
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.spell-row {
+  border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+.spell-row:hover {
+  background: rgba(0, 0, 0, 0.03);
+}
+
+.spell-name-cell {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  cursor: pointer;
+  padding: 4px 8px;
+}
+
+.spell-name-cell .item-img {
+  width: 24px;
+  height: 24px;
+  border-radius: 2px;
+  border: 1px solid rgba(0, 0, 0, 0.2);
+  flex-shrink: 0;
+}
+
+.spell-name-cell .item-name {
+  font-size: 13px;
+}
+
+.spell-rank-cell,
+.spell-mp-cell {
+  font-size: 12px;
+  color: #666;
+  text-align: center;
+  padding: 4px 8px;
+}
+
+.spell-actions-cell {
+  text-align: center;
+  padding: 4px 8px;
+}
+
+.spell-actions-cell .item-delete {
+  cursor: pointer;
+  color: #999;
+  font-size: 12px;
+}
+
+.spell-actions-cell .item-delete:hover {
+  color: #c00;
+}
+
+.spell-header {
+  padding: 10px;
+  background: rgba(0, 0, 0, 0.03);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.15);
+}
+
+.spell-create {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  background: #333;
+  color: white;
+  border-radius: 3px;
+  cursor: pointer;
+  font-size: 12px;
+  font-weight: 600;
+  transition: background 0.2s;
+}
+
+.spell-create:hover {
+  background: #000;
+}
+
+.spell-create i {
+  font-size: 10px;
+}
+
+/* Spell sheet Effects tab - match actor sheet styling (Issue #4 fix) */
+.spell-sheet .effects-list {
+  list-style: none;
+  padding: 0;
+  margin: 10px 0;
+}
+
+.spell-sheet .effects-list .effect {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 8px;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+  background: rgba(0, 0, 0, 0.02);
+  transition: background 0.2s ease;
+}
+
+.spell-sheet .effects-list .effect:hover {
+  background: rgba(0, 0, 0, 0.05);
+}
+
+/* Effect icon - compact size matching actor sheets (32x32px) */
+.spell-sheet .effects-list .effect-icon {
+  width: 32px;
+  height: 32px;
+  object-fit: contain;
+  border: 1px solid rgba(0, 0, 0, 0.2);
+  border-radius: 3px;
+  flex-shrink: 0;
+}
+
+/* Effect name */
+.spell-sheet .effects-list .effect-name {
+  flex: 1;
+  font-size: 14px;
+  font-weight: 500;
+  margin: 0;
+  color: #333;
+}
+
+/* Effect controls */
+.spell-sheet .effects-list .effect-controls {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+}
+
+.spell-sheet .effects-list .effect-control {
+  padding: 4px 6px;
+  border: 1px solid rgba(0, 0, 0, 0.2);
+  border-radius: 3px;
+  background: rgba(255, 255, 255, 0.3);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-size: 12px;
+}
+
+.spell-sheet .effects-list .effect-control:hover {
+  background: rgba(0, 100, 200, 0.2);
+  border-color: #0064c8;
+}
+
+/* Active Effects header */
+.spell-sheet .effects-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 0;
+  border-bottom: 2px solid rgba(0, 0, 0, 0.2);
+  margin-bottom: 10px;
+}
+
+.spell-sheet .effects-header h3 {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.spell-sheet .effects-header .effect-control {
+  padding: 6px 10px;
+  background: rgba(0, 100, 0, 0.1);
+  border: 1px solid rgba(0, 100, 0, 0.3);
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.spell-sheet .effects-header .effect-control:hover {
+  background: rgba(0, 100, 0, 0.2);
+}
+

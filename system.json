@@ -6,7 +6,9 @@
     "module/entrypoint.js"
   ],
   "styles": [
-    "styles/main.css"
+    "styles/main.css",
+    "styles/spell-sheet-compact.css",
+    "styles/group-sheet.css"
   ],
   "packs": [
     {
@@ -224,5 +226,6 @@
   "compatibility": {
     "minimum": "12",
     "verified": "13"
-  }
+  },
+  "socket": true
 }

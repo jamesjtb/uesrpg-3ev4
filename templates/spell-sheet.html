@@ -1,95 +1,152 @@
-<form class="{{cssClass}}" autocomplete="off">
-    <div class="stickyHeader">
-        <header class="sheet-header">
-            <div class="header-fields">
-                <h1 class="charname flex-container">
-                    <img class="profile-img" src="{{item.img}}" data-edit="img" title="{{item.name}}"/>
-                    <input name="name" type="text" value="{{item.name}}" placeholder="Name"/>
-                </h1>
-                <div class="item-resource-container">
-                    <div class="item-resource-row">
-                        <div class="item-resource">
-                            <div class="stat-value-label">
-                                <input type="number" name="system.level" value="{{item.system.level}}"/>
-                            </div>
-                            <div class="flex-container">
-                                <div class="small-text-label">Level</div>
-                            </div>
-                        </div>
-                        <div class="item-resource">
-                            <div class="stat-value-label">
-                                <input type="number" name="system.cost" value="{{item.system.cost}}"/>
-                            </div>
-                            <div class="flex-container">
-                                <div class="small-text-label">MP Cost</div>
-                            </div>
-                        </div>
-                        <div class="item-resource">
-                            <div class="stat-value-label">
-                                <select name="system.school" data-dtype="String">
-                                    {{selectOptions item.system.school_cat selected=item.system.school localize=true}}
-                                </select>
-                            </div>
-                            <div class="flex-container">
-                                <div class="small-text-label">School</div>
-                            </div>
-                        </div>
-                        <div class="item-resource">
-                            <div class="stat-value-label">
-                                <select name="system.spellType" data-dtype="String">
-                                    {{selectOptions item.system.spellTypes selected=item.system.spellType localize=true}}
-                                </select>
-                            </div>
-                            <div class="flex-container">
-                                <div class="small-text-label">Type</div>
-                            </div>
-                        </div>
-                        <div class="item-resource">
-                            <div class="stat-value-label">
-                                <input type="text" name="system.damage" value="{{item.system.damage}}"/>
-                            </div>
-                            <div class="flex-container">
-                                <div class="small-text-label">Damage</div>
-                            </div>
-                        </div>
-                        <div class="item-resource">
-                            <div class="stat-value-label">
-                                <input type="text" name="system.form" value="{{item.system.form}}"/>
-                            </div>
-                            <div class="flex-container">
-                                <div class="small-text-label">Form</div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </header>
-
-        {{!-- Sheet Tab Navigation --}}
-        <nav class="sheet-tabs tabs" data-group="primary">
-            <a class="item" data-tab="description">Description</a>
-            <a class="item" data-tab="attributes">Attributes</a>
-        </nav>
+<form class="{{cssClass}} spell-sheet" autocomplete="off">
+  <header class="sheet-header compact-header">
+    <img class="profile-img" src="{{item.img}}" data-edit="img" title="{{item.name}}" height="60" width="60"/>
+    <div class="header-fields-compact">
+      <h1 class="spell-name">
+        <input name="name" type="text" value="{{item.name}}" placeholder="Spell Name"/>
+      </h1>
+      <div class="spell-stats-row">
+        <div class="stat-compact">
+          <label>Level</label>
+          <input type="number" name="system.level" value="{{item.system.level}}" min="1" max="7"/>
         </div>
+        <div class="stat-compact">
+          <label>MP</label>
+          <input type="number" name="system.cost" value="{{item.system.cost}}" min="0"/>
+        </div>
+        <div class="stat-compact">
+          <label>School</label>
+          <select name="system.school" data-dtype="String">
+            {{selectOptions item.system.school_cat selected=item.system.school localize=true}}
+          </select>
+        </div>
+        <div class="stat-compact">
+          <label>Type</label>
+          <select name="system.spellType" data-dtype="String">
+            {{selectOptions item.system.spellTypes selected=item.system.spellType localize=true}}
+          </select>
+        </div>
+        <div class="stat-compact checkbox-compact">
+          <label><input type="checkbox" name="flags.uesrpg-3ev4.activeSpell" {{checked (lookup (lookup item.flags "uesrpg-3ev4") "activeSpell")}} /> Active</label>
+        </div>
+      </div>
+    </div>
+  </header>
 
-        {{!-- Sheet Body --}}
-        <section class="sheet-body">
+  <nav class="sheet-tabs tabs" data-group="primary">
+    <a class="item" data-tab="description">Description</a>
+    <a class="item" data-tab="attributes">Attributes</a>
+    <a class="item" data-tab="effects">Effects</a>
+  </nav>
 
-            {{!-- Description Tab --}}
-            <div class="tab" data-group="primary" data-tab="description">
-                {{editor item.system.enrichedDescription target="system.description" engine="prosemirror" button=true owner=owner editable=editable}}
-            </div>
+  <section class="sheet-body">
+    {{!-- Description Tab --}}
+    <div class="tab" data-group="primary" data-tab="description">
+      {{editor item.system.enrichedDescription target="system.description" engine="prosemirror" button=true owner=owner editable=editable}}
+    </div>
 
-            {{!-- Attributes Tab --}}
-            <div class="tab" data-group="primary" data-tab="attributes">
-                <div class="attribute-tab-container">
-                    <div class="quality-container">
-                        <div class="flex-container">
-                            <h2>Spell Attributes</h2>
-                            <div>{{editor item.system.attributes target="system.attributes" engine="prosemirror" button=true owner=owner editable=editable}}</div>
-                        </div>
-                    </div>
-                </div>
-            </div>
+    {{!-- Attributes Tab --}}
+    <div class="tab" data-group="primary" data-tab="attributes">
+      <div class="attributes-compact">
+        <section class="attribute-section">
+          <h4>Combat</h4>
+          <div class="attribute-row" style="display: flex; align-items: center; gap: 15px;">
+            <label class="checkbox-label">
+              <input type="checkbox" name="system.isAttackSpell" {{checked item.system.isAttackSpell}} />
+              Attack Spell
+            </label>
+            <label style="margin-left: 10px;">Damage Type</label>
+            <select name="system.damageType" style="width: 150px;">
+              {{selectOptions item.system.damageTypes selected=item.system.damageType}}
+            </select>
+            <input type="text" name="system.damageFormula" value="{{item.system.damageFormula}}" placeholder="1d6" style="width: 100px;" />
+          </div>
+          <p class="hint">Healing spells restore HP. Attack spells use opposed rolls. Direct spells cannot be defended.</p>
         </section>
+        
+        <section class="attribute-section">
+          <h4>Casting</h4>
+          <div class="checkboxes-inline">
+            <label><input type="checkbox" name="system.isInstant" {{checked item.system.isInstant}} /> Instant</label>
+            <label><input type="checkbox" name="system.hasUpkeep" {{checked item.system.hasUpkeep}} /> Upkeep</label>
+            <label><input type="checkbox" name="system.hasOverload" {{checked item.system.hasOverload}} /> Overload</label>
+            <label><input type="checkbox" name="system.hasReinforce" {{checked item.system.hasReinforce}} /> Reinforce</label>
+            <label><input type="checkbox" name="system.isDirect" {{checked item.system.isDirect}} /> Direct</label>
+          </div>
+          {{#if item.system.hasOverload}}
+          <div class="attribute-row" style="margin-top: 8px;">
+            <input type="text" name="system.overloadEffect" value="{{item.system.overloadEffect}}" placeholder="Overload effect description" style="width: 100%;" />
+          </div>
+          {{/if}}
+        </section>
+        
+        <section class="attribute-section">
+          <h4>Range & Duration</h4>
+          <div class="attribute-row">
+            <label>Range</label>
+            <select name="system.rangeType" style="width: 120px;">
+              <option value="none" {{#if (eq item.system.rangeType "none")}}selected{{/if}}>None</option>
+              <option value="ranged" {{#if (eq item.system.rangeType "ranged")}}selected{{/if}}>Ranged</option>
+              <option value="melee" {{#if (eq item.system.rangeType "melee")}}selected{{/if}}>Melee</option>
+              <option value="aoe" {{#if (eq item.system.rangeType "aoe")}}selected{{/if}}>AoE</option>
+            </select>
+            <input type="text" name="system.range" value="{{item.system.range}}" placeholder="e.g. 100m" style="width: 150px; margin-left: 10px;" />
+          </div>
+          {{#if (eq item.system.rangeType "aoe")}}
+          <div class="attribute-row">
+            <label>AoE</label>
+            <select name="system.aoeShape" style="width: 140px;">
+              <option value="circle" {{#if (eq item.system.aoeShape "circle")}}selected{{/if}}>Circle (Radius)</option>
+              <option value="cone" {{#if (eq item.system.aoeShape "cone")}}selected{{/if}}>Cone</option>
+              <option value="ray" {{#if (eq item.system.aoeShape "ray")}}selected{{/if}}>Ray (Line)</option>
+              <option value="rect" {{#if (eq item.system.aoeShape "rect")}}selected{{/if}}>Rectangle</option>
+              <option value="pulse" {{#if (eq item.system.aoeShape "pulse")}}selected{{/if}}>Pulse (Centered on Caster)</option>
+            </select>
+            <input type="number" name="system.aoeSize" value="{{item.system.aoeSize}}" min="0" step="0.5" placeholder="Size (m)" style="width: 110px; margin-left: 10px;" />
+            <input type="number" name="system.aoeWidth" value="{{item.system.aoeWidth}}" min="0" step="0.5" placeholder="Width (m)" style="width: 110px; margin-left: 10px;" />
+            <label style="margin-left:10px; display:flex; align-items:center; gap:6px;">
+              <input type="checkbox" name="system.aoeIncludeCaster" {{#if item.system.aoeIncludeCaster}}checked{{/if}} />
+              Affect Caster
+            </label>
+          </div>
+          {{/if}}
+          <div class="attribute-row" style="display: flex; align-items: center; gap: 10px;">
+            <label>Duration</label>
+            {{#unless (or (eq item.system.duration.unit "instant") (eq item.system.duration.unit "permanent"))}}
+              <input type="number" name="system.duration.value" value="{{item.system.duration.value}}" min="0" style="width: 80px;" />
+            {{/unless}}
+            <select name="system.duration.unit" style="width: 120px;">
+              {{selectOptions item.system.duration.units selected=item.system.duration.unit}}
+            </select>
+            <label style="margin-left: 20px;">Mindlock</label>
+            <input type="number" name="system.mindlockValue" value="{{item.system.mindlockValue}}" min="0" style="width: 60px;" />
+            <span class="hint" style="margin-left: 8px;">Reduces max AP while active</span>
+          </div>
+        </section>
+      </div>
+    </div>
+
+    {{!-- Effects Tab --}}
+    <div class="tab effects" data-group="primary" data-tab="effects">
+      <header class="effects-header flexrow">
+        <h3>Active Effects</h3>
+        <a class="effect-control" data-action="create" title="Create Effect"><i class="fas fa-plus"></i></a>
+      </header>
+      <ol class="effects-list">
+        {{#each effects as |effect id|}}
+        <li class="effect flexrow" data-effect-id="{{effect._id}}">
+          <img class="effect-icon" src="{{effect.img}}" title="{{effect.name}}" alt="{{effect.name}}"/>
+          <h4 class="effect-name">{{effect.name}}</h4>
+          <div class="effect-controls">
+            <a class="effect-control" data-action="edit" data-effect-id="{{effect._id}}" title="Edit Effect"><i class="fas fa-edit"></i></a>
+            <a class="effect-control" data-action="delete" data-effect-id="{{effect._id}}" title="Delete Effect"><i class="fas fa-trash"></i></a>
+            <a class="effect-control" data-action="toggle" data-effect-id="{{effect._id}}" title="{{#if effect.disabled}}Enable{{else}}Disable{{/if}} Effect">
+              <i class="fas {{#if effect.disabled}}fa-check{{else}}fa-times{{/if}}"></i>
+            </a>
+          </div>
+        </li>
+        {{/each}}
+      </ol>
+    </div>
+  </section>
 </form>

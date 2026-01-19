@@ -25,7 +25,9 @@
         <nav class="sheet-tabs tabs" data-group="primary">
             <a class="item" data-tab="description">Description</a>
             <a class="item" data-tab="attributes">Attributes</a>
-        </nav>
+            <a class="item" data-tab="activation">Activation</a>
+            <a class="item" data-tab="effects">Effects</a>
+</nav>
     </div>
     
         {{!-- Sheet Body --}}
@@ -78,130 +80,429 @@
                                     <input class="checkbox" type="checkbox" name="system.addHalfSpeed" {{checked item.system.addHalfSpeed}}>
                                 </div>
                             </div>
+                            <h3 style="margin-top: 10px;">Structured Data (Optional)</h3>
+                            <div class="grid-container">
+                                <div>Stacking Key</div>
+                                <div class="right-align-content">
+                                    <input type="text" name="system.traitKey" value="{{item.system.traitKey}}" placeholder="e.g., resistance.fire" />
+                                </div>
+                            </div>
+                            <div class="grid-container">
+                                <div>Parameter / Type</div>
+                                <div class="right-align-content">
+                                    <input type="text" name="system.traitParam" value="{{item.system.traitParam}}" placeholder="e.g., Fire" />
+                                </div>
+                            </div>
+                            <div class="grid-container">
+                                <div>Value (X)</div>
+                                <div class="right-align-content">
+                                    <input type="number" name="system.traitValue" value="{{item.system.traitValue}}" step="1" />
+                                </div>
+                            </div>
+                            <div class="grid-container">
+                                <div>Unit</div>
+                                <div class="right-align-content">
+                                    <input type="text" name="system.traitUnit" value="{{item.system.traitUnit}}" placeholder="e.g., %, flat" />
+                                </div>
+                            </div>
+                            <div class="grid-container">
+                                <div>Notes</div>
+                                <div class="right-align-content">
+                                    <input type="text" name="system.traitNotes" value="{{item.system.traitNotes}}" />
+                                </div>
+                            </div>
                         </div>
                     </div>
                     <div class="attribute-container">
                         <div class="item-characteristic-container">
                             <h2>Characteristics</h2>
                             <div class="modifier-container single-column-grid">
+                                {{#if item.system.characteristicBonus}}
                                 <div class="grid-container">
                                     <div>Strength</div>
-                                    <div><input type="number" name="system.characteristicBonus.strChaBonus" value="{{item.system.characteristicBonus.strChaBonus}}"></div>
+                                    <div><input type="number" name="system.characteristicBonus.strChaBonus" value="{{#if item.system.characteristicBonus.strChaBonus}}{{item.system.characteristicBonus.strChaBonus}}{{else}}0{{/if}}"></div>
                                 </div>
                                 <div class="grid-container">
                                     <div>Endurance</div>
-                                    <div><input type="number" name="system.characteristicBonus.endChaBonus" value="{{item.system.characteristicBonus.endChaBonus}}"></div>
+                                    <div><input type="number" name="system.characteristicBonus.endChaBonus" value="{{#if item.system.characteristicBonus.endChaBonus}}{{item.system.characteristicBonus.endChaBonus}}{{else}}0{{/if}}"></div>
                                 </div>
                                 <div class="grid-container">
                                     <div>Agility</div>
-                                    <div><input type="number" name="system.characteristicBonus.agiChaBonus" value="{{item.system.characteristicBonus.agiChaBonus}}"></div>
+                                    <div><input type="number" name="system.characteristicBonus.agiChaBonus" value="{{#if item.system.characteristicBonus.agiChaBonus}}{{item.system.characteristicBonus.agiChaBonus}}{{else}}0{{/if}}"></div>
                                 </div>
                                 <div class="grid-container">
                                     <div>Intelligence</div>
-                                    <div><input type="number" name="system.characteristicBonus.intChaBonus" value="{{item.system.characteristicBonus.intChaBonus}}"></div>
+                                    <div><input type="number" name="system.characteristicBonus.intChaBonus" value="{{#if item.system.characteristicBonus.intChaBonus}}{{item.system.characteristicBonus.intChaBonus}}{{else}}0{{/if}}"></div>
                                 </div>
                                 <div class="grid-container">
                                     <div>Willpower</div>
-                                    <div><input type="number" name="system.characteristicBonus.wpChaBonus" value="{{item.system.characteristicBonus.wpChaBonus}}"></div>
+                                    <div><input type="number" name="system.characteristicBonus.wpChaBonus" value="{{#if item.system.characteristicBonus.wpChaBonus}}{{item.system.characteristicBonus.wpChaBonus}}{{else}}0{{/if}}"></div>
                                 </div>
                                 <div class="grid-container">
                                     <div>Perception</div>
-                                    <div><input type="number" name="system.characteristicBonus.prcChaBonus" value="{{item.system.characteristicBonus.prcChaBonus}}"></div>
+                                    <div><input type="number" name="system.characteristicBonus.prcChaBonus" value="{{#if item.system.characteristicBonus.prcChaBonus}}{{item.system.characteristicBonus.prcChaBonus}}{{else}}0{{/if}}"></div>
                                 </div>
                                 <div class="grid-container">
                                     <div>Personality</div>
-                                    <div><input type="number" name="system.characteristicBonus.prsChaBonus" value="{{item.system.characteristicBonus.prsChaBonus}}"></div>
+                                    <div><input type="number" name="system.characteristicBonus.prsChaBonus" value="{{#if item.system.characteristicBonus.prsChaBonus}}{{item.system.characteristicBonus.prsChaBonus}}{{else}}0{{/if}}"></div>
                                 </div>
                                 <div class="grid-container">
                                     <div>Luck</div>
-                                    <div><input type="number" name="system.characteristicBonus.lckChaBonus" value="{{item.system.characteristicBonus.lckChaBonus}}"></div>
+                                    <div><input type="number" name="system.characteristicBonus.lckChaBonus" value="{{#if item.system.characteristicBonus.lckChaBonus}}{{item.system.characteristicBonus.lckChaBonus}}{{else}}0{{/if}}"></div>
                                 </div>
+                                {{else}}
+                                <div style="padding: 10px; text-align: center; font-style: italic;">
+                                    No characteristic bonuses (defaults to 0)
+                                </div>
+                                {{/if}}
                             </div>
                         </div>
                         <div class="item-resistance-container">
                             <h2>Resistances</h2>
                             <div class="modifier-container single-column-grid">
+                                {{!-- Guard: defensive access for resistance values with default 0 --}}
                                 <div class="grid-container">
                                     <div>Disease</div>
-                                    <div><input type="number" name="system.diseaseR" value="{{item.system.diseaseR}}"></div>
+                                    <div><input type="number" name="system.diseaseR" value="{{#if item.system.diseaseR}}{{item.system.diseaseR}}{{else}}0{{/if}}"></div>
                                 </div>
                                 <div class="grid-container">
                                     <div>Fire</div>
-                                    <div><input type="number" name="system.fireR" value="{{item.system.fireR}}"></div>
+                                    <div><input type="number" name="system.fireR" value="{{#if item.system.fireR}}{{item.system.fireR}}{{else}}0{{/if}}"></div>
                                 </div>
                                 <div class="grid-container">
                                     <div>Frost</div>
-                                    <div><input type="number" name="system.frostR" value="{{item.system.frostR}}"></div>
+                                    <div><input type="number" name="system.frostR" value="{{#if item.system.frostR}}{{item.system.frostR}}{{else}}0{{/if}}"></div>
                                 </div>
                                 <div class="grid-container">
                                     <div>Shock</div>
-                                    <div><input type="number" name="system.shockR" value="{{item.system.shockR}}"></div>
+                                    <div><input type="number" name="system.shockR" value="{{#if item.system.shockR}}{{item.system.shockR}}{{else}}0{{/if}}"></div>
                                 </div>
                                 <div class="grid-container">
                                     <div>Poison</div>
-                                    <div><input type="number" name="system.poisonR" value="{{item.system.poisonR}}"></div>
+                                    <div><input type="number" name="system.poisonR" value="{{#if item.system.poisonR}}{{item.system.poisonR}}{{else}}0{{/if}}"></div>
                                 </div>
                                 <div class="grid-container">
                                     <div>Magic</div>
-                                    <div><input type="number" name="system.magicR" value="{{item.system.magicR}}"></div>
+                                    <div><input type="number" name="system.magicR" value="{{#if item.system.magicR}}{{item.system.magicR}}{{else}}0{{/if}}"></div>
                                 </div>
                                 <div class="grid-container">
                                     <div>Toughness</div>
-                                    <div><input type="number" name="system.natToughnessR" value="{{item.system.natToughnessR}}"></div>
+                                    <div><input type="number" name="system.natToughnessR" value="{{#if item.system.natToughnessR}}{{item.system.natToughnessR}}{{else}}0{{/if}}"></div>
                                 </div>
                                 <div class="grid-container">
                                     <div>Silver</div>
-                                    <div><input type="number" name="system.silverR" value="{{item.system.silverR}}"></div>
+                                    <div><input type="number" name="system.silverR" value="{{#if item.system.silverR}}{{item.system.silverR}}{{else}}0{{/if}}"></div>
                                 </div>
                                 <div class="grid-container">
                                     <div>Sunlight</div>
-                                    <div><input type="number" name="system.sunlightR" value="{{item.system.sunlightR}}"></div>
+                                    <div><input type="number" name="system.sunlightR" value="{{#if item.system.sunlightR}}{{item.system.sunlightR}}{{else}}0{{/if}}"></div>
                                 </div>
                             </div>
                         </div>
                         <div class="item-resistance-container">
                             <h2>Stats</h2>
                             <div class="modifier-container single-column-grid">
+                                {{!-- Guard: defensive access for stat bonus values with default 0 --}}
                                 <div class="grid-container">
                                     <div>HP+</div>
-                                    <div><input type="number" name="system.hpBonus" value="{{item.system.hpBonus}}"></div>
+                                    <div><input type="number" name="system.hpBonus" value="{{#if item.system.hpBonus}}{{item.system.hpBonus}}{{else}}0{{/if}}"></div>
                                 </div>
                                 <div class="grid-container">
                                     <div>Stamina+</div>
-                                    <div><input type="number" name="system.spBonus" value="{{item.system.spBonus}}"></div>
+                                    <div><input type="number" name="system.spBonus" value="{{#if item.system.spBonus}}{{item.system.spBonus}}{{else}}0{{/if}}"></div>
                                 </div>
                                 <div class="grid-container">
                                     <div>Magicka+</div>
-                                    <div><input type="number" name="system.mpBonus" value="{{item.system.mpBonus}}"></div>
+                                    <div><input type="number" name="system.mpBonus" value="{{#if item.system.mpBonus}}{{item.system.mpBonus}}{{else}}0{{/if}}"></div>
                                 </div>
                                 <div class="grid-container">
                                     <div>Luck+</div>
-                                    <div><input type="number" name="system.lpBonus" value="{{item.system.lpBonus}}"></div>
+                                    <div><input type="number" name="system.lpBonus" value="{{#if item.system.lpBonus}}{{item.system.lpBonus}}{{else}}0{{/if}}"></div>
                                 </div>
                                 <div class="grid-container">
                                     <div>Wound+</div>
-                                    <div><input type="number" name="system.wtBonus" value="{{item.system.wtBonus}}"></div>
+                                    <div><input type="number" name="system.wtBonus" value="{{#if item.system.wtBonus}}{{item.system.wtBonus}}{{else}}0{{/if}}"></div>
                                 </div>
                                 <div class="grid-container">
                                     <div>Initiative+</div>
-                                    <div><input type="number" name="system.iniBonus" value="{{item.system.iniBonus}}"></div>
+                                    <div><input type="number" name="system.iniBonus" value="{{#if item.system.iniBonus}}{{item.system.iniBonus}}{{else}}0{{/if}}"></div>
                                 </div>
                                 <div class="grid-container">
                                     <div>Speed+</div>
-                                    <div><input type="number" name="system.speedBonus" value="{{item.system.speedBonus}}"></div>
+                                    <div><input type="number" name="system.speedBonus" value="{{#if item.system.speedBonus}}{{item.system.speedBonus}}{{else}}0{{/if}}"></div>
                                 </div>
                                 <div class="grid-container">
                                     <div>Swim+</div>
-                                    <div><input type="number" name="system.swimBonus" value="{{item.system.swimBonus}}"></div>
+                                    <div><input type="number" name="system.swimBonus" value="{{#if item.system.swimBonus}}{{item.system.swimBonus}}{{else}}0{{/if}}"></div>
                                 </div>
                                 <div class="grid-container">
                                     <div>Fly+</div>
-                                    <div><input type="number" name="system.flyBonus" value="{{item.system.flyBonus}}"></div>
+                                    <div><input type="number" name="system.flyBonus" value="{{#if item.system.flyBonus}}{{item.system.flyBonus}}{{else}}0{{/if}}"></div>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-        </section>
+
+            {{!-- Activation Tab --}}
+            <div class="tab" data-group="primary" data-tab="activation">
+                <div class="attribute-tab-container">
+                    <div class="item-selection-container">
+                        <h2>Activation</h2>
+                        <div class="selection-container">
+                            <div class="grid-container">
+                                <div title="If enabled, using this trait posts an activation card and (optionally) spends configured costs/uses.">Activated Trait</div>
+                                <div class="right-align-content">
+                                    <input class="checkbox" type="checkbox" name="system.activation.enabled" {{checked item.system.activation.enabled}}>
+                                </div>
+                            </div>
+
+                            <div class="grid-container">
+                                <div>Action Type</div>
+                                <div class="right-align-content">
+                                    <select name="system.activation.actionType" data-type="String">
+                                        {{selectOptions traitActionTypeOptions selected=item.system.activation.actionType localize=false}}
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="grid-container">
+                                <div title="If enabled, configured costs are deducted from the owning actor when the trait is used.">Spend costs on use</div>
+                                <div class="right-align-content">
+                                    <input class="checkbox" type="checkbox" name="system.activation.spendCosts" {{checked item.system.activation.spendCosts}}>
+                                </div>
+                            </div>
+
+                            <div class="grid-container">
+                                <div title="If enabled, using this trait consumes one use from the Usage tracker.">Consume a use on activation</div>
+                                <div class="right-align-content">
+                                    <input class="checkbox" type="checkbox" name="system.activation.consumeUse" {{checked item.system.activation.consumeUse}}>
+                                </div>
+                            </div>
+
+                            <h3 style="margin-top: 10px;">Requirements</h3>
+                            <div class="grid-container">
+                                <div>Requires Target</div>
+                                <div class="right-align-content">
+                                    <input class="checkbox" type="checkbox" name="system.activation.requirements.requiresTarget" {{checked item.system.activation.requirements.requiresTarget}}>
+                                </div>
+                            </div>
+                            <div class="grid-container">
+                                <div>Requires Equipped Weapon</div>
+                                <div class="right-align-content">
+                                    <input class="checkbox" type="checkbox" name="system.activation.requirements.requiresEquippedWeapon" {{checked item.system.activation.requirements.requiresEquippedWeapon}}>
+                                </div>
+                            </div>
+                            <div class="grid-container">
+                                <div>Requires Melee Weapon</div>
+                                <div class="right-align-content">
+                                    <input class="checkbox" type="checkbox" name="system.activation.requirements.requiresMelee" {{checked item.system.activation.requirements.requiresMelee}}>
+                                </div>
+                            </div>
+                            <div class="grid-container">
+                                <div>Requires Ranged Weapon</div>
+                                <div class="right-align-content">
+                                    <input class="checkbox" type="checkbox" name="system.activation.requirements.requiresRanged" {{checked item.system.activation.requirements.requiresRanged}}>
+                                </div>
+                            </div>
+                            <div class="grid-container">
+                                <div>Requires Hit Location</div>
+                                <div class="right-align-content">
+                                    <input class="checkbox" type="checkbox" name="system.activation.requirements.requiresHitLocation" {{checked item.system.activation.requirements.requiresHitLocation}}>
+                                </div>
+                            </div>
+
+                            <h3 style="margin-top: 10px;">NPC Flags</h3>
+                            <div class="grid-container">
+                                <div>Allow NPC Luck</div>
+                                <div class="right-align-content">
+                                    <input class="checkbox" type="checkbox" name="system.activation.flags.npcLuckAllowed" {{checked item.system.activation.flags.npcLuckAllowed}}>
+                                </div>
+                            </div>
+                            <div class="grid-container">
+                                <div>Allow NPC Heroic Actions</div>
+                                <div class="right-align-content">
+                                    <input class="checkbox" type="checkbox" name="system.activation.flags.npcEliteAllowed" {{checked item.system.activation.flags.npcEliteAllowed}}>
+                                </div>
+                            </div>
+
+                            <h3 style="margin-top: 10px;">Attack</h3>
+                            <div class="grid-container">
+                                <div>Is Attack?</div>
+                                <div class="right-align-content">
+                                    <select name="system.activation.roll.mode" data-type="String">
+                                        <option value="none" {{#if (eq item.system.activation.roll.mode "none")}}selected{{/if}}>No</option>
+                                        <option value="attack" {{#if (eq item.system.activation.roll.mode "attack")}}selected{{/if}}>Yes</option>
+                                    </select>
+                                </div>
+                            </div>
+                            {{#if (eq item.system.activation.roll.mode "attack")}}
+                            <div class="grid-container">
+                                <div>Hit Location Mode</div>
+                                <div class="right-align-content">
+                                    <select name="system.activation.roll.hitLocationMode" data-type="String">
+                                        {{selectOptions activationHitLocationModeOptions selected=item.system.activation.roll.hitLocationMode localize=false}}
+                                    </select>
+                                </div>
+                            </div>
+                            {{/if}}
+
+                            <h3 style="margin-top: 10px;">Damage / Healing</h3>
+                            <div class="grid-container">
+                                <div>Mode</div>
+                                <div class="right-align-content">
+                                    <select name="system.activation.damage.mode" data-type="String">
+                                        {{selectOptions activationDamageModeOptions selected=item.system.activation.damage.mode localize=false}}
+                                    </select>
+                                </div>
+                            </div>
+                            {{#if (eq item.system.activation.damage.mode "manual")}}
+                            <div class="grid-container">
+                                <div>Damage Formula</div>
+                                <div class="right-align-content">
+                                    <input type="text" name="system.activation.damage.formula" value="{{item.system.activation.damage.formula}}" placeholder="e.g., 1d8+2" />
+                                </div>
+                            </div>
+                            <div class="grid-container">
+                                <div>Damage Type</div>
+                                <div class="right-align-content">
+                                    <select name="system.activation.damage.type" data-type="String">
+                                        {{selectOptions activationDamageTypeOptions selected=item.system.activation.damage.type localize=false}}
+                                    </select>
+                                </div>
+                            </div>
+                            <div style="margin-top: 8px;">
+                                <div style="font-weight: 600; margin-bottom: 4px;">Damage Qualities</div>
+                                <input type="hidden" name="activationDamageQualities.present" value="1" />
+                                <div class="structured-qualities-grid">
+                                    {{#each activationDamageQualitiesCatalog}}
+                                        <div class="structured-qualities-cell">
+                                            <div>{{this.label}}</div>
+                                            <div class="right-align-content">
+                                                {{#if this.optionalValue}}
+                                                    <div class="structured-optional-value">
+                                                        <input class="checkbox" type="checkbox" name="activationDamageQualitiesStructured.toggle.{{this.key}}" {{checked (lookup ../activationDamageSelectedToggle this.key)}} />
+                                                        <input class="structured-value structured-value--opt" type="number" name="activationDamageQualitiesStructured.value.{{this.key}}" value="{{lookup ../activationDamageSelectedValue this.key}}" min="0" step="1" placeholder="X" />
+                                                    </div>
+                                                {{else}}
+                                                    {{#if this.hasValue}}
+                                                        <input class="structured-value" type="number" name="activationDamageQualitiesStructured.value.{{this.key}}" value="{{lookup ../activationDamageSelectedValue this.key}}" min="0" step="1" />
+                                                    {{else}}
+                                                        <input class="checkbox" type="checkbox" name="activationDamageQualitiesStructured.toggle.{{this.key}}" {{checked (lookup ../activationDamageSelectedToggle this.key)}} />
+                                                    {{/if}}
+                                                {{/if}}
+                                            </div>
+                                        </div>
+                                    {{/each}}
+                                </div>
+                                <div class="structured-traits-block" style="margin-top: 6px;">
+                                    <div class="structured-traits-label">Other Traits</div>
+                                    <div class="structured-traits-pills">
+                                        {{#each activationDamageTraitsCatalog}}
+                                            <label class="uesrpg-pill {{#if this.selected}}is-selected{{/if}}">
+                                                <input type="checkbox" name="activationDamageQualitiesTraits.toggle.{{this.key}}" {{checked this.selected}} />
+                                                <span>{{this.label}}</span>
+                                            </label>
+                                        {{/each}}
+                                    </div>
+                                </div>
+                            </div>
+                            {{/if}}
+                            {{#if (eq item.system.activation.damage.mode "healing")}}
+                            <div class="grid-container">
+                                <div>Healing Formula</div>
+                                <div class="right-align-content">
+                                    <input type="text" name="system.activation.damage.formula" value="{{item.system.activation.damage.formula}}" placeholder="e.g., 1d8+2" />
+                                </div>
+                            </div>
+                            {{/if}}
+                            {{#if (eq item.system.activation.damage.mode "temporary")}}
+                            <div class="grid-container">
+                                <div>Temp HP Formula</div>
+                                <div class="right-align-content">
+                                    <input type="text" name="system.activation.damage.formula" value="{{item.system.activation.damage.formula}}" placeholder="e.g., 1d6+1" />
+                                </div>
+                            </div>
+                            {{/if}}
+
+                            <h3 style="margin-top: 10px;">Costs</h3>
+                            <div class="grid-container">
+                                <div>Action Points (AP)</div>
+                                <div class="right-align-content">
+                                    <input type="number" name="system.activation.costs.action_points" value="{{item.system.activation.costs.action_points}}" min="0" step="1" />
+                                </div>
+                            </div>
+                            <div class="grid-container">
+                                <div>Stamina (SP)</div>
+                                <div class="right-align-content">
+                                    <input type="number" name="system.activation.costs.stamina" value="{{item.system.activation.costs.stamina}}" min="0" step="1" />
+                                </div>
+                            </div>
+                            <div class="grid-container">
+                                <div>Magicka (MP)</div>
+                                <div class="right-align-content">
+                                    <input type="number" name="system.activation.costs.magicka" value="{{item.system.activation.costs.magicka}}" min="0" step="1" />
+                                </div>
+                            </div>
+                            <div class="grid-container">
+                                <div>Luck Points (LP)</div>
+                                <div class="right-align-content">
+                                    <input type="number" name="system.activation.costs.luck_points" value="{{item.system.activation.costs.luck_points}}" min="0" step="1" />
+                                </div>
+                            </div>
+                            <div class="grid-container">
+                                <div>Health (HP)</div>
+                                <div class="right-align-content">
+                                    <input type="number" name="system.activation.costs.health" value="{{item.system.activation.costs.health}}" min="0" step="1" />
+                                </div>
+                            </div>
+
+                            <h3 style="margin-top: 10px;">Usage</h3>
+                            <div class="grid-container">
+                                <div>Current</div>
+                                <div class="right-align-content">
+                                    <input type="number" name="system.activation.usage.current" value="{{item.system.activation.usage.current}}" min="0" step="1" />
+                                </div>
+                            </div>
+                            <div class="grid-container">
+                                <div>Max</div>
+                                <div class="right-align-content">
+                                    <input type="number" name="system.activation.usage.max" value="{{item.system.activation.usage.max}}" min="0" step="1" />
+                                </div>
+                            </div>
+                            <div class="grid-container">
+                                <div>Reset</div>
+                                <div class="right-align-content">
+                                    <select name="system.activation.usage.period" data-type="String">
+                                        {{selectOptions activationUsagePeriodOptions selected=item.system.activation.usage.period localize=false}}
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        {{!-- Effects Tab --}}
+        <div class="tab effects" data-group="primary" data-tab="effects">
+            <header class="effects-header flexrow">
+                <h3>Effects</h3>
+                <a class="effect-control" data-action="create" title="Create Effect"><i class="fas fa-plus"></i></a>
+            </header>
+            <ol class="effects-list">
+                {{#each effects as |effect|}}
+                <li class="effect flexrow" data-effect-id="{{effect._id}}">
+                    <img class="effect-icon" src="{{effect.img}}" />
+                    <h4 class="effect-name">{{effect.name}}</h4>
+                    <div class="effect-controls flexrow">
+                        <a class="effect-control" data-action="toggle" data-effect-id="{{effect._id}}" title="Toggle"><i class="fas {{#if effect.disabled}}fa-toggle-off{{else}}fa-toggle-on{{/if}}"></i></a>
+                        <a class="effect-control" data-action="edit" data-effect-id="{{effect._id}}" title="Edit"><i class="fas fa-edit"></i></a>
+                        <a class="effect-control" data-action="delete" data-effect-id="{{effect._id}}" title="Delete"><i class="fas fa-trash"></i></a>
+                    </div>
+                </li>
+                {{/each}}
+            </ol>
+        </div>
+    </section>
 </form>
