@@ -1,0 +1,99 @@
+name: Blademaster
+type: talent
+flags:
+  core:
+    sourceId: Item.DYVazRNO2caSDMGE
+img: systems/uesrpg-3ev4/images/Icons/blademaster.webp
+effects: []
+_stats:
+  compendiumSource: Item.DYVazRNO2caSDMGE
+  duplicateSource: null
+  coreVersion: '12.331'
+  systemId: uesrpg-3ev4
+  systemVersion: v1.0.0-RC.64
+  createdTime: 1734675699393
+  modifiedTime: 1734675741901
+  lastModifiedBy: HcIrULZhA1JFIlrf
+ownership:
+  default: 0
+  HcIrULZhA1JFIlrf: 3
+system:
+  mpBonus: 0
+  hpBonus: 0
+  spBonus: 0
+  lpBonus: 0
+  wtBonus: 0
+  iniBonus: 0
+  speedBonus: 0
+  flyBonus: null
+  swimBonus: null
+  diseaseR: 0
+  fireR: 0
+  frostR: 0
+  shockR: 0
+  poisonR: 0
+  magicR: 0
+  natToughnessR: 0
+  silverR: null
+  sunlightR: null
+  replace:
+    ini:
+      iniToggle: false
+      value: 0
+      characteristic: none
+    wt:
+      wtToggle: false
+      value: 0
+      characteristic: none
+  characteristics:
+    none: None
+    str: STR
+    end: END
+    agi: AGI
+    int: INT
+    wp: WP
+    prc: PRC
+    prs: PRS
+    lck: LCK
+  characteristicBonus:
+    strChaBonus: 0
+    endChaBonus: 0
+    agiChaBonus: 0
+    intChaBonus: 0
+    wpChaBonus: 0
+    prcChaBonus: 0
+    prsChaBonus: 0
+    lckChaBonus: 0
+  skillArray: []
+  description: >-
+    <p>The character knows how to leverage their strength with a longsword using
+    the hilt of their weapon or a well placed thrust to overcome their foe’s
+    armor. When making Combat Style (Strength) tests to wield a longsword in two
+    hands the character may choose to replace the Slashing quality with Crushing
+    (1). </p><p>The character also knows that speed often triumphs over
+    strength, and can take maximum advantage of quick precise blows to bring
+    down an opponent. When making Combat Style (Agility) tests to wield a
+    longsword in two hands the character may choose to use their Agility bonus
+    in place of their Strength bonus for the purposes of the Slashing
+    quality.</p><p>Additionally, when the character takes a Defensive Stance
+    action while holding a longsword in two hands they gain an additional +10 to
+    the next parry made before their next turn.</p>
+  governingCharacteristics: Str, Ag
+  xpCost: 500
+  level: Expert
+  talentReq: ''
+  miscReq: Apprentice Combat
+  halfFatiguePenalty: false
+  halfWoundPenalty: false
+  untrainedException: false
+  fatigueException: false
+  addIBToMP: false
+  addIntToMPMultiplier: 1
+  armorAcrobaticsException: false
+  addHalfSpeed: false
+  addIntToMP: false
+folder: coY6fwnED7jEStIl
+_id: rnrN6PhbTmW0Yphg
+sort: 400000
+_key: '!items!rnrN6PhbTmW0Yphg'
+

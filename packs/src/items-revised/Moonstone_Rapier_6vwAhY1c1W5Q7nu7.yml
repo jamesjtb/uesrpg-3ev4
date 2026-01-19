@@ -1,0 +1,113 @@
+_id: 6vwAhY1c1W5Q7nu7
+name: Moonstone Rapier
+type: weapon
+img: icons/weapons/swords/scimitar-guard-gold.webp
+effects: []
+folder: null
+sort: 0
+flags:
+  core:
+    sourceId: Item.AaZLQm2whP97a1Y4
+_stats:
+  coreVersion: '12.331'
+  systemId: null
+  systemVersion: null
+  createdTime: null
+  modifiedTime: null
+  lastModifiedBy: null
+  compendiumSource: null
+  duplicateSource: null
+ownership:
+  default: 0
+  qwt9o1cuKYitvD9G: 3
+system:
+  mpBonus: 0
+  hpBonus: 0
+  spBonus: 0
+  lpBonus: 0
+  wtBonus: 0
+  iniBonus: 0
+  speedBonus: 0
+  flyBonus: 0
+  swimBonus: 0
+  diseaseR: 0
+  fireR: 0
+  frostR: 0
+  shockR: 0
+  poisonR: 0
+  magicR: 0
+  natToughnessR: 0
+  silverR: 0
+  sunlightR: 0
+  characteristics:
+    none: None
+    str: STR
+    end: END
+    agi: AGI
+    int: INT
+    wp: WP
+    prc: PRC
+    prs: PRS
+    lck: LCK
+  characteristicBonus:
+    strChaBonus: 0
+    endChaBonus: 0
+    agiChaBonus: 0
+    intChaBonus: 0
+    wpChaBonus: 0
+    prcChaBonus: 0
+    prsChaBonus: 0
+    lckChaBonus: 0
+  replace:
+    ini:
+      iniToggle: false
+      value: 0
+      characteristic: ''
+    wt:
+      wtToggle: false
+      value: 0
+      characteristic: ''
+  skillArray: []
+  isPhysicalObject: true
+  containerStats:
+    contained: false
+    container_id: ''
+    container_name: ''
+  description: >-
+    <p><em style="box-sizing: border-box; user-select: text; color:
+    #191813;">Enchantments, modifications, notes, etc...</em></p>
+  quantity: 1
+  enc: 1
+  totalENC: 0
+  reach: 2
+  damage: 1d6+2
+  damage2: '0'
+  damage3: 0
+  weapon2H: false
+  equippped: false
+  carried: false
+  excludeENC: false
+  superior: false
+  hands: 0
+  price: 525
+  modPrice: 0
+  armor: 0
+  magic_ar: 0
+  enchant_level: 3
+  qualities: >-
+    @Compendium[uesrpg-revision.journal.8QrUeG8YXaLx1BqW]{Slashing},
+    Compendium[uesrpg-revision.journal.9tFMijYvjZUSN2HV]{Dueling Weapon},
+    @Compendium[uesrpg-revision.journal.5HnOtuIPqSo9GuWE]{Exploit Weakness},
+    @Compendium[uesrpg-revision.journal.6urnr7lIlWIINHiL]{Magic}
+  charge:
+    value: 0
+    max: 0
+    reduction: 1
+  category: none
+  item_cat:
+    none: None
+    weapon1: Primary Weapon
+    weapon2: Secondary Weapon
+    weapon3: Sidearm
+_key: '!items!6vwAhY1c1W5Q7nu7'
+

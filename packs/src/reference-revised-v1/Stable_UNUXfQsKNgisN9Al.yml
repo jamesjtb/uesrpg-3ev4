@@ -1,0 +1,52 @@
+_id: UNUXfQsKNgisN9Al
+name: Stable
+folder: null
+sort: 0
+flags:
+  cf:
+    id: temp_sn2172bakil
+    color: '#000000'
+pages:
+  - name: Stable
+    type: text
+    title:
+      show: false
+      level: 1
+    text:
+      format: 1
+      content: "<p><span style=\"color:#191813\">Character’s Shehai removes the \_@Compendium[uesrpg-revision.journal.21g3rtqdszsKc9jv]{Unwieldy}quality.</span></p>"
+    _stats:
+      coreVersion: '12.331'
+      systemId: null
+      systemVersion: null
+      createdTime: null
+      modifiedTime: null
+      lastModifiedBy: null
+      compendiumSource: null
+      duplicateSource: null
+    _id: xXfPQFYtMlRvJBHe
+    system: {}
+    image: {}
+    video:
+      controls: true
+      volume: 0.5
+    src: null
+    sort: 0
+    ownership:
+      default: -1
+    flags: {}
+    _key: '!journal.pages!UNUXfQsKNgisN9Al.xXfPQFYtMlRvJBHe'
+_stats:
+  coreVersion: '12.331'
+  systemId: null
+  systemVersion: null
+  createdTime: null
+  modifiedTime: null
+  lastModifiedBy: null
+  compendiumSource: null
+  duplicateSource: null
+ownership:
+  default: 0
+  eeXhsDlbzUBZOXZT: 3
+_key: '!journal!UNUXfQsKNgisN9Al'
+

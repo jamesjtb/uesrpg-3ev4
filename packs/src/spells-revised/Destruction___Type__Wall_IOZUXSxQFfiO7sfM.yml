@@ -1,0 +1,147 @@
+_id: IOZUXSxQFfiO7sfM
+name: 'Destruction: [Type] Wall'
+type: spell
+img: icons/magic/fire/projectile-fireball-red-yellow.webp
+effects: []
+folder: null
+sort: 0
+flags:
+  core:
+    sourceId: Item.Dvncp3T7Nn3WBpgy
+_stats:
+  coreVersion: '12.331'
+  systemId: null
+  systemVersion: null
+  createdTime: null
+  modifiedTime: null
+  lastModifiedBy: null
+  compendiumSource: null
+  duplicateSource: null
+ownership:
+  default: 0
+  qwt9o1cuKYitvD9G: 3
+system:
+  description: >-
+    <p>Creates a wall 1m wide and 1 + (2 x Z) meters long within 100m, with an
+    orientation chosen by the caster. Affects all targets within the area of the
+    wall. Leaves behind a persistent zone in this area for 1 round that causes
+    the same effect to any characters who pass through it (or end their turn in
+    it if they started there). Upkeeping the spell does not let the caster move
+    the wall, it merely refreshes the effect and duration.</p>
+
+    <table style="width: 98.5447%; height: 51px;" border="2" cellspacing="2"
+    cellpadding="1">
+
+    <tbody>
+
+    <tr style="height: 17px;">
+
+    <td style="width: 24.9539%; height: 17px; text-align:
+    left;"><strong>Level</strong></td>
+
+    <td style="width: 11.5403%; height: 17px; text-align:
+    center;"><strong>1</strong></td>
+
+    <td style="width: 10.9017%; height: 17px; text-align:
+    center;"><strong>2</strong></td>
+
+    <td style="width: 10.2483%; height: 17px; text-align:
+    center;"><strong>3</strong></td>
+
+    <td style="width: 10.8979%; height: 17px; text-align:
+    center;"><strong>4</strong></td>
+
+    <td style="width: 9.94024%; height: 17px; text-align:
+    center;"><strong>5</strong></td>
+
+    <td style="width: 9.50831%; height: 17px; text-align:
+    center;"><strong>6</strong></td>
+
+    <td style="width: 10.0805%; height: 17px; text-align:
+    center;"><strong>7</strong></td>
+
+    </tr>
+
+    <tr style="height: 17px;">
+
+    <td style="width: 24.9539%; height: 17px; text-align:
+    left;"><strong>Cost</strong></td>
+
+    <td style="width: 11.5403%; height: 17px; text-align: center;">9</td>
+
+    <td style="width: 10.9017%; height: 17px; text-align: center;">11</td>
+
+    <td style="width: 10.2483%; height: 17px; text-align: center;">13</td>
+
+    <td style="width: 10.8979%; height: 17px; text-align: center;">15</td>
+
+    <td style="width: 9.94024%; height: 17px; text-align: center;">17</td>
+
+    <td style="width: 9.50831%; height: 17px; text-align: center;">19</td>
+
+    <td style="width: 10.0805%; height: 17px; text-align: center;">21</td>
+
+    </tr>
+
+    <tr style="height: 17px;">
+
+    <td style="width: 24.9539%; height: 17px; text-align: left;"><strong>Spell
+    Strength</strong></td>
+
+    <td style="width: 11.5403%; height: 17px; text-align: center;">1d4</td>
+
+    <td style="width: 10.9017%; height: 17px; text-align: center;">1d6</td>
+
+    <td style="width: 10.2483%; height: 17px; text-align: center;">1d8</td>
+
+    <td style="width: 10.8979%; height: 17px; text-align: center;">1d10</td>
+
+    <td style="width: 9.94024%; height: 17px; text-align: center;">2d6</td>
+
+    <td style="width: 9.50831%; height: 17px; text-align: center;">2d8</td>
+
+    <td style="width: 10.0805%; height: 17px; text-align: center;">2d10</td>
+
+    </tr>
+
+    </tbody>
+
+    </table>
+
+    <p>&nbsp;</p>
+  damage: 1d4
+  level: 1
+  cost: 9
+  spell_str: ''
+  attributes: >-
+    [Fire, Frost, Shock],
+    @Compendium[uesrpg-revision.journal.etuR7vddrnv3ot2J]{Upkeep},
+    @Compendium[uesrpg-revision.journal.XtV9n7rHuDGDbW2j]{R Attack} (100m),
+    @Compendium[uesrpg-revision.journal.nsLri17F6nvgG4uC]{AoE} (Z, wall)
+  form: Wall
+  school: destruction
+  school_cat:
+    alteration: Alteration
+    conjuration: Conjuration
+    destruction: Destruction
+    illusion: Illusion
+    mysticism: Mysticism
+    necromancy: Necromancy
+    restoration: Restoration
+    none: Select School
+  spellType: ''
+  spellTypes:
+    conventional: Conventional
+    unconventional: Unconventional
+  category: none
+  spell_cat:
+    none: None
+    spell1: Spell 1
+    spell2: Spell 2
+    spell3: Spell 3
+    spell4: Spell 4
+    spell5: Spell 5
+    spell6: Spell 6
+    spell7: Spell 7
+_key: '!items!IOZUXSxQFfiO7sfM'
+

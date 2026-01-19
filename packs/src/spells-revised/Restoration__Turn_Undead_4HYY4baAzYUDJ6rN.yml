@@ -1,0 +1,131 @@
+_id: 4HYY4baAzYUDJ6rN
+name: 'Restoration: Turn Undead'
+type: spell
+img: icons/magic/life/cross-yellow-green.webp
+effects: []
+folder: null
+sort: 0
+flags:
+  core:
+    sourceId: Item.Dvncp3T7Nn3WBpgy
+_stats:
+  coreVersion: '12.331'
+  systemId: null
+  systemVersion: null
+  createdTime: null
+  modifiedTime: null
+  lastModifiedBy: null
+  compendiumSource: null
+  duplicateSource: null
+ownership:
+  default: 0
+  qwt9o1cuKYitvD9G: 3
+system:
+  description: >-
+    <p>Target character with the Undead trait within 50m must make a Willpower
+    test with a [Spell Strength] modifier to not immediately flee the caster for
+    1 round.</p>
+
+    <table style="width: 98.5447%; height: 51px;" border="2" cellspacing="2"
+    cellpadding="1">
+
+    <tbody>
+
+    <tr style="height: 17px;">
+
+    <td style="width: 24.9539%; height: 17px; text-align:
+    left;"><strong>Level</strong></td>
+
+    <td style="width: 11.5403%; height: 17px; text-align:
+    center;"><strong>1</strong></td>
+
+    <td style="width: 10.9017%; height: 17px; text-align:
+    center;"><strong>2</strong></td>
+
+    <td style="width: 10.2483%; height: 17px; text-align:
+    center;"><strong>3</strong></td>
+
+    <td style="width: 10.8979%; height: 17px; text-align:
+    center;"><strong>4</strong></td>
+
+    <td style="width: 9.94024%; height: 17px; text-align:
+    center;"><strong>5</strong></td>
+
+    <td style="width: 9.50831%; height: 17px; text-align:
+    center;"><strong>6</strong></td>
+
+    <td style="width: 10.0805%; height: 17px; text-align:
+    center;"><strong>7</strong></td>
+
+    </tr>
+
+    <tr style="height: 17px;">
+
+    <td style="width: 24.9539%; height: 17px; text-align:
+    left;"><strong>Cost</strong></td>
+
+    <td style="width: 11.5403%; height: 17px; text-align: center;">7</td>
+
+    <td style="width: 10.9017%; height: 17px; text-align: center;">10</td>
+
+    <td style="width: 10.2483%; height: 17px; text-align: center;">13</td>
+
+    <td style="width: 10.8979%; height: 17px; text-align: center;">16</td>
+
+    <td style="width: 9.94024%; height: 17px; text-align: center;">19</td>
+
+    <td style="width: 9.50831%; height: 17px; text-align: center;">22</td>
+
+    <td style="width: 10.0805%; height: 17px; text-align: center;">25</td>
+
+    </tr>
+
+    <tr style="height: 17px;">
+
+    <td style="width: 24.9539%; height: 17px; text-align: left;"><strong>Spell
+    Strength</strong></td>
+
+    <td style="width: 11.5403%; height: 17px; text-align: center;">+20</td>
+
+    <td style="width: 10.9017%; height: 17px; text-align: center;">+10</td>
+
+    <td style="width: 10.2483%; height: 17px; text-align: center;">+0</td>
+
+    <td style="width: 10.8979%; height: 17px; text-align: center;">-10</td>
+
+    <td style="width: 9.94024%; height: 17px; text-align: center;">-20</td>
+
+    <td style="width: 9.50831%; height: 17px; text-align: center;">-30</td>
+
+    <td style="width: 10.0805%; height: 17px; text-align: center;">-40</td>
+
+    </tr>
+
+    </tbody>
+
+    </table>
+
+    <p>&nbsp;</p>
+  damage: '0'
+  level: 1
+  cost: 7
+  spell_str: ''
+  attributes: '@Compendium[uesrpg-revision.journal.etuR7vddrnv3ot2J]{Upkeep}'
+  form: Target
+  school: restoration
+  school_cat:
+    alteration: Alteration
+    conjuration: Conjuration
+    destruction: Destruction
+    illusion: Illusion
+    mysticism: Mysticism
+    necromancy: Necromancy
+    restoration: Restoration
+    none: Select School
+  spellType: ''
+  spellTypes:
+    conventional: Conventional
+    unconventional: Unconventional
+  category: ''
+_key: '!items!4HYY4baAzYUDJ6rN'
+

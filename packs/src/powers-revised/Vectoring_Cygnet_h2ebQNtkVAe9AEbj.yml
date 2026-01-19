@@ -1,0 +1,95 @@
+_id: h2ebQNtkVAe9AEbj
+name: Vectoring Cygnet
+type: power
+img: icons/skills/melee/strike-axe-energy-pink.webp
+effects: []
+folder: null
+sort: 0
+flags:
+  core:
+    sourceId: Item.72qjSfhpG8U1k3y4
+  cf:
+    id: temp_qjpcdxl96ph
+    color: '#000000'
+_stats:
+  coreVersion: '12.331'
+  systemId: null
+  systemVersion: null
+  createdTime: null
+  modifiedTime: null
+  lastModifiedBy: null
+  compendiumSource: null
+  duplicateSource: null
+ownership:
+  default: 0
+  eeXhsDlbzUBZOXZT: 3
+system:
+  mpBonus: 0
+  hpBonus: 0
+  spBonus: 0
+  lpBonus: 0
+  wtBonus: 0
+  iniBonus: 0
+  speedBonus: 0
+  flyBonus: 0
+  swimBonus: 0
+  diseaseR: 0
+  fireR: 0
+  frostR: 0
+  shockR: 0
+  poisonR: 0
+  magicR: 0
+  natToughnessR: 0
+  silverR: 0
+  sunlightR: 0
+  characteristics:
+    none: None
+    str: STR
+    end: END
+    agi: AGI
+    int: INT
+    wp: WP
+    prc: PRC
+    prs: PRS
+    lck: LCK
+  characteristicBonus:
+    strChaBonus: 0
+    endChaBonus: 0
+    agiChaBonus: 0
+    intChaBonus: 0
+    wpChaBonus: 0
+    prcChaBonus: 0
+    prsChaBonus: 0
+    lckChaBonus: 0
+  skillArray: []
+  description: >-
+    <p><strong>Type:</strong> Active (activated as a free action)</p>
+
+    <p><strong>Requires:</strong> Shehai Shen She Ru (Journeyman)</p>
+
+    <p><strong>Cost:</strong> 100 XP</p>
+
+    <p><strong>Difficulty: </strong>Variable</p>
+
+    <p><strong>Effect: </strong>This technique is activated as a free action,
+    but only before a standard melee attack. The sword-singer chooses the
+    penalty of the test. The target of the character&rsquo;s next successful
+    melee attack cannot react to that attack unless he passes a Perception or
+    Observe test with a penalty equal to the penalty the swordsinger chose for
+    the technique.</p>
+  dailyUse: false
+  source: ''
+  shiftForm: false
+  shiftFormStyle: shiftFormNone
+  shiftStyles:
+    shiftFormNone: Regular Form
+    shiftFormVampireLord: Vampire Lord
+    shiftFormWereWolf: Werewolf
+    shiftFormWereBat: Werebat
+    shiftFormWereBoar: Wereboar
+    shiftFormWereBear: Werebear
+    shiftFormWereCrocodile: Werecrocodile
+    shiftFormWereVulture: Werevulture
+    shiftFormWereLion: Werelion
+_key: '!items!h2ebQNtkVAe9AEbj'
+

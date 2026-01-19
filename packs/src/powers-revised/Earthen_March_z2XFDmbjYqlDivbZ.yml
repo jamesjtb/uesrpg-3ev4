@@ -1,0 +1,129 @@
+_id: z2XFDmbjYqlDivbZ
+name: Earthen March
+type: power
+img: icons/magic/earth/barrier-stone-explosion-spiked.webp
+effects: []
+folder: null
+sort: 0
+flags:
+  core:
+    sourceId: Item.UaGSwjYgtBVFt2i2
+  cf:
+    id: temp_d9bp04m8sjq
+    color: '#000000'
+_stats:
+  coreVersion: '12.331'
+  systemId: null
+  systemVersion: null
+  createdTime: null
+  modifiedTime: null
+  lastModifiedBy: null
+  compendiumSource: null
+  duplicateSource: null
+ownership:
+  default: 0
+  eeXhsDlbzUBZOXZT: 3
+system:
+  mpBonus: 0
+  hpBonus: 0
+  spBonus: 0
+  lpBonus: 0
+  wtBonus: 0
+  iniBonus: 0
+  speedBonus: 0
+  flyBonus: 0
+  swimBonus: 0
+  diseaseR: 0
+  fireR: 0
+  frostR: 0
+  shockR: 0
+  poisonR: 0
+  magicR: 0
+  natToughnessR: 0
+  silverR: 0
+  sunlightR: 0
+  characteristics:
+    none: None
+    str: STR
+    end: END
+    agi: AGI
+    int: INT
+    wp: WP
+    prc: PRC
+    prs: PRS
+    lck: LCK
+  characteristicBonus:
+    strChaBonus: 0
+    endChaBonus: 0
+    agiChaBonus: 0
+    intChaBonus: 0
+    wpChaBonus: 0
+    prcChaBonus: 0
+    prsChaBonus: 0
+    lckChaBonus: 0
+  skillArray: []
+  description: >-
+    <p><em>Difficulty: -30, -10 for each word beyond the first.</em></p>
+
+    <p><strong>&bull;Gol : Earth</strong></p>
+
+    <p>A number of targets up to the character&rsquo;s WpB is healed [[/r 1d6]]
+    hp as dirt springs from the ground and covers up any injuries.</p>
+
+    <p><strong>&bull;Gron : Bond</strong></p>
+
+    <p>Same as Gol, except the character can choose to either increase the
+    healing to [[/r 2d6]], or double the number of targets, but anyone healed in
+    this fashion reduces their speed by 3 for the next 24 hours as the weight of
+    the dirt weighs the target down as it slowly heals the flesh. In addition,
+    the shout removes any non-permanent shock effects from wounds taken.</p>
+
+    <p><strong>&bull;Aav : Unity</strong></p>
+
+    <p>Same as Gron, except the character can choose to add an additional die to
+    the amount healed, or double the number of targets again. Additionally, the
+    shout can be used to remove permanent wound effects from wounds taken (even
+    in prior battles), but the new earthen body-parts comes with a cost in the
+    form one or more of the conditions listed below:</p>
+
+    <p>&bull; Earthen Ears: The character removes the Lost</p>
+
+    <p>Ear condition, and the Deafened condition, but</p>
+
+    <p>loses 5 Perception as all sounds are distant and</p>
+
+    <p>muffled to the character.</p>
+
+    <p><em><strong>&bull; Earthen Eyes:</strong></em> The character removes the
+    Lost Eye condition, and the Blinded condition, but loses 5 Perception as the
+    strange blurry vision is never quite in focus.</p>
+
+    <p><em><strong>&bull; Earthen Foot/Leg:</strong></em> The character removes
+    the Lost Foot/Leg condition, and the Immobilized condition if both were
+    lost, but retain the Slowed Condition as the replacement seems firmly
+    attached to the ground.</p>
+
+    <p><em><strong>&bull; Earthen Hand/Arm:</strong></em> The character removes
+    the Lost Hand/Arm condition but suffers a -5 Strength as it is slightly numb
+    and slow.</p>
+
+    <p><em><strong>&bull; Earthen Entrails:</strong></em> The character removes
+    the Organ Damage condition, but must choose whether his SP maximum or WT
+    stays reduced by 1 as no matter how well it functions, the body just never
+    fully recovers.</p>
+  dailyUse: false
+  source: ''
+  shiftForm: false
+  shiftFormStyle: shiftFormNone
+  shiftStyles:
+    shiftFormNone: Regular Form
+    shiftFormVampireLord: Vampire Lord
+    shiftFormWereWolf: Werewolf
+    shiftFormWereBat: Werebat
+    shiftFormWereBoar: Wereboar
+    shiftFormWereBear: Werebear
+    shiftFormWereCrocodile: Werecrocodile
+    shiftFormWereVulture: Werevulture
+    shiftFormWereLion: Werelion
+_key: '!items!z2XFDmbjYqlDivbZ'
+

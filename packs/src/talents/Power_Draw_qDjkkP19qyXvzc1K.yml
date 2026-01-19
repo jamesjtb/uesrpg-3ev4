@@ -1,0 +1,93 @@
+name: Power Draw
+type: talent
+flags:
+  core:
+    sourceId: Item.DYVazRNO2caSDMGE
+img: systems/uesrpg-3ev4/images/Icons/powerDraw.webp
+effects: []
+_stats:
+  compendiumSource: Item.DYVazRNO2caSDMGE
+  duplicateSource: null
+  coreVersion: '12.331'
+  systemId: uesrpg-3ev4
+  systemVersion: v1.0.0-RC.64
+  createdTime: 1734677015728
+  modifiedTime: 1734677015728
+  lastModifiedBy: HcIrULZhA1JFIlrf
+ownership:
+  default: 0
+  HcIrULZhA1JFIlrf: 3
+system:
+  mpBonus: 0
+  hpBonus: 0
+  spBonus: 0
+  lpBonus: 0
+  wtBonus: 0
+  iniBonus: 0
+  speedBonus: 0
+  flyBonus: 0
+  swimBonus: 0
+  diseaseR: 0
+  fireR: 0
+  frostR: 0
+  shockR: 0
+  poisonR: 0
+  magicR: 0
+  natToughnessR: 0
+  silverR: 0
+  sunlightR: 0
+  replace:
+    ini:
+      iniToggle: false
+      value: 0
+      characteristic: none
+    wt:
+      wtToggle: false
+      value: 0
+      characteristic: none
+  characteristics:
+    none: None
+    str: STR
+    end: END
+    agi: AGI
+    int: INT
+    wp: WP
+    prc: PRC
+    prs: PRS
+    lck: LCK
+  characteristicBonus:
+    strChaBonus: 0
+    endChaBonus: 0
+    agiChaBonus: 0
+    intChaBonus: 0
+    wpChaBonus: 0
+    prcChaBonus: 0
+    prsChaBonus: 0
+    lckChaBonus: 0
+  skillArray: []
+  description: >-
+    <p>Before making an attack with a longbow the character can choose to spend
+    one Stamina point. If the attack hits the target and deals damage (after
+    mitigation) the target must make a Strength test or be knocked prone.
+    Additionally, the character may use the longbow as if it were an Unwieldy
+    wooden quarterstaff in melee, and longbows they wield gain Exploit
+    Weakness.</p>
+  governingCharacteristics: Str, Ag
+  xpCost: 500
+  level: Expert
+  talentReq: ''
+  miscReq: Apprentice Combat
+  halfFatiguePenalty: false
+  halfWoundPenalty: false
+  untrainedException: false
+  fatigueException: false
+  addIBToMP: false
+  addIntToMPMultiplier: 1
+  armorAcrobaticsException: false
+  addHalfSpeed: false
+  addIntToMP: false
+folder: coY6fwnED7jEStIl
+_id: qDjkkP19qyXvzc1K
+sort: 0
+_key: '!items!qDjkkP19qyXvzc1K'
+

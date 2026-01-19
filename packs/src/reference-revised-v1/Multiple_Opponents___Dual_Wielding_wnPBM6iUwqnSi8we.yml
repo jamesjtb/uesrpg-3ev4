@@ -1,0 +1,53 @@
+name: Multiple Opponents & Dual Wielding
+folder: null
+sort: 0
+flags:
+  cf:
+    id: temp_3ne3rdpl9xs
+    path: References#/CF_SEP/Combat
+    color: '#000000'
+_id: wnPBM6iUwqnSi8we
+pages:
+  - name: Multiple Opponents & Dual Wielding
+    type: text
+    title:
+      show: false
+      level: 1
+    text:
+      format: 1
+      content: "<p><strong>Multiple Opponents</strong></p>\n<p>Facing multiple opponents can be dangerous. While a character suffers no direct penalties for doing so, they can soon become swamped and run out of action points with which to defend themself. Remember that once all their AP for a round have been expended the character is treated as having failed their defense roll against any subsequent attacks, meaning they quickly become vulnerable to the others.</p>\n<p>\_</p>\n<p><strong>Dual Wielding</strong></p>\n<p>Some characters fight with two one handed weapons at once as a part of their Combat Style and may choose to attack, parry, or counter attack with either one.</p>"
+    _stats:
+      coreVersion: '12.331'
+      systemId: null
+      systemVersion: null
+      createdTime: null
+      modifiedTime: null
+      lastModifiedBy: null
+      compendiumSource: null
+      duplicateSource: null
+    _id: 6iLnIz2pX6Z7iLuX
+    system: {}
+    image: {}
+    video:
+      controls: true
+      volume: 0.5
+    src: null
+    sort: 0
+    ownership:
+      default: -1
+    flags: {}
+    _key: '!journal.pages!wnPBM6iUwqnSi8we.6iLnIz2pX6Z7iLuX'
+_stats:
+  coreVersion: '12.331'
+  systemId: null
+  systemVersion: null
+  createdTime: null
+  modifiedTime: null
+  lastModifiedBy: null
+  compendiumSource: null
+  duplicateSource: null
+ownership:
+  default: 0
+  eeXhsDlbzUBZOXZT: 3
+_key: '!journal!wnPBM6iUwqnSi8we'
+

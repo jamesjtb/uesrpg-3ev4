@@ -1,0 +1,100 @@
+name: The Star-Cursed Atronach
+type: trait
+img: systems/uesrpg-3ev4/images/sign-atronach.webp
+effects: []
+folder: null
+sort: 0
+flags:
+  core:
+    sourceId: Item.rJsPUPqP5FyTYKHs
+_id: rq7QuSU4GhJ8XQgT
+_stats:
+  coreVersion: '12.331'
+  systemId: uesrpg-3ev4
+  systemVersion: v1.0.0-RC.61
+  createdTime: null
+  modifiedTime: 1732507106465
+  lastModifiedBy: GikQCnLAeu0WrzSO
+  compendiumSource: null
+  duplicateSource: null
+ownership:
+  default: 0
+  xfxQc6sVhNVKRNeU: 3
+system:
+  mpBonus: 75
+  hpBonus: 0
+  spBonus: 0
+  lpBonus: 0
+  wtBonus: 0
+  iniBonus: 0
+  speedBonus: 0
+  flyBonus: 0
+  swimBonus: 0
+  diseaseR: 0
+  fireR: 0
+  frostR: 0
+  shockR: 0
+  poisonR: 0
+  magicR: 0
+  natToughnessR: 0
+  silverR: 0
+  sunlightR: 0
+  replace:
+    ini:
+      iniToggle: false
+      value: 0
+      characteristic: ''
+    wt:
+      wtToggle: false
+      value: 0
+      characteristic: ''
+  characteristics:
+    none: None
+    str: STR
+    end: END
+    agi: AGI
+    int: INT
+    wp: WP
+    prc: PRC
+    prs: PRS
+    lck: LCK
+  characteristicBonus:
+    strChaBonus: 0
+    endChaBonus: 0
+    agiChaBonus: 0
+    intChaBonus: 0
+    wpChaBonus: 0
+    prcChaBonus: 0
+    prsChaBonus: 0
+    lckChaBonus: 0
+  skillArray: []
+  description: >-
+    <p><em>“The Atronach (often called the Golem) is one of the Mage’s Charges.
+    Its season is Sun’s Dusk. Those born under this sign are natural sorcerers
+    with deep reserves of magicka, but they cannot generate magicka of their
+    own.”</em></p><p><strong>Those born under the sign of the Star-Cursed
+    Atronach gain the Power Well (75) trait, the
+    @UUID[Compendium.uesrpg-3ev4.signs.Item.nqRF8vGJTN12w4CO]{ Spell Absorption
+    (5)} trait, and the
+    @UUID[Compendium.uesrpg-3ev4.signs.Item.vEULcXrJpVM9nsU8]{Stunted Magicka}
+    trait.</strong></p><p><span style="font-family: Signika, sans-serif"><strong
+    style="box-sizing: border-box; user-select: text; scrollbar-width: thin;
+    scrollbar-color: var(--color-scrollbar) var(--color-scrollbar-track); color:
+    rgb(25, 24, 19); font-family: Signika, sans-serif; font-size: 14px;
+    font-style: normal; font-variant-ligatures: normal; font-variant-caps:
+    normal; letter-spacing: normal; orphans: 2; text-align: start; text-indent:
+    0px; text-transform: none; widows: 2; word-spacing: 0px;
+    -webkit-text-stroke-width: 0px; white-space: normal;
+    text-decoration-thickness: initial; text-decoration-style: initial;
+    text-decoration-color: initial;">Additionally, the player must apply a -5
+    penalty to either Agility or Endurance in the Attributes section of this
+    Birthsign.</strong></span></p>
+  halfSpeed: false
+  addHalfSpeed: false
+  halfFatiguePenalty: false
+  mechanical: false
+  crpCost: 0
+  halfWoundPenalty: false
+  painIntolerant: false
+_key: '!items!rq7QuSU4GhJ8XQgT'
+

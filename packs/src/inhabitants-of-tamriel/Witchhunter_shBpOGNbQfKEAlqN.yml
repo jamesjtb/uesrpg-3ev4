@@ -1,0 +1,2844 @@
+name: Witchhunter
+type: NPC
+img: icons/svg/cowled.svg
+items:
+  - _id: 1xK20bWneeX1xjVw
+    name: Mage Slayer
+    type: power
+    sort: 1000000
+    flags:
+      core:
+        sourceId: Item.MyWjMeVAtBCJa8Bt
+    img: systems/uesrpg-3ev4/images/Icons/mageSlayer.webp
+    effects: []
+    folder: null
+    _stats:
+      compendiumSource: null
+      duplicateSource: null
+      coreVersion: '12.331'
+      systemId: uesrpg-3ev4
+      systemVersion: v1.0.0-RC.59
+      createdTime: null
+      modifiedTime: null
+      lastModifiedBy: null
+    ownership:
+      default: 0
+    system:
+      mpBonus: 0
+      hpBonus: 0
+      spBonus: 0
+      lpBonus: 0
+      wtBonus: 0
+      iniBonus: 0
+      speedBonus: 0
+      flyBonus: 0
+      swimBonus: 0
+      diseaseR: 0
+      fireR: 0
+      frostR: 0
+      shockR: 0
+      poisonR: 0
+      magicR: 0
+      natToughnessR: 0
+      silverR: 0
+      sunlightR: 0
+      characteristics:
+        none: None
+        str: STR
+        end: END
+        agi: AGI
+        int: INT
+        wp: WP
+        prc: PRC
+        prs: PRS
+        lck: LCK
+      characteristicBonus:
+        strChaBonus: 0
+        endChaBonus: 0
+        agiChaBonus: 0
+        intChaBonus: 0
+        wpChaBonus: 0
+        prcChaBonus: 0
+        prsChaBonus: 0
+        lckChaBonus: 0
+      skillArray: []
+      description: >-
+        <p><strong>Cost:</strong> 1 SP</p>
+
+        <p><span style="color: #191813;">As a reaction, this character can make
+        an attack against any opponent within his range that casts a
+        spell.</span></p>
+      dailyUse: false
+      source: ''
+      shiftForm: false
+      shiftFormStyle: ''
+      shiftStyles:
+        shiftFormNone: Regular Form
+        shiftFormVampireLord: Vampire Lord
+        shiftFormWereWolf: Werewolf
+        shiftFormWereBat: Werebat
+        shiftFormWereBoar: Wereboar
+        shiftFormWereBear: Werebear
+        shiftFormWereCrocodile: Werecrocodile
+        shiftFormWereVulture: Werevulture
+        shiftFormWereLion: Werelion
+    _key: '!actors.items!shBpOGNbQfKEAlqN.1xK20bWneeX1xjVw'
+  - _id: Hmp8tEPIjjNyypaO
+    name: Occultist's Bane
+    type: talent
+    sort: 1100000
+    flags:
+      core:
+        sourceId: Item.JX5ttPQSa94C9UKX
+    img: systems/uesrpg-3ev4/images/Icons/occultistBane.webp
+    effects: []
+    folder: null
+    _stats:
+      compendiumSource: null
+      duplicateSource: null
+      coreVersion: '12.331'
+      systemId: uesrpg-3ev4
+      systemVersion: v1.0.0-RC.59
+      createdTime: null
+      modifiedTime: null
+      lastModifiedBy: null
+    ownership:
+      default: 0
+    system:
+      mpBonus: 0
+      hpBonus: 0
+      spBonus: 0
+      lpBonus: 0
+      wtBonus: 0
+      iniBonus: 0
+      speedBonus: 0
+      flyBonus: 0
+      swimBonus: 0
+      diseaseR: 0
+      fireR: 0
+      frostR: 0
+      shockR: 0
+      poisonR: 0
+      magicR: 0
+      natToughnessR: 0
+      silverR: 0
+      sunlightR: 0
+      replace:
+        ini:
+          iniToggle: false
+          value: 0
+          characteristic: str
+        wt:
+          wtToggle: false
+          value: 0
+          characteristic: str
+      characteristics:
+        none: None
+        str: STR
+        end: END
+        agi: AGI
+        int: INT
+        wp: WP
+        prc: PRC
+        prs: PRS
+        lck: LCK
+      characteristicBonus:
+        strChaBonus: 0
+        endChaBonus: 0
+        agiChaBonus: 0
+        intChaBonus: 0
+        wpChaBonus: 0
+        prcChaBonus: 0
+        prsChaBonus: 0
+        lckChaBonus: 0
+      skillArray: []
+      description: >-
+        <p>This character reduces the Reload quality of weapons they wield by 1
+        and gains +1 DoS when in melee combat with only 1 opponent.&nbsp;</p>
+
+        <p>The character may make a free ranged attack with a -20 penalty when
+        they take the Dash action.</p>
+      xpCost: 0
+      level: 0
+      talentReq: ''
+      miscReq: ''
+      halfFatiguePenalty: false
+      halfWoundPenalty: false
+      untrainedException: false
+      fatigueException: false
+      addIBToMP: false
+      armorAcrobaticsException: false
+      addHalfSpeed: false
+    _key: '!actors.items!shBpOGNbQfKEAlqN.Hmp8tEPIjjNyypaO'
+  - _id: hauqgw42WgQMViId
+    name: Favored Enemy (Dark Arts)
+    type: talent
+    sort: 1200000
+    flags:
+      core:
+        sourceId: Item.JX5ttPQSa94C9UKX
+    img: systems/uesrpg-3ev4/images/Icons/onWithAll.webp
+    effects: []
+    folder: null
+    _stats:
+      compendiumSource: null
+      duplicateSource: null
+      coreVersion: '12.331'
+      systemId: uesrpg-3ev4
+      systemVersion: v1.0.0-RC.59
+      createdTime: null
+      modifiedTime: null
+      lastModifiedBy: null
+    ownership:
+      default: 0
+    system:
+      mpBonus: 0
+      hpBonus: 0
+      spBonus: 0
+      lpBonus: 0
+      wtBonus: 0
+      iniBonus: 0
+      speedBonus: 0
+      flyBonus: 0
+      swimBonus: 0
+      diseaseR: 0
+      fireR: 0
+      frostR: 0
+      shockR: 0
+      poisonR: 0
+      magicR: 0
+      natToughnessR: 0
+      silverR: 0
+      sunlightR: 0
+      replace:
+        ini:
+          iniToggle: false
+          value: 0
+          characteristic: str
+        wt:
+          wtToggle: false
+          value: 0
+          characteristic: str
+      characteristics:
+        none: None
+        str: STR
+        end: END
+        agi: AGI
+        int: INT
+        wp: WP
+        prc: PRC
+        prs: PRS
+        lck: LCK
+      characteristicBonus:
+        strChaBonus: 0
+        endChaBonus: 0
+        agiChaBonus: 0
+        intChaBonus: 0
+        wpChaBonus: 0
+        prcChaBonus: 0
+        prsChaBonus: 0
+        lckChaBonus: 0
+      skillArray: []
+      description: >-
+        <p>Gains a +10 to any tests made to bring harm to their prefered enemy.
+        These enemys are things such as vampires, lycanthropes, witches,
+        warlocks, and necromancers.</p>
+      xpCost: 0
+      level: 0
+      talentReq: ''
+      miscReq: ''
+      halfFatiguePenalty: false
+      halfWoundPenalty: false
+      untrainedException: false
+      fatigueException: false
+      addIBToMP: false
+      armorAcrobaticsException: false
+      addHalfSpeed: false
+    _key: '!actors.items!shBpOGNbQfKEAlqN.hauqgw42WgQMViId'
+  - _id: VuXi5vsB3M2LO6fE
+    name: Spellcaster
+    type: talent
+    sort: 1300000
+    flags:
+      core:
+        sourceId: Item.7fKKFs3JVM7UgiPU
+    img: systems/uesrpg-3ev4/images/Icons/questioning.webp
+    effects: []
+    folder: null
+    _stats:
+      compendiumSource: null
+      duplicateSource: null
+      coreVersion: '12.331'
+      systemId: uesrpg-3ev4
+      systemVersion: v1.0.0-RC.59
+      createdTime: null
+      modifiedTime: null
+      lastModifiedBy: null
+    ownership:
+      default: 0
+    system:
+      mpBonus: 0
+      hpBonus: 0
+      spBonus: 0
+      lpBonus: 0
+      wtBonus: 0
+      iniBonus: 0
+      speedBonus: 0
+      flyBonus: 0
+      swimBonus: 0
+      diseaseR: 0
+      fireR: 0
+      frostR: 0
+      shockR: 0
+      poisonR: 0
+      magicR: 0
+      natToughnessR: 0
+      silverR: 0
+      sunlightR: 0
+      replace:
+        ini:
+          iniToggle: false
+          value: 0
+          characteristic: str
+        wt:
+          wtToggle: false
+          value: 0
+          characteristic: str
+      characteristics:
+        none: None
+        str: STR
+        end: END
+        agi: AGI
+        int: INT
+        wp: WP
+        prc: PRC
+        prs: PRS
+        lck: LCK
+      characteristicBonus:
+        strChaBonus: 0
+        endChaBonus: 0
+        agiChaBonus: 0
+        intChaBonus: 0
+        wpChaBonus: 0
+        prcChaBonus: 0
+        prsChaBonus: 0
+        lckChaBonus: 0
+      skillArray: []
+      description: >-
+        <p><span style="color: #191813;">This character does not track magicka,
+        and can instead cast each spell it knows once.</span></p>
+      xpCost: 0
+      level: 0
+      talentReq: ''
+      miscReq: ''
+      halfFatiguePenalty: false
+      halfWoundPenalty: false
+      untrainedException: false
+      fatigueException: false
+      addIBToMP: false
+      armorAcrobaticsException: false
+      addHalfSpeed: false
+    _key: '!actors.items!shBpOGNbQfKEAlqN.VuXi5vsB3M2LO6fE'
+  - _id: smVB7CmNYp8G6U0Z
+    name: Steel Mace
+    type: weapon
+    img: icons/weapons/maces/mace-flanged-steel.webp
+    effects: []
+    folder: null
+    sort: 0
+    flags:
+      core:
+        sourceId: Item.NuW4lwMRLkPi5pzI
+    _stats:
+      compendiumSource: null
+      duplicateSource: null
+      coreVersion: '12.331'
+      systemId: uesrpg-3ev4
+      systemVersion: v1.0.0-RC.59
+      createdTime: null
+      modifiedTime: null
+      lastModifiedBy: null
+    ownership:
+      default: 0
+      qwt9o1cuKYitvD9G: 3
+      eeXhsDlbzUBZOXZT: 3
+    system:
+      mpBonus: 0
+      hpBonus: 0
+      spBonus: 0
+      lpBonus: 0
+      wtBonus: 0
+      iniBonus: 0
+      speedBonus: 0
+      flyBonus: 0
+      swimBonus: 0
+      diseaseR: 0
+      fireR: 0
+      frostR: 0
+      shockR: 0
+      poisonR: 0
+      magicR: 0
+      natToughnessR: 0
+      silverR: 0
+      sunlightR: 0
+      characteristics:
+        none: None
+        str: STR
+        end: END
+        agi: AGI
+        int: INT
+        wp: WP
+        prc: PRC
+        prs: PRS
+        lck: LCK
+      characteristicBonus:
+        strChaBonus: 0
+        endChaBonus: 0
+        agiChaBonus: 0
+        intChaBonus: 0
+        wpChaBonus: 0
+        prcChaBonus: 0
+        prsChaBonus: 0
+        lckChaBonus: 0
+      replace:
+        ini:
+          iniToggle: false
+          value: 0
+          characteristic: ''
+        wt:
+          wtToggle: false
+          value: 0
+          characteristic: ''
+      skillArray: []
+      isPhysicalObject: true
+      containerStats:
+        contained: false
+        container_id: ''
+        container_name: ''
+      description: >-
+        <p><em style="box-sizing: border-box; user-select: text; color:
+        #191813;">Enchantments, modifications, notes, etc...</em></p>
+      quantity: 1
+      enc: 1
+      totalENC: 0
+      reach: 2
+      damage: 1d8+1
+      damage2: '0'
+      damage3: 0
+      weapon2H: false
+      equippped: false
+      carried: false
+      excludeENC: false
+      superior: false
+      hands: 0
+      price: 120
+      modPrice: 0
+      armor: 0
+      magic_ar: 0
+      enchant_level: 2
+      qualities: >-
+        @Compendium[uesrpg-revision.journal.mnfUeIEQkOInlwPK]{Crushing},
+        @Compendium[uesrpg-revision.journal.21g3rtqdszsKc9jv]{Unwieldy}
+      charge:
+        value: 0
+        max: 0
+        reduction: 1
+      item_cat:
+        none: None
+        weapon1: Primary Weapon
+        weapon2: Secondary Weapon
+        weapon3: Sidearm
+    _key: '!actors.items!shBpOGNbQfKEAlqN.smVB7CmNYp8G6U0Z'
+  - _id: nhpMbgzb6c3hQGTg
+    name: Steel Shortsword
+    type: weapon
+    img: icons/weapons/swords/shortsword-guard-brown.webp
+    effects: []
+    folder: null
+    sort: 0
+    flags:
+      core:
+        sourceId: Item.2jUT8icq4MuyLEaC
+    _stats:
+      compendiumSource: null
+      duplicateSource: null
+      coreVersion: '12.331'
+      systemId: uesrpg-3ev4
+      systemVersion: v1.0.0-RC.59
+      createdTime: null
+      modifiedTime: null
+      lastModifiedBy: null
+    ownership:
+      default: 0
+      qwt9o1cuKYitvD9G: 3
+      eeXhsDlbzUBZOXZT: 3
+    system:
+      mpBonus: 0
+      hpBonus: 0
+      spBonus: 0
+      lpBonus: 0
+      wtBonus: 0
+      iniBonus: 0
+      speedBonus: 0
+      flyBonus: 0
+      swimBonus: 0
+      diseaseR: 0
+      fireR: 0
+      frostR: 0
+      shockR: 0
+      poisonR: 0
+      magicR: 0
+      natToughnessR: 0
+      silverR: 0
+      sunlightR: 0
+      characteristics:
+        none: None
+        str: STR
+        end: END
+        agi: AGI
+        int: INT
+        wp: WP
+        prc: PRC
+        prs: PRS
+        lck: LCK
+      characteristicBonus:
+        strChaBonus: 0
+        endChaBonus: 0
+        agiChaBonus: 0
+        intChaBonus: 0
+        wpChaBonus: 0
+        prcChaBonus: 0
+        prsChaBonus: 0
+        lckChaBonus: 0
+      replace:
+        ini:
+          iniToggle: false
+          value: 0
+          characteristic: ''
+        wt:
+          wtToggle: false
+          value: 0
+          characteristic: ''
+      skillArray: []
+      isPhysicalObject: true
+      containerStats:
+        contained: false
+        container_id: ''
+        container_name: ''
+      description: >-
+        <p><em style="box-sizing: border-box; user-select: text; color:
+        #191813;">Enchantments, modifications, notes, etc...</em></p>
+      quantity: 1
+      enc: 1
+      totalENC: 0
+      reach: 1
+      damage: 1d6+1
+      damage2: '0'
+      damage3: 0
+      weapon2H: false
+      equippped: false
+      carried: false
+      excludeENC: false
+      superior: false
+      hands: 0
+      price: 75
+      modPrice: 0
+      armor: 0
+      magic_ar: 0
+      enchant_level: 2
+      qualities: >-
+        @Compendium[uesrpg-revision.journal.8QrUeG8YXaLx1BqW]{Slashing},
+        @Compendium[uesrpg-revision.journal.5HnOtuIPqSo9GuWE]{Exploit Weakness}
+      charge:
+        value: 0
+        max: 0
+        reduction: 1
+      item_cat:
+        none: None
+        weapon1: Primary Weapon
+        weapon2: Secondary Weapon
+        weapon3: Sidearm
+    _key: '!actors.items!shBpOGNbQfKEAlqN.nhpMbgzb6c3hQGTg'
+  - _id: ZyU3vHUSkCpnWcMZ
+    name: Wood Crossbow
+    type: weapon
+    img: icons/weapons/crossbows/crossbow-loaded-black.webp
+    effects: []
+    folder: null
+    sort: 0
+    flags:
+      core:
+        sourceId: Item.gXSr4PMsxrmEKwYC
+    _stats:
+      compendiumSource: null
+      duplicateSource: null
+      coreVersion: '12.331'
+      systemId: uesrpg-3ev4
+      systemVersion: v1.0.0-RC.59
+      createdTime: null
+      modifiedTime: null
+      lastModifiedBy: null
+    ownership:
+      default: 0
+      qwt9o1cuKYitvD9G: 3
+      eeXhsDlbzUBZOXZT: 3
+    system:
+      mpBonus: 0
+      hpBonus: 0
+      spBonus: 0
+      lpBonus: 0
+      wtBonus: 0
+      iniBonus: 0
+      speedBonus: 0
+      flyBonus: 0
+      swimBonus: 0
+      diseaseR: 0
+      fireR: 0
+      frostR: 0
+      shockR: 0
+      poisonR: 0
+      magicR: 0
+      natToughnessR: 0
+      silverR: 0
+      sunlightR: 0
+      characteristics:
+        none: None
+        str: STR
+        end: END
+        agi: AGI
+        int: INT
+        wp: WP
+        prc: PRC
+        prs: PRS
+        lck: LCK
+      characteristicBonus:
+        strChaBonus: 0
+        endChaBonus: 0
+        agiChaBonus: 0
+        intChaBonus: 0
+        wpChaBonus: 0
+        prcChaBonus: 0
+        prsChaBonus: 0
+        lckChaBonus: 0
+      replace:
+        ini:
+          iniToggle: false
+          value: 0
+          characteristic: ''
+        wt:
+          wtToggle: false
+          value: 0
+          characteristic: ''
+      skillArray: []
+      isPhysicalObject: true
+      containerStats:
+        contained: false
+        container_id: ''
+        container_name: ''
+      description: >-
+        <p><em style="box-sizing: border-box; user-select: text; color:
+        #191813;">Enchantments, modifications, notes, etc...</em></p>
+      quantity: 1
+      enc: 1
+      totalENC: 0
+      reach: null
+      damage: '0'
+      damage2: 1d10
+      damage3: 0
+      weapon2H: true
+      equippped: false
+      carried: false
+      excludeENC: false
+      superior: false
+      hands: 0
+      price: 500
+      modPrice: 0
+      armor: 0
+      magic_ar: 0
+      enchant_level: 1
+      qualities: >-
+        @Compendium[uesrpg-revision.journal.jL4N8O5dQsX76Gux]{Complex},
+        @Compendium[uesrpg-revision.journal.m6FZ2DuL1SSGOqr2]{Reload} (2, min
+        1), @Compendium[uesrpg-revision.journal.mnfUeIEQkOInlwPK]{Crushing} (4)
+      charge:
+        value: 0
+        max: 0
+        reduction: 1
+      item_cat:
+        none: None
+        weapon1: Primary Weapon
+        weapon2: Secondary Weapon
+        weapon3: Sidearm
+    _key: '!actors.items!shBpOGNbQfKEAlqN.ZyU3vHUSkCpnWcMZ'
+  - _id: sNJAO0Gn22AplVOm
+    name: Steel Bolt - Bodkin
+    type: ammunition
+    img: icons/weapons/ammunition/arrows-bodkin-yellow-red.webp
+    effects: []
+    folder: null
+    sort: 0
+    flags:
+      core:
+        sourceId: Item.8SI16Irg5SyQEdhU
+    _stats:
+      compendiumSource: null
+      duplicateSource: null
+      coreVersion: '12.331'
+      systemId: uesrpg-3ev4
+      systemVersion: v1.0.0-RC.59
+      createdTime: null
+      modifiedTime: null
+      lastModifiedBy: null
+    ownership:
+      default: 0
+      WcwhQU1nz94WaD5n: 3
+      eeXhsDlbzUBZOXZT: 3
+    system:
+      mpBonus: 0
+      hpBonus: 0
+      spBonus: 0
+      lpBonus: 0
+      wtBonus: 0
+      iniBonus: 0
+      speedBonus: 0
+      flyBonus: 0
+      swimBonus: 0
+      diseaseR: 0
+      fireR: 0
+      frostR: 0
+      shockR: 0
+      poisonR: 0
+      magicR: 0
+      natToughnessR: 0
+      silverR: 0
+      sunlightR: 0
+      characteristics:
+        none: None
+        str: STR
+        end: END
+        agi: AGI
+        int: INT
+        wp: WP
+        prc: PRC
+        prs: PRS
+        lck: LCK
+      characteristicBonus:
+        strChaBonus: 0
+        endChaBonus: 0
+        agiChaBonus: 0
+        intChaBonus: 0
+        wpChaBonus: 0
+        prcChaBonus: 0
+        prsChaBonus: 0
+        lckChaBonus: 0
+      replace:
+        ini:
+          iniToggle: false
+          value: 0
+          characteristic: ''
+        wt:
+          wtToggle: false
+          value: 0
+          characteristic: ''
+      isPhysicalObject: true
+      containerStats:
+        contained: false
+        container_id: ''
+        container_name: ''
+      description: >-
+        <p><em style="box-sizing: border-box; user-select: text; color:
+        #191813;">Enchantments, modifications, notes, etc...</em></p>
+
+        <p>Rename 'Ammunition' to 'Arrow' or 'Bolt'.</p>
+      quantity: 10
+      enc: 0.1
+      totalENC: 0
+      damage: '1'
+      carried: false
+      equipped: false
+      excludeENC: false
+      superior: false
+      price: 2
+      modPrice: 0
+      armor: 0
+      magic_ar: 0
+      enchant_level: 2
+      qualities: '@Compendium[uesrpg-revision.journal.wra9K7hRoVnZarja]{Splitting}'
+      charge:
+        value: 0
+        max: 0
+    _key: '!actors.items!shBpOGNbQfKEAlqN.sNJAO0Gn22AplVOm'
+  - _id: JBLXIf9yG2HQbUb0
+    name: Steel Bolt - Broadhead
+    type: ammunition
+    img: icons/weapons/ammunition/arrows-broadhead-white.webp
+    effects: []
+    folder: null
+    sort: 0
+    flags:
+      core:
+        sourceId: Item.wu2mKwl7koDbwaa2
+    _stats:
+      compendiumSource: null
+      duplicateSource: null
+      coreVersion: '12.331'
+      systemId: uesrpg-3ev4
+      systemVersion: v1.0.0-RC.59
+      createdTime: null
+      modifiedTime: null
+      lastModifiedBy: null
+    ownership:
+      default: 0
+      WcwhQU1nz94WaD5n: 3
+      eeXhsDlbzUBZOXZT: 3
+    system:
+      mpBonus: 0
+      hpBonus: 0
+      spBonus: 0
+      lpBonus: 0
+      wtBonus: 0
+      iniBonus: 0
+      speedBonus: 0
+      flyBonus: 0
+      swimBonus: 0
+      diseaseR: 0
+      fireR: 0
+      frostR: 0
+      shockR: 0
+      poisonR: 0
+      magicR: 0
+      natToughnessR: 0
+      silverR: 0
+      sunlightR: 0
+      characteristics:
+        none: None
+        str: STR
+        end: END
+        agi: AGI
+        int: INT
+        wp: WP
+        prc: PRC
+        prs: PRS
+        lck: LCK
+      characteristicBonus:
+        strChaBonus: 0
+        endChaBonus: 0
+        agiChaBonus: 0
+        intChaBonus: 0
+        wpChaBonus: 0
+        prcChaBonus: 0
+        prsChaBonus: 0
+        lckChaBonus: 0
+      replace:
+        ini:
+          iniToggle: false
+          value: 0
+          characteristic: ''
+        wt:
+          wtToggle: false
+          value: 0
+          characteristic: ''
+      isPhysicalObject: true
+      containerStats:
+        contained: false
+        container_id: ''
+        container_name: ''
+      description: >-
+        <p><em style="box-sizing: border-box; user-select: text; color:
+        #191813;">Enchantments, modifications, notes, etc...</em></p>
+
+        <p>Rename 'Ammunition' to 'Arrow' or 'Bolt'.</p>
+      quantity: 10
+      enc: 0.1
+      totalENC: 0
+      damage: '1'
+      carried: false
+      equipped: false
+      excludeENC: false
+      superior: false
+      price: 2
+      modPrice: 0
+      armor: 0
+      magic_ar: 0
+      enchant_level: 2
+      qualities: '@Compendium[uesrpg-revision.journal.8QrUeG8YXaLx1BqW]{Slashing}'
+      charge:
+        value: 0
+        max: 0
+    _key: '!actors.items!shBpOGNbQfKEAlqN.JBLXIf9yG2HQbUb0'
+  - _id: hlQTsUDb1tDOogUU
+    name: Full Leather Armor
+    type: armor
+    img: icons/equipment/chest/breastplate-banded-simple-leather-brown.webp
+    effects: []
+    folder: null
+    sort: 0
+    flags:
+      core:
+        sourceId: Item.8CMDpj9LkeMsPBGk
+    _stats:
+      compendiumSource: null
+      duplicateSource: null
+      coreVersion: '12.331'
+      systemId: uesrpg-3ev4
+      systemVersion: v1.0.0-RC.59
+      createdTime: null
+      modifiedTime: null
+      lastModifiedBy: null
+    ownership:
+      default: 0
+      qwt9o1cuKYitvD9G: 3
+      eeXhsDlbzUBZOXZT: 3
+    system:
+      mpBonus: 0
+      hpBonus: 0
+      spBonus: 0
+      lpBonus: 0
+      wtBonus: 0
+      iniBonus: 0
+      speedBonus: 0
+      flyBonus: 0
+      swimBonus: 0
+      diseaseR: 0
+      fireR: 0
+      frostR: 0
+      shockR: 0
+      poisonR: 0
+      magicR: 0
+      natToughnessR: 0
+      silverR: 0
+      sunlightR: 0
+      characteristics:
+        none: None
+        str: STR
+        end: END
+        agi: AGI
+        int: INT
+        wp: WP
+        prc: PRC
+        prs: PRS
+        lck: LCK
+      characteristicBonus:
+        strChaBonus: 0
+        endChaBonus: 0
+        agiChaBonus: 0
+        intChaBonus: 0
+        wpChaBonus: 0
+        prcChaBonus: 0
+        prsChaBonus: 0
+        lckChaBonus: 0
+      replace:
+        ini:
+          iniToggle: false
+          value: 0
+          characteristic: ''
+        wt:
+          wtToggle: false
+          value: 0
+          characteristic: ''
+      skillArray: []
+      isPhysicalObject: true
+      containerStats:
+        contained: false
+        container_id: ''
+        container_name: ''
+      description: >-
+        <p><em>Leather armor is lighter and more flexible than metal, giving the
+        wearer that much more room to work with. Crafted from various layers of
+        cured/tanned skin, leather armor provides some protection against bladed
+        weapons and the material even offers some minor protection from
+        fire.&nbsp;</em></p>
+      quantity: 1
+      enc: 3
+      totalENC: 0
+      reach: ''
+      damage: ''
+      equipped: true
+      carried: false
+      hands: 0
+      price: 100
+      modPrice: 0
+      armor: 3
+      blockRating: 0
+      excludeENC: false
+      magic_ar: 1 Fire
+      enchant_level: 1
+      qualities: '@Compendium[uesrpg-revision.journal.dfIZDLRGKnnc5kty]{Medium}'
+      category: none
+      item_cat:
+        none: None
+        head: Helmet
+        l_arm: Left Gauntlet
+        r_arm: Right Gauntlet
+        l_leg: Left Leg
+        r_leg: Right Leg
+        body: Chestplate
+        shield: Shield
+      charge:
+        value: 0
+        max: 0
+        reduction: 1
+    _key: '!actors.items!shBpOGNbQfKEAlqN.hlQTsUDb1tDOogUU'
+  - _id: o3BNmHYBRz1kxfXK
+    name: Full Leather Boot
+    type: armor
+    img: icons/equipment/feet/boots-collared-leather-brown.webp
+    effects: []
+    folder: null
+    sort: 0
+    flags:
+      core:
+        sourceId: Item.TBoz3PlkpSTL5h4I
+    _stats:
+      compendiumSource: null
+      duplicateSource: null
+      coreVersion: '12.331'
+      systemId: uesrpg-3ev4
+      systemVersion: v1.0.0-RC.59
+      createdTime: null
+      modifiedTime: null
+      lastModifiedBy: null
+    ownership:
+      default: 0
+      qwt9o1cuKYitvD9G: 3
+      eeXhsDlbzUBZOXZT: 3
+    system:
+      mpBonus: 0
+      hpBonus: 0
+      spBonus: 0
+      lpBonus: 0
+      wtBonus: 0
+      iniBonus: 0
+      speedBonus: 0
+      flyBonus: 0
+      swimBonus: 0
+      diseaseR: 0
+      fireR: 0
+      frostR: 0
+      shockR: 0
+      poisonR: 0
+      magicR: 0
+      natToughnessR: 0
+      silverR: 0
+      sunlightR: 0
+      characteristics:
+        none: None
+        str: STR
+        end: END
+        agi: AGI
+        int: INT
+        wp: WP
+        prc: PRC
+        prs: PRS
+        lck: LCK
+      characteristicBonus:
+        strChaBonus: 0
+        endChaBonus: 0
+        agiChaBonus: 0
+        intChaBonus: 0
+        wpChaBonus: 0
+        prcChaBonus: 0
+        prsChaBonus: 0
+        lckChaBonus: 0
+      replace:
+        ini:
+          iniToggle: false
+          value: 0
+          characteristic: ''
+        wt:
+          wtToggle: false
+          value: 0
+          characteristic: ''
+      skillArray: []
+      isPhysicalObject: true
+      containerStats:
+        contained: false
+        container_id: ''
+        container_name: ''
+      description: >-
+        <p><em>Leather armor is lighter and more flexible than metal, giving the
+        wearer that much more room to work with. Crafted from various layers of
+        cured/tanned skin, leather armor provides some protection against bladed
+        weapons and the material even offers some minor protection from
+        fire.&nbsp;</em></p>
+      quantity: 1
+      enc: 3
+      totalENC: 0
+      reach: ''
+      damage: ''
+      equipped: true
+      carried: false
+      hands: 0
+      price: 50
+      modPrice: 0
+      armor: 3
+      blockRating: 0
+      excludeENC: false
+      magic_ar: 1 Fire
+      enchant_level: 1
+      qualities: '@Compendium[uesrpg-revision.journal.dfIZDLRGKnnc5kty]{Medium}'
+      category: none
+      item_cat:
+        none: None
+        head: Helmet
+        l_arm: Left Gauntlet
+        r_arm: Right Gauntlet
+        l_leg: Left Leg
+        r_leg: Right Leg
+        body: Chestplate
+        shield: Shield
+      charge:
+        value: 0
+        max: 0
+        reduction: 1
+    _key: '!actors.items!shBpOGNbQfKEAlqN.o3BNmHYBRz1kxfXK'
+  - _id: PXLTgYZRGyJ0JUAv
+    name: Full Leather Boot
+    type: armor
+    img: icons/equipment/feet/boots-collared-leather-brown.webp
+    effects: []
+    folder: null
+    sort: 0
+    flags:
+      core:
+        sourceId: Item.TBoz3PlkpSTL5h4I
+    _stats:
+      compendiumSource: null
+      duplicateSource: null
+      coreVersion: '12.331'
+      systemId: uesrpg-3ev4
+      systemVersion: v1.0.0-RC.59
+      createdTime: null
+      modifiedTime: null
+      lastModifiedBy: null
+    ownership:
+      default: 0
+      qwt9o1cuKYitvD9G: 3
+      eeXhsDlbzUBZOXZT: 3
+    system:
+      mpBonus: 0
+      hpBonus: 0
+      spBonus: 0
+      lpBonus: 0
+      wtBonus: 0
+      iniBonus: 0
+      speedBonus: 0
+      flyBonus: 0
+      swimBonus: 0
+      diseaseR: 0
+      fireR: 0
+      frostR: 0
+      shockR: 0
+      poisonR: 0
+      magicR: 0
+      natToughnessR: 0
+      silverR: 0
+      sunlightR: 0
+      characteristics:
+        none: None
+        str: STR
+        end: END
+        agi: AGI
+        int: INT
+        wp: WP
+        prc: PRC
+        prs: PRS
+        lck: LCK
+      characteristicBonus:
+        strChaBonus: 0
+        endChaBonus: 0
+        agiChaBonus: 0
+        intChaBonus: 0
+        wpChaBonus: 0
+        prcChaBonus: 0
+        prsChaBonus: 0
+        lckChaBonus: 0
+      replace:
+        ini:
+          iniToggle: false
+          value: 0
+          characteristic: ''
+        wt:
+          wtToggle: false
+          value: 0
+          characteristic: ''
+      skillArray: []
+      isPhysicalObject: true
+      containerStats:
+        contained: false
+        container_id: ''
+        container_name: ''
+      description: >-
+        <p><em>Leather armor is lighter and more flexible than metal, giving the
+        wearer that much more room to work with. Crafted from various layers of
+        cured/tanned skin, leather armor provides some protection against bladed
+        weapons and the material even offers some minor protection from
+        fire.&nbsp;</em></p>
+      quantity: 1
+      enc: 3
+      totalENC: 0
+      reach: ''
+      damage: ''
+      equipped: true
+      carried: false
+      hands: 0
+      price: 50
+      modPrice: 0
+      armor: 3
+      blockRating: 0
+      excludeENC: false
+      magic_ar: 1 Fire
+      enchant_level: 1
+      qualities: '@Compendium[uesrpg-revision.journal.dfIZDLRGKnnc5kty]{Medium}'
+      category: none
+      item_cat:
+        none: None
+        head: Helmet
+        l_arm: Left Gauntlet
+        r_arm: Right Gauntlet
+        l_leg: Left Leg
+        r_leg: Right Leg
+        body: Chestplate
+        shield: Shield
+      charge:
+        value: 0
+        max: 0
+        reduction: 1
+    _key: '!actors.items!shBpOGNbQfKEAlqN.PXLTgYZRGyJ0JUAv'
+  - _id: lLbukVJ9sMA0Pkns
+    name: Full Leather Bracer
+    type: armor
+    img: icons/equipment/wrist/bracer-armored-steel.webp
+    effects: []
+    folder: null
+    sort: 0
+    flags:
+      core:
+        sourceId: Item.PgmFniglhwodXNc6
+    _stats:
+      compendiumSource: null
+      duplicateSource: null
+      coreVersion: '12.331'
+      systemId: uesrpg-3ev4
+      systemVersion: v1.0.0-RC.59
+      createdTime: null
+      modifiedTime: null
+      lastModifiedBy: null
+    ownership:
+      default: 0
+      qwt9o1cuKYitvD9G: 3
+      eeXhsDlbzUBZOXZT: 3
+    system:
+      mpBonus: 0
+      hpBonus: 0
+      spBonus: 0
+      lpBonus: 0
+      wtBonus: 0
+      iniBonus: 0
+      speedBonus: 0
+      flyBonus: 0
+      swimBonus: 0
+      diseaseR: 0
+      fireR: 0
+      frostR: 0
+      shockR: 0
+      poisonR: 0
+      magicR: 0
+      natToughnessR: 0
+      silverR: 0
+      sunlightR: 0
+      characteristics:
+        none: None
+        str: STR
+        end: END
+        agi: AGI
+        int: INT
+        wp: WP
+        prc: PRC
+        prs: PRS
+        lck: LCK
+      characteristicBonus:
+        strChaBonus: 0
+        endChaBonus: 0
+        agiChaBonus: 0
+        intChaBonus: 0
+        wpChaBonus: 0
+        prcChaBonus: 0
+        prsChaBonus: 0
+        lckChaBonus: 0
+      replace:
+        ini:
+          iniToggle: false
+          value: 0
+          characteristic: ''
+        wt:
+          wtToggle: false
+          value: 0
+          characteristic: ''
+      skillArray: []
+      isPhysicalObject: true
+      containerStats:
+        contained: false
+        container_id: ''
+        container_name: ''
+      description: >-
+        <p><em>Leather armor is lighter and more flexible than metal, giving the
+        wearer that much more room to work with. Crafted from various layers of
+        cured/tanned skin, leather armor provides some protection against bladed
+        weapons and the material even offers some minor protection from
+        fire.&nbsp;</em></p>
+      quantity: 1
+      enc: 3
+      totalENC: 0
+      reach: ''
+      damage: ''
+      equipped: true
+      carried: false
+      hands: 0
+      price: 50
+      modPrice: 0
+      armor: 3
+      blockRating: 0
+      excludeENC: false
+      magic_ar: 1 Fire
+      enchant_level: 1
+      qualities: '@Compendium[uesrpg-revision.journal.dfIZDLRGKnnc5kty]{Medium}'
+      category: none
+      item_cat:
+        none: None
+        head: Helmet
+        l_arm: Left Gauntlet
+        r_arm: Right Gauntlet
+        l_leg: Left Leg
+        r_leg: Right Leg
+        body: Chestplate
+        shield: Shield
+      charge:
+        value: 0
+        max: 0
+        reduction: 1
+    _key: '!actors.items!shBpOGNbQfKEAlqN.lLbukVJ9sMA0Pkns'
+  - _id: L12bEexS2opba4s9
+    name: Full Leather Bracer
+    type: armor
+    img: icons/equipment/wrist/bracer-armored-steel.webp
+    effects: []
+    folder: null
+    sort: 0
+    flags:
+      core:
+        sourceId: Item.PgmFniglhwodXNc6
+    _stats:
+      compendiumSource: null
+      duplicateSource: null
+      coreVersion: '12.331'
+      systemId: uesrpg-3ev4
+      systemVersion: v1.0.0-RC.59
+      createdTime: null
+      modifiedTime: null
+      lastModifiedBy: null
+    ownership:
+      default: 0
+      qwt9o1cuKYitvD9G: 3
+      eeXhsDlbzUBZOXZT: 3
+    system:
+      mpBonus: 0
+      hpBonus: 0
+      spBonus: 0
+      lpBonus: 0
+      wtBonus: 0
+      iniBonus: 0
+      speedBonus: 0
+      flyBonus: 0
+      swimBonus: 0
+      diseaseR: 0
+      fireR: 0
+      frostR: 0
+      shockR: 0
+      poisonR: 0
+      magicR: 0
+      natToughnessR: 0
+      silverR: 0
+      sunlightR: 0
+      characteristics:
+        none: None
+        str: STR
+        end: END
+        agi: AGI
+        int: INT
+        wp: WP
+        prc: PRC
+        prs: PRS
+        lck: LCK
+      characteristicBonus:
+        strChaBonus: 0
+        endChaBonus: 0
+        agiChaBonus: 0
+        intChaBonus: 0
+        wpChaBonus: 0
+        prcChaBonus: 0
+        prsChaBonus: 0
+        lckChaBonus: 0
+      replace:
+        ini:
+          iniToggle: false
+          value: 0
+          characteristic: ''
+        wt:
+          wtToggle: false
+          value: 0
+          characteristic: ''
+      skillArray: []
+      isPhysicalObject: true
+      containerStats:
+        contained: false
+        container_id: ''
+        container_name: ''
+      description: >-
+        <p><em>Leather armor is lighter and more flexible than metal, giving the
+        wearer that much more room to work with. Crafted from various layers of
+        cured/tanned skin, leather armor provides some protection against bladed
+        weapons and the material even offers some minor protection from
+        fire.&nbsp;</em></p>
+      quantity: 1
+      enc: 3
+      totalENC: 0
+      reach: ''
+      damage: ''
+      equipped: true
+      carried: false
+      hands: 0
+      price: 50
+      modPrice: 0
+      armor: 3
+      blockRating: 0
+      excludeENC: false
+      magic_ar: 1 Fire
+      enchant_level: 1
+      qualities: '@Compendium[uesrpg-revision.journal.dfIZDLRGKnnc5kty]{Medium}'
+      category: none
+      item_cat:
+        none: None
+        head: Helmet
+        l_arm: Left Gauntlet
+        r_arm: Right Gauntlet
+        l_leg: Left Leg
+        r_leg: Right Leg
+        body: Chestplate
+        shield: Shield
+      charge:
+        value: 0
+        max: 0
+        reduction: 1
+    _key: '!actors.items!shBpOGNbQfKEAlqN.L12bEexS2opba4s9'
+  - _id: 5XNiIGSqe7YhL8U3
+    name: Full Leather Helmet
+    type: armor
+    img: icons/equipment/head/helm-barbute-leather.webp
+    effects: []
+    folder: null
+    sort: 0
+    flags:
+      core:
+        sourceId: Item.qMf4mfvclNkpQ8sq
+    _stats:
+      compendiumSource: null
+      duplicateSource: null
+      coreVersion: '12.331'
+      systemId: uesrpg-3ev4
+      systemVersion: v1.0.0-RC.59
+      createdTime: null
+      modifiedTime: null
+      lastModifiedBy: null
+    ownership:
+      default: 0
+      qwt9o1cuKYitvD9G: 3
+      eeXhsDlbzUBZOXZT: 3
+    system:
+      mpBonus: 0
+      hpBonus: 0
+      spBonus: 0
+      lpBonus: 0
+      wtBonus: 0
+      iniBonus: 0
+      speedBonus: 0
+      flyBonus: 0
+      swimBonus: 0
+      diseaseR: 0
+      fireR: 0
+      frostR: 0
+      shockR: 0
+      poisonR: 0
+      magicR: 0
+      natToughnessR: 0
+      silverR: 0
+      sunlightR: 0
+      characteristics:
+        none: None
+        str: STR
+        end: END
+        agi: AGI
+        int: INT
+        wp: WP
+        prc: PRC
+        prs: PRS
+        lck: LCK
+      characteristicBonus:
+        strChaBonus: 0
+        endChaBonus: 0
+        agiChaBonus: 0
+        intChaBonus: 0
+        wpChaBonus: 0
+        prcChaBonus: 0
+        prsChaBonus: 0
+        lckChaBonus: 0
+      replace:
+        ini:
+          iniToggle: false
+          value: 0
+          characteristic: ''
+        wt:
+          wtToggle: false
+          value: 0
+          characteristic: ''
+      skillArray: []
+      isPhysicalObject: true
+      containerStats:
+        contained: false
+        container_id: ''
+        container_name: ''
+      description: >-
+        <p><em>Leather armor is lighter and more flexible than metal, giving the
+        wearer that much more room to work with. Crafted from various layers of
+        cured/tanned skin, leather armor provides some protection against bladed
+        weapons and the material even offers some minor protection from
+        fire.&nbsp;</em></p>
+      quantity: 1
+      enc: 3
+      totalENC: 0
+      reach: ''
+      damage: ''
+      equipped: true
+      carried: false
+      hands: 0
+      price: 50
+      modPrice: 0
+      armor: 3
+      blockRating: 0
+      excludeENC: false
+      magic_ar: 1 Fire
+      enchant_level: 1
+      qualities: '@Compendium[uesrpg-revision.journal.dfIZDLRGKnnc5kty]{Medium}'
+      category: none
+      item_cat:
+        none: None
+        head: Helmet
+        l_arm: Left Gauntlet
+        r_arm: Right Gauntlet
+        l_leg: Left Leg
+        r_leg: Right Leg
+        body: Chestplate
+        shield: Shield
+      charge:
+        value: 0
+        max: 0
+        reduction: 1
+    _key: '!actors.items!shBpOGNbQfKEAlqN.5XNiIGSqe7YhL8U3'
+  - _id: uaaaWXB2s2LxK5s0
+    name: Conjure [Any Weapon]
+    type: spell
+    img: icons/magic/symbols/rune-sigil-white-pink.webp
+    effects: []
+    folder: null
+    sort: 0
+    flags:
+      core:
+        sourceId: Item.Dvncp3T7Nn3WBpgy
+    _stats:
+      compendiumSource: null
+      duplicateSource: null
+      coreVersion: '12.331'
+      systemId: uesrpg-3ev4
+      systemVersion: v1.0.0-RC.59
+      createdTime: null
+      modifiedTime: null
+      lastModifiedBy: null
+    ownership:
+      default: 0
+      qwt9o1cuKYitvD9G: 3
+      eeXhsDlbzUBZOXZT: 3
+    system:
+      description: >-
+        <p>Summons a Bound Daedric weapon or shield of casters choice. The
+        weapon is created with a [Spell Strength] damage modifier. The weapon
+        type must be determined when the spell is learned.</p>
+
+        <table style="width: 98.5447%; height: 51px;" border="2" cellspacing="2"
+        cellpadding="1">
+
+        <tbody>
+
+        <tr style="height: 17px;">
+
+        <td style="width: 28.8754%; height: 17px; text-align:
+        left;"><strong>Level</strong></td>
+
+        <td style="width: 11.1046%; height: 17px; text-align:
+        center;"><strong>1</strong></td>
+
+        <td style="width: 10.6839%; height: 17px; text-align:
+        center;"><strong>2</strong></td>
+
+        <td style="width: 10.2481%; height: 17px; text-align:
+        center;"><strong>3</strong></td>
+
+        <td style="width: 8.93711%; height: 17px; text-align:
+        center;"><strong>4</strong></td>
+
+        <td style="width: 9.06888%; height: 17px; text-align:
+        center;"><strong>5</strong></td>
+
+        <td style="width: 9.72621%; height: 17px; text-align:
+        center;"><strong>6</strong></td>
+
+        <td style="width: 9.4269%; height: 17px; text-align:
+        center;"><strong>7</strong></td>
+
+        </tr>
+
+        <tr style="height: 17px;">
+
+        <td style="width: 28.8754%; height: 17px; text-align:
+        left;"><strong>Cost</strong></td>
+
+        <td style="width: 11.1046%; height: 17px; text-align: center;">-</td>
+
+        <td style="width: 10.6839%; height: 17px; text-align: center;">11</td>
+
+        <td style="width: 10.2481%; height: 17px; text-align: center;">16</td>
+
+        <td style="width: 8.93711%; height: 17px; text-align: center;">21</td>
+
+        <td style="width: 9.06888%; height: 17px; text-align: center;">26</td>
+
+        <td style="width: 9.72621%; height: 17px; text-align: center;">31</td>
+
+        <td style="width: 9.4269%; height: 17px; text-align: center;">-</td>
+
+        </tr>
+
+        <tr style="height: 17px;">
+
+        <td style="width: 28.8754%; height: 17px; text-align:
+        left;"><strong>Spell Strength</strong></td>
+
+        <td style="width: 11.1046%; height: 17px; text-align: center;">-</td>
+
+        <td style="width: 10.6839%; height: 17px; text-align: center;">1</td>
+
+        <td style="width: 10.2481%; height: 17px; text-align: center;">2</td>
+
+        <td style="width: 8.93711%; height: 17px; text-align: center;">3</td>
+
+        <td style="width: 9.06888%; height: 17px; text-align: center;">4</td>
+
+        <td style="width: 9.72621%; height: 17px; text-align: center;">5</td>
+
+        <td style="width: 9.4269%; height: 17px; text-align: center;">-</td>
+
+        </tr>
+
+        </tbody>
+
+        </table>
+
+        <p>This weapon appears in the caster&rsquo;s hand(s) for the duration of
+        the spell, or until the weapon leaves the caster&rsquo;s hands. The
+        caster gains a [Spell Strength] weapon (with ammo) with the Bound and
+        Summoned traits of the chosen type for 1 minute.&nbsp;If the weapon is
+        not in any of the caster&rsquo;s Combat Styles, they&nbsp;count it as
+        being Trained (+0).</p>
+      damage: '0'
+      level: 0
+      cost: 0
+      spell_str: ''
+      attributes: '@Compendium[uesrpg-revision.journal.etuR7vddrnv3ot2J]{Upkeep}'
+      form: Self
+      school: conjuration
+      school_cat:
+        alteration: Alteration
+        conjuration: Conjuration
+        destruction: Destruction
+        illusion: Illusion
+        mysticism: Mysticism
+        necromancy: Necromancy
+        restoration: Restoration
+        none: Select School
+      spellType: ''
+      spellTypes:
+        conventional: Conventional
+        unconventional: Unconventional
+    _key: '!actors.items!shBpOGNbQfKEAlqN.uaaaWXB2s2LxK5s0'
+  - _id: eNIW4Rd6tjbgATP9
+    name: Summon Daedra
+    type: spell
+    img: icons/magic/symbols/rune-sigil-white-pink.webp
+    effects: []
+    folder: null
+    sort: 0
+    flags:
+      core:
+        sourceId: Item.Dvncp3T7Nn3WBpgy
+    _stats:
+      compendiumSource: null
+      duplicateSource: null
+      coreVersion: '12.331'
+      systemId: uesrpg-3ev4
+      systemVersion: v1.0.0-RC.59
+      createdTime: null
+      modifiedTime: null
+      lastModifiedBy: null
+    ownership:
+      default: 0
+      qwt9o1cuKYitvD9G: 3
+      eeXhsDlbzUBZOXZT: 3
+    system:
+      description: >-
+        <p>Summons a Daedra with the Summoned trait, which appears within five
+        meters of the caster. Immediately after being summoned, the Daedra must
+        make a Willpower test against the DoS of the Conjuration test. If the
+        Conjurer wins the test, the Daedra gains the Bound trait and persists
+        for 1 minute, If the Daedra wins the Opposed test, it is not Bound and
+        can act as it pleases, typically murdering its summoner. The unbound
+        Daedra can test Willpower at the end of each minute to maintain itself
+        in Mundus. Keeping the Daedra in line imposes [Spell Str] Mindlock on
+        the caster. Roll initiative for the Daedra when it&rsquo;s summoned, as
+        it acts on its own turn.</p>
+
+        <p>For each time the spell is bought, pick one spell profile from the
+        table below and mark it on your sheet.</p>
+
+        <table style="width: 98.5447%; height: 374px;" border="2"
+        cellspacing="2" cellpadding="1">
+
+        <tbody>
+
+        <tr style="height: 17px;">
+
+        <td style="width: 27.1325%; height: 17px; text-align:
+        left;"><strong>Daedra</strong></td>
+
+        <td style="width: 9.79739%; height: 17px; text-align:
+        center;"><strong>Level</strong></td>
+
+        <td style="width: 8.94093%; height: 17px; text-align:
+        center;"><strong>Cost</strong></td>
+
+        <td style="width: 15.9126%; height: 17px; text-align:
+        center;"><strong>Spell Strength</strong></td>
+
+        </tr>
+
+        <tr style="height: 17px;">
+
+        <td style="width: 27.1325%; height: 17px; text-align:
+        left;">Daedrat</td>
+
+        <td style="width: 9.79739%; height: 17px; text-align: center;">1</td>
+
+        <td style="width: 8.94093%; height: 17px; text-align: center;">14</td>
+
+        <td style="width: 15.9126%; height: 17px; text-align: center;">1</td>
+
+        </tr>
+
+        <tr style="height: 17px;">
+
+        <td style="width: 27.1325%; height: 17px; text-align: left;">Scamp</td>
+
+        <td style="width: 9.79739%; height: 17px; text-align: center;">1</td>
+
+        <td style="width: 8.94093%; height: 17px; text-align: center;">15</td>
+
+        <td style="width: 15.9126%; height: 17px; text-align: center;">1</td>
+
+        </tr>
+
+        <tr style="height: 17px;">
+
+        <td style="width: 27.1325%; text-align: left; height:
+        17px;">Banekin</td>
+
+        <td style="width: 9.79739%; text-align: center; height: 17px;">1</td>
+
+        <td style="width: 8.94093%; text-align: center; height: 17px;">17</td>
+
+        <td style="width: 15.9126%; text-align: center; height: 17px;">1</td>
+
+        </tr>
+
+        <tr style="height: 17px;">
+
+        <td style="width: 27.1325%; text-align: left; height: 17px;">Hell
+        Hound</td>
+
+        <td style="width: 9.79739%; text-align: center; height: 17px;">2</td>
+
+        <td style="width: 8.94093%; text-align: center; height: 17px;">23</td>
+
+        <td style="width: 15.9126%; text-align: center; height: 17px;">1</td>
+
+        </tr>
+
+        <tr style="height: 17px;">
+
+        <td style="width: 27.1325%; text-align: left; height:
+        17px;">Clannfear</td>
+
+        <td style="width: 9.79739%; text-align: center; height: 17px;">2</td>
+
+        <td style="width: 8.94093%; text-align: center; height: 17px;">25</td>
+
+        <td style="width: 15.9126%; text-align: center; height: 17px;">1</td>
+
+        </tr>
+
+        <tr style="height: 17px;">
+
+        <td style="width: 27.1325%; text-align: left; height: 17px;">Hunger</td>
+
+        <td style="width: 9.79739%; text-align: center; height: 17px;">3</td>
+
+        <td style="width: 8.94093%; text-align: center; height: 17px;">32</td>
+
+        <td style="width: 15.9126%; text-align: center; height: 17px;">1</td>
+
+        </tr>
+
+        <tr style="height: 17px;">
+
+        <td style="width: 27.1325%; text-align: left; height: 17px;">Dremora
+        Churl</td>
+
+        <td style="width: 9.79739%; text-align: center; height: 17px;">3</td>
+
+        <td style="width: 8.94093%; text-align: center; height: 17px;">33</td>
+
+        <td style="width: 15.9126%; text-align: center; height: 17px;">1</td>
+
+        </tr>
+
+        <tr style="height: 17px;">
+
+        <td style="width: 27.1325%; text-align: left; height: 17px;">Flame
+        Atronach</td>
+
+        <td style="width: 9.79739%; text-align: center; height: 17px;">3</td>
+
+        <td style="width: 8.94093%; text-align: center; height: 17px;">31</td>
+
+        <td style="width: 15.9126%; text-align: center; height: 17px;">2</td>
+
+        </tr>
+
+        <tr style="height: 17px;">
+
+        <td style="width: 27.1325%; text-align: left; height: 17px;">Spider
+        Daedra</td>
+
+        <td style="width: 9.79739%; text-align: center; height: 17px;">4</td>
+
+        <td style="width: 8.94093%; text-align: center; height: 17px;">40</td>
+
+        <td style="width: 15.9126%; text-align: center; height: 17px;">2</td>
+
+        </tr>
+
+        <tr style="height: 17px;">
+
+        <td style="width: 27.1325%; text-align: left; height: 17px;">Dremora
+        Caitiff</td>
+
+        <td style="width: 9.79739%; text-align: center; height: 17px;">4</td>
+
+        <td style="width: 8.94093%; text-align: center; height: 17px;">36</td>
+
+        <td style="width: 15.9126%; text-align: center; height: 17px;">1</td>
+
+        </tr>
+
+        <tr style="height: 17px;">
+
+        <td style="width: 27.1325%; text-align: left; height: 17px;">Ogrim</td>
+
+        <td style="width: 9.79739%; text-align: center; height: 17px;">4</td>
+
+        <td style="width: 8.94093%; text-align: center; height: 17px;">39</td>
+
+        <td style="width: 15.9126%; text-align: center; height: 17px;">2</td>
+
+        </tr>
+
+        <tr style="height: 17px;">
+
+        <td style="width: 27.1325%; text-align: left; height: 17px;">Frost
+        Atronach</td>
+
+        <td style="width: 9.79739%; text-align: center; height: 17px;">4</td>
+
+        <td style="width: 8.94093%; text-align: center; height: 17px;">37</td>
+
+        <td style="width: 15.9126%; text-align: center; height: 17px;">2</td>
+
+        </tr>
+
+        <tr style="height: 17px;">
+
+        <td style="width: 27.1325%; text-align: left; height:
+        17px;">Auroran</td>
+
+        <td style="width: 9.79739%; text-align: center; height: 17px;">5</td>
+
+        <td style="width: 8.94093%; text-align: center; height: 17px;">47</td>
+
+        <td style="width: 15.9126%; text-align: center; height: 17px;">2</td>
+
+        </tr>
+
+        <tr style="height: 17px;">
+
+        <td style="width: 27.1325%; text-align: left; height: 17px;">Storm
+        Atronach</td>
+
+        <td style="width: 9.79739%; text-align: center; height: 17px;">5</td>
+
+        <td style="width: 8.94093%; text-align: center; height: 17px;">44</td>
+
+        <td style="width: 15.9126%; text-align: center; height: 17px;">3</td>
+
+        </tr>
+
+        <tr style="height: 17px;">
+
+        <td style="width: 27.1325%; text-align: left; height: 17px;">Dremora
+        Kynmarcher</td>
+
+        <td style="width: 9.79739%; text-align: center; height: 17px;">5</td>
+
+        <td style="width: 8.94093%; text-align: center; height: 17px;">46</td>
+
+        <td style="width: 15.9126%; text-align: center; height: 17px;">2</td>
+
+        </tr>
+
+        <tr style="height: 17px;">
+
+        <td style="width: 27.1325%; text-align: left; height: 17px;">Winged
+        Twilight</td>
+
+        <td style="width: 9.79739%; text-align: center; height: 17px;">6</td>
+
+        <td style="width: 8.94093%; text-align: center; height: 17px;">53</td>
+
+        <td style="width: 15.9126%; text-align: center; height: 17px;">3</td>
+
+        </tr>
+
+        <tr style="height: 17px;">
+
+        <td style="width: 27.1325%; text-align: left; height: 17px;">Aureal
+        (Golden Saint)</td>
+
+        <td style="width: 9.79739%; text-align: center; height: 17px;">6</td>
+
+        <td style="width: 8.94093%; text-align: center; height: 17px;">55</td>
+
+        <td style="width: 15.9126%; text-align: center; height: 17px;">3</td>
+
+        </tr>
+
+        <tr style="height: 17px;">
+
+        <td style="width: 27.1325%; text-align: left; height: 17px;">Mazken
+        (Dark Seducer)</td>
+
+        <td style="width: 9.79739%; text-align: center; height: 17px;">6</td>
+
+        <td style="width: 8.94093%; text-align: center; height: 17px;">55</td>
+
+        <td style="width: 15.9126%; text-align: center; height: 17px;">3</td>
+
+        </tr>
+
+        <tr style="height: 17px;">
+
+        <td style="width: 27.1325%; text-align: left; height: 17px;">Dremora
+        Lord</td>
+
+        <td style="width: 9.79739%; text-align: center; height: 17px;">7</td>
+
+        <td style="width: 8.94093%; text-align: center; height: 17px;">65</td>
+
+        <td style="width: 15.9126%; text-align: center; height: 17px;">3</td>
+
+        </tr>
+
+        <tr style="height: 17px;">
+
+        <td style="width: 27.1325%; text-align: left; height:
+        17px;">Xivilai</td>
+
+        <td style="width: 9.79739%; text-align: center; height: 17px;">7</td>
+
+        <td style="width: 8.94093%; text-align: center; height: 17px;">64</td>
+
+        <td style="width: 15.9126%; text-align: center; height: 17px;">3</td>
+
+        </tr>
+
+        <tr style="height: 17px;">
+
+        <td style="width: 27.1325%; text-align: left; height:
+        17px;">Daedroth</td>
+
+        <td style="width: 9.79739%; text-align: center; height: 17px;">7</td>
+
+        <td style="width: 8.94093%; text-align: center; height: 17px;">68</td>
+
+        <td style="width: 15.9126%; text-align: center; height: 17px;">3</td>
+
+        </tr>
+
+        </tbody>
+
+        </table>
+
+        <p>&nbsp;</p>
+      damage: '0'
+      level: 1
+      cost: 0
+      spell_str: ''
+      attributes: >-
+        @Compendium[uesrpg-revision.journal.etuR7vddrnv3ot2J]{Upkeep},
+        @Compendium[uesrpg-revision.journal.DyA3yhRJDDDu8cTw]{Mindlock}(Spell
+        Strength)
+      form: Target
+      school: conjuration
+      school_cat:
+        alteration: Alteration
+        conjuration: Conjuration
+        destruction: Destruction
+        illusion: Illusion
+        mysticism: Mysticism
+        necromancy: Necromancy
+        restoration: Restoration
+        none: Select School
+      spellType: ''
+      spellTypes:
+        conventional: Conventional
+        unconventional: Unconventional
+    _key: '!actors.items!shBpOGNbQfKEAlqN.eNIW4Rd6tjbgATP9'
+  - _id: KZhjY6XRgpB7Xazf
+    name: Dispel 2
+    type: spell
+    img: icons/magic/perception/eye-ringed-green.webp
+    effects: []
+    folder: null
+    sort: 0
+    flags:
+      core:
+        sourceId: Item.Dvncp3T7Nn3WBpgy
+    _stats:
+      compendiumSource: null
+      duplicateSource: null
+      coreVersion: '12.331'
+      systemId: uesrpg-3ev4
+      systemVersion: v1.0.0-RC.59
+      createdTime: null
+      modifiedTime: null
+      lastModifiedBy: null
+    ownership:
+      default: 0
+      qwt9o1cuKYitvD9G: 3
+      eeXhsDlbzUBZOXZT: 3
+    system:
+      description: >-
+        <p>Removes all magical effects of [Spell Strength] level (either potion,
+        spell, or enchantment) or lower from the caster. Constant enchantments
+        reactivate after 1d4 rounds.</p>
+
+        <table style="width: 98.5447%; height: 51px;" border="2" cellspacing="2"
+        cellpadding="1">
+
+        <tbody>
+
+        <tr style="height: 17px;">
+
+        <td style="width: 24.9539%; height: 17px; text-align:
+        left;"><strong>Level</strong></td>
+
+        <td style="width: 11.5403%; height: 17px; text-align:
+        center;"><strong>1</strong></td>
+
+        <td style="width: 10.9017%; height: 17px; text-align:
+        center;"><strong>2</strong></td>
+
+        <td style="width: 10.2483%; height: 17px; text-align:
+        center;"><strong>3</strong></td>
+
+        <td style="width: 10.8979%; height: 17px; text-align:
+        center;"><strong>4</strong></td>
+
+        <td style="width: 9.94024%; height: 17px; text-align:
+        center;"><strong>5</strong></td>
+
+        <td style="width: 9.50831%; height: 17px; text-align:
+        center;"><strong>6</strong></td>
+
+        <td style="width: 10.0805%; height: 17px; text-align:
+        center;"><strong>7</strong></td>
+
+        </tr>
+
+        <tr style="height: 17px;">
+
+        <td style="width: 24.9539%; height: 17px; text-align:
+        left;"><strong>Cost</strong></td>
+
+        <td style="width: 11.5403%; height: 17px; text-align: center;">5</td>
+
+        <td style="width: 10.9017%; height: 17px; text-align: center;">9</td>
+
+        <td style="width: 10.2483%; height: 17px; text-align: center;">13</td>
+
+        <td style="width: 10.8979%; height: 17px; text-align: center;">17</td>
+
+        <td style="width: 9.94024%; height: 17px; text-align: center;">21</td>
+
+        <td style="width: 9.50831%; height: 17px; text-align: center;">25</td>
+
+        <td style="width: 10.0805%; height: 17px; text-align: center;">29</td>
+
+        </tr>
+
+        <tr style="height: 17px;">
+
+        <td style="width: 24.9539%; height: 17px; text-align:
+        left;"><strong>Spell Strength</strong></td>
+
+        <td style="width: 11.5403%; height: 17px; text-align: center;">1</td>
+
+        <td style="width: 10.9017%; height: 17px; text-align: center;">2</td>
+
+        <td style="width: 10.2483%; height: 17px; text-align: center;">3</td>
+
+        <td style="width: 10.8979%; height: 17px; text-align: center;">4</td>
+
+        <td style="width: 9.94024%; height: 17px; text-align: center;">5</td>
+
+        <td style="width: 9.50831%; height: 17px; text-align: center;">6</td>
+
+        <td style="width: 10.0805%; height: 17px; text-align: center;">7</td>
+
+        </tr>
+
+        </tbody>
+
+        </table>
+
+        <p>&nbsp;</p>
+      damage: '0'
+      level: 2
+      cost: 9
+      spell_str: ''
+      attributes: '@Compendium[uesrpg-revision.journal.SJHXIArl88ADTmmG]{Potion}'
+      form: Self
+      school: mysticism
+      school_cat:
+        alteration: Alteration
+        conjuration: Conjuration
+        destruction: Destruction
+        illusion: Illusion
+        mysticism: Mysticism
+        necromancy: Necromancy
+        restoration: Restoration
+        none: Select School
+      spellType: ''
+      spellTypes:
+        conventional: Conventional
+        unconventional: Unconventional
+    _key: '!actors.items!shBpOGNbQfKEAlqN.KZhjY6XRgpB7Xazf'
+  - _id: qzFUT7xJW5mT4zbu
+    name: Reflect 2
+    type: spell
+    img: icons/magic/perception/eye-ringed-green.webp
+    effects: []
+    folder: null
+    sort: 0
+    flags:
+      core:
+        sourceId: Item.Dvncp3T7Nn3WBpgy
+    _stats:
+      compendiumSource: null
+      duplicateSource: null
+      coreVersion: '12.331'
+      systemId: uesrpg-3ev4
+      systemVersion: v1.0.0-RC.59
+      createdTime: null
+      modifiedTime: null
+      lastModifiedBy: null
+    ownership:
+      default: 0
+      qwt9o1cuKYitvD9G: 3
+      eeXhsDlbzUBZOXZT: 3
+    system:
+      description: >-
+        <p>Any time the caster would be hit by a spell (after any defense, but
+        before resolving effects), roll a d10. If the result is a roll of [Spell
+        Strength] or lower, instead resolve the spell against its original
+        caster. Lasts for 1 round.</p>
+
+        <table style="width: 98.5447%; height: 51px;" border="2" cellspacing="2"
+        cellpadding="1">
+
+        <tbody>
+
+        <tr style="height: 17px;">
+
+        <td style="width: 24.9539%; height: 17px; text-align:
+        left;"><strong>Level</strong></td>
+
+        <td style="width: 11.5403%; height: 17px; text-align:
+        center;"><strong>1</strong></td>
+
+        <td style="width: 10.9017%; height: 17px; text-align:
+        center;"><strong>2</strong></td>
+
+        <td style="width: 10.2483%; height: 17px; text-align:
+        center;"><strong>3</strong></td>
+
+        <td style="width: 10.8979%; height: 17px; text-align:
+        center;"><strong>4</strong></td>
+
+        <td style="width: 9.94024%; height: 17px; text-align:
+        center;"><strong>5</strong></td>
+
+        <td style="width: 9.50831%; height: 17px; text-align:
+        center;"><strong>6</strong></td>
+
+        <td style="width: 10.0805%; height: 17px; text-align:
+        center;"><strong>7</strong></td>
+
+        </tr>
+
+        <tr style="height: 17px;">
+
+        <td style="width: 24.9539%; height: 17px; text-align:
+        left;"><strong>Cost</strong></td>
+
+        <td style="width: 11.5403%; height: 17px; text-align: center;">4</td>
+
+        <td style="width: 10.9017%; height: 17px; text-align: center;">7</td>
+
+        <td style="width: 10.2483%; height: 17px; text-align: center;">10</td>
+
+        <td style="width: 10.8979%; height: 17px; text-align: center;">13</td>
+
+        <td style="width: 9.94024%; height: 17px; text-align: center;">16</td>
+
+        <td style="width: 9.50831%; height: 17px; text-align: center;">19</td>
+
+        <td style="width: 10.0805%; height: 17px; text-align: center;">22</td>
+
+        </tr>
+
+        <tr style="height: 17px;">
+
+        <td style="width: 24.9539%; height: 17px; text-align:
+        left;"><strong>Spell Strength</strong></td>
+
+        <td style="width: 11.5403%; height: 17px; text-align: center;">1</td>
+
+        <td style="width: 10.9017%; height: 17px; text-align: center;">2</td>
+
+        <td style="width: 10.2483%; height: 17px; text-align: center;">3</td>
+
+        <td style="width: 10.8979%; height: 17px; text-align: center;">4</td>
+
+        <td style="width: 9.94024%; height: 17px; text-align: center;">5</td>
+
+        <td style="width: 9.50831%; height: 17px; text-align: center;">6</td>
+
+        <td style="width: 10.0805%; height: 17px; text-align: center;">7</td>
+
+        </tr>
+
+        </tbody>
+
+        </table>
+
+        <p>&nbsp;</p>
+      damage: '0'
+      level: 2
+      cost: 7
+      spell_str: ''
+      attributes: >-
+        @Compendium[uesrpg-revision.journal.etuR7vddrnv3ot2J]{Upkeep},
+        @Compendium[uesrpg-revision.journal.SJHXIArl88ADTmmG]{Potion}
+      form: Self
+      school: mysticism
+      school_cat:
+        alteration: Alteration
+        conjuration: Conjuration
+        destruction: Destruction
+        illusion: Illusion
+        mysticism: Mysticism
+        necromancy: Necromancy
+        restoration: Restoration
+        none: Select School
+      spellType: ''
+      spellTypes:
+        conventional: Conventional
+        unconventional: Unconventional
+    _key: '!actors.items!shBpOGNbQfKEAlqN.qzFUT7xJW5mT4zbu'
+effects: []
+folder: YOakefp1093wiaNm
+flags: {}
+_stats:
+  compendiumSource: null
+  duplicateSource: null
+  coreVersion: '12.331'
+  systemId: uesrpg-3ev4
+  systemVersion: v1.0.0-RC.59
+  createdTime: 1732339103936
+  modifiedTime: 1732339103936
+  lastModifiedBy: 7bDMesNjX54nzN9S
+ownership:
+  default: 0
+  WcwhQU1nz94WaD5n: 3
+  7bDMesNjX54nzN9S: 3
+system:
+  equippedWeapons:
+    primaryWeapon:
+      name: 'None: Right click to bind weapon'
+      img: icons/skills/melee/unarmed-punch-fist.webp
+      id: ''
+    secondaryWeapon:
+      name: 'None: Right click to bind weapon'
+      img: icons/skills/melee/unarmed-punch-fist.webp
+      id: ''
+  favorites:
+    '1':
+      name: Hotkey 1
+      img: icons/svg/combat.svg
+      id: ''
+      value: 0
+    '2':
+      name: Hotkey 2
+      img: icons/svg/combat.svg
+      id: ''
+      value: 0
+    '3':
+      name: Hotkey 3
+      img: icons/svg/combat.svg
+      id: ''
+      value: 0
+    '4':
+      name: Hotkey 4
+      img: icons/svg/combat.svg
+      id: ''
+      value: 0
+    '5':
+      name: Hotkey 5
+      img: icons/svg/combat.svg
+      id: ''
+      value: 0
+  race: Any Race
+  birthsign: ''
+  age: null
+  height: ''
+  weight: ''
+  elite_adv: ''
+  wounded: false
+  woundPenalty: 0
+  woundNotes: ''
+  bio: >-
+    <p><em>Witch Hunters are dedicated to rooting out and destroying the
+    perverted practices of dark cults and profane sorcery. They train for
+    martial, magical, and stealthy war against vampires, witches, warlocks and
+    necromancers.</em></p>
+  paperDoll: systems/uesrpg-3ev4/images/paperDoll_Male_Outline_White.png
+  soul_energy: '1500'
+  journal: ''
+  notes: ''
+  threat: minorSolo
+  threatCategory:
+    minorSolo: Minor Solo
+    minorGroup: Minor Group
+    majorSolo: Major Solo
+    majorGroup: Major Group
+    deadlySolo: Deadly Solo
+    deadlyGroup: Deadly Group
+    legendarySolo: Legendary Solo
+    legendaryGroup: Legendary Group
+  resistance:
+    fireR: 0
+    frostR: 0
+    shockR: 0
+    magicR: 0
+    poisonR: 0
+    diseaseR: 0
+    natToughness: 0
+    silverR: 0
+    sunlightR: 0
+  fatigue:
+    level: 0
+    penalty: 0
+    bonus: 0
+  lucky_numbers:
+    ln1: 0
+    ln2: 0
+    ln3: 0
+    ln4: 0
+    ln5: 0
+    ln6: 0
+    ln7: 0
+    ln8: 0
+    ln9: 0
+    ln10: 0
+  unlucky_numbers:
+    ul1: 95
+    ul2: 96
+    ul3: 97
+    ul4: 98
+    ul5: 99
+    ul6: 100
+  supply: 1d2
+  supply_cat:
+    1d2: 1d2
+    1d4: 1d4
+    1d6: 1d6
+    1d8: 1d8
+    1d10: 1d10
+  wealth: 0
+  current_enc: '21.0'
+  carry_rating:
+    current: 0
+    max: 22
+    bonus: 0
+    penalty: 0
+    label: Minimal
+  characteristics:
+    str:
+      value: 40
+      total: 40
+      base: 40
+      favored: false
+    end:
+      value: 35
+      total: 35
+      base: 35
+      favored: false
+    agi:
+      value: 40
+      total: 40
+      base: 40
+      favored: false
+    int:
+      value: 40
+      total: 40
+      base: 40
+      favored: false
+    wp:
+      value: 45
+      total: 45
+      base: 45
+      favored: false
+    prc:
+      value: 40
+      total: 40
+      base: 40
+      favored: false
+    prs:
+      value: 25
+      total: 25
+      base: 25
+      favored: false
+    lck:
+      value: null
+      total: 0
+      base: null
+      favored: false
+  professions:
+    combat: 65
+    magic: 65
+    evade: 60
+    observe: 70
+    stealth: 60
+    knowledge: 60
+    social: 35
+    physical: 60
+    commerce: 0
+    profession1: 0
+    profession2: 0
+    profession3: 0
+  professionsWound:
+    combat: 0
+    magic: 0
+    evade: 0
+    observe: 0
+    stealth: 0
+    knowledge: 0
+    social: 0
+    physical: 0
+    commerce: 0
+    profession1: 0
+    profession2: 0
+    profession3: 0
+  hp:
+    base: 18
+    value: 18
+    max: 18
+    temp: 0
+    bonus: 0
+  action_points:
+    value: 3
+    max: 3
+  luck_points:
+    value: 0
+    max: 0
+    bonus: 0
+  stamina:
+    value: 3
+    max: 3
+    bonus: 0
+  magicka:
+    value: 40
+    max: 40
+    bonus: 0
+  xp: 0
+  wound_threshold:
+    value: '11'
+    base: 11
+    bonus: 0
+  initiative:
+    value: '12'
+    base: 12
+    bonus: 0
+  speed:
+    value: '12'
+    base: 12
+    bonus: 0
+  size: standard
+  size_cat:
+    puny: Puny
+    tiny: Tiny
+    small: Small
+    standard: Standard
+    large: Large
+    huge: Huge
+    enormous: Enormous
+  skill_ranks:
+    untrained:
+      name: Untrained
+      rank: ''
+      bonus: ''
+      specialization: ''
+    novice:
+      name: ' (0) Novice'
+      rank: ''
+      bonus: ''
+      specialization: ''
+    apprentice:
+      name: (1) Apprentice
+      rank: ''
+      bonus: ''
+      specialization: ''
+    journeyman:
+      name: (2) Journeyman
+      rank: ''
+      bonus: ''
+      specialization: ''
+    adept:
+      name: (3) Adept
+      rank: ''
+      bonus: ''
+      specialization: ''
+    expert:
+      name: (4) Expert
+      rank: ''
+      bonus: ''
+      specialization: ''
+    master:
+      name: (5) Master
+      rank: ''
+      bonus: ''
+      specialization: ''
+  skills:
+    profession1:
+      rank: ''
+      bonus: 70
+      specialization: ''
+      characteristic: ''
+      tn: 0
+      name: Alchemy
+    profession2:
+      rank: ''
+      bonus: null
+      specialization: ''
+      characteristic: ''
+      tn: 0
+      name: ''
+    profession3:
+      rank: ''
+      bonus: null
+      specialization: ''
+      characteristic: ''
+      tn: 0
+      name: ''
+    commerce:
+      bonus: 0
+      specialization: ''
+      characteristic: ''
+      tn: 0
+  talents: null
+  traits: ''
+  powers: ''
+  spells: ''
+  armor_class: none
+  armor_class_cat:
+    none: None
+    super_light: Super Light
+    light: Light
+    medium: Medium
+    heavy: Heavy
+    super_heavy: Super Heavy
+  storeName: ''
+  priceMod: 0
+  fatigueLevel: 0
+  weapons:
+    w1:
+      name: ''
+      dmg: ''
+      hands: ''
+      reach: ''
+      qualities: ''
+    w2:
+      name: ''
+      dmg: ''
+      hands: ''
+      reach: ''
+      qualities: ''
+    w3:
+      name: ''
+      dmg: ''
+      hands: ''
+      reach: ''
+      qualities: ''
+    w4:
+      name: ''
+      dmg: ''
+      hands: ''
+      reach: ''
+      qualities: ''
+    w5:
+      name: ''
+      dmg: ''
+      hands: ''
+      reach: ''
+      qualities: ''
+  prep_spells:
+    s1:
+      name: ''
+      dmg: ''
+      cost: ''
+      school: ''
+      form: ''
+      attributes: ''
+      level: ''
+    s2:
+      name: ''
+      dmg: ''
+      cost: ''
+      school: ''
+      form: ''
+      attributes: ''
+      level: ''
+    s3:
+      name: ''
+      dmg: ''
+      cost: ''
+      school: ''
+      form: ''
+      attributes: ''
+      level: ''
+    s4:
+      name: ''
+      dmg: ''
+      cost: ''
+      school: ''
+      form: ''
+      attributes: ''
+      level: ''
+    s5:
+      name: ''
+      dmg: ''
+      cost: ''
+      school: ''
+      form: ''
+      attributes: ''
+      level: ''
+    s6:
+      name: ''
+      dmg: ''
+      cost: ''
+      school: ''
+      form: ''
+      attributes: ''
+      level: ''
+    s7:
+      name: ''
+      dmg: ''
+      cost: ''
+      school: ''
+      form: ''
+      attributes: ''
+      level: ''
+  shield:
+    name: ''
+    br: ''
+    magic_br: ''
+    class: ''
+    qualities: ''
+  armor:
+    head:
+      name: ''
+      enc: 0
+      ar: 3
+      magic_ar: 1 Fire
+      class: ''
+    body:
+      name: ''
+      enc: 0
+      ar: 3
+      magic_ar: 1 Fire
+      class: ''
+    r_leg:
+      name: ''
+      enc: 0
+      ar: 3
+      magic_ar: 1 Fire
+      class: ''
+    l_leg:
+      name: ''
+      enc: 0
+      ar: 3
+      magic_ar: 1 Fire
+      class: ''
+    r_arm:
+      name: ''
+      enc: 0
+      ar: 3
+      magic_ar: 1 Fire
+      class: ''
+    l_arm:
+      name: ''
+      enc: 0
+      ar: 3
+      magic_ar: 1 Fire
+      class: ''
+prototypeToken:
+  flags:
+    token-hud-wildcard:
+      default: ''
+    token-auras:
+      aura1:
+        permission: all
+        colour: '#ffffff'
+        opacity: 0.5
+        distance: null
+        square: false
+      aura2:
+        permission: all
+        colour: '#ffffff'
+        opacity: 0.5
+        distance: null
+        square: false
+  name: Witchhunter
+  displayName: 0
+  width: 1
+  height: 1
+  lockRotation: false
+  rotation: 0
+  actorLink: false
+  disposition: -1
+  displayBars: 20
+  bar1:
+    attribute: hp
+  bar2:
+    attribute: action_points
+  randomImg: true
+  alpha: 1
+  light:
+    dim: 0
+    bright: 0
+    angle: 360
+    color: null
+    alpha: 1
+    animation:
+      speed: 5
+      intensity: 5
+      type: null
+      reverse: false
+    negative: false
+    priority: 0
+    coloration: 1
+    attenuation: 0.5
+    luminosity: 0.5
+    saturation: 0
+    contrast: 0
+    shadows: 0
+    darkness:
+      min: 0
+      max: 1
+  texture:
+    src: icons/svg/cowled.svg
+    tint: '#ffffff'
+    scaleX: 1
+    scaleY: 1
+    anchorX: 0.5
+    anchorY: 0.5
+    offsetX: 0
+    offsetY: 0
+    fit: contain
+    rotation: 0
+    alphaThreshold: 0.75
+  sight:
+    angle: 360
+    enabled: true
+    range: 0
+    brightness: 1
+    visionMode: basic
+    color: null
+    attenuation: 0.1
+    saturation: 0
+    contrast: 0
+  appendNumber: false
+  prependAdjective: false
+  hexagonalShape: 0
+  detectionModes: []
+  occludable:
+    radius: 0
+  ring:
+    enabled: false
+    colors:
+      ring: null
+      background: null
+    effects: 1
+    subject:
+      scale: 1
+      texture: null
+_id: shBpOGNbQfKEAlqN
+sort: 0
+_key: '!actors!shBpOGNbQfKEAlqN'
+

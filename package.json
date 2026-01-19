@@ -1,0 +1,30 @@
+{
+  "name": "uesrpg-3ev4",
+  "version": "1.0.0-RC.81",
+  "description": "A system used to play the UESRPG (Unofficial Elder Scrolls Roleplaying Game) 3ev4 d100 system.",
+  "main": "module/entrypoint.js",
+  "scripts": {
+    "version": "node ./automation/version.js",
+    "postversion": "git pull && git push && git push --tags",
+    "packs-compile": "node ./automation/ldb-packager.mjs compile",
+    "packs-extract": "node ./automation/ldb-packager.mjs extract",
+    "packs-extract-clean": "node ./automation/ldb-packager.mjs extract --clean",
+    "packs-clean": "node ./automation/ldb-packager.mjs clean"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jamesjtb/uesrpg-3ev4.git"
+  },
+  "author": "DogBoneZone",
+  "contributors": [
+    "Greybard"
+  ],
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/jamesjtb/uesrpg-3ev4/issues"
+  },
+  "homepage": "https://github.com/jamesjtb/uesrpg-3ev4#readme",
+  "dependencies": {
+    "@foundryvtt/foundryvtt-cli": "^1.0.3"
+  }
+}

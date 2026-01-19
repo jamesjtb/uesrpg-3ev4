@@ -1,0 +1,53 @@
+name: Cast Enchantment
+folder: null
+sort: 0
+flags:
+  cf:
+    id: temp_h4s9iq5zk1
+    path: References#/CF_SEP/Arcane Items#/CF_SEP/Enchantment Categories
+    color: '#000000'
+_id: 1wBdEK0Ef3immXJ0
+pages:
+  - name: Cast Enchantment
+    type: text
+    title:
+      show: false
+      level: 1
+    text:
+      format: 1
+      content: "<p><strong>The Basics</strong></p>\n<p>Cast enchantments are spells “stored” within an item. A character wielding such an item can invoke this magic through the use of the Cast Magic Primary action, which allows them to cast the stored spell exactly as if they had cast it themselves (but with no casting test). The spell stored in the item can be either conventional or unconventional. Instead of being paid from the user’s magicka pool the cost of the spell is drawn from the item’s soul energy pool. Upkeep spells can be maintained by paying 2 * the spell’s level from the soul energy pool.</p>\n<p>The user counts as having passed the casting test with a number of degrees of success equal to the binding strength of the enchantment. A cast enchantment’s Binding Strength represents how well the enchantment was woven: stronger enchantments are more responsive to their users, and enable them to more easily shape the spell to their will.</p>\n<p>\_</p>\n<p><strong>Soul Energy Pool &amp; Recharging</strong></p>\n<p>Cast enchantments do not last forever! Each cast with the item reduces the item’s Soul Energy Pool by 1. If this would reduce the size of the pool to below zero, then the enchantment can no longer be cast and must be recharged.</p>\n<p>Recharging an item requires that the character be trained in the Enchant skill (though no test is required), and that they have a soul gem with energy stored within it. A simple minute long ritual is required: on completion the ES * 2 of the soul gem is added to the pool. Any energy that would exceed the pool’s maximum size is lost and the gem is destroyed.</p>\n<p>\_</p>\n<p><strong>Multi Spell Enchantments</strong></p>\n<p>Characters can create cast enchantments that have more than one spell stored (to a maximum of 3) but these enchantments are more difficult to create, and characters require a talent to attempt it. When used these function like normal cast enchantments, but the user simply chooses which spell to cast and reduces the amount of spells stored in the item from the it’s soul energy pool.</p>\n<p>\_</p>\n<p><strong>Learning Effects &amp; Forms</strong></p>\n<p>A character does not need to know a particular spell in order to imbue an item with it. Enchanters can also use any combination of effects and forms availible during the spell making process, and they do not need to be trained in a particular school to use effects from that school. Note that using a spell with a level above the character’s Enchant skill rank may be more difficult!</p>\n<p>\_</p>\n<p><strong>Reference Materials</strong></p>\n<p>A list of effects and forms can be found in the Appendix. Follow these steps to imbue items with cast enchantments:</p>\n<p>\_</p>\n<p><strong>Step 1: Choose Item</strong></p>\n<p>First the enchanter must pick an item to enchant. Cast enchantments can be applied to any item, but only some items will have an enchantment level high enough to reasonably support more powerful enchantments. Items without a listed Enchantment Level have an EL of 0.</p>\n<p><strong>Step 2: Choose Soul Gem</strong></p>\n<p>Next the enchanter must pick the soul gem they will use for the enchantment. This gem must have a ES less than or equal to the EL of the item. Once a soul gem has been used to create an enchantment it is destroyed and any excess energy is lost.</p>\n<p><strong>Step 3: Choose Enchantment Spell(s)</strong></p>\n<p>Cast enchantments can be used to store either conventional or unconventional spells. In the case of conventional spells, simply pick from the list in this chapter. Unconventional spells will need to be built using the effects and forms provided in the appendix as normal (though the enchanter does not actually need to spend the time or money to create the spell, and no test is needed).</p>\n<p>Once the enchanter has chosen the spell they will use for the cast enchantment, note its spell level for the next step. The Spell level used for the enchantment must be less than or equal to the ES of the soul gem used. If the enchanter is imbuing multiple spells into the cast enchantment, note the details for each one.</p>\n<p><strong>Step 4: Create the Enchantment</strong></p>\n<p>Now the enchanter can attempt to create the enchantment. This requires a ritual that lasts approximately eight hours, and consumes materials worth approximately 100 drakes. The enchanter then makes an enchant skill test with a -10 penalty for each level by which the chosen spell level exceeds their enchant skill rank (if applicable). Test again for any additional spells being added, if necessary. Failing a test means that spell is not successfully enchanted.</p>\n<p><strong>Step 5: Finalize Enchantment</strong></p>\n<p>Regardless of the outcome of the tests, the soul gem is destroyed and its energy is lost. If the enchanter passes a test then they successfully create the enchanted item. Write down the following details somewhere you can reference them:</p>\n<p>• Spells: Add the details of any spells included in the cast enchantment, including their spell level and effects.</p>\n<p>• Binding Strength: The binding strength (min 1) of the enchantment is equal to the DoS achieved on the enchant skill test.</p>\n<p>• Soul Energy Pool Max: The item’s soul energy pool max is equal to the Enchanter’s enchant skill rank * 2 .</p>"
+    _stats:
+      coreVersion: '12.331'
+      systemId: null
+      systemVersion: null
+      createdTime: null
+      modifiedTime: null
+      lastModifiedBy: null
+      compendiumSource: null
+      duplicateSource: null
+    _id: fWbSNOp1V4o95PZ8
+    system: {}
+    image: {}
+    video:
+      controls: true
+      volume: 0.5
+    src: null
+    sort: 0
+    ownership:
+      default: -1
+    flags: {}
+    _key: '!journal.pages!1wBdEK0Ef3immXJ0.fWbSNOp1V4o95PZ8'
+_stats:
+  coreVersion: '12.331'
+  systemId: null
+  systemVersion: null
+  createdTime: null
+  modifiedTime: null
+  lastModifiedBy: null
+  compendiumSource: null
+  duplicateSource: null
+ownership:
+  default: 0
+  eeXhsDlbzUBZOXZT: 3
+_key: '!journal!1wBdEK0Ef3immXJ0'
+

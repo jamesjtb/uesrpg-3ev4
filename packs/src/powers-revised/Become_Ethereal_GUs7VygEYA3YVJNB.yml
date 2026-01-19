@@ -1,0 +1,95 @@
+_id: GUs7VygEYA3YVJNB
+name: Become Ethereal
+type: power
+img: icons/magic/unholy/hand-claw-fire-blue.webp
+effects: []
+folder: null
+sort: 0
+flags:
+  core:
+    sourceId: Item.mdWuqljLs7rOv2Nk
+  cf:
+    id: temp_d9bp04m8sjq
+    color: '#000000'
+_stats:
+  coreVersion: '12.331'
+  systemId: null
+  systemVersion: null
+  createdTime: null
+  modifiedTime: null
+  lastModifiedBy: null
+  compendiumSource: null
+  duplicateSource: null
+ownership:
+  default: 0
+  eeXhsDlbzUBZOXZT: 3
+system:
+  mpBonus: 0
+  hpBonus: 0
+  spBonus: 0
+  lpBonus: 0
+  wtBonus: 0
+  iniBonus: 0
+  speedBonus: 0
+  flyBonus: 0
+  swimBonus: 0
+  diseaseR: 0
+  fireR: 0
+  frostR: 0
+  shockR: 0
+  poisonR: 0
+  magicR: 0
+  natToughnessR: 0
+  silverR: 0
+  sunlightR: 0
+  characteristics:
+    none: None
+    str: STR
+    end: END
+    agi: AGI
+    int: INT
+    wp: WP
+    prc: PRC
+    prs: PRS
+    lck: LCK
+  characteristicBonus:
+    strChaBonus: 0
+    endChaBonus: 0
+    agiChaBonus: 0
+    intChaBonus: 0
+    wpChaBonus: 0
+    prcChaBonus: 0
+    prsChaBonus: 0
+    lckChaBonus: 0
+  skillArray: []
+  description: >-
+    <p><em>Difficulty: -10, -10 for each word beyond the first.</em></p>
+
+    <p><strong>&bull;Feim : Fade</strong></p>
+
+    <p>Character gains the Incorporeal trait for four rounds. He may end this
+    effect before the duration ends if he so desires.</p>
+
+    <p><strong>&bull;Zii : Spirit</strong></p>
+
+    <p>Same as Feim, except the duration is eight rounds.</p>
+
+    <p><strong>&bull;Gron : Bind</strong></p>
+
+    <p>Same as Feim, except the duration is sixteen rounds.</p>
+  dailyUse: false
+  source: ''
+  shiftForm: false
+  shiftFormStyle: shiftFormNone
+  shiftStyles:
+    shiftFormNone: Regular Form
+    shiftFormVampireLord: Vampire Lord
+    shiftFormWereWolf: Werewolf
+    shiftFormWereBat: Werebat
+    shiftFormWereBoar: Wereboar
+    shiftFormWereBear: Werebear
+    shiftFormWereCrocodile: Werecrocodile
+    shiftFormWereVulture: Werevulture
+    shiftFormWereLion: Werelion
+_key: '!items!GUs7VygEYA3YVJNB'
+

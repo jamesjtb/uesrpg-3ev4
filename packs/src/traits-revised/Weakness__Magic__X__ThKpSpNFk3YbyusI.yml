@@ -1,0 +1,84 @@
+_id: ThKpSpNFk3YbyusI
+name: Weakness (Magic, X)
+type: trait
+img: systems/uesrpg-3ev4/images/Icons/creative.webp
+effects: []
+folder: null
+sort: 0
+flags:
+  core:
+    sourceId: Item.wtEFksGPcojtDLTj
+_stats:
+  coreVersion: '12.331'
+  systemId: null
+  systemVersion: null
+  createdTime: null
+  modifiedTime: null
+  lastModifiedBy: null
+  compendiumSource: null
+  duplicateSource: null
+ownership:
+  default: 0
+  eeXhsDlbzUBZOXZT: 3
+system:
+  mpBonus: 0
+  hpBonus: 0
+  spBonus: 0
+  lpBonus: 0
+  wtBonus: 0
+  iniBonus: 0
+  speedBonus: 0
+  flyBonus: 0
+  swimBonus: 0
+  diseaseR: 0
+  fireR: 0
+  frostR: 0
+  shockR: 0
+  poisonR: 0
+  magicR: 0
+  natToughnessR: 0
+  silverR: 0
+  sunlightR: 0
+  replace:
+    ini:
+      iniToggle: false
+      value: 0
+      characteristic: ''
+    wt:
+      wtToggle: false
+      value: 0
+      characteristic: ''
+  characteristics:
+    none: None
+    str: STR
+    end: END
+    agi: AGI
+    int: INT
+    wp: WP
+    prc: PRC
+    prs: PRS
+    lck: LCK
+  characteristicBonus:
+    strChaBonus: 0
+    endChaBonus: 0
+    agiChaBonus: 0
+    intChaBonus: 0
+    wpChaBonus: 0
+    prcChaBonus: 0
+    prsChaBonus: 0
+    lckChaBonus: 0
+  skillArray: []
+  description: >-
+    <p>Characters with this trait are weak to a certain damage type. They
+    increase damage of * type by X after any other mitigation, and suffer a -10
+    penalty per X to tests made to resist non-damaging effects of this type.
+    This trait can stack.</p>
+  halfSpeed: false
+  addHalfSpeed: false
+  halfFatiguePenalty: false
+  mechanical: false
+  crpCost: 0
+  halfWoundPenalty: false
+  painIntolerant: false
+_key: '!items!ThKpSpNFk3YbyusI'
+

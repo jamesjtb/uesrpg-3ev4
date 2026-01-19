@@ -1,0 +1,91 @@
+_id: Evir3QCd3lTBrLCN
+name: The Knotted Tongue
+type: spell
+img: icons/commodities/biological/tongue-red.webp
+effects: []
+folder: null
+sort: 0
+flags:
+  core:
+    sourceId: Item.VoHpNXIcpWZ2OfPf
+  cf:
+    id: temp_qd8ydqde88k
+    color: '#000000'
+_stats:
+  coreVersion: '12.331'
+  systemId: null
+  systemVersion: null
+  createdTime: null
+  modifiedTime: null
+  lastModifiedBy: null
+  compendiumSource: null
+  duplicateSource: null
+ownership:
+  default: 0
+  eeXhsDlbzUBZOXZT: 3
+system:
+  description: >-
+    <p>The ritual allows the Tongue to imbue a ritually prepared rope of his
+    enemies tongues with a part of his power, allowing him limited use of his
+    Voice, even if</p>
+
+    <p>otherwise prevented from doing so, like being on the brink of exhaustion
+    or somehow robbed of the ability to speak.</p>
+
+    <p>Creating the Rope itself requires no test, but the creator must have the
+    tongues of three powerful and worthy foes, fresh Heartwood from a Spriggan
+    (Extremely Rare Restoration ingredient) for smoking the meat, drying it out
+    while giving it life, and Ice Wraith Essence (Very Rare Restoration /
+    Destruction ingredient) to preserve it from rot.</p>
+
+    <p>With the rope created, it must next imbued with one or more words of
+    power from a single shout that the Tongue knows. Choose the desired Word(s)
+    of the Shout and perform the appropriate Thu&rsquo;um test as if using that
+    shout, but with an added -10 penalty to each word beyond the first. If the
+    test is successful, the draconic runes representing the word(s) of the shout
+    appear on the length of rope, indicating that the ritual was a success.</p>
+
+    <p>The character then fills out the profile of the Gron-Sik by writing down
+    the following information:</p>
+
+    <p>&bull; The chosen name for the Gron-Sik (Usually Gron-Sik of &lsquo;shout
+    name&rsquo;).</p>
+
+    <p>&bull; The word(s) of the chosen shout imbued in the Gron-Sik.</p>
+
+    <p>&bull; The amount of DoS scored in the Imbuement, henceforth known as
+    Binding Strength.</p>
+
+    <p>&bull; The word &ldquo;Ties&rdquo; and a blank space in which to note a
+    number.</p>
+
+    <p>The Gron-Sik can be activated with the Cast Magic action, spending one if
+    its Ties to power all words of the shout, which automatically counts as
+    having succeeded with a number of DoS equal to its Binding Strength. If a
+    shout requires an Opposed Roll, use the wielders Willpower Bonus.</p>
+
+    <p>To power the Gron-Sik, the Tongue must give it a Stamina Point for each
+    Tie desired. This can be done as part of a Long Rest, but as long as the
+    Stamina Points are Tied to the Gron-Sik, it cannot be recovered by any
+    means, neither ordinary or magical.</p>
+  damage: '0'
+  level: 0
+  cost: 0
+  spell_str: ''
+  attributes: '-'
+  form: Self
+  school: alteration
+  school_cat:
+    alteration: Alteration
+    conjuration: Conjuration
+    destruction: Destruction
+    illusion: Illusion
+    mysticism: Mysticism
+    necromancy: Necromancy
+    restoration: Restoration
+  spellType: ''
+  spellTypes:
+    conventional: Conventional
+    unconventional: Unconventional
+_key: '!items!Evir3QCd3lTBrLCN'
+

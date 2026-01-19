@@ -1,0 +1,68 @@
+name: Light
+type: script
+author: KoTybT0dunV5wS6T
+img: icons/sundries/lights/lantern-iron-yellow.webp
+scope: global
+command: |-
+  let dialogEditor = new Dialog({
+    title: `Light Source`,
+    buttons: {
+      none: {
+        label: `None`,
+        callback: () => {
+          token.update({"dimLight": 0, "brightLight": 0, "lightAngle": 360,});
+          dialogEditor.render(true);
+        }
+      },
+      torch: {
+        label: `Candle`,
+        callback: () => {
+          token.update({"dimLight": 2, "brightLight": 1, "lightAngle": 360,});
+          dialogEditor.render(true);
+        }
+      },
+      lamp: {
+        label: `Torch`,
+        callback: () => {
+          token.update({"dimLight": 4, "brightLight": 2, "lightAngle": 360,});
+          dialogEditor.render(true);
+        }
+      },
+      bullseye: {
+        label: `Lantern`,
+        callback: () => {
+          token.update({"dimLight": 6, "brightLight": 3, "lightAngle": 360,});
+          dialogEditor.render(true);
+        }
+      },
+      close: {
+        icon: "<i class='fas fa-tick'></i>",
+        label: `Close`
+      },
+    },
+    default: "close",
+    close: () => {}
+  });
+
+  dialogEditor.render(true)
+folder: null
+sort: 0
+flags:
+  core:
+    sourceId: Macro.pKzRyl5s2DVkvjtF
+_id: yyJuxVsEWA9X8AzF
+_stats:
+  coreVersion: '12.331'
+  systemId: null
+  systemVersion: null
+  createdTime: null
+  modifiedTime: null
+  lastModifiedBy: null
+  compendiumSource: null
+  duplicateSource: null
+ownership:
+  default: 0
+  inSimu0FutxmlwqN: 3
+  KoTybT0dunV5wS6T: 3
+_key: '!macros!yyJuxVsEWA9X8AzF'
+

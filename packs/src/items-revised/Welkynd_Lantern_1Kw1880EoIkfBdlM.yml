@@ -1,0 +1,136 @@
+_id: 1Kw1880EoIkfBdlM
+name: Welkynd Lantern
+type: item
+img: icons/commodities/gems/gem-rough-drop-blue.webp
+effects: []
+folder: null
+sort: 0
+flags:
+  core:
+    sourceId: Item.rk4qgRqYT67MIYHg
+_stats:
+  coreVersion: '12.331'
+  systemId: null
+  systemVersion: null
+  createdTime: null
+  modifiedTime: null
+  lastModifiedBy: null
+  compendiumSource: null
+  duplicateSource: null
+ownership:
+  default: 0
+  qwt9o1cuKYitvD9G: 3
+system:
+  characteristics:
+    none: None
+    str: STR
+    end: END
+    agi: AGI
+    int: INT
+    wp: WP
+    prc: PRC
+    prs: PRS
+    lck: LCK
+  characteristicBonus:
+    strChaBonus: 0
+    endChaBonus: 0
+    agiChaBonus: 0
+    intChaBonus: 0
+    wpChaBonus: 0
+    prcChaBonus: 0
+    prsChaBonus: 0
+    lckChaBonus: 0
+  replace:
+    ini:
+      iniToggle: false
+      value: 0
+      characteristic: ''
+    wt:
+      wtToggle: false
+      value: 0
+      characteristic: ''
+  mpBonus: 0
+  hpBonus: 0
+  spBonus: 0
+  lpBonus: 0
+  wtBonus: 0
+  iniBonus: 0
+  speedBonus: 0
+  flyBonus: 0
+  swimBonus: 0
+  diseaseR: 0
+  fireR: 0
+  frostR: 0
+  shockR: 0
+  poisonR: 0
+  magicR: 0
+  natToughnessR: 0
+  silverR: 0
+  sunlightR: 0
+  skillArray: []
+  isPhysicalObject: true
+  containerStats:
+    contained: false
+    container_id: ''
+    container_name: ''
+  description: >-
+    <blockquote>
+
+    <p>Utilizing a harvested and refined Welkynd crystal, a Welkynd lantern runs
+    not on oil or candle, but by magicka. Easily used and operated, and
+    requiring only a modest amount of magic, a Welkynd lantern can cast great
+    light in a staggeringly large radius, or be used to quietly and dimly light
+    an area. A Welkynd lantern is a light source that weighs 1 ENC. Suspending a
+    floating Welkynd crystal within a ribbed, meteoriciron lantern frame, the
+    lantern is baroque and surprisingly heavy. Because it is magical, it stays
+    lit even while underwater, in Oblivion, or anywhere else that might prevent
+    conventional fires from being lit, and also does not give off an odour,
+    sound, or smoke.&nbsp;</p>
+
+    </blockquote>
+
+    <p>As an action, a character can light a Welkynd lantern by touching it
+    willfully. Doing so, they can expend up to 10 Magicka Points. Each point of
+    magicka spent allows it to cast bright light for up to 10m &times; (magicka
+    spent) for 4 hours. The character can touch the lamp willfully to extinguish
+    it, but relighting it will cost the full MP cost again if they chose to do
+    so. The Welkynd Lantern&rsquo;s light effect is treated as a level 3 spell
+    for the purpose of being magically dispelled.</p>
+  quantity: 1
+  enc: 1
+  totalENC: 0
+  reach: ''
+  damage: ''
+  equipped: false
+  hands: 0
+  price: 800
+  modPrice: 0
+  armor: 0
+  magic_ar: 0
+  blockRating: 0
+  enchant_level: 0
+  excludeENC: false
+  consumable: false
+  qualities: ''
+  wearable: false
+  charge:
+    value: 0
+    max: 0
+    reduction: 1
+  carried: false
+  category: ''
+  item_cat:
+    none: None
+    head: Helmet
+    l_arm: Left Gauntlet
+    r_arm: Right Gauntlet
+    l_leg: Left Leg
+    r_leg: Right Leg
+    body: Chestplate
+    shield: Shield
+    weapon1: Primary Weapon
+    weapon2: Secondary Weapon
+    weapon3: Sidearm
+  attributes: {}
+_key: '!items!1Kw1880EoIkfBdlM'
+

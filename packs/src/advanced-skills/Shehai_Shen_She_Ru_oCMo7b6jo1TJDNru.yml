@@ -1,0 +1,72 @@
+name: Shehai Shen She Ru
+type: combatStyle
+img: icons/skills/melee/strike-sword-steel-yellow.webp
+effects: []
+folder: null
+sort: 0
+flags:
+  core:
+    sourceId: Item.7Wjm85AzmEo7CVIz
+_id: oCMo7b6jo1TJDNru
+_stats:
+  coreVersion: '12.331'
+  systemId: null
+  systemVersion: null
+  createdTime: null
+  modifiedTime: null
+  lastModifiedBy: null
+  compendiumSource: null
+  duplicateSource: null
+ownership:
+  default: 0
+  eeXhsDlbzUBZOXZT: 3
+system:
+  characteristics:
+    none: None
+    str: STR
+    end: END
+    agi: AGI
+    int: INT
+    wp: WP
+    prc: PRC
+    prs: PRS
+    lck: LCK
+  characteristicBonus:
+    strChaBonus: 0
+    endChaBonus: 0
+    agiChaBonus: 0
+    intChaBonus: 0
+    wpChaBonus: 0
+    prcChaBonus: 0
+    prsChaBonus: 0
+    lckChaBonus: 0
+  skillRanks:
+    untrained: Untrained
+    novice: (0) Novice
+    apprentice: (1) Apprentice
+    journeyman: (2) Journeyman
+    adept: (3) Adept
+    expert: (4) Expert
+    master: (5) Master
+  value: 0
+  rank: untrained
+  bonus: 0
+  miscValue: 0
+  specialization: ''
+  description: >-
+    <p>The Shehai Shen She Ru, or &ldquo;Way of the Spirit Sword,&rdquo; is the
+    culmination of the art of sword-singing, practiced by ancient Redguards in
+    Yokuda known as sword-singers. The greatest of the sword-singers were known
+    as Ansei, or &ldquo;Saints of the Sword.&rdquo; The core of the Shehai Shen
+    She Ru is a simple devotion to swordsmanship. This is how every sword singer
+    begins his journey: through intense study, and eventual mastery, of the art
+    of the blade.</p>
+
+    <p>Characters can utilize the Shehai Shen She Ru skill (with either Strength
+    or Agility) as if it were the Combat Style [Field] skill whenever wielding
+    any type of sword (larger or smaller weapons, such as daggers and
+    greatswords, also count).</p>
+  baseCha: str
+  trainedItems: ''
+_key: '!items!oCMo7b6jo1TJDNru'
+

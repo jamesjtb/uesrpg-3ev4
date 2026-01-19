@@ -1,0 +1,56 @@
+name: Direct Attack
+folder: null
+sort: 0
+flags:
+  cf:
+    id: temp_ysrtxwqxmu
+    path: References#/CF_SEP/Qualities#/CF_SEP/Spell Attributes
+    color: '#000000'
+_id: lvno9sPj405BCHon
+pages:
+  - name: Direct Attack
+    type: text
+    title:
+      show: false
+      level: 1
+    text:
+      format: 1
+      content: >-
+        <p>Spell counts as a Attack for the purposes of the attack per round
+        limit, as well as requires a primary action to cast. These kinds of
+        spells cannot do damage.</p>
+    _stats:
+      coreVersion: '12.331'
+      systemId: null
+      systemVersion: null
+      createdTime: null
+      modifiedTime: null
+      lastModifiedBy: null
+      compendiumSource: null
+      duplicateSource: null
+    _id: KLr8ho9OuYzqSPIF
+    system: {}
+    image: {}
+    video:
+      controls: true
+      volume: 0.5
+    src: null
+    sort: 0
+    ownership:
+      default: -1
+    flags: {}
+    _key: '!journal.pages!lvno9sPj405BCHon.KLr8ho9OuYzqSPIF'
+_stats:
+  coreVersion: '12.331'
+  systemId: null
+  systemVersion: null
+  createdTime: null
+  modifiedTime: null
+  lastModifiedBy: null
+  compendiumSource: null
+  duplicateSource: null
+ownership:
+  default: 0
+  eeXhsDlbzUBZOXZT: 3
+_key: '!journal!lvno9sPj405BCHon'
+

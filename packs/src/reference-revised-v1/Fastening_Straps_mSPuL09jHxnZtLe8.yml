@@ -1,0 +1,53 @@
+_id: mSPuL09jHxnZtLe8
+name: Fastening Straps
+folder: null
+sort: 0
+flags:
+  cf:
+    id: temp_i8h2j1d030a
+    path: References#/CF_SEP/Qualities#/CF_SEP/Shields
+    color: '#000000'
+pages:
+  - name: Fastening Straps
+    type: text
+    title:
+      show: false
+      level: 1
+    text:
+      format: 1
+      content: "<p>The shield has extra straps that can be fastened as a Secondary action. When the shield is strapped, it is impossible to disarm, but likewise, requires a Secondary action to undo the straps keeping it in place.\_</p>"
+    _stats:
+      coreVersion: '12.331'
+      systemId: null
+      systemVersion: null
+      createdTime: null
+      modifiedTime: null
+      lastModifiedBy: null
+      compendiumSource: null
+      duplicateSource: null
+    _id: KermkAx9wfcaCHiL
+    system: {}
+    image: {}
+    video:
+      controls: true
+      volume: 0.5
+    src: null
+    sort: 0
+    ownership:
+      default: -1
+    flags: {}
+    _key: '!journal.pages!mSPuL09jHxnZtLe8.KermkAx9wfcaCHiL'
+_stats:
+  coreVersion: '12.331'
+  systemId: null
+  systemVersion: null
+  createdTime: null
+  modifiedTime: null
+  lastModifiedBy: null
+  compendiumSource: null
+  duplicateSource: null
+ownership:
+  default: 0
+  eeXhsDlbzUBZOXZT: 3
+_key: '!journal!mSPuL09jHxnZtLe8'
+

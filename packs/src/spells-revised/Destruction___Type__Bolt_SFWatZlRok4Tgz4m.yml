@@ -1,0 +1,133 @@
+_id: SFWatZlRok4Tgz4m
+name: 'Destruction: [Type] Bolt'
+type: spell
+img: icons/magic/fire/projectile-fireball-red-yellow.webp
+effects: []
+folder: null
+sort: 0
+flags:
+  core:
+    sourceId: Item.Dvncp3T7Nn3WBpgy
+_stats:
+  coreVersion: '12.331'
+  systemId: null
+  systemVersion: null
+  createdTime: null
+  modifiedTime: null
+  lastModifiedBy: null
+  compendiumSource: null
+  duplicateSource: null
+ownership:
+  default: 0
+  qwt9o1cuKYitvD9G: 3
+system:
+  description: >-
+    <p>Fires a bolt of elemental energy at target character within 100m. Deals
+    [Spell Strength] [type] damage.</p>
+
+    <table style="width: 98.5447%; height: 51px;" border="2" cellspacing="2"
+    cellpadding="1">
+
+    <tbody>
+
+    <tr style="height: 17px;">
+
+    <td style="width: 24.9539%; height: 17px; text-align:
+    left;"><strong>Level</strong></td>
+
+    <td style="width: 11.5403%; height: 17px; text-align:
+    center;"><strong>1</strong></td>
+
+    <td style="width: 10.9017%; height: 17px; text-align:
+    center;"><strong>2</strong></td>
+
+    <td style="width: 10.2483%; height: 17px; text-align:
+    center;"><strong>3</strong></td>
+
+    <td style="width: 10.8979%; height: 17px; text-align:
+    center;"><strong>4</strong></td>
+
+    <td style="width: 9.94024%; height: 17px; text-align:
+    center;"><strong>5</strong></td>
+
+    <td style="width: 9.50831%; height: 17px; text-align:
+    center;"><strong>6</strong></td>
+
+    <td style="width: 10.0805%; height: 17px; text-align:
+    center;"><strong>7</strong></td>
+
+    </tr>
+
+    <tr style="height: 17px;">
+
+    <td style="width: 24.9539%; height: 17px; text-align:
+    left;"><strong>Cost</strong></td>
+
+    <td style="width: 11.5403%; height: 17px; text-align: center;">4</td>
+
+    <td style="width: 10.9017%; height: 17px; text-align: center;">6</td>
+
+    <td style="width: 10.2483%; height: 17px; text-align: center;">8</td>
+
+    <td style="width: 10.8979%; height: 17px; text-align: center;">10</td>
+
+    <td style="width: 9.94024%; height: 17px; text-align: center;">12</td>
+
+    <td style="width: 9.50831%; height: 17px; text-align: center;">14</td>
+
+    <td style="width: 10.0805%; height: 17px; text-align: center;">16</td>
+
+    </tr>
+
+    <tr style="height: 17px;">
+
+    <td style="width: 24.9539%; height: 17px; text-align: left;"><strong>Spell
+    Strength</strong></td>
+
+    <td style="width: 11.5403%; height: 17px; text-align: center;">1d4</td>
+
+    <td style="width: 10.9017%; height: 17px; text-align: center;">1d6</td>
+
+    <td style="width: 10.2483%; height: 17px; text-align: center;">1d8</td>
+
+    <td style="width: 10.8979%; height: 17px; text-align: center;">1d10</td>
+
+    <td style="width: 9.94024%; height: 17px; text-align: center;">2d6</td>
+
+    <td style="width: 9.50831%; height: 17px; text-align: center;">2d8</td>
+
+    <td style="width: 10.0805%; height: 17px; text-align: center;">2d10</td>
+
+    </tr>
+
+    </tbody>
+
+    </table>
+
+    <p>&nbsp;</p>
+  damage: 1d4
+  level: 1
+  cost: 4
+  spell_str: ''
+  attributes: >-
+    [Fire, Frost, Shock],
+    @Compendium[uesrpg-revision.journal.XtV9n7rHuDGDbW2j]{R Attack} (100m),
+    @Compendium[uesrpg-revision.journal.ELRN5yhwQUASYJXL]{Overload} (+WpB to
+    Dmg)
+  form: Bolt
+  school: destruction
+  school_cat:
+    alteration: Alteration
+    conjuration: Conjuration
+    destruction: Destruction
+    illusion: Illusion
+    mysticism: Mysticism
+    necromancy: Necromancy
+    restoration: Restoration
+    none: Select School
+  spellType: ''
+  spellTypes:
+    conventional: Conventional
+    unconventional: Unconventional
+_key: '!items!SFWatZlRok4Tgz4m'
+

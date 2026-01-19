@@ -1,0 +1,113 @@
+name: Lost Body Part
+folder: null
+sort: 0
+flags:
+  cf:
+    id: temp_hw0xe1g9xxt
+    path: References#/CF_SEP/Conditions
+    color: '#000000'
+_id: oEGafVol0o1V9bgv
+pages:
+  - name: Lost Body Part
+    type: text
+    title:
+      show: false
+      level: 1
+    text:
+      format: 1
+      content: >-
+        <p>The character loses a part of their body. A character can have
+        multiple instances of this condition at once, each affecting a different
+        body part. If an attack would hit a body part that has been entirely
+        lost, the attack hits the body location instead. This condition applies
+        additional penalties that vary based on the body part. In the case of
+        the head, there is a choice between an ear or an eye (GM’s
+        decision).</p>
+
+        <p><strong>Lost Ear</strong></p>
+
+        <p>The character has had their ear removed or destroyed, and their
+        hearing damaged. They suffers the following penalties:</p>
+
+        <p>• All tests that rely on hearing are made with a -20 penalty.</p>
+
+        <p>• If both ears are lost, the character gains the deafened condition
+        permanently.</p>
+
+        <p><strong>Lost Eye</strong></p>
+
+        <p>The character has had their eye removed or destroyed and suffers the
+        following penalties:</p>
+
+        <p>• All tests that rely on sight are made with a -20 penalty.</p>
+
+        <p>• If both eyes are lost, the character gains the blinded condition
+        permanently.</p>
+
+        <p><strong>Lost Foot/Leg</strong></p>
+
+        <p>The character has had their leg severed somewhere between the ankle
+        and the hip, and suffers the following penalties.</p>
+
+        <p>• Gain the slowed condition permanently.</p>
+
+        <p>• All tests that rely on the use of two legs are made with a -20
+        penalty.</p>
+
+        <p>• If both legs are lost, gain the Immobilized condition permanently
+        and fail any tests that rely entirely on movement.</p>
+
+        <p><strong>Lost Hand/Arm</strong></p>
+
+        <p>The character has had their arm severed somewhere between the wrist
+        and the shoulder, and suffers the following penalties:</p>
+
+        <p>• Can no longer use two-handed weapons, shields (if the whole arm is
+        missing), or one handed weapons in that arm.</p>
+
+        <p>• All tests that rely on the use of two hands are made with a -20
+        penalty.</p>
+
+        <p>• If both hands are lost, the character cannot wield weapons and
+        automatically fails all tests that rely on the use of hands.</p>
+
+        <p><strong>Organ Damage (Lost Body Part: Body)</strong></p>
+
+        <p>The character has had an internal organs damaged. Characters with
+        this condition heal damage at half speed and increase the passive wound
+        penalty to all tests to -30.</p>
+    _stats:
+      coreVersion: '12.331'
+      systemId: null
+      systemVersion: null
+      createdTime: null
+      modifiedTime: null
+      lastModifiedBy: null
+      compendiumSource: null
+      duplicateSource: null
+    _id: Dq4FldTui4LeZSgx
+    system: {}
+    image: {}
+    video:
+      controls: true
+      volume: 0.5
+    src: null
+    sort: 0
+    ownership:
+      default: -1
+    flags: {}
+    _key: '!journal.pages!oEGafVol0o1V9bgv.Dq4FldTui4LeZSgx'
+_stats:
+  coreVersion: '12.331'
+  systemId: null
+  systemVersion: null
+  createdTime: null
+  modifiedTime: null
+  lastModifiedBy: null
+  compendiumSource: null
+  duplicateSource: null
+ownership:
+  default: 0
+  eeXhsDlbzUBZOXZT: 3
+_key: '!journal!oEGafVol0o1V9bgv'
+

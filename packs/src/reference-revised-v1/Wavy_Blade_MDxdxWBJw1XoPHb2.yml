@@ -1,0 +1,55 @@
+_id: MDxdxWBJw1XoPHb2
+name: Wavy Blade
+folder: null
+sort: 0
+flags:
+  cf:
+    id: temp_qtm3mdw5kon
+    path: References#/CF_SEP/Qualities#/CF_SEP/Weapon Qualities
+    color: '#000000'
+pages:
+  - name: Wavy Blade
+    type: text
+    title:
+      show: false
+      level: 1
+    text:
+      format: 1
+      content: >-
+        <p>+5 to Counterattack, -5 to Parry. Increases bonus to +10 against
+        polearms.</p>
+    _stats:
+      coreVersion: '12.331'
+      systemId: null
+      systemVersion: null
+      createdTime: null
+      modifiedTime: null
+      lastModifiedBy: null
+      compendiumSource: null
+      duplicateSource: null
+    _id: wsiHTDq1t0qMaoeF
+    system: {}
+    image: {}
+    video:
+      controls: true
+      volume: 0.5
+    src: null
+    sort: 0
+    ownership:
+      default: -1
+    flags: {}
+    _key: '!journal.pages!MDxdxWBJw1XoPHb2.wsiHTDq1t0qMaoeF'
+_stats:
+  coreVersion: '12.331'
+  systemId: null
+  systemVersion: null
+  createdTime: null
+  modifiedTime: null
+  lastModifiedBy: null
+  compendiumSource: null
+  duplicateSource: null
+ownership:
+  default: 0
+  eeXhsDlbzUBZOXZT: 3
+_key: '!journal!MDxdxWBJw1XoPHb2'
+

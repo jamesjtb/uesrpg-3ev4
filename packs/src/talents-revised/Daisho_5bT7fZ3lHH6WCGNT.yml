@@ -1,0 +1,90 @@
+_id: 5bT7fZ3lHH6WCGNT
+name: Daisho
+type: talent
+flags:
+  core:
+    sourceId: Item.DYVazRNO2caSDMGE
+img: systems/uesrpg-3ev4/images/Icons/daisho.webp
+effects: []
+_stats:
+  coreVersion: '12.331'
+  systemId: null
+  systemVersion: null
+  createdTime: null
+  modifiedTime: null
+  lastModifiedBy: null
+  compendiumSource: null
+  duplicateSource: null
+ownership:
+  default: 0
+  xvA5SwRGJiyPsnxH: 3
+system:
+  mpBonus: 0
+  hpBonus: 0
+  spBonus: 0
+  lpBonus: 0
+  wtBonus: 0
+  iniBonus: 0
+  speedBonus: 0
+  flyBonus: 0
+  swimBonus: 0
+  diseaseR: 0
+  fireR: 0
+  frostR: 0
+  shockR: 0
+  poisonR: 0
+  magicR: 0
+  natToughnessR: 0
+  silverR: 0
+  sunlightR: 0
+  replace:
+    ini:
+      iniToggle: false
+      value: 0
+      characteristic: str
+    wt:
+      wtToggle: false
+      value: 0
+      characteristic: str
+  characteristics:
+    none: None
+    str: STR
+    end: END
+    agi: AGI
+    int: INT
+    wp: WP
+    prc: PRC
+    prs: PRS
+    lck: LCK
+  characteristicBonus:
+    strChaBonus: 0
+    endChaBonus: 0
+    agiChaBonus: 0
+    intChaBonus: 0
+    wpChaBonus: 0
+    prcChaBonus: 0
+    prsChaBonus: 0
+    lckChaBonus: 0
+  skillArray: []
+  description: >-
+    <p>Katanas wielded in two hands deal 1d10 damage. If the character is
+    wielding a Katana in one hand and a Wakizashi in the other, he may use the
+    two handed damage dice of both (1d8 for Katana and 1d6 for Wakizashi)
+    instead of the one handed damage dice. The normal rules for dual weapon
+    apply while wielding the weapons this way, including the effects of the Dual
+    Fighter talent.</p>
+  xpCost: 500
+  level: 5
+  talentReq: ''
+  miscReq: Apprentice Combat
+  halfFatiguePenalty: false
+  halfWoundPenalty: false
+  untrainedException: false
+  fatigueException: false
+  addIBToMP: false
+  armorAcrobaticsException: false
+  addHalfSpeed: false
+folder: null
+sort: 0
+_key: '!items!5bT7fZ3lHH6WCGNT'
+

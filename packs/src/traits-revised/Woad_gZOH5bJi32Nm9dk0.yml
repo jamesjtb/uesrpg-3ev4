@@ -1,0 +1,96 @@
+_id: gZOH5bJi32Nm9dk0
+name: Woad
+type: talent
+img: systems/uesrpg-3ev4/images/Icons/backToBack.webp
+effects: []
+folder: null
+sort: 0
+flags:
+  core:
+    sourceId: Item.JX5ttPQSa94C9UKX
+_stats:
+  coreVersion: '12.331'
+  systemId: null
+  systemVersion: null
+  createdTime: null
+  modifiedTime: null
+  lastModifiedBy: null
+  compendiumSource: null
+  duplicateSource: null
+ownership:
+  default: 0
+  xvA5SwRGJiyPsnxH: 3
+system:
+  mpBonus: 0
+  hpBonus: 0
+  spBonus: 0
+  lpBonus: 0
+  wtBonus: 0
+  iniBonus: 0
+  speedBonus: 0
+  flyBonus: 0
+  swimBonus: 0
+  diseaseR: 0
+  fireR: 0
+  frostR: 0
+  shockR: 0
+  poisonR: 0
+  magicR: 0
+  natToughnessR: 0
+  silverR: 0
+  sunlightR: 0
+  replace:
+    ini:
+      iniToggle: false
+      value: 0
+      characteristic: str
+    wt:
+      wtToggle: false
+      value: 0
+      characteristic: str
+  characteristics:
+    none: None
+    str: STR
+    end: END
+    agi: AGI
+    int: INT
+    wp: WP
+    prc: PRC
+    prs: PRS
+    lck: LCK
+  characteristicBonus:
+    strChaBonus: 0
+    endChaBonus: 0
+    agiChaBonus: 0
+    intChaBonus: 0
+    wpChaBonus: 0
+    prcChaBonus: 0
+    prsChaBonus: 0
+    lckChaBonus: 0
+  skillArray: []
+  description: >-
+    <p>The Nord can, as an action, apply a smear of ritually prepared Woad war
+    paint, which grants a Physical and Magical shield that protects against 5
+    points of damage for 3 Rounds that refreshes for free each Round. If the
+    shield has at least one hit point of damage remaining after the third Round,
+    the shield continues to refresh until it is reduced to 0 shield HP, or until
+    1 minute passes. This shield is semi-divine in nature and cannot be
+    conventionally dispelled.</p>
+
+    <p>The ritual necessary to prepare one dose of Woad paint requires the Nord
+    have access to natural plants, an open sky, and must be performed over a
+    Long Rest as they beseech Kyne for her blessings and protection in the
+    battles to come.</p>
+  xpCost: 400
+  level: 4
+  talentReq: Sons of Skyrim
+  miscReq: Any Expert
+  halfFatiguePenalty: false
+  halfWoundPenalty: false
+  untrainedException: false
+  fatigueException: false
+  addIBToMP: false
+  armorAcrobaticsException: false
+  addHalfSpeed: false
+_key: '!items!gZOH5bJi32Nm9dk0'
+

@@ -1,0 +1,101 @@
+_id: c7tAX26P3K1vH1jk
+name: Investigate
+type: skill
+img: icons/tools/scribal/magnifying-glass.webp
+effects: []
+folder: null
+sort: 900000
+flags:
+  core:
+    sourceId: Item.pXXlRpjJ9A5pF3A1
+_stats:
+  coreVersion: '12.331'
+  systemId: null
+  systemVersion: null
+  createdTime: null
+  modifiedTime: 1732510440759
+  lastModifiedBy: GikQCnLAeu0WrzSO
+  compendiumSource: null
+  duplicateSource: null
+ownership:
+  default: 0
+  zrZomzLbu6XsebKn: 3
+system:
+  characteristics:
+    none: None
+    str: STR
+    end: END
+    agi: AGI
+    int: INT
+    wp: WP
+    prc: PRC
+    prs: PRS
+    lck: LCK
+  characteristicBonus:
+    strChaBonus: 0
+    endChaBonus: 0
+    agiChaBonus: 0
+    intChaBonus: 0
+    wpChaBonus: 0
+    prcChaBonus: 0
+    prsChaBonus: 0
+    lckChaBonus: 0
+  skillRanks:
+    untrained: Untrained
+    novice: (0) Novice
+    apprentice: (1) Apprentice
+    journeyman: (2) Journeyman
+    adept: (3) Adept
+    expert: (4) Expert
+    master: (5) Master
+  value: 0
+  rank: untrained
+  bonus: 0
+  miscValue: 0
+  specialization: ''
+  description: >-
+    <p><em>Example Specializations: Canvassing, Research</em></p>
+
+    <p>Investigate reflects the character&rsquo;s skill at conducting an
+    investigation. This encompasses everything from simple inquiries to
+    coordinating a complex investigation and searching through piles of clues to
+    find an answer. Your GM may ask you to test Investigate when you try to
+    accomplish tasks like the following...</p>
+
+    <ul>
+
+    <li>Gather information from a crowd</li>
+
+    <li>Sift through an archive searching for information</li>
+
+    <li>Locate a person or place in a large city</li>
+
+    <li>Use clues to solve a mystery</li>
+
+    </ul>
+  baseCha: int
+  governingCha: INT, PRC
+  trainedItems: ''
+  data:
+    description: >-
+      <p><em>Example Specializations: Canvassing, Research</em></p>
+
+      <p>Investigate reflects the character&rsquo;s skill at conducting an
+      investigation. This encompasses everything from simple inquiries to
+      coordinating a complex investigation and searching through piles of clues
+      to find an answer. Your GM may ask you to test Investigate when you try to
+      accomplish tasks like the following...</p>
+
+      <ul>
+
+      <li>Gather information from a crowd</li>
+
+      <li>Sift through an archive searching for information</li>
+
+      <li>Locate a person or place in a large city</li>
+
+      <li>Use clues to solve a mystery</li>
+
+      </ul>
+_key: '!items!c7tAX26P3K1vH1jk'
+

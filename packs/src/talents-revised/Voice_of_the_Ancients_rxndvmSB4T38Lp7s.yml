@@ -1,0 +1,94 @@
+name: Voice of the Ancients
+type: talent
+img: icons/magic/sonic/explosion-shock-sound-wave.webp
+effects: []
+folder: null
+sort: 0
+flags:
+  core:
+    sourceId: Item.DkoUiSosstbHvzMj
+_id: rxndvmSB4T38Lp7s
+_stats:
+  coreVersion: '12.331'
+  systemId: null
+  systemVersion: null
+  createdTime: null
+  modifiedTime: null
+  lastModifiedBy: null
+  compendiumSource: null
+  duplicateSource: null
+ownership:
+  default: 0
+  eeXhsDlbzUBZOXZT: 3
+system:
+  mpBonus: 0
+  hpBonus: 0
+  spBonus: 0
+  lpBonus: 0
+  wtBonus: 0
+  iniBonus: 0
+  speedBonus: 0
+  flyBonus: 0
+  swimBonus: 0
+  diseaseR: 0
+  fireR: 0
+  frostR: 0
+  shockR: 0
+  poisonR: 0
+  magicR: 0
+  natToughnessR: 0
+  silverR: 0
+  sunlightR: 0
+  replace:
+    ini:
+      iniToggle: false
+      value: 0
+      characteristic: str
+    wt:
+      wtToggle: false
+      value: 0
+      characteristic: str
+  characteristics:
+    none: None
+    str: STR
+    end: END
+    agi: AGI
+    int: INT
+    wp: WP
+    prc: PRC
+    prs: PRS
+    lck: LCK
+  characteristicBonus:
+    strChaBonus: 0
+    endChaBonus: 0
+    agiChaBonus: 0
+    intChaBonus: 0
+    wpChaBonus: 0
+    prcChaBonus: 0
+    prsChaBonus: 0
+    lckChaBonus: 0
+  skillArray: []
+  description: >-
+    <p>Through meditating upon the true meaning of speech, the character&rsquo;s
+    voice has become too powerful for mere mortals. Shouts that inflict damage
+    add the Tongue&rsquo;s WpB to the damage inflicted, and any shout that can
+    be resisted adds a -10 penalty to doing so (after any modifiers chosen).
+    However, to those not initiated in the way of the voice, the Tongue&rsquo;s
+    normal speech inflicts 1d4+WpB damage to all within WpB meters of the Tongue
+    as the ground shakes and blood-vessels burst. A +10 Thu&rsquo;um test can be
+    used to reduce the voice to a &ldquo;whisper&rdquo; temporarily, reducing
+    his speech to the volume of &ldquo;rolling thunder&rdquo;, removing the
+    threat of harm.</p>
+  xpCost: 500
+  level: 5
+  talentReq: Master of the Voice
+  miscReq: Willpower 50
+  halfFatiguePenalty: false
+  halfWoundPenalty: false
+  untrainedException: false
+  fatigueException: false
+  addIBToMP: false
+  armorAcrobaticsException: false
+  addHalfSpeed: false
+_key: '!items!rxndvmSB4T38Lp7s'
+

@@ -1,0 +1,1780 @@
+name: Rogue
+type: NPC
+img: icons/svg/cowled.svg
+items:
+  - _id: oVi6sGjgsYun7zw3
+    name: Dodging Dash
+    type: power
+    sort: 900000
+    flags:
+      core:
+        sourceId: Item.MyWjMeVAtBCJa8Bt
+    img: systems/uesrpg-3ev4/images/Icons/lightningReflexes.webp
+    effects: []
+    folder: null
+    _stats:
+      compendiumSource: null
+      duplicateSource: null
+      coreVersion: '12.331'
+      systemId: uesrpg-3ev4
+      systemVersion: v1.0.0-RC.59
+      createdTime: null
+      modifiedTime: null
+      lastModifiedBy: null
+    ownership:
+      default: 0
+    system:
+      mpBonus: 0
+      hpBonus: 0
+      spBonus: 0
+      lpBonus: 0
+      wtBonus: 0
+      iniBonus: 0
+      speedBonus: 0
+      flyBonus: 0
+      swimBonus: 0
+      diseaseR: 0
+      fireR: 0
+      frostR: 0
+      shockR: 0
+      poisonR: 0
+      magicR: 0
+      natToughnessR: 0
+      silverR: 0
+      sunlightR: 0
+      characteristics:
+        none: None
+        str: STR
+        end: END
+        agi: AGI
+        int: INT
+        wp: WP
+        prc: PRC
+        prs: PRS
+        lck: LCK
+      characteristicBonus:
+        strChaBonus: 0
+        endChaBonus: 0
+        agiChaBonus: 0
+        intChaBonus: 0
+        wpChaBonus: 0
+        prcChaBonus: 0
+        prsChaBonus: 0
+        lckChaBonus: 0
+      skillArray: []
+      description: >-
+        <p><strong>Cost:</strong> 1 SP</p>
+
+        <p><span style="color: #191813;">This character may use this to imipose
+        a -20 to all Attacks of Opportunity made against them this turn. Using
+        this also allows the character to move at 2x their normal
+        Speed.</span></p>
+      dailyUse: false
+      source: ''
+      shiftForm: false
+      shiftFormStyle: ''
+      shiftStyles:
+        shiftFormNone: Regular Form
+        shiftFormVampireLord: Vampire Lord
+        shiftFormWereWolf: Werewolf
+        shiftFormWereBat: Werebat
+        shiftFormWereBoar: Wereboar
+        shiftFormWereBear: Werebear
+        shiftFormWereCrocodile: Werecrocodile
+        shiftFormWereVulture: Werevulture
+        shiftFormWereLion: Werelion
+    _key: '!actors.items!AkowUH5j49IBvJ5S.oVi6sGjgsYun7zw3'
+  - _id: 4coSBXFRR0YSg3Xm
+    name: Assassin Strike
+    type: talent
+    sort: 1000000
+    flags:
+      core:
+        sourceId: Item.DYVazRNO2caSDMGE
+    img: systems/uesrpg-3ev4/images/Icons/assassinStrike.webp
+    effects: []
+    folder: null
+    _stats:
+      compendiumSource: null
+      duplicateSource: null
+      coreVersion: '12.331'
+      systemId: uesrpg-3ev4
+      systemVersion: v1.0.0-RC.59
+      createdTime: null
+      modifiedTime: null
+      lastModifiedBy: null
+    ownership:
+      default: 0
+    system:
+      mpBonus: 0
+      hpBonus: 0
+      spBonus: 0
+      lpBonus: 0
+      wtBonus: 0
+      iniBonus: 0
+      speedBonus: 0
+      flyBonus: 0
+      swimBonus: 0
+      diseaseR: 0
+      fireR: 0
+      frostR: 0
+      shockR: 0
+      poisonR: 0
+      magicR: 0
+      natToughnessR: 0
+      silverR: 0
+      sunlightR: 0
+      replace:
+        ini:
+          iniToggle: false
+          value: 0
+          characteristic: str
+        wt:
+          wtToggle: false
+          value: 0
+          characteristic: str
+      characteristics:
+        none: None
+        str: STR
+        end: END
+        agi: AGI
+        int: INT
+        wp: WP
+        prc: PRC
+        prs: PRS
+        lck: LCK
+      characteristicBonus:
+        strChaBonus: 0
+        endChaBonus: 0
+        agiChaBonus: 0
+        intChaBonus: 0
+        wpChaBonus: 0
+        prcChaBonus: 0
+        prsChaBonus: 0
+        lckChaBonus: 0
+      skillArray: []
+      description: >-
+        <p>If the character successfully inflicts damage with an attack (after
+        mitigation) then the target of that attack cannot make an attack of
+        opportunity against the character during that turn.</p>
+      xpCost: 0
+      level: 0
+      talentReq: ''
+      miscReq: ''
+      halfFatiguePenalty: false
+      halfWoundPenalty: false
+      untrainedException: false
+      fatigueException: false
+      addIBToMP: false
+      armorAcrobaticsException: false
+      addHalfSpeed: false
+    _key: '!actors.items!AkowUH5j49IBvJ5S.4coSBXFRR0YSg3Xm'
+  - _id: 8waqjxKEmfm2ffG7
+    name: Fleet Footwork
+    type: talent
+    sort: 1100000
+    flags:
+      core:
+        sourceId: Item.JX5ttPQSa94C9UKX
+    img: systems/uesrpg-3ev4/images/Icons/stepAside.webp
+    effects: []
+    folder: null
+    _stats:
+      compendiumSource: null
+      duplicateSource: null
+      coreVersion: '12.331'
+      systemId: uesrpg-3ev4
+      systemVersion: v1.0.0-RC.59
+      createdTime: null
+      modifiedTime: null
+      lastModifiedBy: null
+    ownership:
+      default: 0
+    system:
+      mpBonus: 0
+      hpBonus: 0
+      spBonus: 0
+      lpBonus: 0
+      wtBonus: 0
+      iniBonus: 0
+      speedBonus: 0
+      flyBonus: 0
+      swimBonus: 0
+      diseaseR: 0
+      fireR: 0
+      frostR: 0
+      shockR: 0
+      poisonR: 0
+      magicR: 0
+      natToughnessR: 0
+      silverR: 0
+      sunlightR: 0
+      replace:
+        ini:
+          iniToggle: false
+          value: 0
+          characteristic: str
+        wt:
+          wtToggle: false
+          value: 0
+          characteristic: str
+      characteristics:
+        none: None
+        str: STR
+        end: END
+        agi: AGI
+        int: INT
+        wp: WP
+        prc: PRC
+        prs: PRS
+        lck: LCK
+      characteristicBonus:
+        strChaBonus: 0
+        endChaBonus: 0
+        agiChaBonus: 0
+        intChaBonus: 0
+        wpChaBonus: 0
+        prcChaBonus: 0
+        prsChaBonus: 0
+        lckChaBonus: 0
+      skillArray: []
+      description: >-
+        <p>This character moves at normal Speed when Hidden, and has a free
+        Evade action until they fail an Evade test, at which point they pay 1
+        AP.</p>
+      xpCost: 0
+      level: 0
+      talentReq: ''
+      miscReq: ''
+      halfFatiguePenalty: false
+      halfWoundPenalty: false
+      untrainedException: false
+      fatigueException: false
+      addIBToMP: false
+      armorAcrobaticsException: false
+      addHalfSpeed: false
+    _key: '!actors.items!AkowUH5j49IBvJ5S.8waqjxKEmfm2ffG7'
+  - _id: AsBAD8ryW6EKsHx8
+    name: Charlatan
+    type: talent
+    sort: 1200000
+    flags:
+      core:
+        sourceId: Item.DYVazRNO2caSDMGE
+    img: systems/uesrpg-3ev4/images/Icons/charlatan.webp
+    effects: []
+    folder: null
+    _stats:
+      compendiumSource: null
+      duplicateSource: null
+      coreVersion: '12.331'
+      systemId: uesrpg-3ev4
+      systemVersion: v1.0.0-RC.59
+      createdTime: null
+      modifiedTime: null
+      lastModifiedBy: null
+    ownership:
+      default: 0
+    system:
+      mpBonus: 0
+      hpBonus: 0
+      spBonus: 0
+      lpBonus: 0
+      wtBonus: 0
+      iniBonus: 0
+      speedBonus: 0
+      flyBonus: 0
+      swimBonus: 0
+      diseaseR: 0
+      fireR: 0
+      frostR: 0
+      shockR: 0
+      poisonR: 0
+      magicR: 0
+      natToughnessR: 0
+      silverR: 0
+      sunlightR: 0
+      replace:
+        ini:
+          iniToggle: false
+          value: 0
+          characteristic: str
+        wt:
+          wtToggle: false
+          value: 0
+          characteristic: str
+      characteristics:
+        none: None
+        str: STR
+        end: END
+        agi: AGI
+        int: INT
+        wp: WP
+        prc: PRC
+        prs: PRS
+        lck: LCK
+      characteristicBonus:
+        strChaBonus: 0
+        endChaBonus: 0
+        agiChaBonus: 0
+        intChaBonus: 0
+        wpChaBonus: 0
+        prcChaBonus: 0
+        prsChaBonus: 0
+        lckChaBonus: 0
+      skillArray: []
+      description: >-
+        <p>The character can use the Deceive skill in place of the Commerce
+        skill.</p>
+      xpCost: 0
+      level: 0
+      talentReq: ''
+      miscReq: ''
+      halfFatiguePenalty: false
+      halfWoundPenalty: false
+      untrainedException: false
+      fatigueException: false
+      addIBToMP: false
+      armorAcrobaticsException: false
+      addHalfSpeed: false
+    _key: '!actors.items!AkowUH5j49IBvJ5S.AsBAD8ryW6EKsHx8'
+  - _id: Scun2dmxNC47ypfN
+    name: Steel Shortsword
+    type: weapon
+    img: icons/weapons/swords/shortsword-guard-brown.webp
+    effects: []
+    folder: null
+    sort: 0
+    flags:
+      core:
+        sourceId: Item.2jUT8icq4MuyLEaC
+    _stats:
+      compendiumSource: null
+      duplicateSource: null
+      coreVersion: '12.331'
+      systemId: uesrpg-3ev4
+      systemVersion: v1.0.0-RC.59
+      createdTime: null
+      modifiedTime: null
+      lastModifiedBy: null
+    ownership:
+      default: 0
+      qwt9o1cuKYitvD9G: 3
+      eeXhsDlbzUBZOXZT: 3
+    system:
+      mpBonus: 0
+      hpBonus: 0
+      spBonus: 0
+      lpBonus: 0
+      wtBonus: 0
+      iniBonus: 0
+      speedBonus: 0
+      flyBonus: 0
+      swimBonus: 0
+      diseaseR: 0
+      fireR: 0
+      frostR: 0
+      shockR: 0
+      poisonR: 0
+      magicR: 0
+      natToughnessR: 0
+      silverR: 0
+      sunlightR: 0
+      characteristics:
+        none: None
+        str: STR
+        end: END
+        agi: AGI
+        int: INT
+        wp: WP
+        prc: PRC
+        prs: PRS
+        lck: LCK
+      characteristicBonus:
+        strChaBonus: 0
+        endChaBonus: 0
+        agiChaBonus: 0
+        intChaBonus: 0
+        wpChaBonus: 0
+        prcChaBonus: 0
+        prsChaBonus: 0
+        lckChaBonus: 0
+      replace:
+        ini:
+          iniToggle: false
+          value: 0
+          characteristic: ''
+        wt:
+          wtToggle: false
+          value: 0
+          characteristic: ''
+      skillArray: []
+      isPhysicalObject: true
+      containerStats:
+        contained: false
+        container_id: ''
+        container_name: ''
+      description: >-
+        <p><em style="box-sizing: border-box; user-select: text; color:
+        #191813;">Enchantments, modifications, notes, etc...</em></p>
+      quantity: 1
+      enc: 1
+      totalENC: 0
+      reach: 1
+      damage: 1d6+1
+      damage2: '0'
+      damage3: 0
+      weapon2H: false
+      equippped: false
+      carried: false
+      excludeENC: false
+      superior: false
+      hands: 0
+      price: 75
+      modPrice: 0
+      armor: 0
+      magic_ar: 0
+      enchant_level: 2
+      qualities: >-
+        @Compendium[uesrpg-revision.journal.8QrUeG8YXaLx1BqW]{Slashing},
+        @Compendium[uesrpg-revision.journal.5HnOtuIPqSo9GuWE]{Exploit Weakness}
+      charge:
+        value: 0
+        max: 0
+        reduction: 1
+      item_cat:
+        none: None
+        weapon1: Primary Weapon
+        weapon2: Secondary Weapon
+        weapon3: Sidearm
+    _key: '!actors.items!AkowUH5j49IBvJ5S.Scun2dmxNC47ypfN'
+  - _id: sg33Kp4NARtBninM
+    name: Steel Rapier
+    type: weapon
+    img: icons/weapons/swords/scimitar-guard-gold.webp
+    effects: []
+    folder: null
+    sort: 0
+    flags:
+      core:
+        sourceId: Item.AaZLQm2whP97a1Y4
+    _stats:
+      compendiumSource: null
+      duplicateSource: null
+      coreVersion: '12.331'
+      systemId: uesrpg-3ev4
+      systemVersion: v1.0.0-RC.59
+      createdTime: null
+      modifiedTime: null
+      lastModifiedBy: null
+    ownership:
+      default: 0
+      qwt9o1cuKYitvD9G: 3
+      eeXhsDlbzUBZOXZT: 3
+    system:
+      mpBonus: 0
+      hpBonus: 0
+      spBonus: 0
+      lpBonus: 0
+      wtBonus: 0
+      iniBonus: 0
+      speedBonus: 0
+      flyBonus: 0
+      swimBonus: 0
+      diseaseR: 0
+      fireR: 0
+      frostR: 0
+      shockR: 0
+      poisonR: 0
+      magicR: 0
+      natToughnessR: 0
+      silverR: 0
+      sunlightR: 0
+      characteristics:
+        none: None
+        str: STR
+        end: END
+        agi: AGI
+        int: INT
+        wp: WP
+        prc: PRC
+        prs: PRS
+        lck: LCK
+      characteristicBonus:
+        strChaBonus: 0
+        endChaBonus: 0
+        agiChaBonus: 0
+        intChaBonus: 0
+        wpChaBonus: 0
+        prcChaBonus: 0
+        prsChaBonus: 0
+        lckChaBonus: 0
+      replace:
+        ini:
+          iniToggle: false
+          value: 0
+          characteristic: ''
+        wt:
+          wtToggle: false
+          value: 0
+          characteristic: ''
+      skillArray: []
+      isPhysicalObject: true
+      containerStats:
+        contained: false
+        container_id: ''
+        container_name: ''
+      description: >-
+        <p><em style="box-sizing: border-box; user-select: text; color:
+        #191813;">Enchantments, modifications, notes, etc...</em></p>
+      quantity: 1
+      enc: 1
+      totalENC: 0
+      reach: 2
+      damage: 1d6+1
+      damage2: '0'
+      damage3: 0
+      weapon2H: false
+      equippped: false
+      carried: false
+      excludeENC: false
+      superior: false
+      hands: 0
+      price: 105
+      modPrice: 0
+      armor: 0
+      magic_ar: 0
+      enchant_level: 2
+      qualities: >-
+        @Compendium[uesrpg-revision.journal.8QrUeG8YXaLx1BqW]{Slashing},
+        Compendium[uesrpg-revision.journal.9tFMijYvjZUSN2HV]{Dueling Weapon},
+        @Compendium[uesrpg-revision.journal.5HnOtuIPqSo9GuWE]{Exploit Weakness}
+      charge:
+        value: 0
+        max: 0
+        reduction: 1
+      item_cat:
+        none: None
+        weapon1: Primary Weapon
+        weapon2: Secondary Weapon
+        weapon3: Sidearm
+    _key: '!actors.items!AkowUH5j49IBvJ5S.sg33Kp4NARtBninM'
+  - _id: Lr23u9otzq8RKd22
+    name: Full Leather Armor
+    type: armor
+    img: icons/equipment/chest/breastplate-banded-simple-leather-brown.webp
+    effects: []
+    folder: null
+    sort: 0
+    flags:
+      core:
+        sourceId: Item.8CMDpj9LkeMsPBGk
+    _stats:
+      compendiumSource: null
+      duplicateSource: null
+      coreVersion: '12.331'
+      systemId: uesrpg-3ev4
+      systemVersion: v1.0.0-RC.59
+      createdTime: null
+      modifiedTime: null
+      lastModifiedBy: null
+    ownership:
+      default: 0
+      qwt9o1cuKYitvD9G: 3
+      eeXhsDlbzUBZOXZT: 3
+    system:
+      mpBonus: 0
+      hpBonus: 0
+      spBonus: 0
+      lpBonus: 0
+      wtBonus: 0
+      iniBonus: 0
+      speedBonus: 0
+      flyBonus: 0
+      swimBonus: 0
+      diseaseR: 0
+      fireR: 0
+      frostR: 0
+      shockR: 0
+      poisonR: 0
+      magicR: 0
+      natToughnessR: 0
+      silverR: 0
+      sunlightR: 0
+      characteristics:
+        none: None
+        str: STR
+        end: END
+        agi: AGI
+        int: INT
+        wp: WP
+        prc: PRC
+        prs: PRS
+        lck: LCK
+      characteristicBonus:
+        strChaBonus: 0
+        endChaBonus: 0
+        agiChaBonus: 0
+        intChaBonus: 0
+        wpChaBonus: 0
+        prcChaBonus: 0
+        prsChaBonus: 0
+        lckChaBonus: 0
+      replace:
+        ini:
+          iniToggle: false
+          value: 0
+          characteristic: ''
+        wt:
+          wtToggle: false
+          value: 0
+          characteristic: ''
+      skillArray: []
+      isPhysicalObject: true
+      containerStats:
+        contained: false
+        container_id: ''
+        container_name: ''
+      description: >-
+        <p><em>Leather armor is lighter and more flexible than metal, giving the
+        wearer that much more room to work with. Crafted from various layers of
+        cured/tanned skin, leather armor provides some protection against bladed
+        weapons and the material even offers some minor protection from
+        fire.&nbsp;</em></p>
+      quantity: 1
+      enc: 3
+      totalENC: 0
+      reach: ''
+      damage: ''
+      equipped: true
+      carried: false
+      hands: 0
+      price: 100
+      modPrice: 0
+      armor: 3
+      blockRating: 0
+      excludeENC: false
+      magic_ar: 1 Fire
+      enchant_level: 1
+      qualities: '@Compendium[uesrpg-revision.journal.dfIZDLRGKnnc5kty]{Medium}'
+      category: none
+      item_cat:
+        none: None
+        head: Helmet
+        l_arm: Left Gauntlet
+        r_arm: Right Gauntlet
+        l_leg: Left Leg
+        r_leg: Right Leg
+        body: Chestplate
+        shield: Shield
+      charge:
+        value: 0
+        max: 0
+        reduction: 1
+    _key: '!actors.items!AkowUH5j49IBvJ5S.Lr23u9otzq8RKd22'
+  - _id: LcBx0Q3si8hIMiYZ
+    name: Full Leather Boot
+    type: armor
+    img: icons/equipment/feet/boots-collared-leather-brown.webp
+    effects: []
+    folder: null
+    sort: 0
+    flags:
+      core:
+        sourceId: Item.TBoz3PlkpSTL5h4I
+    _stats:
+      compendiumSource: null
+      duplicateSource: null
+      coreVersion: '12.331'
+      systemId: uesrpg-3ev4
+      systemVersion: v1.0.0-RC.59
+      createdTime: null
+      modifiedTime: null
+      lastModifiedBy: null
+    ownership:
+      default: 0
+      qwt9o1cuKYitvD9G: 3
+      eeXhsDlbzUBZOXZT: 3
+    system:
+      mpBonus: 0
+      hpBonus: 0
+      spBonus: 0
+      lpBonus: 0
+      wtBonus: 0
+      iniBonus: 0
+      speedBonus: 0
+      flyBonus: 0
+      swimBonus: 0
+      diseaseR: 0
+      fireR: 0
+      frostR: 0
+      shockR: 0
+      poisonR: 0
+      magicR: 0
+      natToughnessR: 0
+      silverR: 0
+      sunlightR: 0
+      characteristics:
+        none: None
+        str: STR
+        end: END
+        agi: AGI
+        int: INT
+        wp: WP
+        prc: PRC
+        prs: PRS
+        lck: LCK
+      characteristicBonus:
+        strChaBonus: 0
+        endChaBonus: 0
+        agiChaBonus: 0
+        intChaBonus: 0
+        wpChaBonus: 0
+        prcChaBonus: 0
+        prsChaBonus: 0
+        lckChaBonus: 0
+      replace:
+        ini:
+          iniToggle: false
+          value: 0
+          characteristic: ''
+        wt:
+          wtToggle: false
+          value: 0
+          characteristic: ''
+      skillArray: []
+      isPhysicalObject: true
+      containerStats:
+        contained: false
+        container_id: ''
+        container_name: ''
+      description: >-
+        <p><em>Leather armor is lighter and more flexible than metal, giving the
+        wearer that much more room to work with. Crafted from various layers of
+        cured/tanned skin, leather armor provides some protection against bladed
+        weapons and the material even offers some minor protection from
+        fire.&nbsp;</em></p>
+      quantity: 1
+      enc: 3
+      totalENC: 0
+      reach: ''
+      damage: ''
+      equipped: true
+      carried: false
+      hands: 0
+      price: 50
+      modPrice: 0
+      armor: 3
+      blockRating: 0
+      excludeENC: false
+      magic_ar: 1 Fire
+      enchant_level: 1
+      qualities: '@Compendium[uesrpg-revision.journal.dfIZDLRGKnnc5kty]{Medium}'
+      category: none
+      item_cat:
+        none: None
+        head: Helmet
+        l_arm: Left Gauntlet
+        r_arm: Right Gauntlet
+        l_leg: Left Leg
+        r_leg: Right Leg
+        body: Chestplate
+        shield: Shield
+      charge:
+        value: 0
+        max: 0
+        reduction: 1
+    _key: '!actors.items!AkowUH5j49IBvJ5S.LcBx0Q3si8hIMiYZ'
+  - _id: Ejgwplb5ayJFF1OC
+    name: Full Leather Boot
+    type: armor
+    img: icons/equipment/feet/boots-collared-leather-brown.webp
+    effects: []
+    folder: null
+    sort: 0
+    flags:
+      core:
+        sourceId: Item.TBoz3PlkpSTL5h4I
+    _stats:
+      compendiumSource: null
+      duplicateSource: null
+      coreVersion: '12.331'
+      systemId: uesrpg-3ev4
+      systemVersion: v1.0.0-RC.59
+      createdTime: null
+      modifiedTime: null
+      lastModifiedBy: null
+    ownership:
+      default: 0
+      qwt9o1cuKYitvD9G: 3
+      eeXhsDlbzUBZOXZT: 3
+    system:
+      mpBonus: 0
+      hpBonus: 0
+      spBonus: 0
+      lpBonus: 0
+      wtBonus: 0
+      iniBonus: 0
+      speedBonus: 0
+      flyBonus: 0
+      swimBonus: 0
+      diseaseR: 0
+      fireR: 0
+      frostR: 0
+      shockR: 0
+      poisonR: 0
+      magicR: 0
+      natToughnessR: 0
+      silverR: 0
+      sunlightR: 0
+      characteristics:
+        none: None
+        str: STR
+        end: END
+        agi: AGI
+        int: INT
+        wp: WP
+        prc: PRC
+        prs: PRS
+        lck: LCK
+      characteristicBonus:
+        strChaBonus: 0
+        endChaBonus: 0
+        agiChaBonus: 0
+        intChaBonus: 0
+        wpChaBonus: 0
+        prcChaBonus: 0
+        prsChaBonus: 0
+        lckChaBonus: 0
+      replace:
+        ini:
+          iniToggle: false
+          value: 0
+          characteristic: ''
+        wt:
+          wtToggle: false
+          value: 0
+          characteristic: ''
+      skillArray: []
+      isPhysicalObject: true
+      containerStats:
+        contained: false
+        container_id: ''
+        container_name: ''
+      description: >-
+        <p><em>Leather armor is lighter and more flexible than metal, giving the
+        wearer that much more room to work with. Crafted from various layers of
+        cured/tanned skin, leather armor provides some protection against bladed
+        weapons and the material even offers some minor protection from
+        fire.&nbsp;</em></p>
+      quantity: 1
+      enc: 3
+      totalENC: 0
+      reach: ''
+      damage: ''
+      equipped: true
+      carried: false
+      hands: 0
+      price: 50
+      modPrice: 0
+      armor: 3
+      blockRating: 0
+      excludeENC: false
+      magic_ar: 1 Fire
+      enchant_level: 1
+      qualities: '@Compendium[uesrpg-revision.journal.dfIZDLRGKnnc5kty]{Medium}'
+      category: none
+      item_cat:
+        none: None
+        head: Helmet
+        l_arm: Left Gauntlet
+        r_arm: Right Gauntlet
+        l_leg: Left Leg
+        r_leg: Right Leg
+        body: Chestplate
+        shield: Shield
+      charge:
+        value: 0
+        max: 0
+        reduction: 1
+    _key: '!actors.items!AkowUH5j49IBvJ5S.Ejgwplb5ayJFF1OC'
+  - _id: EHdjEz6l7KDFlcvn
+    name: Full Leather Bracer
+    type: armor
+    img: icons/equipment/wrist/bracer-armored-steel.webp
+    effects: []
+    folder: null
+    sort: 0
+    flags:
+      core:
+        sourceId: Item.PgmFniglhwodXNc6
+    _stats:
+      compendiumSource: null
+      duplicateSource: null
+      coreVersion: '12.331'
+      systemId: uesrpg-3ev4
+      systemVersion: v1.0.0-RC.59
+      createdTime: null
+      modifiedTime: null
+      lastModifiedBy: null
+    ownership:
+      default: 0
+      qwt9o1cuKYitvD9G: 3
+      eeXhsDlbzUBZOXZT: 3
+    system:
+      mpBonus: 0
+      hpBonus: 0
+      spBonus: 0
+      lpBonus: 0
+      wtBonus: 0
+      iniBonus: 0
+      speedBonus: 0
+      flyBonus: 0
+      swimBonus: 0
+      diseaseR: 0
+      fireR: 0
+      frostR: 0
+      shockR: 0
+      poisonR: 0
+      magicR: 0
+      natToughnessR: 0
+      silverR: 0
+      sunlightR: 0
+      characteristics:
+        none: None
+        str: STR
+        end: END
+        agi: AGI
+        int: INT
+        wp: WP
+        prc: PRC
+        prs: PRS
+        lck: LCK
+      characteristicBonus:
+        strChaBonus: 0
+        endChaBonus: 0
+        agiChaBonus: 0
+        intChaBonus: 0
+        wpChaBonus: 0
+        prcChaBonus: 0
+        prsChaBonus: 0
+        lckChaBonus: 0
+      replace:
+        ini:
+          iniToggle: false
+          value: 0
+          characteristic: ''
+        wt:
+          wtToggle: false
+          value: 0
+          characteristic: ''
+      skillArray: []
+      isPhysicalObject: true
+      containerStats:
+        contained: false
+        container_id: ''
+        container_name: ''
+      description: >-
+        <p><em>Leather armor is lighter and more flexible than metal, giving the
+        wearer that much more room to work with. Crafted from various layers of
+        cured/tanned skin, leather armor provides some protection against bladed
+        weapons and the material even offers some minor protection from
+        fire.&nbsp;</em></p>
+      quantity: 1
+      enc: 3
+      totalENC: 0
+      reach: ''
+      damage: ''
+      equipped: true
+      carried: false
+      hands: 0
+      price: 50
+      modPrice: 0
+      armor: 3
+      blockRating: 0
+      excludeENC: false
+      magic_ar: 1 Fire
+      enchant_level: 1
+      qualities: '@Compendium[uesrpg-revision.journal.dfIZDLRGKnnc5kty]{Medium}'
+      category: none
+      item_cat:
+        none: None
+        head: Helmet
+        l_arm: Left Gauntlet
+        r_arm: Right Gauntlet
+        l_leg: Left Leg
+        r_leg: Right Leg
+        body: Chestplate
+        shield: Shield
+      charge:
+        value: 0
+        max: 0
+        reduction: 1
+    _key: '!actors.items!AkowUH5j49IBvJ5S.EHdjEz6l7KDFlcvn'
+  - _id: bv9DMSlbaT1yASxF
+    name: Full Leather Bracer
+    type: armor
+    img: icons/equipment/wrist/bracer-armored-steel.webp
+    effects: []
+    folder: null
+    sort: 0
+    flags:
+      core:
+        sourceId: Item.PgmFniglhwodXNc6
+    _stats:
+      compendiumSource: null
+      duplicateSource: null
+      coreVersion: '12.331'
+      systemId: uesrpg-3ev4
+      systemVersion: v1.0.0-RC.59
+      createdTime: null
+      modifiedTime: null
+      lastModifiedBy: null
+    ownership:
+      default: 0
+      qwt9o1cuKYitvD9G: 3
+      eeXhsDlbzUBZOXZT: 3
+    system:
+      mpBonus: 0
+      hpBonus: 0
+      spBonus: 0
+      lpBonus: 0
+      wtBonus: 0
+      iniBonus: 0
+      speedBonus: 0
+      flyBonus: 0
+      swimBonus: 0
+      diseaseR: 0
+      fireR: 0
+      frostR: 0
+      shockR: 0
+      poisonR: 0
+      magicR: 0
+      natToughnessR: 0
+      silverR: 0
+      sunlightR: 0
+      characteristics:
+        none: None
+        str: STR
+        end: END
+        agi: AGI
+        int: INT
+        wp: WP
+        prc: PRC
+        prs: PRS
+        lck: LCK
+      characteristicBonus:
+        strChaBonus: 0
+        endChaBonus: 0
+        agiChaBonus: 0
+        intChaBonus: 0
+        wpChaBonus: 0
+        prcChaBonus: 0
+        prsChaBonus: 0
+        lckChaBonus: 0
+      replace:
+        ini:
+          iniToggle: false
+          value: 0
+          characteristic: ''
+        wt:
+          wtToggle: false
+          value: 0
+          characteristic: ''
+      skillArray: []
+      isPhysicalObject: true
+      containerStats:
+        contained: false
+        container_id: ''
+        container_name: ''
+      description: >-
+        <p><em>Leather armor is lighter and more flexible than metal, giving the
+        wearer that much more room to work with. Crafted from various layers of
+        cured/tanned skin, leather armor provides some protection against bladed
+        weapons and the material even offers some minor protection from
+        fire.&nbsp;</em></p>
+      quantity: 1
+      enc: 3
+      totalENC: 0
+      reach: ''
+      damage: ''
+      equipped: true
+      carried: false
+      hands: 0
+      price: 50
+      modPrice: 0
+      armor: 3
+      blockRating: 0
+      excludeENC: false
+      magic_ar: 1 Fire
+      enchant_level: 1
+      qualities: '@Compendium[uesrpg-revision.journal.dfIZDLRGKnnc5kty]{Medium}'
+      category: none
+      item_cat:
+        none: None
+        head: Helmet
+        l_arm: Left Gauntlet
+        r_arm: Right Gauntlet
+        l_leg: Left Leg
+        r_leg: Right Leg
+        body: Chestplate
+        shield: Shield
+      charge:
+        value: 0
+        max: 0
+        reduction: 1
+    _key: '!actors.items!AkowUH5j49IBvJ5S.bv9DMSlbaT1yASxF'
+  - _id: 45CvhiYU7gVtRofF
+    name: Full Leather Helmet
+    type: armor
+    img: icons/equipment/head/helm-barbute-leather.webp
+    effects: []
+    folder: null
+    sort: 0
+    flags:
+      core:
+        sourceId: Item.qMf4mfvclNkpQ8sq
+    _stats:
+      compendiumSource: null
+      duplicateSource: null
+      coreVersion: '12.331'
+      systemId: uesrpg-3ev4
+      systemVersion: v1.0.0-RC.59
+      createdTime: null
+      modifiedTime: null
+      lastModifiedBy: null
+    ownership:
+      default: 0
+      qwt9o1cuKYitvD9G: 3
+      eeXhsDlbzUBZOXZT: 3
+    system:
+      mpBonus: 0
+      hpBonus: 0
+      spBonus: 0
+      lpBonus: 0
+      wtBonus: 0
+      iniBonus: 0
+      speedBonus: 0
+      flyBonus: 0
+      swimBonus: 0
+      diseaseR: 0
+      fireR: 0
+      frostR: 0
+      shockR: 0
+      poisonR: 0
+      magicR: 0
+      natToughnessR: 0
+      silverR: 0
+      sunlightR: 0
+      characteristics:
+        none: None
+        str: STR
+        end: END
+        agi: AGI
+        int: INT
+        wp: WP
+        prc: PRC
+        prs: PRS
+        lck: LCK
+      characteristicBonus:
+        strChaBonus: 0
+        endChaBonus: 0
+        agiChaBonus: 0
+        intChaBonus: 0
+        wpChaBonus: 0
+        prcChaBonus: 0
+        prsChaBonus: 0
+        lckChaBonus: 0
+      replace:
+        ini:
+          iniToggle: false
+          value: 0
+          characteristic: ''
+        wt:
+          wtToggle: false
+          value: 0
+          characteristic: ''
+      skillArray: []
+      isPhysicalObject: true
+      containerStats:
+        contained: false
+        container_id: ''
+        container_name: ''
+      description: >-
+        <p><em>Leather armor is lighter and more flexible than metal, giving the
+        wearer that much more room to work with. Crafted from various layers of
+        cured/tanned skin, leather armor provides some protection against bladed
+        weapons and the material even offers some minor protection from
+        fire.&nbsp;</em></p>
+      quantity: 1
+      enc: 3
+      totalENC: 0
+      reach: ''
+      damage: ''
+      equipped: true
+      carried: false
+      hands: 0
+      price: 50
+      modPrice: 0
+      armor: 3
+      blockRating: 0
+      excludeENC: false
+      magic_ar: 1 Fire
+      enchant_level: 1
+      qualities: '@Compendium[uesrpg-revision.journal.dfIZDLRGKnnc5kty]{Medium}'
+      category: none
+      item_cat:
+        none: None
+        head: Helmet
+        l_arm: Left Gauntlet
+        r_arm: Right Gauntlet
+        l_leg: Left Leg
+        r_leg: Right Leg
+        body: Chestplate
+        shield: Shield
+      charge:
+        value: 0
+        max: 0
+        reduction: 1
+    _key: '!actors.items!AkowUH5j49IBvJ5S.45CvhiYU7gVtRofF'
+effects: []
+folder: YOakefp1093wiaNm
+flags: {}
+_stats:
+  compendiumSource: null
+  duplicateSource: null
+  coreVersion: '12.331'
+  systemId: uesrpg-3ev4
+  systemVersion: v1.0.0-RC.59
+  createdTime: 1732339047113
+  modifiedTime: 1732339102041
+  lastModifiedBy: 7bDMesNjX54nzN9S
+ownership:
+  default: 0
+  WcwhQU1nz94WaD5n: 3
+  7bDMesNjX54nzN9S: 3
+system:
+  equippedWeapons:
+    primaryWeapon:
+      name: 'None: Right click to bind weapon'
+      img: icons/skills/melee/unarmed-punch-fist.webp
+      id: ''
+    secondaryWeapon:
+      name: 'None: Right click to bind weapon'
+      img: icons/skills/melee/unarmed-punch-fist.webp
+      id: ''
+  favorites:
+    '1':
+      name: Hotkey 1
+      img: icons/svg/combat.svg
+      id: ''
+      value: 0
+    '2':
+      name: Hotkey 2
+      img: icons/svg/combat.svg
+      id: ''
+      value: 0
+    '3':
+      name: Hotkey 3
+      img: icons/svg/combat.svg
+      id: ''
+      value: 0
+    '4':
+      name: Hotkey 4
+      img: icons/svg/combat.svg
+      id: ''
+      value: 0
+    '5':
+      name: Hotkey 5
+      img: icons/svg/combat.svg
+      id: ''
+      value: 0
+  race: Any Race
+  birthsign: ''
+  age: null
+  height: ''
+  weight: ''
+  elite_adv: ''
+  wounded: false
+  woundPenalty: 0
+  woundNotes: ''
+  bio: >-
+    <p><em>Rogues are adventurers and opportunists with a gift for getting in
+    and out of trouble. Relying variously on charm and dash, blades and business
+    sense, they thrive on conflict and misfortune, trusting to their luck and
+    cunning to survive.</em></p>
+  paperDoll: systems/uesrpg-3ev4/images/paperDoll_Male_Outline_White.png
+  soul_energy: '1500'
+  journal: ''
+  notes: ''
+  threat: minorSolo
+  threatCategory:
+    minorSolo: Minor Solo
+    minorGroup: Minor Group
+    majorSolo: Major Solo
+    majorGroup: Major Group
+    deadlySolo: Deadly Solo
+    deadlyGroup: Deadly Group
+    legendarySolo: Legendary Solo
+    legendaryGroup: Legendary Group
+  resistance:
+    fireR: 0
+    frostR: 0
+    shockR: 0
+    magicR: 0
+    poisonR: 0
+    diseaseR: 0
+    natToughness: 0
+    silverR: 0
+    sunlightR: 0
+  fatigue:
+    level: 0
+    penalty: 0
+    bonus: 0
+  lucky_numbers:
+    ln1: 0
+    ln2: 0
+    ln3: 0
+    ln4: 0
+    ln5: 0
+    ln6: 0
+    ln7: 0
+    ln8: 0
+    ln9: 0
+    ln10: 0
+  unlucky_numbers:
+    ul1: 95
+    ul2: 96
+    ul3: 97
+    ul4: 98
+    ul5: 99
+    ul6: 100
+  supply: 1d2
+  supply_cat:
+    1d2: 1d2
+    1d4: 1d4
+    1d6: 1d6
+    1d8: 1d8
+    1d10: 1d10
+  wealth: 0
+  current_enc: '20.0'
+  carry_rating:
+    current: 0
+    max: 18
+    bonus: 0
+    penalty: 0
+    label: Minimal
+  characteristics:
+    str:
+      value: 35
+      total: null
+      base: 35
+      favored: false
+    end:
+      value: 30
+      total: null
+      base: 30
+      favored: false
+    agi:
+      value: 45
+      total: null
+      base: 45
+      favored: false
+    int:
+      value: 35
+      total: null
+      base: 35
+      favored: false
+    wp:
+      value: 30
+      total: null
+      base: 30
+      favored: false
+    prc:
+      value: 40
+      total: null
+      base: 40
+      favored: false
+    prs:
+      value: 45
+      total: null
+      base: 45
+      favored: false
+    lck:
+      value: null
+      total: null
+      base: 0
+      favored: false
+  professions:
+    combat: 65
+    magic: null
+    evade: 75
+    observe: 70
+    stealth: 75
+    knowledge: 55
+    social: 65
+    physical: 45
+    commerce: 0
+    profession1: 0
+    profession2: 0
+    profession3: 0
+  professionsWound:
+    combat: 0
+    magic: 0
+    evade: 0
+    observe: 0
+    stealth: 0
+    knowledge: 0
+    social: 0
+    physical: 0
+    commerce: 0
+    profession1: 0
+    profession2: 0
+    profession3: 0
+  hp:
+    base: 15
+    value: 15
+    max: 15
+    temp: 0
+    bonus: 0
+  action_points:
+    value: 3
+    max: 3
+  luck_points:
+    value: 0
+    max: 0
+    bonus: 0
+  stamina:
+    value: 3
+    max: 3
+    bonus: 0
+  magicka:
+    value: 35
+    max: 35
+    bonus: 0
+  xp: 0
+  wound_threshold:
+    value: '9'
+    base: 9
+    bonus: 0
+  initiative:
+    value: '11'
+    base: 11
+    bonus: 0
+  speed:
+    value: '11'
+    base: 10
+    bonus: 0
+  size: standard
+  size_cat:
+    puny: Puny
+    tiny: Tiny
+    small: Small
+    standard: Standard
+    large: Large
+    huge: Huge
+    enormous: Enormous
+  skill_ranks:
+    untrained:
+      name: Untrained
+      rank: ''
+      bonus: ''
+      specialization: ''
+    novice:
+      name: ' (0) Novice'
+      rank: ''
+      bonus: ''
+      specialization: ''
+    apprentice:
+      name: (1) Apprentice
+      rank: ''
+      bonus: ''
+      specialization: ''
+    journeyman:
+      name: (2) Journeyman
+      rank: ''
+      bonus: ''
+      specialization: ''
+    adept:
+      name: (3) Adept
+      rank: ''
+      bonus: ''
+      specialization: ''
+    expert:
+      name: (4) Expert
+      rank: ''
+      bonus: ''
+      specialization: ''
+    master:
+      name: (5) Master
+      rank: ''
+      bonus: ''
+      specialization: ''
+  skills:
+    profession1:
+      rank: ''
+      bonus: 75
+      specialization: ''
+      characteristic: ''
+      tn: 0
+      name: Persuede
+    profession2:
+      rank: ''
+      bonus: 75
+      specialization: ''
+      characteristic: ''
+      tn: 0
+      name: Deceive
+    profession3:
+      rank: ''
+      bonus: null
+      specialization: ''
+      characteristic: ''
+      tn: 0
+      name: ''
+    commerce:
+      bonus: 0
+      specialization: ''
+      characteristic: ''
+      tn: 0
+  talents: null
+  traits: ''
+  powers: ''
+  spells: ''
+  armor_class: none
+  armor_class_cat:
+    none: None
+    super_light: Super Light
+    light: Light
+    medium: Medium
+    heavy: Heavy
+    super_heavy: Super Heavy
+  storeName: ''
+  priceMod: 0
+  fatigueLevel: 0
+  weapons:
+    w1:
+      name: ''
+      dmg: ''
+      hands: ''
+      reach: ''
+      qualities: ''
+    w2:
+      name: ''
+      dmg: ''
+      hands: ''
+      reach: ''
+      qualities: ''
+    w3:
+      name: ''
+      dmg: ''
+      hands: ''
+      reach: ''
+      qualities: ''
+    w4:
+      name: ''
+      dmg: ''
+      hands: ''
+      reach: ''
+      qualities: ''
+    w5:
+      name: ''
+      dmg: ''
+      hands: ''
+      reach: ''
+      qualities: ''
+  prep_spells:
+    s1:
+      name: ''
+      dmg: ''
+      cost: ''
+      school: ''
+      form: ''
+      attributes: ''
+      level: ''
+    s2:
+      name: ''
+      dmg: ''
+      cost: ''
+      school: ''
+      form: ''
+      attributes: ''
+      level: ''
+    s3:
+      name: ''
+      dmg: ''
+      cost: ''
+      school: ''
+      form: ''
+      attributes: ''
+      level: ''
+    s4:
+      name: ''
+      dmg: ''
+      cost: ''
+      school: ''
+      form: ''
+      attributes: ''
+      level: ''
+    s5:
+      name: ''
+      dmg: ''
+      cost: ''
+      school: ''
+      form: ''
+      attributes: ''
+      level: ''
+    s6:
+      name: ''
+      dmg: ''
+      cost: ''
+      school: ''
+      form: ''
+      attributes: ''
+      level: ''
+    s7:
+      name: ''
+      dmg: ''
+      cost: ''
+      school: ''
+      form: ''
+      attributes: ''
+      level: ''
+  shield:
+    name: ''
+    br: ''
+    magic_br: ''
+    class: ''
+    qualities: ''
+  armor:
+    head:
+      name: ''
+      enc: 0
+      ar: 3
+      magic_ar: 1 Fire
+      class: ''
+    body:
+      name: ''
+      enc: 0
+      ar: 3
+      magic_ar: 1 Fire
+      class: ''
+    r_leg:
+      name: ''
+      enc: 0
+      ar: 3
+      magic_ar: 1 Fire
+      class: ''
+    l_leg:
+      name: ''
+      enc: 0
+      ar: 3
+      magic_ar: 1 Fire
+      class: ''
+    r_arm:
+      name: ''
+      enc: 0
+      ar: 3
+      magic_ar: 1 Fire
+      class: ''
+    l_arm:
+      name: ''
+      enc: 0
+      ar: 3
+      magic_ar: 1 Fire
+      class: ''
+prototypeToken:
+  flags:
+    token-hud-wildcard:
+      default: ''
+    token-auras:
+      aura1:
+        permission: all
+        colour: '#ffffff'
+        opacity: 0.5
+        distance: null
+        square: false
+      aura2:
+        permission: all
+        colour: '#ffffff'
+        opacity: 0.5
+        distance: null
+        square: false
+  name: Rogue
+  displayName: 0
+  width: 1
+  height: 1
+  lockRotation: false
+  rotation: 0
+  actorLink: false
+  disposition: -1
+  displayBars: 20
+  bar1:
+    attribute: hp
+  bar2:
+    attribute: action_points
+  randomImg: true
+  alpha: 1
+  light:
+    dim: 0
+    bright: 0
+    angle: 360
+    color: null
+    alpha: 1
+    animation:
+      speed: 5
+      intensity: 5
+      type: null
+      reverse: false
+    negative: false
+    priority: 0
+    coloration: 1
+    attenuation: 0.5
+    luminosity: 0.5
+    saturation: 0
+    contrast: 0
+    shadows: 0
+    darkness:
+      min: 0
+      max: 1
+  texture:
+    src: icons/svg/cowled.svg
+    tint: '#ffffff'
+    scaleX: 1
+    scaleY: 1
+    anchorX: 0.5
+    anchorY: 0.5
+    offsetX: 0
+    offsetY: 0
+    fit: contain
+    rotation: 0
+    alphaThreshold: 0.75
+  sight:
+    angle: 360
+    enabled: true
+    range: 0
+    brightness: 1
+    visionMode: basic
+    color: null
+    attenuation: 0.1
+    saturation: 0
+    contrast: 0
+  appendNumber: false
+  prependAdjective: false
+  hexagonalShape: 0
+  detectionModes: []
+  occludable:
+    radius: 0
+  ring:
+    enabled: false
+    colors:
+      ring: null
+      background: null
+    effects: 1
+    subject:
+      scale: 1
+      texture: null
+_id: AkowUH5j49IBvJ5S
+sort: 1000000
+_key: '!actors!AkowUH5j49IBvJ5S'
+

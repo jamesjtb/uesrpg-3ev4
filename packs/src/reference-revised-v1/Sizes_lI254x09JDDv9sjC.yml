@@ -1,0 +1,53 @@
+name: Sizes
+folder: null
+sort: 0
+flags:
+  cf:
+    id: temp_590lo3nu4qu
+    path: References
+    color: '#000000'
+_id: lI254x09JDDv9sjC
+pages:
+  - name: Sizes
+    type: text
+    title:
+      show: false
+      level: 1
+    text:
+      format: 1
+      content: "<p>Tamriel is home to creatures of many shapes and sizes. A character’s size affects them in a number of critical ways. There are seven different size categories.</p>\n<p>• Puny: This category is reserved for the smallest of creatures like kwama foragers, rats, or mice.</p>\n<p>• Tiny: This category includes smaller characters like cats or large cave rats.</p>\n<p>• Small: This category includes everything ranging from quadrupeds like wolves to smaller bipeds like goblins.</p>\n<p>• Standard: Standard sized characters fall fairly close to the average size for man or mer. There are no effects associated with this category.</p>\n<p>• Large: This category includes characters that are substantially larger than average, including quadrupeds like horses and larger bipeds like trolls.</p>\n<p>• Huge: This category includes very large characters such as giants or larger dwemer constructs.</p>\n<p>• Enormous: This category is reserved for extremely large characters, like dragons.</p>\n<p>\_</p>\n<table style=\"width:99.1549%\" border=\"1\">\n<tbody>\n<tr>\n<td style=\"width:35.0691%\"><strong>\_ \_ \_ \_ \_ \_ \_ \_ \_ \_ \_ \_ \_ \_ \_ \_ \_ Size</strong></td>\n<td style=\"width:64.2206%\"><strong>\_ \_ \_ \_ \_ \_ \_ \_ \_ \_ \_ \_ \_ \_ \_ \_ \_ \_ \_ \_ \_ \_ \_ \_ \_ \_ \_ \_ \_ Combat Effects</strong></td>\n</tr>\n<tr>\n<td style=\"width:35.0691%\">Puny</td>\n<td style=\"width:64.2206%\">-30 to hit by characters of larger size / at range</td>\n</tr>\n<tr>\n<td style=\"width:35.0691%\">Tiny</td>\n<td style=\"width:64.2206%\">-20 to hit by characters of larger size / at range</td>\n</tr>\n<tr>\n<td style=\"width:35.0691%\">Small</td>\n<td style=\"width:64.2206%\">-10 to hit at range</td>\n</tr>\n<tr>\n<td style=\"width:35.0691%\">Standard</td>\n<td style=\"width:64.2206%\">-</td>\n</tr>\n<tr>\n<td style=\"width:35.0691%\">Large</td>\n<td style=\"width:64.2206%\">+10 to hit at range</td>\n</tr>\n<tr>\n<td style=\"width:35.0691%\">Huge</td>\n<td style=\"width:64.2206%\">+20 to hit by characters of smaller size / at range</td>\n</tr>\n<tr>\n<td style=\"width:35.0691%\">Enormous</td>\n<td style=\"width:64.2206%\">+30 to hit by characters of small size / at range</td>\n</tr>\n</tbody>\n</table>"
+    _stats:
+      coreVersion: '12.331'
+      systemId: null
+      systemVersion: null
+      createdTime: null
+      modifiedTime: null
+      lastModifiedBy: null
+      compendiumSource: null
+      duplicateSource: null
+    _id: VOHNJ0VXXiaU9FXf
+    system: {}
+    image: {}
+    video:
+      controls: true
+      volume: 0.5
+    src: null
+    sort: 0
+    ownership:
+      default: -1
+    flags: {}
+    _key: '!journal.pages!lI254x09JDDv9sjC.VOHNJ0VXXiaU9FXf'
+_stats:
+  coreVersion: '12.331'
+  systemId: null
+  systemVersion: null
+  createdTime: null
+  modifiedTime: null
+  lastModifiedBy: null
+  compendiumSource: null
+  duplicateSource: null
+ownership:
+  default: 0
+  eeXhsDlbzUBZOXZT: 3
+_key: '!journal!lI254x09JDDv9sjC'
+

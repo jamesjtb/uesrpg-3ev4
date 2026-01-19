@@ -1,0 +1,101 @@
+_id: lQRAhHXgsveGlXMA
+name: Observe
+type: skill
+img: systems/uesrpg-3ev4/images/Icons/attentionToDetail.webp
+effects: []
+folder: null
+sort: 300000
+flags:
+  core:
+    sourceId: Item.pXXlRpjJ9A5pF3A1
+_stats:
+  coreVersion: '12.331'
+  systemId: null
+  systemVersion: null
+  createdTime: null
+  modifiedTime: 1732510440759
+  lastModifiedBy: GikQCnLAeu0WrzSO
+  compendiumSource: null
+  duplicateSource: null
+ownership:
+  default: 0
+  zrZomzLbu6XsebKn: 3
+system:
+  characteristics:
+    none: None
+    str: STR
+    end: END
+    agi: AGI
+    int: INT
+    wp: WP
+    prc: PRC
+    prs: PRS
+    lck: LCK
+  characteristicBonus:
+    strChaBonus: 0
+    endChaBonus: 0
+    agiChaBonus: 0
+    intChaBonus: 0
+    wpChaBonus: 0
+    prcChaBonus: 0
+    prsChaBonus: 0
+    lckChaBonus: 0
+  skillRanks:
+    untrained: Untrained
+    novice: (0) Novice
+    apprentice: (1) Apprentice
+    journeyman: (2) Journeyman
+    adept: (3) Adept
+    expert: (4) Expert
+    master: (5) Master
+  value: 0
+  rank: untrained
+  bonus: 0
+  miscValue: 0
+  specialization: ''
+  description: >-
+    <p><em>Example Specializations: Awareness, Scrutiny, Searching, Hearing,
+    </em><em>Smell, Sight</em></p>
+
+    <p>Observe represents a character&rsquo;s general awareness of their
+    surroundings and their ability to notice things that others might dismiss.
+    Your GM may ask you to test Observe when you try to accomplish tasks like
+    the following...</p>
+
+    <ul>
+
+    <li>Spot an ambush before it happens</li>
+
+    <li>Identify when someone is acting strangely</li>
+
+    <li>Locate a hidden switch or trap in a room</li>
+
+    <li>Notice a strange creature in the distance</li>
+
+    </ul>
+  baseCha: prc
+  governingCha: PRC
+  trainedItems: ''
+  data:
+    description: >-
+      <p><em>Example Specializations: Awareness, Scrutiny, Searching, Hearing,
+      </em><em>Smell, Sight</em></p>
+
+      <p>Observe represents a character&rsquo;s general awareness of their
+      surroundings and their ability to notice things that others might dismiss.
+      Your GM may ask you to test Observe when you try to accomplish tasks like
+      the following...</p>
+
+      <ul>
+
+      <li>Spot an ambush before it happens</li>
+
+      <li>Identify when someone is acting strangely</li>
+
+      <li>Locate a hidden switch or trap in a room</li>
+
+      <li>Notice a strange creature in the distance</li>
+
+      </ul>
+_key: '!items!lQRAhHXgsveGlXMA'
+

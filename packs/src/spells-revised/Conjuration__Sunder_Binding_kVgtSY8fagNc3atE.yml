@@ -1,0 +1,133 @@
+_id: kVgtSY8fagNc3atE
+name: 'Conjuration: Sunder Binding'
+type: spell
+img: icons/magic/symbols/rune-sigil-white-pink.webp
+effects: []
+folder: null
+sort: 0
+flags:
+  core:
+    sourceId: Item.Dvncp3T7Nn3WBpgy
+_stats:
+  coreVersion: '12.331'
+  systemId: null
+  systemVersion: null
+  createdTime: null
+  modifiedTime: null
+  lastModifiedBy: null
+  compendiumSource: null
+  duplicateSource: null
+ownership:
+  default: 0
+  qwt9o1cuKYitvD9G: 3
+system:
+  description: >-
+    <p>The caster picks a target within 50m that has the Summoned trait that
+    must make an opposed Willpower Test vs the caster with a [Spell Strength]
+    modifier or be sent back to the place from whence it came.</p>
+
+    <table style="width: 98.5447%; height: 51px;" border="2" cellspacing="2"
+    cellpadding="1">
+
+    <tbody>
+
+    <tr style="height: 17px;">
+
+    <td style="width: 28.8754%; height: 17px; text-align:
+    left;"><strong>Level</strong></td>
+
+    <td style="width: 11.1046%; height: 17px; text-align:
+    center;"><strong>1</strong></td>
+
+    <td style="width: 10.6839%; height: 17px; text-align:
+    center;"><strong>2</strong></td>
+
+    <td style="width: 10.2481%; height: 17px; text-align:
+    center;"><strong>3</strong></td>
+
+    <td style="width: 8.93711%; height: 17px; text-align:
+    center;"><strong>4</strong></td>
+
+    <td style="width: 9.06888%; height: 17px; text-align:
+    center;"><strong>5</strong></td>
+
+    <td style="width: 9.72621%; height: 17px; text-align:
+    center;"><strong>6</strong></td>
+
+    <td style="width: 9.4269%; height: 17px; text-align:
+    center;"><strong>7</strong></td>
+
+    </tr>
+
+    <tr style="height: 17px;">
+
+    <td style="width: 28.8754%; height: 17px; text-align:
+    left;"><strong>Cost</strong></td>
+
+    <td style="width: 11.1046%; height: 17px; text-align: center;">11</td>
+
+    <td style="width: 10.6839%; height: 17px; text-align: center;">14</td>
+
+    <td style="width: 10.2481%; height: 17px; text-align: center;">17</td>
+
+    <td style="width: 8.93711%; height: 17px; text-align: center;">20</td>
+
+    <td style="width: 9.06888%; height: 17px; text-align: center;">23</td>
+
+    <td style="width: 9.72621%; height: 17px; text-align: center;">26</td>
+
+    <td style="width: 9.4269%; height: 17px; text-align: center;">29</td>
+
+    </tr>
+
+    <tr style="height: 17px;">
+
+    <td style="width: 28.8754%; height: 17px; text-align: left;"><strong>Spell
+    Strength</strong></td>
+
+    <td style="width: 11.1046%; height: 17px; text-align: center;">+30</td>
+
+    <td style="width: 10.6839%; height: 17px; text-align: center;">+20</td>
+
+    <td style="width: 10.2481%; height: 17px; text-align: center;">+10</td>
+
+    <td style="width: 8.93711%; height: 17px; text-align: center;">+0</td>
+
+    <td style="width: 9.06888%; height: 17px; text-align: center;">-10</td>
+
+    <td style="width: 9.72621%; height: 17px; text-align: center;">-20</td>
+
+    <td style="width: 9.4269%; height: 17px; text-align: center;">-30</td>
+
+    </tr>
+
+    </tbody>
+
+    </table>
+
+    <p>&nbsp;</p>
+  damage: '0'
+  level: 1
+  cost: 11
+  spell_str: ''
+  attributes: >-
+    @Compendium[uesrpg-revision.journal.8dsckkZlLlm6Yg13]{Direct},
+    @Compendium[uesrpg-revision.journal.etuR7vddrnv3ot2J]{Upkeep}
+  form: Target
+  school: conjuration
+  school_cat:
+    alteration: Alteration
+    conjuration: Conjuration
+    destruction: Destruction
+    illusion: Illusion
+    mysticism: Mysticism
+    necromancy: Necromancy
+    restoration: Restoration
+    none: Select School
+  spellType: ''
+  spellTypes:
+    conventional: Conventional
+    unconventional: Unconventional
+  category: ''
+_key: '!items!kVgtSY8fagNc3atE'
+

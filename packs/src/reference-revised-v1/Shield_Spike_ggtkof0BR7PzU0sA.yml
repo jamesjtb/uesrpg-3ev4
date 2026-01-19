@@ -1,0 +1,53 @@
+name: Shield Spike
+folder: null
+sort: 0
+flags:
+  cf:
+    id: temp_i8h2j1d030a
+    path: References#/CF_SEP/Qualities#/CF_SEP/Shields
+    color: '#000000'
+_id: ggtkof0BR7PzU0sA
+pages:
+  - name: Shield Spike
+    type: text
+    title:
+      show: false
+      level: 1
+    text:
+      format: 1
+      content: "<p>Adds +1D4 damage with the Crushing (2) quality when using the Bash special action.\_</p>"
+    _stats:
+      coreVersion: '12.331'
+      systemId: null
+      systemVersion: null
+      createdTime: null
+      modifiedTime: null
+      lastModifiedBy: null
+      compendiumSource: null
+      duplicateSource: null
+    _id: GLBQQHkS1JZogjbv
+    system: {}
+    image: {}
+    video:
+      controls: true
+      volume: 0.5
+    src: null
+    sort: 0
+    ownership:
+      default: -1
+    flags: {}
+    _key: '!journal.pages!ggtkof0BR7PzU0sA.GLBQQHkS1JZogjbv'
+_stats:
+  coreVersion: '12.331'
+  systemId: null
+  systemVersion: null
+  createdTime: null
+  modifiedTime: null
+  lastModifiedBy: null
+  compendiumSource: null
+  duplicateSource: null
+ownership:
+  default: 0
+  eeXhsDlbzUBZOXZT: 3
+_key: '!journal!ggtkof0BR7PzU0sA'
+

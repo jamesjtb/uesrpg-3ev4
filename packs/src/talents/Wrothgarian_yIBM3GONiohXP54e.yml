@@ -1,0 +1,90 @@
+name: Wrothgarian
+type: talent
+flags:
+  core:
+    sourceId: Item.JX5ttPQSa94C9UKX
+img: systems/uesrpg-3ev4/images/Icons/wrothgarian.webp
+effects: []
+_stats:
+  compendiumSource: Item.JX5ttPQSa94C9UKX
+  duplicateSource: null
+  coreVersion: '12.331'
+  systemId: uesrpg-3ev4
+  systemVersion: v1.0.0-RC.64
+  createdTime: 1734749389233
+  modifiedTime: 1734749389233
+  lastModifiedBy: HcIrULZhA1JFIlrf
+ownership:
+  default: 0
+  HcIrULZhA1JFIlrf: 3
+system:
+  mpBonus: 0
+  hpBonus: 2
+  spBonus: 0
+  lpBonus: 0
+  wtBonus: 1
+  iniBonus: 0
+  speedBonus: 0
+  flyBonus: 0
+  swimBonus: 0
+  diseaseR: 0
+  fireR: 0
+  frostR: 0
+  shockR: 0
+  poisonR: 0
+  magicR: 0
+  natToughnessR: 0
+  silverR: 0
+  sunlightR: 0
+  replace:
+    ini:
+      iniToggle: false
+      value: 0
+      characteristic: none
+    wt:
+      wtToggle: false
+      value: 0
+      characteristic: none
+  characteristics:
+    none: None
+    str: STR
+    end: END
+    agi: AGI
+    int: INT
+    wp: WP
+    prc: PRC
+    prs: PRS
+    lck: LCK
+  characteristicBonus:
+    strChaBonus: 0
+    endChaBonus: 0
+    agiChaBonus: 0
+    intChaBonus: 0
+    wpChaBonus: 0
+    prcChaBonus: 0
+    prsChaBonus: 0
+    lckChaBonus: 0
+  skillArray: []
+  description: >-
+    <p>The Orsimer increases their Tough trait by 1, and increases the HP gained
+    from their Resilient trait by 2 to a total of 5.</p>
+  governingCharacteristics: Any
+  xpCost: 400
+  level: Adept
+  talentReq: Orsimer
+  miscReq: Any Adept
+  halfFatiguePenalty: false
+  halfWoundPenalty: false
+  untrainedException: false
+  fatigueException: false
+  addIBToMP: false
+  addIntToMPMultiplier: 1
+  armorAcrobaticsException: false
+  addHalfSpeed: false
+  addIntToMP: false
+  doubleSwimSpeed: false
+folder: mI0bromNesuqvkeq
+_id: yIBM3GONiohXP54e
+sort: 0
+_key: '!items!yIBM3GONiohXP54e'
+

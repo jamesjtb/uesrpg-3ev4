@@ -1,0 +1,116 @@
+_id: nTZXLvGOddQjXldb
+name: Full Dwemer Armor
+type: armor
+img: icons/equipment/chest/breastplate-layered-steel-grey.webp
+effects: []
+folder: null
+sort: 0
+flags:
+  core:
+    sourceId: Item.rou5FeQ83IZprcBX
+_stats:
+  coreVersion: '12.331'
+  systemId: null
+  systemVersion: null
+  createdTime: null
+  modifiedTime: null
+  lastModifiedBy: null
+  compendiumSource: null
+  duplicateSource: null
+ownership:
+  default: 0
+  qwt9o1cuKYitvD9G: 3
+system:
+  mpBonus: 0
+  hpBonus: 0
+  spBonus: 0
+  lpBonus: 0
+  wtBonus: 0
+  iniBonus: 0
+  speedBonus: 0
+  flyBonus: 0
+  swimBonus: 0
+  diseaseR: 0
+  fireR: 0
+  frostR: 0
+  shockR: 0
+  poisonR: 0
+  magicR: 0
+  natToughnessR: 0
+  silverR: 0
+  sunlightR: 0
+  characteristics:
+    none: None
+    str: STR
+    end: END
+    agi: AGI
+    int: INT
+    wp: WP
+    prc: PRC
+    prs: PRS
+    lck: LCK
+  characteristicBonus:
+    strChaBonus: 0
+    endChaBonus: 0
+    agiChaBonus: 0
+    intChaBonus: 0
+    wpChaBonus: 0
+    prcChaBonus: 0
+    prsChaBonus: 0
+    lckChaBonus: 0
+  replace:
+    ini:
+      iniToggle: false
+      value: 0
+      characteristic: ''
+    wt:
+      wtToggle: false
+      value: 0
+      characteristic: ''
+  skillArray: []
+  isPhysicalObject: true
+  containerStats:
+    contained: false
+    container_id: ''
+    container_name: ''
+  description: >-
+    <p><em>Dwemer (also known as Dwarven) armor and weapons, though heavier than
+    steel, are highly sought after for their resistance to corrosion, unmatched
+    craftsmanship, their ability to keep an edge, and even just for their
+    rarity. Dwarven items have not been produced since the disappearance of the
+    Dwemer long ago and are truly a treasure whether in the battlefield or on
+    display.</em></p>
+  quantity: 1
+  enc: 5
+  totalENC: 0
+  reach: ''
+  damage: ''
+  equipped: false
+  carried: false
+  hands: 0
+  price: 600
+  modPrice: 0
+  armor: 7
+  blockRating: 0
+  excludeENC: false
+  magic_ar: 2 Magic
+  enchant_level: 3
+  qualities: >-
+    @Compendium[uesrpg-revision.journal.2QEgtXVs9q5qjcOW]{Heavy},
+    @Compendium[uesrpg-revision.journal.m7HXbo12Aeel3Jlk]{Magic}
+  category: none
+  item_cat:
+    none: None
+    head: Helmet
+    l_arm: Left Gauntlet
+    r_arm: Right Gauntlet
+    l_leg: Left Leg
+    r_leg: Right Leg
+    body: Chestplate
+    shield: Shield
+  charge:
+    value: 0
+    max: 0
+    reduction: 1
+_key: '!items!nTZXLvGOddQjXldb'
+

@@ -1,0 +1,159 @@
+_id: hMciL8WHCM00uKmy
+name: Brain Rot
+type: trait
+img: icons/commodities/biological/organ-brain-pink.webp
+effects: []
+folder: null
+sort: 0
+flags:
+  gm-notes:
+    notes: >-
+      <table style="margin-left: auto; margin-right: auto; width: 96.6736%;"
+      border="1">
+
+      <tbody>
+
+      <tr>
+
+      <td style="width: 30.5572%;"><strong>Stage One Symptoms</strong></td>
+
+      <td style="width: 33.7414%;"><strong>Stage Two Symptoms</strong></td>
+
+      <td style="width: 34.4112%;"><strong>Stage Three Symptoms</strong></td>
+
+      </tr>
+
+      <tr>
+
+      <td style="width: 30.5572%;">Magicka -15</td>
+
+      <td style="width: 33.7414%;">
+
+      <p>Magicka -25</p>
+
+      <p>Int -15</p>
+
+      </td>
+
+      <td style="width: 34.4112%;">
+
+      <p>Magicka -50</p>
+
+      <p>Int -25</p>
+
+      <p>Prs -25</p>
+
+      </td>
+
+      </tr>
+
+      </tbody>
+
+      </table>
+
+      <p><span style="text-decoration:
+      underline;"><strong>Carriers</strong></span></p>
+
+      <p>Cave Rats; Zombies; Hagravens; Traps</p>
+
+      <p><span style="text-decoration: underline;"><strong>Disease
+      Progression</strong></span></p>
+
+      <p>Stage One lasts one week. After one week, make a (+10) Endurance Test
+      every day until it is failed or cured. The Disease then progresses to
+      Stage Two. Stage Two lasts one week. After that week, make a (+0)
+      Endurance Test every day until it is failed or cured.</p>
+
+      <p><em style="color: #191813; box-sizing: border-box; user-select:
+      text;"><strong style="box-sizing: border-box; user-select: text;">Date of
+      disease caught:</strong>&nbsp;</em><span style="color: #191813;">{Date} of
+      {Month}, {Era}</span></p>
+
+      <p style="box-sizing: border-box; user-select: text; color: #191813;"><em
+      style="box-sizing: border-box; user-select: text;"><strong
+      style="box-sizing: border-box; user-select: text;">Current
+      Stage:&nbsp;</strong></em>{One, Two, Three}</p>
+  core:
+    sourceId: Item.mWGz9c7nHnwri0vm
+  cf:
+    id: temp_kg76x9jbadm
+    color: '#000000'
+_stats:
+  coreVersion: '12.331'
+  systemId: null
+  systemVersion: null
+  createdTime: null
+  modifiedTime: null
+  lastModifiedBy: null
+  compendiumSource: null
+  duplicateSource: null
+ownership:
+  default: 0
+  eeXhsDlbzUBZOXZT: 3
+system:
+  mpBonus: 0
+  hpBonus: 0
+  spBonus: 0
+  lpBonus: 0
+  wtBonus: 0
+  iniBonus: 0
+  speedBonus: 0
+  flyBonus: 0
+  swimBonus: 0
+  diseaseR: 0
+  fireR: 0
+  frostR: 0
+  shockR: 0
+  poisonR: 0
+  magicR: 0
+  natToughnessR: 0
+  silverR: 0
+  sunlightR: 0
+  replace:
+    ini:
+      iniToggle: false
+      value: 0
+      characteristic: ''
+    wt:
+      wtToggle: false
+      value: 0
+      characteristic: ''
+  characteristics:
+    none: None
+    str: STR
+    end: END
+    agi: AGI
+    int: INT
+    wp: WP
+    prc: PRC
+    prs: PRS
+    lck: LCK
+  characteristicBonus:
+    strChaBonus: 0
+    endChaBonus: 0
+    agiChaBonus: 0
+    intChaBonus: 0
+    wpChaBonus: 0
+    prcChaBonus: 0
+    prsChaBonus: 0
+    lckChaBonus: 0
+  skillArray: []
+  description: >-
+    <p>Brain Rot is a progressively worsening, mind affecting disease. It
+    dampens the intelligence, intuition, and mental acuity of its victims.
+    Eventually, Brain Rot destroys any semblance of sanity and of the self in
+    its victims, leaving them to shuffle in a broken stupor until they are cured
+    or die.</p>
+
+    <p style="box-sizing: border-box; user-select: text; color: #191813;"><em
+    style="box-sizing: border-box; user-select: text;">Note: Apply negative
+    values manually in Attributes</em></p>
+  halfSpeed: false
+  addHalfSpeed: false
+  halfFatiguePenalty: false
+  mechanical: false
+  crpCost: 0
+  halfWoundPenalty: false
+  painIntolerant: false
+_key: '!items!hMciL8WHCM00uKmy'
+

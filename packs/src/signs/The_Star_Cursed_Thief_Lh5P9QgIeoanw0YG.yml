@@ -1,0 +1,93 @@
+name: The Star-Cursed Thief
+type: trait
+img: systems/uesrpg-3ev4/images/sign-thief.webp
+effects: []
+folder: null
+sort: 0
+flags:
+  core:
+    sourceId: Item.M9J2gM4Wkvygszuz
+_id: Lh5P9QgIeoanw0YG
+_stats:
+  coreVersion: '12.331'
+  systemId: uesrpg-3ev4
+  systemVersion: v1.0.0-RC.61
+  createdTime: null
+  modifiedTime: 1732507238086
+  lastModifiedBy: GikQCnLAeu0WrzSO
+  compendiumSource: null
+  duplicateSource: null
+ownership:
+  default: 0
+  xfxQc6sVhNVKRNeU: 3
+system:
+  mpBonus: 0
+  hpBonus: 0
+  spBonus: 0
+  lpBonus: 0
+  wtBonus: 0
+  iniBonus: 0
+  speedBonus: 0
+  flyBonus: 0
+  swimBonus: 0
+  diseaseR: 0
+  fireR: 0
+  frostR: 0
+  shockR: 0
+  poisonR: 0
+  magicR: 0
+  natToughnessR: 0
+  silverR: 0
+  sunlightR: 0
+  replace:
+    ini:
+      iniToggle: false
+      value: 0
+      characteristic: ''
+    wt:
+      wtToggle: false
+      value: 0
+      characteristic: ''
+  characteristics:
+    none: None
+    str: STR
+    end: END
+    agi: AGI
+    int: INT
+    wp: WP
+    prc: PRC
+    prs: PRS
+    lck: LCK
+  characteristicBonus:
+    strChaBonus: 0
+    endChaBonus: 0
+    agiChaBonus: 0
+    intChaBonus: 0
+    wpChaBonus: 0
+    prcChaBonus: 0
+    prsChaBonus: 0
+    lckChaBonus: 0
+  skillArray: []
+  description: >-
+    <p><em>“The Thief is the last Guardian Constellation, and her Season is the
+    darkest month of Evening Star. Her Charges are the Lover, the Shadow, and
+    the Tower. Those born under the sign of the Thief are not typically thieves,
+    though they take risks more often and only rarely come to harm. They will
+    run out of luck eventually, however, and rarely live as long as those born
+    under other signs.”</em></p><p><strong>Those born under the sign of the
+    Star-Cursed Thief roll an extra lucky number that they never lose regardless
+    of their Luck score.</strong></p><p><strong>Additionally, they replace their
+    rolled luck score with 50, gain the power, and gain the
+    @UUID[Compendium.uesrpg-3ev4.signs.Item.X1zpVl4qbhqm7oNI]{Running out of
+    Luck} trait.</strong></p><p><strong>Characters cannot spend Luck to choose
+    this birth-sign. Instead, it is available as a choice for any character who
+    naturally rolled the Thief sign.</strong></p>
+  halfSpeed: false
+  addHalfSpeed: false
+  halfFatiguePenalty: false
+  mechanical: false
+  crpCost: 0
+  halfWoundPenalty: false
+  painIntolerant: false
+_key: '!items!Lh5P9QgIeoanw0YG'
+

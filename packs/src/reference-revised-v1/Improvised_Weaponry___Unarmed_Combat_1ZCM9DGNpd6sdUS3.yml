@@ -1,0 +1,53 @@
+name: Improvised Weaponry & Unarmed Combat
+folder: null
+sort: 0
+flags:
+  cf:
+    id: temp_3ne3rdpl9xs
+    path: References#/CF_SEP/Combat
+    color: '#000000'
+_id: 1ZCM9DGNpd6sdUS3
+pages:
+  - name: Improvised Weaponry & Unarmed Combat
+    type: text
+    title:
+      show: false
+      level: 1
+    text:
+      format: 1
+      content: "<p>In certain cases a character might find themselves forced to fight using improvised weaponry. Attacks with improvised weapons suffer the usual -10 untrained penalty unless the character’s Combat Style includes improvised weapons. The table below provides a set of guidelines for the GM.</p>\n<p>\_</p>\n<table style=\"width:99.1549%\" border=\"1\">\n<tbody>\n<tr>\n<td style=\"width:30.9782%\"><strong>\_ \_ \_ \_ \_ \_ \_ \_ \_ \_ \_ \_ \_ Type</strong></td>\n<td style=\"width:32.8659%\"><strong>\_ \_ \_ \_ \_ \_ \_ \_ \_ \_ \_ \_ \_ \_ \_ Damage</strong></td>\n<td style=\"width:35.3036%\"><strong>\_ \_ \_ \_ \_ \_ \_ \_ \_ \_ \_ \_ \_ \_ \_ \_ Range</strong></td>\n</tr>\n<tr>\n<td style=\"width:30.9782%\">Tiny</td>\n<td style=\"width:32.8659%\">1D4</td>\n<td style=\"width:35.3036%\">1m (gain Small quality)</td>\n</tr>\n<tr>\n<td style=\"width:30.9782%\">Small</td>\n<td style=\"width:32.8659%\">1D6</td>\n<td style=\"width:35.3036%\">1m</td>\n</tr>\n<tr>\n<td style=\"width:30.9782%\">Medium</td>\n<td style=\"width:32.8659%\">1D8</td>\n<td style=\"width:35.3036%\">2m</td>\n</tr>\n<tr>\n<td style=\"width:30.9782%\">Large</td>\n<td style=\"width:32.8659%\">1D10</td>\n<td style=\"width:35.3036%\">3m</td>\n</tr>\n<tr>\n<td style=\"width:30.9782%\">Huge</td>\n<td style=\"width:32.8659%\">1D12</td>\n<td style=\"width:35.3036%\">4m</td>\n</tr>\n</tbody>\n</table>\n<p>The GM should feel free to give certain improvised weapons appropriate weapon qualities based on the type of object.</p>\n<p>\_</p>\n<p><strong>Unarmed Combat</strong></p>\n<p>Unarmed combat is when a character fights using their natural weapons. Characters are always capable of attempting to fight in this manner, even if they do not have a Combat Style skill that includes unarmed combat, they do so by rolling a test against their Strength or Agility, with the standard -20 penalty for using an untrained skill.</p>\n<p>\_</p>\n<p>A character’s natural weapons use the profile specified below unless the character has the Natural Weapons (*) trait (which overrides the default profile). If a character has a Combat Style that includes unarmed combat, that skill can be used for attacks with the character’s natural weapons. Natural weapons ignore rules regarding one, two, or hand and a half weapons, and cannot be disarmed.</p>\n<p>\_</p>\n<table style=\"width:99.1549%\" border=\"1\">\n<tbody>\n<tr>\n<td style=\"width:27.5398%\"><strong>\_ \_ \_ \_ \_ \_ \_ \_ \_ \_ \_ \_Type</strong></td>\n<td style=\"width:36.1611%\"><strong>\_ \_ \_ \_ \_ \_ \_ \_ \_ \_ \_ \_ \_ \_ \_ \_ Damage</strong></td>\n<td style=\"width:35.4468%\"><strong>\_ \_ \_ \_ \_ \_ \_ \_ \_ \_ \_ \_ \_ \_ \_ \_ \_ \_Range</strong></td>\n</tr>\n<tr>\n<td style=\"width:27.5398%\">Punches/Kicks</td>\n<td style=\"width:36.1611%\">1D4</td>\n<td style=\"width:35.4468%\">1m</td>\n</tr>\n<tr>\n<td style=\"width:27.5398%\">Claws</td>\n<td style=\"width:36.1611%\">1D4; Slashing</td>\n<td style=\"width:35.4468%\">1m</td>\n</tr>\n</tbody>\n</table>\n<p><strong>Parrying/Counter Attacking while Unarmed</strong></p>\n<p>If an unarmed combatant is facing an opponent with a weapon with a longer range and they are within their own engagement range, then they can attempt to parry that weapon’s attacks, or counter attack. Otherewise melee attacks cannot be parried or countered by unarmed characters.</p>"
+    _stats:
+      coreVersion: '12.331'
+      systemId: null
+      systemVersion: null
+      createdTime: null
+      modifiedTime: null
+      lastModifiedBy: null
+      compendiumSource: null
+      duplicateSource: null
+    _id: aKlQXkJBmHtbM2HS
+    system: {}
+    image: {}
+    video:
+      controls: true
+      volume: 0.5
+    src: null
+    sort: 0
+    ownership:
+      default: -1
+    flags: {}
+    _key: '!journal.pages!1ZCM9DGNpd6sdUS3.aKlQXkJBmHtbM2HS'
+_stats:
+  coreVersion: '12.331'
+  systemId: null
+  systemVersion: null
+  createdTime: null
+  modifiedTime: null
+  lastModifiedBy: null
+  compendiumSource: null
+  duplicateSource: null
+ownership:
+  default: 0
+  eeXhsDlbzUBZOXZT: 3
+_key: '!journal!1ZCM9DGNpd6sdUS3'
+

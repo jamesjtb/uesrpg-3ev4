@@ -1,0 +1,57 @@
+_id: wra9K7hRoVnZarja
+name: Splitting
+folder: null
+sort: 0
+flags:
+  cf:
+    id: temp_qtm3mdw5kon
+    path: References#/CF_SEP/Qualities#/CF_SEP/Weapon Qualities
+    color: '#000000'
+pages:
+  - name: Splitting
+    type: text
+    title:
+      show: false
+      level: 1
+    text:
+      format: 1
+      content: >-
+        <p>Weapons with this quality can deal savage wounds when properly
+        brought to bear. They deal bonus damage equal to the wielder’s Strength
+        bonus (or X, if another value is given), but only if the DoS of the
+        attack are higher than the AR value of the hit location.</p>
+    _stats:
+      coreVersion: '12.331'
+      systemId: null
+      systemVersion: null
+      createdTime: null
+      modifiedTime: null
+      lastModifiedBy: null
+      compendiumSource: null
+      duplicateSource: null
+    _id: G6fZHYe552GDlb0r
+    system: {}
+    image: {}
+    video:
+      controls: true
+      volume: 0.5
+    src: null
+    sort: 0
+    ownership:
+      default: -1
+    flags: {}
+    _key: '!journal.pages!wra9K7hRoVnZarja.G6fZHYe552GDlb0r'
+_stats:
+  coreVersion: '12.331'
+  systemId: null
+  systemVersion: null
+  createdTime: null
+  modifiedTime: null
+  lastModifiedBy: null
+  compendiumSource: null
+  duplicateSource: null
+ownership:
+  default: 0
+  eeXhsDlbzUBZOXZT: 3
+_key: '!journal!wra9K7hRoVnZarja'
+

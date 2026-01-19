@@ -1,0 +1,60 @@
+name: Falling
+folder: null
+sort: 0
+flags:
+  cf:
+    id: temp_k65789wa1kl
+    path: References#/CF_SEP/Movement
+    color: '#000000'
+_id: 4FK072nJezeej2rb
+pages:
+  - name: Falling
+    type: text
+    title:
+      show: false
+      level: 1
+    text:
+      format: 1
+      content: >-
+        <p>Falling even a relatively short distance can be quite dangerous if a
+        character is unlucky. Falling inflicts 1d8+[meters fallen beyond 2]
+        damage to the body. This damage ignores armor. As long as a character is
+        in control of their body when falling (not tied up / paralyzed /
+        unconscious / surprised etc.), they do not take damage from falling any
+        distance that either naturally or due to spells/talents equal to less
+        than 3 meters.</p>
+    _stats:
+      coreVersion: '12.331'
+      systemId: null
+      systemVersion: null
+      createdTime: null
+      modifiedTime: null
+      lastModifiedBy: null
+      compendiumSource: null
+      duplicateSource: null
+    _id: zernOuo1FFphlpB5
+    system: {}
+    image: {}
+    video:
+      controls: true
+      volume: 0.5
+    src: null
+    sort: 0
+    ownership:
+      default: -1
+    flags: {}
+    _key: '!journal.pages!4FK072nJezeej2rb.zernOuo1FFphlpB5'
+_stats:
+  coreVersion: '12.331'
+  systemId: null
+  systemVersion: null
+  createdTime: null
+  modifiedTime: null
+  lastModifiedBy: null
+  compendiumSource: null
+  duplicateSource: null
+ownership:
+  default: 0
+  eeXhsDlbzUBZOXZT: 3
+_key: '!journal!4FK072nJezeej2rb'
+

@@ -1,0 +1,99 @@
+_id: 3wPBvWfTC1GCAlkj
+name: Restore Life
+type: power
+img: icons/magic/life/cross-beam-green.webp
+effects: []
+folder: null
+sort: 0
+flags:
+  core:
+    sourceId: Item.bUduqKtcqGhTc6Zm
+  cf:
+    id: temp_d9bp04m8sjq
+    color: '#000000'
+_stats:
+  coreVersion: '12.331'
+  systemId: null
+  systemVersion: null
+  createdTime: null
+  modifiedTime: null
+  lastModifiedBy: null
+  compendiumSource: null
+  duplicateSource: null
+ownership:
+  default: 0
+  eeXhsDlbzUBZOXZT: 3
+system:
+  mpBonus: 0
+  hpBonus: 0
+  spBonus: 0
+  lpBonus: 0
+  wtBonus: 0
+  iniBonus: 0
+  speedBonus: 0
+  flyBonus: 0
+  swimBonus: 0
+  diseaseR: 0
+  fireR: 0
+  frostR: 0
+  shockR: 0
+  poisonR: 0
+  magicR: 0
+  natToughnessR: 0
+  silverR: 0
+  sunlightR: 0
+  characteristics:
+    none: None
+    str: STR
+    end: END
+    agi: AGI
+    int: INT
+    wp: WP
+    prc: PRC
+    prs: PRS
+    lck: LCK
+  characteristicBonus:
+    strChaBonus: 0
+    endChaBonus: 0
+    agiChaBonus: 0
+    intChaBonus: 0
+    wpChaBonus: 0
+    prcChaBonus: 0
+    prsChaBonus: 0
+    lckChaBonus: 0
+  skillArray: []
+  description: >-
+    <p><em>Difficulty: -20, -10 for each word beyond the first.</em></p>
+
+    <p><strong>&bull;Vokri : Restore</strong></p>
+
+    <p>Target being within five meters is regains [[/r 1d12]] hp, and removes
+    all instances of the Blood Loss and
+    @Compendium[uesrpg-revision.journal.Of5mt1fvj37x1c0t]{Bleeding}
+    conditions.</p>
+
+    <p><strong>&bull;Kopraan : Body</strong></p>
+
+    <p>Same as Vokri except the target regains [[/r 2d10]] hp instead.</p>
+
+    <p><strong>&bull;Laas : Life</strong></p>
+
+    <p>Same as Kopraan, except the target regains all lost HP instead. With GM
+    permission, a character can burn 10 Luck to use this to bring a recently
+    deceased character back to life.</p>
+  dailyUse: false
+  source: ''
+  shiftForm: false
+  shiftFormStyle: shiftFormNone
+  shiftStyles:
+    shiftFormNone: Regular Form
+    shiftFormVampireLord: Vampire Lord
+    shiftFormWereWolf: Werewolf
+    shiftFormWereBat: Werebat
+    shiftFormWereBoar: Wereboar
+    shiftFormWereBear: Werebear
+    shiftFormWereCrocodile: Werecrocodile
+    shiftFormWereVulture: Werevulture
+    shiftFormWereLion: Werelion
+_key: '!items!3wPBvWfTC1GCAlkj'
+

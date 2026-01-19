@@ -1,0 +1,191 @@
+_id: bEyP0b2y7iF6fHHB
+name: Spell Scroll
+type: item
+img: icons/sundries/scrolls/scroll-bound-blue-white.webp
+effects: []
+folder: null
+sort: 0
+flags:
+  core:
+    sourceId: Item.hbmdKbqZXXPlooXo
+_stats:
+  coreVersion: '12.331'
+  systemId: null
+  systemVersion: null
+  createdTime: null
+  modifiedTime: null
+  lastModifiedBy: null
+  compendiumSource: null
+  duplicateSource: null
+ownership:
+  default: 0
+  qwt9o1cuKYitvD9G: 3
+system:
+  characteristics:
+    none: None
+    str: STR
+    end: END
+    agi: AGI
+    int: INT
+    wp: WP
+    prc: PRC
+    prs: PRS
+    lck: LCK
+  characteristicBonus:
+    strChaBonus: 0
+    endChaBonus: 0
+    agiChaBonus: 0
+    intChaBonus: 0
+    wpChaBonus: 0
+    prcChaBonus: 0
+    prsChaBonus: 0
+    lckChaBonus: 0
+  replace:
+    ini:
+      iniToggle: false
+      value: 0
+      characteristic: ''
+    wt:
+      wtToggle: false
+      value: 0
+      characteristic: ''
+  mpBonus: 0
+  hpBonus: 0
+  spBonus: 0
+  lpBonus: 0
+  wtBonus: 0
+  iniBonus: 0
+  speedBonus: 0
+  flyBonus: 0
+  swimBonus: 0
+  diseaseR: 0
+  fireR: 0
+  frostR: 0
+  shockR: 0
+  poisonR: 0
+  magicR: 0
+  natToughnessR: 0
+  silverR: 0
+  sunlightR: 0
+  skillArray: []
+  isPhysicalObject: true
+  containerStats:
+    contained: false
+    container_id: ''
+    container_name: ''
+  description: >-
+    <p>Assume a Binding Strength of 3 for standard scrolls. Higher or Lower
+    Binding Strengths require a more or less skilled enchanter, which adjusts
+    the total price by 20% for each step (max 5).</p>
+
+    <table style="height: 128px; width: 51.7253%;" border="1">
+
+    <tbody>
+
+    <tr style="height: 16px;">
+
+    <td style="text-align: center; height: 16px; width: 45.233%;"><strong>Spell
+    Level</strong></td>
+
+    <td style="text-align: center; height: 16px; width:
+    53.6941%;"><strong>Cost</strong></td>
+
+    </tr>
+
+    <tr style="height: 16px;">
+
+    <td style="text-align: center; height: 16px; width: 45.233%;">1</td>
+
+    <td style="text-align: center; height: 16px; width: 53.6941%;">30</td>
+
+    </tr>
+
+    <tr style="height: 16px;">
+
+    <td style="text-align: center; height: 16px; width: 45.233%;">2</td>
+
+    <td style="text-align: center; height: 16px; width: 53.6941%;">45</td>
+
+    </tr>
+
+    <tr style="height: 16px;">
+
+    <td style="text-align: center; height: 16px; width: 45.233%;">3</td>
+
+    <td style="text-align: center; height: 16px; width: 53.6941%;">90</td>
+
+    </tr>
+
+    <tr style="height: 16px;">
+
+    <td style="text-align: center; height: 16px; width: 45.233%;">4</td>
+
+    <td style="text-align: center; height: 16px; width: 53.6941%;">150</td>
+
+    </tr>
+
+    <tr style="height: 16px;">
+
+    <td style="text-align: center; height: 16px; width: 45.233%;">5</td>
+
+    <td style="text-align: center; height: 16px; width: 53.6941%;">300</td>
+
+    </tr>
+
+    <tr style="height: 16px;">
+
+    <td style="text-align: center; height: 16px; width: 45.233%;">6</td>
+
+    <td style="text-align: center; height: 16px; width: 53.6941%;">600</td>
+
+    </tr>
+
+    <tr style="height: 16px;">
+
+    <td style="text-align: center; height: 16px; width: 45.233%;">7+</td>
+
+    <td style="text-align: center; height: 16px; width: 53.6941%;">1500</td>
+
+    </tr>
+
+    </tbody>
+
+    </table>
+  quantity: 1
+  enc: 0
+  totalENC: 0
+  reach: ''
+  damage: ''
+  equipped: false
+  hands: 0
+  price: 30
+  modPrice: 0
+  armor: 0
+  magic_ar: 0
+  blockRating: 0
+  enchant_level: 0
+  excludeENC: false
+  consumable: false
+  qualities: ''
+  wearable: false
+  charge:
+    value: 0
+    max: 0
+    reduction: 1
+  carried: false
+  category: ''
+  item_cat:
+    none: None
+    head: Helmet
+    l_arm: Left Gauntlet
+    r_arm: Right Gauntlet
+    l_leg: Left Leg
+    r_leg: Right Leg
+    body: Chestplate
+    shield: Shield
+    weapon1: Primary Weapon
+    weapon2: Secondary Weapon
+    weapon3: Sidearm
+  attributes: {}
+_key: '!items!bEyP0b2y7iF6fHHB'
+

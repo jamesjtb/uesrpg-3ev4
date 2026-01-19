@@ -1,0 +1,94 @@
+_id: uyzhjb772gRLpzYu
+name: Bruiser
+type: talent
+img: systems/uesrpg-3ev4/images/Icons/bruiser.webp
+effects: []
+folder: null
+sort: 0
+flags:
+  core:
+    sourceId: Item.DYVazRNO2caSDMGE
+_stats:
+  coreVersion: '12.331'
+  systemId: null
+  systemVersion: null
+  createdTime: null
+  modifiedTime: null
+  lastModifiedBy: null
+  compendiumSource: null
+  duplicateSource: null
+ownership:
+  default: 0
+  xvA5SwRGJiyPsnxH: 3
+system:
+  mpBonus: 0
+  hpBonus: 0
+  spBonus: 0
+  lpBonus: 0
+  wtBonus: 0
+  iniBonus: 0
+  speedBonus: 0
+  flyBonus: 0
+  swimBonus: 0
+  diseaseR: 0
+  fireR: 0
+  frostR: 0
+  shockR: 0
+  poisonR: 0
+  magicR: 0
+  natToughnessR: 0
+  silverR: 0
+  sunlightR: 0
+  replace:
+    ini:
+      iniToggle: false
+      value: 0
+      characteristic: str
+    wt:
+      wtToggle: false
+      value: 0
+      characteristic: str
+  characteristics:
+    none: None
+    str: STR
+    end: END
+    agi: AGI
+    int: INT
+    wp: WP
+    prc: PRC
+    prs: PRS
+    lck: LCK
+  characteristicBonus:
+    strChaBonus: 0
+    endChaBonus: 0
+    agiChaBonus: 0
+    intChaBonus: 0
+    wpChaBonus: 0
+    prcChaBonus: 0
+    prsChaBonus: 0
+    lckChaBonus: 0
+  skillArray: []
+  description: >-
+    <p>Increase the damage done by thrown axes by the character&rsquo;s Strength
+    bonus. This replaces the Agility bonus added by Dart Thrower, if applicable.
+    Making throwing attacks with hand axes does not provoke attacks of
+    opportunity, and thrown axes can be retrieved as a free action if the
+    character is able to make his way to where they landed. Drawing hand axes
+    does not provoke attacks of opportunity. Additionally, maces the character
+    wields gain the
+    @Compendium[uesrpg-revision.journal.iNRvDXhCiPR8lHX9]{Concussive.} quality
+    and their All Out Attacks cause the target to lose one stamina if they
+    successfully hit.</p>
+  xpCost: 500
+  level: 5
+  talentReq: ''
+  miscReq: Apprentice Combat
+  halfFatiguePenalty: false
+  halfWoundPenalty: false
+  untrainedException: false
+  fatigueException: false
+  addIBToMP: false
+  armorAcrobaticsException: false
+  addHalfSpeed: false
+_key: '!items!uyzhjb772gRLpzYu'
+
