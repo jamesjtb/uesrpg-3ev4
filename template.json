@@ -7,51 +7,47 @@
     ],
     "templates": {
       "equippedWeapons": {
-        "equippedWeapons": {
-          "primaryWeapon": {
-            "name": "None: Right click to bind weapon",
-            "img": "icons/skills/melee/unarmed-punch-fist.webp",
-            "id": ""
-          },
-          "secondaryWeapon": {
-            "name": "None: Right click to bind weapon",
-            "img": "icons/skills/melee/unarmed-punch-fist.webp",
-            "id": ""
-          }
+        "primaryWeapon": {
+          "name": "None: Right click to bind weapon",
+          "img": "icons/skills/melee/unarmed-punch-fist.webp",
+          "id": ""
+        },
+        "secondaryWeapon": {
+          "name": "None: Right click to bind weapon",
+          "img": "icons/skills/melee/unarmed-punch-fist.webp",
+          "id": ""
         }
       },
       "favorites": {
-        "favorites": {
-          "1": {
-            "name": "Hotkey 1",
-            "img": "icons/svg/combat.svg",
-            "id": "",
-            "value": 0
-          },
-          "2": {
-            "name": "Hotkey 2",
-            "img": "icons/svg/combat.svg",
-            "id": "",
-            "value": 0
-          },
-          "3": {
-            "name": "Hotkey 3",
-            "img": "icons/svg/combat.svg",
-            "id": "",
-            "value": 0
-          },
-          "4": {
-            "name": "Hotkey 4",
-            "img": "icons/svg/combat.svg",
-            "id": "",
-            "value": 0
-          },
-          "5": {
-            "name": "Hotkey 5",
-            "img": "icons/svg/combat.svg",
-            "id": "",
-            "value": 0
-          }
+        "1": {
+          "name": "Hotkey 1",
+          "img": "icons/svg/combat.svg",
+          "id": "",
+          "value": 0
+        },
+        "2": {
+          "name": "Hotkey 2",
+          "img": "icons/svg/combat.svg",
+          "id": "",
+          "value": 0
+        },
+        "3": {
+          "name": "Hotkey 3",
+          "img": "icons/svg/combat.svg",
+          "id": "",
+          "value": 0
+        },
+        "4": {
+          "name": "Hotkey 4",
+          "img": "icons/svg/combat.svg",
+          "id": "",
+          "value": 0
+        },
+        "5": {
+          "name": "Hotkey 5",
+          "img": "icons/svg/combat.svg",
+          "id": "",
+          "value": 0
         }
       },
       "combatTracking": {
