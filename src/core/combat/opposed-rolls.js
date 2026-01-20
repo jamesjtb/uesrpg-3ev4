@@ -6,7 +6,7 @@
  * Enhanced with automatic damage calculation and optional application.
  */
 
-import { doTestRoll, resolveOpposed } from "../../../module/helpers/degree-roll-helper.js";
+import { doTestRoll, resolveOpposed } from "../../utils/degree-roll-helper.js";
 import { calculateDamage, DAMAGE_TYPES } from "./damage-automation.js";
 import { applyDamageResolved } from "./damage-resolver.js";
 import { getHitLocationFromRoll } from "./combat-utils.js";

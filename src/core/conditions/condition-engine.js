@@ -14,7 +14,7 @@
  */
 
 import { applyDamage, DAMAGE_TYPES } from "../combat/damage-automation.js";
-import { requestCreateEmbeddedDocuments, requestDeleteEmbeddedDocuments, requestUpdateDocument } from "../../../module/helpers/authority-proxy.js";
+import { requestCreateEmbeddedDocuments, requestDeleteEmbeddedDocuments, requestUpdateDocument } from "../../utils/authority-proxy.js";
 import { isActorSkeletal, isActorUndead, isActorUndeadBloodless } from "../traits/trait-registry.js";
 
 let _conditionHooksRegistered = false;

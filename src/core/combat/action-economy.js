@@ -13,7 +13,7 @@
  * - Keeps behavior deterministic and reversible.
  */
 
-import { requestDeleteEmbeddedDocuments, requestUpdateDocument } from "../../../module/helpers/authority-proxy.js";
+import { requestDeleteEmbeddedDocuments, requestUpdateDocument } from "../../utils/authority-proxy.js";
 
 /**
  * Safe, minimal HTML escaping for plain-text insertion into markup.

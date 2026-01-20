@@ -6,7 +6,7 @@
  */
 
 import { getMagicSkillLevel } from "./magicka-utils.js";
-import { doTestRoll } from "../../../module/helpers/degree-roll-helper.js";
+import { doTestRoll } from "../../utils/degree-roll-helper.js";
 import { actorHasTalent } from "./magic-modifiers.js";
 
 /**

@@ -2,11 +2,11 @@
  * Extend the basic foundry.appv1.sheets.ActorSheet with some very simple modifications
  * @extends {foundry.appv1.sheets.ActorSheet}
  */
-import { isLucky } from "../helpers/skillCalcHelper.js";
+import { isLucky } from "../../src/utils/skillCalcHelper.js";
 import { SYSTEM_ROLL_FORMULA, UESRPG } from "../../src/core/constants.js";
-import { isUnlucky } from "../helpers/skillCalcHelper.js";
+import { isUnlucky } from "../../src/utils/skillCalcHelper.js";
 import chooseBirthsignPenalty from "../dialogs/choose-birthsign-penalty.js";
-import { characteristicAbbreviations } from "../maps/characteristics.js";
+import { characteristicAbbreviations } from "../../src/utils/maps/characteristics.js";
 import renderErrorDialog from '../dialogs/error-dialog.js';
 import { applyPhysicalExertionBonus, applyPhysicalExertionToSkill, applyPowerAttackBonus } from "../../src/core/stamina/stamina-integration-hooks.js";
 import coreRaces from "./racemenu/data/core-races.js";
@@ -14,7 +14,7 @@ import coreVariants from "./racemenu/data/core-variants.js";
 import { renderRaceCards } from "./racemenu/render-race-cards.js";
 import khajiitFurstocks from './racemenu/data/khajiit-furstocks.js';
 import expandedRaces from "./racemenu/data/expanded-races.js";
-import { calculateDegrees } from "../helpers/diceHelper.js";
+import { calculateDegrees } from "../../src/utils/diceHelper.js";
 import { getDamageTypeFromWeapon, getHitLocationFromRoll } from "../../src/core/combat/combat-utils.js";
 import { OpposedRoll } from "../../src/core/combat/opposed-rolls.js";
 import { OpposedWorkflow } from "../../src/core/combat/opposed-workflow.js";
@@ -24,8 +24,8 @@ import { SkillOpposedWorkflow } from "../../src/core/skills/opposed-workflow.js"
 import { computeSkillTN, SKILL_DIFFICULTIES } from "../../src/core/skills/skill-tn.js";
 import { isItemEffectActive } from "../../src/core/ae/transfer.js";
 import { getSpecialActionById } from "../../src/core/config/special-actions.js";
-import { doTestRoll, formatDegree } from "../helpers/degree-roll-helper.js";
-import { requireUserCanRollActor } from "../helpers/permissions.js";
+import { doTestRoll, formatDegree } from "../../src/utils/degree-roll-helper.js";
+import { requireUserCanRollActor } from "../../src/utils/permissions.js";
 import { buildSkillRollRequest, normalizeSkillRollOptions, skillRollDebug } from "../../src/core/skills/roll-request.js";
 import { postItemToChat } from "./shared-handlers.js";
 import {

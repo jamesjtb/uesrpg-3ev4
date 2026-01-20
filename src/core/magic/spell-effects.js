@@ -17,7 +17,7 @@
 export async function applySpellEffectsToTarget(casterActor, targetActor, spell, options = {}) {
   // Permission-safe embedded document operations.
   // We prefer direct operations when permitted; otherwise we proxy through an active GM/owner.
-  const { requestCreateEmbeddedDocuments, requestDeleteEmbeddedDocuments } = await import("../../../module/helpers/authority-proxy.js");
+  const { requestCreateEmbeddedDocuments, requestDeleteEmbeddedDocuments } = await import("../../utils/authority-proxy.js");
 
   const spellUuid = spell.uuid;
   let duration = computeSpellDuration(spell);

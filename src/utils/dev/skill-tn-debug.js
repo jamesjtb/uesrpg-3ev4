@@ -7,7 +7,7 @@
  * It is only exposed when the client setting "Debug: Skill TN Macro" is enabled.
  */
 
-import { computeSkillTN } from "../../src/core/skills/skill-tn.js";
+import { computeSkillTN } from "../../core/skills/skill-tn.js";
 
 function _resolveActorFromContext(explicitActor) {
   if (explicitActor) return explicitActor;

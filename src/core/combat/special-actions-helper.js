@@ -643,7 +643,7 @@ export async function createSpecialActionOpposedTest({
 export async function handleSpecialActionCardAction(message, action) {
   try {
     // Import helpers once at the start
-    const { doTestRoll, resolveOpposed } = await import("../../../module/helpers/degree-roll-helper.js");
+    const { doTestRoll, resolveOpposed } = await import("../../utils/degree-roll-helper.js");
     
     const data = message.flags?.[SYSTEM_ID]?.specialActionOpposed?.state;
     if (!data) return;
@@ -905,7 +905,7 @@ async function _createBashAcrobaticsTest(target) {
 
   // Create a simple skill test card (not opposed, just a single roll)
   const { computeSkillTN } = await import("../skills/skill-tn.js");
-  const { doTestRoll } = await import("../../../module/helpers/degree-roll-helper.js");
+  const { doTestRoll } = await import("../../utils/degree-roll-helper.js");
   
   const tn = computeSkillTN({
     actor: target,

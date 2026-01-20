@@ -16,10 +16,10 @@
  *  - "Treat within End bonus days" timing enforcement (rest/time framework not yet present)
  */
 
-import { doTestRoll } from "../../../module/helpers/degree-roll-helper.js";
-import { requestCreateEmbeddedDocuments, requestDeleteEmbeddedDocuments, requestUpdateDocument } from "../../../module/helpers/authority-proxy.js";
+import { doTestRoll } from "../../utils/degree-roll-helper.js";
+import { requestCreateEmbeddedDocuments, requestDeleteEmbeddedDocuments, requestUpdateDocument } from "../../utils/authority-proxy.js";
 import { isActorUndead, isActorUndeadBloodless } from "../traits/trait-registry.js";
-import { applyGroupedEffect, getEffectGroup } from "../../../module/helpers/ae-grouping.js";
+import { applyGroupedEffect, getEffectGroup } from "../../utils/ae-grouping.js";
 
 let _woundHooksRegistered = false;
 

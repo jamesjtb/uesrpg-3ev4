@@ -12,7 +12,7 @@ import { tickConditionsEndTurn } from "./condition-engine.js";
 import { tickWoundsEndTurn } from "../wounds/wound-engine.js";
 import { getActorTraitValue } from "../traits/trait-registry.js";
 import { postRegenerationPrompt } from "../traits/trait-automation.js";
-import { requestUpdateDocument } from "../../../module/helpers/authority-proxy.js";
+import { requestUpdateDocument } from "../../utils/authority-proxy.js";
 
 let _registered = false;
 

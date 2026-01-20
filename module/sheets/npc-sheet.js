@@ -3,8 +3,8 @@
  * @extends {ActorSheet}
  */
 import { getDamageTypeFromWeapon } from "../../src/core/combat/combat-utils.js";
-import { requireUserCanRollActor } from "../helpers/permissions.js";
-import { doTestRoll, formatDegree } from "../helpers/degree-roll-helper.js";
+import { requireUserCanRollActor } from "../../src/utils/permissions.js";
+import { doTestRoll, formatDegree } from "../../src/utils/degree-roll-helper.js";
 import { computeSkillTN, SKILL_DIFFICULTIES } from "../../src/core/skills/skill-tn.js";
 import { buildSkillRollRequest, normalizeSkillRollOptions } from "../../src/core/skills/roll-request.js";
 import { SkillOpposedWorkflow } from "../../src/core/skills/opposed-workflow.js";

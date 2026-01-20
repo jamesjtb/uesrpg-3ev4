@@ -18,8 +18,8 @@
 
 import { evaluateAEModifierKeys } from "../ae/modifier-evaluator.js";
 import { UESRPG } from "../constants.js";
-import { requestCreateActiveEffect } from "../../../module/helpers/active-effect-proxy.js";
-import { requestUpdateDocument } from "../../../module/helpers/authority-proxy.js";
+import { requestCreateActiveEffect } from "../../utils/active-effect-proxy.js";
+import { requestUpdateDocument } from "../../utils/authority-proxy.js";
 import { isActorImmuneToDamageType, isActorIncorporeal, getActorTraitValue } from "../traits/trait-registry.js";
 
 export const DAMAGE_TYPES = {

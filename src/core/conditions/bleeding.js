@@ -18,7 +18,7 @@
 
 import { hasCondition } from "./condition-engine.js";
 import { applyDamage } from "../combat/damage-automation.js";
-import { requestCreateEmbeddedDocuments, requestDeleteEmbeddedDocuments, requestUpdateDocument } from "../../../module/helpers/authority-proxy.js";
+import { requestCreateEmbeddedDocuments, requestDeleteEmbeddedDocuments, requestUpdateDocument } from "../../utils/authority-proxy.js";
 
 const FLAG_SCOPE = "uesrpg-3ev4";
 const FLAG_PATH = `flags.${FLAG_SCOPE}`;

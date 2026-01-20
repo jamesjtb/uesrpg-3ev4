@@ -14,7 +14,7 @@
  *  - The opposed chat card is then updated with the numeric outcomes and final resolution.
  */
 
-import { doTestRoll, computeResultFromRollTotal } from "../../../module/helpers/degree-roll-helper.js";
+import { doTestRoll, computeResultFromRollTotal } from "../../utils/degree-roll-helper.js";
 import { UESRPG } from "../constants.js";
 import { hasCondition } from "../conditions/condition-engine.js";
 import { DefenseDialog } from "./defense-dialog.js";
@@ -25,13 +25,13 @@ import { getBlockValue, normalizeHitLocation } from "./mitigation.js";
 import { DAMAGE_TYPES } from "./damage-automation.js";
 import { ActionEconomy } from "./action-economy.js";
 import { AttackTracker } from "./attack-tracker.js";
-import { safeUpdateChatMessage } from "../../../module/helpers/chat-message-socket.js";
-import { requestCreateActiveEffect } from "../../../module/helpers/active-effect-proxy.js";
+import { safeUpdateChatMessage } from "../../utils/chat-message-socket.js";
+import { requestCreateActiveEffect } from "../../utils/active-effect-proxy.js";
 import { buildSpecialActionsForActor, isSpecialActionUsableNow } from "./combat-style-utils.js";
 import { SPECIAL_ACTIONS, getSpecialActionById } from "../config/special-actions.js";
 import { getActiveStaminaEffect, consumeStaminaEffect, STAMINA_EFFECT_KEYS } from "../stamina/stamina-dialog.js";
 import { isActorSkeletal } from "../traits/trait-registry.js";
-import { canTokenEscapeTemplate } from "../../../module/helpers/aoe-utils.js";
+import { canTokenEscapeTemplate } from "../../utils/aoe-utils.js";
 
 
 function _collectSensorySituationalMods(decl) {

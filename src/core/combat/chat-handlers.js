@@ -15,9 +15,9 @@ import { applyHealing, DAMAGE_TYPES } from "./damage-automation.js";
 import { applyDamageResolved } from "./damage-resolver.js";
 import { OpposedWorkflow } from "./opposed-workflow.js";
 import { SkillOpposedWorkflow } from "../skills/opposed-workflow.js";
-import { canUserRollActor } from "../../../module/helpers/permissions.js";
+import { canUserRollActor } from "../../utils/permissions.js";
 import { resolveShockTestFromChat } from "../wounds/wound-engine.js";
-import { requestUpdateChatMessage } from "../../../module/helpers/authority-proxy.js";
+import { requestUpdateChatMessage } from "../../utils/authority-proxy.js";
 import { getDiseaseResistancePercent } from "../traits/trait-registry.js";
 
 let _chatHooksRegistered = false;

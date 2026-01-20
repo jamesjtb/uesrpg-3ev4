@@ -2,8 +2,8 @@
  * Extend the base Actor entity by defining a custom roll data structure which is ideal for the Simple system.
  * @extends {Item}
  */
-import { skillHelper } from "../../../module/helpers/skillCalcHelper.js";
-import { skillModHelper } from "../../../module/helpers/skillCalcHelper.js";
+import { skillHelper } from "../../utils/skillCalcHelper.js";
+import { skillModHelper } from "../../utils/skillCalcHelper.js";
 import { UESRPG } from "../constants.js";
 
 /**

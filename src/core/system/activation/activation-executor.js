@@ -1,4 +1,4 @@
-import { requestUpdateDocument } from "../../../../module/helpers/authority-proxy.js";
+import { requestUpdateDocument } from "../../../utils/authority-proxy.js";
 import { OpposedWorkflow } from "../../combat/opposed-workflow.js";
 import { getHitLocationFromRoll } from "../../combat/combat-utils.js";
 import { getExplicitActiveCombatStyleItem } from "../../combat/combat-style-utils.js";

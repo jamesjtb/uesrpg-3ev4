@@ -10,12 +10,12 @@
  *  - Uses DoS/DoF results for both targeted and untargeted skill rolls.
  */
 
-import { doTestRoll, resolveOpposed, formatDegree, computeResultFromRollTotal } from "../../../module/helpers/degree-roll-helper.js";
+import { doTestRoll, resolveOpposed, formatDegree, computeResultFromRollTotal } from "../../utils/degree-roll-helper.js";
 import { computeSkillTN, SKILL_DIFFICULTIES } from "./skill-tn.js";
-import { requireUserCanRollActor } from "../../../module/helpers/permissions.js";
+import { requireUserCanRollActor } from "../../utils/permissions.js";
 import { hasCondition } from "../conditions/condition-engine.js";
 import { buildSkillRollRequest, normalizeSkillRollOptions, skillRollDebug, validateSkillRollRequest } from "./roll-request.js";
-import { safeUpdateChatMessage } from "../../../module/helpers/chat-message-socket.js";
+import { safeUpdateChatMessage } from "../../utils/chat-message-socket.js";
 import { buildResistanceBonusSection, readResistanceBonusSelections, buildResistanceBonusMods } from "../traits/trait-resistance-ui.js";
 
 const _SKILL_ROLL_SETTINGS_NS = "uesrpg-3ev4";

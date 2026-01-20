@@ -19,7 +19,7 @@
  */
 
 import { getSpellMaxRangeMeters, getSpellRangeType } from "./spell-range.js";
-import { requestDeleteEmbeddedDocuments, requestUpdateDocument } from "../../../module/helpers/authority-proxy.js";
+import { requestDeleteEmbeddedDocuments, requestUpdateDocument } from "../../utils/authority-proxy.js";
 
 function _roundTimeSeconds() {
   return Number(CONFIG.time?.roundTime ?? 6) || 6;

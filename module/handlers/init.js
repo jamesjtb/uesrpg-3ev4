@@ -7,17 +7,17 @@ import { SimpleItem } from "../../src/core/documents/item.js";
 import { SimpleItemSheet } from "../sheets/item-sheet.js";
 import { SystemCombat } from "../../src/core/documents/combat.js";
 import { initializeChatHandlers, registerCombatChatHooks } from "../../src/core/combat/chat-handlers.js";
-import { registerSkillTNDebug } from "../dev/skill-tn-debug.js";
-import { registerActorSelectDebug } from "../dev/actor-select-debug.js";
-import { registerDebugSettingsMenu } from "../dev/debug-settings.js";
-import { registerOpposedDiagnostics } from "../dev/opposed-diagnostics.js";
+import { registerSkillTNDebug } from "../../src/utils/dev/skill-tn-debug.js";
+import { registerActorSelectDebug } from "../../src/utils/dev/actor-select-debug.js";
+import { registerDebugSettingsMenu } from "../../src/utils/dev/debug-settings.js";
+import { registerOpposedDiagnostics } from "../../src/utils/dev/opposed-diagnostics.js";
 import { registerConditions } from "../../src/core/conditions/index.js";
 import { registerWounds } from "../../src/core/wounds/index.js";
 import { registerFrenzied, FrenziedAPI } from "../../src/core/conditions/frenzied.js";
 import { applyDamage, applyHealing, DAMAGE_TYPES } from "../../src/core/combat/damage-automation.js";
 import { applyDamageResolved } from "../../src/core/combat/damage-resolver.js";
-import { registerChatMessageSocket } from "../helpers/chat-message-socket.js";
-import { registerActiveEffectProxy } from "../helpers/active-effect-proxy.js";
+import { registerChatMessageSocket } from "../../src/utils/chat-message-socket.js";
+import { registerActiveEffectProxy } from "../../src/utils/active-effect-proxy.js";
 
 /**
  * Preload Handlebars partials used by system sheets.

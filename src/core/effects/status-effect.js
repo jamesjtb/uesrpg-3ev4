@@ -5,7 +5,7 @@
  * Foundry VTT v13 compatible.
  */
 
-import { requestCreateEmbeddedDocuments, requestUpdateDocument } from "../../../module/helpers/authority-proxy.js";
+import { requestCreateEmbeddedDocuments, requestUpdateDocument } from "../../utils/authority-proxy.js";
 
 export async function createOrUpdateStatusEffect(actor, { statusId, name, img, duration = null, flags = {}, changes = [] } = {}) {
   if (!actor) return null;

@@ -4,7 +4,7 @@
  */
 
 import { createOrUpdateStatusEffect } from "../effects/status-effect.js";
-import { requestUpdateDocument } from "../../../module/helpers/authority-proxy.js";
+import { requestUpdateDocument } from "../../utils/authority-proxy.js";
 import { canUseHeroicActions } from "../rules/npc-rules.js";
 import { isActorUndead } from "../traits/trait-registry.js";
 

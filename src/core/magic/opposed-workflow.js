@@ -11,7 +11,7 @@
  *  - Hook migrated to renderChatMessageHTML (v13) to avoid deprecated renderChatMessage.
  */
 
-import { doTestRoll, resolveOpposed, formatDegree } from "../../../module/helpers/degree-roll-helper.js";
+import { doTestRoll, resolveOpposed, formatDegree } from "../../utils/degree-roll-helper.js";
 import {
   computeMagicCastingTN,
   computeSpellMagickaCost,
@@ -27,9 +27,9 @@ import {
 import { applySpellEffect, applySpellEffectsToTarget } from "./spell-effects.js";
 import { applyMagicDamage, applyMagicHealing } from "./damage-application.js";
 import { shouldBackfire, triggerBackfire } from "./backfire.js";
-import { safeUpdateChatMessage } from "../../../module/helpers/chat-message-socket.js";
-import { canUserRollActor, requireUserCanRollActor } from "../../../module/helpers/permissions.js";
-import { canTokenEscapeTemplate } from "../../../module/helpers/aoe-utils.js";
+import { safeUpdateChatMessage } from "../../utils/chat-message-socket.js";
+import { canUserRollActor, requireUserCanRollActor } from "../../utils/permissions.js";
+import { canTokenEscapeTemplate } from "../../utils/aoe-utils.js";
 import { ActionEconomy } from "../combat/action-economy.js";
 import { getHitLocationFromRoll, resolveHitLocationForTarget } from "../combat/combat-utils.js";
 import {

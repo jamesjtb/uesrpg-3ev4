@@ -12,7 +12,7 @@
  * NOTE: This system is not on ApplicationV2.
  */
 
-import { skillHelper, skillModHelper } from "../../../module/helpers/skillCalcHelper.js";
+import { skillHelper, skillModHelper } from "../../utils/skillCalcHelper.js";
 import { collectCombatTNModifiersFromAE } from "../ae/combat-tn-modifiers.js";
 
 /**

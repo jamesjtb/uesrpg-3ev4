@@ -8,7 +8,7 @@
  */
 
 import { applyDamage, applyHealing, DAMAGE_TYPES, getDamageReduction } from "../combat/damage-automation.js";
-import { requestUpdateDocument } from "../../../module/helpers/authority-proxy.js";
+import { requestUpdateDocument } from "../../utils/authority-proxy.js";
 import { getActorTraitValue } from "../traits/trait-registry.js";
 
 function _str(v) {
