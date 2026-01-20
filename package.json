@@ -2,7 +2,7 @@
   "name": "uesrpg-3ev4",
   "version": "1.0.0-RC.82",
   "description": "A system used to play the UESRPG (Unofficial Elder Scrolls Roleplaying Game) 3ev4 d100 system.",
-  "main": "module/entrypoint.js",
+  "main": "src/system.js",
   "scripts": {
     "version": "node ./automation/version.js",
     "postversion": "git pull && git push && git push --tags",
