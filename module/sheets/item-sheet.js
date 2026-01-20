@@ -1,5 +1,5 @@
-import { UESRPG } from "../constants.js";
-import { SPECIAL_ACTIONS } from "../config/special-actions.js";
+import { UESRPG } from "../../src/core/constants.js";
+import { SPECIAL_ACTIONS } from "../../src/core/config/special-actions.js";
 import { activateTalentFromItemSheet, activatePowerFromItemSheet } from "./shared-handlers.js";
 
 /**

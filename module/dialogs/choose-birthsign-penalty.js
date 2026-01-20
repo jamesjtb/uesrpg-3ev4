@@ -1,4 +1,4 @@
-import { systemRootPath } from "../constants.js";
+import { systemRootPath } from "../../src/core/constants.js";
 
 /**
  * Capitalize the first letter of a string.

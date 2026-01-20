@@ -1,21 +1,21 @@
-import { UESRPG } from "../constants.js";
-import { SimpleActor } from "../entities/actor.js";
+import { UESRPG } from "../../src/core/constants.js";
+import { SimpleActor } from "../../src/core/documents/actor.js";
 import { npcSheet } from "../sheets/npc-sheet.js";
 import { SimpleActorSheet } from "../sheets/actor-sheet.js";
 import { GroupSheet } from "../sheets/group-sheet.js";
-import { SimpleItem } from "../entities/item.js";
+import { SimpleItem } from "../../src/core/documents/item.js";
 import { SimpleItemSheet } from "../sheets/item-sheet.js";
-import { SystemCombat } from "../entities/combat.js";
-import { initializeChatHandlers, registerCombatChatHooks } from "../combat/chat-handlers.js";
+import { SystemCombat } from "../../src/core/documents/combat.js";
+import { initializeChatHandlers, registerCombatChatHooks } from "../../src/core/combat/chat-handlers.js";
 import { registerSkillTNDebug } from "../dev/skill-tn-debug.js";
 import { registerActorSelectDebug } from "../dev/actor-select-debug.js";
 import { registerDebugSettingsMenu } from "../dev/debug-settings.js";
 import { registerOpposedDiagnostics } from "../dev/opposed-diagnostics.js";
-import { registerConditions } from "../conditions/index.js";
-import { registerWounds } from "../wounds/index.js";
-import { registerFrenzied, FrenziedAPI } from "../conditions/frenzied.js";
-import { applyDamage, applyHealing, DAMAGE_TYPES } from "../combat/damage-automation.js";
-import { applyDamageResolved } from "../combat/damage-resolver.js";
+import { registerConditions } from "../../src/core/conditions/index.js";
+import { registerWounds } from "../../src/core/wounds/index.js";
+import { registerFrenzied, FrenziedAPI } from "../../src/core/conditions/frenzied.js";
+import { applyDamage, applyHealing, DAMAGE_TYPES } from "../../src/core/combat/damage-automation.js";
+import { applyDamageResolved } from "../../src/core/combat/damage-resolver.js";
 import { registerChatMessageSocket } from "../helpers/chat-message-socket.js";
 import { registerActiveEffectProxy } from "../helpers/active-effect-proxy.js";
 
@@ -574,7 +574,7 @@ Hooks.on("createChatMessage", async (message) => {
   if (!state?.outcome || !state?.specialActionId) return;
 
   try {
-    const { executeSpecialAction } = await import("../combat/special-actions-helper.js");
+    const { executeSpecialAction } = await import("../../src/core/combat/special-actions-helper.js");
     
     const attacker = fromUuidSync(state.attacker?.actorUuid);
     const defender = fromUuidSync(state.defender?.actorUuid);

@@ -1,5 +1,5 @@
-import { SYSTEM_ROLL_FORMULA } from "../constants.js";
-import { isNPC, resolveCriticalFlags } from "../rules/npc-rules.js";
+import { SYSTEM_ROLL_FORMULA } from "../../src/core/constants.js";
+import { isNPC, resolveCriticalFlags } from "../../src/core/rules/npc-rules.js";
 /**
  * module/helpers/degree-roll-helper.js
  * UESRPG v3e — Degree of Success / Degree of Failure helper

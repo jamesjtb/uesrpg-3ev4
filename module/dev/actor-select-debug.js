@@ -7,7 +7,7 @@
  * This module never modifies documents.
  */
 
-import { computeSkillTN } from "../skills/skill-tn.js";
+import { computeSkillTN } from "../../src/core/skills/skill-tn.js";
 
 let _actorSelectDebugRegistered = false;
 
