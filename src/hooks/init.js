@@ -1,24 +1,24 @@
-import { UESRPG } from "../../src/core/constants.js";
-import { SimpleActor } from "../../src/core/documents/actor.js";
-import { SimpleItem } from "../../src/core/documents/item.js";
-import { npcSheet } from "../../src/ui/sheets/npc-sheet.js";
-import { SimpleActorSheet } from "../../src/ui/sheets/actor-sheet.js";
-import { GroupSheet } from "../../src/ui/sheets/group-sheet.js";
-import { SimpleItemSheet } from "../../src/ui/sheets/item-sheet.js";
+import { UESRPG } from "../core/constants.js";
+import { SimpleActor } from "../core/documents/actor.js";
+import { SimpleItem } from "../core/documents/item.js";
+import { npcSheet } from "../ui/sheets/npc-sheet.js";
+import { SimpleActorSheet } from "../ui/sheets/actor-sheet.js";
+import { GroupSheet } from "../ui/sheets/group-sheet.js";
+import { SimpleItemSheet } from "../ui/sheets/item-sheet.js";
 
-import { SystemCombat } from "../../src/core/documents/combat.js";
-import { initializeChatHandlers, registerCombatChatHooks } from "../../src/core/combat/chat-handlers.js";
-import { registerSkillTNDebug } from "../../src/utils/dev/skill-tn-debug.js";
-import { registerActorSelectDebug } from "../../src/utils/dev/actor-select-debug.js";
-import { registerDebugSettingsMenu } from "../../src/utils/dev/debug-settings.js";
-import { registerOpposedDiagnostics } from "../../src/utils/dev/opposed-diagnostics.js";
-import { registerConditions } from "../../src/core/conditions/index.js";
-import { registerWounds } from "../../src/core/wounds/index.js";
-import { registerFrenzied, FrenziedAPI } from "../../src/core/conditions/frenzied.js";
-import { applyDamage, applyHealing, DAMAGE_TYPES } from "../../src/core/combat/damage-automation.js";
-import { applyDamageResolved } from "../../src/core/combat/damage-resolver.js";
-import { registerChatMessageSocket } from "../../src/utils/chat-message-socket.js";
-import { registerActiveEffectProxy } from "../../src/utils/active-effect-proxy.js";
+import { SystemCombat } from "../core/documents/combat.js";
+import { initializeChatHandlers, registerCombatChatHooks } from "../core/combat/chat-handlers.js";
+import { registerSkillTNDebug } from "../utils/dev/skill-tn-debug.js";
+import { registerActorSelectDebug } from "../utils/dev/actor-select-debug.js";
+import { registerDebugSettingsMenu } from "../utils/dev/debug-settings.js";
+import { registerOpposedDiagnostics } from "../utils/dev/opposed-diagnostics.js";
+import { registerConditions } from "../core/conditions/index.js";
+import { registerWounds } from "../core/wounds/index.js";
+import { registerFrenzied, FrenziedAPI } from "../core/conditions/frenzied.js";
+import { applyDamage, applyHealing, DAMAGE_TYPES } from "../core/combat/damage-automation.js";
+import { applyDamageResolved } from "../core/combat/damage-resolver.js";
+import { registerChatMessageSocket } from "../utils/chat-message-socket.js";
+import { registerActiveEffectProxy } from "../utils/active-effect-proxy.js";
 
 /**
  * Preload Handlebars partials used by system sheets.
@@ -391,7 +391,7 @@ game.uesrpg.combat.applyHealing = async (actor, amount, options = {}) => {
 
 
   // NOTE: Spell Item Active Effects use the same deterministic transfer semantics as other item types.
-  // See module/ae/transfer.js for activation gating (spells require an explicit "Active" toggle).
+  // See src/core/ae/transfer.js for activation gating (spells require an explicit "Active" toggle).
 
 
   /**
@@ -575,7 +575,7 @@ Hooks.on("createChatMessage", async (message) => {
   if (!state?.outcome || !state?.specialActionId) return;
 
   try {
-    const { executeSpecialAction } = await import("../../src/core/combat/special-actions-helper.js");
+    const { executeSpecialAction } = await import("../core/combat/special-actions-helper.js");
     
     const attacker = fromUuidSync(state.attacker?.actorUuid);
     const defender = fromUuidSync(state.defender?.actorUuid);

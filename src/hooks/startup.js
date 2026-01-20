@@ -1,4 +1,4 @@
-import { systemRootPath } from "../../src/core/constants.js";
+import { systemRootPath } from "../core/constants.js";
 
 /**
  * Startup dialog (Foundry VTT v13.351, classic API).

@@ -1,7 +1,7 @@
 import { migrateItemsIfNeeded } from "./core/migrations/items.js";
 import { migrateActorsIfNeeded } from "./core/migrations/actors.js";
-import startupHandler from '../module/handlers/startup.js';
-import initHandler from '../module/handlers/init.js';
+import startupHandler from './hooks/startup.js';
+import initHandler from './hooks/init.js';
 import { dumpAEKeys } from "./utils/dev/ae-keys-dump.js";
 import { openStaminaDialog, getActiveStaminaEffect, consumeStaminaEffect } from "./core/stamina/stamina-dialog.js";
 import { 

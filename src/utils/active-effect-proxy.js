@@ -1,9 +1,9 @@
 /**
- * module/helpers/active-effect-proxy.js
+ * src/utils/active-effect-proxy.js
  *
  * Backwards-compatible wrapper for ActiveEffect proxy creation.
  *
- * Canonical implementation lives in module/helpers/authority-proxy.js.
+ * Canonical implementation lives in src/utils/authority-proxy.js.
  */
 
 import { registerAuthorityProxy, requestCreateActiveEffect as requestCreateActiveEffectAuthority } from "./authority-proxy.js";

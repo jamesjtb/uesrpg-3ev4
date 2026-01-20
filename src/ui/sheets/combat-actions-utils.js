@@ -1,5 +1,5 @@
 /**
- * module/sheets/combat-actions-utils.js
+ * src/ui/sheets/combat-actions-utils.js
  *
  * Sheet utilities for the Combat tab “Actions” surface.
  * - Builds template-friendly equipped summaries
@@ -170,7 +170,7 @@ export async function performQuickWeaponAttack(actor, weaponId, options = {}) {
  * @returns {Promise<boolean>}
  */
 export async function spendActionPoints(actor, amount = 1, { reason = "" } = {}) {
-  // Canonical lane: module/combat/action-economy.js
+  // Canonical lane: src/core/combat/action-economy.js
   return ActionEconomy.spendAP(actor, amount, { reason, silent: false });
 }
 
