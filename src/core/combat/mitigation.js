@@ -1,5 +1,5 @@
 /**
- * module/combat/mitigation.js
+ * src/core/combat/mitigation.js
  *
  * Canonical mitigation resolvers.
  *

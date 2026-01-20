@@ -1,5 +1,5 @@
 /**
- * module/helpers/authority-proxy.js
+ * src/utils/authority-proxy.js
  *
  * Centralized permission-safe mutation helper for distributed workflows.
  *

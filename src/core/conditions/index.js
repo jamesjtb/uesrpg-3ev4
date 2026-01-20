@@ -1,5 +1,5 @@
 /**
- * module/conditions/index.js
+ * src/core/conditions/index.js
  */
 
 import { registerConditionHooks, ConditionsAPI, auditConditionRegistry } from "./condition-engine.js";

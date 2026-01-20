@@ -1,5 +1,5 @@
 /**
- * module/conditions/bleeding.js
+ * src/core/conditions/bleeding.js
  *
  * Chapter 5: Bleeding (X) condition automation.
  *

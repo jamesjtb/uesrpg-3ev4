@@ -1,5 +1,5 @@
 /**
- * module/magic/magicka-utils.js
+ * src/core/magic/magicka-utils.js
  *
  * Magicka consumption and spell damage helpers for UESRPG 3ev4.
  *

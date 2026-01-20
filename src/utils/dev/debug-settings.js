@@ -1,5 +1,5 @@
 /**
- * module/dev/debug-settings.js
+ * src/utils/dev/debug-settings.js
  *
  * Foundry v13 (non-ApplicationV2) debug settings submenu.
  *

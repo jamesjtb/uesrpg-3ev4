@@ -1,5 +1,5 @@
 /**
- * module/skills/skill-tn.js
+ * src/core/skills/skill-tn.js
  *
  * Skill TN computation for UESRPG 3ev4 (Foundry v13.351).
  *

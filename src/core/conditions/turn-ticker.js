@@ -1,5 +1,5 @@
 /**
- * module/conditions/turn-ticker.js
+ * src/core/conditions/turn-ticker.js
  *
  * Deterministic end-of-turn condition ticking.
  * Runs GM-only on updateCombat.

@@ -1,5 +1,6 @@
 /**
- * module/magic/backfire.js
+ * src/core/magic/backfire.js
+
  *
  * Magical backfire detection and handling (RAW p.128 lines 225-233).
  * Full backfire tables implementation deferred to future milestone.

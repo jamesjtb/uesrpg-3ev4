@@ -1,5 +1,6 @@
 /**
- * module/helpers/ae-grouping.js
+ * src/utils/ae-grouping.js
+
  *
  * Active Effect grouping and stacking utility for UESRPG 3ev4.
  * Provides deterministic stacking/override behavior for system-created effects.

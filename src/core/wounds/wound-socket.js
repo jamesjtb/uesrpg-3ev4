@@ -1,5 +1,5 @@
 /**
- * module/wounds/wound-socket.js
+ * src/core/wounds/wound-socket.js
  *
  * Permission-safe socket bridge for wounds automation.
  *

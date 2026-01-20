@@ -1,5 +1,5 @@
 /**
- * module/combat/chat-handlers.js
+ * src/core/combat/chat-handlers.js
  * Foundry VTT v13-compatible chat card handlers for UESRPG 3ev4.
  *
  * Exports expected by init.js:

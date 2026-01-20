@@ -1,5 +1,5 @@
 /**
- * module/conditions/status-hud.js
+ * src/core/conditions/status-hud.js
  *
  * Token HUD status ↔ system condition parity.
  *

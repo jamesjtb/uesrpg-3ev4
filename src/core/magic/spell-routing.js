@@ -1,5 +1,5 @@
 /**
- * module/magic/spell-routing.js
+ * src/core/magic/spell-routing.js
  *
  * Centralized spell classification and routing helpers.
  */

@@ -1,5 +1,5 @@
 /**
- * module/wounds/index.js
+ * src/core/wounds/index.js
  */
 
 import { registerWoundHooks, WoundsAPI } from "./wound-engine.js";

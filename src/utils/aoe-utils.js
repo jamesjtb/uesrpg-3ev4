@@ -1,5 +1,6 @@
 /**
- * module/helpers/aoe-utils.js
+ * src/utils/aoe-utils.js
+
  *
  * Small AoE geometry helpers for escape checks.
  * Foundry VTT v13.

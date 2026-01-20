@@ -1,5 +1,5 @@
 /**
- * module/skills/roll-request.js
+ * src/core/skills/roll-request.js
  *
  * Internal data contract for skill roll workflows.
  *

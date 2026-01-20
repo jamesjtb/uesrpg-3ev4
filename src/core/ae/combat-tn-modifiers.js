@@ -1,5 +1,5 @@
 /**
- * module/ae/combat-tn-modifiers.js
+ * src/core/ae/combat-tn-modifiers.js
  *
  * Deterministic aggregation of combat TN modifiers sourced from Active Effects.
  *

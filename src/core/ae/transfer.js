@@ -1,5 +1,5 @@
 /**
- * module/ae/transfer.js
+ * src/core/ae/transfer.js
  *
  * Deterministic "transfer" semantics for Item Active Effects.
  * This system does not rely on implicit Foundry transfer application in roll pipelines.

@@ -1,5 +1,5 @@
 /**
- * module/wounds/wound-engine.js
+ * src/core/wounds/wound-engine.js
  *
  * Wound persistence + blood loss automation (Chapter 5).
  *

@@ -1,5 +1,5 @@
 /**
- * module/combat/opposed-roll.js
+ * src/core/combat/opposed-rolls.js
  * Opposed-roll wrapper that uses degree-roll-helper.js and damage-automation.js
  * Produces a chat card with both Rolls, DoS/DoF, and resolution.
  *

@@ -1,5 +1,5 @@
 /**
- * module/conditions/condition-engine.js
+ * src/core/conditions/condition-engine.js
  *
  * ActiveEffect-backed conditions that require deterministic automation.
  *

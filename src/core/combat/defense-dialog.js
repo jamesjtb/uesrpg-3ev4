@@ -1,5 +1,5 @@
 /**
- * module/combat/defense-dialog.js
+ * src/core/combat/defense-dialog.js
  *
  * Defender selection dialog for opposed combat.
  *

@@ -1,5 +1,5 @@
 /**
- * module/combat/action-economy.js
+ * src/core/combat/action-economy.js
  * Foundry VTT v13 - UESRPG 3ev4
  *
  * Canonical Action Economy service:

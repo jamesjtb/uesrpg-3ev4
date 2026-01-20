@@ -1,5 +1,5 @@
 /**
- * module/magic/magic-modifiers.js
+ * src/core/magic/magic-modifiers.js
  *
  * Package 4 — Magic Rules Parity and Talent Hooks
  *

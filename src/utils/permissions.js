@@ -1,5 +1,5 @@
 /**
- * module/helpers/permissions.js
+ * src/utils/permissions.js
  *
  * Centralized permission checks for roll workflows.
  * Target: Foundry VTT v13.351.

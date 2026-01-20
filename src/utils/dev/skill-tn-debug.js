@@ -1,5 +1,5 @@
 /**
- * module/dev/skill-tn-debug.js
+ * src/utils/dev/skill-tn-debug.js
  *
  * GM-only developer utility for inspecting Skill TN computation.
  *

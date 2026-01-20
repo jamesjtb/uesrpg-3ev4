@@ -1,5 +1,5 @@
 /**
- * module/combat/damage-resolver.js
+ * src/core/combat/damage-resolver.js
  *
  * Single, shared resolver path for damage application.
  *

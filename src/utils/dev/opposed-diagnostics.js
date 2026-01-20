@@ -1,5 +1,5 @@
 /**
- * module/dev/opposed-diagnostics.js
+ * src/utils/dev/opposed-diagnostics.js
  *
  * GM-facing diagnostics helpers for the opposed workflow.
  *

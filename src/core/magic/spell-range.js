@@ -1,5 +1,5 @@
 /**
- * module/magic/spell-range.js
+ * src/core/magic/spell-range.js
  *
  * Range gating and AoE template placement for spell casting.
  * Target: Foundry VTT v13.351.

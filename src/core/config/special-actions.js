@@ -1,5 +1,5 @@
 /**
- * module/config/special-actions.js
+ * src/core/config/special-actions.js
  *
  * Canonical Special Actions registry (UESRPG 3ev4, Chapter 5 - Advanced Mechanics).
  *

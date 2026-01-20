@@ -1,5 +1,5 @@
 /**
- * module/combat/attack-tracker.js
+ * src/core/combat/attack-tracker.js
  *
  * Track attacks made per round/turn for the UESRPG 3ev4 system.
  * According to RAW: "A character may make no more than two total attacks in a single round"

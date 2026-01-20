@@ -1,5 +1,5 @@
 /**
- * module/magic/opposed-workflow.js
+ * src/core/magic/opposed-workflow.js
  *
  * Magic attack opposed workflow for UESRPG 3ev4.
  * Target: Foundry VTT v13.351.

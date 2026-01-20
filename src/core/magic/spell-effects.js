@@ -1,5 +1,5 @@
 /**
- * module/magic/spell-effects.js
+ * src/core/magic/spell-effects.js
  *
  * Spell effect application with RAW stacking rules and duration tracking.
  * Chapter 6 p.128 lines 234-241: Effects don't stack with themselves,

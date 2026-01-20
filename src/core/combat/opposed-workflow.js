@@ -1,5 +1,5 @@
 /**
- * module/combat/opposed-workflow.js
+ * src/core/combat/opposed-workflow.js
  *
  * Canonical opposed/contested workflow for UESRPG 3ev4 (Foundry v13, non-ApplicationV2).
  *

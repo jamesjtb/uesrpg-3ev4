@@ -1,5 +1,5 @@
 /**
- * module/apps/hp-temp-hp-dialog.js
+ * src/ui/apps/hp-temp-hp-dialog.js
  * 
  * Dialog for managing HP and Temporary HP for actors.
  * Temporary HP acts as a damage buffer and does not stack.

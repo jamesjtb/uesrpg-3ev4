@@ -1,5 +1,5 @@
 /**
- * module/combat/combat-style-utils.js
+ * src/core/combat/combat-style-utils.js
  *
  * Combat Style helpers (Option 2):
  *  - For PCs: "known" Special Actions are derived ONLY from an explicitly selected active combat style stored on the Actor.

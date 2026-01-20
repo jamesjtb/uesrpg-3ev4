@@ -1,5 +1,5 @@
 /**
- * module/skills/opposed-workflow.js
+ * src/core/skills/opposed-workflow.js
  *
  * Skill opposed workflow, modeled after module/combat/opposed-workflow.js.
  *

@@ -1,5 +1,5 @@
 /**
- * module/magic/upkeep-workflow.js
+ * src/core/magic/upkeep-workflow.js
  *
  * Spell upkeep system for UESRPG 3ev4.
  *

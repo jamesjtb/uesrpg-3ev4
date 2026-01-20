@@ -1,5 +1,5 @@
 /**
- * module/combat/defense-options.js
+ * src/core/combat/defense-options.js
  *
  * Canonical defense option availability computation for the opposed workflow.
  *

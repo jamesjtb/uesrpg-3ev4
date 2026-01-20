@@ -1,5 +1,5 @@
 /**
- * module/conditions/frenzied.js
+ * src/core/conditions/frenzied.js
  *
  * Chapter 5: Frenzied condition automation.
  *

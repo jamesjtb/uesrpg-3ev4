@@ -1,5 +1,5 @@
 /**
- * module/combat/tn.js
+ * src/core/combat/tn.js
  *
  * Deterministic TN computation pipeline for opposed workflow.
  *

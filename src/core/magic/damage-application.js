@@ -1,5 +1,5 @@
 /**
- * module/magic/damage-application.js
+ * src/core/magic/damage-application.js
  *
  * Magic damage/healing application wrappers which delegate to the unified combat
  * damage/healing pipeline for full parity.

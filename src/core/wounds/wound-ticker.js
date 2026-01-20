@@ -1,5 +1,5 @@
 /**
- * module/wounds/wound-ticker.js
+ * src/core/wounds/wound-ticker.js
  *
  * Deterministic combat-driven ticking for Chapter 5 wound automation.
  *

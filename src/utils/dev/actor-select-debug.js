@@ -1,5 +1,5 @@
 /**
- * module/dev/actor-select-debug.js
+ * src/utils/dev/actor-select-debug.js
  *
  * Developer utility:
  * When enabled, logs an actor's TN-relevant context to the console every time a token is controlled.

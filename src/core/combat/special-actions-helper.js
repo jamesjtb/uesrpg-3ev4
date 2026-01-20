@@ -1,5 +1,5 @@
 /**
- * module/combat/special-actions-helper.js
+ * src/core/combat/special-actions-helper.js
  * 
  * Full automation for Special Actions (Chapter 5) with:
  * - Interactive opposed test cards with action buttons

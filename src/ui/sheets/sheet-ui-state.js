@@ -1,5 +1,5 @@
 /**
- * module/sheets/sheet-ui-state.js
+ * src/ui/sheets/sheet-ui-state.js
  *
  * Per-user sheet UI state helpers (no actor schema changes).
  *

@@ -1,5 +1,5 @@
 /**
- * module/combat/combat-utils.js
+ * src/core/combat/combat-utils.js
  *
  * UESRPG 3e v4 — Combat utilities (Foundry VTT v13).
  *

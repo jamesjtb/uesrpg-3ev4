@@ -1,5 +1,5 @@
 /**
- * module/helpers/chat-message-socket.js
+ * src/utils/chat-message-socket.js
  *
  * Backwards-compatible ChatMessage update helper.
  *

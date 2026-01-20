@@ -1,5 +1,5 @@
 /**
- * module/conditions/condition-automation.js
+ * src/core/conditions/condition-automation.js
  *
  * Restoration: condition mechanics and ticking automation.
  *

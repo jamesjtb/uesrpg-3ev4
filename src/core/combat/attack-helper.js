@@ -1,5 +1,5 @@
 /**
- * module/combat/attack-helper.js
+ * src/core/combat/attack-helper.js
  * Helper functions for performing attacks with weapons
  * Integrates combat rolls, damage calculation, and automation
  */
