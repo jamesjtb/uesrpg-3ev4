@@ -2,13 +2,13 @@
  * Extend the basic ActorSheet with some very simple modifications
  * @extends {ActorSheet}
  */
-import { getDamageTypeFromWeapon } from "../../src/core/combat/combat-utils.js";
-import { requireUserCanRollActor } from "../../src/utils/permissions.js";
-import { doTestRoll, formatDegree } from "../../src/utils/degree-roll-helper.js";
-import { computeSkillTN, SKILL_DIFFICULTIES } from "../../src/core/skills/skill-tn.js";
-import { buildSkillRollRequest, normalizeSkillRollOptions } from "../../src/core/skills/roll-request.js";
-import { SkillOpposedWorkflow } from "../../src/core/skills/opposed-workflow.js";
-import { OpposedWorkflow } from "../../src/core/combat/opposed-workflow.js";
+import { getDamageTypeFromWeapon } from "../../core/combat/combat-utils.js";
+import { requireUserCanRollActor } from "../../utils/permissions.js";
+import { doTestRoll, formatDegree } from "../../utils/degree-roll-helper.js";
+import { computeSkillTN, SKILL_DIFFICULTIES } from "../../core/skills/skill-tn.js";
+import { buildSkillRollRequest, normalizeSkillRollOptions } from "../../core/skills/roll-request.js";
+import { SkillOpposedWorkflow } from "../../core/skills/opposed-workflow.js";
+import { OpposedWorkflow } from "../../core/combat/opposed-workflow.js";
 import { postItemToChat } from "./shared-handlers.js";
 import {
   buildCombatQuickContext,
@@ -18,10 +18,10 @@ import {
   resolveTokenForActor,
   spendActionPoints
 } from "./combat-actions-utils.js";
-import { buildSpecialActionsForActor, getActiveCombatStyleId, getExplicitActiveCombatStyleItem, isSpecialActionUsableNow } from "../../src/core/combat/combat-style-utils.js";
-import { AimAudit } from "../../src/core/combat/aim-audit.js";
-import { createOrUpdateStatusEffect } from "../../src/core/effects/status-effect.js";
-import { getSpecialActionById } from "../../src/core/config/special-actions.js";
+import { buildSpecialActionsForActor, getActiveCombatStyleId, getExplicitActiveCombatStyleItem, isSpecialActionUsableNow } from "../../core/combat/combat-style-utils.js";
+import { AimAudit } from "../../core/combat/aim-audit.js";
+import { createOrUpdateStatusEffect } from "../../core/effects/status-effect.js";
+import { getSpecialActionById } from "../../core/config/special-actions.js";
 import {
   getCollapsedGroups,
   setGroupCollapsed,
@@ -35,12 +35,12 @@ import { shouldHideFromMainInventory } from "./sheet-inventory.js";
 import { prepareCharacterItems } from "./sheet-prepare-items.js";
 import { registerHPButtonHandler } from "./actor-sheet-hp-integration.js";
 import { registerStaminaButtonHandler } from "./actor-sheet-stamina-integration.js";
-import { classifySpellForRouting, getUserSpellTargets, shouldUseTargetedSpellWorkflow, shouldUseModernSpellWorkflow, debugMagicRoutingLog } from "../../src/core/magic/spell-routing.js";
-import { filterTargetsBySpellRange, getSpellAoEConfig, getSpellRangeType, placeAoETemplateAndCollectTargets } from "../../src/core/magic/spell-range.js";
+import { classifySpellForRouting, getUserSpellTargets, shouldUseTargetedSpellWorkflow, shouldUseModernSpellWorkflow, debugMagicRoutingLog } from "../../core/magic/spell-routing.js";
+import { filterTargetsBySpellRange, getSpellAoEConfig, getSpellRangeType, placeAoETemplateAndCollectTargets } from "../../core/magic/spell-range.js";
 import { applyShortRest, applyLongRest, buildRestChatContent } from "./rest-workflow.js";
-import { executeActivation, buildSpecialActionActivation } from "../../src/core/system/activation/activation-executor.js";
-import { resolveCriticalFlags } from "../../src/core/rules/npc-rules.js";
-import { buildResistanceBonusSection, readResistanceBonusSelections, buildResistanceBonusMods } from "../../src/core/traits/trait-resistance-ui.js";
+import { executeActivation, buildSpecialActionActivation } from "../../core/system/activation/activation-executor.js";
+import { resolveCriticalFlags } from "../../core/rules/npc-rules.js";
+import { buildResistanceBonusSection, readResistanceBonusSelections, buildResistanceBonusMods } from "../../core/traits/trait-resistance-ui.js";
 
 export class npcSheet extends foundry.appv1.sheets.ActorSheet {
   /** @override */
@@ -438,7 +438,7 @@ async activateListeners(html) {
 
         // Arise doesn't need opposed test
         if (specialId === "arise") {
-          const { executeSpecialAction } = await import("../../src/core/combat/special-actions-helper.js");
+          const { executeSpecialAction } = await import("../../core/combat/special-actions-helper.js");
           const result = await executeSpecialAction({
             specialActionId: specialId,
             actor: this.actor,
@@ -886,7 +886,7 @@ async activateListeners(html) {
         }
         
         // Check for Power Draw stamina effect
-        const { applyPowerDrawBonus } = await import("../../src/core/stamina/stamina-integration-hooks.js");
+        const { applyPowerDrawBonus } = await import("../../core/stamina/stamina-integration-hooks.js");
         const powerDrawReduction = await applyPowerDrawBonus(this.actor, rangedWeapon);
         let effectiveReloadCost = Math.max(0, reloadCost - powerDrawReduction);
         
@@ -1865,7 +1865,7 @@ async _onDefendRoll(event) {
   if (!item) return;
 
   // ✅ Import helper functions at top of file if not already
-  // import { rollHitLocation, getDamageTypeFromWeapon } from "../../src/core/combat/combat-utils.js";
+  // import { rollHitLocation, getDamageTypeFromWeapon } from "../../core/combat/combat-utils.js";
   
   // Determine damage formula
   const damageRoll = item.system?.weapon2H ?  item.system?.damage2 : item.system?.damage;
@@ -2133,7 +2133,7 @@ if (shouldUseTargetedSpellWorkflow(spell, workingTargets)) {
 	    } else if (shouldUseModernSpellWorkflow(spell)) {
 	      const spellOptions = await this._showSpellOptionsDialog(spell);
 	      if (spellOptions === null) return;
-	      const { MagicOpposedWorkflow } = await import("../../src/core/magic/opposed-workflow.js");
+	      const { MagicOpposedWorkflow } = await import("../../core/magic/opposed-workflow.js");
 	      await MagicOpposedWorkflow.castUnopposed({
 	        attackerActorUuid: this.actor.uuid,
 	        attackerTokenUuid: this.token?.document?.uuid ?? this.token?.uuid ?? null,
@@ -2280,7 +2280,7 @@ if (shouldUseTargetedSpellWorkflow(spell, workingTargets)) {
    */
   async _castAttackSpell(spell, targets, spellOptions = {}, castActionType = "primary", { aoeTemplateUuid = null, aoeTemplateId = null } = {}) {
     // Import MagicOpposedWorkflow
-    const { MagicOpposedWorkflow } = await import("../../src/core/magic/opposed-workflow.js");
+    const { MagicOpposedWorkflow } = await import("../../core/magic/opposed-workflow.js");
     
     // Get attacker token
     const attackerToken = canvas?.tokens?.controlled?.find(t => t.actor?.id === this.actor.id) 
@@ -2344,7 +2344,7 @@ async _onSpellRoll(event) {
 	  if (shouldUseModernSpellWorkflow(spellToCast)) {
 	    const spellOptions = await this._showSpellOptionsDialog(spellToCast);
 	    if (spellOptions === null) return;
-	    const { MagicOpposedWorkflow } = await import("../../src/core/magic/opposed-workflow.js");
+	    const { MagicOpposedWorkflow } = await import("../../core/magic/opposed-workflow.js");
 	    await MagicOpposedWorkflow.castUnopposed({
 	      attackerActorUuid: this.actor.uuid,
 	      attackerTokenUuid: this.token?.document?.uuid ?? this.token?.uuid ?? null,

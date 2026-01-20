@@ -1,4 +1,4 @@
-import { executeItemActivation, executeItemMacroBestEffort } from "../../src/core/system/activation/activation-executor.js";
+import { executeItemActivation, executeItemMacroBestEffort } from "../../core/system/activation/activation-executor.js";
 
 /**
  * Shared sheet handler utilities.

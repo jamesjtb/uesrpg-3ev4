@@ -3,7 +3,7 @@
  * Overrides the default stamina button to open the stamina spending dialog.
  */
 
-import { openStaminaDialog } from "../../src/core/stamina/stamina-dialog.js";
+import { openStaminaDialog } from "../../core/stamina/stamina-dialog.js";
 
 /**
  * Register stamina button handler to intercept clicks on the stamina button

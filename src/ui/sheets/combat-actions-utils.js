@@ -26,7 +26,7 @@
  *   equippedShields: Array<{_id: string, name: string}>
  * }}
  */
-import { ActionEconomy } from "../../src/core/combat/action-economy.js";
+import { ActionEconomy } from "../../core/combat/action-economy.js";
 export function buildCombatQuickContext(actorData) {
   const combatStyleName = (actorData?.combatStyle?.[0]?.name) ?? null;
 

@@ -1,10 +1,11 @@
 import { UESRPG } from "../../src/core/constants.js";
 import { SimpleActor } from "../../src/core/documents/actor.js";
-import { npcSheet } from "../sheets/npc-sheet.js";
-import { SimpleActorSheet } from "../sheets/actor-sheet.js";
-import { GroupSheet } from "../sheets/group-sheet.js";
 import { SimpleItem } from "../../src/core/documents/item.js";
-import { SimpleItemSheet } from "../sheets/item-sheet.js";
+import { npcSheet } from "../../src/ui/sheets/npc-sheet.js";
+import { SimpleActorSheet } from "../../src/ui/sheets/actor-sheet.js";
+import { GroupSheet } from "../../src/ui/sheets/group-sheet.js";
+import { SimpleItemSheet } from "../../src/ui/sheets/item-sheet.js";
+
 import { SystemCombat } from "../../src/core/documents/combat.js";
 import { initializeChatHandlers, registerCombatChatHooks } from "../../src/core/combat/chat-handlers.js";
 import { registerSkillTNDebug } from "../../src/utils/dev/skill-tn-debug.js";
