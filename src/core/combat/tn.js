@@ -13,7 +13,7 @@
  */
 
 import { skillHelper, skillModHelper } from "../../utils/skillCalcHelper.js";
-import { collectCombatTNModifiersFromAE } from "../ae/combat-tn-modifiers.js";
+import { collectCombatTNModifiersFromAE } from "../active-effects/combat-tn-modifiers.js";
 
 /**
  * Read combat TN modifiers from actor.system.modifiers.combat.*.
