@@ -17,8 +17,8 @@
  */
 
 import { applyDamage, calculateDamage, DAMAGE_TYPES, applyForcefulImpact, ensureUnconsciousEffect, isItemMagicSource, itemHasToken } from "./damage-automation.js";
-import { evaluateAEModifierKeys } from "../ae/modifier-evaluator.js";
-import { isTransferEffectActive } from "../ae/transfer.js";
+import { evaluateAEModifierKeys } from "../active-effects/modifier-evaluator.js";
+import { isTransferEffectActive } from "../active-effects/transfer.js";
 import { isActorIncorporeal, getActorTraitValue, getDiseaseResistancePercent, hasActorTrait, isActorUndead } from "../traits/trait-registry.js";
 import { postDiseasedCheckCard } from "../traits/trait-automation.js";
 
