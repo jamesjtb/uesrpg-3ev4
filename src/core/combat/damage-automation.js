@@ -16,7 +16,7 @@
  *  - getDamageReduction(actor, damageType, hitLocation)
  */
 
-import { evaluateAEModifierKeys } from "../ae/modifier-evaluator.js";
+import { evaluateAEModifierKeys } from "../active-effects/modifier-evaluator.js";
 import { UESRPG } from "../constants.js";
 import { requestCreateActiveEffect } from "../../utils/active-effect-proxy.js";
 import { requestUpdateDocument } from "../../utils/authority-proxy.js";
