@@ -4,8 +4,8 @@
  */
 
 
-import { isTransferEffectActive } from "../ae/transfer.js";
-import { evaluateAEModifierKeys } from "../ae/modifier-evaluator.js";
+import { isTransferEffectActive } from "../active-effects/transfer.js";
+import { evaluateAEModifierKeys } from "../active-effects/modifier-evaluator.js";
 import { collectTraitDamageModifiers, getResistanceKeyForTraitType, getActorTraitValue, isActorUndead } from "../traits/trait-registry.js";
 
 export class SimpleActor extends Actor {
