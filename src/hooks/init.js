@@ -391,7 +391,7 @@ game.uesrpg.combat.applyHealing = async (actor, amount, options = {}) => {
 
 
   // NOTE: Spell Item Active Effects use the same deterministic transfer semantics as other item types.
-  // See src/core/ae/transfer.js for activation gating (spells require an explicit "Active" toggle).
+  // See src/core/active-effects/transfer.js for activation gating (spells require an explicit "Active" toggle).
 
 
   /**
