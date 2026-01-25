@@ -1,0 +1,84 @@
+name: 'Shift Form: (Lycanthrope)'
+type: power
+flags: {}
+img: systems/uesrpg-3ev4/images/Icons/Druideskill_22.webp
+effects: []
+_id: cJSMt2CJJhza46Gf
+_stats:
+  coreVersion: '12.331'
+  systemId: null
+  systemVersion: null
+  createdTime: null
+  modifiedTime: null
+  lastModifiedBy: null
+  compendiumSource: null
+  duplicateSource: null
+ownership:
+  default: 0
+  inSimu0FutxmlwqN: 3
+system:
+  mpBonus: 0
+  hpBonus: 0
+  spBonus: 0
+  lpBonus: 0
+  wtBonus: 0
+  iniBonus: 0
+  speedBonus: 0
+  flyBonus: 0
+  swimBonus: 0
+  diseaseR: 0
+  fireR: 0
+  frostR: 0
+  shockR: 0
+  poisonR: 0
+  magicR: 0
+  natToughnessR: 0
+  silverR: 0
+  sunlightR: 0
+  characteristics:
+    none: None
+    str: STR
+    end: END
+    agi: AGI
+    int: INT
+    wp: WP
+    prc: PRC
+    prs: PRS
+    lck: LCK
+  characteristicBonus:
+    strChaBonus: 0
+    endChaBonus: 0
+    agiChaBonus: 0
+    intChaBonus: 0
+    wpChaBonus: 0
+    prcChaBonus: 0
+    prsChaBonus: 0
+    lckChaBonus: 0
+  skillArray: []
+  description: >-
+    <p>This character can shift (willingly or otherwise) into a different form.
+    Use this as a template for Lycanthropes such as Werewolves, Wereboars,
+    Werebears, etc.</p>
+
+    <p>To shift into Beast Form, go into the Attributes tab and select the
+    appropriate form type in the dropdown. When reverting back to normal form,
+    remember to select the "Regular Form" dropdown to revert your stats back to
+    normal.</p>
+  dailyUse: false
+  source: Curse
+  shiftForm: false
+  shiftFormStyle: shiftFormNone
+  shiftStyles:
+    shiftFormNone: Regular Form
+    shiftFormVampireLord: Vampire Lord
+    shiftFormWereWolf: Werewolf
+    shiftFormWereBat: Werebat
+    shiftFormWereBoar: Wereboar
+    shiftFormWereBear: Werebear
+    shiftFormWereCrocodile: Werecrocodile
+    shiftFormWereVulture: Werevulture
+    shiftFormWereLion: Werelion
+folder: null
+sort: 0
+_key: '!items!cJSMt2CJJhza46Gf'
+

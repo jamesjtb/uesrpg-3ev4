@@ -1,0 +1,55 @@
+_id: H4R1UkkTMaBeOVjY
+name: Sanguinare Vampiris
+folder: null
+sort: 0
+flags:
+  core:
+    sourceId: JournalEntry.UuZO2z9LRKVPBxke
+  cf:
+    id: temp_590lo3nu4qu
+    path: References
+    color: '#000000'
+pages:
+  - name: Sanguinare Vampiris
+    type: text
+    title:
+      show: false
+      level: 1
+    text:
+      format: 1
+      content: "<p><span style=\"text-decoration:underline\"><strong>Infection</strong></span></p>\n<p>Whenever someone takes damage from a Vampire’s Bite attack, the target must make a -10 End test or become infected. If you are fed the blood of a vampire, you will automatically fail the test.</p>\n<p><span style=\"text-decoration:underline\"><strong>The Thirst</strong></span></p>\n<p>You suffer from an insatiable thirst for mortal blood. Each night at sundown, the Vampire must make a WILL test or suffer a point of Thirst. You gain a -10 penalty each night you go without feeding. The following information is the effects of each stage of thirst.</p>\n<p><em><strong>Well Fed</strong></em></p>\n<p>While well fed, your natural healing rate is doubled.</p>\n<p><em><strong>Sated</strong></em></p>\n<p>While sated you suffer from no penalties</p>\n<p><em><strong>Thirsty</strong></em></p>\n<p>While thirsty, you are plagued by nightmares of a pale woman covered in blood. You suffer from a -10 penalty on Skills that are governed by Int, Wp, &amp; Prs.</p>\n<p><em><strong>Parched</strong></em></p>\n<p>While parched, the penalty to your skills is doubled (-20).</p>\n<p><em><strong>Dry</strong></em></p>\n<p>While dry the prior penalty is doubled (-40) but you gain a +1 Max SP. Raises your “Visage” by +30.</p>\n<p><em><strong>Ravenous</strong></em></p>\n<p>While ravenous, you gain an additional +1 Max SP (+2)</p>\n<p><em><strong>Feral</strong></em></p>\n<p>While Feral, you have lost yourself to the thirst. You are forced to attack the nearest source of blood, friend, or foe, until you reach the “Sated” thirst state.</p>\n<p><span style=\"text-decoration:underline\"><strong>Feeding</strong></span></p>\n<p>To slake your thirst, you must be at full HP while you feed. If you are not at full health when you feed, you restore HP instead of Hunger.</p>\n<p>You may only feed on live creatures that you are either grappling, if they are asleep, or bound. Feeding on a beast restores 1/2 of a thirst point and a mortal restores 1 whole point of thirst</p>\n<p><span style=\"text-decoration:underline\"><strong>Draining Dry</strong></span></p>\n<p>When you feed on a helpless target, you can drain them dry, doubling the HP you restore or the thirst you regain, doing this kills the target.</p>\n<p><span style=\"text-decoration:underline\"><strong>Vampiric Fatigue</strong></span></p>\n<p>Vampires never gain points of fatigue and are immune to any magic that would apply said effect. Instead, when they spend stamina they don’t have, they gain a point of thirst. In doing so, your later powers can drain you of your blood reserves.</p>\n<p><span style=\"text-decoration:underline\"><strong>Sanguiphage</strong></span></p>\n<p>When a vampire feeds on another vampire they gain a portion of their power for a time. If you kill a vampire by feeding on them, you gain access to their bloodline ability for the next night. This only works if you are well fed.</p>\n<p>\_</p>"
+    _stats:
+      coreVersion: '12.331'
+      systemId: null
+      systemVersion: null
+      createdTime: null
+      modifiedTime: null
+      lastModifiedBy: null
+      compendiumSource: null
+      duplicateSource: null
+    _id: ln1jx1FE6H5m4QIk
+    system: {}
+    image: {}
+    video:
+      controls: true
+      volume: 0.5
+    src: null
+    sort: 0
+    ownership:
+      default: -1
+    flags: {}
+    _key: '!journal.pages!H4R1UkkTMaBeOVjY.ln1jx1FE6H5m4QIk'
+_stats:
+  coreVersion: '12.331'
+  systemId: null
+  systemVersion: null
+  createdTime: null
+  modifiedTime: null
+  lastModifiedBy: null
+  compendiumSource: null
+  duplicateSource: null
+ownership:
+  default: 0
+  eeXhsDlbzUBZOXZT: 3
+_key: '!journal!H4R1UkkTMaBeOVjY'
+

@@ -1,0 +1,56 @@
+name: Light
+folder: null
+sort: 0
+flags:
+  cf:
+    id: temp_u0ce34u73r
+    path: References#/CF_SEP/Qualities#/CF_SEP/Armour Qualities
+    color: '#000000'
+_id: aN3hsvyJGDAMPW2n
+pages:
+  - name: Light
+    type: text
+    title:
+      show: false
+      level: 1
+    text:
+      format: 1
+      content: >-
+        <p>Light armor imposes a minor penalty on a character’s mobility: The
+        character suffers a -10 penalty to Acrobatics and Spellcasting skill
+        tests.</p>
+    _stats:
+      coreVersion: '12.331'
+      systemId: null
+      systemVersion: null
+      createdTime: null
+      modifiedTime: null
+      lastModifiedBy: null
+      compendiumSource: null
+      duplicateSource: null
+    _id: bQ6TyYT4G0bWBZWJ
+    system: {}
+    image: {}
+    video:
+      controls: true
+      volume: 0.5
+    src: null
+    sort: 0
+    ownership:
+      default: -1
+    flags: {}
+    _key: '!journal.pages!aN3hsvyJGDAMPW2n.bQ6TyYT4G0bWBZWJ'
+_stats:
+  coreVersion: '12.331'
+  systemId: null
+  systemVersion: null
+  createdTime: null
+  modifiedTime: null
+  lastModifiedBy: null
+  compendiumSource: null
+  duplicateSource: null
+ownership:
+  default: 0
+  eeXhsDlbzUBZOXZT: 3
+_key: '!journal!aN3hsvyJGDAMPW2n'
+

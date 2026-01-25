@@ -1,0 +1,87 @@
+name: Skirmisher
+type: talent
+flags:
+  core:
+    sourceId: Item.DYVazRNO2caSDMGE
+img: systems/uesrpg-3ev4/images/Icons/skirmisher.webp
+effects: []
+_stats:
+  compendiumSource: Item.DYVazRNO2caSDMGE
+  duplicateSource: null
+  coreVersion: '12.331'
+  systemId: uesrpg-3ev4
+  systemVersion: v1.0.0-RC.62
+  createdTime: 1733368194114
+  modifiedTime: 1733369301281
+  lastModifiedBy: HcIrULZhA1JFIlrf
+ownership:
+  default: 0
+  HcIrULZhA1JFIlrf: 3
+system:
+  mpBonus: 0
+  hpBonus: 0
+  spBonus: 0
+  lpBonus: 0
+  wtBonus: 0
+  iniBonus: 0
+  speedBonus: 0
+  flyBonus: 0
+  swimBonus: 0
+  diseaseR: 0
+  fireR: 0
+  frostR: 0
+  shockR: 0
+  poisonR: 0
+  magicR: 0
+  natToughnessR: 0
+  silverR: 0
+  sunlightR: 0
+  replace:
+    ini:
+      iniToggle: false
+      value: 0
+      characteristic: none
+    wt:
+      wtToggle: false
+      value: 0
+      characteristic: none
+  characteristics:
+    none: None
+    str: STR
+    end: END
+    agi: AGI
+    int: INT
+    wp: WP
+    prc: PRC
+    prs: PRS
+    lck: LCK
+  characteristicBonus:
+    strChaBonus: 0
+    endChaBonus: 0
+    agiChaBonus: 0
+    intChaBonus: 0
+    wpChaBonus: 0
+    prcChaBonus: 0
+    prsChaBonus: 0
+    lckChaBonus: 0
+  skillArray: []
+  description: >-
+    <p>The character can make a ranged attack as a free action whenever they
+    take the Dash action but at a -20 penalty.</p>
+  governingCharacteristics: Ag
+  xpCost: 300
+  level: Journeyman
+  talentReq: ''
+  miscReq: Agility 35
+  halfFatiguePenalty: false
+  halfWoundPenalty: false
+  untrainedException: false
+  fatigueException: false
+  addIBToMP: false
+  armorAcrobaticsException: false
+  addHalfSpeed: false
+folder: aAOygNvKFmG4260D
+_id: 0V4XlljFs5bduLds
+sort: 1000000
+_key: '!items!0V4XlljFs5bduLds'
+

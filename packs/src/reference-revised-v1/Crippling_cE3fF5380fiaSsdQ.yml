@@ -1,0 +1,53 @@
+name: Crippling
+folder: null
+sort: 0
+flags:
+  cf:
+    id: temp_u0ce34u73r
+    path: References#/CF_SEP/Qualities#/CF_SEP/Armour Qualities
+    color: '#000000'
+_id: cE3fF5380fiaSsdQ
+pages:
+  - name: Crippling
+    type: text
+    title:
+      show: false
+      level: 1
+    text:
+      format: 1
+      content: <p>Character cannot move, and suffers a -40 to all tests.</p>
+    _stats:
+      coreVersion: '12.331'
+      systemId: null
+      systemVersion: null
+      createdTime: null
+      modifiedTime: null
+      lastModifiedBy: null
+      compendiumSource: null
+      duplicateSource: null
+    _id: bBdv9id6kQe7kGb7
+    system: {}
+    image: {}
+    video:
+      controls: true
+      volume: 0.5
+    src: null
+    sort: 0
+    ownership:
+      default: -1
+    flags: {}
+    _key: '!journal.pages!cE3fF5380fiaSsdQ.bBdv9id6kQe7kGb7'
+_stats:
+  coreVersion: '12.331'
+  systemId: null
+  systemVersion: null
+  createdTime: null
+  modifiedTime: null
+  lastModifiedBy: null
+  compendiumSource: null
+  duplicateSource: null
+ownership:
+  default: 0
+  eeXhsDlbzUBZOXZT: 3
+_key: '!journal!cE3fF5380fiaSsdQ'
+

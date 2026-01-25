@@ -1,0 +1,76 @@
+name: Frenzied
+folder: null
+sort: 0
+flags:
+  cf:
+    id: temp_hw0xe1g9xxt
+    path: References#/CF_SEP/Conditions
+    color: '#000000'
+_id: 1yYaEZKzCWMWCgNn
+pages:
+  - name: Frenzied
+    type: text
+    title:
+      show: false
+      level: 1
+    text:
+      format: 1
+      content: >-
+        <p>The character is flung into an uncontrollable rage. Frenzied
+        characters gain the following rules:</p>
+
+        <p>• Must attempt to attack the nearest enemy in melee combat each turn
+        if able. May only make All Out Attacks.</p>
+
+        <p>• If not in range of the nearest enemy, must move towards that enemy.
+        May not attempt to flee the fight.</p>
+
+        <p>• Increase SB by 1.</p>
+
+        <p>• Suffer a -20 penalty to all skill tests based on anything except
+        Strength, Agility, or Endurance.</p>
+
+        <p>• Gains an extra SP, which can exceed their SP maximum.</p>
+
+        <p>• Immune to the effects of the stunned condition, fear, and passive
+        wound effects.</p>
+
+        <p>Once the encounter has ended, the character snaps out of their
+        frenzied state and loses 2 SP (this cannot kill them). The character can
+        also test Willpower at a -20 as an action during combat to attempt to
+        snap out of frenzy, which ends the condition.</p>
+    _stats:
+      coreVersion: '12.331'
+      systemId: null
+      systemVersion: null
+      createdTime: null
+      modifiedTime: null
+      lastModifiedBy: null
+      compendiumSource: null
+      duplicateSource: null
+    _id: UaN7ojq78tnyh4PF
+    system: {}
+    image: {}
+    video:
+      controls: true
+      volume: 0.5
+    src: null
+    sort: 0
+    ownership:
+      default: -1
+    flags: {}
+    _key: '!journal.pages!1yYaEZKzCWMWCgNn.UaN7ojq78tnyh4PF'
+_stats:
+  coreVersion: '12.331'
+  systemId: null
+  systemVersion: null
+  createdTime: null
+  modifiedTime: null
+  lastModifiedBy: null
+  compendiumSource: null
+  duplicateSource: null
+ownership:
+  default: 0
+  eeXhsDlbzUBZOXZT: 3
+_key: '!journal!1yYaEZKzCWMWCgNn'
+

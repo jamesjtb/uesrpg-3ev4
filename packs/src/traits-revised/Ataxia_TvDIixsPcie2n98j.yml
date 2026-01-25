@@ -1,0 +1,153 @@
+_id: TvDIixsPcie2n98j
+name: Ataxia
+type: trait
+img: icons/skills/wounds/blood-cells-disease-green.webp
+effects: []
+folder: null
+sort: 0
+flags:
+  gm-notes:
+    notes: >-
+      <table style="width: 98.7526%; margin-left: auto; margin-right: auto;"
+      border="1">
+
+      <tbody>
+
+      <tr>
+
+      <td style="width: 45.037%;"><strong>Stage One Symptoms</strong></td>
+
+      <td style="width: 53.9103%;"><strong>Stage Two Symptoms</strong></td>
+
+      </tr>
+
+      <tr>
+
+      <td style="width: 45.037%;">
+
+      <p>Ag -5</p>
+
+      <p>Str -5</p>
+
+      <p>-10 Ag based Subterfuge</p>
+
+      </td>
+
+      <td style="width: 53.9103%;">
+
+      <p>Ag -10</p>
+
+      <p>Str -10</p>
+
+      <p>-10 Ag based Subterfuge</p>
+
+      <p>-10 Block</p>
+
+      </td>
+
+      </tr>
+
+      </tbody>
+
+      </table>
+
+      <p><span style="text-decoration:
+      underline;"><strong>Carriers</strong></span></p>
+
+      <p>Cave Rats; Bears; Alit; Giant Spiders; Slaughterfish; Zombies;
+      Traps</p>
+
+      <p><span style="text-decoration: underline;"><strong>Disease
+      Progression</strong></span></p>
+
+      <p>Stage One lasts one week. After one week, make a (-10) Endurance Test.
+      If failed, the disease progresses to Stage Two. Repeat this test at the
+      start of every day until it is cured or failed.</p>
+
+      <p><em><strong>Date of disease caught:</strong>&nbsp;</em>{Date} of
+      {Month}, {Era}</p>
+
+      <p><em><strong>Current Stage:&nbsp;</strong></em>{One, Two, Three}</p>
+  core:
+    sourceId: Item.kzJidtI5bnJdqIAa
+  cf:
+    id: temp_kg76x9jbadm
+    color: '#000000'
+_stats:
+  coreVersion: '12.331'
+  systemId: null
+  systemVersion: null
+  createdTime: null
+  modifiedTime: null
+  lastModifiedBy: null
+  compendiumSource: null
+  duplicateSource: null
+ownership:
+  default: 0
+  eeXhsDlbzUBZOXZT: 3
+system:
+  mpBonus: 0
+  hpBonus: 0
+  spBonus: 0
+  lpBonus: 0
+  wtBonus: 0
+  iniBonus: 0
+  speedBonus: 0
+  flyBonus: 0
+  swimBonus: 0
+  diseaseR: 0
+  fireR: 0
+  frostR: 0
+  shockR: 0
+  poisonR: 0
+  magicR: 0
+  natToughnessR: 0
+  silverR: 0
+  sunlightR: 0
+  replace:
+    ini:
+      iniToggle: false
+      value: 0
+      characteristic: ''
+    wt:
+      wtToggle: false
+      value: 0
+      characteristic: ''
+  characteristics:
+    none: None
+    str: STR
+    end: END
+    agi: AGI
+    int: INT
+    wp: WP
+    prc: PRC
+    prs: PRS
+    lck: LCK
+  characteristicBonus:
+    strChaBonus: 0
+    endChaBonus: 0
+    agiChaBonus: 0
+    intChaBonus: 0
+    wpChaBonus: 0
+    prcChaBonus: 0
+    prsChaBonus: 0
+    lckChaBonus: 0
+  skillArray: []
+  description: >-
+    <p>Ataxia is a common and relatively mild disease found across the breadth
+    of Tamriel. Its symptoms include general pain and soreness, muscle
+    stiffness, and anemia. Victims of Ataxia are often pale, groggy, and
+    irritable because of their symptoms. Some particularly devious bandits and
+    trap-makers are known to spring vials or lace nails with the bodily fluids
+    of dead animals that carry the disease.</p>
+
+    <p><em>Note: Apply negative values manually in Attributes</em></p>
+  halfSpeed: false
+  addHalfSpeed: false
+  halfFatiguePenalty: false
+  mechanical: false
+  crpCost: 0
+  halfWoundPenalty: false
+  painIntolerant: false
+_key: '!items!TvDIixsPcie2n98j'
+

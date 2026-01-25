@@ -1,0 +1,95 @@
+folder: RhPqL8Wqptkx6Oko
+name: Warrior Birthsigns (Star-Cursed)
+_id: YzMEpFSLKQt3hBQP
+img: systems/uesrpg-3ev4/images/sign-warrior.webp
+description: >-
+  <p><em>“The Warrior is the first Guardian Constellation and he protects his
+  charges during their Seasons. The Warrior’s own season is Last Seed when his
+  Strength is needed for the harvest. His Charges are the Lady, the Steed, and
+  the Lord. Those born under the sign of the Warrior are skilled with weapons of
+  all kinds, but prone to short tempers.”</em></p>
+results:
+  - type: pack
+    documentCollection: uesrpg-3ev4.signs
+    weight: 1
+    range:
+      - 1
+      - 1
+    drawn: false
+    text: The Star-Cursed Warrior
+    documentId: 1VMWP1tbtpowTI4O
+    img: systems/uesrpg-3ev4/images/sign-warrior.webp
+    _id: ZmpO8fDiV9FRP3j0
+    flags: {}
+    _key: '!tables.results!YzMEpFSLKQt3hBQP.ZmpO8fDiV9FRP3j0'
+  - type: pack
+    documentCollection: uesrpg-3ev4.signs
+    weight: 1
+    range:
+      - 2
+      - 2
+    drawn: false
+    text: The Star-Cursed Lady
+    documentId: YJ0znjzt5rhhyN1B
+    img: systems/uesrpg-3ev4/images/sign-lady.webp
+    _id: yFBESOxV4l56IqBu
+    flags: {}
+    _key: '!tables.results!YzMEpFSLKQt3hBQP.yFBESOxV4l56IqBu'
+  - type: pack
+    documentCollection: uesrpg-3ev4.signs
+    weight: 1
+    range:
+      - 3
+      - 3
+    drawn: false
+    text: The Star-Cursed Steed
+    documentId: WbOrSiR2sPM5jA30
+    img: systems/uesrpg-3ev4/images/sign-steed.webp
+    _id: yVMPYwW6VLGTkGBW
+    flags: {}
+    _key: '!tables.results!YzMEpFSLKQt3hBQP.yVMPYwW6VLGTkGBW'
+  - type: pack
+    documentCollection: uesrpg-3ev4.signs
+    weight: 1
+    range:
+      - 4
+      - 4
+    drawn: false
+    text: The Star-Cursed Lord
+    documentId: mG6OvH97y78ijGsS
+    img: systems/uesrpg-3ev4/images/sign-lord.webp
+    _id: rwnoIZbiANFZ1bds
+    flags: {}
+    _key: '!tables.results!YzMEpFSLKQt3hBQP.rwnoIZbiANFZ1bds'
+  - type: pack
+    documentCollection: uesrpg-3ev4.roll-tables
+    weight: 1
+    range:
+      - 5
+      - 5
+    drawn: false
+    text: Warrior Birthsigns (Star-Cursed)
+    documentId: YzMEpFSLKQt3hBQP
+    img: systems/uesrpg-3ev4/images/sign-warrior.webp
+    _id: FjLcWaoxnzFF5mBf
+    flags: {}
+    _key: '!tables.results!YzMEpFSLKQt3hBQP.FjLcWaoxnzFF5mBf'
+replacement: true
+displayRoll: true
+sort: 150000
+ownership:
+  default: 0
+  HcIrULZhA1JFIlrf: 3
+flags: {}
+_stats:
+  compendiumSource: null
+  duplicateSource: null
+  coreVersion: '12.331'
+  systemId: uesrpg-3ev4
+  systemVersion: v1.0.0-RC.70
+  createdTime: 1746863568452
+  modifiedTime: 1746864272187
+  lastModifiedBy: HcIrULZhA1JFIlrf
+formula: 1d5
+_key: '!tables!YzMEpFSLKQt3hBQP'
+

@@ -1,0 +1,134 @@
+name: Combat Panic Test Results
+flags:
+  core:
+    sourceId: RollTable.66XDFjrN9CXZO5Ln
+img: icons/svg/terror.svg
+description: >-
+  <p>When a character is confronted by an excessively frightening event or
+  adversary, they must make a Fear Test. There are two types of fear tests:
+  panic and horror tests. If the character fails the test, they succumb to the
+  effects of fear.</p><p>Your GM may call on you to make a Panic Test when you
+  are confronted by mundane shock or horror. This is represented by the Panic
+  (+/- X) notation, which is simply a Willpower test with a +/- X
+  modifier.</p><p>Your GM may call on you to make a Horror Test when you are
+  confronted by supernatural terrors. This is represented by the Horror (+/- X)
+  notation, which is simply a Willpower test with a +/- X modifier. In general,
+  horror tests with any sort of penalty should be reserved for the most
+  terrifying monsters and mind melting terrors.</p><h3>Fear Effects</h3><p>If in
+  combat a character fails a fear test, they must immediately roll a d100 on the
+  appropriate table on the next page. The effects listed are applied immediately
+  to the character.</p><p>If in a non-combat situation the character fails a
+  fear test, the character becomes unnerved and suffers a -20 penalty to any
+  tests that requires concentration on their part. This penalty lasts while the
+  character remains in the vicinity of the object of their
+  fear.</p><p>Characters may be able to shake off some of the effects of fear
+  after the initial shock has worn off. The table below will specify certain
+  cases where a character can make a Willpower test when it is their next turn
+  to “snap out” of their fear. “Snapping out” of the fear always happens at the
+  end of their turn.</p><p>If this succeeds, then they regain their senses,
+  shrug off the effects, and may act normally from then on. If they fail this
+  test, the effect continues, and they may try again when it is their next
+  turn.</p>
+results:
+  - _id: tk2FvHIQN96D2IJ7
+    flags: {}
+    type: text
+    text: >-
+      Startled: The character is startled by the source of panic. They jump in
+      their boots and pause for a brief moment as they struggle to reassess the
+      situation. They may not make any reactions until the beginning of their
+      next turn.
+    img: icons/svg/d20-black.svg
+    weight: 1
+    range:
+      - 1
+      - 30
+    drawn: false
+    documentId: null
+    _key: '!tables.results!NjKdwj9XZJ0ziZCa.tk2FvHIQN96D2IJ7'
+  - _id: djXx06elfE5bHsYU
+    flags: {}
+    type: text
+    text: >-
+      Spooked: The character gets the shakes from the source of their panic.
+      Fretting, nervous, and full of doubt, they suffer a -10 penalty to all
+      tests for the rest of the encounter unless they snap out of it.
+    img: icons/svg/d20-black.svg
+    weight: 1
+    range:
+      - 31
+      - 60
+    drawn: false
+    documentId: null
+    _key: '!tables.results!NjKdwj9XZJ0ziZCa.djXx06elfE5bHsYU'
+  - _id: IWeFOUMzAv2WZhow
+    flags: {}
+    type: text
+    text: >-
+      Frightened: The character is taken aback, and their teeth clatter in their
+      skull as they inch back from the source of their panic. The character
+      cannot willingly approach the object of their fear, and they suffer a –10
+      penalty to all tests until the end of the encounter.
+    img: icons/svg/d20-black.svg
+    weight: 1
+    range:
+      - 61
+      - 90
+    drawn: false
+    documentId: null
+    _key: '!tables.results!NjKdwj9XZJ0ziZCa.IWeFOUMzAv2WZhow'
+  - _id: GJA8lLVGwkew1i7b
+    flags: {}
+    type: text
+    text: >-
+      Lost Composure: The character loses their nerve and freezes in place.
+      Their will to act is decimated by the stress on their mind from the source
+      of their Panic. The character may take no actions until they snap out of
+      it. After snapping out of it, the character will make all tests at a –10
+      penalty for the rest of the encounter.
+    img: icons/svg/d20-black.svg
+    weight: 1
+    range:
+      - 91
+      - 95
+    drawn: false
+    documentId: null
+    _key: '!tables.results!NjKdwj9XZJ0ziZCa.GJA8lLVGwkew1i7b'
+  - _id: U3sXcxA66ieCkcse
+    flags: {}
+    type: text
+    text: >-
+      Running and Screaming: The character breaks down with fear and flees. They
+      must immediately flee directly away from the source of their fear as fast
+      as they can, which includes ditching equipment slowing them down. They
+      must do everything in their power to accomplish this and is at a -20
+      penalty to all tests. Once away from the danger, they must successfully
+      snap out of it to regain control, or the encounter must end.
+    img: icons/svg/d20-black.svg
+    weight: 1
+    range:
+      - 96
+      - 100
+    drawn: false
+    documentId: null
+    _key: '!tables.results!NjKdwj9XZJ0ziZCa.U3sXcxA66ieCkcse'
+formula: 1d100
+replacement: true
+displayRoll: true
+_id: NjKdwj9XZJ0ziZCa
+_stats:
+  coreVersion: '12.331'
+  systemId: null
+  systemVersion: null
+  createdTime: null
+  modifiedTime: 1746863195785
+  lastModifiedBy: HcIrULZhA1JFIlrf
+  compendiumSource: null
+  duplicateSource: null
+ownership:
+  default: 0
+  qwt9o1cuKYitvD9G: 3
+folder: c9T9A8SeM2a4RicH
+sort: 200000
+_key: '!tables!NjKdwj9XZJ0ziZCa'
+

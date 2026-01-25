@@ -1,0 +1,101 @@
+_id: o46N7p4pQuxVQgq1
+name: Retarius
+type: talent
+img: systems/uesrpg-3ev4/images/Icons/retarius.webp
+effects: []
+folder: null
+sort: 0
+flags:
+  core:
+    sourceId: Item.DYVazRNO2caSDMGE
+_stats:
+  coreVersion: '12.331'
+  systemId: null
+  systemVersion: null
+  createdTime: null
+  modifiedTime: null
+  lastModifiedBy: null
+  compendiumSource: null
+  duplicateSource: null
+ownership:
+  default: 0
+  xvA5SwRGJiyPsnxH: 3
+system:
+  mpBonus: 0
+  hpBonus: 0
+  spBonus: 0
+  lpBonus: 0
+  wtBonus: 0
+  iniBonus: 0
+  speedBonus: 0
+  flyBonus: 0
+  swimBonus: 0
+  diseaseR: 0
+  fireR: 0
+  frostR: 0
+  shockR: 0
+  poisonR: 0
+  magicR: 0
+  natToughnessR: 0
+  silverR: 0
+  sunlightR: 0
+  replace:
+    ini:
+      iniToggle: false
+      value: 0
+      characteristic: str
+    wt:
+      wtToggle: false
+      value: 0
+      characteristic: str
+  characteristics:
+    none: None
+    str: STR
+    end: END
+    agi: AGI
+    int: INT
+    wp: WP
+    prc: PRC
+    prs: PRS
+    lck: LCK
+  characteristicBonus:
+    strChaBonus: 0
+    endChaBonus: 0
+    agiChaBonus: 0
+    intChaBonus: 0
+    wpChaBonus: 0
+    prcChaBonus: 0
+    prsChaBonus: 0
+    lckChaBonus: 0
+  skillArray: []
+  description: >-
+    <p>If the character successfully entangles an enemy with a net, he can spend
+    1 SP to confer an additional &ndash;20 to all attempts to escape the
+    net.</p>
+
+    <p>While attacking an
+    @Compendium[uesrpg-revision.journal.DfC1501wL64oIckY]{Entangling} enemy of
+    the same Size Category or lower with a Trident, the target&rsquo;s Wound
+    Threshold is 1 lower than normal. If the attack deals a Wound, the target
+    gains the
+    @Compendium[uesrpg-revision.journal.Of5mt1fvj37x1c0t]{Bleeding}([[/r
+    1d4]]+Material Modifier) condition regardless of the Shock test.</p>
+
+    <p>Any trident the character wields gains the
+    @Compendium[uesrpg-revision.journal.rOEKxH0jiC62uvFH]{Thrown} quality
+    (5/10/20). Should a thrown trident hit a target, the attack counts as having
+    the Entangling quality, except it can be blocked and inflicts damage as
+    normal.</p>
+  xpCost: 500
+  level: 5
+  talentReq: ''
+  miscReq: Apprentice Combat
+  halfFatiguePenalty: false
+  halfWoundPenalty: false
+  untrainedException: false
+  fatigueException: false
+  addIBToMP: false
+  armorAcrobaticsException: false
+  addHalfSpeed: false
+_key: '!items!o46N7p4pQuxVQgq1'
+

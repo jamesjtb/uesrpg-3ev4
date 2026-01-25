@@ -1,0 +1,141 @@
+_id: WP45JHxdVqMrsxCm
+name: Dark Welkynd Stone
+type: item
+img: icons/commodities/gems/gem-rough-rose-teal.webp
+effects: []
+folder: null
+sort: 0
+flags:
+  core:
+    sourceId: Item.7tL4HxhFvsQq8n02
+_stats:
+  coreVersion: '12.331'
+  systemId: null
+  systemVersion: null
+  createdTime: null
+  modifiedTime: null
+  lastModifiedBy: null
+  compendiumSource: null
+  duplicateSource: null
+ownership:
+  default: 0
+  qwt9o1cuKYitvD9G: 3
+system:
+  characteristics:
+    none: None
+    str: STR
+    end: END
+    agi: AGI
+    int: INT
+    wp: WP
+    prc: PRC
+    prs: PRS
+    lck: LCK
+  characteristicBonus:
+    strChaBonus: 0
+    endChaBonus: 0
+    agiChaBonus: 0
+    intChaBonus: 0
+    wpChaBonus: 0
+    prcChaBonus: 0
+    prsChaBonus: 0
+    lckChaBonus: 0
+  replace:
+    ini:
+      iniToggle: false
+      value: 0
+      characteristic: ''
+    wt:
+      wtToggle: false
+      value: 0
+      characteristic: ''
+  mpBonus: 0
+  hpBonus: 0
+  spBonus: 0
+  lpBonus: 0
+  wtBonus: 0
+  iniBonus: 0
+  speedBonus: 0
+  flyBonus: 0
+  swimBonus: 0
+  diseaseR: 0
+  fireR: 0
+  frostR: 0
+  shockR: 0
+  poisonR: 0
+  magicR: 0
+  natToughnessR: 0
+  silverR: 0
+  sunlightR: 0
+  skillArray: []
+  isPhysicalObject: true
+  containerStats:
+    contained: false
+    container_id: ''
+    container_name: ''
+  description: >-
+    <blockquote>
+
+    <p>Small crystals of black-light, an inversion of their aqueous-blue
+    cousins, Dark Welkynd Stones are imbued with sorcerous power, and are left
+    suspended by magic to act as simple sentinels. With proper expertise,
+    training, and magical prowess, these Dark Welkynd Stones can be subverted,
+    stolen, and used for ones&rsquo; own purposes.</p>
+
+    </blockquote>
+
+    <p>A character with an inert Dark Welkynd Stone can power it with a
+    successful -20 Mysticism test as an Action. While activated, the Dark
+    Welkynd Stone will float about a metre off the ground, and can be moved by
+    pushing or carrying it around. The character can then nominate either
+    targets to be attacked, or targets to be ignored.</p>
+
+    <p>The character can then cast a Destruction spell up to spell level 2 into
+    the Dark Welkynd Stone, and the crystal &ldquo;learns&rdquo; this spell. It
+    can only know one at a time.</p>
+
+    <p>The Dark Welkynd Stone will, once per round, cast this spell as a Bolt at
+    the nearest eligible target (always succeeds with 1 DoS) until the character
+    passes a +20 Mysticism test as an Action to make it stop, or it runs out of
+    Magicka. The character must manually charge it with their own Magicka as an
+    Action, transferring as much of their own available Magicka into it as they
+    wish as a +0 Mysticism test. The Dark Welkynd Stone holds up to 100
+    Magicka.</p>
+  quantity: 1
+  enc: 1
+  totalENC: 0
+  reach: ''
+  damage: ''
+  equipped: false
+  hands: 0
+  price: 1000
+  modPrice: 0
+  armor: 0
+  magic_ar: 0
+  blockRating: 0
+  enchant_level: 0
+  excludeENC: false
+  consumable: false
+  qualities: ''
+  wearable: false
+  charge:
+    value: 0
+    max: 0
+    reduction: 1
+  carried: false
+  category: ''
+  item_cat:
+    none: None
+    head: Helmet
+    l_arm: Left Gauntlet
+    r_arm: Right Gauntlet
+    l_leg: Left Leg
+    r_leg: Right Leg
+    body: Chestplate
+    shield: Shield
+    weapon1: Primary Weapon
+    weapon2: Secondary Weapon
+    weapon3: Sidearm
+  attributes: {}
+_key: '!items!WP45JHxdVqMrsxCm'
+

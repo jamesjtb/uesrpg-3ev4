@@ -1,0 +1,57 @@
+name: Muffled
+folder: null
+sort: 0
+flags:
+  cf:
+    id: temp_hw0xe1g9xxt
+    path: References#/CF_SEP/Conditions
+    color: '#000000'
+_id: opyPzcQHAXz7QpUX
+pages:
+  - name: Muffled
+    type: text
+    title:
+      show: false
+      level: 1
+    text:
+      format: 1
+      content: >-
+        <p>A character with this condition is harder to hear. Hearing based
+        tests to detect this character are made with a -X penalty. Only apply
+        the highest value version of this condition if a character would receive
+        it more than once.</p>
+    _stats:
+      coreVersion: '12.331'
+      systemId: null
+      systemVersion: null
+      createdTime: null
+      modifiedTime: null
+      lastModifiedBy: null
+      compendiumSource: null
+      duplicateSource: null
+    _id: ij5DsAsc12tZnRI8
+    system: {}
+    image: {}
+    video:
+      controls: true
+      volume: 0.5
+    src: null
+    sort: 0
+    ownership:
+      default: -1
+    flags: {}
+    _key: '!journal.pages!opyPzcQHAXz7QpUX.ij5DsAsc12tZnRI8'
+_stats:
+  coreVersion: '12.331'
+  systemId: null
+  systemVersion: null
+  createdTime: null
+  modifiedTime: null
+  lastModifiedBy: null
+  compendiumSource: null
+  duplicateSource: null
+ownership:
+  default: 0
+  eeXhsDlbzUBZOXZT: 3
+_key: '!journal!opyPzcQHAXz7QpUX'
+

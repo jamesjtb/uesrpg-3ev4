@@ -1,0 +1,98 @@
+_id: 8BKBGg6F8WhtELsJ
+name: Acrobatics
+type: skill
+img: systems/uesrpg-3ev4/images/Icons/lightningReflexes.webp
+effects: []
+folder: null
+sort: 100000
+flags:
+  core:
+    sourceId: Item.T2Tnips3skDxgFWZ
+_stats:
+  coreVersion: '12.331'
+  systemId: null
+  systemVersion: null
+  createdTime: null
+  modifiedTime: 1732510420625
+  lastModifiedBy: GikQCnLAeu0WrzSO
+  compendiumSource: null
+  duplicateSource: null
+ownership:
+  default: 0
+  zrZomzLbu6XsebKn: 3
+system:
+  characteristics:
+    none: None
+    str: STR
+    end: END
+    agi: AGI
+    int: INT
+    wp: WP
+    prc: PRC
+    prs: PRS
+    lck: LCK
+  characteristicBonus:
+    strChaBonus: 0
+    endChaBonus: 0
+    agiChaBonus: 0
+    intChaBonus: 0
+    wpChaBonus: 0
+    prcChaBonus: 0
+    prsChaBonus: 0
+    lckChaBonus: 0
+  skillRanks:
+    untrained: Untrained
+    novice: (0) Novice
+    apprentice: (1) Apprentice
+    journeyman: (2) Journeyman
+    adept: (3) Adept
+    expert: (4) Expert
+    master: (5) Master
+  value: 0
+  rank: untrained
+  bonus: 0
+  miscValue: 0
+  specialization: ''
+  description: >-
+    <p><em>Example Specializations: Contortion, Balance, Jumping</em></p>
+
+    <p>Acrobatics covers the spectrum of physical activities involving explosive
+    body movements and feats of flexibility and balance. Your GM may ask you to
+    test Acrobatics when you try to accomplish tasks like the following...</p>
+
+    <ul>
+
+    <li>Leaping deftly between rooftops or over an enemy</li>
+
+    <li>Escaping from bonds</li>
+
+    <li>Squeezing into a small space</li>
+
+    <li>Balancing on the edge of a cliff</li>
+
+    </ul>
+  baseCha: str
+  governingCha: STR, AGI
+  trainedItems: ''
+  data:
+    description: >-
+      <p><em>Example Specializations: Contortion, Balance, Jumping </em></p>
+
+      <p>Acrobatics covers the spectrum of physical activities involving
+      explosive body movements and feats of flexibility and balance. Your GM may
+      ask you to test Acrobatics when you try to accomplish tasks like the
+      following...</p>
+
+      <ul>
+
+      <li>Leaping deftly between rooftops or over an enemy</li>
+
+      <li>Escaping from bonds</li>
+
+      <li>Squeezing into a small space</li>
+
+      <li>Balancing on the edge of a cliff</li>
+
+      </ul>
+_key: '!items!8BKBGg6F8WhtELsJ'
+

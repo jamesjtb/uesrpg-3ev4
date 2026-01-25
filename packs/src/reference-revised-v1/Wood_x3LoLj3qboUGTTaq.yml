@@ -1,0 +1,55 @@
+_id: x3LoLj3qboUGTTaq
+name: Wood
+folder: null
+sort: 0
+flags:
+  cf:
+    id: temp_qtm3mdw5kon
+    path: References#/CF_SEP/Qualities#/CF_SEP/Weapon Qualities
+    color: '#000000'
+pages:
+  - name: Wood
+    type: text
+    title:
+      show: false
+      level: 1
+    text:
+      format: 1
+      content: >-
+        <p>No modifier for Quarterstaffs and Maces. Halves damage of all other
+        weapons.</p>
+    _stats:
+      coreVersion: '12.331'
+      systemId: null
+      systemVersion: null
+      createdTime: null
+      modifiedTime: null
+      lastModifiedBy: null
+      compendiumSource: null
+      duplicateSource: null
+    _id: B8Bvg1en9aPhdvvN
+    system: {}
+    image: {}
+    video:
+      controls: true
+      volume: 0.5
+    src: null
+    sort: 0
+    ownership:
+      default: -1
+    flags: {}
+    _key: '!journal.pages!x3LoLj3qboUGTTaq.B8Bvg1en9aPhdvvN'
+_stats:
+  coreVersion: '12.331'
+  systemId: null
+  systemVersion: null
+  createdTime: null
+  modifiedTime: null
+  lastModifiedBy: null
+  compendiumSource: null
+  duplicateSource: null
+ownership:
+  default: 0
+  eeXhsDlbzUBZOXZT: 3
+_key: '!journal!x3LoLj3qboUGTTaq'
+

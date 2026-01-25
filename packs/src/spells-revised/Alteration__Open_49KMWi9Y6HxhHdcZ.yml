@@ -1,0 +1,131 @@
+_id: 49KMWi9Y6HxhHdcZ
+name: 'Alteration: Open'
+type: spell
+img: icons/magic/symbols/cross-circle-blue.webp
+effects: []
+folder: null
+sort: 0
+flags:
+  core:
+    sourceId: Item.Dvncp3T7Nn3WBpgy
+_stats:
+  coreVersion: '12.331'
+  systemId: null
+  systemVersion: null
+  createdTime: null
+  modifiedTime: null
+  lastModifiedBy: null
+  compendiumSource: null
+  duplicateSource: null
+ownership:
+  default: 0
+  qwt9o1cuKYitvD9G: 3
+system:
+  description: >-
+    <p>The caster chooses a locked door or container within 1 meter. If the
+    extended test threshold to unlock it is [Spell Strength] or lower, then it
+    instantly unlocks itself.</p>
+
+    <table style="width: 98.5447%; height: 51px;" border="2" cellspacing="2"
+    cellpadding="1">
+
+    <tbody>
+
+    <tr style="height: 17px;">
+
+    <td style="width: 33.4506%; height: 17px; text-align:
+    left;"><strong>Level</strong></td>
+
+    <td style="width: 10.0153%; height: 17px; text-align:
+    center;"><strong>1</strong></td>
+
+    <td style="width: 9.15877%; height: 17px; text-align:
+    center;"><strong>2</strong></td>
+
+    <td style="width: 9.15881%; height: 17px; text-align:
+    center;"><strong>3</strong></td>
+
+    <td style="width: 9.37287%; height: 17px; text-align:
+    center;"><strong>4</strong></td>
+
+    <td style="width: 8.85101%; height: 17px; text-align:
+    center;"><strong>5</strong></td>
+
+    <td style="width: 8.63689%; height: 17px; text-align:
+    center;"><strong>6</strong></td>
+
+    <td style="width: 9.4269%; height: 17px; text-align:
+    center;"><strong>7</strong></td>
+
+    </tr>
+
+    <tr style="height: 17px;">
+
+    <td style="width: 33.4506%; height: 17px; text-align:
+    left;"><strong>Cost</strong></td>
+
+    <td style="width: 10.0153%; height: 17px; text-align: center;">4</td>
+
+    <td style="width: 9.15877%; height: 17px; text-align: center;">7</td>
+
+    <td style="width: 9.15881%; height: 17px; text-align: center;">10</td>
+
+    <td style="width: 9.37287%; height: 17px; text-align: center;">13</td>
+
+    <td style="width: 8.85101%; height: 17px; text-align: center;">16</td>
+
+    <td style="width: 8.63689%; height: 17px; text-align: center;">19</td>
+
+    <td style="width: 9.4269%; height: 17px; text-align: center;">22</td>
+
+    </tr>
+
+    <tr style="height: 17px;">
+
+    <td style="width: 33.4506%; height: 17px; text-align: left;"><strong>Spell
+    Strength</strong></td>
+
+    <td style="width: 10.0153%; height: 17px; text-align: center;">2</td>
+
+    <td style="width: 9.15877%; height: 17px; text-align: center;">4</td>
+
+    <td style="width: 9.15881%; height: 17px; text-align: center;">6</td>
+
+    <td style="width: 9.37287%; height: 17px; text-align: center;">8</td>
+
+    <td style="width: 8.85101%; height: 17px; text-align: center;">10</td>
+
+    <td style="width: 8.63689%; height: 17px; text-align: center;">12</td>
+
+    <td style="width: 9.4269%; height: 17px; text-align: center;">14</td>
+
+    </tr>
+
+    </tbody>
+
+    </table>
+
+    <p>&nbsp;</p>
+  damage: '0'
+  level: 1
+  cost: 4
+  spell_str: ''
+  attributes: ''
+  form: Target
+  school: alteration
+  school_cat:
+    alteration: Alteration
+    conjuration: Conjuration
+    destruction: Destruction
+    illusion: Illusion
+    mysticism: Mysticism
+    necromancy: Necromancy
+    restoration: Restoration
+    none: Select School
+  spellType: ''
+  spellTypes:
+    conventional: Conventional
+    unconventional: Unconventional
+  category: ''
+_key: '!items!49KMWi9Y6HxhHdcZ'
+

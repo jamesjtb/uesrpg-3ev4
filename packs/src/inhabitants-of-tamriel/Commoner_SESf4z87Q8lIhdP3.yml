@@ -1,0 +1,798 @@
+name: Commoner
+type: NPC
+img: icons/svg/cowled.svg
+items:
+  - _id: zrQvDwZPMPmy7x6M
+    name: Fool's Luck
+    type: power
+    sort: 100000
+    flags:
+      core:
+        sourceId: Item.MyWjMeVAtBCJa8Bt
+    img: systems/uesrpg-3ev4/images/Icons/businessman.webp
+    effects: []
+    folder: null
+    _stats:
+      compendiumSource: null
+      duplicateSource: null
+      coreVersion: '12.331'
+      systemId: uesrpg-3ev4
+      systemVersion: v1.0.0-RC.59
+      createdTime: null
+      modifiedTime: null
+      lastModifiedBy: null
+    ownership:
+      default: 0
+    system:
+      mpBonus: 0
+      hpBonus: 0
+      spBonus: 0
+      lpBonus: 0
+      wtBonus: 0
+      iniBonus: 0
+      speedBonus: 0
+      flyBonus: 0
+      swimBonus: 0
+      diseaseR: 0
+      fireR: 0
+      frostR: 0
+      shockR: 0
+      poisonR: 0
+      magicR: 0
+      natToughnessR: 0
+      silverR: 0
+      sunlightR: 0
+      characteristics:
+        none: None
+        str: STR
+        end: END
+        agi: AGI
+        int: INT
+        wp: WP
+        prc: PRC
+        prs: PRS
+        lck: LCK
+      characteristicBonus:
+        strChaBonus: 0
+        endChaBonus: 0
+        agiChaBonus: 0
+        intChaBonus: 0
+        wpChaBonus: 0
+        prcChaBonus: 0
+        prsChaBonus: 0
+        lckChaBonus: 0
+      skillArray: []
+      description: >-
+        <p><strong>Cost:</strong> 3 SP</p>
+
+        <p>This character can spend 3 SP to re-roll any failed test with a +20
+        bonus as fortune seems to be smiling on this unfortunate fool.</p>
+      dailyUse: false
+      source: ''
+      shiftForm: false
+      shiftFormStyle: ''
+      shiftStyles:
+        shiftFormNone: Regular Form
+        shiftFormVampireLord: Vampire Lord
+        shiftFormWereWolf: Werewolf
+        shiftFormWereBat: Werebat
+        shiftFormWereBoar: Wereboar
+        shiftFormWereBear: Werebear
+        shiftFormWereCrocodile: Werecrocodile
+        shiftFormWereVulture: Werevulture
+        shiftFormWereLion: Werelion
+    _key: '!actors.items!SESf4z87Q8lIhdP3.zrQvDwZPMPmy7x6M'
+  - _id: FOooWBH0Ytz2HayO
+    name: Gang Up
+    type: power
+    sort: 200000
+    flags:
+      core:
+        sourceId: Item.MyWjMeVAtBCJa8Bt
+    img: systems/uesrpg-3ev4/images/Icons/ringleader.webp
+    effects: []
+    folder: null
+    _stats:
+      compendiumSource: null
+      duplicateSource: null
+      coreVersion: '12.331'
+      systemId: uesrpg-3ev4
+      systemVersion: v1.0.0-RC.59
+      createdTime: null
+      modifiedTime: null
+      lastModifiedBy: null
+    ownership:
+      default: 0
+    system:
+      mpBonus: 0
+      hpBonus: 0
+      spBonus: 0
+      lpBonus: 0
+      wtBonus: 0
+      iniBonus: 0
+      speedBonus: 0
+      flyBonus: 0
+      swimBonus: 0
+      diseaseR: 0
+      fireR: 0
+      frostR: 0
+      shockR: 0
+      poisonR: 0
+      magicR: 0
+      natToughnessR: 0
+      silverR: 0
+      sunlightR: 0
+      characteristics:
+        none: None
+        str: STR
+        end: END
+        agi: AGI
+        int: INT
+        wp: WP
+        prc: PRC
+        prs: PRS
+        lck: LCK
+      characteristicBonus:
+        strChaBonus: 0
+        endChaBonus: 0
+        agiChaBonus: 0
+        intChaBonus: 0
+        wpChaBonus: 0
+        prcChaBonus: 0
+        prsChaBonus: 0
+        lckChaBonus: 0
+      skillArray: []
+      description: >-
+        <p><strong>Cost:</strong> 1 SP</p>
+
+        <p>This character can spend 1 SP when an ally attacks an enemy within
+        this character's reach. Doing so imposes a -10 penalty on the target's
+        defense.&nbsp;</p>
+
+        <p>Each ally using this ability adds +1 damage to the attack's damage
+        roll.&nbsp;</p>
+      dailyUse: false
+      source: ''
+      shiftForm: false
+      shiftFormStyle: ''
+      shiftStyles:
+        shiftFormNone: Regular Form
+        shiftFormVampireLord: Vampire Lord
+        shiftFormWereWolf: Werewolf
+        shiftFormWereBat: Werebat
+        shiftFormWereBoar: Wereboar
+        shiftFormWereBear: Werebear
+        shiftFormWereCrocodile: Werecrocodile
+        shiftFormWereVulture: Werevulture
+        shiftFormWereLion: Werelion
+    _key: '!actors.items!SESf4z87Q8lIhdP3.FOooWBH0Ytz2HayO'
+  - _id: rKuj1dDnE6wIZ8LX
+    name: Teamwork
+    type: trait
+    sort: 300000
+    flags:
+      core:
+        sourceId: Item.wtEFksGPcojtDLTj
+    img: systems/uesrpg-3ev4/images/Icons/teamwork.webp
+    effects: []
+    folder: null
+    _stats:
+      compendiumSource: null
+      duplicateSource: null
+      coreVersion: '12.331'
+      systemId: uesrpg-3ev4
+      systemVersion: v1.0.0-RC.59
+      createdTime: null
+      modifiedTime: null
+      lastModifiedBy: null
+    ownership:
+      default: 0
+    system:
+      mpBonus: 0
+      hpBonus: 0
+      spBonus: 0
+      lpBonus: 0
+      wtBonus: 0
+      iniBonus: 0
+      speedBonus: 0
+      flyBonus: 0
+      swimBonus: 0
+      diseaseR: 0
+      fireR: 0
+      frostR: 0
+      shockR: 0
+      poisonR: 0
+      magicR: 0
+      natToughnessR: 0
+      silverR: 0
+      sunlightR: 0
+      replace:
+        ini:
+          iniToggle: false
+          value: 0
+          characteristic: ''
+        wt:
+          wtToggle: false
+          value: 0
+          characteristic: ''
+      characteristics:
+        none: None
+        str: STR
+        end: END
+        agi: AGI
+        int: INT
+        wp: WP
+        prc: PRC
+        prs: PRS
+        lck: LCK
+      characteristicBonus:
+        strChaBonus: 0
+        endChaBonus: 0
+        agiChaBonus: 0
+        intChaBonus: 0
+        wpChaBonus: 0
+        prcChaBonus: 0
+        prsChaBonus: 0
+        lckChaBonus: 0
+      skillArray: []
+      description: >-
+        <p>Characters with this trait gain a bonus DoS on attack rolls made
+        while an ally with this trait is in Reach of the same target.</p>
+      halfSpeed: false
+      addHalfSpeed: false
+      halfFatiguePenalty: false
+      mechanical: false
+      crpCost: null
+      halfWoundPenalty: false
+      painIntolerant: false
+    _key: '!actors.items!SESf4z87Q8lIhdP3.rKuj1dDnE6wIZ8LX'
+effects: []
+folder: YOakefp1093wiaNm
+flags: {}
+_stats:
+  compendiumSource: null
+  duplicateSource: null
+  coreVersion: '12.331'
+  systemId: uesrpg-3ev4
+  systemVersion: v1.0.0-RC.59
+  createdTime: 1732338962187
+  modifiedTime: 1732339102041
+  lastModifiedBy: 7bDMesNjX54nzN9S
+ownership:
+  default: 0
+  WcwhQU1nz94WaD5n: 3
+  7bDMesNjX54nzN9S: 3
+system:
+  equippedWeapons:
+    primaryWeapon:
+      name: 'None: Right click to bind weapon'
+      img: icons/skills/melee/unarmed-punch-fist.webp
+      id: ''
+    secondaryWeapon:
+      name: 'None: Right click to bind weapon'
+      img: icons/skills/melee/unarmed-punch-fist.webp
+      id: ''
+  favorites:
+    '1':
+      name: Hotkey 1
+      img: icons/svg/combat.svg
+      id: ''
+      value: 0
+    '2':
+      name: Hotkey 2
+      img: icons/svg/combat.svg
+      id: ''
+      value: 0
+    '3':
+      name: Hotkey 3
+      img: icons/svg/combat.svg
+      id: ''
+      value: 0
+    '4':
+      name: Hotkey 4
+      img: icons/svg/combat.svg
+      id: ''
+      value: 0
+    '5':
+      name: Hotkey 5
+      img: icons/svg/combat.svg
+      id: ''
+      value: 0
+  race: Any Race
+  birthsign: ''
+  age: null
+  height: ''
+  weight: ''
+  elite_adv: ''
+  wounded: false
+  woundPenalty: 0
+  woundNotes: ''
+  bio: <p><em>Commoners are the average people of Tamriel.</em></p>
+  paperDoll: systems/uesrpg-3ev4/images/paperDoll_Male_Outline_White.png
+  soul_energy: '1500'
+  journal: ''
+  notes: ''
+  threat: minorSolo
+  threatCategory:
+    minorSolo: Minor Solo
+    minorGroup: Minor Group
+    majorSolo: Major Solo
+    majorGroup: Major Group
+    deadlySolo: Deadly Solo
+    deadlyGroup: Deadly Group
+    legendarySolo: Legendary Solo
+    legendaryGroup: Legendary Group
+  resistance:
+    fireR: 0
+    frostR: 0
+    shockR: 0
+    magicR: 0
+    poisonR: 0
+    diseaseR: 0
+    natToughness: 0
+    silverR: 0
+    sunlightR: 0
+  fatigue:
+    level: 0
+    penalty: 0
+    bonus: 0
+  lucky_numbers:
+    ln1: 0
+    ln2: 0
+    ln3: 0
+    ln4: 0
+    ln5: 0
+    ln6: 0
+    ln7: 0
+    ln8: 0
+    ln9: 0
+    ln10: 0
+  unlucky_numbers:
+    ul1: 95
+    ul2: 96
+    ul3: 97
+    ul4: 98
+    ul5: 99
+    ul6: 100
+  supply: 1d2
+  supply_cat:
+    1d2: 1d2
+    1d4: 1d4
+    1d6: 1d6
+    1d8: 1d8
+    1d10: 1d10
+  wealth: 0
+  current_enc: '0.0'
+  carry_rating:
+    current: 0
+    max: 18
+    bonus: 0
+    penalty: 0
+    label: Minimal
+  characteristics:
+    str:
+      value: 30
+      total: null
+      base: 30
+      favored: false
+    end:
+      value: 30
+      total: null
+      base: 30
+      favored: false
+    agi:
+      value: 30
+      total: null
+      base: 30
+      favored: false
+    int:
+      value: 30
+      total: null
+      base: 30
+      favored: false
+    wp:
+      value: 30
+      total: null
+      base: 30
+      favored: false
+    prc:
+      value: 30
+      total: null
+      base: 30
+      favored: false
+    prs:
+      value: 30
+      total: null
+      base: 30
+      favored: false
+    lck:
+      value: null
+      total: null
+      base: 0
+      favored: false
+  professions:
+    combat: 30
+    magic: null
+    evade: 30
+    observe: 40
+    stealth: 10
+    knowledge: 50
+    social: 40
+    physical: 40
+    commerce: 0
+    profession1: 0
+    profession2: 0
+    profession3: 0
+  professionsWound:
+    combat: 0
+    magic: 0
+    evade: 0
+    observe: 0
+    stealth: 0
+    knowledge: 0
+    social: 0
+    physical: 0
+    commerce: 0
+    profession1: 0
+    profession2: 0
+    profession3: 0
+  hp:
+    base: 15
+    value: 15
+    max: 15
+    temp: 0
+    bonus: 0
+  action_points:
+    value: 3
+    max: 3
+  luck_points:
+    value: 0
+    max: 0
+    bonus: 0
+  stamina:
+    value: 3
+    max: 3
+    bonus: 0
+  magicka:
+    value: 30
+    max: 30
+    bonus: 0
+  xp: 0
+  wound_threshold:
+    value: '9'
+    base: 9
+    bonus: 0
+  initiative:
+    value: '9'
+    base: 9
+    bonus: 0
+  speed:
+    value: '9'
+    base: 9
+    bonus: 0
+  size: standard
+  size_cat:
+    puny: Puny
+    tiny: Tiny
+    small: Small
+    standard: Standard
+    large: Large
+    huge: Huge
+    enormous: Enormous
+  skill_ranks:
+    untrained:
+      name: Untrained
+      rank: ''
+      bonus: ''
+      specialization: ''
+    novice:
+      name: ' (0) Novice'
+      rank: ''
+      bonus: ''
+      specialization: ''
+    apprentice:
+      name: (1) Apprentice
+      rank: ''
+      bonus: ''
+      specialization: ''
+    journeyman:
+      name: (2) Journeyman
+      rank: ''
+      bonus: ''
+      specialization: ''
+    adept:
+      name: (3) Adept
+      rank: ''
+      bonus: ''
+      specialization: ''
+    expert:
+      name: (4) Expert
+      rank: ''
+      bonus: ''
+      specialization: ''
+    master:
+      name: (5) Master
+      rank: ''
+      bonus: ''
+      specialization: ''
+  skills:
+    profession1:
+      rank: ''
+      bonus: 60
+      specialization: ''
+      characteristic: ''
+      tn: 0
+      name: Profession [Varies]
+    profession2:
+      rank: ''
+      bonus: null
+      specialization: ''
+      characteristic: ''
+      tn: 0
+      name: ''
+    profession3:
+      rank: ''
+      bonus: null
+      specialization: ''
+      characteristic: ''
+      tn: 0
+      name: ''
+    commerce:
+      bonus: 0
+      specialization: ''
+      characteristic: ''
+      tn: 0
+  talents: >-
+    <ul>
+
+    <li><strong>Fool&rsquo;s Luck (3 SP):</strong> The commoner can spend 3
+    Stamina to reroll any one failed test with a +20 bonus as fortune seems to
+    smile on the unfortunate fool (Use sparingly)</li>
+
+    <li><strong> Gang Up (1 SP):</strong> Can gang up by spending a Stamina
+    Point when an enemy in Reach is attacked by another allied Commoner. Ganging
+    up imposes a -10 on the target&rsquo;s Defence roll. Additionally, each
+    ganging up Commoner adds +1 damage to the attacking Commoner&rsquo;s damage
+    roll.&nbsp;</li>
+
+    </ul>
+  traits: ''
+  powers: ''
+  spells: ''
+  armor_class: none
+  armor_class_cat:
+    none: None
+    super_light: Super Light
+    light: Light
+    medium: Medium
+    heavy: Heavy
+    super_heavy: Super Heavy
+  storeName: ''
+  priceMod: 0
+  fatigueLevel: 0
+  weapons:
+    w1:
+      name: ''
+      dmg: ''
+      hands: ''
+      reach: ''
+      qualities: ''
+    w2:
+      name: ''
+      dmg: ''
+      hands: ''
+      reach: ''
+      qualities: ''
+    w3:
+      name: ''
+      dmg: ''
+      hands: ''
+      reach: ''
+      qualities: ''
+    w4:
+      name: ''
+      dmg: ''
+      hands: ''
+      reach: ''
+      qualities: ''
+    w5:
+      name: ''
+      dmg: ''
+      hands: ''
+      reach: ''
+      qualities: ''
+  prep_spells:
+    s1:
+      name: ''
+      dmg: ''
+      cost: ''
+      school: ''
+      form: ''
+      attributes: ''
+      level: ''
+    s2:
+      name: ''
+      dmg: ''
+      cost: ''
+      school: ''
+      form: ''
+      attributes: ''
+      level: ''
+    s3:
+      name: ''
+      dmg: ''
+      cost: ''
+      school: ''
+      form: ''
+      attributes: ''
+      level: ''
+    s4:
+      name: ''
+      dmg: ''
+      cost: ''
+      school: ''
+      form: ''
+      attributes: ''
+      level: ''
+    s5:
+      name: ''
+      dmg: ''
+      cost: ''
+      school: ''
+      form: ''
+      attributes: ''
+      level: ''
+    s6:
+      name: ''
+      dmg: ''
+      cost: ''
+      school: ''
+      form: ''
+      attributes: ''
+      level: ''
+    s7:
+      name: ''
+      dmg: ''
+      cost: ''
+      school: ''
+      form: ''
+      attributes: ''
+      level: ''
+  shield:
+    name: ''
+    br: ''
+    magic_br: ''
+    class: ''
+    qualities: ''
+  armor:
+    head:
+      name: ''
+      enc: 0
+      ar: ''
+      magic_ar: ''
+      class: ''
+    body:
+      name: ''
+      enc: 0
+      ar: ''
+      magic_ar: ''
+      class: ''
+    r_leg:
+      name: ''
+      enc: 0
+      ar: ''
+      magic_ar: ''
+      class: ''
+    l_leg:
+      name: ''
+      enc: 0
+      ar: ''
+      magic_ar: ''
+      class: ''
+    r_arm:
+      name: ''
+      enc: 0
+      ar: ''
+      magic_ar: ''
+      class: ''
+    l_arm:
+      name: ''
+      enc: 0
+      ar: ''
+      magic_ar: ''
+      class: ''
+prototypeToken:
+  flags:
+    token-hud-wildcard:
+      default: ''
+    token-auras:
+      aura1:
+        permission: all
+        colour: '#ffffff'
+        opacity: 0.5
+        distance: null
+        square: false
+      aura2:
+        permission: all
+        colour: '#ffffff'
+        opacity: 0.5
+        distance: null
+        square: false
+  name: Commoner
+  displayName: 0
+  width: 1
+  height: 1
+  lockRotation: false
+  rotation: 0
+  actorLink: false
+  disposition: -1
+  displayBars: 20
+  bar1:
+    attribute: hp
+  bar2:
+    attribute: action_points
+  randomImg: true
+  alpha: 1
+  light:
+    dim: 0
+    bright: 0
+    angle: 360
+    color: null
+    alpha: 1
+    animation:
+      speed: 5
+      intensity: 5
+      type: null
+      reverse: false
+    negative: false
+    priority: 0
+    coloration: 1
+    attenuation: 0.5
+    luminosity: 0.5
+    saturation: 0
+    contrast: 0
+    shadows: 0
+    darkness:
+      min: 0
+      max: 1
+  texture:
+    src: icons/svg/cowled.svg
+    tint: '#ffffff'
+    scaleX: 1
+    scaleY: 1
+    anchorX: 0.5
+    anchorY: 0.5
+    offsetX: 0
+    offsetY: 0
+    fit: contain
+    rotation: 0
+    alphaThreshold: 0.75
+  sight:
+    angle: 360
+    enabled: true
+    range: 0
+    brightness: 1
+    visionMode: basic
+    color: null
+    attenuation: 0.1
+    saturation: 0
+    contrast: 0
+  appendNumber: false
+  prependAdjective: false
+  hexagonalShape: 0
+  detectionModes: []
+  occludable:
+    radius: 0
+  ring:
+    enabled: false
+    colors:
+      ring: null
+      background: null
+    effects: 1
+    subject:
+      scale: 1
+      texture: null
+_id: SESf4z87Q8lIhdP3
+sort: 4100000
+_key: '!actors!SESf4z87Q8lIhdP3'
+

@@ -1,0 +1,127 @@
+name: Feast
+type: power
+flags: {}
+img: systems/uesrpg-3ev4/images/Icons/Druideskill_22.webp
+effects: []
+_id: OaJPHxeXqkzCC3Cd
+_stats:
+  coreVersion: '12.331'
+  systemId: null
+  systemVersion: null
+  createdTime: null
+  modifiedTime: null
+  lastModifiedBy: null
+  compendiumSource: null
+  duplicateSource: null
+ownership:
+  default: 0
+  inSimu0FutxmlwqN: 3
+system:
+  mpBonus: 0
+  hpBonus: 0
+  spBonus: 0
+  lpBonus: 0
+  wtBonus: 0
+  iniBonus: 0
+  speedBonus: 0
+  flyBonus: 0
+  swimBonus: 0
+  diseaseR: 0
+  fireR: 0
+  frostR: 0
+  shockR: 0
+  poisonR: 0
+  magicR: 0
+  natToughnessR: 0
+  silverR: 0
+  sunlightR: 0
+  characteristics:
+    none: None
+    str: STR
+    end: END
+    agi: AGI
+    int: INT
+    wp: WP
+    prc: PRC
+    prs: PRS
+    lck: LCK
+  characteristicBonus:
+    strChaBonus: 0
+    endChaBonus: 0
+    agiChaBonus: 0
+    intChaBonus: 0
+    wpChaBonus: 0
+    prcChaBonus: 0
+    prsChaBonus: 0
+    lckChaBonus: 0
+  skillArray: []
+  description: >-
+    <p><strong>(Vampire, 1 AP): </strong>While in Beast Form, this character may
+    choose to eat a creature after killing it. This causes the character to
+    recover HP equal to the size of the creature. See the table below.</p>
+
+    <table style="width: 98.783%;" border="1">
+
+    <tbody>
+
+    <tr>
+
+    <td style="width: 8.82957%;"><strong>HP</strong></td>
+
+    <td style="text-align: center; width: 9.85626%;">2</td>
+
+    <td style="text-align: center; width: 8.41889%;">4</td>
+
+    <td style="text-align: center; width: 11.7043%;">6</td>
+
+    <td style="text-align: center; width: 13.9349%;">8</td>
+
+    <td style="text-align: center; width: 13.5805%;">10</td>
+
+    <td style="text-align: center; width: 15.0435%;">12</td>
+
+    <td style="text-align: center; width: 16.3733%;">14</td>
+
+    </tr>
+
+    <tr>
+
+    <td style="width: 8.82957%;"><strong>Size</strong></td>
+
+    <td style="text-align: center; width: 9.85626%;">Puny</td>
+
+    <td style="text-align: center; width: 8.41889%;">Tiny</td>
+
+    <td style="text-align: center; width: 11.7043%;">Small</td>
+
+    <td style="text-align: center; width: 13.9349%;">Medium</td>
+
+    <td style="text-align: center; width: 13.5805%;">Large</td>
+
+    <td style="text-align: center; width: 15.0435%;">Huge</td>
+
+    <td style="text-align: center; width: 16.3733%;">Enormous</td>
+
+    </tr>
+
+    </tbody>
+
+    </table>
+  dailyUse: false
+  source: Vampirism
+  shiftForm: false
+  shiftFormStyle: shiftFormNone
+  shiftStyles:
+    shiftFormNone: Regular Form
+    shiftFormVampireLord: Vampire Lord
+    shiftFormWereWolf: Werewolf
+    shiftFormWereBat: Werebat
+    shiftFormWereBoar: Wereboar
+    shiftFormWereBear: Werebear
+    shiftFormWereCrocodile: Werecrocodile
+    shiftFormWereVulture: Werevulture
+    shiftFormWereLion: Werelion
+folder: null
+sort: 0
+_key: '!items!OaJPHxeXqkzCC3Cd'
+

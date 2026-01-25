@@ -1,0 +1,103 @@
+_id: yYT0IKaNcZmbuYmV
+name: Deceive
+type: skill
+img: systems/uesrpg-3ev4/images/Icons/bigWords.webp
+effects: []
+folder: null
+sort: 1400000
+flags:
+  core:
+    sourceId: Item.pXXlRpjJ9A5pF3A1
+_stats:
+  coreVersion: '12.331'
+  systemId: uesrpg-3ev4
+  systemVersion: v1.0.0-RC.61
+  createdTime: null
+  modifiedTime: 1732510440759
+  lastModifiedBy: GikQCnLAeu0WrzSO
+  compendiumSource: null
+  duplicateSource: null
+ownership:
+  default: 0
+  zrZomzLbu6XsebKn: 3
+system:
+  characteristics:
+    none: None
+    str: STR
+    end: END
+    agi: AGI
+    int: INT
+    wp: WP
+    prc: PRC
+    prs: PRS
+    lck: LCK
+  characteristicBonus:
+    strChaBonus: 0
+    endChaBonus: 0
+    agiChaBonus: 0
+    intChaBonus: 0
+    wpChaBonus: 0
+    prcChaBonus: 0
+    prsChaBonus: 0
+    lckChaBonus: 0
+  skillRanks:
+    untrained: Untrained
+    novice: (0) Novice
+    apprentice: (1) Apprentice
+    journeyman: (2) Journeyman
+    adept: (3) Adept
+    expert: (4) Expert
+    master: (5) Master
+  value: 0
+  rank: untrained
+  bonus: 0
+  miscValue: 0
+  specialization: ''
+  description: >-
+    <p><em>Example Specializations: Blathering, Impersonation</em></p>
+
+    <p>Deceive measure&rsquo;s a character&rsquo;s aptitude for fooling others
+    into believing something that is not true. A Deceive test should only be
+    required if the character believes that they are lying. This test can be
+    opposed by a Logic test or an Observe test, depending on the nature of the
+    deception. Your GM may ask you to test Deceive when you try to accomplish
+    tasks like the following...</p>
+
+    <ul>
+
+    <li>Pretend to be someone you are not</li>
+
+    <li>Talk your way out of trouble</li>
+
+    <li>Lie about something</li>
+
+    <li>Pretend to be an expert on a subject</li>
+
+    </ul>
+  baseCha: prs
+  governingCha: INT, PRS
+  trainedItems: ''
+  data:
+    description: >-
+      <p><em>Example Specializations: Blathering, Impersonation</em></p>
+
+      <p>Deceive measure&rsquo;s a character&rsquo;s aptitude for fooling others
+      into believing something that is not true. A Deceive test should only be
+      required if the character believes that they are lying. This test can be
+      opposed by a Logic test or an Observe test, depending on the nature of the
+      deception. Your GM may ask you to test Deceive when you try to accomplish
+      tasks like the following...</p>
+
+      <ul>
+
+      <li>Pretend to be someone you are not</li>
+
+      <li>Talk your way out of trouble</li>
+
+      <li>Lie about something</li>
+
+      <li>Pretend to be an expert on a subject</li>
+
+      </ul>
+_key: '!items!yYT0IKaNcZmbuYmV'
+

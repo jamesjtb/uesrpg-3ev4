@@ -1,0 +1,100 @@
+name: Woad
+type: talent
+flags:
+  core:
+    sourceId: Item.JX5ttPQSa94C9UKX
+img: icons/equipment/head/mask-horned-skull.webp
+effects: []
+_stats:
+  compendiumSource: Item.JX5ttPQSa94C9UKX
+  duplicateSource: null
+  coreVersion: '12.331'
+  systemId: uesrpg-3ev4
+  systemVersion: v1.0.0-RC.64
+  createdTime: 1734749333259
+  modifiedTime: 1734749333259
+  lastModifiedBy: HcIrULZhA1JFIlrf
+ownership:
+  default: 0
+  HcIrULZhA1JFIlrf: 3
+system:
+  mpBonus: 0
+  hpBonus: 0
+  spBonus: 0
+  lpBonus: 0
+  wtBonus: 0
+  iniBonus: 0
+  speedBonus: 0
+  flyBonus: 0
+  swimBonus: 0
+  diseaseR: 0
+  fireR: 0
+  frostR: 0
+  shockR: 0
+  poisonR: 0
+  magicR: 0
+  natToughnessR: 0
+  silverR: 0
+  sunlightR: 0
+  replace:
+    ini:
+      iniToggle: false
+      value: 0
+      characteristic: none
+    wt:
+      wtToggle: false
+      value: 0
+      characteristic: none
+  characteristics:
+    none: None
+    str: STR
+    end: END
+    agi: AGI
+    int: INT
+    wp: WP
+    prc: PRC
+    prs: PRS
+    lck: LCK
+  characteristicBonus:
+    strChaBonus: 0
+    endChaBonus: 0
+    agiChaBonus: 0
+    intChaBonus: 0
+    wpChaBonus: 0
+    prcChaBonus: 0
+    prsChaBonus: 0
+    lckChaBonus: 0
+  skillArray: []
+  description: >-
+    <p>The Nord can, as an action, apply a smear of ritually prepared Woad war
+    paint, which grants a Physical and Magical shield that protects against 5
+    points of damage for 3 Rounds that refreshes for free each Round. If the
+    shield has at least one hit point of damage remaining after the third Round,
+    the shield continues to refresh until it is reduced to 0 shield HP, or until
+    1 minute passes. This shield is semi-divine in nature and cannot be
+    conventionally dispelled.</p>
+
+    <p>The ritual necessary to prepare one dose of Woad paint requires the Nord
+    have access to natural plants, an open sky, and must be performed over a
+    Long Rest as they beseech Kyne for her blessings and protection in the
+    battles to come.</p>
+  governingCharacteristics: Any
+  xpCost: 500
+  level: Expert
+  talentReq: Sons of Skyrim
+  miscReq: Any Expert
+  halfFatiguePenalty: false
+  halfWoundPenalty: false
+  untrainedException: false
+  fatigueException: false
+  addIBToMP: false
+  addIntToMPMultiplier: 1
+  armorAcrobaticsException: false
+  addHalfSpeed: false
+  addIntToMP: false
+  doubleSwimSpeed: false
+folder: znvtmUBMi3Cqd1zw
+_id: svkWDgkZWWxVO9um
+sort: 0
+_key: '!items!svkWDgkZWWxVO9um'
+

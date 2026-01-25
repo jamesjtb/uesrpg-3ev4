@@ -1,0 +1,88 @@
+_id: ljBGIOFNt6VE2Wtr
+name: Summoned
+type: trait
+flags:
+  core:
+    sourceId: Item.wtEFksGPcojtDLTj
+img: systems/uesrpg-3ev4/images/Icons/summoned.webp
+effects: []
+_stats:
+  coreVersion: '12.331'
+  systemId: null
+  systemVersion: null
+  createdTime: null
+  modifiedTime: null
+  lastModifiedBy: null
+  compendiumSource: null
+  duplicateSource: null
+ownership:
+  default: 0
+  xvA5SwRGJiyPsnxH: 3
+system:
+  mpBonus: 0
+  hpBonus: 0
+  spBonus: 0
+  lpBonus: 0
+  wtBonus: 0
+  iniBonus: 0
+  speedBonus: 0
+  flyBonus: 0
+  swimBonus: 0
+  diseaseR: 0
+  fireR: 0
+  frostR: 0
+  shockR: 0
+  poisonR: 0
+  magicR: 0
+  natToughnessR: 0
+  silverR: 0
+  sunlightR: 0
+  replace:
+    ini:
+      iniToggle: false
+      value: 0
+      characteristic: ''
+    wt:
+      wtToggle: false
+      value: 0
+      characteristic: ''
+  characteristics:
+    none: None
+    str: STR
+    end: END
+    agi: AGI
+    int: INT
+    wp: WP
+    prc: PRC
+    prs: PRS
+    lck: LCK
+  characteristicBonus:
+    strChaBonus: 0
+    endChaBonus: 0
+    agiChaBonus: 0
+    intChaBonus: 0
+    wpChaBonus: 0
+    prcChaBonus: 0
+    prsChaBonus: 0
+    lckChaBonus: 0
+  skillArray: []
+  description: >-
+    <p>The character has been summoned into this world through magic. They must
+    obey the verbal commands of their master, who summoned them. If their master
+    is killed, they are banished back to their realm instantly.</p>
+
+    <p>Summoned characters cannot attack their masters unless it is to defend
+    themselves. If this character is killed, they do not die in the conventional
+    sense: instead they are banished back to their realm of origin, along with
+    any items that may be on them at the time.</p>
+  halfSpeed: false
+  addHalfSpeed: false
+  halfFatiguePenalty: false
+  mechanical: false
+  crpCost: null
+  halfWoundPenalty: false
+  painIntolerant: false
+folder: null
+sort: 0
+_key: '!items!ljBGIOFNt6VE2Wtr'
+

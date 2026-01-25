@@ -1,0 +1,97 @@
+name: Red Legion Throw
+type: talent
+flags:
+  core:
+    sourceId: Item.DYVazRNO2caSDMGE
+img: systems/uesrpg-3ev4/images/Icons/redLegionThrow.webp
+effects: []
+_stats:
+  compendiumSource: Item.DYVazRNO2caSDMGE
+  duplicateSource: null
+  coreVersion: '12.331'
+  systemId: uesrpg-3ev4
+  systemVersion: v1.0.0-RC.64
+  createdTime: 1734677084748
+  modifiedTime: 1734677084748
+  lastModifiedBy: HcIrULZhA1JFIlrf
+ownership:
+  default: 0
+  HcIrULZhA1JFIlrf: 3
+system:
+  mpBonus: 0
+  hpBonus: 0
+  spBonus: 0
+  lpBonus: 0
+  wtBonus: 0
+  iniBonus: 0
+  speedBonus: 0
+  flyBonus: 0
+  swimBonus: 0
+  diseaseR: 0
+  fireR: 0
+  frostR: 0
+  shockR: 0
+  poisonR: 0
+  magicR: 0
+  natToughnessR: 0
+  silverR: 0
+  sunlightR: 0
+  replace:
+    ini:
+      iniToggle: false
+      value: 0
+      characteristic: none
+    wt:
+      wtToggle: false
+      value: 0
+      characteristic: none
+  characteristics:
+    none: None
+    str: STR
+    end: END
+    agi: AGI
+    int: INT
+    wp: WP
+    prc: PRC
+    prs: PRS
+    lck: LCK
+  characteristicBonus:
+    strChaBonus: 0
+    endChaBonus: 0
+    agiChaBonus: 0
+    intChaBonus: 0
+    wpChaBonus: 0
+    prcChaBonus: 0
+    prsChaBonus: 0
+    lckChaBonus: 0
+  skillArray: []
+  description: >-
+    <p>When a character throws a Javelin and successfully causes damage to the
+    target (after mitigation), the target location (either a limb or the body)
+    is Speared. A Speared hit location is treated as crippled until the Javelin
+    is removed, either as a Free action inflicting the Bleeding(1) condition or
+    as a Secondary action requiring a strength test, which if successful removes
+    the spear without causing further harm.  </p><p>If the Javelin is blocked
+    instead, the shield is Speared. A speared shield requires the wielder to
+    spend one Stamina point in order to even attempt to block with the added
+    weight of the javelin. Removing the javelin from the shield requires the
+    character to succeed on a Strength test as a secondary action.</p>
+  governingCharacteristics: Str, Ag
+  xpCost: 500
+  level: Expert
+  talentReq: ''
+  miscReq: Apprentice Combat
+  halfFatiguePenalty: false
+  halfWoundPenalty: false
+  untrainedException: false
+  fatigueException: false
+  addIBToMP: false
+  addIntToMPMultiplier: 1
+  armorAcrobaticsException: false
+  addHalfSpeed: false
+  addIntToMP: false
+folder: coY6fwnED7jEStIl
+_id: BVjqugycbSG5xodi
+sort: 0
+_key: '!items!BVjqugycbSG5xodi'
+

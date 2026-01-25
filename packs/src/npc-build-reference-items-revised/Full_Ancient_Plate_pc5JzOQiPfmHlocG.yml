@@ -1,0 +1,110 @@
+_id: pc5JzOQiPfmHlocG
+name: Full Ancient Plate
+type: armor
+img: icons/equipment/chest/breastplate-metal-tan.webp
+effects: []
+folder: null
+sort: 0
+flags:
+  core:
+    sourceId: Item.bonkO89RqJjN4m5k
+_stats:
+  coreVersion: '12.331'
+  systemId: null
+  systemVersion: null
+  createdTime: null
+  modifiedTime: null
+  lastModifiedBy: null
+  compendiumSource: null
+  duplicateSource: null
+ownership:
+  default: 0
+  eeXhsDlbzUBZOXZT: 3
+system:
+  mpBonus: 0
+  hpBonus: 0
+  spBonus: 0
+  lpBonus: 0
+  wtBonus: 0
+  iniBonus: 0
+  speedBonus: 0
+  flyBonus: 0
+  swimBonus: 0
+  diseaseR: 0
+  fireR: 0
+  frostR: 0
+  shockR: 0
+  poisonR: 0
+  magicR: 0
+  natToughnessR: 0
+  silverR: 0
+  sunlightR: 0
+  characteristics:
+    none: None
+    str: STR
+    end: END
+    agi: AGI
+    int: INT
+    wp: WP
+    prc: PRC
+    prs: PRS
+    lck: LCK
+  characteristicBonus:
+    strChaBonus: 0
+    endChaBonus: 0
+    agiChaBonus: 0
+    intChaBonus: 0
+    wpChaBonus: 0
+    prcChaBonus: 0
+    prsChaBonus: 0
+    lckChaBonus: 0
+  replace:
+    ini:
+      iniToggle: false
+      value: 0
+      characteristic: ''
+    wt:
+      wtToggle: false
+      value: 0
+      characteristic: ''
+  skillArray: []
+  isPhysicalObject: true
+  containerStats:
+    contained: false
+    container_id: ''
+    container_name: ''
+  description: <p><em>Ancient armor worn by once powerful warriors.</em></p>
+  quantity: 1
+  enc: 4
+  totalENC: 0
+  reach: ''
+  damage: ''
+  equipped: true
+  carried: true
+  hands: 0
+  price: 0
+  modPrice: 0
+  armor: 5
+  blockRating: 0
+  excludeENC: false
+  magic_ar: 1 Magic
+  enchant_level: 4
+  qualities: >-
+    @Compendium[uesrpg-revision.journal.dfIZDLRGKnnc5kty]{Medium},
+    @Compendium[uesrpg-revision.journal.m7HXbo12Aeel3Jlk]{Magic}
+  category: body
+  item_cat:
+    none: None
+    head: Helmet
+    l_arm: Left Gauntlet
+    r_arm: Right Gauntlet
+    l_leg: Left Leg
+    r_leg: Right Leg
+    body: Chestplate
+    shield: Shield
+  charge:
+    value: 0
+    max: 0
+    reduction: 1
+_key: '!items!pc5JzOQiPfmHlocG'
+

@@ -1,0 +1,99 @@
+_id: J5TBXCay0og910iw
+name: Disarm
+type: power
+img: icons/skills/melee/shield-damaged-broken-gold.webp
+effects: []
+folder: null
+sort: 0
+flags:
+  core:
+    sourceId: Item.suL2wDKsAX0OHTYN
+  cf:
+    id: temp_d9bp04m8sjq
+    color: '#000000'
+_stats:
+  coreVersion: '12.331'
+  systemId: null
+  systemVersion: null
+  createdTime: null
+  modifiedTime: null
+  lastModifiedBy: null
+  compendiumSource: null
+  duplicateSource: null
+ownership:
+  default: 0
+  eeXhsDlbzUBZOXZT: 3
+system:
+  mpBonus: 0
+  hpBonus: 0
+  spBonus: 0
+  lpBonus: 0
+  wtBonus: 0
+  iniBonus: 0
+  speedBonus: 0
+  flyBonus: 0
+  swimBonus: 0
+  diseaseR: 0
+  fireR: 0
+  frostR: 0
+  shockR: 0
+  poisonR: 0
+  magicR: 0
+  natToughnessR: 0
+  silverR: 0
+  sunlightR: 0
+  characteristics:
+    none: None
+    str: STR
+    end: END
+    agi: AGI
+    int: INT
+    wp: WP
+    prc: PRC
+    prs: PRS
+    lck: LCK
+  characteristicBonus:
+    strChaBonus: 0
+    endChaBonus: 0
+    agiChaBonus: 0
+    intChaBonus: 0
+    wpChaBonus: 0
+    prcChaBonus: 0
+    prsChaBonus: 0
+    lckChaBonus: 0
+  skillArray: []
+  description: >-
+    <p><em>Difficulty: +0, -10 for each word beyond the first.</em></p>
+
+    <p><strong>&bull;Zun : Weapon</strong></p>
+
+    <p>Character chooses a direction. All characters within a cone (with range
+    fifteen meters and diameter five meters) in front of the character must make
+    an Agility test or drop any weapons and/or shields they&rsquo;re
+    holding.</p>
+
+    <p><strong>&bull;Haal : Hand</strong></p>
+
+    <p>Same as Zun, except the character may choose to either double the range
+    or increase the difficulty of the test by -10.</p>
+
+    <p><strong>&bull;Viik : Defeat</strong></p>
+
+    <p>Same as Haal, except the character may do both of those things, or one of
+    them twice.</p>
+  dailyUse: false
+  source: ''
+  shiftForm: false
+  shiftFormStyle: shiftFormNone
+  shiftStyles:
+    shiftFormNone: Regular Form
+    shiftFormVampireLord: Vampire Lord
+    shiftFormWereWolf: Werewolf
+    shiftFormWereBat: Werebat
+    shiftFormWereBoar: Wereboar
+    shiftFormWereBear: Werebear
+    shiftFormWereCrocodile: Werecrocodile
+    shiftFormWereVulture: Werevulture
+    shiftFormWereLion: Werelion
+_key: '!items!J5TBXCay0og910iw'
+

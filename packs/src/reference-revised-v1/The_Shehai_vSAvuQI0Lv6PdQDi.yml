@@ -1,0 +1,102 @@
+_id: vSAvuQI0Lv6PdQDi
+name: The Shehai
+folder: null
+sort: 0
+flags:
+  cf:
+    id: temp_7tigytrysn
+    color: '#000000'
+pages:
+  - name: The Shehai
+    type: text
+    title:
+      show: false
+      level: 1
+    text:
+      format: 1
+      content: >-
+        <p>In game terms, the Shehai may be manifested in structured time with
+        the use of the Cast Magic Secondary action and a Shehai Shen She Ru (WP)
+        skill test, the difficulty of which will vary with the desired Shehai
+        level. Characters must have the appropriate talent in order to manifest
+        a Shehai of a given level.</p>
+
+        <p>• Manifesting a Shehai of the First Level Requires: a Shehai Shen She
+        Ru (WP) skill test with a -10 penalty. Failing the manifestation roll
+        costs the Swordsinger a Stamina Point.</p>
+
+        <p>• Manifesting a Shehai of the Second Level Requires: a Shehai Shen
+        She Ru (WP) skill test with a -20 penalty. Failing the manifestation
+        roll costs the Swordsinger two Stamina Points.</p>
+
+        <p>• Manifesting a Shehai of the third Level Requires: a Shehai Shen She
+        Ru (WP) skill test with a -40 penalty. Failing the manifestation roll
+        costs the Swordsinger three Stamina Points.</p>
+
+        <p>On success, the character manifests the Shehai in an open hand. The
+        weapon type of the manifested Shehai is determined in advance when the
+        character purchases the necessary talent. A Shehai persists until the
+        character dismisses it, or for a number of hours equal to the
+        character’s Willpower bonus minus the level of the Shehai. A Shehai
+        cannot be taken from the character in any way, and it may not be thrown
+        without dissipating, as it is bound by his will. The Shehai is
+        transparent, but is very much capable of interacting with physical
+        objects: it can make attacks, applies all weapon qualities normally, and
+        be defended against normally.</p>
+
+        <p><strong>Shehai of the First Level</strong></p>
+
+        <p>A Shehai of this level may vaguely resemble a certain weapon, but it
+        is very weak. Use the base weapon profile for the chosen weapon type,
+        but add half the character’s unmodified (by magic, enchantments etc.)
+        Willpower bonus (round up) to the damage, and give the weapon the Magic
+        and Primitive qualities.</p>
+
+        <p><strong>Shehai of the Second Level</strong></p>
+
+        <p>A Shehai of this level is clearly a weapon, and is quite potent. Use
+        the base weapon profile for the chosen weapon type, but add the
+        character’s unmodified (by magic, enchantments etc.) Willpower bonus to
+        the damage of the weapon, and give the weapon the Magic quality.</p>
+
+        <p><strong>Shehai of the Third Level</strong></p>
+
+        <p>A Shehai of this level is a legendary weapon of incredible power. Use
+        the base weapon profile for the chosen weapon type, but add twice the
+        character’s unmodified (by magic, enchantments etc.) Willpower bonus to
+        the damage of the weapon, and give the weapon the Magic quality.</p>
+    _stats:
+      coreVersion: '12.331'
+      systemId: null
+      systemVersion: null
+      createdTime: null
+      modifiedTime: null
+      lastModifiedBy: null
+      compendiumSource: null
+      duplicateSource: null
+    _id: EYZe6nxOVvhr01YV
+    system: {}
+    image: {}
+    video:
+      controls: true
+      volume: 0.5
+    src: null
+    sort: 0
+    ownership:
+      default: -1
+    flags: {}
+    _key: '!journal.pages!vSAvuQI0Lv6PdQDi.EYZe6nxOVvhr01YV'
+_stats:
+  coreVersion: '12.331'
+  systemId: null
+  systemVersion: null
+  createdTime: null
+  modifiedTime: null
+  lastModifiedBy: null
+  compendiumSource: null
+  duplicateSource: null
+ownership:
+  default: 0
+  eeXhsDlbzUBZOXZT: 3
+_key: '!journal!vSAvuQI0Lv6PdQDi'
+

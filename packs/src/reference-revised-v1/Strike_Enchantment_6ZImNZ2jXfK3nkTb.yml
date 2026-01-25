@@ -1,0 +1,53 @@
+name: Strike Enchantment
+folder: null
+sort: 0
+flags:
+  cf:
+    id: temp_h4s9iq5zk1
+    path: References#/CF_SEP/Arcane Items#/CF_SEP/Enchantment Categories
+    color: '#000000'
+_id: 6ZImNZ2jXfK3nkTb
+pages:
+  - name: Strike Enchantment
+    type: text
+    title:
+      show: false
+      level: 1
+    text:
+      format: 1
+      content: "<p><strong>The Basics</strong></p>\n<p>Strike enchantments are augmentations applied to weapons that grant some sort of offensive effect when the weapon is used in combat. The effects of strike enchantments are applied on any successful hit with the weapon. Strike enchantments do not need to be recharged like cast enchantments and have no soul energy pool. Ammo enchanted this way only works once.</p>\n<p>\_</p>\n<p><strong>Learning Effects</strong></p>\n<p>Strike enchantments use a unique set of effects drawn from the table below.</p>\n<p><strong>Step 1: Choose Item</strong></p>\n<p>First the enchanter must pick an item to enchant. Strike enchantments can be applied to any ranged or melee weapon, but only some weapons will have an enchantment level high enough to reasonably support more powerful enchantments. Ammunition can be enchanted in “batches” of 25 shots (use the EL of one shot). Items without a listed enchantment level have an EL of 0.</p>\n<p><strong>Step 2: Choose Soul Gem</strong></p>\n<p>Next the enchanter must pick the soul gem they will use for the enchantment. This gem must have an ES equal to or greater than the EL of the item. Once a soul gem has been used to create an enchantment it is destroyed and any excess energy is lost.</p>\n<p><strong>Step 3: Choose Enchantment Effect</strong></p>\n<p>Strike enchantments use a unique set of effects drawn from the table below: choose the desired effect (at most one, though some talents allow for more) and ES. Every effect has an EL min, this is the minimum EL an item must have in order to use that effect. The ES chosen for the effect must be less than or equal to the ES of the soul gem used. Add the ES of any enchantments used when calculating multiple enchantments.</p>\n<p><strong>Step 4: Create the Enchantment</strong></p>\n<p>Now the enchanter can attempt to create the enchantment. This requires a ritual that lasts approximately eight hours, and consumes materials worth approximately 100 drakes. The enchanter then makes an enchant skill test with a -10 penalty for each level by which the total ES of all chosen effects exceed their enchant skill rank (if applicable). Failing the test means that effect is not successfully enchanted.</p>\n<p><strong>Step 5: Finalize Enchantment</strong></p>\n<p>Regardless of the outcome of the tests, the soul gem is destroyed and its energy is lost. If the enchanter passes a test then they successfully create the enchanted item. Write down the details somewhere you can reference them later.</p>\n<table style=\"width:99.1477%\" border=\"1\">\n<tbody>\n<tr>\n<td style=\"width:20.1761%\"><strong>\_ \_ \_ \_ \_ \_Name</strong></td>\n<td style=\"width:68.5263%\"><strong>\_ \_ \_ \_ \_ \_ \_ \_ \_ \_ \_ \_ \_ \_ \_ \_ \_ \_ \_ \_ Effect (ES = Enchantment Strength)</strong></td>\n<td style=\"width:10.4381%\"><strong>\_ \_ EL min</strong></td>\n</tr>\n<tr>\n<td style=\"width:20.1761%\">[Element]</td>\n<td style=\"width:68.5263%\">Weapon deals ES additional [type] damage.</td>\n<td style=\"width:10.4381%\">2</td>\n</tr>\n<tr>\n<td style=\"width:20.1761%\">Fatigue</td>\n<td style=\"width:68.5263%\">Weapon causes the target to test Endurance with a (30-[10*ES]) modifier or lose 1 SP.</td>\n<td style=\"width:10.4381%\">1</td>\n</tr>\n<tr>\n<td style=\"width:20.1761%\">Sunlight</td>\n<td style=\"width:68.5263%\">Weapon deals ES additional fire daamge. Counts as sunlight.</td>\n<td style=\"width:10.4381%\">3</td>\n</tr>\n<tr>\n<td style=\"width:20.1761%\">Drain Magicka</td>\n<td style=\"width:68.5263%\">Weapon causes the target to lose 4*ES MP.</td>\n<td style=\"width:10.4381%\">1</td>\n</tr>\n<tr>\n<td style=\"width:20.1761%\">Elemental Weakness</td>\n<td style=\"width:68.5263%\">Weapon causes the target to gain Weakness ([type], ES) trait for 1 round.</td>\n<td style=\"width:10.4381%\">1</td>\n</tr>\n<tr>\n<td style=\"width:20.1761%\">Weakness to Magic</td>\n<td style=\"width:68.5263%\">Weapon causes the target to gain Weakness (magic, ES) trait for 1 round.</td>\n<td style=\"width:10.4381%\">2</td>\n</tr>\n<tr>\n<td style=\"width:20.1761%\">Paralyze</td>\n<td style=\"width:68.5263%\">Target tests Willpower at a (30-[10*ES]) modifier or is paralyzed for Y rounds.</td>\n<td style=\"width:10.4381%\">2</td>\n</tr>\n<tr>\n<td style=\"width:20.1761%\">Soul Trap (SL 2)</td>\n<td style=\"width:68.5263%\">If the target dies within 1 minute of being struck by this weapon, their soul is trapped within an appropriate soul gem of the wielder's choice.</td>\n<td style=\"width:10.4381%\">3</td>\n</tr>\n<tr>\n<td style=\"width:20.1761%\">Absorb Life</td>\n<td style=\"width:68.5263%\">The wielder regenerates ES HP, capped at the damage dealt for that hit (after mitigation).</td>\n<td style=\"width:10.4381%\">2</td>\n</tr>\n<tr>\n<td style=\"width:20.1761%\">Absorb Magicka</td>\n<td style=\"width:68.5263%\">Weapon causes the target to lose 4*ES MP, wielder regains MP equal to the amount lost.</td>\n<td style=\"width:10.4381%\">3</td>\n</tr>\n<tr>\n<td style=\"width:20.1761%\">Dispel</td>\n<td style=\"width:68.5263%\">Dispels magical effects of ES level or lower. Constant enchants return after 1D4 rounds.</td>\n<td style=\"width:10.4381%\">4</td>\n</tr>\n<tr>\n<td style=\"width:20.1761%\">Disintegrate</td>\n<td style=\"width:68.5263%\">Weapon applies Damaged (ES) to armour struck, or weapons used to parry or counter it.</td>\n<td style=\"width:10.4381%\">3</td>\n</tr>\n<tr>\n<td style=\"width:20.1761%\">Turn Undead</td>\n<td style=\"width:68.5263%\">Target with Undead trait tests Willpower with a (30-[10*ES]) modifier or flees for 1 round.</td>\n<td style=\"width:10.4381%\">1</td>\n</tr>\n<tr>\n<td style=\"width:20.1761%\">Silence</td>\n<td style=\"width:68.5263%\">Target tests Willpower at a (30-[10*ES]) modifier or is Silenced for 1 round.</td>\n<td style=\"width:10.4381%\">2</td>\n</tr>\n</tbody>\n</table>"
+    _stats:
+      coreVersion: '12.331'
+      systemId: null
+      systemVersion: null
+      createdTime: null
+      modifiedTime: null
+      lastModifiedBy: null
+      compendiumSource: null
+      duplicateSource: null
+    _id: WEuBG30f8PHhW1JT
+    system: {}
+    image: {}
+    video:
+      controls: true
+      volume: 0.5
+    src: null
+    sort: 0
+    ownership:
+      default: -1
+    flags: {}
+    _key: '!journal.pages!6ZImNZ2jXfK3nkTb.WEuBG30f8PHhW1JT'
+_stats:
+  coreVersion: '12.331'
+  systemId: null
+  systemVersion: null
+  createdTime: null
+  modifiedTime: null
+  lastModifiedBy: null
+  compendiumSource: null
+  duplicateSource: null
+ownership:
+  default: 0
+  eeXhsDlbzUBZOXZT: 3
+_key: '!journal!6ZImNZ2jXfK3nkTb'
+

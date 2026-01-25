@@ -1,0 +1,56 @@
+name: Free Actions
+folder: null
+sort: 0
+flags:
+  cf:
+    id: temp_oklt7qkfm8k
+    path: References#/CF_SEP/Combat#/CF_SEP/Actions
+    color: '#000000'
+_id: H1FN8P9TR5rkpP1n
+pages:
+  - name: Free Actions
+    type: text
+    title:
+      show: false
+      level: 1
+    text:
+      format: 1
+      content: >-
+        <p>Free Actions can be taken at any time during the combat round, and
+        cost no action points to activate, though the GM should keep in mind
+        what is reasonable for a character to achieve in six seconds.</p>
+    _stats:
+      coreVersion: '12.331'
+      systemId: null
+      systemVersion: null
+      createdTime: null
+      modifiedTime: null
+      lastModifiedBy: null
+      compendiumSource: null
+      duplicateSource: null
+    _id: 4HtN2C0TfVxb2XQj
+    system: {}
+    image: {}
+    video:
+      controls: true
+      volume: 0.5
+    src: null
+    sort: 0
+    ownership:
+      default: -1
+    flags: {}
+    _key: '!journal.pages!H1FN8P9TR5rkpP1n.4HtN2C0TfVxb2XQj'
+_stats:
+  coreVersion: '12.331'
+  systemId: null
+  systemVersion: null
+  createdTime: null
+  modifiedTime: null
+  lastModifiedBy: null
+  compendiumSource: null
+  duplicateSource: null
+ownership:
+  default: 0
+  eeXhsDlbzUBZOXZT: 3
+_key: '!journal!H1FN8P9TR5rkpP1n'
+

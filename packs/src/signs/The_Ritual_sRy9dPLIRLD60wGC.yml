@@ -1,0 +1,90 @@
+name: The Ritual
+type: trait
+img: systems/uesrpg-3ev4/images/sign-ritual.webp
+effects: []
+folder: null
+sort: 0
+flags:
+  core:
+    sourceId: Item.EiZvTpIgnvFg2UY3
+_id: sRy9dPLIRLD60wGC
+_stats:
+  coreVersion: '12.331'
+  systemId: uesrpg-3ev4
+  systemVersion: v1.0.0-RC.61
+  createdTime: null
+  modifiedTime: 1732507001237
+  lastModifiedBy: GikQCnLAeu0WrzSO
+  compendiumSource: null
+  duplicateSource: null
+ownership:
+  default: 0
+  xfxQc6sVhNVKRNeU: 3
+system:
+  mpBonus: 0
+  hpBonus: 0
+  spBonus: 0
+  lpBonus: 0
+  wtBonus: 0
+  iniBonus: 0
+  speedBonus: 0
+  flyBonus: 0
+  swimBonus: 0
+  diseaseR: 0
+  fireR: 0
+  frostR: 0
+  shockR: 0
+  poisonR: 0
+  magicR: 0
+  natToughnessR: 0
+  silverR: 0
+  sunlightR: 0
+  replace:
+    ini:
+      iniToggle: false
+      value: 0
+      characteristic: ''
+    wt:
+      wtToggle: false
+      value: 0
+      characteristic: ''
+  characteristics:
+    none: None
+    str: STR
+    end: END
+    agi: AGI
+    int: INT
+    wp: WP
+    prc: PRC
+    prs: PRS
+    lck: LCK
+  characteristicBonus:
+    strChaBonus: 0
+    endChaBonus: 0
+    agiChaBonus: 0
+    intChaBonus: 0
+    wpChaBonus: 0
+    prcChaBonus: 0
+    prsChaBonus: 0
+    lckChaBonus: 0
+  skillArray: []
+  description: >-
+    <p><em>“The Ritual is one of the Mage’s Charges and its Season is Morning
+    Star. Those born under this sign have a variety of abilities depending on
+    the aspects of the moons and the Divines.”</em></p><p><strong>Those born
+    under the sign of the Ritual may choose to gain one of the following powers
+    at the beginning of each
+    day:</strong></p><ul><li><p><strong>@UUID[Compendium.uesrpg-3ev4.signs.Item.eTR6ngEkDEcFU0TX]{Blessed
+    Touch}</strong></p></li><li><p><strong>@UUID[Compendium.uesrpg-3ev4.signs.Item.FW3thKNDdo8yA3KJ]{Blessed
+    Word}</strong></p></li><li><p><strong>@UUID[Compendium.uesrpg-3ev4.signs.Item.7nnrw6agzg2Lg0ZS]{Mara’s
+    Gift}</strong></p></li></ul><p><strong>They have this power until their next
+    long rest, when they can make another choice if they wish.</strong></p>
+  halfSpeed: false
+  addHalfSpeed: false
+  halfFatiguePenalty: false
+  mechanical: false
+  crpCost: 0
+  halfWoundPenalty: false
+  painIntolerant: false
+_key: '!items!sRy9dPLIRLD60wGC'
+

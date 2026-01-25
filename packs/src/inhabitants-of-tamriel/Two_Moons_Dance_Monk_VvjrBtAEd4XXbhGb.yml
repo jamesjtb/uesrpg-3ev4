@@ -1,0 +1,2099 @@
+name: Two-Moons Dance Monk
+type: NPC
+img: icons/svg/cowled.svg
+items:
+  - _id: yRPqVNr7JkXVlItR
+    name: Martial Revenge
+    type: power
+    sort: 600000
+    flags:
+      core:
+        sourceId: Item.MyWjMeVAtBCJa8Bt
+    img: systems/uesrpg-3ev4/images/Icons/martialRevenge.webp
+    effects: []
+    folder: null
+    _stats:
+      compendiumSource: null
+      duplicateSource: null
+      coreVersion: '12.331'
+      systemId: uesrpg-3ev4
+      systemVersion: v1.0.0-RC.59
+      createdTime: null
+      modifiedTime: null
+      lastModifiedBy: null
+    ownership:
+      default: 0
+    system:
+      mpBonus: 0
+      hpBonus: 0
+      spBonus: 0
+      lpBonus: 0
+      wtBonus: 0
+      iniBonus: 0
+      speedBonus: 0
+      flyBonus: 0
+      swimBonus: 0
+      diseaseR: 0
+      fireR: 0
+      frostR: 0
+      shockR: 0
+      poisonR: 0
+      magicR: 0
+      natToughnessR: 0
+      silverR: 0
+      sunlightR: 0
+      characteristics:
+        none: None
+        str: STR
+        end: END
+        agi: AGI
+        int: INT
+        wp: WP
+        prc: PRC
+        prs: PRS
+        lck: LCK
+      characteristicBonus:
+        strChaBonus: 0
+        endChaBonus: 0
+        agiChaBonus: 0
+        intChaBonus: 0
+        wpChaBonus: 0
+        prcChaBonus: 0
+        prsChaBonus: 0
+        lckChaBonus: 0
+      skillArray: []
+      description: >-
+        <p><strong>Cost:</strong> 1 SP</p>
+
+        <p><span style="color: #191813;">This character can spend 1 SP to make a
+        counter-attack using a hand-to-hand weapon or unarmed strike. This does
+        not count toward the character's maximum number of attacks per
+        round.</span></p>
+      dailyUse: false
+      source: ''
+      shiftForm: false
+      shiftFormStyle: ''
+      shiftStyles:
+        shiftFormNone: Regular Form
+        shiftFormVampireLord: Vampire Lord
+        shiftFormWereWolf: Werewolf
+        shiftFormWereBat: Werebat
+        shiftFormWereBoar: Wereboar
+        shiftFormWereBear: Werebear
+        shiftFormWereCrocodile: Werecrocodile
+        shiftFormWereVulture: Werevulture
+        shiftFormWereLion: Werelion
+    _key: '!actors.items!VvjrBtAEd4XXbhGb.yRPqVNr7JkXVlItR'
+  - _id: Iw69eYcq4m2dZPR1
+    name: Martial Traditions
+    type: talent
+    sort: 700000
+    flags:
+      core:
+        sourceId: Item.7fKKFs3JVM7UgiPU
+    img: systems/uesrpg-3ev4/images/Icons/forceOfWill.webp
+    effects: []
+    folder: null
+    _stats:
+      compendiumSource: null
+      duplicateSource: null
+      coreVersion: '12.331'
+      systemId: uesrpg-3ev4
+      systemVersion: v1.0.0-RC.59
+      createdTime: null
+      modifiedTime: null
+      lastModifiedBy: null
+    ownership:
+      default: 0
+    system:
+      mpBonus: 0
+      hpBonus: 0
+      spBonus: 0
+      lpBonus: 0
+      wtBonus: 0
+      iniBonus: 0
+      speedBonus: 0
+      flyBonus: 0
+      swimBonus: 0
+      diseaseR: 0
+      fireR: 0
+      frostR: 0
+      shockR: 0
+      poisonR: 0
+      magicR: 0
+      natToughnessR: 0
+      silverR: 0
+      sunlightR: 0
+      replace:
+        ini:
+          iniToggle: false
+          value: 0
+          characteristic: str
+        wt:
+          wtToggle: false
+          value: 0
+          characteristic: str
+      characteristics:
+        none: None
+        str: STR
+        end: END
+        agi: AGI
+        int: INT
+        wp: WP
+        prc: PRC
+        prs: PRS
+        lck: LCK
+      characteristicBonus:
+        strChaBonus: 0
+        endChaBonus: 0
+        agiChaBonus: 0
+        intChaBonus: 0
+        wpChaBonus: 0
+        prcChaBonus: 0
+        prsChaBonus: 0
+        lckChaBonus: 0
+      skillArray: []
+      description: >-
+        <p>This character's base unarmed damage is 1d6+4 and they increase the
+        slashing or crushing damage of any hand-to-hand weapons they wield by
+        1.&nbsp;</p>
+
+        <p>They also do not suffer any penalties normally applied when wielding
+        hand-to-hand weapons.</p>
+      xpCost: 0
+      level: 0
+      talentReq: ''
+      miscReq: ''
+      halfFatiguePenalty: false
+      halfWoundPenalty: false
+      untrainedException: false
+      fatigueException: false
+      addIBToMP: false
+      armorAcrobaticsException: false
+      addHalfSpeed: false
+    _key: '!actors.items!VvjrBtAEd4XXbhGb.Iw69eYcq4m2dZPR1'
+  - _id: wIceofbHPos5GUYe
+    name: Spellcaster
+    type: talent
+    sort: 800000
+    flags:
+      core:
+        sourceId: Item.7fKKFs3JVM7UgiPU
+    img: systems/uesrpg-3ev4/images/Icons/questioning.webp
+    effects: []
+    folder: null
+    _stats:
+      compendiumSource: null
+      duplicateSource: null
+      coreVersion: '12.331'
+      systemId: uesrpg-3ev4
+      systemVersion: v1.0.0-RC.59
+      createdTime: null
+      modifiedTime: null
+      lastModifiedBy: null
+    ownership:
+      default: 0
+    system:
+      mpBonus: 0
+      hpBonus: 0
+      spBonus: 0
+      lpBonus: 0
+      wtBonus: 0
+      iniBonus: 0
+      speedBonus: 0
+      flyBonus: 0
+      swimBonus: 0
+      diseaseR: 0
+      fireR: 0
+      frostR: 0
+      shockR: 0
+      poisonR: 0
+      magicR: 0
+      natToughnessR: 0
+      silverR: 0
+      sunlightR: 0
+      replace:
+        ini:
+          iniToggle: false
+          value: 0
+          characteristic: str
+        wt:
+          wtToggle: false
+          value: 0
+          characteristic: str
+      characteristics:
+        none: None
+        str: STR
+        end: END
+        agi: AGI
+        int: INT
+        wp: WP
+        prc: PRC
+        prs: PRS
+        lck: LCK
+      characteristicBonus:
+        strChaBonus: 0
+        endChaBonus: 0
+        agiChaBonus: 0
+        intChaBonus: 0
+        wpChaBonus: 0
+        prcChaBonus: 0
+        prsChaBonus: 0
+        lckChaBonus: 0
+      skillArray: []
+      description: >-
+        <p><span style="color: #191813;">This character does not track magicka,
+        and can instead cast each spell it knows once.</span></p>
+      xpCost: 0
+      level: 0
+      talentReq: ''
+      miscReq: ''
+      halfFatiguePenalty: false
+      halfWoundPenalty: false
+      untrainedException: false
+      fatigueException: false
+      addIBToMP: false
+      armorAcrobaticsException: false
+      addHalfSpeed: false
+    _key: '!actors.items!VvjrBtAEd4XXbhGb.wIceofbHPos5GUYe'
+  - _id: 7L2CmSPIsE7BM445
+    name: Martial Domination
+    type: talent
+    sort: 900000
+    flags:
+      core:
+        sourceId: Item.7fKKFs3JVM7UgiPU
+    img: systems/uesrpg-3ev4/images/Icons/forceOfWill.webp
+    effects: []
+    folder: null
+    _stats:
+      compendiumSource: null
+      duplicateSource: null
+      coreVersion: '12.331'
+      systemId: uesrpg-3ev4
+      systemVersion: v1.0.0-RC.59
+      createdTime: null
+      modifiedTime: null
+      lastModifiedBy: null
+    ownership:
+      default: 0
+    system:
+      mpBonus: 0
+      hpBonus: 0
+      spBonus: 0
+      lpBonus: 0
+      wtBonus: 0
+      iniBonus: 0
+      speedBonus: 0
+      flyBonus: 0
+      swimBonus: 0
+      diseaseR: 0
+      fireR: 0
+      frostR: 0
+      shockR: 0
+      poisonR: 0
+      magicR: 0
+      natToughnessR: 0
+      silverR: 0
+      sunlightR: 0
+      replace:
+        ini:
+          iniToggle: false
+          value: 0
+          characteristic: str
+        wt:
+          wtToggle: false
+          value: 0
+          characteristic: str
+      characteristics:
+        none: None
+        str: STR
+        end: END
+        agi: AGI
+        int: INT
+        wp: WP
+        prc: PRC
+        prs: PRS
+        lck: LCK
+      characteristicBonus:
+        strChaBonus: 0
+        endChaBonus: 0
+        agiChaBonus: 0
+        intChaBonus: 0
+        wpChaBonus: 0
+        prcChaBonus: 0
+        prsChaBonus: 0
+        lckChaBonus: 0
+      skillArray: []
+      description: >-
+        <p>Can parry any melee or non magic ranged attack while unarmed, and
+        gains a minimum of 4 DoS when grappling, restraining or engangling an
+        opponent.</p>
+      xpCost: 0
+      level: 0
+      talentReq: ''
+      miscReq: ''
+      halfFatiguePenalty: false
+      halfWoundPenalty: false
+      untrainedException: false
+      fatigueException: false
+      addIBToMP: false
+      armorAcrobaticsException: false
+      addHalfSpeed: false
+    _key: '!actors.items!VvjrBtAEd4XXbhGb.7L2CmSPIsE7BM445'
+  - _id: TEIWCZq4Y8PiR5TM
+    name: Eye of Night
+    type: talent
+    sort: 1100000
+    flags:
+      core:
+        sourceId: Item.7fKKFs3JVM7UgiPU
+    img: systems/uesrpg-3ev4/images/Icons/combatSenses.webp
+    effects: []
+    folder: null
+    _stats:
+      compendiumSource: null
+      duplicateSource: null
+      coreVersion: '12.331'
+      systemId: uesrpg-3ev4
+      systemVersion: v1.0.0-RC.59
+      createdTime: null
+      modifiedTime: null
+      lastModifiedBy: null
+    ownership:
+      default: 0
+    system:
+      mpBonus: 0
+      hpBonus: 0
+      spBonus: 0
+      lpBonus: 0
+      wtBonus: 0
+      iniBonus: 0
+      speedBonus: 0
+      flyBonus: 0
+      swimBonus: 0
+      diseaseR: 0
+      fireR: 0
+      frostR: 0
+      shockR: 0
+      poisonR: 0
+      magicR: 0
+      natToughnessR: 0
+      silverR: 0
+      sunlightR: 0
+      replace:
+        ini:
+          iniToggle: false
+          value: 0
+          characteristic: str
+        wt:
+          wtToggle: false
+          value: 0
+          characteristic: str
+      characteristics:
+        none: None
+        str: STR
+        end: END
+        agi: AGI
+        int: INT
+        wp: WP
+        prc: PRC
+        prs: PRS
+        lck: LCK
+      characteristicBonus:
+        strChaBonus: 0
+        endChaBonus: 0
+        agiChaBonus: 0
+        intChaBonus: 0
+        wpChaBonus: 0
+        prcChaBonus: 0
+        prsChaBonus: 0
+        lckChaBonus: 0
+      skillArray: []
+      description: >-
+        <p>The Khajiit increases the size of their Natural Weapon damage dice by
+        one step (d4 becomes d6, d12 becomes 2d8, etc), and can make a free
+        Precision Strike with their first attack made while Hidden at night time
+        or in total darkness.</p>
+      xpCost: 300
+      level: 3
+      talentReq: ''
+      miscReq: Any Adept
+      halfFatiguePenalty: false
+      halfWoundPenalty: false
+      untrainedException: false
+      fatigueException: false
+      addIBToMP: false
+      armorAcrobaticsException: false
+      addHalfSpeed: false
+    _key: '!actors.items!VvjrBtAEd4XXbhGb.TEIWCZq4Y8PiR5TM'
+  - _id: bs2x55URclJNTcGS
+    name: Skyhigh
+    type: trait
+    sort: 1200000
+    flags:
+      core:
+        sourceId: Item.wtEFksGPcojtDLTj
+    img: systems/uesrpg-3ev4/images/Icons/catfall.webp
+    effects: []
+    folder: null
+    _stats:
+      compendiumSource: null
+      duplicateSource: null
+      coreVersion: '12.331'
+      systemId: uesrpg-3ev4
+      systemVersion: v1.0.0-RC.59
+      createdTime: null
+      modifiedTime: null
+      lastModifiedBy: null
+    ownership:
+      default: 0
+    system:
+      mpBonus: 0
+      hpBonus: 0
+      spBonus: 0
+      lpBonus: 0
+      wtBonus: 0
+      iniBonus: 0
+      speedBonus: 0
+      flyBonus: 0
+      swimBonus: 0
+      diseaseR: 0
+      fireR: 0
+      frostR: 0
+      shockR: 0
+      poisonR: 0
+      magicR: 0
+      natToughnessR: 0
+      silverR: 0
+      sunlightR: 0
+      replace:
+        ini:
+          iniToggle: false
+          value: 0
+          characteristic: ''
+        wt:
+          wtToggle: false
+          value: 0
+          characteristic: ''
+      characteristics:
+        none: None
+        str: STR
+        end: END
+        agi: AGI
+        int: INT
+        wp: WP
+        prc: PRC
+        prs: PRS
+        lck: LCK
+      characteristicBonus:
+        strChaBonus: 0
+        endChaBonus: 0
+        agiChaBonus: 0
+        intChaBonus: 0
+        wpChaBonus: 0
+        prcChaBonus: 0
+        prsChaBonus: 0
+        lckChaBonus: 0
+      skillArray: []
+      description: >-
+        <p>This character reduces all fall distances by 6m and ignore all
+        penalties on Combat tests due to unusual terrain (except while
+        underwater).</p>
+      halfSpeed: false
+      addHalfSpeed: false
+      halfFatiguePenalty: false
+      mechanical: false
+      crpCost: null
+      halfWoundPenalty: false
+      painIntolerant: false
+    _key: '!actors.items!VvjrBtAEd4XXbhGb.bs2x55URclJNTcGS'
+  - _id: V2Z40bbqpORJFavd
+    name: Nimble (Action Points)
+    type: trait
+    sort: 1300000
+    flags:
+      core:
+        sourceId: Item.wtEFksGPcojtDLTj
+    img: systems/uesrpg-3ev4/images/Icons/lightningReflexes.webp
+    effects: []
+    folder: null
+    _stats:
+      compendiumSource: null
+      duplicateSource: null
+      coreVersion: '12.331'
+      systemId: uesrpg-3ev4
+      systemVersion: v1.0.0-RC.59
+      createdTime: null
+      modifiedTime: null
+      lastModifiedBy: null
+    ownership:
+      default: 0
+    system:
+      mpBonus: 0
+      hpBonus: 0
+      spBonus: 0
+      lpBonus: 0
+      wtBonus: 0
+      iniBonus: 0
+      speedBonus: 0
+      flyBonus: 0
+      swimBonus: 0
+      diseaseR: 0
+      fireR: 0
+      frostR: 0
+      shockR: 0
+      poisonR: 0
+      magicR: 0
+      natToughnessR: 0
+      silverR: 0
+      sunlightR: 0
+      replace:
+        ini:
+          iniToggle: false
+          value: 0
+          characteristic: ''
+        wt:
+          wtToggle: false
+          value: 0
+          characteristic: ''
+      characteristics:
+        none: None
+        str: STR
+        end: END
+        agi: AGI
+        int: INT
+        wp: WP
+        prc: PRC
+        prs: PRS
+        lck: LCK
+      characteristicBonus:
+        strChaBonus: 0
+        endChaBonus: 0
+        agiChaBonus: 0
+        intChaBonus: 0
+        wpChaBonus: 0
+        prcChaBonus: 0
+        prsChaBonus: 0
+        lckChaBonus: 0
+      skillArray: []
+      description: <p>This character has 4 Action Points.</p>
+      halfSpeed: false
+      addHalfSpeed: false
+      halfFatiguePenalty: false
+      mechanical: false
+      crpCost: null
+      halfWoundPenalty: false
+      painIntolerant: false
+    _key: '!actors.items!VvjrBtAEd4XXbhGb.V2Z40bbqpORJFavd'
+  - _id: U47kd8Y08mLxlChF
+    name: Sugar-Rush
+    type: talent
+    sort: 1400000
+    flags:
+      core:
+        sourceId: Item.JX5ttPQSa94C9UKX
+    img: systems/uesrpg-3ev4/images/Icons/blessingOfMadgod.webp
+    effects: []
+    folder: null
+    _stats:
+      compendiumSource: null
+      duplicateSource: null
+      coreVersion: '12.331'
+      systemId: uesrpg-3ev4
+      systemVersion: v1.0.0-RC.59
+      createdTime: null
+      modifiedTime: null
+      lastModifiedBy: null
+    ownership:
+      default: 0
+    system:
+      mpBonus: 0
+      hpBonus: 0
+      spBonus: 0
+      lpBonus: 0
+      wtBonus: 0
+      iniBonus: 0
+      speedBonus: 0
+      flyBonus: 0
+      swimBonus: 0
+      diseaseR: 0
+      fireR: 0
+      frostR: 0
+      shockR: 0
+      poisonR: 0
+      magicR: 0
+      natToughnessR: 0
+      silverR: 0
+      sunlightR: 0
+      replace:
+        ini:
+          iniToggle: false
+          value: 0
+          characteristic: str
+        wt:
+          wtToggle: false
+          value: 0
+          characteristic: str
+      characteristics:
+        none: None
+        str: STR
+        end: END
+        agi: AGI
+        int: INT
+        wp: WP
+        prc: PRC
+        prs: PRS
+        lck: LCK
+      characteristicBonus:
+        strChaBonus: 0
+        endChaBonus: 0
+        agiChaBonus: 0
+        intChaBonus: 0
+        wpChaBonus: 0
+        prcChaBonus: 0
+        prsChaBonus: 0
+        lckChaBonus: 0
+      skillArray: []
+      description: >-
+        <p>This character can tap into reserves of Moon Sugar in their system.
+        They can evade all Attacks of Opportunity for free until they are hit,
+        at which point they pay 1 AP.</p>
+
+        <p>They can also evade AoE attacks completely if the AoE is less than
+        6m.</p>
+      xpCost: 0
+      level: 0
+      talentReq: ''
+      miscReq: ''
+      halfFatiguePenalty: false
+      halfWoundPenalty: false
+      untrainedException: false
+      fatigueException: false
+      addIBToMP: false
+      armorAcrobaticsException: false
+      addHalfSpeed: false
+    _key: '!actors.items!VvjrBtAEd4XXbhGb.U47kd8Y08mLxlChF'
+  - _id: BQQDax0WBj5JS6wZ
+    name: Cestus
+    type: weapon
+    img: icons/weapons/fist/fist-knuckles-stone.webp
+    effects: []
+    folder: null
+    sort: 0
+    flags:
+      core:
+        sourceId: Item.LDevjhdz5praSC0l
+    _stats:
+      compendiumSource: null
+      duplicateSource: null
+      coreVersion: '12.331'
+      systemId: uesrpg-3ev4
+      systemVersion: v1.0.0-RC.59
+      createdTime: null
+      modifiedTime: null
+      lastModifiedBy: null
+    ownership:
+      default: 0
+      qwt9o1cuKYitvD9G: 3
+      eeXhsDlbzUBZOXZT: 3
+    system:
+      mpBonus: 0
+      hpBonus: 0
+      spBonus: 0
+      lpBonus: 0
+      wtBonus: 0
+      iniBonus: 0
+      speedBonus: 0
+      flyBonus: 0
+      swimBonus: 0
+      diseaseR: 0
+      fireR: 0
+      frostR: 0
+      shockR: 0
+      poisonR: 0
+      magicR: 0
+      natToughnessR: 0
+      silverR: 0
+      sunlightR: 0
+      characteristics:
+        none: None
+        str: STR
+        end: END
+        agi: AGI
+        int: INT
+        wp: WP
+        prc: PRC
+        prs: PRS
+        lck: LCK
+      characteristicBonus:
+        strChaBonus: 0
+        endChaBonus: 0
+        agiChaBonus: 0
+        intChaBonus: 0
+        wpChaBonus: 0
+        prcChaBonus: 0
+        prsChaBonus: 0
+        lckChaBonus: 0
+      replace:
+        ini:
+          iniToggle: false
+          value: 0
+          characteristic: ''
+        wt:
+          wtToggle: false
+          value: 0
+          characteristic: ''
+      skillArray: []
+      isPhysicalObject: true
+      containerStats:
+        contained: false
+        container_id: ''
+        container_name: ''
+      description: >-
+        <p><em style="box-sizing: border-box; user-select: text; color:
+        #191813;">Enchantments, modifications, notes, etc...</em></p>
+
+        <p><em style="box-sizing: border-box; user-select: text; color:
+        #191813;">*Base damage is the wielder's Natural Weapon damage.</em></p>
+      quantity: 1
+      enc: 1
+      totalENC: 0
+      reach: 1
+      damage: '*'
+      damage2: '0'
+      damage3: 0
+      weapon2H: false
+      equippped: false
+      carried: false
+      excludeENC: false
+      superior: false
+      hands: 0
+      price: 45
+      modPrice: 0
+      armor: 0
+      magic_ar: 0
+      enchant_level: 1
+      qualities: >-
+        @Compendium[uesrpg-revision.journal.mnfUeIEQkOInlwPK]{Crushing} (1),
+        @Compendium[uesrpg-revision.journal.zlB1i3aexZMAh6yZ]{Hand to Hand},
+        @Compendium[uesrpg-revision.journal.6uGjOBqZGeIY37ln]{Small}
+      charge:
+        value: 0
+        max: 0
+        reduction: 1
+      item_cat:
+        none: None
+        weapon1: Primary Weapon
+        weapon2: Secondary Weapon
+        weapon3: Sidearm
+    _key: '!actors.items!VvjrBtAEd4XXbhGb.BQQDax0WBj5JS6wZ'
+  - _id: V5YGeME0z1UmzKEf
+    name: Steel Dagger
+    type: weapon
+    img: icons/weapons/daggers/dagger-straight-cracked.webp
+    effects: []
+    folder: null
+    sort: 0
+    flags:
+      core:
+        sourceId: Item.Fu76GajVgn4dKKq4
+    _stats:
+      compendiumSource: null
+      duplicateSource: null
+      coreVersion: '12.331'
+      systemId: uesrpg-3ev4
+      systemVersion: v1.0.0-RC.59
+      createdTime: null
+      modifiedTime: null
+      lastModifiedBy: null
+    ownership:
+      default: 0
+      qwt9o1cuKYitvD9G: 3
+      eeXhsDlbzUBZOXZT: 3
+    system:
+      mpBonus: 0
+      hpBonus: 0
+      spBonus: 0
+      lpBonus: 0
+      wtBonus: 0
+      iniBonus: 0
+      speedBonus: 0
+      flyBonus: 0
+      swimBonus: 0
+      diseaseR: 0
+      fireR: 0
+      frostR: 0
+      shockR: 0
+      poisonR: 0
+      magicR: 0
+      natToughnessR: 0
+      silverR: 0
+      sunlightR: 0
+      characteristics:
+        none: None
+        str: STR
+        end: END
+        agi: AGI
+        int: INT
+        wp: WP
+        prc: PRC
+        prs: PRS
+        lck: LCK
+      characteristicBonus:
+        strChaBonus: 0
+        endChaBonus: 0
+        agiChaBonus: 0
+        intChaBonus: 0
+        wpChaBonus: 0
+        prcChaBonus: 0
+        prsChaBonus: 0
+        lckChaBonus: 0
+      replace:
+        ini:
+          iniToggle: false
+          value: 0
+          characteristic: ''
+        wt:
+          wtToggle: false
+          value: 0
+          characteristic: ''
+      skillArray: []
+      isPhysicalObject: true
+      containerStats:
+        contained: false
+        container_id: ''
+        container_name: ''
+      description: >-
+        <p><em style="box-sizing: border-box; user-select: text; color:
+        #191813;">Enchantments, modifications, notes, etc...</em></p>
+      quantity: 1
+      enc: 1
+      totalENC: 0
+      reach: 1
+      damage: 1d4+1
+      damage2: '0'
+      damage3: 0
+      weapon2H: false
+      equippped: false
+      carried: false
+      excludeENC: false
+      superior: false
+      hands: 0
+      price: 45
+      modPrice: 0
+      armor: 0
+      magic_ar: 0
+      enchant_level: 2
+      qualities: >-
+        @Compendium[uesrpg-revision.journal.5HnOtuIPqSo9GuWE]{Exploit Weakness},
+        @Compendium[uesrpg-revision.journal.rOEKxH0jiC62uvFH]{Thrown} (5/10/15),
+        @Compendium[uesrpg-revision.journal.6uGjOBqZGeIY37ln]{Small}
+      charge:
+        value: 0
+        max: 0
+        reduction: 1
+      item_cat:
+        none: None
+        weapon1: Primary Weapon
+        weapon2: Secondary Weapon
+        weapon3: Sidearm
+    _key: '!actors.items!VvjrBtAEd4XXbhGb.V5YGeME0z1UmzKEf'
+  - _id: xyMi5yKfhuBrre7x
+    name: Wood Longbow
+    type: weapon
+    img: icons/weapons/bows/longbow-recurve-leather-brown.webp
+    effects: []
+    folder: null
+    sort: 0
+    flags:
+      core:
+        sourceId: Item.OKZPsQqlt5joV7DH
+    _stats:
+      compendiumSource: null
+      duplicateSource: null
+      coreVersion: '12.331'
+      systemId: uesrpg-3ev4
+      systemVersion: v1.0.0-RC.59
+      createdTime: null
+      modifiedTime: null
+      lastModifiedBy: null
+    ownership:
+      default: 0
+      qwt9o1cuKYitvD9G: 3
+      eeXhsDlbzUBZOXZT: 3
+    system:
+      mpBonus: 0
+      hpBonus: 0
+      spBonus: 0
+      lpBonus: 0
+      wtBonus: 0
+      iniBonus: 0
+      speedBonus: 0
+      flyBonus: 0
+      swimBonus: 0
+      diseaseR: 0
+      fireR: 0
+      frostR: 0
+      shockR: 0
+      poisonR: 0
+      magicR: 0
+      natToughnessR: 0
+      silverR: 0
+      sunlightR: 0
+      characteristics:
+        none: None
+        str: STR
+        end: END
+        agi: AGI
+        int: INT
+        wp: WP
+        prc: PRC
+        prs: PRS
+        lck: LCK
+      characteristicBonus:
+        strChaBonus: 0
+        endChaBonus: 0
+        agiChaBonus: 0
+        intChaBonus: 0
+        wpChaBonus: 0
+        prcChaBonus: 0
+        prsChaBonus: 0
+        lckChaBonus: 0
+      replace:
+        ini:
+          iniToggle: false
+          value: 0
+          characteristic: ''
+        wt:
+          wtToggle: false
+          value: 0
+          characteristic: ''
+      skillArray: []
+      isPhysicalObject: true
+      containerStats:
+        contained: false
+        container_id: ''
+        container_name: ''
+      description: >-
+        <p><em style="box-sizing: border-box; user-select: text; color:
+        #191813;">Enchantments, modifications, notes, etc...</em></p>
+      quantity: 1
+      enc: 2
+      totalENC: 0
+      reach: null
+      damage: '0'
+      damage2: 1d8
+      damage3: 0
+      weapon2H: true
+      equippped: false
+      carried: false
+      excludeENC: false
+      superior: false
+      hands: 0
+      price: 200
+      modPrice: 0
+      armor: 0
+      magic_ar: 0
+      enchant_level: 1
+      qualities: >-
+        @Compendium[uesrpg-revision.journal.m6FZ2DuL1SSGOqr2]{Reload} (2),
+        @Compendium[uesrpg-revision.journal.21g3rtqdszsKc9jv]{Unwieldy}
+      charge:
+        value: 0
+        max: 0
+        reduction: 1
+      item_cat:
+        none: None
+        weapon1: Primary Weapon
+        weapon2: Secondary Weapon
+        weapon3: Sidearm
+    _key: '!actors.items!VvjrBtAEd4XXbhGb.xyMi5yKfhuBrre7x'
+  - _id: I3Jj9dLKnMJIavJa
+    name: Steel Arrow - Bodkin
+    type: ammunition
+    img: icons/weapons/ammunition/arrows-bodkin-yellow-red.webp
+    effects: []
+    folder: null
+    sort: 100000
+    flags:
+      core:
+        sourceId: Item.8SI16Irg5SyQEdhU
+    _stats:
+      compendiumSource: null
+      duplicateSource: null
+      coreVersion: '12.331'
+      systemId: uesrpg-3ev4
+      systemVersion: v1.0.0-RC.59
+      createdTime: null
+      modifiedTime: null
+      lastModifiedBy: null
+    ownership:
+      default: 0
+      WcwhQU1nz94WaD5n: 3
+      eeXhsDlbzUBZOXZT: 3
+    system:
+      mpBonus: 0
+      hpBonus: 0
+      spBonus: 0
+      lpBonus: 0
+      wtBonus: 0
+      iniBonus: 0
+      speedBonus: 0
+      flyBonus: 0
+      swimBonus: 0
+      diseaseR: 0
+      fireR: 0
+      frostR: 0
+      shockR: 0
+      poisonR: 0
+      magicR: 0
+      natToughnessR: 0
+      silverR: 0
+      sunlightR: 0
+      characteristics:
+        none: None
+        str: STR
+        end: END
+        agi: AGI
+        int: INT
+        wp: WP
+        prc: PRC
+        prs: PRS
+        lck: LCK
+      characteristicBonus:
+        strChaBonus: 0
+        endChaBonus: 0
+        agiChaBonus: 0
+        intChaBonus: 0
+        wpChaBonus: 0
+        prcChaBonus: 0
+        prsChaBonus: 0
+        lckChaBonus: 0
+      replace:
+        ini:
+          iniToggle: false
+          value: 0
+          characteristic: ''
+        wt:
+          wtToggle: false
+          value: 0
+          characteristic: ''
+      isPhysicalObject: true
+      containerStats:
+        contained: false
+        container_id: ''
+        container_name: ''
+      description: >-
+        <p><em style="box-sizing: border-box; user-select: text; color:
+        #191813;">Enchantments, modifications, notes, etc...</em></p>
+
+        <p>Rename 'Ammunition' to 'Arrow' or 'Bolt'.</p>
+      quantity: 10
+      enc: 0.1
+      totalENC: 0
+      damage: '1'
+      carried: false
+      equipped: false
+      excludeENC: false
+      superior: false
+      price: 2
+      modPrice: 0
+      armor: 0
+      magic_ar: 0
+      enchant_level: 2
+      qualities: '@Compendium[uesrpg-revision.journal.wra9K7hRoVnZarja]{Splitting}'
+      charge:
+        value: 0
+        max: 0
+    _key: '!actors.items!VvjrBtAEd4XXbhGb.I3Jj9dLKnMJIavJa'
+  - _id: i6oueaItIsSOIwxE
+    name: Steel Arrow - Broadhead
+    type: ammunition
+    img: icons/weapons/ammunition/arrows-broadhead-white.webp
+    effects: []
+    folder: null
+    sort: 0
+    flags:
+      core:
+        sourceId: Item.wu2mKwl7koDbwaa2
+    _stats:
+      compendiumSource: null
+      duplicateSource: null
+      coreVersion: '12.331'
+      systemId: uesrpg-3ev4
+      systemVersion: v1.0.0-RC.59
+      createdTime: null
+      modifiedTime: null
+      lastModifiedBy: null
+    ownership:
+      default: 0
+      WcwhQU1nz94WaD5n: 3
+      eeXhsDlbzUBZOXZT: 3
+    system:
+      mpBonus: 0
+      hpBonus: 0
+      spBonus: 0
+      lpBonus: 0
+      wtBonus: 0
+      iniBonus: 0
+      speedBonus: 0
+      flyBonus: 0
+      swimBonus: 0
+      diseaseR: 0
+      fireR: 0
+      frostR: 0
+      shockR: 0
+      poisonR: 0
+      magicR: 0
+      natToughnessR: 0
+      silverR: 0
+      sunlightR: 0
+      characteristics:
+        none: None
+        str: STR
+        end: END
+        agi: AGI
+        int: INT
+        wp: WP
+        prc: PRC
+        prs: PRS
+        lck: LCK
+      characteristicBonus:
+        strChaBonus: 0
+        endChaBonus: 0
+        agiChaBonus: 0
+        intChaBonus: 0
+        wpChaBonus: 0
+        prcChaBonus: 0
+        prsChaBonus: 0
+        lckChaBonus: 0
+      replace:
+        ini:
+          iniToggle: false
+          value: 0
+          characteristic: ''
+        wt:
+          wtToggle: false
+          value: 0
+          characteristic: ''
+      isPhysicalObject: true
+      containerStats:
+        contained: false
+        container_id: ''
+        container_name: ''
+      description: >-
+        <p><em style="box-sizing: border-box; user-select: text; color:
+        #191813;">Enchantments, modifications, notes, etc...</em></p>
+
+        <p>Rename 'Ammunition' to 'Arrow' or 'Bolt'.</p>
+      quantity: 10
+      enc: 0.1
+      totalENC: 0
+      damage: '1'
+      carried: false
+      equipped: false
+      excludeENC: false
+      superior: false
+      price: 2
+      modPrice: 0
+      armor: 0
+      magic_ar: 0
+      enchant_level: 2
+      qualities: '@Compendium[uesrpg-revision.journal.8QrUeG8YXaLx1BqW]{Slashing}'
+      charge:
+        value: 0
+        max: 0
+    _key: '!actors.items!VvjrBtAEd4XXbhGb.i6oueaItIsSOIwxE'
+  - _id: erZ4dVcFYCveoVx3
+    name: Partial Heavy Robes
+    type: armor
+    img: icons/equipment/chest/breastplate-purple.webp
+    effects: []
+    folder: null
+    sort: 0
+    flags:
+      core:
+        sourceId: Item.FxHxtXoffTmPh5kN
+    _stats:
+      compendiumSource: null
+      duplicateSource: null
+      coreVersion: '12.331'
+      systemId: uesrpg-3ev4
+      systemVersion: v1.0.0-RC.59
+      createdTime: null
+      modifiedTime: null
+      lastModifiedBy: null
+    ownership:
+      default: 0
+      eeXhsDlbzUBZOXZT: 3
+    system:
+      mpBonus: 0
+      hpBonus: 0
+      spBonus: 0
+      lpBonus: 0
+      wtBonus: 0
+      iniBonus: 0
+      speedBonus: 0
+      flyBonus: 0
+      swimBonus: 0
+      diseaseR: 0
+      fireR: 0
+      frostR: 0
+      shockR: 0
+      poisonR: 0
+      magicR: 0
+      natToughnessR: 0
+      silverR: 0
+      sunlightR: 0
+      characteristics:
+        none: None
+        str: STR
+        end: END
+        agi: AGI
+        int: INT
+        wp: WP
+        prc: PRC
+        prs: PRS
+        lck: LCK
+      characteristicBonus:
+        strChaBonus: 0
+        endChaBonus: 0
+        agiChaBonus: 0
+        intChaBonus: 0
+        wpChaBonus: 0
+        prcChaBonus: 0
+        prsChaBonus: 0
+        lckChaBonus: 0
+      replace:
+        ini:
+          iniToggle: false
+          value: 0
+          characteristic: ''
+        wt:
+          wtToggle: false
+          value: 0
+          characteristic: ''
+      skillArray: []
+      isPhysicalObject: true
+      containerStats:
+        contained: false
+        container_id: ''
+        container_name: ''
+      description: null
+      quantity: 1
+      enc: 1
+      totalENC: 0
+      reach: ''
+      damage: ''
+      equipped: true
+      carried: true
+      hands: 0
+      price: 500
+      modPrice: 0
+      armor: 1
+      blockRating: 0
+      excludeENC: false
+      magic_ar: ''
+      enchant_level: 4
+      qualities: '@JournalEntry[arBC9NKZ6Xxo4a3S]{Light}'
+      category: body
+      item_cat:
+        none: None
+        head: Helmet
+        l_arm: Left Gauntlet
+        r_arm: Right Gauntlet
+        l_leg: Left Leg
+        r_leg: Right Leg
+        body: Chestplate
+        shield: Shield
+      charge:
+        value: 0
+        max: 0
+        reduction: 1
+    _key: '!actors.items!VvjrBtAEd4XXbhGb.erZ4dVcFYCveoVx3'
+  - _id: KHUoQO4Rt8HnLCDD
+    name: Heal 2
+    type: spell
+    img: icons/magic/life/cross-yellow-green.webp
+    effects: []
+    folder: null
+    sort: 0
+    flags:
+      core:
+        sourceId: Item.Dvncp3T7Nn3WBpgy
+    _stats:
+      compendiumSource: null
+      duplicateSource: null
+      coreVersion: '12.331'
+      systemId: uesrpg-3ev4
+      systemVersion: v1.0.0-RC.59
+      createdTime: null
+      modifiedTime: null
+      lastModifiedBy: null
+    ownership:
+      default: 0
+      qwt9o1cuKYitvD9G: 3
+      eeXhsDlbzUBZOXZT: 3
+    system:
+      description: >-
+        <p>Caster regains [Spell Strength] HP.</p>
+
+        <table style="width: 98.5447%; height: 51px;" border="2" cellspacing="2"
+        cellpadding="1">
+
+        <tbody>
+
+        <tr style="height: 17px;">
+
+        <td style="width: 24.9539%; height: 17px; text-align:
+        left;"><strong>Level</strong></td>
+
+        <td style="width: 11.5403%; height: 17px; text-align:
+        center;"><strong>1</strong></td>
+
+        <td style="width: 10.9017%; height: 17px; text-align:
+        center;"><strong>2</strong></td>
+
+        <td style="width: 10.2483%; height: 17px; text-align:
+        center;"><strong>3</strong></td>
+
+        <td style="width: 10.8979%; height: 17px; text-align:
+        center;"><strong>4</strong></td>
+
+        <td style="width: 9.94024%; height: 17px; text-align:
+        center;"><strong>5</strong></td>
+
+        <td style="width: 9.50831%; height: 17px; text-align:
+        center;"><strong>6</strong></td>
+
+        <td style="width: 10.0805%; height: 17px; text-align:
+        center;"><strong>7</strong></td>
+
+        </tr>
+
+        <tr style="height: 17px;">
+
+        <td style="width: 24.9539%; height: 17px; text-align:
+        left;"><strong>Cost</strong></td>
+
+        <td style="width: 11.5403%; height: 17px; text-align: center;">3</td>
+
+        <td style="width: 10.9017%; height: 17px; text-align: center;">5</td>
+
+        <td style="width: 10.2483%; height: 17px; text-align: center;">7</td>
+
+        <td style="width: 10.8979%; height: 17px; text-align: center;">9</td>
+
+        <td style="width: 9.94024%; height: 17px; text-align: center;">11</td>
+
+        <td style="width: 9.50831%; height: 17px; text-align: center;">13</td>
+
+        <td style="width: 10.0805%; height: 17px; text-align: center;">15</td>
+
+        </tr>
+
+        <tr style="height: 17px;">
+
+        <td style="width: 24.9539%; height: 17px; text-align:
+        left;"><strong>Spell Strength</strong></td>
+
+        <td style="width: 11.5403%; height: 17px; text-align: center;">2</td>
+
+        <td style="width: 10.9017%; height: 17px; text-align: center;">4</td>
+
+        <td style="width: 10.2483%; height: 17px; text-align: center;">6</td>
+
+        <td style="width: 10.8979%; height: 17px; text-align: center;">8</td>
+
+        <td style="width: 9.94024%; height: 17px; text-align: center;">10</td>
+
+        <td style="width: 9.50831%; height: 17px; text-align: center;">12</td>
+
+        <td style="width: 10.0805%; height: 17px; text-align: center;">14</td>
+
+        </tr>
+
+        </tbody>
+
+        </table>
+
+        <p>&nbsp;</p>
+      damage: '0'
+      level: 2
+      cost: 5
+      spell_str: ''
+      attributes: '@Compendium[uesrpg-revision.journal.SJHXIArl88ADTmmG]{Potion}'
+      form: Self
+      school: restoration
+      school_cat:
+        alteration: Alteration
+        conjuration: Conjuration
+        destruction: Destruction
+        illusion: Illusion
+        mysticism: Mysticism
+        necromancy: Necromancy
+        restoration: Restoration
+        none: Select School
+      spellType: ''
+      spellTypes:
+        conventional: Conventional
+        unconventional: Unconventional
+    _key: '!actors.items!VvjrBtAEd4XXbhGb.KHUoQO4Rt8HnLCDD'
+  - _id: djeLjsdA2vvZNCPX
+    name: Wood Quarterstaff
+    type: weapon
+    img: icons/weapons/staves/staff-ornate-purple.webp
+    effects: []
+    folder: null
+    sort: 0
+    flags:
+      core:
+        sourceId: Item.JzGx9VUhSZ8Gutbe
+    _stats:
+      compendiumSource: null
+      duplicateSource: null
+      coreVersion: '12.331'
+      systemId: uesrpg-3ev4
+      systemVersion: v1.0.0-RC.59
+      createdTime: null
+      modifiedTime: null
+      lastModifiedBy: null
+    ownership:
+      default: 0
+      qwt9o1cuKYitvD9G: 3
+      eeXhsDlbzUBZOXZT: 3
+    system:
+      mpBonus: 0
+      hpBonus: 0
+      spBonus: 0
+      lpBonus: 0
+      wtBonus: 0
+      iniBonus: 0
+      speedBonus: 0
+      flyBonus: 0
+      swimBonus: 0
+      diseaseR: 0
+      fireR: 0
+      frostR: 0
+      shockR: 0
+      poisonR: 0
+      magicR: 0
+      natToughnessR: 0
+      silverR: 0
+      sunlightR: 0
+      characteristics:
+        none: None
+        str: STR
+        end: END
+        agi: AGI
+        int: INT
+        wp: WP
+        prc: PRC
+        prs: PRS
+        lck: LCK
+      characteristicBonus:
+        strChaBonus: 0
+        endChaBonus: 0
+        agiChaBonus: 0
+        intChaBonus: 0
+        wpChaBonus: 0
+        prcChaBonus: 0
+        prsChaBonus: 0
+        lckChaBonus: 0
+      replace:
+        ini:
+          iniToggle: false
+          value: 0
+          characteristic: ''
+        wt:
+          wtToggle: false
+          value: 0
+          characteristic: ''
+      skillArray: []
+      isPhysicalObject: true
+      containerStats:
+        contained: false
+        container_id: ''
+        container_name: ''
+      description: >-
+        <p><em style="box-sizing: border-box; user-select: text; color:
+        #191813;">Enchantments, modifications, notes, etc...</em></p>
+      quantity: 1
+      enc: 2
+      totalENC: 0
+      reach: 2
+      damage: 1d6
+      damage2: 1d8
+      damage3: 0
+      weapon2H: false
+      equippped: false
+      carried: false
+      excludeENC: false
+      superior: false
+      hands: 0
+      price: 17
+      modPrice: 0
+      armor: 0
+      magic_ar: 0
+      enchant_level: 1
+      qualities: >-
+        @Compendium[uesrpg-revision.journal.iNRvDXhCiPR8lHX9]{Concussive.},
+        @Compendium[uesrpg-revision.journal.J1fYlZ5DQd3of7iS]{Arcane},
+        @Compendium[uesrpg-revision.journal.x3LoLj3qboUGTTaq]{Wood}
+      charge:
+        value: 0
+        max: 0
+        reduction: 1
+      item_cat:
+        none: None
+        weapon1: Primary Weapon
+        weapon2: Secondary Weapon
+        weapon3: Sidearm
+    _key: '!actors.items!VvjrBtAEd4XXbhGb.djeLjsdA2vvZNCPX'
+effects: []
+folder: YOakefp1093wiaNm
+flags: {}
+_stats:
+  compendiumSource: null
+  duplicateSource: null
+  coreVersion: '12.331'
+  systemId: uesrpg-3ev4
+  systemVersion: v1.0.0-RC.59
+  createdTime: 1732339096381
+  modifiedTime: 1732339102041
+  lastModifiedBy: 7bDMesNjX54nzN9S
+ownership:
+  default: 0
+  WcwhQU1nz94WaD5n: 3
+  7bDMesNjX54nzN9S: 3
+system:
+  equippedWeapons:
+    primaryWeapon:
+      name: 'None: Right click to bind weapon'
+      img: icons/skills/melee/unarmed-punch-fist.webp
+      id: ''
+    secondaryWeapon:
+      name: 'None: Right click to bind weapon'
+      img: icons/skills/melee/unarmed-punch-fist.webp
+      id: ''
+  favorites:
+    '1':
+      name: Hotkey 1
+      img: icons/svg/combat.svg
+      id: ''
+      value: 0
+    '2':
+      name: Hotkey 2
+      img: icons/svg/combat.svg
+      id: ''
+      value: 0
+    '3':
+      name: Hotkey 3
+      img: icons/svg/combat.svg
+      id: ''
+      value: 0
+    '4':
+      name: Hotkey 4
+      img: icons/svg/combat.svg
+      id: ''
+      value: 0
+    '5':
+      name: Hotkey 5
+      img: icons/svg/combat.svg
+      id: ''
+      value: 0
+  race: Any Race
+  birthsign: ''
+  age: null
+  height: ''
+  weight: ''
+  elite_adv: ''
+  wounded: false
+  woundPenalty: 0
+  woundNotes: ''
+  bio: >-
+    <p><em>The Two-Moons Dance Monks are a mostly Khajiit order of monks,
+    dedicated to Riddle-Thar and the art of unarmed battle. Those known to have
+    mastered this style of combat are renowned across Tamriel as unmatched in
+    weaponless combat. Even those that face them with magical enhancement are
+    seen as inferior combatants in their eyes.</em></p>
+  paperDoll: systems/uesrpg-3ev4/images/paperDoll_Male_Outline_White.png
+  soul_energy: '1500'
+  journal: ''
+  notes: ''
+  threat: minorSolo
+  threatCategory:
+    minorSolo: Minor Solo
+    minorGroup: Minor Group
+    majorSolo: Major Solo
+    majorGroup: Major Group
+    deadlySolo: Deadly Solo
+    deadlyGroup: Deadly Group
+    legendarySolo: Legendary Solo
+    legendaryGroup: Legendary Group
+  resistance:
+    fireR: 0
+    frostR: 0
+    shockR: 0
+    magicR: 0
+    poisonR: 0
+    diseaseR: 0
+    natToughness: 0
+    silverR: 0
+    sunlightR: 0
+  fatigue:
+    level: 0
+    penalty: 0
+    bonus: 0
+  lucky_numbers:
+    ln1: 0
+    ln2: 0
+    ln3: 0
+    ln4: 0
+    ln5: 0
+    ln6: 0
+    ln7: 0
+    ln8: 0
+    ln9: 0
+    ln10: 0
+  unlucky_numbers:
+    ul1: 95
+    ul2: 96
+    ul3: 97
+    ul4: 98
+    ul5: 99
+    ul6: 100
+  supply: 1d2
+  supply_cat:
+    1d2: 1d2
+    1d4: 1d4
+    1d6: 1d6
+    1d8: 1d8
+    1d10: 1d10
+  wealth: 0
+  current_enc: '7.0'
+  carry_rating:
+    current: 0
+    max: 26
+    bonus: 0
+    penalty: 0
+    label: Minimal
+  characteristics:
+    str:
+      value: 40
+      total: 40
+      base: 40
+      favored: false
+    end:
+      value: 50
+      total: 50
+      base: 50
+      favored: false
+    agi:
+      value: 60
+      total: 60
+      base: 60
+      favored: false
+    int:
+      value: 35
+      total: 35
+      base: 35
+      favored: false
+    wp:
+      value: 45
+      total: 45
+      base: 45
+      favored: false
+    prc:
+      value: 50
+      total: 50
+      base: 50
+      favored: false
+    prs:
+      value: 35
+      total: 35
+      base: 35
+      favored: false
+    lck:
+      value: null
+      total: 0
+      base: null
+      favored: false
+  professions:
+    combat: 80
+    magic: null
+    evade: 80
+    observe: 70
+    stealth: 80
+    knowledge: 65
+    social: 35
+    physical: 65
+    commerce: 0
+    profession1: 0
+    profession2: 0
+    profession3: 0
+  professionsWound:
+    combat: 0
+    magic: 0
+    evade: 0
+    observe: 0
+    stealth: 0
+    knowledge: 0
+    social: 0
+    physical: 0
+    commerce: 0
+    profession1: 0
+    profession2: 0
+    profession3: 0
+  hp:
+    base: 25
+    value: 25
+    max: 25
+    temp: 0
+    bonus: 0
+  action_points:
+    value: 4
+    max: 4
+  luck_points:
+    value: 0
+    max: 0
+    bonus: 0
+  stamina:
+    value: 5
+    max: 5
+    bonus: 0
+  magicka:
+    value: 35
+    max: 35
+    bonus: 0
+  xp: 0
+  wound_threshold:
+    value: '13'
+    base: 13
+    bonus: 0
+  initiative:
+    value: '14'
+    base: 14
+    bonus: 0
+  speed:
+    value: '16'
+    base: 16
+    bonus: 0
+  size: standard
+  size_cat:
+    puny: Puny
+    tiny: Tiny
+    small: Small
+    standard: Standard
+    large: Large
+    huge: Huge
+    enormous: Enormous
+  skill_ranks:
+    untrained:
+      name: Untrained
+      rank: ''
+      bonus: ''
+      specialization: ''
+    novice:
+      name: ' (0) Novice'
+      rank: ''
+      bonus: ''
+      specialization: ''
+    apprentice:
+      name: (1) Apprentice
+      rank: ''
+      bonus: ''
+      specialization: ''
+    journeyman:
+      name: (2) Journeyman
+      rank: ''
+      bonus: ''
+      specialization: ''
+    adept:
+      name: (3) Adept
+      rank: ''
+      bonus: ''
+      specialization: ''
+    expert:
+      name: (4) Expert
+      rank: ''
+      bonus: ''
+      specialization: ''
+    master:
+      name: (5) Master
+      rank: ''
+      bonus: ''
+      specialization: ''
+  skills:
+    profession1:
+      rank: ''
+      bonus: null
+      specialization: ''
+      characteristic: ''
+      tn: 0
+      name: ''
+    profession2:
+      rank: ''
+      bonus: null
+      specialization: ''
+      characteristic: ''
+      tn: 0
+      name: ''
+    profession3:
+      rank: ''
+      bonus: null
+      specialization: ''
+      characteristic: ''
+      tn: 0
+      name: ''
+    commerce:
+      bonus: 0
+      specialization: ''
+      characteristic: ''
+      tn: 0
+  talents: >-
+    <p><strong>Martial Revenge ( 1 SP):</strong> The Monk can use this ability
+    to immediately make a counter attack using a hand-to-hand weapon or unarmed
+    strike, and this does not count towards that character&rsquo;s maximum
+    number of attacks that they can make per round</p>
+  traits: ''
+  powers: ''
+  spells: ''
+  armor_class: light
+  armor_class_cat:
+    none: None
+    super_light: Super Light
+    light: Light
+    medium: Medium
+    heavy: Heavy
+    super_heavy: Super Heavy
+  storeName: ''
+  priceMod: 0
+  fatigueLevel: 0
+  weapons:
+    w1:
+      name: ''
+      dmg: ''
+      hands: ''
+      reach: ''
+      qualities: ''
+    w2:
+      name: ''
+      dmg: ''
+      hands: ''
+      reach: ''
+      qualities: ''
+    w3:
+      name: ''
+      dmg: ''
+      hands: ''
+      reach: ''
+      qualities: ''
+    w4:
+      name: ''
+      dmg: ''
+      hands: ''
+      reach: ''
+      qualities: ''
+    w5:
+      name: ''
+      dmg: ''
+      hands: ''
+      reach: ''
+      qualities: ''
+  prep_spells:
+    s1:
+      name: ''
+      dmg: ''
+      cost: ''
+      school: ''
+      form: ''
+      attributes: ''
+      level: ''
+    s2:
+      name: ''
+      dmg: ''
+      cost: ''
+      school: ''
+      form: ''
+      attributes: ''
+      level: ''
+    s3:
+      name: ''
+      dmg: ''
+      cost: ''
+      school: ''
+      form: ''
+      attributes: ''
+      level: ''
+    s4:
+      name: ''
+      dmg: ''
+      cost: ''
+      school: ''
+      form: ''
+      attributes: ''
+      level: ''
+    s5:
+      name: ''
+      dmg: ''
+      cost: ''
+      school: ''
+      form: ''
+      attributes: ''
+      level: ''
+    s6:
+      name: ''
+      dmg: ''
+      cost: ''
+      school: ''
+      form: ''
+      attributes: ''
+      level: ''
+    s7:
+      name: ''
+      dmg: ''
+      cost: ''
+      school: ''
+      form: ''
+      attributes: ''
+      level: ''
+  shield:
+    name: ''
+    br: ''
+    magic_br: ''
+    class: ''
+    qualities: ''
+  armor:
+    head:
+      name: ''
+      enc: 0
+      ar: ''
+      magic_ar: ''
+      class: ''
+    body:
+      name: ''
+      enc: 0
+      ar: 1
+      magic_ar: ''
+      class: ''
+    r_leg:
+      name: ''
+      enc: 0
+      ar: ''
+      magic_ar: ''
+      class: ''
+    l_leg:
+      name: ''
+      enc: 0
+      ar: ''
+      magic_ar: ''
+      class: ''
+    r_arm:
+      name: ''
+      enc: 0
+      ar: ''
+      magic_ar: ''
+      class: ''
+    l_arm:
+      name: ''
+      enc: 0
+      ar: ''
+      magic_ar: ''
+      class: ''
+prototypeToken:
+  flags:
+    token-hud-wildcard:
+      default: ''
+    token-auras:
+      aura1:
+        permission: all
+        colour: '#ffffff'
+        opacity: 0.5
+        distance: null
+        square: false
+      aura2:
+        permission: all
+        colour: '#ffffff'
+        opacity: 0.5
+        distance: null
+        square: false
+  name: Two-Moons Dance Monk
+  displayName: 0
+  width: 1
+  height: 1
+  lockRotation: false
+  rotation: 0
+  actorLink: false
+  disposition: -1
+  displayBars: 20
+  bar1:
+    attribute: hp
+  bar2:
+    attribute: action_points
+  randomImg: false
+  alpha: 1
+  light:
+    dim: 0
+    bright: 0
+    angle: 360
+    color: null
+    alpha: 1
+    animation:
+      speed: 5
+      intensity: 5
+      type: null
+      reverse: false
+    negative: false
+    priority: 0
+    coloration: 1
+    attenuation: 0.5
+    luminosity: 0.5
+    saturation: 0
+    contrast: 0
+    shadows: 0
+    darkness:
+      min: 0
+      max: 1
+  texture:
+    src: icons/svg/cowled.svg
+    tint: '#ffffff'
+    scaleX: 1
+    scaleY: 1
+    anchorX: 0.5
+    anchorY: 0.5
+    offsetX: 0
+    offsetY: 0
+    fit: contain
+    rotation: 0
+    alphaThreshold: 0.75
+  sight:
+    angle: 360
+    enabled: true
+    range: 0
+    brightness: 1
+    visionMode: basic
+    color: null
+    attenuation: 0.1
+    saturation: 0
+    contrast: 0
+  appendNumber: false
+  prependAdjective: false
+  hexagonalShape: 0
+  detectionModes: []
+  occludable:
+    radius: 0
+  ring:
+    enabled: false
+    colors:
+      ring: null
+      background: null
+    effects: 1
+    subject:
+      scale: 1
+      texture: null
+_id: VvjrBtAEd4XXbhGb
+sort: 500000
+_key: '!actors!VvjrBtAEd4XXbhGb'
+

@@ -1,0 +1,90 @@
+name: From Oblivion's Heart
+type: talent
+img: icons/weapons/polearms/trident-ornate-red.webp
+system:
+  mpBonus: 0
+  hpBonus: 0
+  spBonus: 0
+  lpBonus: 0
+  wtBonus: 0
+  iniBonus: 0
+  speedBonus: 0
+  flyBonus: 0
+  swimBonus: 0
+  diseaseR: 0
+  fireR: 0
+  frostR: 0
+  shockR: 0
+  poisonR: 0
+  magicR: 0
+  natToughnessR: 0
+  silverR: 0
+  sunlightR: 0
+  replace:
+    ini:
+      iniToggle: false
+      value: 0
+      characteristic: none
+    wt:
+      wtToggle: false
+      value: 0
+      characteristic: none
+  characteristics:
+    none: None
+    str: STR
+    end: END
+    agi: AGI
+    int: INT
+    wp: WP
+    prc: PRC
+    prs: PRS
+    lck: LCK
+  characteristicBonus:
+    strChaBonus: 0
+    endChaBonus: 0
+    agiChaBonus: 0
+    intChaBonus: 0
+    wpChaBonus: 0
+    prcChaBonus: 0
+    prsChaBonus: 0
+    lckChaBonus: 0
+  skillArray: []
+  description: >-
+    <p>If an attack made by the character wielding a trident inflicts a wound,
+    the enemy gains the Bleeding(1) condition regardless of the result of shock
+    test. Additionally, any Trident the character wields gains the Thrown
+    (5/10/20) quality. If a thrown attack with this weapon hits the target, the
+    attack counts as if the trident had the Entangling quality, except it can be
+    blocked and inflicts damage as normal.</p>
+  governingCharacteristics: Str
+  xpCost: 500
+  level: Expert
+  talentReq: ''
+  miscReq: ''
+  halfFatiguePenalty: false
+  halfWoundPenalty: false
+  untrainedException: false
+  fatigueException: false
+  addIBToMP: false
+  addIntToMPMultiplier: 1
+  armorAcrobaticsException: false
+  addHalfSpeed: false
+effects: []
+folder: coY6fwnED7jEStIl
+ownership:
+  default: 0
+  HcIrULZhA1JFIlrf: 3
+flags: {}
+_stats:
+  compendiumSource: null
+  duplicateSource: null
+  coreVersion: '12.331'
+  systemId: uesrpg-3ev4
+  systemVersion: v1.0.0-RC.64
+  createdTime: 1734676323708
+  modifiedTime: 1734676323708
+  lastModifiedBy: HcIrULZhA1JFIlrf
+_id: GNSGJ5goC08YxyfD
+sort: 0
+_key: '!items!GNSGJ5goC08YxyfD'
+

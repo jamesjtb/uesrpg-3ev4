@@ -1,0 +1,125 @@
+_id: ocX6KlzdfkkOhnER
+name: Snow Bear Pelt
+type: item
+img: icons/commodities/leather/fur-pelt-off-white.webp
+effects: []
+folder: null
+sort: 0
+flags:
+  core:
+    sourceId: Item.UuK7DCRPgd0L3QZB
+_stats:
+  coreVersion: '12.331'
+  systemId: null
+  systemVersion: null
+  createdTime: null
+  modifiedTime: null
+  lastModifiedBy: null
+  compendiumSource: null
+  duplicateSource: null
+ownership:
+  default: 0
+  qwt9o1cuKYitvD9G: 3
+system:
+  characteristics:
+    none: None
+    str: STR
+    end: END
+    agi: AGI
+    int: INT
+    wp: WP
+    prc: PRC
+    prs: PRS
+    lck: LCK
+  characteristicBonus:
+    strChaBonus: 0
+    endChaBonus: 0
+    agiChaBonus: 0
+    intChaBonus: 0
+    wpChaBonus: 0
+    prcChaBonus: 0
+    prsChaBonus: 0
+    lckChaBonus: 0
+  replace:
+    ini:
+      iniToggle: false
+      value: 0
+      characteristic: ''
+    wt:
+      wtToggle: false
+      value: 0
+      characteristic: ''
+  mpBonus: 0
+  hpBonus: 0
+  spBonus: 0
+  lpBonus: 0
+  wtBonus: 0
+  iniBonus: 0
+  speedBonus: 0
+  flyBonus: 0
+  swimBonus: 0
+  diseaseR: 0
+  fireR: 0
+  frostR: 0
+  shockR: 0
+  poisonR: 0
+  magicR: 0
+  natToughnessR: 0
+  silverR: 0
+  sunlightR: 0
+  skillArray: []
+  isPhysicalObject: true
+  containerStats:
+    contained: false
+    container_id: ''
+    container_name: ''
+  description: >-
+    <p>On a&nbsp;<strong>+30 Survival test</strong>, a character can remove the
+    bear&rsquo;s pelt, worth 100 drakes, over the course of a Short Rest. Snow
+    Bear pelts are worth&nbsp;<strong>200 drakes</strong>. Both are ENC 2.
+    Failing this test spoils the pelt, halving its worth.</p>
+
+    <p>On a&nbsp;<strong>+20 Survival test</strong>, a character can, over the
+    course of a Long Rest, turn a bear pelt into two pieces of Full Bear Fur
+    armour, or one Full Bear Fur chest piece. Bear Fur armour is exactly the
+    same as regular Fur but has +1 AR. Snow Bear Fur armour is the same as Bear
+    Fur but gives 3 additional Frost Resistance on the equipped location.
+    Failing this test spoils the pelt instead, rendering it useless and halving
+    its worth.</p>
+  quantity: 1
+  enc: 2
+  totalENC: 0
+  reach: ''
+  damage: ''
+  equipped: false
+  hands: 0
+  price: 200
+  modPrice: 0
+  armor: 0
+  magic_ar: 0
+  blockRating: 0
+  enchant_level: 0
+  excludeENC: false
+  consumable: false
+  qualities: ''
+  wearable: false
+  charge:
+    value: 0
+    max: 0
+    reduction: 1
+  carried: false
+  item_cat:
+    none: None
+    head: Helmet
+    l_arm: Left Gauntlet
+    r_arm: Right Gauntlet
+    l_leg: Left Leg
+    r_leg: Right Leg
+    body: Chestplate
+    shield: Shield
+    weapon1: Primary Weapon
+    weapon2: Secondary Weapon
+    weapon3: Sidearm
+  attributes: {}
+_key: '!items!ocX6KlzdfkkOhnER'
+

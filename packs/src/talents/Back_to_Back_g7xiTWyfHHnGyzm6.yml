@@ -1,0 +1,88 @@
+name: Back to Back
+type: talent
+flags:
+  core:
+    sourceId: Item.DYVazRNO2caSDMGE
+img: systems/uesrpg-3ev4/images/Icons/backToBack.webp
+effects: []
+_stats:
+  compendiumSource: Item.DYVazRNO2caSDMGE
+  duplicateSource: null
+  coreVersion: '12.331'
+  systemId: uesrpg-3ev4
+  systemVersion: v1.0.0-RC.62
+  createdTime: 1733369640141
+  modifiedTime: 1733369640141
+  lastModifiedBy: HcIrULZhA1JFIlrf
+ownership:
+  default: 0
+  HcIrULZhA1JFIlrf: 3
+system:
+  mpBonus: 0
+  hpBonus: 0
+  spBonus: 0
+  lpBonus: 0
+  wtBonus: 0
+  iniBonus: 0
+  speedBonus: 0
+  flyBonus: null
+  swimBonus: null
+  diseaseR: 0
+  fireR: 0
+  frostR: 0
+  shockR: 0
+  poisonR: 0
+  magicR: 0
+  natToughnessR: 0
+  silverR: null
+  sunlightR: null
+  replace:
+    ini:
+      iniToggle: false
+      value: 0
+      characteristic: none
+    wt:
+      wtToggle: false
+      value: 0
+      characteristic: none
+  characteristics:
+    none: None
+    str: STR
+    end: END
+    agi: AGI
+    int: INT
+    wp: WP
+    prc: PRC
+    prs: PRS
+    lck: LCK
+  characteristicBonus:
+    strChaBonus: 0
+    endChaBonus: 0
+    agiChaBonus: 0
+    intChaBonus: 0
+    wpChaBonus: 0
+    prcChaBonus: 0
+    prsChaBonus: 0
+    lckChaBonus: 0
+  skillArray: []
+  description: >-
+    <p>The character can make an attack of opportunity whenever an enemy within
+    their melee range makes a melee attack against an ally who also has this
+    talent.</p>
+  governingCharacteristics: Prc
+  xpCost: 300
+  level: Journeyman
+  talentReq: Teamwork
+  miscReq: Journeyman Combat
+  halfFatiguePenalty: false
+  halfWoundPenalty: false
+  untrainedException: false
+  fatigueException: false
+  addIBToMP: false
+  armorAcrobaticsException: false
+  addHalfSpeed: false
+folder: aAOygNvKFmG4260D
+_id: g7xiTWyfHHnGyzm6
+sort: 0
+_key: '!items!g7xiTWyfHHnGyzm6'
+
