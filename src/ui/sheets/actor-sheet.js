@@ -22,7 +22,7 @@ import { classifySpellForRouting, getUserSpellTargets, shouldUseTargetedSpellWor
 import { filterTargetsBySpellRange, getSpellAoEConfig, getSpellRangeType, placeAoETemplateAndCollectTargets } from "../../core/magic/spell-range.js";
 import { SkillOpposedWorkflow } from "../../core/skills/opposed-workflow.js";
 import { computeSkillTN, SKILL_DIFFICULTIES } from "../../core/skills/skill-tn.js";
-import { isItemEffectActive } from "../../core/ae/transfer.js";
+import { isItemEffectActive } from "../../core/active-effects/transfer.js";
 import { getSpecialActionById } from "../../core/config/special-actions.js";
 import { doTestRoll, formatDegree } from "../../utils/degree-roll-helper.js";
 import { requireUserCanRollActor } from "../../utils/permissions.js";
@@ -37,7 +37,7 @@ import {
   spendActionPoints
 } from "./combat-actions-utils.js";
 import { AimAudit } from "../../core/combat/aim-audit.js";
-import { createOrUpdateStatusEffect } from "../../core/effects/status-effect.js";
+import { createOrUpdateStatusEffect } from "../../core/active-effects/status-effect.js";
 import { buildSpecialActionsForActor, getActiveCombatStyleId, getExplicitActiveCombatStyleItem, isSpecialActionUsableNow } from "../../core/combat/combat-style-utils.js";
 import {
   getCollapsedGroups,

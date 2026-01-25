@@ -20,7 +20,7 @@ import {
 } from "./combat-actions-utils.js";
 import { buildSpecialActionsForActor, getActiveCombatStyleId, getExplicitActiveCombatStyleItem, isSpecialActionUsableNow } from "../../core/combat/combat-style-utils.js";
 import { AimAudit } from "../../core/combat/aim-audit.js";
-import { createOrUpdateStatusEffect } from "../../core/effects/status-effect.js";
+import { createOrUpdateStatusEffect } from "../../core/active-effects/status-effect.js";
 import { getSpecialActionById } from "../../core/config/special-actions.js";
 import {
   getCollapsedGroups,
