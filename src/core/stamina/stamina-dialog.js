@@ -3,7 +3,7 @@
  * Implements Chapter 1 stamina rules from documentation.
  */
 
-import { createOrUpdateStatusEffect } from "../effects/status-effect.js";
+import { createOrUpdateStatusEffect } from "../active-effects/status-effect.js";
 import { requestUpdateDocument } from "../../utils/authority-proxy.js";
 import { canUseHeroicActions } from "../rules/npc-rules.js";
 import { isActorUndead } from "../traits/trait-registry.js";
