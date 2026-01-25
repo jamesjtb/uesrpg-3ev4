@@ -7,15 +7,12 @@
  *
  * Notes:
  * - Compendia are not auto-migrated here.
+ * - This is a lightweight normalization pass intended to be safe to run on every startup.
  */
 
 const MODULE_ID = "uesrpg-3ev4";
 
 /** @typedef {"melee"|"ranged"} AttackMode */
-
-function _ensureArray(value) {
-  return Array.isArray(value) ? value : [];
-}
 
 function _debugEnabled() {
   try {
@@ -28,7 +25,7 @@ function _debugEnabled() {
 function _itemHasTransferEffects(item) {
   try {
     const effects = item?.effects?.contents ?? item?.effects ?? [];
-    return Array.isArray(effects) && effects.some(e => {
+    return Array.isArray(effects) && effects.some((e) => {
       const obj = typeof e?.toObject === "function" ? e.toObject() : e;
       return !!(obj?.transfer);
     });
@@ -69,18 +66,18 @@ function _normalizeEnchantLevel(item, sys = {}) {
 function _inferAttackMode(item, sys = {}) {
   // 1) Structured qualities: explicit ranged signals
   const structured = Array.isArray(sys.qualitiesStructured) ? sys.qualitiesStructured : [];
-  const sKeys = new Set(structured.map(q => String(q?.key ?? "").toLowerCase()).filter(Boolean));
+  const sKeys = new Set(structured.map((q) => String(q?.key ?? "").toLowerCase()).filter(Boolean));
   if (sKeys.has("reload") || sKeys.has("thrown")) return "ranged";
 
   // 2) Explicit thrown range fields (newer schema)
   const ts = Number(sys.thrownShort ?? 0);
   const tm = Number(sys.thrownMed ?? 0);
   const tl = Number(sys.thrownLong ?? 0);
-  if ([ts, tm, tl].some(n => Number.isFinite(n) && n > 0)) return "ranged";
+  if ([ts, tm, tl].some((n) => Number.isFinite(n) && n > 0)) return "ranged";
 
   // 3) Trait pills: explicit ranged identifiers (sling, etc.)
   const traits = Array.isArray(sys.qualitiesTraits) ? sys.qualitiesTraits : [];
-  const tSet = new Set(traits.map(t => String(t).toLowerCase()));
+  const tSet = new Set(traits.map((t) => String(t).toLowerCase()));
   if (tSet.has("sling")) return "ranged";
 
   // 4) Category-ish fields: deterministic keyword mapping (only promotes to ranged)
@@ -90,16 +87,8 @@ function _inferAttackMode(item, sys = {}) {
 
   const hay = `${cat} ${style} ${name}`;
   // NOTE: These are only used to promote to ranged. If none match, we do not guess.
-  const rangedKeywords = [
-    "bow",
-    "crossbow",
-    "arbalest",
-    "sling",
-    "marksman",
-    "archery",
-    "ranged"
-  ];
-  if (rangedKeywords.some(k => hay.includes(k))) return "ranged";
+  const rangedKeywords = ["bow", "crossbow", "arbalest", "sling", "marksman", "archery", "ranged"];
+  if (rangedKeywords.some((k) => hay.includes(k))) return "ranged";
 
   return null;
 }
@@ -117,7 +106,7 @@ function _normalizeWeaponSystem(item, sys = {}) {
 
   // Ensure attackMode exists (melee|ranged).
   // Legacy assumption in this system has been melee unless explicitly ranged.
-  const hasValidAttackMode = (sys.attackMode === "melee" || sys.attackMode === "ranged");
+  const hasValidAttackMode = sys.attackMode === "melee" || sys.attackMode === "ranged";
   if (!hasValidAttackMode) {
     const inferred = _inferAttackMode(item, sys);
     if (inferred) update["system.attackMode"] = inferred;
@@ -136,6 +125,35 @@ function _normalizeWeaponSystem(item, sys = {}) {
 
   // Ensure structured qualities array
   if (!Array.isArray(sys.qualitiesStructured)) update["system.qualitiesStructured"] = [];
+
+  // ------------------------------------------------------------
+  // Reach migration
+  // ------------------------------------------------------------
+  // Reach used to exist as a structured quality (reach (X)) that was mirrored into system.reach.
+  // Reach is now a dedicated Basic Property (system.reach) and is removed from qualitiesStructured.
+  // We migrate any legacy structured reach into system.reach (non-destructive) and strip it.
+  try {
+    const structured = Array.isArray(sys.qualitiesStructured) ? sys.qualitiesStructured : [];
+    const reachEntry = structured.find((q) => String(q?.key ?? "").toLowerCase() === "reach") ?? null;
+    const reachFromStructured = Number(reachEntry?.value ?? 0);
+
+    const reachFromSystemRaw = sys.reach;
+    const reachFromSystem = Number(reachFromSystemRaw ?? 0);
+    const systemHasReach = Number.isFinite(reachFromSystem) && reachFromSystem !== 0;
+
+    if (!systemHasReach && Number.isFinite(reachFromStructured) && reachFromStructured !== 0) {
+      update["system.reach"] = reachFromStructured;
+    }
+
+    if (reachEntry) {
+      const filtered = structured.filter((q) => String(q?.key ?? "").toLowerCase() !== "reach");
+      if (filtered.length !== structured.length) {
+        update["system.qualitiesStructured"] = filtered;
+      }
+    }
+  } catch (_e) {
+    // Ignore and continue; migration must be best-effort and non-blocking.
+  }
 
   // Reach bounds: Reach is a numeric field (max reach). Minimum reach is optional (0 for none).
   if (sys.reachMin === undefined || sys.reachMin === null || sys.reachMin === "") update["system.reachMin"] = 0;
