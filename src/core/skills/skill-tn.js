@@ -9,7 +9,7 @@
  */
 
 import { collectCombatTNModifierEntries } from "../combat/tn.js";
-import { evaluateAEModifierKeys } from "../ae/modifier-evaluator.js";
+import { evaluateAEModifierKeys } from "../active-effects/modifier-evaluator.js";
 
 export const SKILL_DIFFICULTIES = Object.freeze([
   { key: "effortless", label: "Effortless", mod: 40 },
