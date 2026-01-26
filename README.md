@@ -39,25 +39,3 @@ You can find the lively UESRPG Discord Community here: https://discord.gg/KAkXdf
    https://raw.githubusercontent.com/jamesjtb/uesrpg-3ev4/refs/heads/master/system.json
    ```
 3. Click **Install** and follow the remaining on-screen instructions.
-
-## Contributing
-### Contributing to the Compendium (non-developers)
-This guide is written for those who would like to help with the entry of content data, but don't necessarily have the skillset to contribute to the project directly.
-
-#### Requirements
-- Basic ability to navigate your computer's files
-- A file archiving utility (winzip, 7-zip, winrar, etc)
-- The latest version of Foundry VTT, locally installed
-  - *while this guide can be followed using the remote files on a hosted foundry server, you will need to rely on the host's documentation for file exploration and manipulation*
-- The latest version of uesrpg-3ev4 system module (see [Installing](#installing))
-- A Foundry world that you can use as your work environment
-
-#### Making and Submitting Compendium Changes (WIP)
-**IMPORTANT!!** You should be starting from the latest unmodified version of the uesrpg-3ev4 system. If you've modified your system compendiums prior to starting a new set of work, you will need to uninstall and reinstall the uesrpg-3ev4 system in foundry. If you do not, you could cause data corruption once you've handed off your changes to a developer.
-
-1. Find your \<foundry data folder\>, and take note of its path for later. On Windows, this can usually be found in `C:\Users\<username>\AppData\Local\FoundryVTT`.
-  <img width="1131" height="640" alt="image" src="https://github.com/user-attachments/assets/776cb3c8-1d93-40d9-af3b-489f923a90b6" />
-
-  Hint: if you're unable to find the folders in this path, make sure you "show hidden files" in Windows File Explorer.
-  <img width="1139" height="651" alt="image" src="https://github.com/user-attachments/assets/ed5f40e8-b2d2-42a6-a70e-ad5edf786405" />
-2. 
